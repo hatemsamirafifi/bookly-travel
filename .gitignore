@@ -1,0 +1,138 @@
+# ============================================================
+# Bookly .gitignore
+# Stack: Laravel (API + Filament) · Next.js 14 · PostgreSQL · Redis
+# ============================================================
+
+# -----------------------------------------------
+# Operating System
+# -----------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# -----------------------------------------------
+# IDEs and Editors
+# -----------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.code-workspace
+.history/
+
+# -----------------------------------------------
+# Environment and Secrets
+# -----------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# -----------------------------------------------
+# Laravel (Backend + Filament Admin)
+# -----------------------------------------------
+/backend/vendor/
+/backend/node_modules/
+/backend/public/hot
+/backend/public/storage
+/backend/storage/*.key
+/backend/storage/framework/cache/data/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+/backend/storage/logs/*
+/backend/bootstrap/cache/*
+/backend/composer.phar
+/backend/.phpunit.result.cache
+/backend/.phpunit.cache/
+/backend/phpunit.xml
+!backend/phpunit.xml.dist
+/backend/.php-cs-fixer.cache
+/backend/_ide_helper.php
+/backend/_ide_helper_models.php
+/backend/.phpstorm.meta.php
+/backend/auth.json
+/backend/.scribe/
+
+# -----------------------------------------------
+# Next.js (Public Website + Partner Dashboard)
+# -----------------------------------------------
+/frontend/node_modules/
+/frontend/.next/
+/frontend/out/
+/frontend/.turbo/
+/frontend/.vercel/
+/frontend/.env*.local
+/frontend/next-env.d.ts
+/frontend/.cache/
+/frontend/coverage/
+/frontend/.nyc_output/
+/frontend/storybook-static/
+
+# -----------------------------------------------
+# Node.js / npm / yarn / pnpm (any surface)
+# -----------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+package-lock.json.bak
+*.tsbuildinfo
+
+# -----------------------------------------------
+# Build Outputs
+# -----------------------------------------------
+/dist/
+/build/
+*.js.map
+*.css.map
+
+# -----------------------------------------------
+# Testing
+# -----------------------------------------------
+/coverage/
+.nyc_output/
+*.lcov
+.phpunit.result.cache
+.phpunit.cache/
+junit.xml
+test-results/
+playwright-report/
+
+# -----------------------------------------------
+# Docker (if used for local dev)
+# -----------------------------------------------
+docker-compose.override.yml
+.docker/data/
+
+# -----------------------------------------------
+# Logs
+# -----------------------------------------------
+*.log
+logs/
+
+# -----------------------------------------------
+# Compiled / Binary
+# -----------------------------------------------
+*.o
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+*.class
+*.pyc
