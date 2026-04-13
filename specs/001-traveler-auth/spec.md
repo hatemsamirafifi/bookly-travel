@@ -14,6 +14,7 @@
 - Q: Which authentication events should be logged for security auditing? → A: Standard set — sign-ins (success and failure), password resets, account lockouts, account creation, and email verification events.
 - Q: How long should unconverted guest identity records be retained? → A: 24 months after the last booking. After that, guest identity data is anonymized but booking records are retained with anonymized contact information.
 - Q: Can signed-in travelers change their password without using the email reset flow? → A: Yes. Travelers can change their password from account settings by providing their current password for confirmation. This is separate from the forgot-password reset flow.
+- Q: Should auth audit log entries include client IP address and user agent? → A: Yes. FR-025 updated to explicitly require IP address and user agent string alongside account identifier, timestamp, and event outcome.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -161,7 +162,7 @@ A signed-in traveler expects their session to persist for a reasonable duration 
 - **FR-022**: The system MUST mark accounts as "unverified" until the traveler confirms their email via the verification link.
 - **FR-023**: The system MUST restrict password reset functionality to verified email addresses only. Unverified accounts requesting a password reset MUST receive a verification email instead.
 - **FR-024**: The system MUST allow travelers to request a new verification email if the original was not received or has expired.
-- **FR-025**: The system MUST log the following authentication events for security auditing: successful sign-ins, failed sign-in attempts, password reset requests, password changes, account lockouts (brute-force protection triggers), account creation (both standard and guest conversion), and email verification completions. Each log entry MUST include the associated account identifier, timestamp, and event outcome.
+- **FR-025**: The system MUST log the following authentication events for security auditing: successful sign-ins, failed sign-in attempts, password reset requests, password changes, account lockouts (brute-force protection triggers), account creation (both standard and guest conversion), and email verification completions. Each log entry MUST include the associated account identifier, timestamp, event outcome, client IP address, and user agent string.
 - **FR-026**: The system MUST anonymize unconverted guest identity records 24 months after the guest's last booking. Anonymization MUST remove personally identifiable information (name, email, phone) from the guest identity while retaining the associated booking records with anonymized contact fields. Guest identities linked to bookings with future tour dates MUST NOT be anonymized regardless of age.
 - **FR-027**: The system MUST allow signed-in travelers to change their password from their account settings by providing their current password and a new password that meets strength requirements. This is distinct from the forgot-password reset flow (FR-009) and does not require an email link.
 

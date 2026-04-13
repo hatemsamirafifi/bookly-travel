@@ -13,7 +13,30 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        // Auth events → listeners will be added in T017
+        \App\Domains\Auth\Events\TravelerRegistered::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\TravelerLoggedIn::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\LoginFailed::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\AccountLockedOut::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\PasswordReset::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\PasswordChanged::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\EmailVerified::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
+        \App\Domains\Auth\Events\GuestConvertedToAccount::class => [
+            \App\Domains\Auth\Listeners\LogAuthEvent::class,
+        ],
     ];
 
     /**

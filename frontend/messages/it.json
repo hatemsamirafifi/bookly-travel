@@ -5,5 +5,26 @@
     "error": "Qualcosa è andato storto",
     "back": "Torna indietro",
     "marketplaceSubtitle": "Mercato dei Tour"
+  },
+  "auth": {
+    "login": "Accedi",
+    "register": "Crea un account",
+    "logout": "Esci",
+    "forgotPassword": "Hai dimenticato la password?",
+    "resetPassword": "Reimposta password",
+    "changePassword": "Cambia password",
+    "email": "Indirizzo email",
+    "password": "Password",
+    "passwordConfirmation": "Conferma password",
+    "name": "Nome completo",
+    "phone": "Numero di telefono",
+    "errors": {
+      "invalidCredentials": "Email o password non validi.",
+      "emailTaken": "Questa email è già registrata. Per favore, accedi.",
+      "weakPassword": "La password è troppo debole.",
+      "sessionExpired": "La tua sessione è scadura. Per favore, accedi di nuovo.",
+      "accountLocked": "Troppi tentativi falliti. Riprova più tardi.",
+      "linkExpired": "Questo link è scaduto. Richiedine uno nuovo."
+    }
   }
 }
