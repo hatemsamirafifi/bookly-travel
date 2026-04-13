@@ -29,6 +29,11 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => 'traveler',
+            'locale' => fake()->randomElement(['en', 'es', 'it']),
+            'failed_login_count' => 0,
+            'locked_until' => null,
+            'last_login_at' => null,
             'remember_token' => Str::random(10),
         ];
     }
@@ -40,6 +45,47 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a traveler.
+     */
+    public function traveler(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'traveler',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a partner.
+     */
+    public function partner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'partner',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is currently locked out.
+     */
+    public function lockedOut(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'failed_login_count' => 5,
+            'locked_until' => now()->addMinutes(1),
         ]);
     }
 }

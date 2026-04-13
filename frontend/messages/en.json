@@ -5,5 +5,26 @@
     "error": "Something went wrong",
     "back": "Go back",
     "marketplaceSubtitle": "Tours Marketplace"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Create Account",
+    "logout": "Sign Out",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "changePassword": "Change Password",
+    "email": "Email Address",
+    "password": "Password",
+    "passwordConfirmation": "Confirm Password",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailTaken": "This email is already registered. Please sign in.",
+      "weakPassword": "Password is too weak.",
+      "sessionExpired": "Your session has expired. Please sign in again.",
+      "accountLocked": "Too many failed attempts. Please try again later.",
+      "linkExpired": "This link has expired. Please request a new one."
+    }
   }
 }

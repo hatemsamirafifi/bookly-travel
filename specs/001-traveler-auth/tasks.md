@@ -38,26 +38,26 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create `users` table migration with all columns (role enum, locale enum, email_verified_at, failed_login_count, locked_until, last_login_at) per data-model.md in `backend/database/migrations/xxxx_create_users_table.php`
-- [ ] T007 [P] Publish and run Sanctum `personal_access_tokens` migration in `backend/database/migrations/xxxx_create_personal_access_tokens_table.php`
-- [ ] T008 [P] Create `password_reset_tokens` migration (Laravel default) in `backend/database/migrations/xxxx_create_password_reset_tokens_table.php`
-- [ ] T009 [P] Create `guest_identities` table migration with email index, converted_user_id FK, anonymized_at per data-model.md in `backend/database/migrations/xxxx_create_guest_identities_table.php`
-- [ ] T010 [P] Create `auth_audit_logs` table migration with user_id FK, event_type, ip_address, user_agent, metadata (jsonb) per data-model.md in `backend/database/migrations/xxxx_create_auth_audit_logs_table.php`
-- [ ] T011 Create User model with role enum, locale enum, HasApiTokens trait, MustVerifyEmail contract, fillable/casts/relationships in `backend/app/Models/User.php`
-- [ ] T012 [P] Create GuestIdentity model with relationships, scopes (active, anonymizable), and anonymization method in `backend/app/Models/GuestIdentity.php`
-- [ ] T013 [P] Create AuthAuditLog model (no updating/deleting, append-only) with scopes for event type filtering in `backend/app/Models/AuthAuditLog.php`
-- [ ] T014 Create UserResource API transformer (id, name, email, locale, email_verified, created_at, last_login_at) in `backend/app/Http/Resources/UserResource.php`
-- [ ] T015 [P] Create all auth domain events (TravelerRegistered, TravelerLoggedIn, LoginFailed, AccountLockedOut, PasswordReset, PasswordChanged, EmailVerified, GuestConvertedToAccount) in `backend/app/Domains/Auth/Events/`
-- [ ] T016 [P] Create LogAuthEvent listener that writes to auth_audit_logs table, capturing user_id, event_type, IP, user agent, and metadata in `backend/app/Domains/Auth/Listeners/LogAuthEvent.php`
-- [ ] T017 Register event-listener mappings in `backend/app/Providers/EventServiceProvider.php`
-- [ ] T018 Configure Sanctum token expiration (7 days), configure rate limiting for auth endpoints (10 req/min) in `backend/config/sanctum.php` and `backend/app/Providers/RouteServiceProvider.php`
-- [ ] T019 Create auth API route group with rate limiting middleware in `backend/routes/api/public.php`
-- [ ] T020 [P] Create Zod validation schemas for all auth forms (register, login, forgot-password, reset-password, change-password) in `frontend/src/lib/validators/auth.ts`
-- [ ] T021 [P] Create auth API client module with typed methods for all endpoints (register, login, logout, etc.) in `frontend/src/lib/api/auth.ts`
-- [ ] T022 [P] Create useAuth hook with auth context provider (token management, user state, sign-in/out methods) in `frontend/src/lib/hooks/useAuth.ts`
-- [ ] T023 [P] Create auth translation files for all three languages in `frontend/src/i18n/en/auth.json`, `frontend/src/i18n/es/auth.json`, `frontend/src/i18n/it/auth.json`
-- [ ] T024 [P] Create AuthGuard component for protecting authenticated routes with redirect-to-login in `frontend/src/components/auth/AuthGuard.tsx`
-- [ ] T025 Create UserFactory and GuestIdentityFactory for test seeding in `backend/database/factories/UserFactory.php` and `backend/database/factories/GuestIdentityFactory.php`
+- [x] T006 Create `users` table migration with all columns (role enum, locale enum, email_verified_at, failed_login_count, locked_until, last_login_at) per data-model.md in `backend/database/migrations/xxxx_create_users_table.php`
+- [x] T007 [P] Publish and run Sanctum `personal_access_tokens` migration in `backend/database/migrations/xxxx_create_personal_access_tokens_table.php`
+- [x] T008 [P] Create `password_reset_tokens` migration (Laravel default) in `backend/database/migrations/xxxx_create_password_reset_tokens_table.php`
+- [x] T009 [P] Create `guest_identities` table migration with email index, converted_user_id FK, anonymized_at per data-model.md in `backend/database/migrations/xxxx_create_guest_identities_table.php`
+- [x] T010 [P] Create `auth_audit_logs` table migration with user_id FK, event_type, ip_address, user_agent, metadata (jsonb) per data-model.md in `backend/database/migrations/xxxx_create_auth_audit_logs_table.php`
+- [x] T011 Create User model with role enum, locale enum, HasApiTokens trait, MustVerifyEmail contract, fillable/casts/relationships in `backend/app/Models/User.php`
+- [x] T012 [P] Create GuestIdentity model with relationships, scopes (active, anonymizable), and anonymization method in `backend/app/Models/GuestIdentity.php`
+- [x] T013 [P] Create AuthAuditLog model (no updating/deleting, append-only) with scopes for event type filtering in `backend/app/Models/AuthAuditLog.php`
+- [x] T014 Create UserResource API transformer (id, name, email, locale, email_verified, created_at, last_login_at) in `backend/app/Http/Resources/UserResource.php`
+- [x] T015 [P] Create all auth domain events (TravelerRegistered, TravelerLoggedIn, LoginFailed, AccountLockedOut, PasswordReset, PasswordChanged, EmailVerified, GuestConvertedToAccount) in `backend/app/Domains/Auth/Events/`
+- [x] T016 [P] Create LogAuthEvent listener that writes to auth_audit_logs table, capturing user_id, event_type, IP, user agent, and metadata in `backend/app/Domains/Auth/Listeners/LogAuthEvent.php`
+- [x] T017 Register event-listener mappings in `backend/app/Providers/EventServiceProvider.php`
+- [x] T018 Configure Sanctum token expiration (7 days), configure rate limiting for auth endpoints (10 req/min) in `backend/config/sanctum.php` and `backend/app/Providers/RouteServiceProvider.php`
+- [x] T019 Create auth API route group with rate limiting middleware in `backend/routes/api/public.php`
+- [x] T020 [P] Create Zod validation schemas for all auth forms (register, login, forgot-password, reset-password, change-password) in `frontend/src/lib/validators/auth.ts`
+- [x] T021 [P] Create auth API client module with typed methods for all endpoints (register, login, logout, etc.) in `frontend/src/lib/api/auth.ts`
+- [x] T022 [P] Create useAuth hook with auth context provider (token management, user state, sign-in/out methods) in `frontend/src/lib/hooks/useAuth.ts`
+- [x] T023 [P] Create auth translation files for all three languages in `frontend/src/i18n/en/auth.json`, `frontend/src/i18n/es/auth.json`, `frontend/src/i18n/it/auth.json`
+- [x] T024 [P] Create AuthGuard component for protecting authenticated routes with redirect-to-login in `frontend/src/components/auth/AuthGuard.tsx`
+- [x] T025 Create UserFactory and GuestIdentityFactory for test seeding in `backend/database/factories/UserFactory.php` and `backend/database/factories/GuestIdentityFactory.php`
 
 **Checkpoint**: Foundation ready — database migrated, models created, events wired, API client and auth context ready. User story implementation can now begin.
 
