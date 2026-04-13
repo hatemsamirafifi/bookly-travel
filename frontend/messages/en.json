@@ -1,0 +1,8 @@
+{
+  "common": {
+    "appName": "Bookly",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "back": "Go back"
+  }
+}

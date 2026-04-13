@@ -1,4 +1,4 @@
-﻿# bookly travel Development Guidelines
+# bookly travel Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2026-04-13
 
@@ -17,6 +17,18 @@ tests/
 ## Commands
 
 npm test; npm run lint
+
+## Shell Execution (Windows — CRITICAL)
+
+This project runs on **Windows**. All `.ps1` scripts MUST be run with Windows PowerShell:
+
+```
+powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
+```
+
+Do NOT use `pwsh`, `bash`, or `sh` — they are not available or will fail.
+If `powershell` is unavailable in your environment, skip the scripts and read
+files directly from `specs/001-traveler-auth/`.
 
 ## Code Style
 

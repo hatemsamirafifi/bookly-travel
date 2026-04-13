@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+#!/usr/bin/env powershell
 # Common PowerShell functions analogous to common.sh
 
 # Find repository root by searching upward for .specify directory

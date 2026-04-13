@@ -10,7 +10,7 @@ Implement the traveler account and authentication system for the Bookly tours ma
 ## Technical Context
 
 **Language/Version**: PHP 8.2+ (Laravel), TypeScript 5.x (Next.js 14)
-**Primary Dependencies**: Laravel Sanctum (token auth), Laravel Mail (queued email), Next.js App Router, React Hook Form + Zod (frontend validation)
+**Primary Dependencies**: Laravel Sanctum (token auth), Laravel Mail (queued email), Next.js App Router, Tailwind CSS, React Hook Form + Zod (frontend validation)
 **Storage**: PostgreSQL (primary), Redis (session cache, rate limiting, queue)
 **Testing**: Pest (PHP backend), Vitest + React Testing Library (frontend)
 **Target Platform**: Web (server-rendered public pages, client-rendered authenticated pages)

@@ -151,7 +151,7 @@ A signed-in traveler expects their session to persist for a reasonable duration 
 - **FR-012**: The system MUST maintain active sessions for signed-in travelers, extending the session with each user interaction and expiring the session after a configurable period of inactivity (default: 7 days).
 - **FR-013**: The system MUST allow multiple concurrent sessions per traveler (e.g., signed in on phone and laptop simultaneously).
 - **FR-014**: The system MUST implement progressive sign-in attempt blocking: after 5 consecutive failed attempts for a given account, block further attempts with escalating delays of 1 minute, then 5 minutes, then 30 minutes on continued failures. The lockout counter MUST reset to zero after a successful sign-in.
-- **FR-015**: The system MUST display user-friendly, localized error messages for all authentication failures (invalid credentials, expired session, blocked account, validation errors).
+- **FR-015**: The system MUST display localized, clear error messages for all authentication failures (invalid credentials, expired session, blocked account, validation errors). All error messages MUST be mapped from API error codes to translation keys defined in the i18n locale files.
 - **FR-016**: The system MUST support the platform's three languages (English, Spanish, Italian) for all authentication pages and error messages.
 - **FR-017**: The system MUST redirect travelers to their original destination after successful sign-in or registration (return-to-URL behavior).
 - **FR-018**: The system MUST use email as the unique account identifier. No two accounts may share the same email address.
@@ -199,3 +199,4 @@ A signed-in traveler expects their session to persist for a reasonable duration 
 - Session inactivity timeout of 7 days is a reasonable default for a consumer-facing travel platform where users may browse intermittently.
 - Phone number is collected during guest checkout (for booking contact purposes) but is NOT required for account registration.
 - Account deletion/deactivation flows are out of scope for Phase 1.
+- Email address changes (updating the email on an existing account) are out of scope for Phase 1. The edge case is documented for awareness but will be implemented in a future feature.

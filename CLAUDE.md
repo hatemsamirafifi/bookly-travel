@@ -12,6 +12,15 @@ partners list and manage tours; admins moderate and govern the platform.
 Read `.specify/memory/constitution.md` before making any architectural decision.
 It is the governing document. All code MUST comply with its principles.
 
+## Shell & Script Execution (Windows)
+
+> **IMPORTANT**: This project runs on **Windows**. All Spec Kit scripts are
+> PowerShell `.ps1` files. Use `powershell` (NOT `pwsh`, `bash`, or `sh`):
+>
+> ```
+> powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
+> ```
+
 ## Stack
 
 | Layer | Technology |
