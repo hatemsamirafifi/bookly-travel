@@ -3,6 +3,7 @@
     "appName": "Bookly",
     "loading": "Loading...",
     "error": "Something went wrong",
-    "back": "Go back"
+    "back": "Go back",
+    "marketplaceSubtitle": "Tours Marketplace"
   }
 }

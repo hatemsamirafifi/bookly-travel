@@ -235,14 +235,16 @@
 
 - [ ] T087 Create AnonymizeStaleGuestIdentities scheduled job: find guest_identities where last booking > 24 months and no future bookings, clear PII in `backend/app/Jobs/AnonymizeStaleGuestIdentities.php`
 - [ ] T088 Register AnonymizeStaleGuestIdentities in Laravel scheduler (daily) in `backend/app/Console/Kernel.php`
-- [ ] T089 [P] Create UserPolicy for ownership authorization (users can only access their own profile/sessions) in `backend/app/Policies/UserPolicy.php`
-- [ ] T090 [P] Write unit tests for AuthService (lockout logic, failure counter, guest identity resolution) in `backend/tests/Unit/Auth/AuthServiceTest.php`
-- [ ] T091 [P] Write unit tests for LinkGuestBookingsAction (email matching, multiple bookings, no bookings) in `backend/tests/Unit/Auth/LinkGuestBookingsActionTest.php`
-- [ ] T092 [P] Write frontend component tests for LoginForm and RegisterForm in `frontend/tests/components/auth/LoginForm.test.tsx` and `frontend/tests/components/auth/RegisterForm.test.tsx`
-- [ ] T093 Run all backend tests (`php artisan test --filter=Auth`) and verify all pass
-- [ ] T094 Validate translation key completeness: verify every error code from API contracts has a corresponding key in all 3 locale files (`frontend/src/i18n/{en,es,it}/auth.json`)
-- [ ] T095 Run quickstart.md verification checklist end-to-end
-- [ ] T096 Code cleanup: ensure no hardcoded secrets, all error messages use translation keys, all controllers are thin
+- [ ] T089 [P] Create UserPolicy for ownership authorization (users can only access their profile) and extend with role/permission capabilities (`hasRole`, `hasPermission`) in `backend/app/Policies/UserPolicy.php`
+- [ ] T090 [P] Create RoleMiddleware and PermissionMiddleware (or equivalent Gate definitions) and apply them to all "auth required" routes to enforce role boundaries.
+- [ ] T091 [P] Write unit tests for AuthService (lockout logic, failure counter, guest identity resolution) in `backend/tests/Unit/Auth/AuthServiceTest.php`
+- [ ] T092 [P] Add feature tests in `tests/Feature` to completely assert the full authorization chain (authentication → role → permission → ownership) for protected endpoints.
+- [ ] T093 [P] Write unit tests for LinkGuestBookingsAction (email matching, multiple bookings, no bookings) in `backend/tests/Unit/Auth/LinkGuestBookingsActionTest.php`
+- [ ] T094 [P] Write frontend component tests for LoginForm and RegisterForm in `frontend/tests/components/auth/LoginForm.test.tsx` and `frontend/tests/components/auth/RegisterForm.test.tsx`
+- [ ] T095 Run all backend tests (`php artisan test --filter=Auth`) and verify all pass
+- [ ] T096 Validate translation key completeness: verify every error code from API contracts has a corresponding key in all 3 locale files (`frontend/src/i18n/{en,es,it}/auth.json`)
+- [ ] T097 Run quickstart.md verification checklist end-to-end
+- [ ] T098 Code cleanup: ensure no hardcoded secrets, all error messages use translation keys, all controllers are thin
 
 ---
 

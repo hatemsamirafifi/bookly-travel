@@ -3,6 +3,7 @@
     "appName": "Bookly",
     "loading": "Cargando...",
     "error": "Algo salió mal",
-    "back": "Volver"
+    "back": "Volver",
+    "marketplaceSubtitle": "Mercado de Tours"
   }
 }

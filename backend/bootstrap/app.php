@@ -3,6 +3,10 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,10 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api/public.php',
         apiPrefix: 'api/public',
         then: function () {
-            use Illuminate\Support\Facades\Route;
-            use Illuminate\Support\Facades\RateLimiter;
-            use Illuminate\Cache\RateLimiting\Limit;
-            use Illuminate\Http\Request;
 
             RateLimiter::for('api', function (Request $request) {
                 return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());

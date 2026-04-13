@@ -22,7 +22,7 @@ npm test; npm run lint
 
 This project runs on **Windows**. All `.ps1` scripts MUST be run with Windows PowerShell:
 
-```
+```powershell
 powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
 ```
 

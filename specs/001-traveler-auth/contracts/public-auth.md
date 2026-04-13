@@ -123,7 +123,11 @@
 
 **Description**: Sign out and revoke current session token (FR-005)
 
-**Authentication**: Required (Bearer token)
+**Authorization Layers**:
+1. **Authentication**: Required (Valid Bearer token)
+2. **Role**: Require `traveler` role
+3. **Permission**: Require `auth:logout` permission
+4. **Ownership**: Token subject must match the target traveler resource
 
 **Request Body**: None
 
@@ -214,7 +218,7 @@
 
 ---
 
-## POST /verify-email
+## GET /verify-email
 
 **Description**: Verify email address via signed URL (FR-022)
 
@@ -246,7 +250,11 @@
 
 **Description**: Request a new verification email (FR-024)
 
-**Authentication**: Required (Bearer token)
+**Authorization Layers**:
+1. **Authentication**: Required (Valid Bearer token)
+2. **Role**: Require `traveler` role
+3. **Permission**: Require `auth:resend_verification` permission
+4. **Ownership**: Token subject must match the target traveler resource
 
 **Request Body**: None
 

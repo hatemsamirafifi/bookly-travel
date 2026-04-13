@@ -1,0 +1,9 @@
+name: Pull Requests
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  uneditable:
+    uses: laravel/.github/.github/workflows/pull-requests.yml@2cb86405a12fc5a4ec114ec26d41a790cdcbc2fa

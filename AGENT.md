@@ -30,12 +30,12 @@ conflicts with it, the constitution wins.
 > are PowerShell `.ps1` files. Do **NOT** attempt to run them with `bash`,
 > `sh`, or `pwsh` (PowerShell Core). Use Windows PowerShell:
 >
-> ```
+> ```powershell
 > powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
 > ```
 >
 > **Examples**:
-> ```
+> ```powershell
 > powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/check-prerequisites.ps1 -Json
 > powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/setup-plan.ps1 -Json
 > powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/update-agent-context.ps1 -AgentType claude

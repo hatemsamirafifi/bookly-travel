@@ -17,7 +17,7 @@ It is the governing document. All code MUST comply with its principles.
 > **IMPORTANT**: This project runs on **Windows**. All Spec Kit scripts are
 > PowerShell `.ps1` files. Use `powershell` (NOT `pwsh`, `bash`, or `sh`):
 >
-> ```
+> ```powershell
 > powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
 > ```
 
