@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+#!/usr/bin/env powershell
 # Setup implementation plan for a feature
 
 [CmdletBinding()]

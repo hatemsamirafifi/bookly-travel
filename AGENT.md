@@ -24,6 +24,26 @@ Phase 1 delivers the core booking MVP across 11 feature specifications.
 The **constitution is the highest authority**. If any spec, plan, or task
 conflicts with it, the constitution wins.
 
+## Shell & Script Execution (Windows)
+
+> **IMPORTANT**: This project runs on **Windows**. All Spec Kit helper scripts
+> are PowerShell `.ps1` files. Do **NOT** attempt to run them with `bash`,
+> `sh`, or `pwsh` (PowerShell Core). Use Windows PowerShell:
+>
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
+> ```
+>
+> **Examples**:
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/check-prerequisites.ps1 -Json
+> powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/setup-plan.ps1 -Json
+> powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/update-agent-context.ps1 -AgentType claude
+> ```
+>
+> If your environment does not have `powershell` available, you can skip the
+> helper scripts and manually read the relevant files from the `specs/` directory.
+
 ## Technology Stack
 
 ### Backend

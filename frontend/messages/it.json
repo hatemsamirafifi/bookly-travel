@@ -1,0 +1,9 @@
+{
+  "common": {
+    "appName": "Bookly",
+    "loading": "Caricamento...",
+    "error": "Qualcosa è andato storto",
+    "back": "Torna indietro",
+    "marketplaceSubtitle": "Mercato dei Tour"
+  }
+}

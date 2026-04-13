@@ -1,0 +1,3 @@
+# Auth Domain
+# Events, Actions, Services, and Listeners for traveler authentication.
+# See specs/001-traveler-auth/ for full specification.
