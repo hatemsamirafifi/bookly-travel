@@ -55,6 +55,18 @@ class GuestIdentity extends Model
     }
 
     /**
+     * Convert this guest identity into a registered user account.
+     */
+    public function convertToUser(User $user): void
+    {
+        $this->converted_user_id = $user->id;
+        // Optionally mark it anonymized immediately or keep the record intact
+        $this->saveQuietly();
+
+        event(new \App\Domains\Auth\Events\GuestConvertedToAccount($user));
+    }
+
+    /**
      * Anonymize the guest identity's PII.
      */
     public function anonymize(): void

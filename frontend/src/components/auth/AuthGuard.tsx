@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface AuthGuardProps {
@@ -13,6 +14,7 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
 
   useEffect(() => {
     if (!isLoading) {
@@ -20,14 +22,13 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
         // Build return url
         const params = new URLSearchParams();
         params.set('returnUrl', pathname);
-        // We use window.location here or usePathname from next-intl if that's configured
-        router.push(`/auth/login?${params.toString()}`);
+        router.push(`/${locale}/auth/login?${params.toString()}`);
       } else if (!requireAuth && user) {
         // Redirect to account if user is already logged in but trying to access guest routes
-        router.push('/account/profile');
+        router.push(`/${locale}/account/profile`);
       }
     }
-  }, [user, isLoading, requireAuth, router, pathname]);
+  }, [user, isLoading, requireAuth, router, pathname, locale]);
 
   if (isLoading) {
     return (

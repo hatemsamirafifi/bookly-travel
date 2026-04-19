@@ -18,13 +18,30 @@
     "passwordConfirmation": "Confirmar contraseña",
     "name": "Nombre completo",
     "phone": "Número de teléfono",
+    "register": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Únete a miles de viajeros que descubren el mundo",
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Juan García",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Mín. 8 caracteres con mayús., minús. y número",
+      "submitButton": "Crear cuenta",
+      "signinPrompt": "¿Ya tienes una cuenta?",
+      "signinLink": "Iniciar sesión",
+      "successMessage": "¡Cuenta creada! Por favor revisa tu correo para verificar tu dirección."
+    },
     "errors": {
       "invalidCredentials": "Correo electrónico o contraseña no válidos.",
       "emailTaken": "Este correo ya está registrado. Por favor, inicia sesión.",
       "weakPassword": "La contraseña es demasiado débil.",
       "sessionExpired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
       "accountLocked": "Demasiados intentos fallidos. Inténtalo más tarde.",
-      "linkExpired": "Este enlace ha expirado. Solicita uno nuevo."
+      "linkExpired": "Este enlace ha expirado. Solicita uno nuevo.",
+      "passwordsMismatch": "Las contraseñas no coinciden.",
+      "nameRequired": "El nombre completo es obligatorio.",
+      "invalidLocale": "El idioma seleccionado no es compatible."
     }
   }
 }

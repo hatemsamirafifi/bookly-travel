@@ -18,13 +18,30 @@
     "passwordConfirmation": "Confirm Password",
     "name": "Full Name",
     "phone": "Phone Number",
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Join thousands of travelers discovering the world",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min. 8 chars with upper, lower & number",
+      "submitButton": "Create Account",
+      "signinPrompt": "Already have an account?",
+      "signinLink": "Sign in",
+      "successMessage": "Account created! Please check your email to verify your address."
+    },
     "errors": {
       "invalidCredentials": "Invalid email or password.",
       "emailTaken": "This email is already registered. Please sign in.",
       "weakPassword": "Password is too weak.",
       "sessionExpired": "Your session has expired. Please sign in again.",
       "accountLocked": "Too many failed attempts. Please try again later.",
-      "linkExpired": "This link has expired. Please request a new one."
+      "linkExpired": "This link has expired. Please request a new one.",
+      "passwordsMismatch": "Passwords do not match.",
+      "nameRequired": "Full name is required.",
+      "invalidLocale": "Selected language is not supported."
     }
   }
 }

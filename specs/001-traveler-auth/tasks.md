@@ -55,7 +55,7 @@
 - [x] T020 [P] Create Zod validation schemas for all auth forms (register, login, forgot-password, reset-password, change-password) in `frontend/src/lib/validators/auth.ts`
 - [x] T021 [P] Create auth API client module with typed methods for all endpoints (register, login, logout, etc.) in `frontend/src/lib/api/auth.ts`
 - [x] T022 [P] Create useAuth hook with auth context provider (token management, user state, sign-in/out methods) in `frontend/src/lib/hooks/useAuth.ts`
-- [x] T023 [P] Create auth translation files for all three languages in `frontend/src/i18n/en/auth.json`, `frontend/src/i18n/es/auth.json`, `frontend/src/i18n/it/auth.json`
+- [x] T023 [P] Create/Update auth translation files for all three languages, adding an "auth" key in `frontend/messages/en.json`, `frontend/messages/es.json`, `frontend/messages/it.json`
 - [x] T024 [P] Create AuthGuard component for protecting authenticated routes with redirect-to-login in `frontend/src/components/auth/AuthGuard.tsx`
 - [x] T025 Create UserFactory and GuestIdentityFactory for test seeding in `backend/database/factories/UserFactory.php` and `backend/database/factories/GuestIdentityFactory.php`
 
@@ -71,20 +71,20 @@
 
 ### Tests for User Story 1
 
-- [ ] T026 [P] [US1] Write registration feature test: valid registration, duplicate email, weak password, missing fields, verification email dispatch, guest booking linkage in `backend/tests/Feature/Auth/RegistrationTest.php`
+- [x] T026 [P] [US1] Write registration feature test: valid registration, duplicate email, weak password, missing fields, verification email dispatch, guest booking linkage in `backend/tests/Feature/Auth/RegistrationTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T027 [P] [US1] Create RegisterRequest form request with validation rules (name required max 255, email required unique, password min 8 with uppercase/lowercase/number, locale optional) in `backend/app/Http/Requests/Auth/RegisterRequest.php`
-- [ ] T028 [US1] Create RegisterTravelerAction with logic: create user, link guest bookings by email, dispatch TravelerRegistered event, queue verification email in `backend/app/Domains/Auth/Actions/RegisterTravelerAction.php`
-- [ ] T029 [US1] Create LinkGuestBookingsAction to query guest_identities by email and update associated bookings' user_id in `backend/app/Domains/Auth/Actions/LinkGuestBookingsAction.php`
-- [ ] T030 [US1] Create SendVerificationEmailAction using Laravel's signed URL verification with 60-min expiry in `backend/app/Domains/Auth/Actions/SendVerificationEmailAction.php`
-- [ ] T031 [P] [US1] Create VerificationMail mailable with multi-language support (EN/ES/IT) in `backend/app/Mail/VerificationMail.php`
-- [ ] T032 [P] [US1] Create SendVerificationEmail queued job (retry-safe, idempotent) in `backend/app/Jobs/SendVerificationEmail.php`
-- [ ] T033 [US1] Create RegisterController (thin: validate via RegisterRequest, delegate to RegisterTravelerAction, return UserResource + token) in `backend/app/Http/Controllers/Public/Auth/RegisterController.php`
-- [ ] T034 [US1] Register POST `/api/public/auth/register` route in `backend/routes/api/public.php`
-- [ ] T035 [P] [US1] Create RegisterForm component with name/email/password fields, client-side Zod validation, error display, loading state in `frontend/src/components/auth/RegisterForm.tsx`
-- [ ] T036 [US1] Create register page with RegisterForm, return-to-URL handling, redirect on success in `frontend/src/app/[locale]/auth/register/page.tsx`
+- [x] T027 [P] [US1] Create RegisterRequest form request with validation rules (name required max 255, email required unique, password min 8 with uppercase/lowercase/number, locale optional) in `backend/app/Http/Requests/Auth/RegisterRequest.php`
+- [x] T028 [US1] Create RegisterTravelerAction with logic: create user, link guest bookings by email, dispatch TravelerRegistered event, queue verification email in `backend/app/Domains/Auth/Actions/RegisterTravelerAction.php`
+- [x] T029 [US1] Create LinkGuestBookingsAction to query guest_identities by email and update associated bookings' user_id in `backend/app/Domains/Auth/Actions/LinkGuestBookingsAction.php`
+- [x] T030 [US1] Create SendVerificationEmailAction using Laravel's signed URL verification with 60-min expiry in `backend/app/Domains/Auth/Actions/SendVerificationEmailAction.php`
+- [x] T031 [P] [US1] Create VerificationMail mailable with multi-language support (EN/ES/IT) in `backend/app/Mail/VerificationMail.php`
+- [x] T032 [P] [US1] Create SendVerificationEmail queued job (retry-safe, idempotent) in `backend/app/Jobs/SendVerificationEmail.php`
+- [x] T033 [US1] Create RegisterController (thin: validate via RegisterRequest, delegate to RegisterTravelerAction, return UserResource + token) in `backend/app/Http/Controllers/Public/Auth/RegisterController.php`
+- [x] T034 [US1] Register POST `/api/public/auth/register` route in `backend/routes/api/public.php`
+- [x] T035 [P] [US1] Create RegisterForm component with name/email/password fields, client-side Zod validation, error display, loading state in `frontend/src/components/auth/RegisterForm.tsx`
+- [x] T036 [US1] Create register page with RegisterForm, return-to-URL handling, redirect on success in `frontend/src/app/[locale]/auth/register/page.tsx`
 
 **Checkpoint**: Traveler registration fully functional — account creation, verification email, guest linkage, and frontend form all working.
 

@@ -23,9 +23,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // In a full implementation, you'd check for a token in an httpOnly cookie
-    // via a server action or an API route here, and fetch the user profile if it exists.
-    setIsLoading(false);
+    const restoreSession = async () => {
+      try {
+        // In full implementation, fetch from server action or endpoint here
+        // const res = await fetch('/api/auth/session');
+        // if (res.ok) {
+        //   const data = await res.json();
+        //   setAuth(data.user, data.token);
+        // }
+      } catch (error) {
+        console.error('Session restore failed', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    restoreSession();
   }, []);
 
   const setAuth = (newUser: User, newToken: string) => {

@@ -16,7 +16,6 @@
   "name": "string, required, max 255",
   "email": "string, required, valid email, unique",
   "password": "string, required, min 8, mixed case + number",
-  "password_confirmation": "string, required, must match password",
   "locale": "string, optional, enum: en|es|it, default: en"
 }
 ```
