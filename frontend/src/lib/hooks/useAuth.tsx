@@ -25,12 +25,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        // In full implementation, fetch from server action or endpoint here
-        // const res = await fetch('/api/auth/session');
-        // if (res.ok) {
-        //   const data = await res.json();
-        //   setAuth(data.user, data.token);
-        // }
+        const res = await fetch('/api/auth/session');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.user && data.token) {
+            setUser(data.user);
+            setToken(data.token);
+          }
+        }
       } catch (error) {
         console.error('Session restore failed', error);
       } finally {

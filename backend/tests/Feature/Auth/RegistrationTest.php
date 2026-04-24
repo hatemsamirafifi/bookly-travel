@@ -31,7 +31,10 @@ it('registers a new traveler successfully', function () {
         'locale' => 'en',
     ]);
 
+    $user = User::where('email', 'john@example.com')->first();
+
     assertDatabaseHas('auth_audit_logs', [
+        'user_id' => $user->id,
         'event_type' => 'registration',
     ]);
 
@@ -124,17 +127,21 @@ it('normalizes the email address', function () {
 });
 
 it('is protected by rate limiting', function () {
-    for ($i = 0; $i < 11; $i++) {
+    for ($i = 0; $i < 10; $i++) {
         $response = postJson('/api/public/auth/register', [
             'name' => "User {$i}",
             'email' => "user{$i}@example.com",
             'password' => 'Password123!',
         ]);
         
-        if ($response->status() === 429) {
-            break;
-        }
+        $response->assertStatus(201);
     }
+
+    $response = postJson('/api/public/auth/register', [
+        'name' => "User 10",
+        'email' => "user10@example.com",
+        'password' => 'Password123!',
+    ]);
 
     $response->assertStatus(429);
 });

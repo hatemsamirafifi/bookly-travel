@@ -47,13 +47,10 @@
 ### 422 Unprocessable Entity — Validation Errors
 ```json
 {
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "The given data was invalid.",
-    "details": {
-      "email": ["The email has already been taken."],
-      "password": ["The password must be at least 8 characters."]
-    }
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The email has already been taken."],
+    "password": ["The password must be at least 8 characters."]
   }
 }
 ```
@@ -61,13 +58,7 @@
 ### 429 Too Many Requests — Rate Limited
 ```json
 {
-  "error": {
-    "code": "RATE_LIMITED",
-    "message": "Too many requests. Please try again later.",
-    "details": {
-      "retry_after_seconds": 60
-    }
-  }
+  "message": "Too many requests."
 }
 ```
 

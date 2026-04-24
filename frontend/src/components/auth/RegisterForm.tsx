@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { registerSchema } from '@/lib/validators/auth';
 import { authApi } from '@/lib/api/auth';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { AuthApiError } from '@/lib/api/auth';
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -47,11 +48,10 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
       setTimeout(() => {
         router.push(returnUrl || `/${locale}`);
       }, 1200);
-    } catch (err: any) {
-      // Parse server validation errors (error.details shape)
-      const details = err?.details;
-      if (details && typeof details === 'object') {
-        for (const [field, messages] of Object.entries(details)) {
+    } catch (err: unknown) {
+      // Map AuthApiError field errors to react-hook-form
+      if (err instanceof AuthApiError && err.errors) {
+        for (const [field, messages] of Object.entries(err.errors)) {
           if (field in data) {
             setError(field as keyof RegisterFormData, {
               message: Array.isArray(messages) ? messages[0] : String(messages),
@@ -59,15 +59,16 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           }
         }
       } else {
-        setServerError(err?.message || 'auth.errors.invalidCredentials');
+        const message = err instanceof Error ? err.message : 'auth.errors.invalidCredentials';
+        setServerError(message);
       }
     }
   };
 
   if (success) {
     return (
-      <div className="register-form__success" role="status" aria-live="polite">
-        <div className="register-form__success-icon">✓</div>
+      <div className="flex flex-col items-center gap-4 py-6 text-center text-success text-[0.9375rem] font-medium" role="status" aria-live="polite">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-success/15 text-2xl font-bold">✓</div>
         <p>{t('register.successMessage')}</p>
       </div>
     );
@@ -75,20 +76,20 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
 
   return (
     <form
-      className="register-form"
+      className="flex flex-col gap-5"
       onSubmit={handleSubmit(onSubmit)}
       noValidate
       aria-label={t('register.title')}
     >
       {/* Name */}
-      <div className="register-form__field">
-        <label htmlFor="register-name" className="register-form__label">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="register-name" className="text-sm font-semibold text-foreground">
           {t('register.nameLabel')}
         </label>
         <input
           id="register-name"
           type="text"
-          className={`register-form__input ${errors.name ? 'register-form__input--error' : ''}`}
+          className={`w-full px-3.5 py-2.5 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.name ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
           placeholder={t('register.namePlaceholder')}
           autoComplete="name"
           aria-invalid={!!errors.name}
@@ -96,21 +97,21 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           {...register('name')}
         />
         {errors.name && (
-          <p id="register-name-error" className="register-form__error" role="alert">
+          <p id="register-name-error" className="text-[0.8125rem] text-error m-0" role="alert">
             {errors.name.message}
           </p>
         )}
       </div>
 
       {/* Email */}
-      <div className="register-form__field">
-        <label htmlFor="register-email" className="register-form__label">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="register-email" className="text-sm font-semibold text-foreground">
           {t('register.emailLabel')}
         </label>
         <input
           id="register-email"
           type="email"
-          className={`register-form__input ${errors.email ? 'register-form__input--error' : ''}`}
+          className={`w-full px-3.5 py-2.5 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.email ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
           placeholder={t('register.emailPlaceholder')}
           autoComplete="email"
           aria-invalid={!!errors.email}
@@ -118,22 +119,22 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           {...register('email')}
         />
         {errors.email && (
-          <p id="register-email-error" className="register-form__error" role="alert">
+          <p id="register-email-error" className="text-[0.8125rem] text-error m-0" role="alert">
             {errors.email.message}
           </p>
         )}
       </div>
 
       {/* Password */}
-      <div className="register-form__field">
-        <label htmlFor="register-password" className="register-form__label">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="register-password" className="text-sm font-semibold text-foreground">
           {t('register.passwordLabel')}
         </label>
-        <div className="register-form__password-wrapper">
+        <div className="relative">
           <input
             id="register-password"
             type={showPassword ? 'text' : 'password'}
-            className={`register-form__input register-form__input--password ${errors.password ? 'register-form__input--error' : ''}`}
+            className={`w-full px-3.5 py-2.5 pr-11 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.password ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
             placeholder={t('register.passwordPlaceholder')}
             autoComplete="new-password"
             aria-invalid={!!errors.password}
@@ -142,9 +143,9 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           />
           <button
             type="button"
-            className="register-form__password-toggle"
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-text-muted flex items-center p-1 rounded-md transition-colors hover:text-foreground"
             onClick={() => setShowPassword((v) => !v)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? t('register.hidePassword') : t('register.showPassword')}
             tabIndex={0}
           >
             {showPassword ? (
@@ -155,7 +156,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           </button>
         </div>
         {errors.password && (
-          <p id="register-password-error" className="register-form__error" role="alert">
+          <p id="register-password-error" className="text-[0.8125rem] text-error m-0" role="alert">
             {errors.password.message}
           </p>
         )}
@@ -163,7 +164,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
 
       {/* Server-level error */}
       {serverError && (
-        <div className="register-form__server-error" role="alert" aria-live="assertive">
+        <div className="px-4 py-3 bg-error/10 border border-error/30 rounded-md text-error text-sm" role="alert" aria-live="assertive">
           {serverError}
         </div>
       )}
@@ -172,20 +173,20 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
       <button
         id="register-submit"
         type="submit"
-        className="register-form__submit"
+        className="flex items-center justify-center gap-2 w-full px-4 py-3 mt-1 bg-primary text-white text-[0.9375rem] font-semibold border-none rounded-md cursor-pointer transition-all hover:bg-primary-dark hover:shadow-[0_4px_14px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
       >
         {isSubmitting ? (
-          <span className="register-form__spinner" aria-hidden="true" />
+          <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />
         ) : null}
         {t('register.submitButton')}
       </button>
 
       {/* Sign-in prompt */}
-      <p className="register-form__signin-prompt">
+      <p className="text-center text-sm text-text-muted m-0">
         {t('register.signinPrompt')}{' '}
-        <Link href={`/${locale}/auth/login`} className="register-form__signin-link">
+        <Link href={`/${locale}/auth/login`} className="text-primary font-semibold no-underline transition-colors hover:text-primary-dark hover:underline">
           {t('register.signinLink')}
         </Link>
       </p>

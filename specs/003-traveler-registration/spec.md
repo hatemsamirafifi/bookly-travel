@@ -107,7 +107,7 @@ The registration page is available in all three supported languages (English, Sp
 - **SC-003**: All guest bookings associated with the registered email are linked to the new account with a 100% linkage rate.
 - **SC-004**: Verification emails are queued within 1 second of account creation under normal operating conditions.
 - **SC-005**: 100% of registration pages render correctly in all three supported languages (English, Spanish, Italian).
-- **SC-006**: Zero instances of email enumeration are possible through the registration endpoint — the error message for duplicate emails does not leak information about existing accounts beyond confirmation that the email is taken.
+- **SC-006**: The system prioritizes user experience by providing an explicit "email taken" error for duplicate registrations (guiding the user to log in), accepting that this allows email enumeration as a known and intentional tradeoff.
 - **SC-007**: Client-side validation catches 100% of common input errors (empty fields, malformed email, weak password) before a server request is made.
 
 ## Assumptions

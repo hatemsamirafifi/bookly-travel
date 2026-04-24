@@ -39,7 +39,7 @@ class RegisterRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if ($this->has('email')) {
+        if ($this->has('email') && is_string($this->email)) {
             $this->merge([
                 'email' => strtolower(trim($this->email)),
             ]);
@@ -59,8 +59,8 @@ class RegisterRequest extends FormRequest
             'email.unique' => 'auth.errors.emailTaken',
             'password.required' => 'auth.errors.passwordRequired',
             'password.min' => 'auth.errors.passwordTooShort',
-            'password.regex' => 'auth.errors.passwordWeak',
-            'locale.in' => 'auth.errors.localeInvalid',
+            'password.regex' => 'auth.errors.weakPassword',
+            'locale.in' => 'auth.errors.invalidLocale',
         ];
     }
 }

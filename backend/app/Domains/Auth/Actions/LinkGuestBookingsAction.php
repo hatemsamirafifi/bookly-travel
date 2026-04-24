@@ -2,6 +2,7 @@
 
 namespace App\Domains\Auth\Actions;
 
+use App\Models\AuthAuditLog;
 use App\Models\GuestIdentity;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -18,23 +19,49 @@ class LinkGuestBookingsAction
     public function execute(User $user): void
     {
         DB::transaction(function () use ($user) {
-            // Find all guest identities matching the user's email
-            $guestIdentities = GuestIdentity::where('email', $user->email)->get();
+            // Find all guest identities matching the user's email that are NOT yet converted
+            $guestIdentities = GuestIdentity::where('email', $user->email)
+                ->whereNull('converted_user_id')
+                ->get();
 
             if ($guestIdentities->isEmpty()) {
                 return;
             }
 
-            // Update guest_identities to mark them as converted
-            GuestIdentity::where('email', $user->email)
+            $guestIdentityIds = $guestIdentities->pluck('id')->toArray();
+
+            // Mark identities as converted (guards re-linking)
+            GuestIdentity::whereIn('id', $guestIdentityIds)
                 ->update(['converted_user_id' => $user->id]);
 
-            // If the bookings table exists, link the bookings to the new user
+            $linkedBookingIds = [];
+
+            // If the bookings table exists, link the bookings idempotently
             if (Schema::hasTable('bookings')) {
-                DB::table('bookings')
-                    ->whereIn('guest_id', $guestIdentities->pluck('id'))
-                    ->update(['user_id' => $user->id]);
+                $linkedBookingIds = DB::table('bookings')
+                    ->whereIn('guest_id', $guestIdentityIds)
+                    ->whereNull('user_id')
+                    ->pluck('id')
+                    ->toArray();
+
+                if (! empty($linkedBookingIds)) {
+                    DB::table('bookings')
+                        ->whereIn('id', $linkedBookingIds)
+                        ->update(['user_id' => $user->id]);
+                }
             }
+
+            // Emit audit log
+            AuthAuditLog::create([
+                'user_id' => $user->id,
+                'event_type' => 'guest_bookings_linked',
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'metadata' => [
+                    'guest_identity_ids' => $guestIdentityIds,
+                    'linked_booking_ids' => $linkedBookingIds,
+                ],
+            ]);
         });
     }
 }

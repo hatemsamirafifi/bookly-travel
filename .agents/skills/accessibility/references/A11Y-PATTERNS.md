@@ -91,9 +91,10 @@ Announce errors to screen readers and focus the first invalid field on submit.
 
 ```javascript
 form.addEventListener('submit', (e) => {
-  const firstError = form.querySelector('[aria-invalid="true"]');
-  if (firstError) {
+  const errors = form.querySelectorAll('[aria-invalid="true"]');
+  if (errors.length > 0) {
     e.preventDefault();
+    const firstError = errors[0];
     firstError.focus();
 
     const errorSummary = document.getElementById('error-summary');

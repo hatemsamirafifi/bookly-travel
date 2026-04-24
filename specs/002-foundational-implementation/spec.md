@@ -68,7 +68,7 @@ The system needs a configured API route group with rate limiting, Sanctum token 
 
 1. **Given** the API route configuration, **When** more than 10 requests per minute hit auth endpoints from the same IP, **Then** subsequent requests receive a 429 response.
 2. **Given** a User model, **When** transformed via `UserResource`, **Then** the output contains exactly: `id`, `name`, `email`, `role`, `locale`, `email_verified` (boolean), `created_at`, `last_login_at`.
-3. **Given** the Sanctum configuration, **When** a token is issued, **Then** it expires after 7 days of inactivity.
+3. **Given** the Sanctum configuration, **When** a token is issued, **Then** it expires 7 days after issuance.
 
 ---
 

@@ -105,7 +105,7 @@
 
 - [x] T012 [P] [US3] Add registration form translation keys to `frontend/messages/it.json` — same key structure as T010, all values translated to Italian.
 
-- [x] T013 [US3] First, verify and update the `registerSchema` in `frontend/src/lib/validators/auth.ts` — confirm it includes `name: z.string().min(1, 'auth.errors.nameRequired').max(255)` as a required field alongside `email` and `password`. The existing Phase 2 schema may be missing the `name` field. Then create `RegisterForm` client component in `frontend/src/components/auth/RegisterForm.tsx`. Uses `useTranslations('auth')` from next-intl for all displayed text. Form fields: name (text input), email (email input), password (password input with show/hide toggle). Client-side validation using the updated `registerSchema`. On submit: call `authApi.register()`, on success call `auth.setAuth(user, token)` from `useAuth()` hook, then redirect to `returnUrl` or locale homepage. Display per-field validation errors (both client-side Zod and server-side API `error.details` errors mapped to fields). Show loading spinner during submission. Style with a premium design using CSS variables from `globals.css` (dark-friendly, smooth transitions, card layout).
+- [x] T013 [US3] First, verify and update the `registerSchema` in `frontend/src/lib/validators/auth.ts` — confirm it includes `name: z.string().min(1, 'auth.errors.nameRequired').max(255)` as a required field alongside `email` and `password`. The existing Phase 2 schema may be missing the `name` field. Then create `RegisterForm` client component in `frontend/src/components/auth/RegisterForm.tsx`. Uses `useTranslations('auth')` from next-intl for all displayed text. Form fields: name (text input), email (email input), password (password input with show/hide toggle). Client-side validation using the updated `registerSchema`. On submit: call `authApi.register()`, on success call `auth.setAuth(user, token)` from `useAuth()` hook, then redirect to `returnUrl` or locale homepage. Display per-field validation errors (both client-side Zod and server-side API `error.details` errors mapped to fields). Show loading spinner during submission. Style with a premium design using Tailwind utility classes and the project's design system tokens (not custom globals.css variables) for the dark-friendly card layout, transitions and spacing.
 
 - [x] T014 [US3] Create registration page in `frontend/src/app/[locale]/auth/register/page.tsx`. Server component that renders the `RegisterForm` inside an `AuthGuard` with `requireAuth={false}` (guest-only page — redirect authenticated users away). Read `returnUrl` from URL search params and pass to `RegisterForm`. Include SEO metadata: title "Create Account | Bookly", meta description. Use proper heading hierarchy (`<h1>` for page title).
 
@@ -146,7 +146,7 @@
 
 ### Parallel Opportunities
 
-```
+```text
 Phase 2 parallel group:     T001 ║ T002 → then T003
 Phase 3 parallel group:     T004 ║ T005 ║ T006 ║ T007 → then T008 → then T009
 Phase 5 parallel group:     T010 ║ T011 ║ T012 → then T013 → then T014

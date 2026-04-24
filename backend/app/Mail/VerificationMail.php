@@ -44,6 +44,7 @@ class VerificationMail extends Mailable implements ShouldQueue
                 'userName' => $this->user->name,
                 'verificationUrl' => $this->verificationUrl,
                 'platformName' => config('app.name', 'Bookly'),
+                'expirationMinutes' => \App\Jobs\SendVerificationEmail::EXPIRATION_MINUTES,
             ],
         );
     }
@@ -55,11 +56,7 @@ class VerificationMail extends Mailable implements ShouldQueue
     {
         $locale = $this->user->locale ?? 'en';
 
-        return match ($locale) {
-            'es' => 'Verifica tu correo electrónico',
-            'it' => 'Verifica il tuo indirizzo email',
-            default => 'Verify your email address',
-        };
+        return __('emails.verification.subject', [], $locale);
     }
 
     /**

@@ -16,6 +16,11 @@ class SendVerificationEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * The number of minutes until the verification link expires.
+     */
+    public const EXPIRATION_MINUTES = 60;
+
+    /**
      * The number of times the job may be attempted.
      */
     public int $tries = 3;
@@ -38,10 +43,24 @@ class SendVerificationEmail implements ShouldQueue
      */
     public function handle(): void
     {
+        $this->user->refresh();
+
+        if ($this->user->hasVerifiedEmail() || $this->user->verification_email_sent_at) {
+            return;
+        }
+
+        $updated = \App\Models\User::where('id', $this->user->id)
+            ->whereNull('verification_email_sent_at')
+            ->update(['verification_email_sent_at' => now()]);
+
+        if (! $updated) {
+            return;
+        }
+
         // Generate a signed verification URL
         $verificationUrl = URL::temporarySignedRoute(
             'auth.verify',
-            now()->addMinutes(60),
+            now()->addMinutes(self::EXPIRATION_MINUTES),
             [
                 'id' => $this->user->id,
                 'hash' => sha1($this->user->email),

@@ -25,7 +25,25 @@ export interface AuthResponse {
   token: string;
 }
 
-function mapUserApiToUser(apiUser: any): User {
+export interface UserApiType {
+  id: number;
+  name: string;
+  email: string;
+  role: 'traveler' | 'partner' | 'admin';
+  locale: 'en' | 'es' | 'it';
+  email_verified: boolean;
+  created_at: string;
+  last_login_at: string | null;
+}
+
+interface AuthApiResponse {
+  data: {
+    user: UserApiType;
+    token: string;
+  };
+}
+
+function mapUserApiToUser(apiUser: UserApiType): User {
   return {
     id: apiUser.id,
     name: apiUser.name,
@@ -36,6 +54,16 @@ function mapUserApiToUser(apiUser: any): User {
     createdAt: apiUser.created_at,
     lastLoginAt: apiUser.last_login_at,
   };
+}
+
+export class AuthApiError extends Error {
+  errors?: Record<string, string[]>;
+
+  constructor(message: string, errors?: Record<string, string[]>) {
+    super(message);
+    this.name = 'AuthApiError';
+    this.errors = errors;
+  }
 }
 
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -53,7 +81,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
   const data: any = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(data?.message || 'Authentication failed');
+    throw new AuthApiError(data?.message || 'Authentication failed', data?.errors);
   }
 
   return data as T;
@@ -61,19 +89,18 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
 
 export const authApi = {
   login: async (credentials: z.infer<typeof loginSchema>): Promise<AuthResponse> => {
-    const res = await fetchApi<any>('/login', {
+    const res = await fetchApi<AuthApiResponse>('/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
-    return { data: mapUserApiToUser(res.data), token: res.token };
+    return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 
   register: async (data: z.infer<typeof registerSchema>): Promise<AuthResponse> => {
-    const res = await fetchApi<any>('/register', {
+    const res = await fetchApi<AuthApiResponse>('/register', {
       method: 'POST',
       body: JSON.stringify(data),
     });
-    // Contract returns { data: { user: {...}, token: "..." } }
     return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 

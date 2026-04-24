@@ -95,7 +95,7 @@
             </p>
         </div>
         <div class="footer">
-            <p>This link will expire in 60 minutes.</p>
+            <p>This link will expire in {{ $expirationMinutes }} minutes.</p>
             <p>&copy; {{ date('Y') }} {{ $platformName }}. All rights reserved.</p>
         </div>
     </div>

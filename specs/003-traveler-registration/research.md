@@ -2,7 +2,7 @@
 
 **Feature**: 003-traveler-registration
 **Date**: 2026-04-18
-**Parent Research**: [001-traveler-auth/research.md](file:///f:/Travel%20Website/bookly%20travel/specs/001-traveler-auth/research.md)
+**Parent Research**: [001-traveler-auth/research.md](../001-traveler-auth/research.md)
 
 ## Research Scope
 

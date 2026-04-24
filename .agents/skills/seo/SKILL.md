@@ -103,7 +103,7 @@ Sitemap: https://example.com/sitemap.xml
 
 ### URL structure
 
-```
+```text
 ✅ Good URLs:
 https://example.com/products/blue-widget
 https://example.com/blog/how-to-use-widgets
@@ -132,7 +132,7 @@ https://example.com/products/item/category/subcategory/blue-widget-2024-sale-dis
 ```
 
 **Security headers for SEO trust signals:**
-```
+```http
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY

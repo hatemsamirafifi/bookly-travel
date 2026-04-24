@@ -1,6 +1,6 @@
 # Implementation Plan: Traveler Registration
 
-**Branch**: `003-traveler-registration` | **Date**: 2026-04-18 | **Spec**: [spec.md](file:///f:/Travel%20Website/bookly%20travel/specs/003-traveler-registration/spec.md)
+**Branch**: `003-traveler-registration` | **Date**: 2026-04-18 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/003-traveler-registration/spec.md`
 **Parent**: `/specs/001-traveler-auth/` (inherits Phase 2 infrastructure)
 

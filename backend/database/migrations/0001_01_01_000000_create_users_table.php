@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('verification_email_sent_at')->nullable();
             $table->string('password');
             $table->enum('role', ['traveler', 'partner', 'admin'])->default('traveler');
             $table->enum('locale', ['en', 'es', 'it'])->default('en');

@@ -1,25 +1,25 @@
 import type { Metadata } from 'next';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 import { RegisterForm } from '@/components/auth/RegisterForm';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bookly.travel';
 
-export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
-  const locale = params?.locale ?? 'en';
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const resolved = await params;
+  const locale = resolved?.locale ?? 'en';
   const canonicalUrl = `${SITE_URL}/${locale}/auth/register`;
+  const t = await getTranslations({ locale, namespace: 'auth.register' });
 
   return {
-    title: 'Create Account | Bookly',
-    description:
-      'Create your Bookly traveler account. Join thousands discovering tours worldwide — registration is free and takes under a minute.',
+    title: t('metaTitle'),
+    description: t('metaDescription'),
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: 'Create Account | Bookly',
-      description:
-        'Join Bookly and discover tours across the world. Create your free traveler account in under a minute.',
+      title: t('metaTitle'),
+      description: t('metaDescription'),
       url: canonicalUrl,
       siteName: 'Bookly',
       type: 'website',
@@ -33,17 +33,17 @@ interface RegisterPageProps {
 }
 
 export default async function RegisterPage({ searchParams }: RegisterPageProps) {
-  const t = useTranslations('auth');
+  const t = await getTranslations('auth.register');
   const { returnUrl } = await searchParams;
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
+    <div className="flex min-h-[100dvh] items-center justify-center p-6 bg-gradient-to-br from-background to-[color-mix(in_srgb,var(--color-primary)_6%,var(--background))]">
+      <div className="w-full max-w-[26rem] bg-surface border border-border rounded-lg shadow-card px-8 py-10">
         {/* Header */}
-        <header className="auth-card__header">
-          <p className="auth-card__brand">Bookly</p>
-          <h1 className="auth-card__title">{t('register.title')}</h1>
-          <p className="auth-card__subtitle">{t('register.subtitle')}</p>
+        <header className="mb-8 text-center">
+          <p className="text-2xl font-extrabold text-primary tracking-tight mb-4">Bookly</p>
+          <h1 className="text-[1.375rem] font-bold text-foreground tracking-tight m-0 mb-1.5">{t('title')}</h1>
+          <p className="text-sm text-text-muted m-0">{t('subtitle')}</p>
         </header>
 
         {/* Guest-only guard: redirect authenticated users away */}

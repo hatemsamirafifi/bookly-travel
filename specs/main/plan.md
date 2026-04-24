@@ -57,9 +57,17 @@ specs/[###-feature]/
 ```text
 backend/
 ├── app/
-│   ├── Models/
-│   ├── Services/
-│   └── Http/
+│   ├── Domains/
+│   │   └── Auth/
+│   │       ├── Actions/
+│   │       ├── Events/
+│   │       ├── Listeners/
+│   │       ├── Models/
+│   │       ├── Services/
+│   │       └── Http/
+│   └── Providers/
+├── database/
+├── routes/
 └── tests/
 
 frontend/

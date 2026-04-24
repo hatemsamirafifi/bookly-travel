@@ -30,7 +30,11 @@
       "submitButton": "Crea account",
       "signinPrompt": "Hai già un account?",
       "signinLink": "Accedi",
-      "successMessage": "Account creato! Controlla la tua email per verificare il tuo indirizzo."
+      "successMessage": "Account creato! Controlla la tua email per verificare il tuo indirizzo.",
+      "hidePassword": "Nascondi password",
+      "showPassword": "Mostra password",
+      "metaTitle": "Crea un account | Bookly",
+      "metaDescription": "Crea il tuo account viaggiatore Bookly. Unisciti a migliaia di persone che scoprono tour in tutto il mondo: la registrazione è gratuita e richiede meno di un minuto."
     },
     "errors": {
       "invalidCredentials": "Email o password non validi.",

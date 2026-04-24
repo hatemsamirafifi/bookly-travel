@@ -2,7 +2,7 @@
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-04-18
-**Feature**: [spec.md](file:///f:/Travel%20Website/bookly%20travel/specs/002-foundational-implementation/spec.md)
+**Feature**: [spec.md](../spec.md)
 
 ## Content Quality
 

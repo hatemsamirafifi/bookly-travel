@@ -38,7 +38,7 @@ class LogAuthEvent
 
         AuthAuditLog::create([
             'user_id' => $userId,
-            'event_type' => Str::snake($eventType),
+            'event_type' => $eventType,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent() ? Str::limit(request()->userAgent(), 500) : null,
             'metadata' => empty($metadata) ? null : $metadata,
