@@ -8,7 +8,6 @@
   },
   "auth": {
     "login": "Accedi",
-    "register": "Crea un account",
     "logout": "Esci",
     "forgotPassword": "Hai dimenticato la password?",
     "resetPassword": "Reimposta password",
@@ -35,6 +34,19 @@
       "showPassword": "Mostra password",
       "metaTitle": "Crea un account | Bookly",
       "metaDescription": "Crea il tuo account viaggiatore Bookly. Unisciti a migliaia di persone che scoprono tour in tutto il mondo: la registrazione è gratuita e richiede meno di un minuto."
+    },
+    "signin": {
+      "title": "Bentornato",
+      "subtitle": "Accedi per gestire le tue prenotazioni e recensioni",
+      "emailLabel": "Indirizzo email",
+      "emailPlaceholder": "tu@esempio.com",
+      "passwordLabel": "Password",
+      "submitButton": "Accedi",
+      "registerPrompt": "Non hai un account?",
+      "registerLink": "Crea account",
+      "forgotPasswordLink": "Hai dimenticato la password?",
+      "metaTitle": "Accedi | Bookly",
+      "metaDescription": "Accedi al tuo account viaggiatore Bookly per gestire prenotazioni, scaricare voucher e lasciare recensioni."
     },
     "errors": {
       "invalidCredentials": "Email o password non validi.",

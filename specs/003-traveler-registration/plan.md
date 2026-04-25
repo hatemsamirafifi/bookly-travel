@@ -43,7 +43,7 @@ Implement the traveler registration flow: a public POST `/api/public/auth/regist
 | Retry-Safety | ✅ Pass | SendVerificationEmail job is idempotent (re-sending is safe) |
 | Mandatory Audit Logs | ✅ Pass | TravelerRegistered event → LogAuthEvent listener → auth_audit_logs |
 | Minimum Testing Coverage | ✅ Pass | Feature tests for registration flow (RegistrationTest.php) |
-| Security-First | ✅ Pass | Server-side validation, rate limiting, hashed passwords, no email enumeration |
+| Security-First | ✅ Pass | Server-side validation, rate limiting, hashed passwords, explicit email-taken error (enumeration accepted per SC-006) |
 
 **GATE RESULT**: ✅ ALL PASS — No violations.
 

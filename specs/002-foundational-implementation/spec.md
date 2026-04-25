@@ -158,7 +158,7 @@ The development team needs User and GuestIdentity factories with configurable st
 
 - PHP 8.2+ and Laravel 11 are installed and configured (Phase 1 setup).
 - PostgreSQL 15 and Redis 7 are available via Docker Compose (Phase 1 setup).
-- Next.js 14 with TypeScript, App Router, and next-intl is configured (Phase 1 setup).
+- Next.js 16 with TypeScript, App Router, and next-intl is configured (Phase 1 setup).
 - The `bookings` table does NOT exist yet (spec 007) — the GuestIdentity model's booking-related logic must handle this gracefully.
 - This phase produces no user-facing UI — it is purely infrastructure for subsequent phases.
 - All items in this spec have been implemented and reviewed. Status is Complete.

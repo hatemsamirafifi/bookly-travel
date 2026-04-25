@@ -25,7 +25,7 @@
 **Purpose**: Project scaffolding — Laravel backend + Next.js frontend initialization
 
 - [x] T001 Initialize Laravel project in `backend/` with PHP 8.2+, configure Sanctum, PostgreSQL, and Redis connections in `backend/.env`
-- [x] T002 Initialize Next.js 14 project in `frontend/` with TypeScript strict mode, App Router, and Tailwind CSS
+- [x] T002 Initialize Next.js 16 project in `frontend/` with TypeScript strict mode, App Router, and Tailwind CSS
 - [x] T003 [P] Configure Docker Compose for local development with PostgreSQL 15, Redis 7, and mailpit (email testing) in `docker-compose.yml`
 - [x] T004 [P] Configure backend linting (Pint) and frontend linting (ESLint + Prettier) in `backend/pint.json` and `frontend/.eslintrc.json`
 - [x] T005 [P] Setup `next-intl` with locale-prefixed routing (`/en/`, `/es/`, `/it/`) and middleware in `frontend/src/middleware.ts`
@@ -94,24 +94,25 @@
 
 **Goal**: Returning travelers can sign in with email/password and sign out. Includes brute-force protection (5 attempts → escalating lockout) and session token management.
 
+> **Detailed spec**: See [`specs/004-traveler-signin/tasks.md`](../004-traveler-signin/tasks.md) for the authoritative, implementation-ready task breakdown (35 tasks). The tasks below are a high-level summary.
+
 **Independent Test**: Sign in with valid credentials, verify access to auth pages, sign out, confirm auth pages inaccessible.
 
 ### Tests for User Story 2
 
 - [ ] T037 [P] [US2] Write login feature test: valid login, invalid credentials (generic error), token issuance, last_login_at update in `backend/tests/Feature/Auth/LoginTest.php`
-- [ ] T038 [P] [US2] Write logout feature test: token revocation, other sessions preserved in `backend/tests/Feature/Auth/LogoutTest.php`
+- [x] T038 [P] [US2] Write logout feature test: token revocation, other sessions preserved in `backend/tests/Feature/Auth/LogoutTest.php`
 - [ ] T039 [P] [US2] Write brute-force protection test: counter increment, lockout after 5 failures (1min/5min/30min escalation), reset on success in `backend/tests/Feature/Auth/BruteForceProtectionTest.php`
 
 ### Implementation for User Story 2
 
 - [ ] T040 [P] [US2] Create LoginRequest form request (email required, password required) in `backend/app/Http/Requests/Auth/LoginRequest.php`
-- [ ] T041 [US2] Create LoginAction with logic: check lockout, verify credentials, reset/increment failure counter, issue Sanctum token, dispatch events in `backend/app/Domains/Auth/Actions/LoginAction.php`
-- [ ] T042 [US2] Create LogoutAction to revoke current token in `backend/app/Domains/Auth/Actions/LogoutAction.php`
-- [ ] T043 [US2] Implement brute-force protection in AuthService: track failed_login_count, compute lockout duration (1min→5min→30min), check locked_until, dispatch AccountLockedOut event in `backend/app/Domains/Auth/Services/AuthService.php`
-- [ ] T044 [US2] Create LoginController (thin: validate, delegate to LoginAction, return UserResource + token or error) in `backend/app/Http/Controllers/Public/Auth/LoginController.php`
-- [ ] T045 [P] [US2] Create LogoutController (auth required, delegate to LogoutAction) in `backend/app/Http/Controllers/Public/Auth/LogoutController.php`
-- [ ] T046 [US2] Register POST `/api/public/auth/login` and POST `/api/public/auth/logout` routes in `backend/routes/api/public.php`
-- [ ] T047 [P] [US2] Create LoginForm component with email/password fields, Zod validation, generic error display, lockout countdown timer in `frontend/src/components/auth/LoginForm.tsx`
+- [ ] T041 [US2] Create AuthenticateTravelerAction with logic: check lockout, verify credentials, reset/increment failure counter, compute lockout duration (1min→5min→30min), issue Sanctum token, dispatch TravelerLoggedIn/LoginFailed/AccountLockedOut events in `backend/app/Domains/Auth/Actions/AuthenticateTravelerAction.php`. Brute-force protection is embedded in this action (not in a separate AuthService).
+- [x] T042 [US2] Create LogoutTravelerAction to revoke current token in `backend/app/Domains/Auth/Actions/LogoutTravelerAction.php`
+- [ ] T044 [US2] Create LoginController (thin: validate via LoginRequest, delegate to AuthenticateTravelerAction, return UserResource + token or error with `code` field) in `backend/app/Http/Controllers/Public/Auth/LoginController.php`
+- [x] T045 [P] [US2] Create LogoutController (auth required, delegate to LogoutTravelerAction, return 204) in `backend/app/Http/Controllers/Public/Auth/LogoutController.php`
+- [/] T046 [US2] Register POST `/api/public/auth/login` and POST `/api/public/auth/logout` routes in `backend/routes/api/public.php` *(logout route exists; login route pending)*
+- [ ] T047 [P] [US2] Create LoginForm component with email/password fields, Zod validation, generic error display, lockout error display (static message, no countdown — countdown would leak timing info to attackers) in `frontend/src/components/auth/LoginForm.tsx`
 - [ ] T048 [US2] Create login page with LoginForm, "Forgot password?" link, return-to-URL handling in `frontend/src/app/[locale]/auth/login/page.tsx`
 - [ ] T049 [US2] Integrate login/logout with useAuth hook: store token in httpOnly cookie via Next.js API route, update auth context on sign-in/out in `frontend/src/lib/hooks/useAuth.ts`
 

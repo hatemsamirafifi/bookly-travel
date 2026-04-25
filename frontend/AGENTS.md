@@ -5,7 +5,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 <!-- END:nextjs-agent-rules -->
 
 ## Responsibilities
-- **Task Orchestration**: Execute frontend implementation tasks by adhering to the established Next.js 14 App Router conventions.
+- **Task Orchestration**: Execute frontend implementation tasks by adhering to the established Next.js 16 App Router conventions.
 - **State Management**: Ensure appropriate separation of Server Components and Client Components, handling UI state using standard React hooks natively or context providers.
 - **Error Handling**: Build robust error boundaries and display user-friendly locale-aware (`next-intl`) fallback UI for API failures.
 - **Styling**: Enforce Tailwind CSS constraints properly instead of vanilla CSS overrides.

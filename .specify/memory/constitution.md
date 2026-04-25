@@ -125,7 +125,7 @@ backend is permitted for application views.
 
 | Layer              | Technology                              |
 |--------------------|-----------------------------------------|
-| Frontend           | Next.js 14, TypeScript, Tailwind CSS    |
+| Frontend           | Next.js 16, TypeScript, Tailwind CSS    |
 | Backend            | Laravel (API-only)                      |
 | Authentication     | Laravel Sanctum                         |
 | Database           | PostgreSQL                              |
@@ -356,4 +356,4 @@ This constitution governs all surfaces of the Bookly platform:
 - Shared backend services (Laravel API)
 - Documentation and delivery workflows
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-04-10
+**Version**: 1.0.1 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-04-25

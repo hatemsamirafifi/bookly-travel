@@ -1,7 +1,9 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, authApi } from '../api/auth';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { User, authApi, AuthApiError } from '../api/auth';
 import { z } from 'zod';
 import { loginSchema, registerSchema } from '../validators/auth';
 
@@ -18,6 +20,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const locale = useLocale();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +36,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(data.user);
             setToken(data.token);
           }
+        } else if (res.status === 401) {
+          setUser(null);
+          setToken(null);
+          router.push(`/${locale}/auth/login?sessionExpired=1`);
         }
       } catch (error) {
         console.error('Session restore failed', error);
@@ -80,6 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null);
         setIsLoading(false);
         // Clear httpOnly cookie here
+        router.push(`/${locale}/`);
       }
     }
   };

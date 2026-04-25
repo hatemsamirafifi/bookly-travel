@@ -81,7 +81,7 @@ This feature inherits the full technology stack and architectural decisions from
 |----------|--------|--------|
 | Backend framework | Laravel 11 | Constitution |
 | Authentication | Laravel Sanctum 4 | Constitution |
-| Frontend | Next.js 14 + TypeScript | Constitution |
+| Frontend | Next.js 16 + TypeScript | Constitution |
 | Database | PostgreSQL 15 | Constitution |
 | Queue | Redis 7 | Constitution |
 | Email (dev) | Mailpit (SMTP on port 1025) | Phase 1 Docker setup |

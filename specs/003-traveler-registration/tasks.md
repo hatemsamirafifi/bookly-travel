@@ -16,7 +16,7 @@
 ## Path Conventions
 
 - **Backend**: `backend/` (Laravel 11)
-- **Frontend**: `frontend/` (Next.js 14)
+- **Frontend**: `frontend/` (Next.js 16)
 
 ---
 

@@ -4,7 +4,8 @@
       "Bash(powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks)",
       "Bash(npx @spec-kit/tasks specs/main)",
       "Bash(grep -E \"\\.(json|env|php)$\")",
-      "Bash(grep -E \"\\.(json|js|ts)$\")"
+      "Bash(grep -E \"\\.(json|js|ts)$\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/setup-plan.ps1 -Json)"
     ]
   }
 }

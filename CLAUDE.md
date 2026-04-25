@@ -1,4 +1,4 @@
-# Bookly — Claude Code Guide
+﻿# Bookly — Claude Code Guide
 
 ## Project Overview
 
@@ -25,7 +25,7 @@ It is the governing document. All code MUST comply with its principles.
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend (public + partner) | Next.js 14, TypeScript, Tailwind CSS |
+| Frontend (public + partner) | Next.js 16, TypeScript, Tailwind CSS |
 | Backend (API + admin) | Laravel (API-only), Laravel Filament (admin) |
 | Auth | Laravel Sanctum |
 | Database | PostgreSQL |
@@ -39,7 +39,7 @@ It is the governing document. All code MUST comply with its principles.
 
 ```
 backend/          → Laravel API + Filament admin dashboard
-frontend/         → Next.js 14 (public website + partner dashboard)
+frontend/         → Next.js 16 (public website + partner dashboard)
 docs/             → Project documentation and specification strategy
 specs/            → Feature specifications (001 through 011)
 .specify/         → Spec Kit configuration and templates

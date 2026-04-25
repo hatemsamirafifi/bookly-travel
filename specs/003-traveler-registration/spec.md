@@ -2,7 +2,7 @@
 
 **Feature Branch**: `003-traveler-registration`
 **Created**: 2026-04-18
-**Status**: Draft
+**Status**: In Review
 **Input**: User description: "Implement Phase 3 (User Story 1) from the Traveler Authentication feature — traveler registration with email verification, guest booking linkage, and multi-language support"
 **Parent Feature**: `001-traveler-auth` (Phase 3)
 
@@ -11,6 +11,12 @@
 ### Session 2026-04-18
 
 - Q: Should the registration form include a password confirmation field? → A: No. The registration form collects only three fields (name, email, password) with no confirmation field. Password strength rules are sufficient. The API contract is updated to remove `password_confirmation` from the register endpoint.
+
+### Session 2026-04-25
+
+- Q: What restrictions should apply to unverified accounts? → A: No restrictions. Verification is advisory in this feature; feature-gating (e.g., blocking unverified users from booking or reviewing) is deferred to each downstream feature spec.
+- Q: What should happen when a traveler clicks an expired verification link? → A: Redirect to a dedicated page explaining the link has expired, with a one-click "Resend verification email" button.
+- Q: Should the spec status be updated from Draft? → A: Yes, updated to "In Review" — implementation is complete but end-to-end verification (T015) is still pending.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -71,6 +77,7 @@ The registration page is available in all three supported languages (English, Sp
 - What happens if two visitors try to register with the same email simultaneously? → The unique email constraint ensures only one account is created; the second attempt receives a "email taken" error.
 - What happens when a guest identity exists for the email but the bookings table is not yet created (spec 007)? → The guest booking linkage gracefully handles the case where no bookings table exists, without errors.
 - What happens if the registration request is submitted multiple times rapidly? → Rate limiting (10 requests per minute per IP) prevents abuse. Duplicate submissions after the first successful registration return an "email taken" error.
+- What happens when a traveler clicks a verification link that has expired? → The traveler is redirected to a dedicated expiry page explaining the link is no longer valid, with a one-click "Resend verification email" button to generate a fresh link.
 
 ## Requirements *(mandatory)*
 
@@ -81,7 +88,7 @@ The registration page is available in all three supported languages (English, Sp
 - **FR-003**: The system MUST enforce password strength requirements: minimum 8 characters, at least one uppercase letter, one lowercase letter, and one number.
 - **FR-004**: The system MUST immediately sign in the traveler upon successful registration, issuing a session token.
 - **FR-005**: The system MUST redirect the traveler to their original destination page after successful registration (return-to-URL behavior). If no return URL is present, the traveler is redirected to the homepage.
-- **FR-006**: The system MUST send a non-blocking verification email to the traveler upon account creation. The email is queued and sent in the background; the traveler is not blocked waiting for delivery.
+- **FR-006**: The system MUST send a non-blocking verification email to the traveler upon account creation. The email is queued and sent in the background; the traveler is not blocked waiting for delivery. Unverified accounts have no feature restrictions in this spec; verification gating is deferred to downstream feature specs (e.g., booking, reviews).
 - **FR-007**: The system MUST automatically link all guest bookings made with the registered email to the newly created account. This linkage occurs during the registration process.
 - **FR-008**: The system MUST display specific, user-friendly validation errors for each invalid field (name, email, password).
 - **FR-009**: The system MUST display a clear error when the provided email is already associated with an existing account, and suggest signing in instead.
@@ -95,7 +102,7 @@ The registration page is available in all three supported languages (English, Sp
 
 - **Traveler Account**: Represents a registered user. Key attributes: full name, email address (unique), hashed password, preferred language, email verification status, creation date, last sign-in timestamp. In this feature, accounts are created via the registration form.
 - **Guest Identity**: A temporary identity created during guest checkout (name, email, phone). Not modified by this feature, but queried during registration to identify bookings eligible for linkage.
-- **Verification Email**: A transactional email sent upon registration containing a time-limited signed link for the traveler to confirm ownership of their email address.
+- **Verification Email**: A transactional email sent upon registration containing a time-limited signed link for the traveler to confirm ownership of their email address. Verification is advisory in this feature — no account restrictions are imposed for unverified status. Expired links redirect the traveler to a page with a "Resend verification email" button.
 - **Audit Log Entry**: An append-only record of the registration event, including user identity, timestamp, IP address, and user agent.
 
 ## Success Criteria *(mandatory)*

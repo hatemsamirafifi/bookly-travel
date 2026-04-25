@@ -17,7 +17,7 @@
   the iteration process.
 -->
 
-**Language/Version**: PHP 8.2+ (Laravel 11.x) / TypeScript 5 (Next.js 14)
+**Language/Version**: PHP 8.2+ (Laravel 11.x) / TypeScript 5 (Next.js 16)
 **Primary Dependencies**: Laravel Sanctum, Laravel Scout, React Hook Form, Zod, Next-Intl
 **Storage**: PostgreSQL 15, Redis 7, Cloudflare R2
 **Testing**: PHPUnit, Pest, Jest

@@ -14,8 +14,8 @@ booking flow (MVP) across three application surfaces:
 
 | Surface | Technology | Purpose |
 |---------|-----------|---------|
-| Public traveler website | Next.js 14 (SSR/SSG) | Search, discover, and book tours |
-| Partner dashboard | Next.js 14 | Tour CRUD, pricing, availability |
+| Public traveler website | Next.js 16 (SSR/SSG) | Search, discover, and book tours |
+| Partner dashboard | Next.js 16 | Tour CRUD, pricing, availability |
 | Admin dashboard | Laravel Filament | Moderation, approval, operations |
 
 All surfaces consume a shared **Laravel API-only backend** with
@@ -56,8 +56,8 @@ to v1.1.0 to reflect:
 1. **Filament** added to the approved stack table as the admin dashboard
    framework.
 2. **Three-surface architecture** codified:
-   - Public website → Next.js 14 (SSR/SSG)
-   - Partner dashboard → Next.js 14
+   - Public website → Next.js 16 (SSR/SSG)
+   - Partner dashboard → Next.js 16
    - Admin dashboard → Laravel Filament (server-rendered)
 
 This is a MINOR bump (new technology added, no principles removed or

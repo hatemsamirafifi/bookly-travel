@@ -25,7 +25,7 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
         router.push(`/${locale}/auth/login?${params.toString()}`);
       } else if (!requireAuth && user) {
         // Redirect to account if user is already logged in but trying to access guest routes
-        router.push(`/${locale}/account/profile`);
+        router.push(`/${locale}/`);
       }
     }
   }, [user, isLoading, requireAuth, router, pathname, locale]);
