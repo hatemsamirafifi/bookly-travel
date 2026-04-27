@@ -44,9 +44,15 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
       const response = await authApi.register(data);
       setAuth(response.data, response.token);
       setSuccess(true);
+      
+      let validatedReturnUrl = `/${locale}/`;
+      if (returnUrl && returnUrl.startsWith(`/${locale}/`)) {
+        validatedReturnUrl = returnUrl;
+      }
+
       // Small delay so success message shows briefly
       setTimeout(() => {
-        router.push(returnUrl || `/${locale}`);
+        router.push(validatedReturnUrl);
       }, 1200);
     } catch (err: unknown) {
       // Map AuthApiError field errors to react-hook-form
@@ -59,7 +65,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           }
         }
       } else {
-        const message = err instanceof Error ? err.message : 'auth.errors.invalidCredentials';
+        const message = err instanceof Error ? err.message : t('errors.invalidCredentials');
         setServerError(message);
       }
     }

@@ -127,13 +127,15 @@ it('normalizes the email address', function () {
 });
 
 it('is protected by rate limiting', function () {
+    $headers = ['REMOTE_ADDR' => '203.0.113.1'];
+
     for ($i = 0; $i < 10; $i++) {
         $response = postJson('/api/public/auth/register', [
             'name' => "User {$i}",
             'email' => "user{$i}@example.com",
             'password' => 'Password123!',
-        ]);
-        
+        ], $headers);
+
         $response->assertStatus(201);
     }
 
@@ -141,7 +143,7 @@ it('is protected by rate limiting', function () {
         'name' => "User 10",
         'email' => "user10@example.com",
         'password' => 'Password123!',
-    ]);
+    ], $headers);
 
     $response->assertStatus(429);
 });

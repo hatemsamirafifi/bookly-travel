@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $locale ?? 'en' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email</title>
+    <title>{{ __('emails.verification.title', [], $locale ?? 'en') }}</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -83,20 +83,20 @@
             <h1>{{ $platformName }}</h1>
         </div>
         <div class="content">
-            <p class="greeting">Hello {{ $userName }},</p>
+            <p class="greeting">{{ __('emails.verification.greeting', ['name' => $userName], $locale ?? 'en') }}</p>
             <p class="message">
-                Thank you for signing up for {{ $platformName }}. Please verify your email address to complete your registration.
+                {{ __('emails.verification.body', ['platform' => $platformName], $locale ?? 'en') }}
             </p>
             <div class="button-container">
-                <a href="{{ $verificationUrl }}" class="button">Verify Email Address</a>
+                <a href="{{ $verificationUrl }}" class="button">{{ __('emails.verification.button', [], $locale ?? 'en') }}</a>
             </div>
             <p class="message">
-                If you didn't create an account, you can safely ignore this email.
+                {{ __('emails.verification.ignore', [], $locale ?? 'en') }}
             </p>
         </div>
         <div class="footer">
-            <p>This link will expire in {{ $expirationMinutes }} minutes.</p>
-            <p>&copy; {{ date('Y') }} {{ $platformName }}. All rights reserved.</p>
+            <p>{{ __('emails.verification.expiration', ['minutes' => $expirationMinutes], $locale ?? 'en') }}</p>
+            <p>&copy; {{ date('Y') }} {{ $platformName }}. {{ __('emails.verification.rights', [], $locale ?? 'en') }}</p>
         </div>
     </div>
 </body>

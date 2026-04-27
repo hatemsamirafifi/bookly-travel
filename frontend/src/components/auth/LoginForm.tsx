@@ -134,7 +134,7 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
             type="button"
             className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-text-muted flex items-center p-1 rounded-md transition-colors hover:text-foreground"
             onClick={() => setShowPassword((v) => !v)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? t('signin.hidePassword') : t('signin.showPassword')}
             tabIndex={0}
           >
             {showPassword ? (

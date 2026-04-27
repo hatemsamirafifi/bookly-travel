@@ -44,7 +44,8 @@ class VerificationMail extends Mailable implements ShouldQueue
                 'userName' => $this->user->name,
                 'verificationUrl' => $this->verificationUrl,
                 'platformName' => config('app.name', 'Bookly'),
-                'expirationMinutes' => \App\Jobs\SendVerificationEmail::EXPIRATION_MINUTES,
+                'expirationMinutes' => config('mail.verification.expiration_minutes'),
+                'locale' => $this->user->locale ?? 'en',
             ],
         );
     }

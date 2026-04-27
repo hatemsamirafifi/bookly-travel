@@ -45,11 +45,15 @@
       "registerPrompt": "Don't have an account?",
       "registerLink": "Create account",
       "forgotPasswordLink": "Forgot password?",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
       "metaTitle": "Sign In | Bookly",
       "metaDescription": "Sign in to your Bookly traveler account to manage bookings, download vouchers, and leave reviews."
     },
     "errors": {
       "invalidCredentials": "Invalid email or password.",
+      "invalidEmail": "Please enter a valid email address.",
+      "passwordRequired": "Password is required.",
       "emailTaken": "This email is already registered. Please sign in.",
       "weakPassword": "Password is too weak.",
       "sessionExpired": "Your session has expired. Please sign in again.",

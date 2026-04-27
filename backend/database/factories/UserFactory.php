@@ -79,6 +79,16 @@ class UserFactory extends Factory
     }
 
     /**
+     * Set the user's locale.
+     */
+    public function locale(string $locale): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'locale' => $locale,
+        ]);
+    }
+
+    /**
      * Indicate that the user is currently locked out.
      */
     public function lockedOut(): static

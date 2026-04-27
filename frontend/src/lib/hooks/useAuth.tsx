@@ -39,7 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else if (res.status === 401) {
           setUser(null);
           setToken(null);
-          router.push(`/${locale}/auth/login?sessionExpired=1`);
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('sessionExpired', '1');
+          }
         }
       } catch (error) {
         console.error('Session restore failed', error);

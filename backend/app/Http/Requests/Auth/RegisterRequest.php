@@ -60,6 +60,7 @@ class RegisterRequest extends FormRequest
             'password.required' => 'auth.errors.passwordRequired',
             'password.min' => 'auth.errors.passwordTooShort',
             'password.regex' => 'auth.errors.weakPassword',
+            'locale.filled' => 'auth.errors.localeFilled',
             'locale.in' => 'auth.errors.invalidLocale',
         ];
     }

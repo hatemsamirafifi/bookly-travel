@@ -22,6 +22,10 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
         // Build return url
         const params = new URLSearchParams();
         params.set('returnUrl', pathname);
+        if (typeof window !== 'undefined' && sessionStorage.getItem('sessionExpired') === '1') {
+          params.set('sessionExpired', '1');
+          sessionStorage.removeItem('sessionExpired');
+        }
         router.push(`/${locale}/auth/login?${params.toString()}`);
       } else if (!requireAuth && user) {
         // Redirect to account if user is already logged in but trying to access guest routes

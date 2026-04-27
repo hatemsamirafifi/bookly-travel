@@ -16,11 +16,6 @@ class SendVerificationEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * The number of minutes until the verification link expires.
-     */
-    public const EXPIRATION_MINUTES = 60;
-
-    /**
      * The number of times the job may be attempted.
      */
     public int $tries = 3;
@@ -49,27 +44,37 @@ class SendVerificationEmail implements ShouldQueue
             return;
         }
 
-        $updated = \App\Models\User::where('id', $this->user->id)
-            ->whereNull('verification_email_sent_at')
-            ->update(['verification_email_sent_at' => now()]);
-
-        if (! $updated) {
-            return;
-        }
-
         // Generate a signed verification URL
         $verificationUrl = URL::temporarySignedRoute(
             'auth.verify',
-            now()->addMinutes(self::EXPIRATION_MINUTES),
+            now()->addMinutes(config('mail.verification.expiration_minutes')),
             [
                 'id' => $this->user->id,
                 'hash' => sha1($this->user->email),
             ]
         );
 
-        // Send the verification email
-        \Mail::to($this->user->email)->send(
-            new VerificationMail($this->user, $verificationUrl)
-        );
+        try {
+            // Send the verification email first; transport failures will bubble
+            // up and trigger Laravel's retry mechanism (tries/backoff).
+            \Mail::to($this->user->email)->send(
+                new VerificationMail($this->user, $verificationUrl)
+            );
+        } catch (\Throwable $e) {
+            // Re-throw so the job is retried; do NOT mark as sent on failure.
+            throw $e;
+        }
+
+        // Only mark as sent after the email was successfully dispatched.
+        // The conditional update keeps the operation idempotent under
+        // concurrent workers.
+        $updated = \App\Models\User::where('id', $this->user->id)
+            ->whereNull('verification_email_sent_at')
+            ->update(['verification_email_sent_at' => now()]);
+
+        if (! $updated) {
+            // Another worker already recorded the send; nothing more to do.
+            return;
+        }
     }
 }

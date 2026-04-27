@@ -108,12 +108,12 @@ it('returns structured error codes', function () {
 });
 
 it('locks account after 5 failed attempts with 1 minute tier', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'brute@example.com',
         'password' => Hash::make('Password123!'),
     ]);
 
-    for (\ = 0; \ < 5; \++) {
+    for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', [
             'email' => 'brute@example.com',
             'password' => 'WrongPassword!',
@@ -127,18 +127,18 @@ it('locks account after 5 failed attempts with 1 minute tier', function () {
         ->assertStatus(423)
         ->assertJsonPath('code', 'account_locked');
 
-    \->refresh();
-    expect(\->failed_login_count)->toBe(5);
-    expect(\->locked_until)->not->toBeNull();
+    $user->refresh();
+    expect($user->failed_login_count)->toBe(5);
+    expect($user->locked_until)->not->toBeNull();
     
     assertDatabaseHas('auth_audit_logs', [
-        'user_id' => \->id,
+        'user_id' => $user->id,
         'event_type' => 'account_lockout',
     ]);
 });
 
 it('rejects login while account is locked even with correct password', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'locked2@example.com',
         'password' => Hash::make('Password123!'),
         'locked_until' => now()->addMinutes(1),
@@ -151,7 +151,7 @@ it('rejects login while account is locked even with correct password', function 
 });
 
 it('resets counter and tier on successful login after lockout expires', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'reset@example.com',
         'password' => Hash::make('Password123!'),
         'locked_until' => now()->subMinutes(1),
@@ -163,63 +163,63 @@ it('resets counter and tier on successful login after lockout expires', function
         'password' => 'Password123!',
     ])->assertOk();
 
-    \->refresh();
-    expect(\->failed_login_count)->toBe(0);
-    expect(\->locked_until)->toBeNull();
+    $user->refresh();
+    expect($user->failed_login_count)->toBe(0);
+    expect($user->locked_until)->toBeNull();
 
-    for (\ = 0; \ < 5; \++) {
+    for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', [
             'email' => 'reset@example.com',
             'password' => 'WrongPassword!',
         ]);
     }
 
-    \->refresh();
+    $user->refresh();
     // 1st lockout after a successful login should be 1 minute
-    \ = now()->diffInMinutes(\->locked_until);
-    expect(\)->toBeLessThanOrEqual(1);
+    $minutes = now()->diffInMinutes($user->locked_until);
+    expect($minutes)->toBeLessThanOrEqual(1);
 });
 
 it('escalates to 30 minute tier on third lockout', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'escalate@example.com',
         'password' => Hash::make('Password123!'),
     ]);
 
     // 1st lockout
-    for (\ = 0; \ < 5; \++) {
+    for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', ['email' => 'escalate@example.com', 'password' => 'Wrong!']);
     }
-    \->refresh();
-    expect(now()->diffInMinutes(\->locked_until))->toBeLessThanOrEqual(1);
+    $user->refresh();
+    expect(now()->diffInMinutes($user->locked_until))->toBeLessThanOrEqual(1);
 
     // Expire 1st lockout
-    \->locked_until = now()->subMinutes(1);
-    \->save();
+    $user->locked_until = now()->subMinutes(1);
+    $user->save();
 
     // 2nd lockout
-    for (\ = 0; \ < 5; \++) {
+    for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', ['email' => 'escalate@example.com', 'password' => 'Wrong!']);
     }
-    \->refresh();
-    expect(now()->diffInMinutes(\->locked_until))->toBeGreaterThan(1);
-    expect(now()->diffInMinutes(\->locked_until))->toBeLessThanOrEqual(5);
+    $user->refresh();
+    expect(now()->diffInMinutes($user->locked_until))->toBeGreaterThan(1);
+    expect(now()->diffInMinutes($user->locked_until))->toBeLessThanOrEqual(5);
 
     // Expire 2nd lockout
-    \->locked_until = now()->subMinutes(1);
-    \->save();
+    $user->locked_until = now()->subMinutes(1);
+    $user->save();
 
     // 3rd lockout
-    for (\ = 0; \ < 5; \++) {
+    for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', ['email' => 'escalate@example.com', 'password' => 'Wrong!']);
     }
-    \->refresh();
-    expect(now()->diffInMinutes(\->locked_until))->toBeGreaterThan(5);
-    expect(now()->diffInMinutes(\->locked_until))->toBeLessThanOrEqual(30);
+    $user->refresh();
+    expect(now()->diffInMinutes($user->locked_until))->toBeGreaterThan(5);
+    expect(now()->diffInMinutes($user->locked_until))->toBeLessThanOrEqual(30);
 });
 
 it('resets failed count on successful login before reaching 5', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'reset_early@example.com',
         'password' => Hash::make('Password123!'),
     ]);
@@ -232,12 +232,12 @@ it('resets failed count on successful login before reaching 5', function () {
         'password' => 'Password123!',
     ])->assertOk();
 
-    \->refresh();
-    expect(\->failed_login_count)->toBe(0);
+    $user->refresh();
+    expect($user->failed_login_count)->toBe(0);
 });
 
 it('handles concurrent failed login requests safely', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'concurrent@example.com',
         'password' => Hash::make('Password123!'),
     ]);
@@ -245,12 +245,12 @@ it('handles concurrent failed login requests safely', function () {
     postJson('/api/public/auth/login', ['email' => 'concurrent@example.com', 'password' => 'Wrong!']);
     postJson('/api/public/auth/login', ['email' => 'concurrent@example.com', 'password' => 'Wrong!']);
     
-    \->refresh();
-    expect(\->failed_login_count)->toBe(2);
+    $user->refresh();
+    expect($user->failed_login_count)->toBe(2);
 });
 
 it('survives redis cache flush during lockout', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'redis@example.com',
         'password' => Hash::make('Password123!'),
         'locked_until' => now()->addMinutes(10),
@@ -265,28 +265,28 @@ it('survives redis cache flush during lockout', function () {
     ])->assertStatus(423);
     
     assertDatabaseHas('users', [
-        'id' => \->id,
+        'id' => $user->id,
     ]);
-    \->refresh();
-    expect(\->locked_until)->not->toBeNull();
+    $user->refresh();
+    expect($user->locked_until)->not->toBeNull();
 });
 
 
 it('responds within 3 seconds', function () {
-    \ = User::factory()->create([
+    $user = User::factory()->create([
         'email' => 'perf@example.com',
         'password' => Hash::make('Password123!'),
     ]);
 
-    \ = microtime(true);
+    $start = microtime(true);
     
     postJson('/api/public/auth/login', [
         'email' => 'perf@example.com',
         'password' => 'Password123!',
     ])->assertOk();
 
-    \ = (microtime(true) - \) * 1000;
+    $elapsed = (microtime(true) - $start) * 1000;
     
-    expect(\)->toBeLessThan(3000);
+    expect($elapsed)->toBeLessThan(3000);
 })->group('performance');
 

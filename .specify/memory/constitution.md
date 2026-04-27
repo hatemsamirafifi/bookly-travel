@@ -2,9 +2,11 @@
   ============================================================
   SYNC IMPACT REPORT
   ============================================================
-  Version change : 0.0.0 (template) → 1.0.0
+  Version change : 0.0.0 (template) → 1.0.1
   Bump rationale : MAJOR — first concrete ratification of all
                    governing principles; no prior version existed.
+  Ratified       : 2026-04-10
+  Last Amended   : 2026-04-25
 
   Modified principles:
     - [PRINCIPLE_1_NAME] → I. Marketplace-First

@@ -4,6 +4,7 @@ namespace App\Domains\Auth\Actions;
 
 use App\Models\User;
 use App\Models\AuthAuditLog;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Domains\Auth\Events\TravelerLoggedIn;
 use App\Domains\Auth\Events\LoginFailed;
@@ -20,52 +21,11 @@ class AuthenticateTravelerAction
     public function execute(array $data): array
     {
         $normalizedEmail = strtolower(trim($data['email']));
-        
+
         $user = User::where('email', $normalizedEmail)->first();
 
-        if ($user && $user->locked_until && $user->locked_until->isFuture()) {
-            return [
-                'success' => false,
-                'locked' => true,
-                'message' => 'Too many failed attempts. Please try again later.'
-            ];
-        }
-
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            if ($user) {
-                $user->failed_login_count = ($user->failed_login_count ?? 0) + 1;
-                $user->save();
-            }
-
-            event(new LoginFailed($normalizedEmail, $user));
-
-            if ($user && $user->failed_login_count >= 5) {
-                $lastLogin = AuthAuditLog::where('user_id', $user->id)
-                    ->where('event_type', 'login_success')
-                    ->latest()
-                    ->first();
-
-                $lockoutsQuery = AuthAuditLog::where('user_id', $user->id)
-                    ->where('event_type', 'account_lockout');
-
-                if ($lastLogin) {
-                    $lockoutsQuery->where('created_at', '>', $lastLogin->created_at);
-                }
-
-                $lockoutCount = $lockoutsQuery->count();
-
-                $tierDuration = 1; // 1 minute default
-                if ($lockoutCount == 1) {
-                    $tierDuration = 5; // 2nd lockout
-                } elseif ($lockoutCount >= 2) {
-                    $tierDuration = 30; // 3rd+ lockout
-                }
-
-                $user->locked_until = now()->addMinutes($tierDuration);
-                $user->save();
-
-                event(new AccountLockedOut($user));
-            }
+        if (!$user) {
+            event(new LoginFailed($normalizedEmail, null));
 
             return [
                 'success' => false,
@@ -73,19 +33,80 @@ class AuthenticateTravelerAction
             ];
         }
 
-        $user->failed_login_count = 0;
-        $user->locked_until = null;
-        $user->last_login_at = now();
-        $user->save();
+        return DB::transaction(function () use ($user, $data, $normalizedEmail) {
+            // Re-read with row lock to prevent concurrent mutation races
+            $user = User::where('id', $user->id)->lockForUpdate()->first();
 
-        $token = $user->createToken('auth-token');
+            if ($user->locked_until && $user->locked_until->isFuture()) {
+                DB::afterCommit(function () use ($normalizedEmail, $user) {
+                    event(new LoginFailed($normalizedEmail, $user));
+                });
 
-        event(new TravelerLoggedIn($user));
+                return [
+                    'success' => false,
+                    'message' => 'Invalid email or password.'
+                ];
+            }
 
-        return [
-            'success' => true,
-            'user' => $user,
-            'token' => $token->plainTextToken
-        ];
+            if (!Hash::check($data['password'], $user->password)) {
+                $user->failed_login_count = ($user->failed_login_count ?? 0) + 1;
+
+                if ($user->failed_login_count >= 5) {
+                    $lastLogin = AuthAuditLog::where('user_id', $user->id)
+                        ->where('event_type', 'login_success')
+                        ->latest()
+                        ->first();
+
+                    $lockoutsQuery = AuthAuditLog::where('user_id', $user->id)
+                        ->where('event_type', 'account_lockout');
+
+                    if ($lastLogin) {
+                        $lockoutsQuery->where('created_at', '>', $lastLogin->created_at);
+                    }
+
+                    $lockoutCount = $lockoutsQuery->count();
+
+                    $tierDuration = 1; // 1 minute default
+                    if ($lockoutCount == 1) {
+                        $tierDuration = 5; // 2nd lockout
+                    } elseif ($lockoutCount >= 2) {
+                        $tierDuration = 30; // 3rd+ lockout
+                    }
+
+                    $user->locked_until = now()->addMinutes($tierDuration);
+                }
+
+                $user->save();
+
+                DB::afterCommit(function () use ($normalizedEmail, $user) {
+                    event(new LoginFailed($normalizedEmail, $user));
+                    if ($user->locked_until && $user->locked_until->isFuture()) {
+                        event(new AccountLockedOut($user));
+                    }
+                });
+
+                return [
+                    'success' => false,
+                    'message' => 'Invalid email or password.'
+                ];
+            }
+
+            $user->failed_login_count = 0;
+            $user->locked_until = null;
+            $user->last_login_at = now();
+            $user->save();
+
+            $token = $user->createToken('auth-token');
+
+            DB::afterCommit(function () use ($user) {
+                event(new TravelerLoggedIn($user));
+            });
+
+            return [
+                'success' => true,
+                'user' => $user,
+                'token' => $token->plainTextToken
+            ];
+        });
     }
 }

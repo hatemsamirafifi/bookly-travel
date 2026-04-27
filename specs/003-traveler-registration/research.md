@@ -66,7 +66,7 @@ This feature inherits the full technology stack and architectural decisions from
 **Rationale**: The Zod schemas and API client already exist from Phase 2. The component uses them directly. Client-side validation provides immediate feedback (FR-010) before the server request.
 
 **Alternatives considered**:
-- React Hook Form — adds a dependency not in the approved stack.
+- React Hook Form — **selected** after research. The `registerSchema` Zod resolver is already in place (Phase 2) and `react-hook-form` 7.54 was added to the approved stack in spec 004 for the login flow. Both `RegisterForm.tsx` and `LoginForm.tsx` use it for client-side validation, error mapping, and submission state (see `frontend/src/components/auth/`).
 - Server Actions (Next.js) — the API-first constitution mandates that the frontend consumes the Laravel API, not Next.js server actions.
 
 ## Decision 6: Registration Page Route and Return-to-URL

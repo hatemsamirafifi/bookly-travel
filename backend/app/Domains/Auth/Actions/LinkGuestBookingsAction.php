@@ -55,8 +55,8 @@ class LinkGuestBookingsAction
             AuthAuditLog::create([
                 'user_id' => $user->id,
                 'event_type' => 'guest_bookings_linked',
-                'ip_address' => request()->ip(),
-                'user_agent' => request()->userAgent(),
+                'ip_address' => request()?->ip() ?? null,
+                'user_agent' => request()?->userAgent() ?? null,
                 'metadata' => [
                     'guest_identity_ids' => $guestIdentityIds,
                     'linked_booking_ids' => $linkedBookingIds,

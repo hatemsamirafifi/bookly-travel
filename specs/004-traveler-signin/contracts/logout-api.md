@@ -45,6 +45,7 @@ No response body.
 
 ```json
 {
+  "code": "unauthenticated",
   "message": "Unauthenticated."
 }
 ```

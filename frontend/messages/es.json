@@ -45,11 +45,15 @@
       "registerPrompt": "¿No tienes una cuenta?",
       "registerLink": "Crear cuenta",
       "forgotPasswordLink": "¿Olvidaste tu contraseña?",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
       "metaTitle": "Iniciar sesión | Bookly",
       "metaDescription": "Inicia sesión en tu cuenta de viajero de Bookly para gestionar reservas, descargar vouchers y dejar reseñas."
     },
     "errors": {
       "invalidCredentials": "Correo electrónico o contraseña no válidos.",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida.",
+      "passwordRequired": "La contraseña es obligatoria.",
       "emailTaken": "Este correo ya está registrado. Por favor, inicia sesión.",
       "weakPassword": "La contraseña es demasiado débil.",
       "sessionExpired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",

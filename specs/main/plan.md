@@ -61,10 +61,15 @@ backend/
 │   │   └── Auth/
 │   │       ├── Actions/
 │   │       ├── Events/
-│   │       ├── Listeners/
-│   │       ├── Models/
-│   │       ├── Services/
-│   │       └── Http/
+│   │       └── Listeners/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── Public/
+│   │   ├── Requests/
+│   │   └── Resources/
+│   ├── Jobs/
+│   ├── Mail/
+│   ├── Models/
 │   └── Providers/
 ├── database/
 ├── routes/

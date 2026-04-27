@@ -80,10 +80,14 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     headers,
   });
 
-  const data: any = await response.json().catch(() => null);
+  const data: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new AuthApiError(data?.message || 'Authentication failed', data?.errors, data?.code);
+    const payload = data !== null && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+    const message = typeof payload?.message === 'string' ? payload.message : 'Authentication failed';
+    const errors = payload?.errors as Record<string, string[]> | undefined;
+    const code = typeof payload?.code === 'string' ? payload.code : undefined;
+    throw new AuthApiError(message, errors, code);
   }
 
   return data as T;

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Domains\Auth\Events\GuestConvertedToAccount;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GuestIdentity extends Model
@@ -63,7 +64,7 @@ class GuestIdentity extends Model
         // Optionally mark it anonymized immediately or keep the record intact
         $this->saveQuietly();
 
-        event(new \App\Domains\Auth\Events\GuestConvertedToAccount($user));
+        event(new GuestConvertedToAccount($user));
     }
 
     /**

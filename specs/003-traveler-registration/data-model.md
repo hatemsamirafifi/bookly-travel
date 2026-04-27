@@ -2,7 +2,7 @@
 
 **Feature**: 003-traveler-registration
 **Date**: 2026-04-18
-**Parent**: [001-traveler-auth/data-model.md](file:///f:/Travel%20Website/bookly%20travel/specs/001-traveler-auth/data-model.md)
+**Parent**: [001-traveler-auth/data-model.md](../001-traveler-auth/data-model.md)
 
 ## Scope
 
@@ -61,7 +61,7 @@ If the `bookings` table exists (spec 007), `LinkGuestBookingsAction` updates `us
 
 ## Data Flow Sequence
 
-```
+```text
 Request → RegisterRequest (validate) → RegisterTravelerAction:
   1. Create User row (users table)
   2. LinkGuestBookingsAction (read guest_identities, update bookings.user_id if table exists)

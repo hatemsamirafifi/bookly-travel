@@ -7,7 +7,7 @@ metadata:
   version: "1.0"
 ---
 
-# SEO optimization
+# SEO
 
 Search engine optimization based on Lighthouse SEO audits and Google Search guidelines. Focus on technical SEO, on-page optimization, and structured data.
 
@@ -447,10 +447,10 @@ body {
 
 ```html
 <!-- For multi-language sites -->
-<link rel="alternate" hreflang="en" href="https://example.com/page">
+<link rel="alternate" hreflang="en" href="https://example.com/en/page">
 <link rel="alternate" hreflang="es" href="https://example.com/es/page">
-<link rel="alternate" hreflang="fr" href="https://example.com/fr/page">
-<link rel="alternate" hreflang="x-default" href="https://example.com/page">
+<link rel="alternate" hreflang="it" href="https://example.com/it/page">
+<link rel="alternate" hreflang="x-default" href="https://example.com/en/page">
 ```
 
 ### Language declaration

@@ -16,8 +16,8 @@ function openModal(modal) {
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
 
-  modal.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
+  function onModalKeydown(e) {
+    if (e.key === 'Tab' && firstElement && lastElement) {
       if (e.shiftKey && document.activeElement === firstElement) {
         e.preventDefault();
         lastElement.focus();
@@ -27,11 +27,26 @@ function openModal(modal) {
       }
     }
     if (e.key === 'Escape') {
-      closeModal();
+      closeModal(modal);
     }
-  });
+  }
 
-  firstElement.focus();
+  modal._onModalKeydown = onModalKeydown;
+  modal.addEventListener('keydown', onModalKeydown);
+
+  if (firstElement) {
+    firstElement.focus();
+  } else {
+    modal.focus();
+  }
+}
+
+function closeModal(modal) {
+  // ... hide modal, restore focus to trigger element, etc.
+  if (modal._onModalKeydown) {
+    modal.removeEventListener('keydown', modal._onModalKeydown);
+    delete modal._onModalKeydown;
+  }
 }
 ```
 
@@ -77,6 +92,9 @@ Announce errors to screen readers and focus the first invalid field on submit.
 
 ```html
 <form novalidate>
+  <div id="error-summary" class="error-summary" tabindex="-1" role="alert" aria-live="assertive">
+    <!-- Error summary content will be injected here -->
+  </div>
   <div class="field" aria-live="polite">
     <label for="email">Email</label>
     <input type="email" id="email"
@@ -98,9 +116,11 @@ form.addEventListener('submit', (e) => {
     firstError.focus();
 
     const errorSummary = document.getElementById('error-summary');
-    errorSummary.textContent =
-      `${errors.length} errors found. Please fix them and try again.`;
-    errorSummary.focus();
+    if (errorSummary) {
+      errorSummary.textContent =
+        `${errors.length} errors found. Please fix them and try again.`;
+      errorSummary.focus();
+    }
   }
 });
 ```

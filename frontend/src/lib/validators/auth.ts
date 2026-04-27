@@ -8,8 +8,8 @@ export const passwordSchema = z
   .regex(/[0-9]/, { message: "auth.errors.weakPassword" });
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: "auth.errors.invalidCredentials" }),
-  password: z.string().min(1, { message: "auth.errors.invalidCredentials" }),
+  email: z.string().email({ message: "auth.errors.invalidEmail" }),
+  password: z.string().min(1, { message: "auth.errors.passwordRequired" }),
 });
 
 export const registerSchema = z.object({

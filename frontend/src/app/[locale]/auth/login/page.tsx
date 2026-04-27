@@ -29,12 +29,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 
 interface LoginPageProps {
-  searchParams: Promise<{ returnUrl?: string; sessionExpired?: string }>;
+  searchParams: Promise<{ returnUrl?: string | string[]; sessionExpired?: string | string[] }>;
+}
+
+function normalizeSearchParam(value: string | string[] | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  if (Array.isArray(value)) return value[0];
+  return value;
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const t = await getTranslations('auth.signin');
-  const { returnUrl, sessionExpired } = await searchParams;
+  const params = await searchParams;
+  const returnUrl = normalizeSearchParam(params.returnUrl);
+  const sessionExpired = normalizeSearchParam(params.sessionExpired);
 
   return (
     <div className="flex min-h-[100dvh] items-center justify-center p-6 bg-gradient-to-br from-background to-[color-mix(in_srgb,var(--color-primary)_6%,var(--background))]">

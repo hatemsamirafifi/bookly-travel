@@ -83,7 +83,7 @@ Append-only audit trail for authentication events.
 
 ### Brute-Force Lockout State Machine
 
-```
+```text
 [Normal State]
    │
    │ Failed login
