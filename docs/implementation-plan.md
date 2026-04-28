@@ -64,7 +64,7 @@ Bookly Phase 1 delivers the **core booking MVP** for a tours-only marketplace. I
 └───────────────┬───────────────────────────────────┬───────────────────┘
                 │                                   │
     ┌───────────▼───────────┐           ┌───────────▼───────────┐
-    │    Next.js 14 (SSR)   │           │   Laravel Filament    │
+    │    Next.js 16 (SSR)   │           │   Laravel Filament    │
     │  ┌─────────────────┐  │           │   (Admin Dashboard)   │
     │  │ Public Website  │  │           │   Server-Rendered     │
     │  │ (SSR/SSG)       │  │           └───────────┬───────────┘
@@ -99,8 +99,8 @@ Bookly Phase 1 delivers the **core booking MVP** for a tours-only marketplace. I
 
 | Surface | Technology | Route Prefix | Rendering |
 |---------|-----------|-------------|-----------|
-| Public traveler website | Next.js 14 | `/en/`, `/es/`, `/it/` | SSR/SSG |
-| Partner dashboard | Next.js 14 | `/partner/` | CSR |
+| Public traveler website | Next.js 16 | `/en/`, `/es/`, `/it/` | SSR/SSG |
+| Partner dashboard | Next.js 16 | `/partner/` | CSR |
 | Admin dashboard | Laravel Filament | `/admin/` | Server-rendered |
 | Backend API | Laravel | `/api/public/*`, `/api/partner/*`, `/api/admin/*` | JSON |
 
@@ -147,7 +147,7 @@ Domains:
 
 | Component | Technology | Purpose |
 |-----------|-----------|---------|
-| Framework | Next.js 14 (App Router) | Public website + partner dashboard |
+| Framework | Next.js 16 (App Router) | Public website + partner dashboard |
 | Language | TypeScript (strict) | Type safety |
 | Styling | Tailwind CSS | Utility-first CSS |
 | Rendering | SSR/SSG | SEO for public pages |
@@ -309,12 +309,12 @@ gantt
 
 **Objective**: Scaffold the project, establish core authentication, and set up both traveler and partner identity systems.
 
-| Task | Description | Priority |
-|------|------------|----------|
-| A.0 | Project scaffolding — initialize Laravel backend with PostgreSQL, Redis, and Filament. Initialize Next.js frontend with TypeScript, Tailwind, and i18n. Set up Docker dev environment. | **Critical** |
-| A.1 | Constitution patch v1.1.0 — add Filament to approved stack table, codify three-surface architecture | **Critical** |
-| A.2 | 001 — Traveler Auth — Registration, login, session management, guest identity, password reset | **Critical** |
-| A.3 | 002 — Partner Onboarding — Self-registration, admin invitation, account states, approval gate | **Critical** |
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| A.0 | ✅ Done | Project scaffolding — initialize Laravel backend with PostgreSQL, Redis, and Filament. Initialize Next.js frontend with TypeScript, Tailwind, and i18n. Set up Docker dev environment. | **Critical** |
+| A.1 | ✅ Done | Constitution patch v1.1.0 — add Filament to approved stack table, codify three-surface architecture | **Critical** |
+| A.2 | 🔄 In Progress | 001 — Traveler Auth — Registration, login, session management, guest identity, password reset | **Critical** |
+| A.3 | ⏳ Pending | 002 — Partner Onboarding — Self-registration, admin invitation, account states, approval gate | **Critical** |
 
 **Dependencies**: None (foundation layer)
 
@@ -1172,13 +1172,13 @@ Push to feature branch
 
 Before beginning Phase A implementation:
 
-- [ ] Constitution patched to v1.1.0 (add Filament, codify three-surface architecture)
-- [ ] `specs/` directory created at project root
-- [ ] Specification strategy document saved and committed
-- [ ] Docker Compose configuration prepared (PostgreSQL, Redis, Nginx)
-- [ ] Laravel project initialized in `backend/`
-- [ ] Next.js project initialized in `frontend/`
-- [ ] Git branching strategy documented (feature branches per spec)
+- [x] Constitution patched to v1.1.0 (add Filament, codify three-surface architecture)
+- [x] `specs/` directory created at project root
+- [x] Specification strategy document saved and committed
+- [x] Docker Compose configuration prepared (PostgreSQL, Redis, Nginx)
+- [x] Laravel project initialized in `backend/`
+- [x] Next.js project initialized in `frontend/`
+- [x] Git branching strategy documented (feature branches per spec)
 - [ ] CI/CD pipeline configured (lint, type-check, test)
 - [ ] Cloudflare R2 bucket created and credentials provisioned
 - [ ] Stripe test API keys provisioned

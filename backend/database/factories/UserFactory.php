@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'role' => 'traveler',
-            'locale' => fake()->randomElement(['en', 'es', 'it']),
+            'locale' => 'en',
             'failed_login_count' => 0,
             'locked_until' => null,
             'last_login_at' => null,
@@ -75,6 +75,16 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'role' => 'admin',
+        ]);
+    }
+
+    /**
+     * Set the user's locale.
+     */
+    public function locale(string $locale): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'locale' => $locale,
         ]);
     }
 

@@ -8,7 +8,6 @@
   },
   "auth": {
     "login": "Sign In",
-    "register": "Create Account",
     "logout": "Sign Out",
     "forgotPassword": "Forgot Password?",
     "resetPassword": "Reset Password",
@@ -18,13 +17,51 @@
     "passwordConfirmation": "Confirm Password",
     "name": "Full Name",
     "phone": "Phone Number",
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Join thousands of travelers discovering the world",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min. 8 chars with upper, lower & number",
+      "submitButton": "Create Account",
+      "signinPrompt": "Already have an account?",
+      "signinLink": "Sign in",
+      "successMessage": "Account created! Please check your email to verify your address.",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "metaTitle": "Create Account | Bookly",
+      "metaDescription": "Create your Bookly traveler account. Join thousands discovering tours worldwide — registration is free and takes under a minute."
+    },
+    "signin": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to access your bookings and reviews",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "submitButton": "Sign In",
+      "registerPrompt": "Don't have an account?",
+      "registerLink": "Create account",
+      "forgotPasswordLink": "Forgot password?",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "metaTitle": "Sign In | Bookly",
+      "metaDescription": "Sign in to your Bookly traveler account to manage bookings, download vouchers, and leave reviews."
+    },
     "errors": {
       "invalidCredentials": "Invalid email or password.",
+      "invalidEmail": "Please enter a valid email address.",
+      "passwordRequired": "Password is required.",
       "emailTaken": "This email is already registered. Please sign in.",
       "weakPassword": "Password is too weak.",
       "sessionExpired": "Your session has expired. Please sign in again.",
       "accountLocked": "Too many failed attempts. Please try again later.",
-      "linkExpired": "This link has expired. Please request a new one."
+      "linkExpired": "This link has expired. Please request a new one.",
+      "passwordsMismatch": "Passwords do not match.",
+      "nameRequired": "Full name is required.",
+      "invalidLocale": "Selected language is not supported."
     }
   }
 }

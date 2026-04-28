@@ -115,4 +115,18 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Verification Email
+    |--------------------------------------------------------------------------
+    |
+    | These values control the verification email sent to newly registered
+    | users, including how many minutes the signed link remains valid.
+    |
+    */
+
+    'verification' => [
+        'expiration_minutes' => 60,
+    ],
+
 ];

@@ -2,41 +2,45 @@ import { z } from 'zod';
 
 export const passwordSchema = z
   .string()
-  .min(8, { message: 'Password must be at least 8 characters long' })
-  .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
-  .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
-  .regex(/[0-9]/, { message: 'Password must contain at least one number' });
+  .min(8, { message: "auth.errors.weakPassword" })
+  .regex(/[A-Z]/, { message: "auth.errors.weakPassword" })
+  .regex(/[a-z]/, { message: "auth.errors.weakPassword" })
+  .regex(/[0-9]/, { message: "auth.errors.weakPassword" });
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
-  password: z.string().min(1, { message: 'Password is required' }),
+  email: z.string().email({ message: "auth.errors.invalidEmail" }),
+  password: z.string().min(1, { message: "auth.errors.passwordRequired" }),
 });
 
 export const registerSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters long' }).max(255),
-  email: z.string().email({ message: 'Please enter a valid email address' }),
+  name: z.string().min(1, 'auth.errors.nameRequired').max(255),
+  email: z.string().email({ message: "auth.errors.invalidCredentials" }),
   password: passwordSchema,
+  locale: z.enum(['en', 'es', 'it'], { 
+    required_error: "auth.errors.invalidLocale", 
+    invalid_type_error: "auth.errors.invalidLocale" 
+  }).optional(),
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
+  email: z.string().email({ message: "auth.errors.invalidCredentials" }),
 });
 
 export const resetPasswordSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email({ message: "auth.errors.invalidCredentials" }),
   token: z.string().min(1),
   password: passwordSchema,
   password_confirmation: z.string(),
 }).refine((data) => data.password === data.password_confirmation, {
-  message: "Passwords don't match",
+  message: "auth.errors.passwordsMismatch",
   path: ["password_confirmation"],
 });
 
 export const changePasswordSchema = z.object({
-  current_password: z.string().min(1, { message: 'Current password is required' }),
+  current_password: z.string().min(1),
   password: passwordSchema,
   password_confirmation: z.string(),
 }).refine((data) => data.password === data.password_confirmation, {
-  message: "Passwords don't match",
+  message: "auth.errors.passwordsMismatch",
   path: ["password_confirmation"],
 });

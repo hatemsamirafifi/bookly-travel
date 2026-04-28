@@ -25,7 +25,7 @@
 **Purpose**: Project scaffolding — Laravel backend + Next.js frontend initialization
 
 - [x] T001 Initialize Laravel project in `backend/` with PHP 8.2+, configure Sanctum, PostgreSQL, and Redis connections in `backend/.env`
-- [x] T002 Initialize Next.js 14 project in `frontend/` with TypeScript strict mode, App Router, and Tailwind CSS
+- [x] T002 Initialize Next.js 16 project in `frontend/` with TypeScript strict mode, App Router, and Tailwind CSS
 - [x] T003 [P] Configure Docker Compose for local development with PostgreSQL 15, Redis 7, and mailpit (email testing) in `docker-compose.yml`
 - [x] T004 [P] Configure backend linting (Pint) and frontend linting (ESLint + Prettier) in `backend/pint.json` and `frontend/.eslintrc.json`
 - [x] T005 [P] Setup `next-intl` with locale-prefixed routing (`/en/`, `/es/`, `/it/`) and middleware in `frontend/src/middleware.ts`
@@ -55,7 +55,7 @@
 - [x] T020 [P] Create Zod validation schemas for all auth forms (register, login, forgot-password, reset-password, change-password) in `frontend/src/lib/validators/auth.ts`
 - [x] T021 [P] Create auth API client module with typed methods for all endpoints (register, login, logout, etc.) in `frontend/src/lib/api/auth.ts`
 - [x] T022 [P] Create useAuth hook with auth context provider (token management, user state, sign-in/out methods) in `frontend/src/lib/hooks/useAuth.ts`
-- [x] T023 [P] Create auth translation files for all three languages in `frontend/src/i18n/en/auth.json`, `frontend/src/i18n/es/auth.json`, `frontend/src/i18n/it/auth.json`
+- [x] T023 [P] Create/Update auth translation files for all three languages, adding an "auth" key in `frontend/messages/en.json`, `frontend/messages/es.json`, `frontend/messages/it.json`
 - [x] T024 [P] Create AuthGuard component for protecting authenticated routes with redirect-to-login in `frontend/src/components/auth/AuthGuard.tsx`
 - [x] T025 Create UserFactory and GuestIdentityFactory for test seeding in `backend/database/factories/UserFactory.php` and `backend/database/factories/GuestIdentityFactory.php`
 
@@ -71,20 +71,20 @@
 
 ### Tests for User Story 1
 
-- [ ] T026 [P] [US1] Write registration feature test: valid registration, duplicate email, weak password, missing fields, verification email dispatch, guest booking linkage in `backend/tests/Feature/Auth/RegistrationTest.php`
+- [x] T026 [P] [US1] Write registration feature test: valid registration, duplicate email, weak password, missing fields, verification email dispatch, guest booking linkage in `backend/tests/Feature/Auth/RegistrationTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T027 [P] [US1] Create RegisterRequest form request with validation rules (name required max 255, email required unique, password min 8 with uppercase/lowercase/number, locale optional) in `backend/app/Http/Requests/Auth/RegisterRequest.php`
-- [ ] T028 [US1] Create RegisterTravelerAction with logic: create user, link guest bookings by email, dispatch TravelerRegistered event, queue verification email in `backend/app/Domains/Auth/Actions/RegisterTravelerAction.php`
-- [ ] T029 [US1] Create LinkGuestBookingsAction to query guest_identities by email and update associated bookings' user_id in `backend/app/Domains/Auth/Actions/LinkGuestBookingsAction.php`
-- [ ] T030 [US1] Create SendVerificationEmailAction using Laravel's signed URL verification with 60-min expiry in `backend/app/Domains/Auth/Actions/SendVerificationEmailAction.php`
-- [ ] T031 [P] [US1] Create VerificationMail mailable with multi-language support (EN/ES/IT) in `backend/app/Mail/VerificationMail.php`
-- [ ] T032 [P] [US1] Create SendVerificationEmail queued job (retry-safe, idempotent) in `backend/app/Jobs/SendVerificationEmail.php`
-- [ ] T033 [US1] Create RegisterController (thin: validate via RegisterRequest, delegate to RegisterTravelerAction, return UserResource + token) in `backend/app/Http/Controllers/Public/Auth/RegisterController.php`
-- [ ] T034 [US1] Register POST `/api/public/auth/register` route in `backend/routes/api/public.php`
-- [ ] T035 [P] [US1] Create RegisterForm component with name/email/password fields, client-side Zod validation, error display, loading state in `frontend/src/components/auth/RegisterForm.tsx`
-- [ ] T036 [US1] Create register page with RegisterForm, return-to-URL handling, redirect on success in `frontend/src/app/[locale]/auth/register/page.tsx`
+- [x] T027 [P] [US1] Create RegisterRequest form request with validation rules (name required max 255, email required unique, password min 8 with uppercase/lowercase/number, locale optional) in `backend/app/Http/Requests/Auth/RegisterRequest.php`
+- [x] T028 [US1] Create RegisterTravelerAction with logic: create user, link guest bookings by email, dispatch TravelerRegistered event, queue verification email in `backend/app/Domains/Auth/Actions/RegisterTravelerAction.php`
+- [x] T029 [US1] Create LinkGuestBookingsAction to query guest_identities by email and update associated bookings' user_id in `backend/app/Domains/Auth/Actions/LinkGuestBookingsAction.php`
+- [x] T030 [US1] Create SendVerificationEmailAction using Laravel's signed URL verification with 60-min expiry in `backend/app/Domains/Auth/Actions/SendVerificationEmailAction.php`
+- [x] T031 [P] [US1] Create VerificationMail mailable with multi-language support (EN/ES/IT) in `backend/app/Mail/VerificationMail.php`
+- [x] T032 [P] [US1] Create SendVerificationEmail queued job (retry-safe, idempotent) in `backend/app/Jobs/SendVerificationEmail.php`
+- [x] T033 [US1] Create RegisterController (thin: validate via RegisterRequest, delegate to RegisterTravelerAction, return UserResource + token) in `backend/app/Http/Controllers/Public/Auth/RegisterController.php`
+- [x] T034 [US1] Register POST `/api/public/auth/register` route in `backend/routes/api/public.php`
+- [x] T035 [P] [US1] Create RegisterForm component with name/email/password fields, client-side Zod validation, error display, loading state in `frontend/src/components/auth/RegisterForm.tsx`
+- [x] T036 [US1] Create register page with RegisterForm, return-to-URL handling, redirect on success in `frontend/src/app/[locale]/auth/register/page.tsx`
 
 **Checkpoint**: Traveler registration fully functional — account creation, verification email, guest linkage, and frontend form all working.
 
@@ -94,24 +94,25 @@
 
 **Goal**: Returning travelers can sign in with email/password and sign out. Includes brute-force protection (5 attempts → escalating lockout) and session token management.
 
+> **Detailed spec**: See [`specs/004-traveler-signin/tasks.md`](../004-traveler-signin/tasks.md) for the authoritative, implementation-ready task breakdown (35 tasks). The tasks below are a high-level summary.
+
 **Independent Test**: Sign in with valid credentials, verify access to auth pages, sign out, confirm auth pages inaccessible.
 
 ### Tests for User Story 2
 
 - [ ] T037 [P] [US2] Write login feature test: valid login, invalid credentials (generic error), token issuance, last_login_at update in `backend/tests/Feature/Auth/LoginTest.php`
-- [ ] T038 [P] [US2] Write logout feature test: token revocation, other sessions preserved in `backend/tests/Feature/Auth/LogoutTest.php`
+- [x] T038 [P] [US2] Write logout feature test: token revocation, other sessions preserved in `backend/tests/Feature/Auth/LogoutTest.php`
 - [ ] T039 [P] [US2] Write brute-force protection test: counter increment, lockout after 5 failures (1min/5min/30min escalation), reset on success in `backend/tests/Feature/Auth/BruteForceProtectionTest.php`
 
 ### Implementation for User Story 2
 
 - [ ] T040 [P] [US2] Create LoginRequest form request (email required, password required) in `backend/app/Http/Requests/Auth/LoginRequest.php`
-- [ ] T041 [US2] Create LoginAction with logic: check lockout, verify credentials, reset/increment failure counter, issue Sanctum token, dispatch events in `backend/app/Domains/Auth/Actions/LoginAction.php`
-- [ ] T042 [US2] Create LogoutAction to revoke current token in `backend/app/Domains/Auth/Actions/LogoutAction.php`
-- [ ] T043 [US2] Implement brute-force protection in AuthService: track failed_login_count, compute lockout duration (1min→5min→30min), check locked_until, dispatch AccountLockedOut event in `backend/app/Domains/Auth/Services/AuthService.php`
-- [ ] T044 [US2] Create LoginController (thin: validate, delegate to LoginAction, return UserResource + token or error) in `backend/app/Http/Controllers/Public/Auth/LoginController.php`
-- [ ] T045 [P] [US2] Create LogoutController (auth required, delegate to LogoutAction) in `backend/app/Http/Controllers/Public/Auth/LogoutController.php`
-- [ ] T046 [US2] Register POST `/api/public/auth/login` and POST `/api/public/auth/logout` routes in `backend/routes/api/public.php`
-- [ ] T047 [P] [US2] Create LoginForm component with email/password fields, Zod validation, generic error display, lockout countdown timer in `frontend/src/components/auth/LoginForm.tsx`
+- [ ] T041 [US2] Create AuthenticateTravelerAction with logic: check lockout, verify credentials, reset/increment failure counter, compute lockout duration (1min→5min→30min), issue Sanctum token, dispatch TravelerLoggedIn/LoginFailed/AccountLockedOut events in `backend/app/Domains/Auth/Actions/AuthenticateTravelerAction.php`. Brute-force protection is embedded in this action (not in a separate AuthService).
+- [x] T042 [US2] Create LogoutTravelerAction to revoke current token in `backend/app/Domains/Auth/Actions/LogoutTravelerAction.php`
+- [ ] T044 [US2] Create LoginController (thin: validate via LoginRequest, delegate to AuthenticateTravelerAction, return UserResource + token or error with `code` field) in `backend/app/Http/Controllers/Public/Auth/LoginController.php`
+- [x] T045 [P] [US2] Create LogoutController (auth required, delegate to LogoutTravelerAction, return 204) in `backend/app/Http/Controllers/Public/Auth/LogoutController.php`
+- [/] T046 [US2] Register POST `/api/public/auth/login` and POST `/api/public/auth/logout` routes in `backend/routes/api/public.php` *(logout route exists; login route pending)*
+- [ ] T047 [P] [US2] Create LoginForm component with email/password fields, Zod validation, generic error display, lockout error display (static message, no countdown — countdown would leak timing info to attackers) in `frontend/src/components/auth/LoginForm.tsx`
 - [ ] T048 [US2] Create login page with LoginForm, "Forgot password?" link, return-to-URL handling in `frontend/src/app/[locale]/auth/login/page.tsx`
 - [ ] T049 [US2] Integrate login/logout with useAuth hook: store token in httpOnly cookie via Next.js API route, update auth context on sign-in/out in `frontend/src/lib/hooks/useAuth.ts`
 

@@ -59,7 +59,7 @@ conflicts with it, the constitution wins.
 
 ### Frontend
 
-- **Framework**: Next.js 14
+- **Framework**: Next.js 16
 - **Language**: TypeScript (strict)
 - **Styling**: Tailwind CSS
 - **Rendering**: SSR/SSG for all public pages (SEO requirement)

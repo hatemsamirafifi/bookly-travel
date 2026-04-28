@@ -1,7 +1,9 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, authApi } from '../api/auth';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { User, authApi, AuthApiError } from '../api/auth';
 import { z } from 'zod';
 import { loginSchema, registerSchema } from '../validators/auth';
 
@@ -18,14 +20,36 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const locale = useLocale();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // In a full implementation, you'd check for a token in an httpOnly cookie
-    // via a server action or an API route here, and fetch the user profile if it exists.
-    setIsLoading(false);
+    const restoreSession = async () => {
+      try {
+        const res = await fetch('/api/auth/session');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.user && data.token) {
+            setUser(data.user);
+            setToken(data.token);
+          }
+        } else if (res.status === 401) {
+          setUser(null);
+          setToken(null);
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('sessionExpired', '1');
+          }
+        }
+      } catch (error) {
+        console.error('Session restore failed', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    restoreSession();
   }, []);
 
   const setAuth = (newUser: User, newToken: string) => {
@@ -66,6 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null);
         setIsLoading(false);
         // Clear httpOnly cookie here
+        router.push(`/${locale}/`);
       }
     }
   };

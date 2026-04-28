@@ -9,7 +9,7 @@ Implement the traveler account and authentication system for the Bookly tours ma
 
 ## Technical Context
 
-**Language/Version**: PHP 8.2+ (Laravel), TypeScript 5.x (Next.js 14)
+**Language/Version**: PHP 8.2+ (Laravel), TypeScript 5.x (Next.js 16)
 **Primary Dependencies**: Laravel Sanctum (token auth), Laravel Mail (queued email), Next.js App Router, Tailwind CSS, React Hook Form + Zod (frontend validation)
 **Storage**: PostgreSQL (primary), Redis (session cache, rate limiting, queue)
 **Testing**: Pest (PHP backend), Vitest + React Testing Library (frontend)
@@ -32,7 +32,7 @@ Implement the traveler account and authentication system for the Bookly tours ma
 | V | Platform-Controlled Commerce | Auth supports the identity layer for financial auditability | ✅ PASS |
 | VI | Completed-Booking Review Integrity | Not directly applicable to auth | ✅ PASS |
 | — | API-First | All auth endpoints are REST API; frontend consumes via API only | ✅ PASS |
-| — | Approved Stack | Laravel Sanctum, PostgreSQL, Redis, Next.js 14 — all approved | ✅ PASS |
+| — | Approved Stack | Laravel Sanctum, PostgreSQL, Redis, Next.js 16 — all approved | ✅ PASS |
 | — | Thin Controllers | Controllers delegate to AuthService/Actions — no business logic in controllers | ✅ PASS |
 | — | No Direct DB in Controllers | All data access through service layer | ✅ PASS |
 | — | Server-Side Validation | Form Requests for all write endpoints | ✅ PASS |

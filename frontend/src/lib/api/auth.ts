@@ -15,9 +15,9 @@ export interface User {
   email: string;
   role: 'traveler' | 'partner' | 'admin';
   locale: 'en' | 'es' | 'it';
-  email_verified: boolean;
-  created_at: string;
-  last_login_at: string | null;
+  emailVerified: boolean;
+  createdAt: string;
+  lastLoginAt: string | null;
 }
 
 export interface AuthResponse {
@@ -25,7 +25,50 @@ export interface AuthResponse {
   token: string;
 }
 
-async function fetchApi(endpoint: string, options: RequestInit = {}) {
+export interface UserApiType {
+  id: number;
+  name: string;
+  email: string;
+  role: 'traveler' | 'partner' | 'admin';
+  locale: 'en' | 'es' | 'it';
+  email_verified: boolean;
+  created_at: string;
+  last_login_at: string | null;
+}
+
+interface AuthApiResponse {
+  data: {
+    user: UserApiType;
+    token: string;
+  };
+}
+
+function mapUserApiToUser(apiUser: UserApiType): User {
+  return {
+    id: apiUser.id,
+    name: apiUser.name,
+    email: apiUser.email,
+    role: apiUser.role,
+    locale: apiUser.locale,
+    emailVerified: apiUser.email_verified,
+    createdAt: apiUser.created_at,
+    lastLoginAt: apiUser.last_login_at,
+  };
+}
+
+export class AuthApiError extends Error {
+  errors?: Record<string, string[]>;
+  code?: string;
+
+  constructor(message: string, errors?: Record<string, string[]>, code?: string) {
+    super(message);
+    this.name = 'AuthApiError';
+    this.errors = errors;
+    this.code = code;
+  }
+}
+
+async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -37,53 +80,59 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
     headers,
   });
 
-  const data = await response.json().catch(() => null);
+  const data: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(data?.message || 'Authentication failed');
+    const payload = data !== null && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+    const message = typeof payload?.message === 'string' ? payload.message : 'Authentication failed';
+    const errors = payload?.errors as Record<string, string[]> | undefined;
+    const code = typeof payload?.code === 'string' ? payload.code : undefined;
+    throw new AuthApiError(message, errors, code);
   }
 
-  return data;
+  return data as T;
 }
 
 export const authApi = {
   login: async (credentials: z.infer<typeof loginSchema>): Promise<AuthResponse> => {
-    return fetchApi('/login', {
+    const res = await fetchApi<AuthApiResponse>('/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
+    return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 
   register: async (data: z.infer<typeof registerSchema>): Promise<AuthResponse> => {
-    return fetchApi('/register', {
+    const res = await fetchApi<AuthApiResponse>('/register', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 
   logout: async (token: string): Promise<void> => {
-    await fetchApi('/logout', {
+    await fetchApi<void>('/logout', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
     });
   },
 
   forgotPassword: async (data: z.infer<typeof forgotPasswordSchema>): Promise<{ message: string }> => {
-    return fetchApi('/forgot-password', {
+    return fetchApi<{ message: string }>('/forgot-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
   resetPassword: async (data: z.infer<typeof resetPasswordSchema>): Promise<{ message: string }> => {
-    return fetchApi('/reset-password', {
+    return fetchApi<{ message: string }>('/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
   changePassword: async (token: string, data: z.infer<typeof changePasswordSchema>): Promise<{ message: string }> => {
-    return fetchApi('/change-password', {
+    return fetchApi<{ message: string }>('/change-password', {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
@@ -102,7 +151,7 @@ export const authApi = {
   },
   
   resendVerification: async (token: string): Promise<{ message: string }> => {
-    return fetchApi('/resend-verification', {
+    return fetchApi<{ message: string }>('/resend-verification', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
     });

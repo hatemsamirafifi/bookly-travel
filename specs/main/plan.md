@@ -17,21 +17,27 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: PHP 8.2+ (Laravel 11.x) / TypeScript 5 (Next.js 16)
+**Primary Dependencies**: Laravel Sanctum, Laravel Scout, React Hook Form, Zod, Next-Intl
+**Storage**: PostgreSQL 15, Redis 7, Cloudflare R2
+**Testing**: PHPUnit, Pest, Jest
+**Target Platform**: Web application (Responsive layout)
+**Project Type**: Multi-vendor marketplace
+**Performance Goals**: Sub-500ms API response time, instant bookings
+**Constraints**: PCI Compliance out-of-scope (Stripe handles CCs), Platform strictly Tours only
+**Scale/Scope**: International userbase (en, es, it initially)
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] Gate: All surfaces must consume the Laravel backend exclusively via APIs (API-First).
+- [ ] Gate: No server-rendered HTML from the backend is permitted for application views.
+- [ ] Gate: Every tour listing must be linked exclusively to tours/activities (Tours-Only Discipline).
+- [ ] Gate: All payments must be processed securely via Stripe.
+- [ ] Gate: Backend must support horizontal scaling with stateless sessions (Redis).
+- [ ] Gate: Bookings must offer direct, instant confirmation (No manual approval flows).
+- [ ] Gate: Review system must strictly lock submissions to completed bookings only.
 
 ## Project Structure
 
@@ -48,51 +54,36 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
-
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
+├── app/
+│   ├── Domains/
+│   │   └── Auth/
+│   │       ├── Actions/
+│   │       ├── Events/
+│   │       └── Listeners/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── Public/
+│   │   ├── Requests/
+│   │   └── Resources/
+│   ├── Jobs/
+│   ├── Mail/
+│   ├── Models/
+│   └── Providers/
+├── database/
+├── routes/
 └── tests/
 
 frontend/
 ├── src/
 │   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+│   ├── app/
+│   └── lib/
+└── messages/
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Web application with separated Laravel backend and Next.js frontend APIs.
 
 ## Complexity Tracking
 
