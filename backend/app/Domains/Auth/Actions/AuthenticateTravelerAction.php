@@ -39,19 +39,20 @@ class AuthenticateTravelerAction
 
             if ($user->locked_until && $user->locked_until->isFuture()) {
                 DB::afterCommit(function () use ($normalizedEmail, $user) {
-                    event(new LoginFailed($normalizedEmail, $user));
+                    event(new LoginFailed($normalizedEmail, $user, rejectedDueToLockout: true));
                 });
 
                 return [
                     'success' => false,
-                    'message' => 'Invalid email or password.'
+                    'locked' => true,
+                    'message' => 'Too many failed attempts. Please try again later.'
                 ];
             }
 
             if (!Hash::check($data['password'], $user->password)) {
                 $user->failed_login_count = ($user->failed_login_count ?? 0) + 1;
 
-                if ($user->failed_login_count >= 5) {
+                if ($user->failed_login_count > 0 && $user->failed_login_count % 5 == 0) {
                     $lastLogin = AuthAuditLog::where('user_id', $user->id)
                         ->where('event_type', 'login_success')
                         ->latest()

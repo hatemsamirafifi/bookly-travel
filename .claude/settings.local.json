@@ -5,7 +5,8 @@
       "Bash(npx @spec-kit/tasks specs/main)",
       "Bash(grep -E \"\\.(json|env|php)$\")",
       "Bash(grep -E \"\\.(json|js|ts)$\")",
-      "Bash(powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/setup-plan.ps1 -Json)"
+      "Bash(powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/setup-plan.ps1 -Json)",
+      "Bash(php artisan *)"
     ]
   }
 }

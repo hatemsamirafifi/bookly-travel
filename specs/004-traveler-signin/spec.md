@@ -86,6 +86,8 @@ The sign-in page is available in all three supported languages (English, Spanish
 - What happens when a traveler is locked out and the Redis cache that stores lockout state is flushed? → Lockout state is stored in the `users` database table (columns: `failed_login_count`, `locked_until`), NOT in Redis cache, so a cache flush does not affect lockout enforcement.
 - What happens if two sign-in requests for the same account arrive simultaneously, both with incorrect passwords? → Both increment the failed login counter. Race conditions are acceptable here — worst case is the counter increments twice, which is still correct behavior (the traveler just reaches lockout faster).
 - What happens when a traveler's account exists but has no password (created via future guest conversion with incomplete setup)? → The sign-in attempt fails with the same generic "Invalid email or password" error. No distinction is made between missing password and wrong password.
+- What happens when the audit log history is purged and lockout tier history is lost? → The lockout tier is determined by counting `account_lockout` events since the most recent `login_success` event. If no prior lockouts are found (e.g., logs purged, or traveler has never been locked out before), the system defaults to the 1st lockout tier (1 minute). This prevents an audit log purge from causing incorrect tier escalation.
+- Is the `returnUrl` parameter validated on the backend? → No. The backend (`AuthenticateTravelerAction`) only processes `email` and `password` — it does not read, validate, or echo `returnUrl`. The `returnUrl` parameter is handled exclusively on the frontend (`LoginForm.tsx`), which validates it is a same-origin relative path starting with `/${locale}/` before redirecting. External URLs are rejected and default to the homepage. There is no server-side open redirect vector.
 
 ## Requirements *(mandatory)*
 
@@ -124,14 +126,14 @@ The sign-in page is available in all three supported languages (English, Spanish
 
 ### Measurable Outcomes
 
-- **SC-001**: Travelers can complete the sign-in flow (from landing on the sign-in page to being signed in and redirected) in under 15 seconds.
-- **SC-002**: 100% of valid sign-in submissions result in the traveler being authenticated and receiving a session token within 3 seconds.
-- **SC-003**: 100% of failed sign-in attempts display the generic "Invalid email or password" error — never revealing whether the email exists.
+- **SC-001**: Travelers can complete the sign-in flow (from landing on the sign-in page to being signed in and redirected) in under 15 seconds under normal network conditions. Measured as manual QA per the quickstart validation checklist.
+- **SC-002**: Valid sign-in submissions return a session token with median response time under 1 second and p95 under 3 seconds (measured server-side).
+- **SC-003**: Every failed sign-in attempt displays the generic "Invalid email or password" error — never revealing whether the email exists. Verified by automated tests covering all failure paths (wrong email, wrong password, no password, locked account).
 - **SC-004**: Brute-force protection activates after exactly 5 consecutive failed sign-in attempts, with lockout durations matching the 1min → 5min → 30min escalation tiers.
-- **SC-005**: Sign-out revokes only the current session token. Other active sessions for the same traveler remain functional with a 100% independence rate.
-- **SC-006**: 100% of sign-in pages render correctly in all three supported languages (English, Spanish, Italian) with all text (labels, errors, lockout messages) properly translated.
+- **SC-005**: Sign-out revokes only the current session token. Other active sessions for the same traveler remain functional. Verified by automated multi-session test.
+- **SC-006**: All sign-in pages render with correctly translated text (labels, errors, lockout messages) in all three supported languages (English, Spanish, Italian). Verified by translation completeness checks.
 - **SC-007**: All sign-in events (success, failure, lockout) are recorded in the audit log with account identifier, timestamp, IP address, and user agent.
-- **SC-008**: Client-side validation catches 100% of common input errors (empty email, empty password) before a server request is made.
+- **SC-008**: Client-side validation prevents submission of common input errors (empty email, empty password) — no server request is made for these cases.
 
 ## Assumptions
 

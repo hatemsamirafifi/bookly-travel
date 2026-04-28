@@ -35,6 +35,9 @@ class LogAuthEvent
         if (isset($event->email)) {
             $metadata['email'] = hash_hmac('sha256', strtolower(trim($event->email)), config('app.key'));
         }
+        if (isset($event->rejectedDueToLockout) && $event->rejectedDueToLockout) {
+            $metadata['rejected_due_to_lockout'] = true;
+        }
 
         AuthAuditLog::create([
             'user_id' => $userId,

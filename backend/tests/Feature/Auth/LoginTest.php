@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\User;
+use App\Mail\AccountLockedOutMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Testing\Fluent\AssertableJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\assertDatabaseHas;
@@ -105,6 +107,15 @@ it('returns structured error codes', function () {
     ])
         ->assertStatus(423)
         ->assertJsonPath('code', 'account_locked');
+
+    $auditLog = \App\Models\AuthAuditLog::where('user_id', $user->id)
+        ->where('event_type', 'login_failed')
+        ->latest()
+        ->first();
+
+    expect($auditLog)->not->toBeNull();
+    expect($auditLog->metadata)->toBeArray();
+    expect($auditLog->metadata['rejected_due_to_lockout'])->toBeTrue();
 });
 
 it('locks account after 5 failed attempts with 1 minute tier', function () {
@@ -272,6 +283,25 @@ it('survives redis cache flush during lockout', function () {
 });
 
 
+it('rate limits the login endpoint after 10 requests', function () {
+    $user = User::factory()->create([
+        'email' => 'ratelimit@example.com',
+        'password' => Hash::make('Password123!'),
+    ]);
+
+    for ($i = 0; $i < 10; $i++) {
+        postJson('/api/public/auth/login', [
+            'email' => 'ratelimit@example.com',
+            'password' => 'Password123!',
+        ]);
+    }
+
+    postJson('/api/public/auth/login', [
+        'email' => 'ratelimit@example.com',
+        'password' => 'Password123!',
+    ])->assertStatus(429);
+});
+
 it('responds within 3 seconds', function () {
     $user = User::factory()->create([
         'email' => 'perf@example.com',
@@ -279,14 +309,34 @@ it('responds within 3 seconds', function () {
     ]);
 
     $start = microtime(true);
-    
+
     postJson('/api/public/auth/login', [
         'email' => 'perf@example.com',
         'password' => 'Password123!',
     ])->assertOk();
 
     $elapsed = (microtime(true) - $start) * 1000;
-    
+
     expect($elapsed)->toBeLessThan(3000);
 })->group('performance');
+
+it('queues an email notification when account is locked out', function () {
+    Mail::fake();
+
+    $user = User::factory()->create([
+        'email' => 'notify@example.com',
+        'password' => Hash::make('Password123!'),
+    ]);
+
+    for ($i = 0; $i < 5; $i++) {
+        postJson('/api/public/auth/login', [
+            'email' => 'notify@example.com',
+            'password' => 'WrongPassword!',
+        ]);
+    }
+
+    Mail::assertQueued(AccountLockedOutMail::class, function ($mail) use ($user) {
+        return $mail->hasTo($user->email);
+    });
+});
 

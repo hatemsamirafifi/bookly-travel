@@ -69,8 +69,9 @@ Sitemap: https://example.com/sitemap.xml
 <!-- Self-referencing canonical (recommended) -->
 <link rel="canonical" href="https://example.com/current-page">
 
-<!-- For paginated content, use self-referencing canonical on each page -->
-<link rel="canonical" href="https://example.com/products?page=2">
+<!-- For paginated content -->
+<link rel="canonical" href="https://example.com/products">
+<!-- Or use rel="prev" / rel="next" for explicit pagination -->
 ```
 
 ### XML sitemap
