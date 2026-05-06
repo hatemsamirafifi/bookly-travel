@@ -1,4 +1,4 @@
-# Bookly — Claude Code Guide
+﻿# Bookly — Claude Code Guide
 
 ## Project Overview
 

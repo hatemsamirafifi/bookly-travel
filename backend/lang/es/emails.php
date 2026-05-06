@@ -11,4 +11,12 @@ return [
         'expiration' => 'Este enlace expirará en :minutes minutos.',
         'rights' => 'Todos los derechos reservados.',
     ],
+    'account_locked_out' => [
+        'subject' => 'Alerta de seguridad: Cuenta bloqueada temporalmente',
+        'title' => 'Cuenta bloqueada temporalmente',
+        'greeting' => 'Hola :name,',
+        'body' => 'Detectamos demasiados intentos fallidos de inicio de sesión en tu cuenta de :platform. Por tu seguridad, tu cuenta ha sido bloqueada temporalmente. Puedes intentar iniciar sesión nuevamente después de que expire el período de bloqueo.',
+        'security_note' => 'Si no fuiste tú, te recomendamos cambiar tu contraseña una vez que expire el bloqueo para proteger tu cuenta.',
+        'rights' => 'Todos los derechos reservados.',
+    ],
 ];

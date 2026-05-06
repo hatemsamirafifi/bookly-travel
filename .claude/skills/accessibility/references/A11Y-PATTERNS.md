@@ -16,7 +16,7 @@ function openModal(modal) {
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
 
-  function onModalKeydown(e) {
+  modal.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       if (e.shiftKey && document.activeElement === firstElement) {
         e.preventDefault();
@@ -27,28 +27,11 @@ function openModal(modal) {
       }
     }
     if (e.key === 'Escape') {
-      closeModal(modal);
+      closeModal();
     }
-  }
+  });
 
-  modal.addEventListener('keydown', onModalKeydown);
-
-  // Return cleanup function so callers can remove the listener on any close path
-  modal._cleanupFocusTrap = () => {
-    modal.removeEventListener('keydown', onModalKeydown);
-    delete modal._cleanupFocusTrap;
-  };
-
-  if (firstElement) {
-    firstElement.focus();
-  }
-}
-
-function closeModal(modal) {
-  if (modal._cleanupFocusTrap) {
-    modal._cleanupFocusTrap();
-  }
-  modal.close();
+  firstElement.focus();
 }
 ```
 
@@ -94,7 +77,6 @@ Announce errors to screen readers and focus the first invalid field on submit.
 
 ```html
 <form novalidate>
-  <div id="error-summary" class="error-summary" role="alert" tabindex="-1"></div>
   <div class="field" aria-live="polite">
     <label for="email">Email</label>
     <input type="email" id="email"
@@ -109,17 +91,15 @@ Announce errors to screen readers and focus the first invalid field on submit.
 
 ```javascript
 form.addEventListener('submit', (e) => {
-  const errors = form.querySelectorAll('[aria-invalid="true"]');
-  if (errors.length > 0) {
+  const firstError = form.querySelector('[aria-invalid="true"]');
+  if (firstError) {
     e.preventDefault();
-    errors[0].focus();
+    firstError.focus();
 
     const errorSummary = document.getElementById('error-summary');
-    if (errorSummary) {
-      errorSummary.textContent =
-        `${errors.length} errors found. Please fix them and try again.`;
-      errorSummary.focus();
-    }
+    errorSummary.textContent =
+      `${errors.length} errors found. Please fix them and try again.`;
+    errorSummary.focus();
   }
 });
 ```
@@ -215,12 +195,12 @@ Use `aria-live` to announce dynamic content changes to screen readers without mo
 
 ```html
 <!-- Status updates (polite — waits for pause in speech) -->
-<div id="polite-announcer" aria-live="polite" aria-atomic="true" class="status">
+<div aria-live="polite" aria-atomic="true" class="status">
   <!-- Content updates announced to screen readers -->
 </div>
 
 <!-- Urgent alerts (assertive — interrupts) -->
-<div id="assertive-announcer" role="alert">
+<div role="alert" aria-live="assertive">
   <!-- Interrupts current announcement -->
 </div>
 ```

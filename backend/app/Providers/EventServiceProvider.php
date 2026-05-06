@@ -24,6 +24,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Domains\Auth\Events\AccountLockedOut::class => [
             \App\Domains\Auth\Listeners\LogAuthEvent::class,
+            \App\Domains\Auth\Listeners\SendAccountLockedOutEmail::class,
         ],
         \App\Domains\Auth\Events\PasswordReset::class => [
             \App\Domains\Auth\Listeners\LogAuthEvent::class,

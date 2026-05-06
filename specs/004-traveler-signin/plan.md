@@ -20,6 +20,7 @@ Implement traveler sign-in with email and password, sign-out with single-token r
 **Performance Goals**: Sign-in response < 3 seconds; page render < 15 seconds end-to-end
 **Constraints**: Rate limit 10 req/min per IP on auth endpoints (`throttle:auth`); generic error messages to prevent email enumeration; no new DB columns or migrations
 **Scale/Scope**: Single feature within Phase 1 MVP; supports EN/ES/IT locales; no social OAuth
+**Terminology**: Use "sign in" / "sign out" for all user-facing copy (buttons, labels, page titles, translations). Use "login" / "logout" for technical identifiers (API endpoints, controller/action filenames, schema names, function names). Example: the page title reads "Sign In" but the endpoint is `/login` and the file is `LoginController.php`.
 
 ## Constitution Check
 
