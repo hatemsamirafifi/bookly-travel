@@ -63,5 +63,74 @@
       "nameRequired": "Full name is required.",
       "invalidLocale": "Selected language is not supported."
     }
+  },
+  "search": {
+    "placeholder": "Search tours, destinations, categories...",
+    "searchButton": "Search",
+    "noResults": "No tours found",
+    "noResultsHint": "Try broadening your search terms or browse tours by category.",
+    "browseCategories": "Browse Categories",
+    "resultsFor": "{total} result for \"{query}\"",
+    "resultsFor_plural": "{total} results for \"{query}\"",
+    "toursAvailable": "{total} tour available",
+    "toursAvailable_plural": "{total} tours available",
+    "filters": "Filters",
+    "clearAll": "Clear all",
+    "category": "Category",
+    "location": "Location",
+    "priceRange": "Price Range",
+    "duration": "Duration",
+    "availableDate": "Available Date",
+    "minPrice": "Minimum price",
+    "maxPrice": "Maximum price",
+    "sortBy": "Sort by:",
+    "sortRelevance": "Relevance",
+    "sortPriceLow": "Price: Low to High",
+    "sortPriceHigh": "Price: High to Low",
+    "sortRating": "Top Rated",
+    "sortNewest": "Newest",
+    "durations": {
+      "halfDay": "Half Day (≤4h)",
+      "fullDay": "Full Day (4-8h)",
+      "multiDay": "Multi-Day (>8h)"
+    }
+  },
+  "tour": {
+    "about": "About This Tour",
+    "highlights": "Highlights",
+    "included": "What's Included",
+    "excluded": "What's Excluded",
+    "meetingPoint": "Meeting Point",
+    "cancellationPolicy": "Cancellation Policy",
+    "reviews": "Reviews",
+    "selectDate": "Select a Date",
+    "nextAvailable": "Next available",
+    "unavailable": "Currently Unavailable",
+    "unavailableHint": "No upcoming dates are available for this tour. Check back soon.",
+    "bookNow": "Book Now",
+    "participants": "Participants",
+    "perPerson": "/ person",
+    "allowedRange": "{min}–{max} allowed",
+    "selected": "Selected:",
+    "partialTranslation": "Some content is displayed in English"
+  },
+  "home": {
+    "heroTitle": "Discover & Book Amazing Tours",
+    "heroSubtitle": "Explore thousands of experiences curated by local experts. Your next adventure starts here.",
+    "featuredTours": "Featured Tours",
+    "viewAll": "View all",
+    "popularCategories": "Popular Categories",
+    "topDestinations": "Top Destinations"
+  },
+  "locale": {
+    "switch": "Switch language",
+    "en": "English",
+    "es": "Español",
+    "it": "Italiano"
+  },
+  "nav": {
+    "home": "Home",
+    "categories": "Categories",
+    "destinations": "Destinations"
   }
 }

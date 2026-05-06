@@ -7,6 +7,13 @@ use App\Mail\AccountLockedOutMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * Sends an email notification when a traveler's account is locked out.
+ *
+ * Idempotent: checks last_lockout_email_sent_at against current locked_until
+ * before sending. On retry, if the timestamps match the email was already sent
+ * and is skipped. Satisfies constitution's retry-safety mandate (§6).
+ */
 class SendAccountLockedOutEmail implements ShouldQueue
 {
     /**
@@ -24,8 +31,21 @@ class SendAccountLockedOutEmail implements ShouldQueue
      */
     public function handle(AccountLockedOut $event): void
     {
-        Mail::to($event->user->email)->send(
-            new AccountLockedOutMail($event->user)
+        $user = $event->user->fresh();
+
+        if (
+            $user->last_lockout_email_sent_at instanceof \Carbon\Carbon &&
+            $user->last_lockout_email_sent_at->equalTo($user->locked_until)
+        ) {
+            return;
+        }
+
+        Mail::to($user->email)->send(
+            new AccountLockedOutMail($user)
         );
+
+        $user->update([
+            'last_lockout_email_sent_at' => $user->locked_until,
+        ]);
     }
 }

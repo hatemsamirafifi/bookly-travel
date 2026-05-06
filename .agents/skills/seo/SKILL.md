@@ -7,7 +7,7 @@ metadata:
   version: "1.0"
 ---
 
-# SEO optimization
+# SEO
 
 Search engine optimization based on Lighthouse SEO audits and Google Search guidelines. Focus on technical SEO, on-page optimization, and structured data.
 
@@ -102,7 +102,7 @@ Sitemap: https://example.com/sitemap.xml
 
 ### URL structure
 
-```
+```text
 ✅ Good URLs:
 https://example.com/products/blue-widget
 https://example.com/blog/how-to-use-widgets
@@ -122,7 +122,7 @@ https://example.com/products/item/category/subcategory/blue-widget-2024-sale-dis
 
 ### HTTPS & security
 
-```html
+```http
 <!-- Ensure all resources use HTTPS -->
 <img src="https://example.com/image.jpg">
 
@@ -446,10 +446,10 @@ body {
 
 ```html
 <!-- For multi-language sites -->
-<link rel="alternate" hreflang="en" href="https://example.com/page">
+<link rel="alternate" hreflang="en" href="https://example.com/en/page">
 <link rel="alternate" hreflang="es" href="https://example.com/es/page">
-<link rel="alternate" hreflang="fr" href="https://example.com/fr/page">
-<link rel="alternate" hreflang="x-default" href="https://example.com/page">
+<link rel="alternate" hreflang="it" href="https://example.com/it/page">
+<link rel="alternate" hreflang="x-default" href="https://example.com/en/page">
 ```
 
 ### Language declaration

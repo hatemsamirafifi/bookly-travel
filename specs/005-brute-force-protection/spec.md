@@ -2,7 +2,7 @@
 
 **Feature Branch**: `005-brute-force-protection`
 **Created**: 2026-04-28
-**Status**: Draft
+**Status**: Implemented
 **Input**: User description: "phase 5 only specs\004-traveler-signin\tasks.md"
 **Parent Feature**: `004-traveler-signin` (Phase 5 — User Story 3)
 
@@ -60,11 +60,12 @@ A legitimate traveler who mistyped their password a few times eventually remembe
 - **What happens if two sign-in requests for the same account arrive simultaneously, both with incorrect passwords?** Both requests increment the `failed_login_count`. The worst case is a double-increment (e.g., count goes from 4 to 6 instead of 4 to 5), which is acceptable — the attacker reaches lockout slightly later (at 10 instead of 5), but the account is still protected. No data corruption occurs.
 - **What happens to `failed_login_count` when a lockout is triggered?** The counter is NOT reset at lockout time. During the lockout window, no new increments occur because attempts are rejected before credential verification. However, every lockout-rejected attempt is still logged as a `login_failed` audit event with a `rejected_due_to_lockout` flag. After the lockout expires, the counter resumes from its current value, so the next lockout triggers at the next multiple of 5 (e.g., 10, 15).
 - **What prevents a "slow-burn" attack where an attacker succeeds occasionally to reset the counter?** The counter only resets on a successful sign-in. If an attacker fails 4 times, guesses correctly on the 5th, and signs in, the counter resets to 0. However, if they fail 4 times and do not succeed, the counter persists indefinitely until a legitimate successful sign-in occurs. There is no time-based decay.
-- **What happens to lockout state if the audit log history is purged?** Lockout tiers are determined by counting `account_lockout` events in `auth_audit_logs` since the most recent `login_success` event for that account. If audit logs are purged and no prior lockout history is found, the system defaults to the 1st lockout tier (1 minute). This prevents a log purge from causing incorrect tier escalation to 30 minutes.
+- **What happens to lockout state if the audit log history is purged?** Lockout tiers are determined by counting `account_lockout` events in `auth_audit_logs` since the most recent `login_success` event for that account. If audit logs are purged and no prior lockout history is found, the system defaults to the 1st lockout tier (1 minute). The system cannot distinguish "logs were purged" from "genuinely no prior lockouts" — both produce zero `account_lockout` rows — but the tier-1 default is the safe fallback in either case. This prevents a log purge from causing incorrect tier escalation to 30 minutes.
 - **What happens if a traveler has never signed in successfully (no `login_success` events exist)?** The system counts ALL `account_lockout` events for that account to determine the tier. Since there is no `login_success` to anchor the "since" point, every lockout event in history is counted.
 - **What happens when the `locked_until` timestamp passes but the traveler hasn't attempted sign-in yet?** The account is not "auto-unlocked" in the database — `locked_until` remains set but is simply in the past. The next sign-in attempt checks `locked_until->isFuture()` and, finding it false, proceeds to credential verification. A successful sign-in at that point clears both `locked_until` and `failed_login_count`.
 - **What happens when a legitimate traveler is locked out and contacts support?** There is no manual unlock mechanism in Phase 1. The traveler receives an email notification when their account is locked out, alerting them to the suspicious activity. The traveler must wait for the lockout to expire. This is acceptable because the maximum lockout is 30 minutes.
 - **How does the lockout interact with IP-based rate limiting?** These are independent layers. The `throttle:auth` middleware (10 req/min/IP) provides network-level protection, while the account lockout provides per-account protection. An attacker from a single IP would hit both limits. A distributed attack from multiple IPs would bypass IP rate limiting but still be stopped by per-account lockout.
+- **Can an attacker keep a legitimate traveler locked out indefinitely by continuously triggering 30-minute lockouts?** Yes — this is accepted behavior in Phase 1. After the 3rd lockout, every subsequent lockout remains at 30 minutes with no upper cap. The traveler is notified by email on each lockout event and must wait for the lockout to expire, then sign in successfully before the attacker triggers another cycle. In practice, the IP-based rate limit (10 req/min) significantly slows the attacker, and the traveler can use the "Forgot Password" flow (future spec) as an alternative recovery path. A manual admin unlock mechanism may be added in a future phase if this proves problematic.
 
 ## Clarifications
 
@@ -81,7 +82,7 @@ A legitimate traveler who mistyped their password a few times eventually remembe
 
 ### Functional Requirements
 
-- **FR-001**: The system MUST track consecutive failed sign-in attempts per traveler account using a `failed_login_count` counter stored in the `users` database table.
+- **FR-001**: The system MUST track consecutive failed sign-in attempts per traveler account using a `failed_login_count` counter stored in the `users` database table (see Key Entities for column details).
 - **FR-002**: The system MUST increment `failed_login_count` by 1 on each failed credential verification where a user exists (wrong password or account with no password). Non-existent emails MUST NOT increment `failed_login_count` — they return the generic error message with no account-specific tracking.
 - **FR-003**: The system MUST trigger an account lockout when `failed_login_count` reaches a multiple of 5 (`failed_login_count > 0 && failed_login_count % 5 == 0`). Lockout is enforced by setting `locked_until` on the `users` table to the current time plus the lockout duration.
 - **FR-004**: The system MUST implement escalating lockout durations based on the number of prior lockouts since the last successful sign-in:
@@ -93,14 +94,14 @@ A legitimate traveler who mistyped their password a few times eventually remembe
 - **FR-007**: The system MUST NOT reveal whether credentials were correct or incorrect when rejecting a locked account. The same lockout message is returned regardless of credential validity.
 - **FR-008**: The system MUST reset `failed_login_count` to 0 and `locked_until` to null exclusively upon successful sign-in. The counter MUST NOT reset on lockout expiry, session boundaries, or time decay. The lockout tier resets — the next lockout (if triggered) starts at the 1-minute tier.
 - **FR-009**: The system MUST dispatch a `LoginFailed` event on every failed credential verification, including the email and user (or null if the user does not exist). Additionally, the system MUST dispatch a `LoginFailed` event for every sign-in attempt rejected due to an active lockout, including a `rejected_due_to_lockout` flag in the event payload.
-- **FR-010**: The system MUST dispatch an `AccountLockedOut` event when a lockout is triggered (exactly when `failed_login_count` reaches 5 and the lockout tier is determined).
+- **FR-010**: The system MUST dispatch an `AccountLockedOut` event when a lockout is triggered (i.e., when `failed_login_count` reaches a multiple of 5 and the lockout tier is determined).
 - **FR-011**: The system MUST store lockout state exclusively in the `users` database table (`failed_login_count` and `locked_until` columns). The lockout mechanism MUST NOT depend on cache — a cache flush must not affect lockout enforcement.
 - **FR-012**: The frontend MUST display a user-facing lockout message when the server returns a 423 status. The message MUST be displayed in the traveler's selected language (English, Spanish, or Italian) using the `auth.errors.accountLocked` translation key.
-- **FR-013**: The system MUST send an email notification to the traveler when their account is locked out. The notification MUST be triggered by the `AccountLockedOut` event and dispatched as a queued job.
+- **FR-013**: The system MUST send an email notification to the traveler when their account is locked out. The notification MUST be triggered by the `AccountLockedOut` event and dispatched as a queued job. The email MUST be rendered in the traveler's preferred language (English, Spanish, or Italian) and include: the account email, the lockout timestamp, and instructions to wait for expiry or use password reset (see [login-lockout-api.md](./contracts/login-lockout-api.md) for full contract).
 
 ### Key Entities
 
-- **Traveler Account** (`users` table): Contains `failed_login_count` (integer, tracks consecutive failures) and `locked_until` (datetime/null, the lockout expiration timestamp). Both are reset on successful sign-in.
+- **Traveler Account** (`users` table): Contains `failed_login_count` (integer, tracks consecutive failures), `locked_until` (datetime/null, the lockout expiration timestamp), and `last_lockout_email_sent_at` (datetime/null, tracks the `locked_until` value for which a notification was last sent — enables retry-safe idempotency). All three are reset to 0/null on successful sign-in.
 - **Auth Audit Log** (`auth_audit_logs` table): Append-only event log. Entries of type `account_lockout` are counted to determine the lockout tier. Entries of type `login_failed` record individual failures. Entries of type `login_success` serve as the tier-reset anchor point.
 
 ## Success Criteria *(mandatory)*
@@ -123,4 +124,4 @@ A legitimate traveler who mistyped their password a few times eventually remembe
 - The frontend `AuthApiError` class supports a `code` field so the frontend can distinguish `account_locked` (423) from `invalid_credentials` (422) responses and display the correct translated message.
 - The lockout tier is determined dynamically by counting prior lockout events rather than stored as a separate tier column. This avoids schema changes and keeps the tier calculation auditable.
 - There is no manual account unlock mechanism for admins in Phase 1. Locked-out travelers must wait for the lockout to expire.
-- The "Forgot Password" flow (spec 005, planned separately) does not interact with the lockout mechanism — requesting a password reset does not unlock an account.
+- The "Forgot Password" flow (a future spec, planned separately) does not interact with the lockout mechanism — requesting a password reset does not unlock an account.

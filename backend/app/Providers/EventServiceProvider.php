@@ -45,7 +45,17 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \App\Models\Tour::saved(function (\App\Models\Tour $tour) {
+            if ($tour->shouldBeSearchable()) {
+                \App\Domains\Search\Actions\IndexTourAction::dispatch($tour->id);
+            } else {
+                \App\Domains\Search\Actions\RemoveFromIndexAction::dispatch($tour->id);
+            }
+        });
+
+        \App\Models\Tour::deleted(function (\App\Models\Tour $tour) {
+            \App\Domains\Search\Actions\RemoveFromIndexAction::dispatch($tour->id);
+        });
     }
 
     /**

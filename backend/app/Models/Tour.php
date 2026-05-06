@@ -1,0 +1,153 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+
+class Tour extends Model
+{
+    use Searchable;
+
+    protected $fillable = [
+        'partner_id',
+        'category_id',
+        'slug',
+        'location',
+        'location_slug',
+        'duration_minutes',
+        'duration_label',
+        'group_size_min',
+        'group_size_max',
+        'status',
+        'cover_image_url',
+        'is_featured',
+        'created_at',
+        'updated_at',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'group_size_min' => 'integer',
+            'group_size_max' => 'integer',
+            'duration_minutes' => 'integer',
+            'is_featured' => 'boolean',
+        ];
+    }
+
+    public function toSearchableArray(): array
+    {
+        $en = $this->translations()->where('locale', 'en')->first();
+        $es = $this->translations()->where('locale', 'es')->first();
+        $it = $this->translations()->where('locale', 'it')->first();
+
+        return [
+            'id' => $this->id,
+            'title_en' => $en?->title ?? '',
+            'title_es' => $es?->title ?? '',
+            'title_it' => $it?->title ?? '',
+            'description_en' => $en?->description ?? '',
+            'description_es' => $es?->description ?? '',
+            'description_it' => $it?->description ?? '',
+            'highlights_en' => $en ? json_encode($en->highlights ?? []) : '[]',
+            'highlights_es' => $es ? json_encode($es->highlights ?? []) : '[]',
+            'highlights_it' => $it ? json_encode($it->highlights ?? []) : '[]',
+            'slug' => $this->slug,
+            'location' => $this->location,
+            'location_slug' => $this->location_slug,
+            'category_name' => $this->category?->name ?? '',
+            'category_slug' => $this->category?->slug ?? '',
+            'price_amount' => $this->lowestPriceAmount(),
+            'price_currency' => $this->currency(),
+            'duration_minutes' => $this->duration_minutes,
+            'duration_label' => $this->duration_label,
+            'average_rating' => $this->averageRating(),
+            'review_count' => $this->reviewCount(),
+            'cover_image_url' => $this->cover_image_url,
+            'image_urls' => $this->allImageUrls(),
+            'group_size_min' => $this->group_size_min,
+            'group_size_max' => $this->group_size_max,
+            'available_dates' => $this->upcomingAvailableDates(),
+            'languages' => $this->availableLanguages(),
+            'status' => $this->status,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
+
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status === 'published'
+            && $this->hasValidPricing()
+            && $this->hasUpcomingAvailability();
+    }
+
+    public function hasValidPricing(): bool
+    {
+        return $this->lowestPriceAmount() > 0;
+    }
+
+    public function hasUpcomingAvailability(): bool
+    {
+        return count($this->upcomingAvailableDates()) > 0;
+    }
+
+    public function lowestPriceAmount(): int
+    {
+        // Delegate to Pricing domain (spec 004) — placeholder returns 0
+        return 0;
+    }
+
+    public function currency(): string
+    {
+        return 'EUR';
+    }
+
+    public function averageRating(): float
+    {
+        // Delegate to Reviews domain (spec 010) — placeholder returns 0.0
+        return 0.0;
+    }
+
+    public function reviewCount(): int
+    {
+        // Delegate to Reviews domain (spec 010)
+        return 0;
+    }
+
+    public function allImageUrls(): array
+    {
+        // Delegate to Tour Images (spec 003)
+        return $this->cover_image_url ? [$this->cover_image_url] : [];
+    }
+
+    public function upcomingAvailableDates(): array
+    {
+        // Delegate to Availability domain (spec 004) — placeholder returns empty array
+        return [];
+    }
+
+    public function availableLanguages(): array
+    {
+        return $this->translations()
+            ->whereNotNull('title')
+            ->pluck('locale')
+            ->toArray();
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(TourTranslation::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function partner()
+    {
+        return $this->belongsTo(User::class, 'partner_id');
+    }
+}

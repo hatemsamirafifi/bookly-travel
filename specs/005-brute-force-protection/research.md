@@ -34,7 +34,7 @@
 
 **Decision**: Create a `SendAccountLockedOutEmail` listener attached to the `AccountLockedOut` event, dispatching a queued `AccountLockedOutNotification` mail class.
 
-**Rationale**: Follows existing project pattern — events → listeners → queued jobs. The `AccountLockedOut` event already fires on every lockout trigger. Adding a second listener is the minimal change. The mail is queued to avoid blocking the login response. Duplicate sends from retried jobs are acceptable (user seeing two lockout emails is not harmful).
+**Rationale**: Follows existing project pattern — events → listeners → queued jobs. The `AccountLockedOut` event already fires on every lockout trigger. Adding a second listener is the minimal change. The mail is queued to avoid blocking the login response. While duplicate sends from retried jobs would not be harmful (user seeing two lockout emails is benign), a timestamp-based dedup check (`last_lockout_email_sent_at` vs current `locked_until`) was implemented to satisfy the constitution's retry-safety mandate (§274-276: "All queued jobs MUST be retry-safe"). This is a belt-and-suspenders approach — not strictly necessary for correctness, but required for constitution compliance.
 
 **Alternatives considered**:
 - **Inline mail in `AuthenticateTravelerAction`**: Rejected — violates thin action principle and blocks login response on SMTP latency.

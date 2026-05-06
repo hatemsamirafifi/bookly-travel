@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'locale',
         'failed_login_count',
         'locked_until',
+        'last_lockout_email_sent_at',
         'last_login_at',
     ];
 
@@ -45,6 +46,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'verification_email_sent_at' => 'datetime',
             'locked_until' => 'datetime',
+            'last_lockout_email_sent_at' => 'datetime',
             'last_login_at' => 'datetime',
             'password' => 'hashed',
         ];

@@ -1,50 +1,167 @@
 services:
-  # PostgreSQL 15 — Primary database (constitution-mandated)
+  # Next.js Frontend
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bookly-frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost/api
+    networks:
+      - bookly-network
+    depends_on:
+      - laravel
+
+  # Laravel Backend
+  laravel:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bookly-backend
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=bookly
+      - DB_USERNAME=bookly
+      - DB_PASSWORD=secret
+      - REDIS_HOST=redis
+      - APP_URL=http://localhost/api
+    networks:
+      - bookly-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Laravel Queue Worker
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bookly-queue
+    restart: unless-stopped
+    command: php artisan queue:work
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=bookly
+      - DB_USERNAME=bookly
+      - DB_PASSWORD=secret
+      - REDIS_HOST=redis
+      - APP_URL=http://localhost/api
+    networks:
+      - bookly-network
+    depends_on:
+      - laravel
+      - redis
+
+  # Laravel Task Scheduler
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bookly-scheduler
+    restart: unless-stopped
+    command: php artisan schedule:work
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=bookly
+      - DB_USERNAME=bookly
+      - DB_PASSWORD=secret
+      - REDIS_HOST=redis
+      - APP_URL=http://localhost/api
+    networks:
+      - bookly-network
+    depends_on:
+      - laravel
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: bookly-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+    - ./backend:/var/www/html
+    - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - bookly-network
+    depends_on:
+      - nextjs
+      - laravel
+
+  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     container_name: bookly-postgres
     restart: unless-stopped
-    ports:
-      - '5432:5432'
     environment:
-      POSTGRES_DB: bookly
-      POSTGRES_USER: bookly
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB=bookly
+      - POSTGRES_USER=bookly
+      - POSTGRES_PASSWORD=secret
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U bookly']
+      test: ["CMD-SHELL", "pg_isready -U bookly"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - bookly-network
 
-  # Redis 7 — Cache, Queue, Session (constitution-mandated)
+  # Redis Cache & Queue
   redis:
     image: redis:7-alpine
     container_name: bookly-redis
     restart: unless-stopped
-    ports:
-      - '6379:6379'
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - bookly-network
 
-  # Mailpit — Local email testing (catches all outbound email)
-  mailpit:
-    image: axllent/mailpit
-    container_name: bookly-mailpit
+  # Meilisearch Search Engine
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    container_name: bookly-meilisearch
     restart: unless-stopped
     ports:
-      - '1025:1025'  # SMTP
-      - '8025:8025'  # Web UI
+      - "7700:7700"
     environment:
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-development-key}
+      MEILI_ENV: development
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - bookly-network
+
+networks:
+  bookly-network:
+    driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
+  meilisearch_data:

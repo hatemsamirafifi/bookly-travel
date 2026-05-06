@@ -6,7 +6,30 @@
       "Bash(grep -E \"\\.(json|env|php)$\")",
       "Bash(grep -E \"\\.(json|js|ts)$\")",
       "Bash(powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/setup-plan.ps1 -Json)",
-      "Bash(php artisan *)"
+      "Bash(php artisan migrate)",
+      "Bash(php artisan db:seed)",
+      "Bash(php artisan cache:clear)",
+      "Bash(php artisan config:clear)",
+      "Bash(php artisan test)",
+      "Bash(xxd \"F:/Travel Website/bookly travel/CLAUDE.md\")",
+      "Bash(Select-String -Pattern \"hreflang\" -Context 2,2)",
+      "Bash(Select-Object -First 45)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\specs *)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/create-new-feature.ps1\" -Json -ShortName \"public-search-discovery\" \"Create the public search and discovery specification for Bookly, a tours-only marketplace.\")",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -PathsOnly)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/setup-plan.ps1\" -Json)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/update-agent-context.ps1\" -AgentType claude)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json)",
+      "Bash(composer require *)",
+      "Bash(php -v)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\frontend\\\\src\\\\app\\\\[locale] *)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\backend\\\\tests\\\\Feature\\\\Auth *)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\frontend\\\\messages *)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\backend\\\\tests\\\\Feature *)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\backend\\\\tests *)",
+      "Bash(dir F:\\\\Travel Website\\\\bookly travel\\\\backend\\\\tests\\\\Unit *)",
+      "Bash(dir *)"
     ]
   }
 }

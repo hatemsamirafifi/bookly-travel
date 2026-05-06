@@ -37,6 +37,13 @@ class AuthenticateTravelerAction
             // Re-read with row lock to prevent concurrent mutation races
             $user = User::where('id', $user->id)->lockForUpdate()->first();
 
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => 'Invalid email or password.'
+                ];
+            }
+
             if ($user->locked_until && $user->locked_until->isFuture()) {
                 DB::afterCommit(function () use ($normalizedEmail, $user) {
                     event(new LoginFailed($normalizedEmail, $user, rejectedDueToLockout: true));

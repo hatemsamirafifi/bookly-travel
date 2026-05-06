@@ -141,11 +141,35 @@ it('locks account after 5 failed attempts with 1 minute tier', function () {
     $user->refresh();
     expect($user->failed_login_count)->toBe(5);
     expect($user->locked_until)->not->toBeNull();
-    
+
     assertDatabaseHas('auth_audit_logs', [
         'user_id' => $user->id,
         'event_type' => 'account_lockout',
     ]);
+});
+
+it('dispatches AccountLockedOut event when lockout triggers', function () {
+    \Illuminate\Support\Facades\Event::fake([
+        \App\Domains\Auth\Events\AccountLockedOut::class,
+    ]);
+
+    $user = User::factory()->create([
+        'email' => 'fr010@example.com',
+        'password' => Hash::make('Password123!'),
+    ]);
+
+    for ($i = 0; $i < 5; $i++) {
+        postJson('/api/public/auth/login', [
+            'email' => 'fr010@example.com',
+            'password' => 'WrongPassword!',
+        ]);
+    }
+
+    // FR-010: AccountLockedOut event MUST be dispatched exactly once
+    \Illuminate\Support\Facades\Event::assertDispatched(
+        \App\Domains\Auth\Events\AccountLockedOut::class,
+        fn ($event) => $event->user->id === $user->id
+    );
 });
 
 it('rejects login while account is locked even with correct password', function () {
@@ -289,6 +313,8 @@ it('rate limits the login endpoint after 10 requests', function () {
         'password' => Hash::make('Password123!'),
     ]);
 
+    \Illuminate\Support\Facades\RateLimiter::clear('auth');
+
     for ($i = 0; $i < 10; $i++) {
         postJson('/api/public/auth/login', [
             'email' => 'ratelimit@example.com',
@@ -320,6 +346,34 @@ it('responds within 3 seconds', function () {
     expect($elapsed)->toBeLessThan(3000);
 })->group('performance');
 
+it('does not send duplicate email for the same lockout event', function () {
+    Mail::fake();
+
+    $user = User::factory()->create([
+        'email' => 'dedup@example.com',
+        'password' => Hash::make('Password123!'),
+    ]);
+
+    // Trigger lockout (dispatches AccountLockedOut event → listener sends email)
+    for ($i = 0; $i < 5; $i++) {
+        postJson('/api/public/auth/login', [
+            'email' => 'dedup@example.com',
+            'password' => 'WrongPassword!',
+        ]);
+    }
+
+    Mail::assertQueued(AccountLockedOutMail::class, 1);
+
+    $user->refresh();
+    expect($user->last_lockout_email_sent_at)->not->toBeNull();
+
+    // Manually dispatch a duplicate AccountLockedOut event with the same locked_until
+    event(new \App\Domains\Auth\Events\AccountLockedOut($user));
+
+    // No second email should be queued — listener detects same locked_until timestamp
+    Mail::assertQueued(AccountLockedOutMail::class, 1);
+});
+
 it('queues an email notification when account is locked out', function () {
     Mail::fake();
 
@@ -336,7 +390,8 @@ it('queues an email notification when account is locked out', function () {
     }
 
     Mail::assertQueued(AccountLockedOutMail::class, function ($mail) use ($user) {
-        return $mail->hasTo($user->email);
+        return $mail->hasTo($user->email)
+            && $mail->subject === __('emails.account_locked_out.subject', [], $user->locale ?? 'en');
     });
 });
 

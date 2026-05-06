@@ -5,7 +5,7 @@
 
 ## Endpoint
 
-```
+```text
 POST /api/public/auth/login
 ```
 
