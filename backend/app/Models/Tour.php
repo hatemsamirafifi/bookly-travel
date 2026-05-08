@@ -19,6 +19,7 @@ class Tour extends Model
         'duration_label',
         'group_size_min',
         'group_size_max',
+        'price_amount',
         'status',
         'cover_image_url',
         'is_featured',
@@ -32,15 +33,17 @@ class Tour extends Model
             'group_size_min' => 'integer',
             'group_size_max' => 'integer',
             'duration_minutes' => 'integer',
+            'price_amount' => 'integer',
             'is_featured' => 'boolean',
         ];
     }
 
     public function toSearchableArray(): array
     {
-        $en = $this->translations()->where('locale', 'en')->first();
-        $es = $this->translations()->where('locale', 'es')->first();
-        $it = $this->translations()->where('locale', 'it')->first();
+        $translations = $this->translations->keyBy('locale');
+        $en = $translations->get('en');
+        $es = $translations->get('es');
+        $it = $translations->get('it');
 
         return [
             'id' => $this->id,
@@ -95,8 +98,7 @@ class Tour extends Model
 
     public function lowestPriceAmount(): int
     {
-        // Delegate to Pricing domain (spec 004) — placeholder returns 0
-        return 0;
+        return (int) ($this->price_amount ?? 0);
     }
 
     public function currency(): string
@@ -149,5 +151,14 @@ class Tour extends Model
     public function partner()
     {
         return $this->belongsTo(User::class, 'partner_id');
+    }
+
+    public static function formatPrice(int $amount, string $currency): string
+    {
+        return match ($currency) {
+            'EUR' => '€' . number_format($amount / 100, 2),
+            'USD' => '$' . number_format($amount / 100, 2),
+            default => number_format($amount / 100, 2) . ' ' . $currency,
+        };
     }
 }

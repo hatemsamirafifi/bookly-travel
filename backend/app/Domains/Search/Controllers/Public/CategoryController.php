@@ -15,15 +15,18 @@ class CategoryController
 
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['locale' => 'required|in:en,es,it']);
+
         $categories = Category::where('is_active', true)
             ->orderBy('display_order')
+            ->withCount(['tours' => fn ($q) => $q->where('status', 'published')])
             ->get()
             ->map(fn (Category $cat) => [
                 'slug' => $cat->slug,
                 'name' => $cat->name,
                 'description' => $cat->description,
                 'image_url' => $cat->image_url,
-                'tour_count' => $cat->publishedTourCount(),
+                'tour_count' => (int) $cat->tours_count,
             ]);
 
         return response()->json(['data' => $categories]);
@@ -37,7 +40,7 @@ class CategoryController
             'price_min' => 'nullable|integer|min:0',
             'price_max' => 'nullable|integer|min:0',
             'duration' => 'nullable|in:half-day,full-day,multi-day',
-            'date' => 'nullable|date|date_format:Y-m-d',
+            'date' => 'nullable|date_format:Y-m-d',
             'sort' => 'nullable|in:relevance,price_asc,price_desc,rating,newest',
             'page' => 'nullable|integer|min:1',
         ]);

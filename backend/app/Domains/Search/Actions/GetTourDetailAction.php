@@ -74,7 +74,7 @@ class GetTourDetailAction
                 'base_price' => [
                     'amount' => $tour->lowestPriceAmount(),
                     'currency' => $tour->currency(),
-                    'formatted' => $this->formatPrice($tour->lowestPriceAmount(), $tour->currency()),
+                    'formatted' => Tour::formatPrice($tour->lowestPriceAmount(), $tour->currency()),
                 ],
                 'tiered_pricing' => null,
             ],
@@ -120,12 +120,4 @@ class GetTourDetailAction
         ];
     }
 
-    protected function formatPrice(int $amount, string $currency): string
-    {
-        return match ($currency) {
-            'EUR' => '€' . number_format($amount / 100, 2),
-            'USD' => '$' . number_format($amount / 100, 2),
-            default => number_format($amount / 100, 2) . ' ' . $currency,
-        };
-    }
 }

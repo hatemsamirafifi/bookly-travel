@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import type { SearchParams } from '@/lib/api/types';
 import { searchTours } from '@/lib/api/search';
+import { RateLimitError } from '@/lib/api/client';
 import SearchBar from '@/components/search/SearchBar';
 import SearchResults from '@/components/search/SearchResults';
 import Pagination from '@/components/search/Pagination';
 import FilterPanel from '@/components/search/FilterPanel';
 import SortDropdown from '@/components/search/SortDropdown';
+import SearchUnavailable from '@/components/search/SearchUnavailable';
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>;
@@ -46,6 +48,8 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
 
   let data;
   let error: string | null = null;
+  let isServiceUnavailable = false;
+  let retryAfterSeconds: number | undefined;
 
   try {
     data = await searchTours({
@@ -60,7 +64,13 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
       date: sp.date,
       sort: sp.sort as SearchParams['sort'] | undefined,
     });
-  } catch {
+  } catch (err) {
+    if (err instanceof RateLimitError) {
+      isServiceUnavailable = true;
+      retryAfterSeconds = err.retryAfter;
+    } else if (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 503) {
+      isServiceUnavailable = true;
+    }
     error = 'Failed to load search results. Please try again.';
   }
 
@@ -71,7 +81,9 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
           <SearchBar initialQuery={query} />
         </div>
 
-        {error ? (
+        {error && isServiceUnavailable ? (
+          <SearchUnavailable retryAfter={retryAfterSeconds} />
+        ) : error ? (
           <div className="rounded-lg border border-red-200 bg-red-50 p-8 text-center" role="alert">
             <p className="text-red-600">{error}</p>
           </div>

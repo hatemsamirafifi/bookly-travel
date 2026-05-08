@@ -5,9 +5,10 @@ import { useState, useMemo } from 'react';
 interface AvailabilityCalendarProps {
   availableDates: string[];
   nextAvailableDate: string | null;
+  locale?: string;
 }
 
-export default function AvailabilityCalendar({ availableDates, nextAvailableDate }: AvailabilityCalendarProps) {
+export default function AvailabilityCalendar({ availableDates, nextAvailableDate, locale = 'en' }: AvailabilityCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
@@ -15,7 +16,7 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
 
   const formatDisplay = (dateStr: string) => {
     const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    return d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
   };
 
   if (availableDates.length === 0) {
@@ -58,7 +59,7 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
               aria-label={formatDisplay(date)}
               aria-pressed={isSelected}
             >
-              {new Date(date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              {new Date(date + 'T00:00:00').toLocaleDateString(locale, { month: 'short', day: 'numeric' })}
             </button>
           );
         })}

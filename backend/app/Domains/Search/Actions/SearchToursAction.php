@@ -2,11 +2,19 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Tour;
 use App\Models\Category;
 
 class SearchToursAction
 {
+    protected TourCardTransformer $transformer;
+
+    public function __construct()
+    {
+        $this->transformer = new TourCardTransformer();
+    }
+
     protected int $perPage = 12;
 
     public function execute(array $params): array
@@ -31,7 +39,7 @@ class SearchToursAction
 
         $results = $search->paginate($perPage, 'page', $page);
 
-        $data = $results->map(fn (Tour $tour) => $this->toTourCard($tour, $locale))->values()->toArray();
+        $data = $results->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))->values()->toArray();
 
         return [
             'data' => $data,
@@ -45,61 +53,16 @@ class SearchToursAction
         ];
     }
 
-    protected function toTourCard(Tour $tour, string $locale): array
-    {
-        $translation = $tour->translations()->where('locale', $locale)->first()
-            ?? $tour->translations()->where('locale', 'en')->first();
-
-        return [
-            'id' => $tour->id,
-            'slug' => $tour->slug,
-            'title' => $translation?->title ?? '',
-            'location' => $tour->location,
-            'category' => $tour->category?->name ?? '',
-            'duration_label' => $tour->duration_label,
-            'price' => [
-                'amount' => $tour->lowestPriceAmount(),
-                'currency' => $tour->currency(),
-                'formatted' => $this->formatPrice($tour->lowestPriceAmount(), $tour->currency()),
-            ],
-            'rating' => [
-                'average' => $tour->averageRating(),
-                'count' => $tour->reviewCount(),
-            ],
-            'cover_image_url' => $tour->cover_image_url ?? '',
-            'group_size' => [
-                'min' => $tour->group_size_min,
-                'max' => $tour->group_size_max,
-            ],
-            'next_available_date' => $this->nextAvailableDate($tour),
-        ];
-    }
-
-    protected function nextAvailableDate(Tour $tour): ?string
-    {
-        $dates = $tour->upcomingAvailableDates();
-        return $dates[0] ?? null;
-    }
-
-    protected function formatPrice(int $amount, string $currency): string
-    {
-        return match ($currency) {
-            'EUR' => '€' . number_format($amount / 100, 2),
-            'USD' => '$' . number_format($amount / 100, 2),
-            default => number_format($amount / 100, 2) . ' ' . $currency,
-        };
-    }
-
     protected function buildFilterString(array $params): string
     {
         $filters = ['status = published'];
 
         if (! empty($params['category'])) {
-            $filters[] = 'category_slug = ' . $params['category'];
+            $filters[] = 'category_slug = "' . str_replace('"', '\\"', $params['category']) . '"';
         }
 
         if (! empty($params['location'])) {
-            $filters[] = 'location_slug = ' . $params['location'];
+            $filters[] = 'location_slug = "' . str_replace('"', '\\"', $params['location']) . '"';
         }
 
         if (! empty($params['price_min'])) {
@@ -115,7 +78,7 @@ class SearchToursAction
         }
 
         if (! empty($params['date'])) {
-            $filters[] = 'available_dates EXISTS ' . $params['date'];
+            $filters[] = 'available_dates = "' . $params['date'] . '"';
         }
 
         return implode(' AND ', $filters);
@@ -125,7 +88,7 @@ class SearchToursAction
     {
         return match ($duration) {
             'half-day' => 'duration_minutes <= 240',
-            'full-day' => 'duration_minutes 241 TO 480',
+            'full-day' => 'duration_minutes >= 241 AND duration_minutes <= 480',
             'multi-day' => 'duration_minutes > 480',
             default => 'duration_minutes >= 0',
         };
@@ -144,15 +107,14 @@ class SearchToursAction
 
     protected function facetAggregates(array $params, string $locale): array
     {
-        $publishedQuery = Tour::where('status', 'published');
-
         $categories = Category::where('is_active', true)
             ->orderBy('display_order')
+            ->withCount(['tours' => fn ($q) => $q->where('status', 'published')])
             ->get()
             ->map(fn (Category $cat) => [
                 'slug' => $cat->slug,
                 'name' => $cat->name,
-                'count' => $cat->publishedTourCount(),
+                'count' => (int) $cat->tours_count,
             ])
             ->filter(fn (array $c) => $c['count'] > 0)
             ->values()
@@ -168,14 +130,11 @@ class SearchToursAction
             ->toArray();
 
         // Calculate price range from published tours
-        $priceStats = Tour::where('status', 'published')->get();
-        $priceMin = 0;
-        $priceMax = 0;
-        if ($priceStats->isNotEmpty()) {
-            $amounts = $priceStats->map(fn (Tour $t) => $t->lowestPriceAmount())->filter(fn (int $a) => $a > 0);
-            $priceMin = $amounts->isEmpty() ? 0 : $amounts->min();
-            $priceMax = $amounts->isEmpty() ? 0 : $amounts->max();
-        }
+        $priceRange = Tour::where('status', 'published')
+            ->selectRaw('MIN(price_amount) as min_price, MAX(price_amount) as max_price')
+            ->first();
+        $priceMin = (int) ($priceRange->min_price ?? 0);
+        $priceMax = (int) ($priceRange->max_price ?? 0);
 
         $durations = [
             ['value' => 'half-day', 'label' => __('search.durations.half_day', [], $locale), 'count' => 0],

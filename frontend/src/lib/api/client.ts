@@ -36,6 +36,11 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
       throw new NotFoundError('Resource not found');
     }
 
+    if (response.status === 410) {
+      const body = await response.json().catch(() => ({}));
+      throw new GoneError(body.message || 'This resource is no longer available.');
+    }
+
     throw new ApiError(
       `API request failed with status ${response.status}`,
       response.status
@@ -58,6 +63,13 @@ export class NotFoundError extends ApiError {
   constructor(message: string) {
     super(message, 404);
     this.name = 'NotFoundError';
+  }
+}
+
+export class GoneError extends ApiError {
+  constructor(message: string) {
+    super(message, 410);
+    this.name = 'GoneError';
   }
 }
 

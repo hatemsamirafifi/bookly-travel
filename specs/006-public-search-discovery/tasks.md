@@ -44,7 +44,7 @@
 - [x] T009 [P] Create frontend i18n directory `frontend/src/i18n/` with empty placeholder files `en.json`, `es.json`, `it.json`
 - [x] T010 Create Next.js `[locale]` layout at `frontend/src/app/[locale]/layout.tsx` with locale validation (`en`/`es`/`it`), `<html lang={locale}>`, and providers wrapper
 - [x] T011 [P] Create locale middleware at `frontend/src/middleware.ts` that parses `Accept-Language` header, redirects root `/` to `/{detected-locale}`, and validates `[locale]` param
-- [x] T012 [P] Create shared API client at `frontend/src/lib/api/client.ts` with base URL from env, `Accept: application/json` header, error handling, and type-safe fetch wrapper
+- [x] T012 [P] Create shared API client at `frontend/src/lib/api/client.ts` with base URL from env, `Accept: application/json` header, error handling (including 429 rate-limit responses with user-friendly message and `Retry-After` parsing), and type-safe fetch wrapper
 - [x] T013 Create base TypeScript types at `frontend/src/lib/api/types.ts` for `Tour`, `TourCard`, `Category`, `Destination`, `SearchParams`, `SearchResponse`, `TourDetailResponse`, `HomepageData`, `PricingMeta`
 - [x] T014 Register public API route group in `backend/routes/api.php` with prefix `public` and rate limit middleware applied
 
@@ -118,7 +118,7 @@
 - [x] T044 [P] [US3] Create `frontend/src/components/tour/BookingCTA.tsx` showing price display, participant count selector (min/max group size constrained), date confirmation, and "Book Now" button linking to booking flow — or "Currently Unavailable" state when no availability
 - [x] T045 [US3] Create `frontend/src/components/tour/TourDetail.tsx` composing all sections: `<ImageGallery>`, title/rating/location header, description, highlights list, inclusions/exclusions lists, meeting point with map link, cancellation policy, `<AvailabilityCalendar>`, `<ReviewList>`, `<BookingCTA>`
 - [x] T046 [US3] Create tour detail page at `frontend/src/app/[locale]/tours/[slug]/page.tsx` as ISR page (`revalidate: 300`) with `generateStaticParams` returning top published tour slugs, calling `getTourDetail()`, rendering `<TourDetail>`, and `generateMetadata()` with tour-specific title/description/OG/canonical/hreflang
-- [x] T047 [P] [US3] Create backend feature test `backend/tests/Feature/Search/TourDetailTest.php` covering: valid slug returns full detail, 404 for draft/rejected tour, 404 for nonexistent slug, content returned in correct locale, availability data is real-time, reviews included
+- [x] T047 [P] [US3] Create backend feature test `backend/tests/Feature/Search/TourDetailTest.php` covering: valid slug returns full detail, 404 for draft/rejected tour, 404 for nonexistent slug, 410 for archived tour, content returned in correct locale, availability data is real-time, reviews included
 - [x] T048 [P] [US3] Create frontend E2E test `frontend/tests/e2e/tour-detail.spec.ts` covering: page loads with all sections, image gallery navigation, availability calendar interaction, "Currently Unavailable" state, 404 page for bad slug
 
 **Checkpoint**: Tour detail page fully functional — comprehensive tour information with booking path. US1 + US2 + US3 operational.
@@ -188,13 +188,14 @@
 - [x] T079 [P] Create `frontend/src/components/layout/Header.tsx` with Bookly logo, main navigation (Home, Categories, Destinations), `<LocaleSwitcher>`, and mobile hamburger menu
 - [x] T080 [P] Create `frontend/src/components/layout/Footer.tsx` with footer links, copyright, social placeholders, and locale-specific content
 - [x] T081 Update `frontend/src/app/[locale]/layout.tsx` to include `<Header>` and `<Footer>` wrapping all pages
-- [ ] T082 Run Lighthouse audit on homepage, search results, and tour detail pages — optimize to achieve score ≥ 90 on Performance per SC-004: image optimization (WebP, lazy loading, responsive sizes), font loading strategy, bundle size analysis, CDN caching headers
-- [ ] T083 Run WCAG 2.1 AA accessibility audit across all page types per FR-035: verify color contrast ratios, keyboard navigation (tab order, focus indicators, skip-to-content), screen reader labels (aria-labels, roles, alt text), form input labeling — fix all AA-level violations
+- [x] T082 Run Lighthouse audit on homepage, search results, and tour detail pages — optimize to achieve score ≥ 90 on Performance per SC-004: image optimization (WebP, lazy loading, responsive sizes), font loading strategy, bundle size analysis, CDN caching headers
+- [x] T083 Run WCAG 2.1 AA accessibility audit across all page types per FR-035: verify color contrast ratios, keyboard navigation (tab order, focus indicators, skip-to-content), screen reader labels (aria-labels, roles, alt text), form input labeling — fix all AA-level violations
 - [x] T084 [P] Add `backend/app/Domains/Search/Actions/IndexTourAction.php` and `backend/app/Domains/Search/Actions/RemoveFromIndexAction.php` — queued jobs for async index updates per FR-036, dispatched via Tour model events (created, updated, deleted) with 5-minute processing window
 - [x] T085 [P] Wire Tour model observers/listeners in `backend/app/Providers/EventServiceProvider.php` to dispatch `IndexTourAction` on Tour saved (when shouldBeSearchable) and `RemoveFromIndexAction` on Tour deleted/unpublished
-- [ ] T086 Validate full quickstart.md flow end-to-end: docker compose up, scout:import, API curl test, frontend dev server, all page types render
+- [x] T086 Validate full quickstart.md flow end-to-end: docker compose up, scout:import, API curl test, frontend dev server, all page types render
 - [x] T087 [P] Create backend feature test `backend/tests/Feature/Search/RateLimitTest.php` verifying 429 response after exceeding per-endpoint limits, Retry-After header present, rate limit resets after window expiry
 - [x] T088 [P] Create backend feature test `backend/tests/Feature/Search/SitemapTest.php` verifying sitemap XML structure, hreflang alternates present per URL, only published tours listed, valid XML schema
+- [x] T089 [P] Create `frontend/src/components/search/SearchUnavailable.tsx` rendering a graceful degradation message ("Search is temporarily unavailable, please try again shortly") when the search API returns a 503 or network error — used as fallback in SearchResults and search page error boundary
 
 ---
 

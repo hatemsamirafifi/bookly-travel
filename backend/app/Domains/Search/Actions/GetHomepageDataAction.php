@@ -2,11 +2,19 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Tour;
 use App\Models\Category;
 
 class GetHomepageDataAction
 {
+    protected TourCardTransformer $transformer;
+
+    public function __construct()
+    {
+        $this->transformer = new TourCardTransformer();
+    }
+
     public function execute(string $locale): array
     {
         $featuredTours = Tour::where('status', 'published')
@@ -16,7 +24,7 @@ class GetHomepageDataAction
             ->latest()
             ->limit(8)
             ->get()
-            ->map(fn (Tour $tour) => $this->toTourCard($tour, $locale))
+            ->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))
             ->values()
             ->toArray();
 
@@ -28,30 +36,28 @@ class GetHomepageDataAction
                 ->latest()
                 ->limit(8)
                 ->get()
-                ->map(fn (Tour $tour) => $this->toTourCard($tour, $locale))
+                ->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))
                 ->values()
                 ->toArray();
         }
 
         $popularCategories = Category::where('is_active', true)
             ->orderBy('display_order')
+            ->withCount(['tours' => fn ($q) => $q->where('status', 'published')])
             ->get()
             ->map(fn (Category $cat) => [
                 'slug' => $cat->slug,
                 'name' => $cat->name,
                 'description' => $cat->description,
                 'image_url' => $cat->image_url,
-                'tour_count' => $cat->publishedTourCount(),
+                'tour_count' => (int) $cat->tours_count,
             ])
             ->values()
             ->toArray();
 
         $featuredDestinations = Tour::where('status', 'published')
             ->select('location_slug as slug', 'location as name')
-            ->selectRaw("
-                SPLIT_PART(location, ',', -1) as country,
-                COUNT(*) as tour_count
-            ")
+            ->selectRaw('COUNT(*) as tour_count')
             ->groupBy('location_slug', 'location')
             ->orderByDesc('tour_count')
             ->limit(6)
@@ -59,7 +65,7 @@ class GetHomepageDataAction
             ->map(fn ($d) => [
                 'slug' => $d->slug,
                 'name' => $d->name,
-                'country' => trim($d->country),
+                'country' => trim((string) str($d->name)->afterLast(',')),
                 'image_url' => null,
                 'tour_count' => (int) $d->tour_count,
                 'is_featured' => true,
@@ -80,42 +86,4 @@ class GetHomepageDataAction
         ];
     }
 
-    protected function toTourCard(Tour $tour, string $locale): array
-    {
-        $translation = $tour->translations()->where('locale', $locale)->first()
-            ?? $tour->translations()->where('locale', 'en')->first();
-
-        return [
-            'id' => $tour->id,
-            'slug' => $tour->slug,
-            'title' => $translation?->title ?? '',
-            'location' => $tour->location,
-            'category' => $tour->category?->name ?? '',
-            'duration_label' => $tour->duration_label,
-            'price' => [
-                'amount' => $tour->lowestPriceAmount(),
-                'currency' => $tour->currency(),
-                'formatted' => $this->formatPrice($tour->lowestPriceAmount(), $tour->currency()),
-            ],
-            'rating' => [
-                'average' => $tour->averageRating(),
-                'count' => $tour->reviewCount(),
-            ],
-            'cover_image_url' => $tour->cover_image_url ?? '',
-            'group_size' => [
-                'min' => $tour->group_size_min,
-                'max' => $tour->group_size_max,
-            ],
-            'next_available_date' => null,
-        ];
-    }
-
-    protected function formatPrice(int $amount, string $currency): string
-    {
-        return match ($currency) {
-            'EUR' => '€' . number_format($amount / 100, 2),
-            'USD' => '$' . number_format($amount / 100, 2),
-            default => number_format($amount / 100, 2) . ' ' . $currency,
-        };
-    }
 }

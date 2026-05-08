@@ -15,12 +15,11 @@ class DestinationController
 
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['locale' => 'required|in:en,es,it']);
+
         $destinations = Tour::where('status', 'published')
             ->select('location_slug as slug', 'location as name')
-            ->selectRaw("
-                TRIM(SPLIT_PART(location, ',', -1)) as country,
-                COUNT(*) as tour_count
-            ")
+            ->selectRaw('COUNT(*) as tour_count')
             ->groupBy('location_slug', 'location')
             ->orderByDesc('tour_count')
             ->limit(20)
@@ -28,7 +27,7 @@ class DestinationController
             ->map(fn ($d) => [
                 'slug' => $d->slug,
                 'name' => $d->name,
-                'country' => $d->country,
+                'country' => trim((string) str($d->name)->afterLast(',')),
                 'image_url' => null,
                 'tour_count' => (int) $d->tour_count,
                 'is_featured' => true,
@@ -46,7 +45,7 @@ class DestinationController
             'price_min' => 'nullable|integer|min:0',
             'price_max' => 'nullable|integer|min:0',
             'duration' => 'nullable|in:half-day,full-day,multi-day',
-            'date' => 'nullable|date|date_format:Y-m-d',
+            'date' => 'nullable|date_format:Y-m-d',
             'sort' => 'nullable|in:relevance,price_asc,price_desc,rating,newest',
             'page' => 'nullable|integer|min:1',
         ]);

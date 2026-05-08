@@ -60,10 +60,9 @@ class RateLimitSearchMiddleware
     protected function resolveKey(Request $request, string $type): string
     {
         return sprintf(
-            'rate_limit:%s:%s:%s',
+            'rate_limit:%s:%s',
             $type,
-            $request->ip(),
-            floor(time() / 60)
+            $request->ip()
         );
     }
 }

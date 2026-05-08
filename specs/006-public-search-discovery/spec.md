@@ -143,7 +143,7 @@ A traveler accesses Bookly in their preferred language — English, Spanish, or 
 - **FR-013**: System MUST display current pricing and an availability calendar on the tour detail page.
 - **FR-014**: System MUST display aggregated review information (average rating, total review count, individual reviews) on the tour detail page.
 - **FR-015**: System MUST show a prominent booking call-to-action on the tour detail page for tours with availability.
-- **FR-016**: System MUST show a "Currently Unavailable" state on the detail page for published tours with no upcoming availability, with the booking CTA disabled or hidden.
+- **FR-016**: System MUST show a "Currently Unavailable" state on the detail page for published tours with no upcoming availability, with the booking CTA rendered in a disabled state (visually grayed out, `aria-disabled="true"`, non-clickable) rather than hidden, preserving page layout and informing screen reader users.
 - **FR-017**: System MUST return a 404 or appropriate not-found page for URLs corresponding to unpublished, rejected, or non-existent tours.
 
 **Homepage & Discovery**
@@ -173,7 +173,7 @@ A traveler accesses Bookly in their preferred language — English, Spanish, or 
 
 - **FR-032**: System MUST serve all public pages with responsive layouts that function correctly across mobile, tablet, and desktop viewports.
 - **FR-033**: System MUST achieve a Lighthouse Performance score of 90 or above on all public page types.
-- **FR-034**: System MUST enforce per-endpoint rate limits on public search and discovery endpoints, tracked per-user (by session or IP), and respond with a clear, friendly message when a limit is exceeded rather than a generic error.
+- **FR-034**: System MUST enforce per-endpoint rate limits on public search and discovery endpoints, tracked per-IP for unauthenticated users, and respond with a clear, friendly message and a `Retry-After` header when a limit is exceeded rather than a generic error.
 - **FR-035**: System MUST meet WCAG 2.1 Level AA accessibility standards across all public pages, including: sufficient color contrast, full keyboard navigability, screen reader compatibility, descriptive alt text on all images, and clearly labeled form controls.
 - **FR-036**: System MUST reflect tour changes (publish, unpublish, price, availability) in search results within 5 minutes of the change, using async queued index updates. Tour detail pages MUST perform a real-time availability check on load to cover any staleness within the update window.
 

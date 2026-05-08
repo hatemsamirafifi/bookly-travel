@@ -22,7 +22,7 @@ class SearchController
             'price_min' => 'nullable|integer|min:0',
             'price_max' => 'nullable|integer|min:0',
             'duration' => 'nullable|in:half-day,full-day,multi-day',
-            'date' => 'nullable|date|date_format:Y-m-d',
+            'date' => 'nullable|date_format:Y-m-d',
             'sort' => 'nullable|in:relevance,price_asc,price_desc,rating,newest',
             'page' => 'nullable|integer|min:1',
         ]);

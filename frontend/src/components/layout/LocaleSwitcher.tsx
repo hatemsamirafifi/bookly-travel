@@ -17,7 +17,7 @@ export default function LocaleSwitcher() {
 
   const switchTo = (locale: string) => {
     if (locale === currentLocale) return;
-    const newPath = pathname.replace(`/${currentLocale}`, `/${locale}`);
+    const newPath = pathname.replace(new RegExp(`^/${currentLocale}(?=/|$)`), `/${locale}`);
     router.push(newPath);
   };
 

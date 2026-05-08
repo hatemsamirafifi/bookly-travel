@@ -68,9 +68,17 @@ export default function BookingCTA({ pricing, availability, groupSize, locale, s
           </p>
         </>
       ) : (
-        <div className="rounded-md bg-gray-100 py-3 text-center">
+        <div className="rounded-md bg-gray-100 py-3 text-center" role="status">
           <p className="text-sm font-medium text-gray-500">Currently Unavailable</p>
           <p className="mt-1 text-xs text-gray-400">Check back soon for new dates</p>
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            className="mt-3 w-full rounded-lg bg-gray-300 py-2.5 text-center text-sm font-semibold text-gray-500 cursor-not-allowed"
+          >
+            Book Now
+          </button>
         </div>
       )}
     </div>
