@@ -11,10 +11,11 @@
 |--------|------|-------------|---------|
 | `failed_login_count` | `integer` | `NOT NULL`, `DEFAULT 0` | Consecutive failed sign-in count since last success |
 | `locked_until` | `timestamp` | `NULLABLE` | Lockout expiration; when past, lockout is inactive |
+| `last_lockout_email_sent_at` | `timestamp` | `NULLABLE` | Tracks the `locked_until` value for which a notification was last sent; used for retry-safe idempotency |
 
 **State transitions**:
 
-```
+```text
 failed_login_count = 0 ──(wrong password)──> failed_login_count += 1
 failed_login_count = N ──(wrong password)──> failed_login_count = N + 1
 failed_login_count = N ──(N % 5 == 0)──────> locked_until = now() + tier_duration + AccountLockedOut event
@@ -23,7 +24,7 @@ locked_until is future ──(any attempt)──────> 423 Locked (no cou
 ```
 
 **Locked check pseudo-logic**:
-```
+```text
 if locked_until && locked_until->isFuture():
     reject with 423 (before credential verification)
 elif Hash::check(password, user.password):
@@ -69,10 +70,13 @@ else:
 | `account_lockout` | `AccountLockedOut` | Lockout triggered (counted for tier calculation) |
 
 **Metadata for `login_failed` events**:
+
+> `rejected_due_to_lockout` is ONLY present for lockout-rejected attempts.
+
 ```json
 {
   "email": "<hmac-sha256 hash>",
-  "rejected_due_to_lockout": true  // ONLY present for lockout-rejected attempts
+  "rejected_due_to_lockout": true
 }
 ```
 
@@ -113,7 +117,7 @@ If no `account_lockout` entries exist, default tier → 1 minute.
 
 ## Relationships
 
-```
+```text
 User ──(hasMany)──> AuthAuditLog  (via user_id FK)
 ```
 

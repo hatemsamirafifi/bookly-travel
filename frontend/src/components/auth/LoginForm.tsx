@@ -115,14 +115,12 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
           <label htmlFor="login-password" className="text-sm font-semibold text-foreground">
             {t('signin.passwordLabel')}
           </label>
-          <Link
-            href={`/${locale}/auth/forgot-password`}
-            className="text-xs text-primary font-semibold no-underline transition-colors hover:text-primary-dark hover:underline"
-            aria-label="Password reset — coming soon"
-            onClick={(e) => e.preventDefault()}
+          <span
+            className="text-xs text-text-muted font-semibold"
+            aria-label={t('signin.forgotPasswordLink')}
           >
             {t('signin.forgotPasswordLink')}
-          </Link>
+          </span>
         </div>
         <div className="relative">
           <input

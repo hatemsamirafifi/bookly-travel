@@ -41,8 +41,10 @@ class AccountLockedOutMail extends Mailable implements ShouldQueue
             view: 'emails.auth.locked-out',
             with: [
                 'userName' => $this->user->name,
+                'userEmail' => $this->user->email,
                 'platformName' => config('app.name', 'Bookly'),
                 'locale' => $this->user->locale ?? 'en',
+                'lockedAt' => $this->user->locked_until,
             ],
         );
     }

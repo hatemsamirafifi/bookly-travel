@@ -21,6 +21,11 @@
                 <p style="margin: 0 0 12px; color: #3f3f46; line-height: 1.6;">
                     {{ __('emails.account_locked_out.body', ['platform' => $platformName], $locale) }}
                 </p>
+                @if(isset($lockedAt))
+                <p style="margin: 0 0 12px; color: #3f3f46; line-height: 1.6;">
+                    <strong>{{ __('emails.account_locked_out.locked_at', [], $locale) }}</strong> {{ $lockedAt }}
+                </p>
+                @endif
                 <p style="margin: 0; padding: 16px; background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 8px; color: #991b1b; line-height: 1.6;">
                     {{ __('emails.account_locked_out.security_note', [], $locale) }}
                 </p>

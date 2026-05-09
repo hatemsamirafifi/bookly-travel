@@ -13,8 +13,8 @@ After 5 consecutive failed sign-in attempts for the same account, the account is
 | `app/Domains/Auth/Events/LoginFailed.php` | **MODIFY** | Add `bool $rejectedDueToLockout = false` property |
 | `app/Domains/Auth/Actions/AuthenticateTravelerAction.php` | **MODIFY** | Pass `rejectedDueToLockout: true` on lockout reject path |
 | `app/Domains/Auth/Listeners/LogAuthEvent.php` | **MODIFY** | Include `rejected_due_to_lockout` in metadata when set |
-| `app/Domains/Auth/Listeners/SendAccountLockedOutEmail.php` | **CREATE** | New listener → queues email notification |
-| `app/Domains/Auth/Notifications/AccountLockedOutNotification.php` | **CREATE** | Mail notification class |
+| `app/Domains/Auth/Listeners/SendAccountLockedOutEmail.php` | **CREATE** | New listener → queues AccountLockedOutMail |
+| `app/Mail/AccountLockedOutMail.php` | **CREATE** | Mailable class for lockout notification |
 | `app/Providers/EventServiceProvider.php` | **MODIFY** | Register `SendAccountLockedOutEmail` listener for `AccountLockedOut` |
 
 ### Frontend (Next.js)

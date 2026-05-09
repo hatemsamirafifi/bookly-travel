@@ -1,122 +1,175 @@
-﻿# Bookly — Claude Code Guide
+# Ruflo — Claude Code Configuration
 
-## Project Overview
+## Rules
 
-Bookly is a **tours-only marketplace** platform. Travelers search and book tours;
-partners list and manage tours; admins moderate and govern the platform.
+- Do what has been asked; nothing more, nothing less
+- NEVER create files unless absolutely necessary — prefer editing existing files
+- NEVER create documentation files unless explicitly requested
+- NEVER save working files or tests to root — use `/src`, `/tests`, `/docs`, `/config`, `/scripts`
+- ALWAYS read a file before editing it
+- NEVER commit secrets, credentials, or .env files
+- Keep files under 500 lines
+- Validate input at system boundaries
 
-**Phase 1 scope**: Core booking MVP (11 feature specs).
+## Agent Comms (SendMessage-First Coordination)
 
-## Constitution
-
-Read `.specify/memory/constitution.md` before making any architectural decision.
-It is the governing document. All code MUST comply with its principles.
-
-## Shell & Script Execution (Windows)
-
-> **IMPORTANT**: This project runs on **Windows**. All Spec Kit scripts are
-> PowerShell `.ps1` files. Use `powershell` (NOT `pwsh`, `bash`, or `sh`):
->
-> ```powershell
-> powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/<script>.ps1 [args]
-> ```
-
-## Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend (public + partner) | Next.js 16, TypeScript, Tailwind CSS |
-| Backend (API + admin) | Laravel (API-only), Laravel Filament (admin) |
-| Auth | Laravel Sanctum |
-| Database | PostgreSQL |
-| Cache / Queue | Redis |
-| Search | Laravel Scout (Meilisearch later) |
-| Storage | Cloudflare R2 |
-| CDN | Cloudflare |
-| Payments | Stripe |
-
-## Project Structure
+Named agents coordinate via `SendMessage`, not polling or shared state.
 
 ```
-backend/          → Laravel API + Filament admin dashboard
-frontend/         → Next.js 16 (public website + partner dashboard)
-docs/             → Project documentation and specification strategy
-specs/            → Feature specifications (001 through 011)
-.specify/         → Spec Kit configuration and templates
+Lead (you) ←→ architect ←→ developer ←→ tester ←→ reviewer
+              (named agents message each other directly)
 ```
 
-## Architecture Rules
+### Spawning a Coordinated Team
 
-- **API-first**: All frontend surfaces consume the Laravel API. No server-rendered
-  HTML from Laravel for application views (Filament admin is the exception).
-- **Three surfaces**: Public website (Next.js SSR/SSG), Partner dashboard (Next.js),
-  Admin dashboard (Filament).
-- **Shared backend**: One Laravel app serves all surfaces. Access is separated by
-  route groups, middleware, roles, and ownership policies.
-- **Modular domains**: Auth, Partners, Tours, Pricing, Availability, Bookings,
-  Payments, Reviews, Finance, Notifications, Translation, Admin Operations.
+```javascript
+// ALL agents in ONE message, each knows WHO to message next
+Agent({ prompt: "Research the codebase. SendMessage findings to 'architect'.",
+  subagent_type: "researcher", name: "researcher", run_in_background: true })
+Agent({ prompt: "Wait for 'researcher'. Design solution. SendMessage to 'coder'.",
+  subagent_type: "system-architect", name: "architect", run_in_background: true })
+Agent({ prompt: "Wait for 'architect'. Implement it. SendMessage to 'tester'.",
+  subagent_type: "coder", name: "coder", run_in_background: true })
+Agent({ prompt: "Wait for 'coder'. Write tests. SendMessage results to 'reviewer'.",
+  subagent_type: "tester", name: "tester", run_in_background: true })
+Agent({ prompt: "Wait for 'tester'. Review code quality and security.",
+  subagent_type: "reviewer", name: "reviewer", run_in_background: true })
 
-## Code Conventions
-
-### Laravel Backend
-
-- **Thin controllers**: Controllers handle request/response and authorization only.
-  No business logic, no direct DB queries.
-- **Services/Actions**: All business logic goes in service or action classes.
-- **Form Requests**: All write endpoints use Form Request validation. No manual
-  validation in controllers.
-- **Route groups**: `/api/public/*`, `/api/partner/*`, `/api/admin/*`.
-- **Queued jobs**: Notifications, search indexing, image processing, reports.
-  All jobs MUST be retry-safe (idempotent).
-- **Audit logging**: Required for admin actions, financial transactions, booking
-  state changes, and partner management actions.
-
-### Next.js Frontend
-
-- **TypeScript**: Strict mode. No `any` types except in generated/external code.
-- **Tailwind CSS**: For all styling. Follow design system tokens.
-- **SSR/SSG for public pages**: All public routes must be server-rendered for SEO.
-- **Multi-language**: English, Spanish, Italian. Localized routes (`/en/`, `/es/`,
-  `/it/`).
-
-### General
-
-- **No secrets in code**: Use environment variables. Never commit `.env` files.
-- **Idempotent financial flows**: Payment and booking operations use idempotency
-  keys. No duplicate charges or bookings on retry.
-- **Test critical paths**: Booking, payment, auth, and tour publishing flows
-  MUST have automated tests.
-
-## Phase 1 Decisions
-
-These are binding product decisions. Do not deviate without explicit approval:
-
-- Guest checkout is enabled (no account needed to book)
-- One partner = one account (no multi-staff)
-- Email notifications only (no SMS/push)
-- Manual refunds only (admin via Stripe dashboard)
-- Auto-complete bookings after tour date (scheduled job)
-- Traveler cancellation allowed before tour date (no penalties)
-- Reviews: submit only (rating + comment), no partner replies
-- Languages: EN, ES, IT
-
-## Spec Kit Workflow
-
-Feature specs live in `specs/NNN-feature-name/`. Each feature follows:
-
-```
-/speckit.specify → /speckit.clarify → /speckit.plan → /speckit.tasks
+// Kick off the pipeline
+SendMessage({ to: "researcher", summary: "Start", message: "[task context]" })
 ```
 
-See `docs/specification-strategy.md` for the full plan and all 11 spec prompts.
+### Patterns
 
-## Commit Convention
+| Pattern | Flow | Use When |
+|---------|------|----------|
+| **Pipeline** | A → B → C → D | Sequential dependencies (feature dev) |
+| **Fan-out** | Lead → A, B, C → Lead | Independent parallel work (research) |
+| **Supervisor** | Lead ↔ workers | Ongoing coordination (complex refactor) |
 
+### Rules
+
+- ALWAYS name agents — `name: "role"` makes them addressable
+- ALWAYS include comms instructions in prompts — who to message, what to send
+- Spawn ALL agents in ONE message with `run_in_background: true`
+- After spawning: STOP, tell user what's running, wait for results
+- NEVER poll status — agents message back or complete automatically
+
+## Swarm & Routing
+
+### Config
+- **Topology**: hierarchical-mesh (anti-drift)
+- **Max Agents**: 15
+- **Memory**: hybrid
+- **HNSW**: Enabled
+- **Neural**: Enabled
+
+```bash
+npx @claude-flow/cli@latest swarm init --topology hierarchical --max-agents 8 --strategy specialized
 ```
-feat(NNN): description     → New feature (NNN = spec number)
-fix(NNN): description      → Bug fix
-docs: description           → Documentation only
-refactor(NNN): description → Code restructuring
-test(NNN): description     → Test additions
-chore: description          → Tooling, config, dependencies
+
+### Agent Routing
+
+| Task | Agents | Topology |
+|------|--------|----------|
+| Bug Fix | researcher, coder, tester | hierarchical |
+| Feature | architect, coder, tester, reviewer | hierarchical |
+| Refactor | architect, coder, reviewer | hierarchical |
+| Performance | perf-engineer, coder | hierarchical |
+| Security | security-architect, auditor | hierarchical |
+
+### When to Swarm
+- **YES**: 3+ files, new features, cross-module refactoring, API changes, security, performance
+- **NO**: single file edits, 1-2 line fixes, docs updates, config changes, questions
+
+### 3-Tier Model Routing
+
+| Tier | Handler | Use Cases |
+|------|---------|-----------|
+| 1 | Agent Booster (WASM) | Simple transforms — skip LLM, use Edit directly |
+| 2 | Haiku | Simple tasks, low complexity |
+| 3 | Sonnet/Opus | Architecture, security, complex reasoning |
+
+## Memory & Learning
+
+### Before Any Task
+```bash
+npx @claude-flow/cli@latest memory search --query "[task keywords]" --namespace patterns
+npx @claude-flow/cli@latest hooks route --task "[task description]"
 ```
+
+### After Success
+```bash
+npx @claude-flow/cli@latest memory store --namespace patterns --key "[name]" --value "[what worked]"
+npx @claude-flow/cli@latest hooks post-task --task-id "[id]" --success true --store-results true
+```
+
+### MCP Tools (use `ToolSearch("keyword")` to discover)
+
+| Category | Key Tools |
+|----------|-----------|
+| **Memory** | `memory_store`, `memory_search`, `memory_search_unified` |
+| **Bridge** | `memory_import_claude`, `memory_bridge_status` |
+| **Swarm** | `swarm_init`, `swarm_status`, `swarm_health` |
+| **Agents** | `agent_spawn`, `agent_list`, `agent_status` |
+| **Hooks** | `hooks_route`, `hooks_post-task`, `hooks_worker-dispatch` |
+| **Security** | `aidefence_scan`, `aidefence_is_safe`, `aidefence_has_pii` |
+| **Hive-Mind** | `hive-mind_init`, `hive-mind_consensus`, `hive-mind_spawn` |
+
+### Background Workers
+
+| Worker | When |
+|--------|------|
+| `audit` | After security changes |
+| `optimize` | After performance work |
+| `testgaps` | After adding features |
+| `map` | Every 5+ file changes |
+| `document` | After API changes |
+
+```bash
+npx @claude-flow/cli@latest hooks worker dispatch --trigger audit
+```
+
+## Agents
+
+**Core**: `coder`, `reviewer`, `tester`, `planner`, `researcher`
+**Architecture**: `system-architect`, `backend-dev`, `mobile-dev`
+**Security**: `security-architect`, `security-auditor`
+**Performance**: `performance-engineer`, `perf-analyzer`
+**Coordination**: `hierarchical-coordinator`, `mesh-coordinator`, `adaptive-coordinator`
+**GitHub**: `pr-manager`, `code-review-swarm`, `issue-tracker`, `release-manager`
+
+Any string works as a custom agent type.
+
+## Build & Test
+
+- ALWAYS run tests after code changes
+- ALWAYS verify build succeeds before committing
+
+```bash
+npm run build && npm test
+```
+
+## CLI Quick Reference
+
+```bash
+npx @claude-flow/cli@latest init --wizard           # Setup
+npx @claude-flow/cli@latest swarm init --v3-mode     # Start swarm
+npx @claude-flow/cli@latest memory search --query "" # Vector search
+npx @claude-flow/cli@latest hooks route --task ""    # Route to agent
+npx @claude-flow/cli@latest doctor --fix             # Diagnostics
+npx @claude-flow/cli@latest security scan            # Security scan
+npx @claude-flow/cli@latest performance benchmark    # Benchmarks
+```
+
+26 commands, 140+ subcommands. Use `--help` on any command for details.
+
+## Setup
+
+```bash
+claude mcp add claude-flow -- npx -y @claude-flow/cli@latest
+npx @claude-flow/cli@latest daemon start
+npx @claude-flow/cli@latest doctor --fix
+```
+
+**Agent tool** handles execution (agents, files, code, git). **MCP tools** handle coordination (swarm, memory, hooks). **CLI** is the same via Bash.

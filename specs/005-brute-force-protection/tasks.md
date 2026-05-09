@@ -58,7 +58,7 @@
 - [x] T009 [P] [US1] Create `AccountLockedOutMail` mailable class following `VerificationMail` pattern in `backend/app/Mail/AccountLockedOutMail.php`
 - [x] T010 [P] [US1] Create `SendAccountLockedOutEmail` listener implementing `ShouldQueue` in `backend/app/Domains/Auth/Listeners/SendAccountLockedOutEmail.php`
 - [x] T011 [US1] Register `SendAccountLockedOutEmail::class` as a listener for `AccountLockedOut::class` in `backend/app/Providers/EventServiceProvider.php`
-- [x] T012 [US1] Add test asserting email queued on lockout in `backend/tests/Feature/Auth/LoginTest.php`
+- [x] T012 [US1] Add tests asserting email queued on lockout + idempotency (no duplicate email for same `locked_until` timestamp) in `backend/tests/Feature/Auth/LoginTest.php`
 
 **Checkpoint**: After T012, triggering lockout dispatches a queued email notification. The existing lockout flow tests remain green.
 
@@ -70,6 +70,7 @@
 
 - [x] T013 [P] Verify translation completeness: confirm `auth.errors.accountLocked` exists in `frontend/messages/en.json`, `frontend/messages/es.json`, and `frontend/messages/it.json`
 - [x] T014 [P] Verify `LoginForm.tsx` handles `code === 'account_locked'` in `frontend/src/components/auth/LoginForm.tsx` and `AuthApiError` code field in `frontend/src/lib/api/auth.ts`
+- [x] T014.1 [P] Verify cache-survivability test exists in `backend/tests/Feature/Auth/LoginTest.php` — confirmed: "survives redis cache flush during lockout" at line 287 validates lockout enforcement after `Cache::flush()` (SC-005 traceability)
 - [ ] T015 Run full backend auth test suite: `cd backend && php artisan test tests/Feature/Auth/` (user to execute locally)
 - [ ] T016 Run quickstart validation per `specs/005-brute-force-protection/quickstart.md` (user to execute locally)
 
@@ -116,7 +117,7 @@ Task: "T003 Verify event classes exist"
 # Phase 2: Launch independent new file creation (T005) in parallel with Phase 3 setup (T009-T010)
 # These touch completely different files
 Task: "T005 Add rejectedDueToLockout property to LoginFailed event"
-Task: "T009 Create AccountLockedOutNotification mail class"
+Task: "T009 Create AccountLockedOutMail mail class"
 Task: "T010 Create SendAccountLockedOutEmail listener"
 
 # Phase 4: Launch verification tasks in parallel
@@ -157,6 +158,6 @@ The MVP (User Story 1 minimum) is already implemented and passing. The remaining
 
 - [P] tasks = different files, no dependencies
 - [Story] label maps task to specific user story for traceability
-- Only 12 new/modified files across backend (8 existing modified, 4 new created — 2 source files + 2 test assertions)
+- Total files touched across the entire feature (including pre-implemented work): 12 backend files (8 existing modified, 4 new created). Remaining tasks touch only 4-5 files (see plan.md § Structure Decision).
 - Frontend requires zero changes — already complete
 - Commit after each phase checkpoint

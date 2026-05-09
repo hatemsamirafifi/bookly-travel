@@ -63,5 +63,107 @@
       "nameRequired": "Il nome completo è obbligatorio.",
       "invalidLocale": "La lingua selezionata non è supportata."
     }
+  },
+  "search": {
+    "placeholder": "Cerca tour, destinazioni, categorie...",
+    "searchButton": "Cerca",
+    "noResults": "Nessun tour trovato",
+    "noResultsHint": "Prova ad ampliare i termini di ricerca o sfoglia i tour per categoria.",
+    "browseCategories": "Sfoglia Categorie",
+    "resultsFor": "{total} risultato per \"{query}\"",
+    "resultsFor_plural": "{total} risultati per \"{query}\"",
+    "toursAvailable": "{total} tour disponibile",
+    "toursAvailable_plural": "{total} tour disponibili",
+    "filters": "Filtri",
+    "clearAll": "Cancella tutto",
+    "category": "Categoria",
+    "location": "Località",
+    "priceRange": "Fascia di Prezzo",
+    "duration": "Durata",
+    "availableDate": "Data Disponibile",
+    "minPrice": "Prezzo minimo",
+    "maxPrice": "Prezzo massimo",
+    "sortBy": "Ordina per:",
+    "sortRelevance": "Rilevanza",
+    "sortPriceLow": "Prezzo: dal più basso",
+    "sortPriceHigh": "Prezzo: dal più alto",
+    "sortRating": "Migliori Valutati",
+    "sortNewest": "Più Recenti",
+    "durations": {
+      "halfDay": "Mezza Giornata (≤4h)",
+      "fullDay": "Giornata Intera (4-8h)",
+      "multiDay": "Multi-Giorno (>8h)"
+    }
+  },
+  "tour": {
+    "about": "Informazioni sul Tour",
+    "highlights": "Punti Salienti",
+    "included": "Cosa è Incluso",
+    "excluded": "Cosa è Escluso",
+    "meetingPoint": "Punto di Incontro",
+    "cancellationPolicy": "Politica di Cancellazione",
+    "reviews": "Recensioni",
+    "selectDate": "Seleziona Data",
+    "nextAvailable": "Prossimo disponibile",
+    "unavailable": "Non Disponibile",
+    "unavailableHint": "Nessuna data disponibile per questo tour. Torna a controllare presto.",
+    "bookNow": "Prenota Ora",
+    "participants": "Partecipanti",
+    "perPerson": "/ persona",
+    "allowedRange": "{min}–{max} consentiti",
+    "selected": "Selezionato:",
+    "partialTranslation": "Alcuni contenuti sono visualizzati in inglese"
+  },
+  "home": {
+    "heroTitle": "Scopri e Prenota Tour Incredibili",
+    "heroSubtitle": "Esplora migliaia di esperienze curate da esperti locali. La tua prossima avventura inizia qui.",
+    "featuredTours": "Tour in Evidenza",
+    "viewAll": "Vedi tutti",
+    "popularCategories": "Categorie Popolari",
+    "topDestinations": "Migliori Destinazioni"
+  },
+  "locale": {
+    "switch": "Cambia lingua",
+    "en": "English",
+    "es": "Español",
+    "it": "Italiano"
+  },
+  "nav": {
+    "home": "Home",
+    "categories": "Categorie",
+    "destinations": "Destinazioni"
+  },
+  "booking": {
+    "title": "Completa Prenotazione",
+    "confirmationTitle": "Prenotazione Confermata!",
+    "participants": "Partecipanti",
+    "date": "Data Selezionata",
+    "changeDate": "Cambia data",
+    "priceBreakdown": "Riepilogo Prezzi",
+    "perPerson": "/ persona",
+    "total": "Totale",
+    "confirmButton": "Conferma Prenotazione",
+    "confirming": "Conferma in corso...",
+    "reference": "Riferimento Prenotazione",
+    "status": "Stato",
+    "statusConfirmed": "confermata",
+    "statusCompleted": "completata",
+    "statusCancelled": "cancellata",
+    "statusNoShow": "mancata presentazione",
+    "cancellationPolicy": "Politica di Cancellazione",
+    "cancelBooking": "Cancella Prenotazione",
+    "cancelConfirm": "Sei sicuro? Il rimborso sarà elaborato entro 5-10 giorni lavorativi.",
+    "cancelYes": "Sì, Cancella Prenotazione",
+    "cancelKeep": "Mantieni Prenotazione",
+    "cancelSuccess": "Prenotazione cancellata. Il rimborso è in fase di elaborazione.",
+    "emptyState": "Nessuna prenotazione — trova un tour per iniziare la tua avventura",
+    "errors": {
+      "loadFailed": "Impossibile caricare i dettagli del tour.",
+      "soldOut": "Questa data è al completo. Seleziona un'altra data.",
+      "invalidDetails": "Dettagli della prenotazione non validi. Controlla la tua selezione.",
+      "rateLimit": "Troppi tentativi di prenotazione. Attendi un momento e riprova.",
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "cancelWindowPassed": "La finestra di cancellazione è scaduta o la prenotazione non è idonea alla cancellazione"
+    }
   }
 }

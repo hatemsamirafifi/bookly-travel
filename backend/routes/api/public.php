@@ -29,3 +29,56 @@ Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::post('logout', LogoutController::class)
         ->middleware('auth:sanctum');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Public Search & Discovery Routes
+|--------------------------------------------------------------------------
+| Routes for the public search, tour detail, category, and discovery APIs.
+| Rate limits are per-endpoint: 60/min search, 120/min detail/listings.
+|
+| Feature: 006-public-search-discovery
+*/
+Route::prefix('search')->middleware('throttle:search')->group(function () {
+    Route::get('tours', [\App\Domains\Search\Controllers\Public\SearchController::class, 'search']);
+});
+
+Route::prefix('tours')->middleware('throttle:detail')->group(function () {
+    Route::get('{slug}', [\App\Domains\Search\Controllers\Public\TourDetailController::class, 'show']);
+});
+
+Route::prefix('categories')->middleware('throttle:listing')->group(function () {
+    Route::get('/', [\App\Domains\Search\Controllers\Public\CategoryController::class, 'index']);
+    Route::get('{slug}/tours', [\App\Domains\Search\Controllers\Public\CategoryController::class, 'tours']);
+});
+
+Route::prefix('destinations')->middleware('throttle:listing')->group(function () {
+    Route::get('/', [\App\Domains\Search\Controllers\Public\DestinationController::class, 'index']);
+    Route::get('{slug}/tours', [\App\Domains\Search\Controllers\Public\DestinationController::class, 'tours']);
+});
+
+Route::prefix('homepage')->middleware('throttle:homepage')->group(function () {
+    Route::get('/', [\App\Domains\Search\Controllers\Public\HomepageController::class, 'index']);
+});
+
+Route::prefix('sitemap')->middleware('throttle:sitemap')->group(function () {
+    Route::get('.xml', [\App\Domains\Search\Controllers\Public\SitemapController::class, 'index']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Booking API Routes (Feature: 007-tour-booking)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('bookings')->middleware('throttle:booking.create')->group(function () {
+        Route::post('/', [\App\Domains\Booking\Controllers\Public\BookingController::class, 'store']);
+    });
+
+    Route::prefix('my-bookings')->middleware('throttle:booking.get')->group(function () {
+        Route::get('/', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'index']);
+        Route::get('{reference}', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'show']);
+        Route::post('{reference}/cancel', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'cancel'])
+            ->middleware('throttle:booking.create');
+    });
+});

@@ -63,5 +63,107 @@
       "nameRequired": "El nombre completo es obligatorio.",
       "invalidLocale": "El idioma seleccionado no es compatible."
     }
+  },
+  "search": {
+    "placeholder": "Buscar tours, destinos, categorías...",
+    "searchButton": "Buscar",
+    "noResults": "No se encontraron tours",
+    "noResultsHint": "Intenta ampliar tus términos de búsqueda o explora tours por categoría.",
+    "browseCategories": "Explorar Categorías",
+    "resultsFor": "{total} resultado para \"{query}\"",
+    "resultsFor_plural": "{total} resultados para \"{query}\"",
+    "toursAvailable": "{total} tour disponible",
+    "toursAvailable_plural": "{total} tours disponibles",
+    "filters": "Filtros",
+    "clearAll": "Limpiar todo",
+    "category": "Categoría",
+    "location": "Ubicación",
+    "priceRange": "Rango de Precio",
+    "duration": "Duración",
+    "availableDate": "Fecha Disponible",
+    "minPrice": "Precio mínimo",
+    "maxPrice": "Precio máximo",
+    "sortBy": "Ordenar por:",
+    "sortRelevance": "Relevancia",
+    "sortPriceLow": "Precio: menor a mayor",
+    "sortPriceHigh": "Precio: mayor a menor",
+    "sortRating": "Mejor Valorados",
+    "sortNewest": "Más Recientes",
+    "durations": {
+      "halfDay": "Medio Día (≤4h)",
+      "fullDay": "Día Completo (4-8h)",
+      "multiDay": "Varios Días (>8h)"
+    }
+  },
+  "tour": {
+    "about": "Sobre Este Tour",
+    "highlights": "Destacados",
+    "included": "Qué Incluye",
+    "excluded": "Qué No Incluye",
+    "meetingPoint": "Punto de Encuentro",
+    "cancellationPolicy": "Política de Cancelación",
+    "reviews": "Reseñas",
+    "selectDate": "Seleccionar Fecha",
+    "nextAvailable": "Próximo disponible",
+    "unavailable": "No Disponible",
+    "unavailableHint": "No hay fechas próximas disponibles para este tour. Vuelve pronto.",
+    "bookNow": "Reservar Ahora",
+    "participants": "Participantes",
+    "perPerson": "/ persona",
+    "allowedRange": "{min}–{max} permitidos",
+    "selected": "Seleccionado:",
+    "partialTranslation": "Parte del contenido se muestra en inglés"
+  },
+  "home": {
+    "heroTitle": "Descubre y Reserva Tours Increíbles",
+    "heroSubtitle": "Explora miles de experiencias seleccionadas por expertos locales. Tu próxima aventura comienza aquí.",
+    "featuredTours": "Tours Destacados",
+    "viewAll": "Ver todos",
+    "popularCategories": "Categorías Populares",
+    "topDestinations": "Mejores Destinos"
+  },
+  "locale": {
+    "switch": "Cambiar idioma",
+    "en": "English",
+    "es": "Español",
+    "it": "Italiano"
+  },
+  "nav": {
+    "home": "Inicio",
+    "categories": "Categorías",
+    "destinations": "Destinos"
+  },
+  "booking": {
+    "title": "Completar Reserva",
+    "confirmationTitle": "¡Reserva Confirmada!",
+    "participants": "Participantes",
+    "date": "Fecha Seleccionada",
+    "changeDate": "Cambiar fecha",
+    "priceBreakdown": "Desglose de Precios",
+    "perPerson": "/ persona",
+    "total": "Total",
+    "confirmButton": "Confirmar Reserva",
+    "confirming": "Confirmando...",
+    "reference": "Referencia de Reserva",
+    "status": "Estado",
+    "statusConfirmed": "confirmada",
+    "statusCompleted": "completada",
+    "statusCancelled": "cancelada",
+    "statusNoShow": "no presentado",
+    "cancellationPolicy": "Política de Cancelación",
+    "cancelBooking": "Cancelar Reserva",
+    "cancelConfirm": "¿Está seguro? El reembolso se procesará en 5-10 días hábiles.",
+    "cancelYes": "Sí, Cancelar Reserva",
+    "cancelKeep": "Mantener Reserva",
+    "cancelSuccess": "Reserva cancelada. El reembolso está siendo procesado.",
+    "emptyState": "No hay reservas todavía — encuentre un tour para comenzar su aventura",
+    "errors": {
+      "loadFailed": "Error al cargar los detalles del tour.",
+      "soldOut": "Esta fecha está agotada. Por favor seleccione otra fecha.",
+      "invalidDetails": "Detalles de reserva no válidos. Verifique su selección.",
+      "rateLimit": "Demasiados intentos de reserva. Espere un momento e intente de nuevo.",
+      "generic": "Algo salió mal. Por favor intente de nuevo.",
+      "cancelWindowPassed": "La ventana de cancelación ha pasado o la reserva no es elegible para cancelación"
+    }
   }
 }
