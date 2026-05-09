@@ -34,7 +34,7 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
-      - APP_URL=http://localhost/api
+      - APP_URL=http://localhost
     networks:
       - bookly-network
     depends_on:
@@ -61,7 +61,7 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
-      - APP_URL=http://localhost/api
+      - APP_URL=http://localhost
     networks:
       - bookly-network
     depends_on:
@@ -86,7 +86,7 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
-      - APP_URL=http://localhost/api
+      - APP_URL=http://localhost
     networks:
       - bookly-network
     depends_on:

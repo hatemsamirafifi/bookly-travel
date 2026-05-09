@@ -132,5 +132,38 @@
     "home": "Inicio",
     "categories": "Categorías",
     "destinations": "Destinos"
+  },
+  "booking": {
+    "title": "Completar Reserva",
+    "confirmationTitle": "¡Reserva Confirmada!",
+    "participants": "Participantes",
+    "date": "Fecha Seleccionada",
+    "changeDate": "Cambiar fecha",
+    "priceBreakdown": "Desglose de Precios",
+    "perPerson": "/ persona",
+    "total": "Total",
+    "confirmButton": "Confirmar Reserva",
+    "confirming": "Confirmando...",
+    "reference": "Referencia de Reserva",
+    "status": "Estado",
+    "statusConfirmed": "confirmada",
+    "statusCompleted": "completada",
+    "statusCancelled": "cancelada",
+    "statusNoShow": "no presentado",
+    "cancellationPolicy": "Política de Cancelación",
+    "cancelBooking": "Cancelar Reserva",
+    "cancelConfirm": "¿Está seguro? El reembolso se procesará en 5-10 días hábiles.",
+    "cancelYes": "Sí, Cancelar Reserva",
+    "cancelKeep": "Mantener Reserva",
+    "cancelSuccess": "Reserva cancelada. El reembolso está siendo procesado.",
+    "emptyState": "No hay reservas todavía — encuentre un tour para comenzar su aventura",
+    "errors": {
+      "loadFailed": "Error al cargar los detalles del tour.",
+      "soldOut": "Esta fecha está agotada. Por favor seleccione otra fecha.",
+      "invalidDetails": "Detalles de reserva no válidos. Verifique su selección.",
+      "rateLimit": "Demasiados intentos de reserva. Espere un momento e intente de nuevo.",
+      "generic": "Algo salió mal. Por favor intente de nuevo.",
+      "cancelWindowPassed": "La ventana de cancelación ha pasado o la reserva no es elegible para cancelación"
+    }
   }
 }

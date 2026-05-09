@@ -36,9 +36,19 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
       throw new NotFoundError('Resource not found');
     }
 
+    if (response.status === 409) {
+      const body = await response.json().catch(() => ({}));
+      throw new ConflictError(body.message || 'This request conflicts with the current state.');
+    }
+
     if (response.status === 410) {
       const body = await response.json().catch(() => ({}));
       throw new GoneError(body.message || 'This resource is no longer available.');
+    }
+
+    if (response.status === 422) {
+      const body = await response.json().catch(() => ({}));
+      throw new ValidationError(body.message || 'Validation failed', body.errors || {});
     }
 
     throw new ApiError(
@@ -63,6 +73,22 @@ export class NotFoundError extends ApiError {
   constructor(message: string) {
     super(message, 404);
     this.name = 'NotFoundError';
+  }
+}
+
+export class ConflictError extends ApiError {
+  constructor(message: string) {
+    super(message, 409);
+    this.name = 'ConflictError';
+  }
+}
+
+export class ValidationError extends ApiError {
+  errors: Record<string, string[]>;
+  constructor(message: string, errors: Record<string, string[]> = {}) {
+    super(message, 422);
+    this.name = 'ValidationError';
+    this.errors = errors;
   }
 }
 

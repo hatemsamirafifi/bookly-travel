@@ -132,5 +132,37 @@
     "home": "Home",
     "categories": "Categories",
     "destinations": "Destinations"
+  },
+  "booking": {
+    "title": "Complete Your Booking",
+    "confirmationTitle": "Booking Confirmed!",
+    "participants": "Participants",
+    "date": "Selected Date",
+    "changeDate": "Change date",
+    "priceBreakdown": "Price Breakdown",
+    "perPerson": "/ person",
+    "total": "Total",
+    "confirmButton": "Confirm Booking",
+    "confirming": "Confirming...",
+    "reference": "Booking Reference",
+    "status": "Status",
+    "statusConfirmed": "confirmed",
+    "statusCompleted": "completed",
+    "statusCancelled": "cancelled",
+    "statusNoShow": "no_show",
+    "cancellationPolicy": "Cancellation Policy",
+    "cancelBooking": "Cancel Booking",
+    "cancelConfirm": "Are you sure? Refund will be processed within 5-10 business days.",
+    "cancelYes": "Yes, Cancel Booking",
+    "cancelKeep": "Keep Booking",
+    "cancelSuccess": "Booking cancelled. Refund is being processed.",
+    "emptyState": "No bookings yet — find a tour to start your adventure",
+    "errors": {
+      "loadFailed": "Failed to load tour details.",
+      "soldOut": "This tour date is sold out. Please select a different date.",
+      "invalidDetails": "Invalid booking details. Please check your selection.",
+      "rateLimit": "Too many booking attempts. Please wait a moment and try again.",
+      "generic": "Something went wrong. Please try again.",
+      "cancelWindowPassed": "Cancellation window has passed or booking is not eligible for cancellation"
+    }
   }
-}

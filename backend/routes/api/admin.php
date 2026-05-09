@@ -11,5 +11,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    // Admin routes will be added in spec 011 (Admin Dashboard)
+    Route::prefix('audit/bookings')->middleware('throttle:booking.get')->group(function () {
+        Route::get('/', [\App\Domains\Booking\Controllers\Admin\AuditController::class, 'index']);
+        Route::get('{reference}', [\App\Domains\Booking\Controllers\Admin\AuditController::class, 'show']);
+    });
 });

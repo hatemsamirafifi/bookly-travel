@@ -64,3 +64,21 @@ Route::prefix('homepage')->middleware('throttle:homepage')->group(function () {
 Route::prefix('sitemap')->middleware('throttle:sitemap')->group(function () {
     Route::get('.xml', [\App\Domains\Search\Controllers\Public\SitemapController::class, 'index']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Booking API Routes (Feature: 007-tour-booking)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('bookings')->middleware('throttle:booking.create')->group(function () {
+        Route::post('/', [\App\Domains\Booking\Controllers\Public\BookingController::class, 'store']);
+    });
+
+    Route::prefix('my-bookings')->middleware('throttle:booking.get')->group(function () {
+        Route::get('/', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'index']);
+        Route::get('{reference}', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'show']);
+        Route::post('{reference}/cancel', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'cancel'])
+            ->middleware('throttle:booking.create');
+    });
+});

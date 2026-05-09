@@ -132,5 +132,38 @@
     "home": "Home",
     "categories": "Categorie",
     "destinations": "Destinazioni"
+  },
+  "booking": {
+    "title": "Completa Prenotazione",
+    "confirmationTitle": "Prenotazione Confermata!",
+    "participants": "Partecipanti",
+    "date": "Data Selezionata",
+    "changeDate": "Cambia data",
+    "priceBreakdown": "Riepilogo Prezzi",
+    "perPerson": "/ persona",
+    "total": "Totale",
+    "confirmButton": "Conferma Prenotazione",
+    "confirming": "Conferma in corso...",
+    "reference": "Riferimento Prenotazione",
+    "status": "Stato",
+    "statusConfirmed": "confermata",
+    "statusCompleted": "completata",
+    "statusCancelled": "cancellata",
+    "statusNoShow": "mancata presentazione",
+    "cancellationPolicy": "Politica di Cancellazione",
+    "cancelBooking": "Cancella Prenotazione",
+    "cancelConfirm": "Sei sicuro? Il rimborso sarà elaborato entro 5-10 giorni lavorativi.",
+    "cancelYes": "Sì, Cancella Prenotazione",
+    "cancelKeep": "Mantieni Prenotazione",
+    "cancelSuccess": "Prenotazione cancellata. Il rimborso è in fase di elaborazione.",
+    "emptyState": "Nessuna prenotazione — trova un tour per iniziare la tua avventura",
+    "errors": {
+      "loadFailed": "Impossibile caricare i dettagli del tour.",
+      "soldOut": "Questa data è al completo. Seleziona un'altra data.",
+      "invalidDetails": "Dettagli della prenotazione non validi. Controlla la tua selezione.",
+      "rateLimit": "Troppi tentativi di prenotazione. Attendi un momento e riprova.",
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "cancelWindowPassed": "La finestra di cancellazione è scaduta o la prenotazione non è idonea alla cancellazione"
+    }
   }
 }

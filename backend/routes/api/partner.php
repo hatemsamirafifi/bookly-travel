@@ -11,5 +11,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:sanctum', 'role:partner'])->group(function () {
-    // Partner routes will be added in spec 002 (Partner Onboarding)
+    Route::prefix('bookings')->middleware('throttle:booking.get')->group(function () {
+        Route::get('/', [\App\Domains\Booking\Controllers\Partner\PartnerBookingController::class, 'index']);
+        Route::patch('{reference}/status', [\App\Domains\Booking\Controllers\Partner\PartnerBookingController::class, 'updateStatus']);
+    });
 });
