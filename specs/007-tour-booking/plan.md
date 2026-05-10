@@ -7,10 +7,13 @@
 
 Deliver the tour booking flow for Bookly travelers — instant booking confirmation with real-time availability validation, idempotent creation, booking lifecycle management (confirmed → completed/cancelled/no_show), traveler booking management, partner booking visibility, and immutable audit trails. The booking domain integrates with existing tours/auth (specs 003/004), triggers payment events (spec 008), and surfaces via localized Next.js pages (EN/ES/IT) with queued email confirmations.
 
+**Cross-spec dependency**: This feature depends on spec 006 (localized routing, i18n infrastructure, Tailwind CSS design system, and tour detail page CTA). Spec 006 MUST be fully deployed before booking frontend pages are released.
+
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x (Next.js 16 frontend), PHP 8.x (Laravel backend)
 **Primary Dependencies**: Next.js 16 (App Router), Laravel (API-only), PostgreSQL, Redis, Laravel Sanctum (auth)
+**CSS Framework**: Tailwind CSS (inherited from spec 006 baseline — no deviation; all booking components use the existing Tailwind design system)
 **Storage**: PostgreSQL (bookings, audit log), Redis (cache/queue/sessions/rate limiting)
 **Testing**: Pest/PHPUnit (backend), Jest + Playwright (frontend)
 **Target Platform**: Web (SSR/ISR public pages, Cloudflare CDN)
@@ -38,9 +41,14 @@ Deliver the tour booking flow for Bookly travelers — instant booking confirmat
 | Queueing & Async Work | PASS | Email confirmations dispatched to Redis queue (FR-026); idempotent jobs |
 | SEO-First | PASS | Booking pages use SSR/ISR with localized metadata (per spec 006) |
 | Security-First Mandate | PASS | FR-010 adds strict rate limiting; FR-006 requires auth; FR-017/FR-019 enforce ownership |
-| WCAG Accessibility | PASS | Booking UI follows WCAG 2.1 AA (FR-009 locale-aware UI built per spec 006 a11y standards) |
+| WCAG Accessibility | PASS | FR-031 mandates WCAG 2.1 AA audit with specific keyboard/screen-reader checks (T054) |
 | Audit Logging | PASS | FR-020–FR-022 mandate immutable audit log entries for all status transitions |
 | Idempotent Financial Flows | PASS | FR-003 requires client-generated idempotency key; FR-023 atomic availability checks prevent overbooking |
+| FR-027 (Price-Change UI) | PASS | New FR surfaces explicit re-confirmation when price drifts between page load and booking — no silent price acceptance |
+| FR-028 (Failed-Email Alert) | PASS | New FR mandates admin alert on exhausted retry — email failure never silently swallowed |
+| FR-029 (Anonymization Job) | PASS | New FR mandates idempotent scheduled job with `data_anonymized` audit entry — complies with retention policy |
+| FR-030 (Lighthouse ≥ 90) | PASS | New FR formalizes performance gate verified by T053 |
+| FR-031 (WCAG 2.1 AA) | PASS | New FR formalizes accessibility gate verified by T054 |
 
 **Gate Result**: ALL PASS — No violations. Proceed to Phase 0.
 
@@ -71,6 +79,8 @@ backend/
 │   │       │   ├── GetTravelerBookingsAction.php
 │   │       │   ├── GetPartnerBookingsAction.php
 │   │       │   └── TransitionBookingStatusAction.php
+│   │       ├── Jobs/
+│   │       │   └── SendBookingConfirmationEmail.php   # Queued job (ShouldQueue)
 │   │       ├── Services/
 │   │       │   ├── BookingService.php
 │   │       │   ├── AvailabilityService.php
@@ -79,8 +89,10 @@ backend/
 │   │       │   ├── Public/
 │   │       │   │   ├── BookingController.php
 │   │       │   │   └── TravelerBookingController.php
-│   │       │   └── Partner/
-│   │       │       └── PartnerBookingController.php
+│   │       │   ├── Partner/
+│   │       │   │   └── PartnerBookingController.php
+│   │       │   └── Admin/
+│   │       │       └── AuditController.php
 │   │       ├── DTOs/
 │   │       │   ├── CreateBookingDTO.php
 │   │       │   └── BookingResponseDTO.php

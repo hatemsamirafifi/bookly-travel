@@ -15,10 +15,12 @@ class BookingController
     public function store(Request $request, CreateBookingAction $action): JsonResponse
     {
         $validated = $request->validate([
-            'tour_slug' => 'required|string|max:255',
-            'tour_date' => 'required|date_format:Y-m-d',
+            'tour_slug'        => 'required|string|max:255',
+            'tour_date'        => 'required|date_format:Y-m-d',
             'participant_count' => 'required|integer|min:1',
-            'locale' => 'sometimes|string|in:en,es,it|max:2',
+            'locale'           => 'sometimes|string|in:en,es,it|max:2',
+            // FR-027: optional price the traveler saw on the tour detail page (cents)
+            'page_load_price'  => 'sometimes|integer|min:0',
         ]);
 
         $idempotencyKey = $request->header('Idempotency-Key');
@@ -37,13 +39,22 @@ class BookingController
             locale: $validated['locale'] ?? 'en',
             idempotencyKey: $idempotencyKey,
             travelerId: (int) $request->user()->id,
+            pageLoadPrice: isset($validated['page_load_price']) ? (int) $validated['page_load_price'] : null,
         );
 
         try {
             $result = $action->execute($dto);
             $status = $result['is_retry'] ? 200 : 201;
 
-            return response()->json(['data' => $result['data']], $status);
+            $body = ['data' => $result['data']];
+
+            // FR-027: surface price_changed so the frontend can prompt the traveler
+            // to re-confirm at the new price before proceeding
+            if (! $result['is_retry'] && ($result['price_changed'] ?? false)) {
+                $body['price_changed'] = true;
+            }
+
+            return response()->json($body, $status);
         } catch (NotFoundHttpException $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         } catch (ConflictHttpException $e) {

@@ -5,7 +5,9 @@ namespace App\Domains\Booking\Actions;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\DTOs\BookingResponseDTO;
 use App\Domains\Booking\Services\AuditService;
+use App\Domains\Payment\Actions\ProcessRefundAction;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -14,6 +16,7 @@ class CancelBookingAction
 {
     public function __construct(
         private readonly AuditService $audit,
+        private readonly ProcessRefundAction $processRefund,
     ) {}
 
     public function execute(string $reference, int $travelerId, ?string $reason = null): array
@@ -25,7 +28,7 @@ class CancelBookingAction
         }
 
         if ($booking->traveler_id !== $travelerId) {
-            throw new NotFoundHttpException('Booking not found.');
+            throw new AccessDeniedHttpException('You do not have access to this booking.');
         }
 
         if ($booking->status !== Booking::STATUS_CONFIRMED) {
@@ -46,6 +49,8 @@ class CancelBookingAction
                 'cancelled_at' => now(),
                 'cancellation_reason' => $reason,
             ]);
+
+            $this->processRefund->execute($booking);
 
             $this->audit->log(
                 $booking,

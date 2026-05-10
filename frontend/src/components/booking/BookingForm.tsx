@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import ParticipantSelector from './ParticipantSelector';
 import DateConfirmation from './DateConfirmation';
 import PriceBreakdown from './PriceBreakdown';
+import PriceChangeModal from './PriceChangeModal';
+import StripePaymentForm from './StripePaymentForm';
 import { createBooking } from '@/lib/api/bookings';
 import { getTourDetail } from '@/lib/api/tours';
 import type { TourDetail } from '@/lib/api/types';
@@ -13,6 +17,16 @@ interface BookingFormProps {
   locale: string;
 }
 
+/**
+ * Booking form — composes ParticipantSelector, DateConfirmation, PriceBreakdown.
+ *
+ * FR-027: When the API signals price_changed: true (i.e., the tour price changed
+ * between page load and booking confirmation), a PriceChangeModal intercepts the
+ * flow and requires the traveler to explicitly re-confirm at the new price.
+ * The original booking IS already created server-side at this point (the booking
+ * is confirmed), so re-confirmation here means the traveler accepts the price
+ * and is redirected to the confirmation page.
+ */
 export default function BookingForm({ locale }: BookingFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,6 +39,20 @@ export default function BookingForm({ locale }: BookingFormProps) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Two-step payment flow state
+  const [paymentStep, setPaymentStep] = useState<{
+    clientSecret: string;
+    bookingReference: string;
+  } | null>(null);
+
+  // FR-027: price-change modal state
+  const [priceChangeModal, setPriceChangeModal] = useState<{
+    visible: boolean;
+    bookingReference: string;
+    oldPriceFormatted: string;
+    newPriceFormatted: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!tourSlug) {
@@ -46,6 +74,11 @@ export default function BookingForm({ locale }: BookingFormProps) {
       .finally(() => setLoading(false));
   }, [tourSlug, locale, searchParams]);
 
+  const formatPrice = (amountCents: number, currency: string): string => {
+    const symbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
+    return `${symbol}${(amountCents / 100).toFixed(2)}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!tourSlug || !date) return;
@@ -54,14 +87,48 @@ export default function BookingForm({ locale }: BookingFormProps) {
     setError(null);
 
     try {
+      const pageLoadPriceCents = tour?.pricing?.base_price?.amount;
+
       const result = await createBooking({
         tour_slug: tourSlug,
         tour_date: date,
         participant_count: participants,
         locale,
+        page_load_price: pageLoadPriceCents,
       });
 
-      router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
+      // FR-027: price drifted — surface the modal before forwarding to payment
+      if (result.price_changed && result.data.pricing) {
+        const confirmedPrice = result.data.pricing.price_per_person;
+        const oldFormatted = pageLoadPriceCents
+          ? formatPrice(pageLoadPriceCents, confirmedPrice.currency)
+          : confirmedPrice.formatted;
+
+        setPriceChangeModal({
+          visible: true,
+          bookingReference: result.data.reference,
+          oldPriceFormatted: oldFormatted,
+          newPriceFormatted: confirmedPrice.formatted,
+        });
+        // Store payment info for after modal confirmation
+        if (result.payment) {
+          setPaymentStep({
+            clientSecret: result.payment.client_secret,
+            bookingReference: result.data.reference,
+          });
+        }
+        return;
+      }
+
+      // Enter payment step with Stripe Elements
+      if (result.payment) {
+        setPaymentStep({
+          clientSecret: result.payment.client_secret,
+          bookingReference: result.data.reference,
+        });
+      } else {
+        router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
+      }
     } catch (err: any) {
       if (err.status === 409) {
         setError('This tour date is sold out. Please select a different date.');
@@ -75,6 +142,31 @@ export default function BookingForm({ locale }: BookingFormProps) {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handlePaymentSuccess = () => {
+    if (paymentStep) {
+      router.push(`/${locale}/booking/confirmation?ref=${paymentStep.bookingReference}`);
+    }
+  };
+
+  const handlePaymentError = (message: string) => {
+    setError(message);
+  };
+
+  const stripePromise = paymentStep
+    ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+    : null;
+
+  // FR-027: traveler explicitly accepts the new price — dismiss modal (payment step already set)
+  const handlePriceChangeConfirm = () => {
+    setPriceChangeModal(null);
+  };
+
+  // FR-027: traveler declines the new price — dismiss modal and clear payment step
+  const handlePriceChangeCancel = () => {
+    setPriceChangeModal(null);
+    setPaymentStep(null);
   };
 
   if (loading) {
@@ -95,46 +187,74 @@ export default function BookingForm({ locale }: BookingFormProps) {
     );
   }
 
+  if (paymentStep && stripePromise) {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-lg font-semibold text-gray-800">Payment</h2>
+        <Elements stripe={stripePromise} options={{ clientSecret: paymentStep.clientSecret }}>
+          <StripePaymentForm
+            clientSecret={paymentStep.clientSecret}
+            onSuccess={handlePaymentSuccess}
+            onError={handlePaymentError}
+          />
+        </Elements>
+        {error && (
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+            {error}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <DateConfirmation date={date} tourSlug={tourSlug} locale={locale} />
-
-      {tour && (
-        <>
-          <ParticipantSelector
-            value={participants}
-            onChange={setParticipants}
-            min={tour.group_size.min}
-            max={tour.group_size.max}
-            pricePerPerson={tour.pricing.base_price.formatted}
-          />
-
-          <PriceBreakdown
-            pricePerPerson={tour.pricing.base_price.formatted}
-            participantCount={participants}
-            total={(() => {
-              const totalCents = tour.pricing.base_price.amount * participants;
-              const currency = tour.pricing.base_price.currency;
-              const symbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
-              return `${symbol}${(totalCents / 100).toFixed(2)}`;
-            })()}
-          />
-        </>
+    <>
+      {/* FR-027: price-change re-confirmation modal */}
+      {priceChangeModal?.visible && (
+        <PriceChangeModal
+          oldPrice={priceChangeModal.oldPriceFormatted}
+          newPrice={priceChangeModal.newPriceFormatted}
+          onConfirm={handlePriceChangeConfirm}
+          onCancel={handlePriceChangeCancel}
+          locale={locale}
+        />
       )}
 
-      {error && (
-        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
-          {error}
-        </div>
-      )}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <DateConfirmation date={date} tourSlug={tourSlug} locale={locale} />
 
-      <button
-        type="submit"
-        disabled={submitting || !tourSlug || !date}
-        className="w-full rounded-lg bg-blue-600 py-3 text-base font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-      >
-        {submitting ? 'Confirming...' : 'Confirm Booking'}
-      </button>
-    </form>
+        {tour && (
+          <>
+            <ParticipantSelector
+              value={participants}
+              onChange={setParticipants}
+              min={tour.group_size.min}
+              max={tour.group_size.max}
+              pricePerPerson={tour.pricing.base_price.formatted}
+            />
+
+            <PriceBreakdown
+              pricePerPerson={tour.pricing.base_price.formatted}
+              participantCount={participants}
+              total={formatPrice(tour.pricing.base_price.amount * participants, tour.pricing.base_price.currency)}
+            />
+          </>
+        )}
+
+        {error && (
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting || !tourSlug || !date}
+          className="w-full rounded-lg bg-blue-600 py-3 text-base font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+        >
+          {submitting ? 'Reserving...' : 'Confirm & Pay'}
+        </button>
+      </form>
+    </>
   );
 }

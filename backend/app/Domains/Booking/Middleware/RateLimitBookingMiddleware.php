@@ -18,7 +18,8 @@ class RateLimitBookingMiddleware
             $availableIn = RateLimiter::availableIn($key);
 
             return response()->json([
-                'message' => 'Too many requests. Please try again later.',
+                'message'     => 'Too many booking attempts. Please wait and try again.',
+                'retry_after' => $availableIn,
             ], 429)->withHeaders([
                 'Retry-After' => $availableIn,
             ]);
@@ -33,6 +34,6 @@ class RateLimitBookingMiddleware
     {
         $identifier = $request->user()?->id ?? $request->ip();
 
-        return 'rate_limit:booking:' . $tier . ':' . $identifier . ':' . now()->format('Y-m-d-H-i');
+        return 'rate_limit:booking:' . $tier . ':' . $identifier;
     }
 }

@@ -15,4 +15,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         Route::get('/', [\App\Domains\Booking\Controllers\Admin\AuditController::class, 'index']);
         Route::get('{reference}', [\App\Domains\Booking\Controllers\Admin\AuditController::class, 'show']);
     });
+
+    Route::get('financial-ledger', [\App\Domains\Payment\Controllers\Admin\FinancialLedgerController::class, 'index'])
+        ->middleware('throttle:booking.get');
 });

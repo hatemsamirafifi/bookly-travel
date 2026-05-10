@@ -142,14 +142,18 @@
     "priceBreakdown": "Desglose de Precios",
     "perPerson": "/ persona",
     "total": "Total",
-    "confirmButton": "Confirmar Reserva",
-    "confirming": "Confirmando...",
+    "confirmButton": "Confirmar y Pagar",
+    "confirming": "Reservando...",
+    "payButton": "Pagar Ahora",
+    "paying": "Procesando...",
     "reference": "Referencia de Reserva",
     "status": "Estado",
     "statusConfirmed": "confirmada",
     "statusCompleted": "completada",
     "statusCancelled": "cancelada",
     "statusNoShow": "no presentado",
+    "statusPendingPayment": "pago_pendiente",
+    "statusExpired": "expirada",
     "cancellationPolicy": "Política de Cancelación",
     "cancelBooking": "Cancelar Reserva",
     "cancelConfirm": "¿Está seguro? El reembolso se procesará en 5-10 días hábiles.",
@@ -163,7 +167,28 @@
       "invalidDetails": "Detalles de reserva no válidos. Verifique su selección.",
       "rateLimit": "Demasiados intentos de reserva. Espere un momento e intente de nuevo.",
       "generic": "Algo salió mal. Por favor intente de nuevo.",
-      "cancelWindowPassed": "La ventana de cancelación ha pasado o la reserva no es elegible para cancelación"
+      "cancelWindowPassed": "La ventana de cancelación ha pasado o la reserva no es elegible para cancelación",
+      "paymentFailed": "El pago falló. Por favor intente de nuevo."
+    }
+  },
+  "payment": {
+    "title": "Detalles del Pago",
+    "status": "Estado",
+    "statusPending": "Pago Pendiente",
+    "statusSucceeded": "Pago Exitoso",
+    "statusFailed": "Pago Fallido",
+    "statusRefunded": "Reembolsado",
+    "statusDisputed": "Disputado",
+    "amount": "Importe",
+    "card": "Tarjeta",
+    "paidAt": "Pagado el",
+    "financialSummary": {
+      "totalRevenue": "Ingresos Totales",
+      "totalRefunds": "Reembolsos Totales",
+      "netRevenue": "Ingresos Netos",
+      "bookingCount": "Reservas",
+      "refundCount": "Reembolsos",
+      "averageBookingValue": "Valor Medio de Reserva"
     }
   }
 }

@@ -5,6 +5,8 @@ export interface CreateBookingRequest {
   tour_date: string;
   participant_count: number;
   locale?: string;
+  /** Price per person in cents as shown on the tour detail page (FR-027 drift detection). */
+  page_load_price?: number;
 }
 
 export interface BookingResponse {
@@ -41,7 +43,21 @@ export interface BookingResponse {
   created_at: string;
 }
 
-export async function createBooking(params: CreateBookingRequest): Promise<{ data: BookingResponse }> {
+export interface PaymentInfo {
+  client_secret: string;
+  stripe_publishable_key: string;
+}
+
+export interface CreateBookingResult {
+  data: BookingResponse;
+  /** True when the tour's current price differs from the price_load_price sent.
+   *  When true, the UI must show a re-confirmation modal before treating the
+   *  booking as accepted by the traveler (FR-027). */
+  price_changed?: boolean;
+  payment?: PaymentInfo;
+}
+
+export async function createBooking(params: CreateBookingRequest): Promise<CreateBookingResult> {
   const idempotencyKey = crypto.randomUUID();
 
   const headers: Record<string, string> = {
@@ -54,7 +70,7 @@ export async function createBooking(params: CreateBookingRequest): Promise<{ dat
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  return apiClient<{ data: BookingResponse }>('/api/public/bookings', {
+  return apiClient<CreateBookingResult>('/api/public/bookings', {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -62,6 +78,8 @@ export async function createBooking(params: CreateBookingRequest): Promise<{ dat
       tour_date: params.tour_date,
       participant_count: params.participant_count,
       locale: params.locale || 'en',
+      ...(params.page_load_price !== undefined && { page_load_price: params.page_load_price }),
     }),
   });
 }
+
