@@ -17,13 +17,19 @@ class ConfirmBookingOnPayment
     {
         $booking = $event->booking;
 
+        if ($booking->status === Booking::STATUS_CONFIRMED || $this->ledger->hasChargeRecord($event->payment)) {
+            return;
+        }
+
         $booking->update([
             'status' => Booking::STATUS_CONFIRMED,
             'payment_confirmed_at' => now(),
         ]);
 
-        $this->ledger->recordCharge($event->payment);
+        $recorded = $this->ledger->recordCharge($event->payment);
 
-        SendBookingConfirmationEmail::dispatch($booking);
+        if ($recorded) {
+            SendBookingConfirmationEmail::dispatch($booking);
+        }
     }
 }

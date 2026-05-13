@@ -15,9 +15,9 @@ class ExpirePendingBookingsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function handle(): void
+    public function handle(\App\Domains\Booking\Services\AuditService $auditService): void
     {
-        $expired = DB::transaction(function () {
+        $expired = DB::transaction(function () use ($auditService) {
             $bookings = Booking::where('status', Booking::STATUS_PENDING_PAYMENT)
                 ->where('pending_expires_at', '<=', now())
                 ->lockForUpdate()
@@ -25,7 +25,19 @@ class ExpirePendingBookingsJob implements ShouldQueue
 
             $count = 0;
             foreach ($bookings as $booking) {
+                $beforeState = $booking->status;
                 $booking->update(['status' => Booking::STATUS_EXPIRED]);
+                
+                $auditService->log(
+                    $booking,
+                    'system',
+                    null,
+                    'booking.expired',
+                    $beforeState,
+                    Booking::STATUS_EXPIRED,
+                    ['reason' => 'pending_payment_timeout']
+                );
+
                 $count++;
             }
 

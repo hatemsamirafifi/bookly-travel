@@ -108,14 +108,12 @@ class Tour extends Model
 
     public function averageRating(): float
     {
-        // Delegate to Reviews domain (spec 010) — placeholder returns 0.0
-        return 0.0;
+        return (float) ($this->average_rating ?? 0.0);
     }
 
     public function reviewCount(): int
     {
-        // Delegate to Reviews domain (spec 010)
-        return 0;
+        return (int) ($this->review_count ?? 0);
     }
 
     public function allImageUrls(): array

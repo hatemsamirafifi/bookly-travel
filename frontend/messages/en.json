@@ -169,7 +169,39 @@
       "generic": "Something went wrong. Please try again.",
       "cancelWindowPassed": "Cancellation window has passed or booking is not eligible for cancellation",
       "paymentFailed": "Payment failed. Please try again."
+    },
+    "priceChangeModal": {
+      "title": "Price has changed",
+      "body": "The price for this tour has changed since you loaded the page.",
+      "from": "Original price",
+      "to": "Current price",
+      "confirm": "Confirm at new price",
+      "cancel": "Cancel"
     }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "star_rating_label": "Select {star} star rating",
+    "submit_review": "Submit Review",
+    "edit_review": "Edit Review",
+    "update_review": "Update Review",
+    "no_reviews_yet": "No reviews yet. Be the first!",
+    "edited": "Edited",
+    "char_count": "{count}/2000",
+    "rate_limit_message": "You are submitting reviews too quickly. Please wait before trying again.",
+    "review_window_closed": "The review window has closed. Reviews can only be submitted within 30 days of the tour date.",
+    "edit_window_closed": "The edit window has closed. Reviews can only be edited within 48 hours of submission.",
+    "flagged": "Flagged",
+    "thank_you": "Thank you for your review!",
+    "updated": "Your review has been updated!",
+    "leave_review": "Leave a Review",
+    "your_rating": "Your Rating",
+    "your_review": "Your Review (optional)",
+    "share_experience": "Share your experience...",
+    "submitting": "Submitting...",
+    "load_more": "Load More",
+    "loading": "Loading...",
+    "failed_to_load": "Failed to load reviews. Please try again later."
   },
   "payment": {
     "title": "Payment Details",

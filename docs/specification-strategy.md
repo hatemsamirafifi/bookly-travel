@@ -1,9 +1,9 @@
 # Bookly Specification Strategy — Phase 1
 
-> **Version**: 1.0.0
-> **Date**: 2026-04-11
-> **Constitution**: v1.0.0 (patch to v1.1.0 pending — Filament addition)
-> **Status**: Approved
+> **Version**: 2.0.0
+> **Date**: 2026-04-11 (revised 2026-05-13)
+> **Constitution**: v1.0.1
+> **Status**: In Progress
 
 ---
 
@@ -22,7 +22,15 @@ All surfaces consume a shared **Laravel API-only backend** with
 PostgreSQL, Redis, and Stripe.
 
 This document defines the specification decomposition, execution order,
-and precise `/speckit.specify` prompts for all 11 Phase 1 features.
+and precise `/speckit.specify` prompts for all Phase 1 features.
+
+> **NOTE — v2.0.0 Revision**: The original v1.0.0 plan listed 11
+> features numbered 001–011. During implementation, the plan was
+> re-decomposed: the original 001 (Traveler Auth) was expanded into
+> 5 granular phases (001–005), and subsequent features were renumbered
+> accordingly. This revision updates all sections to reflect the
+> actual project structure. See §4.5 for a mapping from the original
+> numbering to the current numbering.
 
 ---
 
@@ -48,10 +56,9 @@ specs.
 
 ---
 
-## 3. Constitution Patch Required
+## 3. Constitution Patch — ✅ Complete
 
-Before executing any specs, the constitution (v1.0.0) MUST be patched
-to v1.1.0 to reflect:
+The constitution has been patched to v1.0.1, reflecting:
 
 1. **Filament** added to the approved stack table as the admin dashboard
    framework.
@@ -60,89 +67,189 @@ to v1.1.0 to reflect:
    - Partner dashboard → Next.js 16
    - Admin dashboard → Laravel Filament (server-rendered)
 
-This is a MINOR bump (new technology added, no principles removed or
-redefined).
-
 ---
 
 ## 4. Feature Decomposition
 
-### 4.1 Spec Directory Structure
+### 4.1 Spec Directory Structure (Actual)
 
 ```text
 specs/
-├── 001-traveler-auth/
-│   └── spec.md
-├── 002-partner-onboarding/
-│   └── spec.md
-├── 003-tour-management/
-│   └── spec.md
-├── 004-pricing-availability/
-│   └── spec.md
-├── 005-admin-moderation/
-│   └── spec.md
-├── 006-public-search-discovery/
-│   └── spec.md
-├── 007-booking-checkout/
-│   └── spec.md
-├── 008-payments-finance/
-│   └── spec.md
-├── 009-notifications-vouchers/
-│   └── spec.md
-├── 010-traveler-reviews/
-│   └── spec.md
-└── 011-traveler-account-bookings/
-    └── spec.md
+├── 001-traveler-auth/               ✅ Implemented
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 002-foundational-implementation/ ✅ Implemented
+│   ├── spec.md
+│   └── checklists/
+├── 003-traveler-registration/       ✅ Implemented
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 004-traveler-signin/             ✅ Implemented
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 005-brute-force-protection/      ✅ Implemented
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 006-public-search-discovery/     ✅ Implemented
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 007-tour-booking/                ✅ Implemented
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 008-payment-processing/          📋 Specified (ready for implementation)
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   └── checklists/
+├── 009-reviews-ratings/             📝 Partially specified (needs tasks)
+│   ├── spec.md
+│   ├── plan.md
+│   └── checklists/
+├── 010-TBD/                         🔲 Not yet started
+├── 011-TBD/                         🔲 Not yet started
+├── 012-TBD/                         🔲 Not yet started
+├── 013-TBD/                         🔲 Not yet started
+├── 014-TBD/                         🔲 Not yet started
+└── 015-TBD/                         🔲 Not yet started
 ```
 
 ### 4.2 Feature Summary Table
 
-| Spec | Feature | Surface(s) | Key Domains |
-|------|---------|-----------|-------------|
-| 001 | Traveler Auth | Public, Backend | Auth |
-| 002 | Partner Onboarding | Partner, Admin, Backend | Partners, Auth |
-| 003 | Tour Management | Partner, Backend | Tours, Translation |
-| 004 | Pricing & Availability | Partner, Backend | Pricing, Availability |
-| 005 | Admin Moderation | Admin, Backend | Admin Ops, Partners, Tours, Finance |
-| 006 | Public Search & Discovery | Public, Backend | Tours, Search |
-| 007 | Booking & Checkout | Public, Backend | Bookings |
-| 008 | Payments & Finance | Backend | Payments, Finance |
-| 009 | Notifications & Vouchers | Backend | Notifications |
-| 010 | Traveler Reviews | Public, Backend | Reviews |
-| 011 | Traveler Account & Bookings | Public, Backend | Bookings, Auth |
+#### Completed Features (001–007)
 
-### 4.3 Dependency Graph
+| Spec | Feature | Surface(s) | Key Domains | Status |
+|------|---------|-----------|-------------|--------|
+| 001 | Traveler Auth (Architecture & Spec) | Backend | Auth | ✅ Implemented |
+| 002 | Foundational Implementation | Backend, Frontend | Auth, Infrastructure | ✅ Implemented |
+| 003 | Traveler Registration | Public, Backend | Auth | ✅ Implemented |
+| 004 | Traveler Sign-in | Public, Backend | Auth | ✅ Implemented |
+| 005 | Brute Force Protection | Backend | Auth, Security | ✅ Implemented |
+| 006 | Public Search & Discovery | Public, Backend | Tours, Search, SEO | ✅ Implemented |
+| 007 | Tour Booking | Public, Backend | Bookings, Availability | ✅ Implemented |
+
+#### In-Progress Features (008–009)
+
+| Spec | Feature | Surface(s) | Key Domains | Status |
+|------|---------|-----------|-------------|--------|
+| 008 | Payment Processing | Public, Backend | Payments, Finance, Stripe | 📋 Ready for implementation |
+| 009 | Reviews & Ratings | Public, Backend | Reviews | 📝 Needs tasks, contracts, data-model |
+
+#### Remaining Features (010–015) — Not Yet Specified
+
+These features from the original strategy have NOT been specified yet
+and need to be created as new specs:
+
+| Spec | Feature | Surface(s) | Key Domains | Depends On |
+|------|---------|-----------|-------------|------------|
+| 010 | Partner Onboarding | Partner, Admin, Backend | Partners, Auth | — |
+| 011 | Tour Management | Partner, Backend | Tours, Translation | 010 |
+| 012 | Pricing & Availability | Partner, Backend | Pricing, Availability | 011 |
+| 013 | Admin Moderation | Admin, Backend | Admin Ops, Partners, Tours | 010, 011 |
+| 014 | Notifications & Vouchers | Backend | Notifications | 007 |
+| 015 | Traveler Account & Bookings | Public, Backend | Bookings, Auth | 001, 007 |
+
+### 4.3 Dependency Graph (Updated)
 
 ```
-001 Traveler Auth ─────────────────────────────────┐
-                                                    ↓
-002 Partner Onboarding ──→ 003 Tour Management     007 Booking & Checkout
-                             │                      ↑     │
-                             ├──→ 004 Pricing ──┐   │     ├──→ 008 Payments & Finance
-                             │                  │   │     ├──→ 009 Notifications & Vouchers
-                             └──→ 005 Admin ──┐ │   │     ├──→ 010 Traveler Reviews
-                                              ↓ ↓   │     └──→ 011 Traveler Account
-                                    006 Search ──┘
+--- COMPLETED ---
+001 Traveler Auth ──→ 002 Foundation ──→ 003 Registration ──→ 004 Sign-in ──→ 005 Brute Force
+                                                                                     │
+                                                                              006 Search ←──┘
+                                                                                     │
+                                                                              007 Booking
+                                                                                 │
+                                                           ┌─────────────────────┼────────────┐
+--- IN PROGRESS ---                                        ↓                     ↓            ↓
+                                                    008 Payments          009 Reviews    (future)
+
+--- REMAINING ---
+010 Partner Onboarding ──→ 011 Tour Management
+                               │
+                               ├──→ 012 Pricing & Availability
+                               └──→ 013 Admin Moderation
+
+014 Notifications & Vouchers  (depends on 007 ✅)
+015 Traveler Account          (depends on 001 ✅, 007 ✅)
 ```
 
-### 4.4 Execution Order
+### 4.4 Execution Order (Updated)
 
-Specs MUST be authored in this sequence. Each spec builds on the
-context established by prior specs.
+| Order | Spec | Feature | Depends On | Status |
+|-------|------|---------|------------|--------|
+| 1 | 001 | Traveler Auth | — | ✅ Done |
+| 2 | 002 | Foundational Implementation | 001 | ✅ Done |
+| 3 | 003 | Traveler Registration | 002 | ✅ Done |
+| 4 | 004 | Traveler Sign-in | 002 | ✅ Done |
+| 5 | 005 | Brute Force Protection | 004 | ✅ Done |
+| 6 | 006 | Public Search & Discovery | — | ✅ Done |
+| 7 | 007 | Tour Booking | 001, 006 | ✅ Done |
+| 8 | 008 | Payment Processing | 007 | 📋 Ready |
+| 9 | 009 | Reviews & Ratings | 007, 008 | 📝 Partial |
+| 10 | 010 | Partner Onboarding | — | 🔲 Not started |
+| 11 | 011 | Tour Management | 010 | 🔲 Not started |
+| 12 | 012 | Pricing & Availability | 011 | 🔲 Not started |
+| 13 | 013 | Admin Moderation | 010, 011 | 🔲 Not started |
+| 14 | 014 | Notifications & Vouchers | 007 | 🔲 Not started |
+| 15 | 015 | Traveler Account & Bookings | 001, 007 | 🔲 Not started |
 
-| Order | Spec | Depends On |
-|-------|------|-----------|
-| 1 | 001-traveler-auth | — |
-| 2 | 002-partner-onboarding | — |
-| 3 | 003-tour-management | 002 |
-| 4 | 004-pricing-availability | 003 |
-| 5 | 005-admin-moderation | 002, 003 |
-| 6 | 006-public-search-discovery | 003, 004, 005 |
-| 7 | 007-booking-checkout | 001, 006 |
-| 8 | 008-payments-finance | 007 |
-| 9 | 009-notifications-vouchers | 007 |
-| 10 | 010-traveler-reviews | 007 |
-| 11 | 011-traveler-account-bookings | 001, 007 |
+### 4.5 Original → Current Numbering Mapping
+
+For reference, this maps the original v1.0.0 feature numbers to the
+current v2.0.0 numbers:
+
+| Original (v1.0.0) | Feature | Current (v2.0.0) | Notes |
+|--------------------|---------|------------------|-------|
+| 001 | Traveler Auth | 001–005 | Split into 5 granular phases |
+| 002 | Partner Onboarding | 010 | Not yet specified |
+| 003 | Tour Management | 011 | Not yet specified |
+| 004 | Pricing & Availability | 012 | Not yet specified |
+| 005 | Admin Moderation | 013 | Not yet specified |
+| 006 | Public Search & Discovery | 006 | Same number, implemented |
+| 007 | Booking & Checkout | 007 | Same number, implemented |
+| 008 | Payments & Finance | 008 | Same number, specified |
+| 009 | Notifications & Vouchers | 014 | Not yet specified |
+| 010 | Traveler Reviews | 009 | Renumbered, partially specified |
+| 011 | Traveler Account & Bookings | 015 | Not yet specified |
 
 ---
 
@@ -607,21 +714,49 @@ or notification behavior (those are in specs 007, 008, 009).
 
 ## 7. Pre-Execution Checklist
 
-Before running the first `/speckit.specify` command:
-
-- [ ] Constitution patched to v1.1.0 (add Filament to approved stack,
-      codify three-surface architecture)
-- [ ] `specs/` directory created at project root
-- [ ] This document saved and committed
+- [x] Constitution patched to v1.0.1
+- [x] `specs/` directory created at project root
+- [x] This document saved and committed
+- [x] Docker dev environment operational
+- [x] CI pipeline configured (GitHub Actions)
 
 ---
 
 ## 8. Post-Specification Workflow
 
-After all 11 specs are authored and clarified:
+For each feature spec, the workflow is:
 
 1. Each spec feeds into `/speckit.plan` for implementation design
 2. Each plan feeds into `/speckit.tasks` for task breakdown
 3. Implementation proceeds spec-by-spec in dependency order
 4. Each spec is independently testable and deliverable
-5. Commits reference the spec number (e.g., `feat(001): traveler auth`)
+5. Commits reference the spec number (e.g., `feat(008): payment processing`)
+
+---
+
+## 9. Current Project Status (as of 2026-05-13)
+
+### Progress Summary
+
+| Category | Count |
+|----------|-------|
+| Features implemented | 7 (001–007) |
+| Features ready to build | 1 (008) |
+| Features partially specified | 1 (009) |
+| Features not yet specified | 6 (010–015) |
+| **Total Phase 1 features** | **15** |
+
+### Recommended Next Actions
+
+1. **Implement 008 (Payment Processing)** — fully specified with
+   spec, plan, tasks, contracts, and data-model. Ready to build.
+2. **Complete 009 (Reviews & Ratings)** — has spec and plan, needs
+   `/speckit.tasks` to generate task breakdown, plus contracts and
+   data-model artifacts.
+3. **Specify 014 (Notifications & Vouchers)** — all dependencies
+   satisfied (007 ✅). Can be specified in parallel with 008
+   implementation.
+4. **Specify 015 (Traveler Account & Bookings)** — all dependencies
+   satisfied (001 ✅, 007 ✅). Can be specified in parallel.
+5. **Specify 010 (Partner Onboarding)** — no dependencies. Unlocks
+   011 → 012 → 013 chain.

@@ -12,6 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
+    protected static function booted(): void
+    {
+        static::creating(function (Booking $booking) {
+            if (empty($booking->idempotency_key)) {
+                $booking->idempotency_key = \Illuminate\Support\Str::uuid()->toString();
+            }
+        });
+    }
+
     public const STATUS_PENDING_PAYMENT = 'pending_payment';
     public const STATUS_CONFIRMED = 'confirmed';
     public const STATUS_COMPLETED = 'completed';

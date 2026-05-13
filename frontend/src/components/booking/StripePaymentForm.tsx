@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 interface StripePaymentFormProps {
@@ -14,13 +14,48 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
 
+  useEffect(() => {
+    if (!stripe) {
+      return;
+    }
+
+    const clientSecretParam = new URLSearchParams(window.location.search).get(
+      'payment_intent_client_secret'
+    );
+
+    if (!clientSecretParam) {
+      return;
+    }
+
+    stripe.retrievePaymentIntent(clientSecretParam).then(({ paymentIntent }) => {
+      if (!paymentIntent) return;
+
+      switch (paymentIntent.status) {
+        case 'succeeded':
+        case 'requires_capture':
+          onSuccess();
+          break;
+        case 'processing':
+          // The payment is processing, we can either wait or call onSuccess
+          // Let's rely on webhooks for async processing or just notify user
+          break;
+        case 'requires_payment_method':
+          onError('Your payment was not successful, please try again.');
+          break;
+        default:
+          onError('Something went wrong. Please try again.');
+          break;
+      }
+    });
+  }, [stripe, onSuccess, onError]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
     setProcessing(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: window.location.href,
@@ -30,7 +65,7 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
 
     if (error) {
       onError(error.message || 'Payment failed. Please try again.');
-    } else {
+    } else if (paymentIntent && (paymentIntent.status === 'succeeded' || paymentIntent.status === 'requires_capture')) {
       onSuccess();
     }
 

@@ -72,14 +72,14 @@ Content-Type: application/json
 
 ---
 
-## POST /api/webhooks/stripe
+## POST /api/public/webhooks/stripe
 
 Receives and processes Stripe webhook events. This endpoint is unauthenticated but validated via Stripe webhook signature.
 
 ### Request
 
 ```
-POST /api/webhooks/stripe
+POST /api/public/webhooks/stripe
 Stripe-Signature: t=1234567890,v1=abc123...
 Content-Type: application/json
 ```
@@ -110,7 +110,7 @@ Raw Stripe event payload (not parsed as JSON before signature verification).
 | `payment_intent.payment_failed` | Transition booking `pending_payment` → `expired`, release availability |
 | `charge.refunded` | Update payment status to `refunded`, create credit ledger entry |
 | `charge.dispute.created` | Update payment status to `disputed`, alert admin |
-| `charge.dispute.closed` | Update payment/booking based on outcome (won → `confirmed`, lost → `cancelled`) |
+| `charge.dispute.closed` | Record outcome; require admin review to update payment/booking state |
 
 ---
 

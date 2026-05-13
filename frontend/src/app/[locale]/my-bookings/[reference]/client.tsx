@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getBookingDetail, cancelBooking } from '@/lib/api/my-bookings';
 import CancelBookingButton from '@/components/my-bookings/CancelBookingButton';
+import ReviewForm from '@/components/reviews/ReviewForm';
+import { submitReview } from '@/lib/reviews/review-api';
 import type { BookingResponse } from '@/lib/api/bookings';
 
 interface Props {
@@ -88,6 +90,26 @@ export default function BookingDetailClient({ reference, locale }: Props) {
 
       {booking.can_cancel && (
         <CancelBookingButton canCancel={booking.can_cancel} onCancel={handleCancel} />
+      )}
+
+      {booking.status === 'completed' && (
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            {locale === 'es' ? 'Deja una Reseña' : locale === 'it' ? 'Lascia una Recensione' : 'Leave a Review'}
+          </h2>
+          <ReviewForm
+            bookingReference={booking.reference}
+            locale={locale}
+            onSubmit={async (data) => {
+              await submitReview({
+                booking_reference: booking.reference,
+                rating: data.rating,
+                comment: data.comment || undefined,
+                locale: locale,
+              });
+            }}
+          />
+        </div>
       )}
     </div>
   );

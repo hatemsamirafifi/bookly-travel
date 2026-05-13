@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { getStripe } from '@/lib/stripe/stripe-client';
 import ParticipantSelector from './ParticipantSelector';
 import DateConfirmation from './DateConfirmation';
 import PriceBreakdown from './PriceBreakdown';
 import PriceChangeModal from './PriceChangeModal';
 import StripePaymentForm from './StripePaymentForm';
 import { createBooking } from '@/lib/api/bookings';
+import { cancelBooking } from '@/lib/api/my-bookings';
 import { getTourDetail } from '@/lib/api/tours';
 import type { TourDetail } from '@/lib/api/types';
 
@@ -44,6 +45,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
   const [paymentStep, setPaymentStep] = useState<{
     clientSecret: string;
     bookingReference: string;
+    stripe_publishable_key: string;
   } | null>(null);
 
   // FR-027: price-change modal state
@@ -115,6 +117,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
           setPaymentStep({
             clientSecret: result.payment.client_secret,
             bookingReference: result.data.reference,
+            stripe_publishable_key: result.payment.stripe_publishable_key,
           });
         }
         return;
@@ -125,6 +128,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
         setPaymentStep({
           clientSecret: result.payment.client_secret,
           bookingReference: result.data.reference,
+          stripe_publishable_key: result.payment.stripe_publishable_key,
         });
       } else {
         router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
@@ -155,7 +159,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
   };
 
   const stripePromise = paymentStep
-    ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+    ? getStripe(paymentStep.stripe_publishable_key)
     : null;
 
   // FR-027: traveler explicitly accepts the new price — dismiss modal (payment step already set)
@@ -163,8 +167,18 @@ export default function BookingForm({ locale }: BookingFormProps) {
     setPriceChangeModal(null);
   };
 
-  // FR-027: traveler declines the new price — dismiss modal and clear payment step
-  const handlePriceChangeCancel = () => {
+  // FR-027: traveler declines the new price — dismiss modal, clear payment step, and cancel booking on server
+  const handlePriceChangeCancel = async () => {
+    if (priceChangeModal?.bookingReference) {
+      setSubmitting(true);
+      try {
+        await cancelBooking(priceChangeModal.bookingReference);
+      } catch (err) {
+        console.error('Failed to cancel rejected booking', err);
+      } finally {
+        setSubmitting(false);
+      }
+    }
     setPriceChangeModal(null);
     setPaymentStep(null);
   };
@@ -216,7 +230,6 @@ export default function BookingForm({ locale }: BookingFormProps) {
           newPrice={priceChangeModal.newPriceFormatted}
           onConfirm={handlePriceChangeConfirm}
           onCancel={handlePriceChangeCancel}
-          locale={locale}
         />
       )}
 

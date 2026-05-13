@@ -169,7 +169,39 @@
       "generic": "Algo salió mal. Por favor intente de nuevo.",
       "cancelWindowPassed": "La ventana de cancelación ha pasado o la reserva no es elegible para cancelación",
       "paymentFailed": "El pago falló. Por favor intente de nuevo."
+    },
+    "priceChangeModal": {
+      "title": "El precio ha cambiado",
+      "body": "El precio de este tour ha cambiado desde que cargaste la página.",
+      "from": "Precio original",
+      "to": "Precio actual",
+      "confirm": "Confirmar al nuevo precio",
+      "cancel": "Cancelar"
     }
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "star_rating_label": "Seleccionar calificación de {star} estrellas",
+    "submit_review": "Enviar Reseña",
+    "edit_review": "Editar Reseña",
+    "update_review": "Actualizar Reseña",
+    "no_reviews_yet": "No hay reseñas todavía. ¡Sé el primero!",
+    "edited": "Editado",
+    "char_count": "{count}/2000",
+    "rate_limit_message": "Estás enviando reseñas demasiado rápido. Espera un momento antes de intentar de nuevo.",
+    "review_window_closed": "La ventana de reseñas se ha cerrado. Las reseñas solo pueden enviarse dentro de los 30 días posteriores a la fecha del tour.",
+    "edit_window_closed": "La ventana de edición se ha cerrado. Las reseñas solo pueden editarse dentro de las 48 horas posteriores al envío.",
+    "flagged": "Marcado",
+    "thank_you": "¡Gracias por tu reseña!",
+    "updated": "¡Tu reseña ha sido actualizada!",
+    "leave_review": "Deja una Reseña",
+    "your_rating": "Tu Calificación",
+    "your_review": "Tu Reseña (opcional)",
+    "share_experience": "Comparte tu experiencia...",
+    "submitting": "Enviando...",
+    "load_more": "Cargar Más",
+    "loading": "Cargando...",
+    "failed_to_load": "Error al cargar las reseñas. Por favor, inténtalo de nuevo más tarde."
   },
   "payment": {
     "title": "Detalles del Pago",

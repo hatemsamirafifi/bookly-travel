@@ -19,4 +19,9 @@ Schedule::job(new AnonymizeExpiredBookingData())
 Schedule::job(new ExpirePendingBookingsJob())
     ->everyFiveMinutes()
     ->name('expire-pending-bookings')
+    ->withoutOverlapping(10);
+
+Schedule::job(new \App\Domains\Booking\Jobs\CompleteBookingJob())
+    ->hourly()
+    ->name('complete-bookings')
     ->withoutOverlapping();

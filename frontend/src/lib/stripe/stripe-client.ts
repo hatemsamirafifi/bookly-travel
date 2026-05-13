@@ -1,10 +1,11 @@
 import { loadStripe } from '@stripe/stripe-js';
 
-let stripePromise: ReturnType<typeof loadStripe>;
+const stripePromises = new Map<string, ReturnType<typeof loadStripe>>();
 
-export const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+export const getStripe = (publishableKey?: string) => {
+  const key = publishableKey || process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
+  if (!stripePromises.has(key)) {
+    stripePromises.set(key, loadStripe(key));
   }
-  return stripePromise;
+  return stripePromises.get(key)!;
 };

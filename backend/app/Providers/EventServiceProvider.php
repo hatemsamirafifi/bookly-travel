@@ -47,6 +47,13 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Domains\Payment\Events\PaymentFailed::class => [
             \App\Domains\Payment\Listeners\ExpireBookingOnPaymentFailure::class,
+            \App\Domains\Payment\Listeners\NotifyAdminOnPaymentFailure::class,
+        ],
+        \App\Domains\Reviews\Events\ReviewSubmitted::class => [
+            \App\Domains\Reviews\Listeners\UpdateTourAggregateRating::class,
+        ],
+        \App\Domains\Reviews\Events\ReviewFlagged::class => [
+            \App\Domains\Reviews\Listeners\UpdateTourAggregateRating::class,
         ],
     ];
 

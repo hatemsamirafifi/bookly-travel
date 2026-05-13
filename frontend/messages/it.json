@@ -169,7 +169,39 @@
       "generic": "Qualcosa è andato storto. Riprova.",
       "cancelWindowPassed": "La finestra di cancellazione è scaduta o la prenotazione non è idonea alla cancellazione",
       "paymentFailed": "Pagamento fallito. Per favore riprova."
+    },
+    "priceChangeModal": {
+      "title": "Il prezzo è cambiato",
+      "body": "Il prezzo di questo tour è cambiato da quando hai caricato la pagina.",
+      "from": "Prezzo originale",
+      "to": "Prezzo attuale",
+      "confirm": "Conferma al nuovo prezzo",
+      "cancel": "Annulla"
     }
+  },
+  "reviews": {
+    "title": "Recensioni",
+    "star_rating_label": "Seleziona valutazione di {star} stelle",
+    "submit_review": "Invia Recensione",
+    "edit_review": "Modifica Recensione",
+    "update_review": "Aggiorna Recensione",
+    "no_reviews_yet": "Nessuna recensione ancora. Sii il primo!",
+    "edited": "Modificato",
+    "char_count": "{count}/2000",
+    "rate_limit_message": "Stai inviando recensioni troppo velocemente. Attendi un momento prima di riprovare.",
+    "review_window_closed": "La finestra per le recensioni è chiusa. Le recensioni possono essere inviate solo entro 30 giorni dalla data del tour.",
+    "edit_window_closed": "La finestra di modifica è chiusa. Le recensioni possono essere modificate solo entro 48 ore dall'invio.",
+    "flagged": "Segnalato",
+    "thank_you": "Grazie per la tua recensione!",
+    "updated": "La tua recensione è stata aggiornata!",
+    "leave_review": "Lascia una Recensione",
+    "your_rating": "La Tua Valutazione",
+    "your_review": "La Tua Recensione (opzionale)",
+    "share_experience": "Condividi la tua esperienza...",
+    "submitting": "Invio in corso...",
+    "load_more": "Carica Altro",
+    "loading": "Caricamento...",
+    "failed_to_load": "Impossibile caricare le recensioni. Per favore riprova più tardi."
   },
   "payment": {
     "title": "Dettagli del Pagamento",

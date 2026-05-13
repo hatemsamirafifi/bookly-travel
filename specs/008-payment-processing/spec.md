@@ -2,7 +2,7 @@
 
 **Feature Branch**: `008-payment-processing`  
 **Created**: 2026-05-11  
-**Status**: Draft  
+**Status**: Complete  
 **Input**: User description: "Phase 8 — Payment processing with Stripe integration, payment capture on booking confirmation, refund on cancellation, immutable financial ledger, and webhook-driven payment lifecycle"
 
 ## Clarifications
@@ -27,8 +27,8 @@ A traveler confirms a booking on Bookly and is seamlessly charged for the full a
 
 **Acceptance Scenarios**:
 
-1. **Given** a traveler confirms a booking for 2 participants at €89/person, **When** the payment is processed, **Then** a charge of €178.00 is captured, the booking status remains `confirmed`, and the traveler sees a payment confirmation with a transaction reference.
-2. **Given** a traveler submits a booking, **When** the payment method is declined (insufficient funds, expired card), **Then** the booking is not created, no charge is captured, and the traveler sees a clear error message asking them to update their payment method.
+1. **Given** a traveler confirms a booking for 2 participants at €89/person, **When** the payment is processed, **Then** a charge of €178.00 is captured, the booking transitions from `pending_payment` to `confirmed`, and the traveler sees a payment confirmation with a transaction reference.
+2. **Given** a traveler submits a booking, **When** the payment method is declined (insufficient funds, expired card), **Then** the booking remains in `pending_payment` (not transitioned to `confirmed`), no charge is captured, and the traveler sees a clear error message asking them to update their payment method.
 3. **Given** a payment has been captured for a booking, **When** the traveler views their booking details, **Then** the payment amount, currency, last four digits of the card, and transaction date are visible.
 4. **Given** a traveler submits the same booking twice (network retry with same idempotency key), **When** the system processes both requests, **Then** only one charge is created and the duplicate request returns the existing booking and payment.
 5. **Given** a booking is confirmed and paid, **When** the partner subsequently changes the tour price, **Then** the captured charge amount remains unchanged — the traveler pays the price at the time of booking, not the current price.
@@ -134,9 +134,9 @@ Partners can see the financial summary for their tours — total revenue, pendin
 - **FR-015**: System MUST handle Stripe downtime gracefully — if the Stripe API is unreachable during booking confirmation, the system MUST return a retriable error (503) without creating an orphan booking.
 - **FR-016**: System MUST support Stripe test mode for development and staging environments, with production keys used only in the production environment.
 - **FR-017**: All Stripe API keys and webhook secrets MUST be loaded from environment variables, never hardcoded (per constitution Security Principles).
-- **FR-018**: The booking page MUST embed Stripe Elements (via Stripe.js) for card input, creating a Payment Intent client-side and confirming payment without redirecting the traveler away from Bookly. PCI compliance is handled via Stripe.js tokenization (SAQ-A scope).
+- **FR-018**: The booking page MUST embed Stripe Elements (via Stripe.js) for card input. The backend API MUST create the PaymentIntent and return its `client_secret` to the frontend. The frontend uses this `client_secret` to confirm the payment via Stripe Elements without redirecting the traveler away from Bookly (unless required for 3D Secure). PCI compliance is handled via Stripe.js tokenization (SAQ-A scope).
 - **FR-019**: Pending bookings (created during step 1 of the two-step flow) MUST hold/reserve their spots in the availability count. The `AvailabilityService` MUST count both `pending_payment` and `confirmed` bookings toward tour capacity. Pending bookings MUST be automatically expired and their reserved spots released if payment is not confirmed within 15 minutes. A scheduled job or event-driven cleanup MUST handle this to prevent indefinite availability holds.
-- **FR-020**: The booking status model MUST be extended with two new statuses: `pending_payment` (availability reserved, awaiting card confirmation) and `expired` (payment not completed within the timeout window). The complete booking lifecycle becomes: `pending_payment` → `confirmed` (payment succeeded) | `expired` (timeout/payment failed) → `completed` | `cancelled` | `no_show`. Only `confirmed` bookings are eligible for cancellation/refund. Both `pending_payment` and `confirmed` bookings count toward tour capacity.
+- **FR-020**: The booking status model MUST be extended with two new statuses: `pending_payment` (availability reserved, awaiting card confirmation) and `expired` (payment not completed within the timeout window). The complete booking lifecycle becomes: `pending_payment` → `confirmed` (payment succeeded) | `expired` (timeout/payment failed) → `completed` | `cancelled` | `no_show` | `disputed` (charge dispute opened via webhook). Only `confirmed` bookings are eligible for cancellation/refund. Disputed bookings remain active until admin resolution — if the dispute is won, the booking returns to `confirmed`; if lost, the booking transitions to `cancelled` with a credit ledger entry. Both `pending_payment` and `confirmed` bookings count toward tour capacity.
 
 ### Key Entities
 

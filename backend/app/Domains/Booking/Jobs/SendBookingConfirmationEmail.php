@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -41,27 +42,32 @@ class SendBookingConfirmationEmail implements ShouldQueue
 
     public function handle(): void
     {
-        // Idempotency guard — skip if email was already delivered
-        if ($this->booking->confirmation_email_sent_at !== null) {
+        $lock = Cache::lock("booking:{$this->booking->id}:confirmation_email", 30);
+
+        if (! $lock->get()) {
             return;
         }
 
-        // Re-fresh booking in case it was modified between dispatch and execution
-        $booking = $this->booking->fresh();
-        if (! $booking || $booking->confirmation_email_sent_at !== null) {
-            return;
+        try {
+            // Re-fresh in case the booking was modified between dispatch and execution
+            $booking = $this->booking->fresh();
+            if (! $booking || $booking->confirmation_email_sent_at !== null) {
+                return;
+            }
+
+            // TODO: swap the Log::info stub below for a real Mailable once the
+            //       Mail template (BookingConfirmationMail) is implemented.
+            //       Example: Mail::to($booking->traveler->email)->send(new BookingConfirmationMail($booking));
+            Log::info('Booking confirmation email dispatched', [
+                'booking_reference' => $booking->reference,
+                'traveler_id'       => $booking->traveler_id,
+                'locale'            => $booking->locale,
+            ]);
+
+            $booking->update(['confirmation_email_sent_at' => now()]);
+        } finally {
+            $lock->release();
         }
-
-        // TODO: swap the Log::info stub below for a real Mailable once the
-        //       Mail template (BookingConfirmationMail) is implemented.
-        //       Example: Mail::to($booking->traveler->email)->send(new BookingConfirmationMail($booking));
-        Log::info('Booking confirmation email dispatched', [
-            'booking_reference' => $booking->reference,
-            'traveler_id'       => $booking->traveler_id,
-            'locale'            => $booking->locale,
-        ]);
-
-        $booking->update(['confirmation_email_sent_at' => now()]);
     }
 
     /**

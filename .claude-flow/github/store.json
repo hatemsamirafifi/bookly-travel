@@ -1,15 +1,6 @@
 {
   "repos": {},
-  "prs": {
-    "pr-1778368493342": {
-      "id": "pr-1778368493342",
-      "title": "feat: tour booking with idempotency, concurrency control, and audit trail",
-      "status": "open",
-      "branch": "007-tour-booking",
-      "baseBranch": "main",
-      "createdAt": "2026-05-09T23:14:53.342Z"
-    }
-  },
+  "prs": {},
   "issues": {},
   "version": "3.0.0"
 }

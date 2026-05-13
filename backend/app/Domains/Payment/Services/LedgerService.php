@@ -7,17 +7,30 @@ use App\Domains\Payment\Models\Payment;
 
 class LedgerService
 {
-    public function recordCharge(Payment $payment): void
+    public function recordCharge(Payment $payment): bool
     {
-        FinancialLedgerEntry::create([
-            'booking_id' => $payment->booking_id,
-            'payment_id' => $payment->id,
-            'entry_type' => 'debit',
-            'amount' => $payment->amount,
-            'currency' => $payment->currency,
-            'actor' => 'system',
-            'description' => 'Payment captured for booking ' . $payment->booking->reference,
-        ]);
+        $entry = FinancialLedgerEntry::firstOrCreate(
+            [
+                'payment_id' => $payment->id,
+                'entry_type' => 'debit',
+            ],
+            [
+                'booking_id' => $payment->booking_id,
+                'amount' => $payment->amount,
+                'currency' => $payment->currency,
+                'actor' => 'system',
+                'description' => 'Payment captured for booking ' . $payment->booking->reference,
+            ]
+        );
+
+        return $entry->wasRecentlyCreated;
+    }
+
+    public function hasChargeRecord(Payment $payment): bool
+    {
+        return FinancialLedgerEntry::where('payment_id', $payment->id)
+            ->where('entry_type', 'debit')
+            ->exists();
     }
 
     public function recordRefund(Payment $payment): void

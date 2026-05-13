@@ -90,3 +90,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 | Unauthenticated — validated via Stripe webhook signature.
 */
 Route::post('webhooks/stripe', \App\Domains\Payment\Controllers\Public\StripeWebhookController::class);
+
+/*
+|--------------------------------------------------------------------------
+| Reviews API Routes (Feature: 009-reviews-ratings)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('reviews')->middleware('throttle:reviews')->group(function () {
+        Route::post('/', [\App\Domains\Reviews\Controllers\Public\ReviewController::class, 'store']);
+        Route::put('{review}', [\App\Domains\Reviews\Controllers\Public\ReviewController::class, 'update']);
+    });
+});
+
+Route::get('tours/{slug}/reviews', [\App\Domains\Reviews\Controllers\Public\ReviewController::class, 'index'])
+    ->middleware('throttle:detail');

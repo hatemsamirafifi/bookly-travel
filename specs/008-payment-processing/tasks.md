@@ -47,7 +47,9 @@
 - [X] T027 [US3] `backend/routes/api/public.php`: Register POST `/webhooks/stripe` pointing to `StripeWebhookController`.
 - [X] T028 [US3] `backend/app/Domains/Payment/Listeners/ConfirmBookingOnPayment.php`: Listen to `PaymentSucceeded`. Update booking status to `STATUS_CONFIRMED`, write debit to `LedgerService`, and dispatch the existing `SendBookingConfirmationEmail` job.
 - [X] T029 [US3] `backend/app/Domains/Payment/Listeners/ExpireBookingOnPaymentFailure.php`: Listen to `PaymentFailed`. Update booking status to `STATUS_EXPIRED`.
-- [X] T030 [US3] `backend/app/Providers/EventServiceProvider.php`: Register the new payment events and listeners in the `$listen` array.
+- [X] T042 [US3] `backend/app/Domains/Payment/Listeners/NotifyAdminOnPaymentFailure.php`: Listen to `PaymentFailed`. Dispatch an admin notification via the existing notification pipeline (spec 007 FR-028) alerting that a payment failed after booking creation. Include booking reference, traveler ID, failure reason, and timestamp in the alert payload.
+- [X] T043 [US3] `backend/app/Domains/Payment/Actions/ProcessStripeWebhookAction.php`: Add dispute event handling branches to the existing webhook action. For `charge.dispute.created`: update `Payment` status to `disputed`, trigger admin alert via `NotifyAdminOnPaymentFailure` (or a dedicated `DisputeOpened` event). For `charge.dispute.closed`: read the dispute outcome — if won, restore payment status to `succeeded` and booking to `confirmed`; if lost, update payment to `refunded` and booking to `cancelled`, and append a credit ledger entry via `LedgerService`.
+- [X] T030 [US3] `backend/app/Providers/EventServiceProvider.php`: Register the new payment events and listeners in the `$listen` array. Ensure `NotifyAdminOnPaymentFailure` is registered as a listener for `PaymentFailed` alongside `ExpireBookingOnPaymentFailure`.
 
 ## Phase 5: User Story 2 (Receive a Refund on Cancellation - P2)
 
@@ -71,6 +73,8 @@
 - [X] T039 `frontend/src/i18n/it.json`: Add Italian translations for the new payment keys.
 - [X] T040 `backend/tests/Feature/Payment/WebhookTest.php`: Write test verifying webhook signature validation and asserting that duplicate Stripe event IDs do not process twice.
 - [X] T041 `backend/tests/Feature/Payment/PendingExpiryTest.php`: Write test verifying that `ExpirePendingBookingsJob` correctly identifies 16-minute-old pending bookings and successfully transitions them to `expired`, thereby freeing capacity.
+- [X] T044 `frontend/src/components/booking/__tests__/StripePaymentForm.test.tsx`: Write Jest test for the `StripePaymentForm` component. Mock `@stripe/react-stripe-js` hooks (`useStripe`, `useElements`). Verify: (1) the PaymentElement renders, (2) submit handler calls `stripe.confirmPayment` with the correct `client_secret`, (3) error states are displayed when `confirmPayment` returns an error, (4) the submit button is disabled during processing.
+- [X] T045 `frontend/src/components/booking/__tests__/PaymentStatus.test.tsx`: Write Jest test for the `PaymentStatus` component. Verify: (1) payment receipt displays amount, card last 4, card brand, and timestamp when payment data is present, (2) component handles null/missing payment data gracefully.
 
 ---
 
