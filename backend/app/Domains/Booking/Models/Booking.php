@@ -2,18 +2,22 @@
 
 namespace App\Domains\Booking\Models;
 
+use App\Domains\Payment\Models\Payment;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
+    public const STATUS_PENDING_PAYMENT = 'pending_payment';
     public const STATUS_CONFIRMED = 'confirmed';
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_CANCELLED = 'cancelled';
     public const STATUS_NO_SHOW = 'no_show';
+    public const STATUS_EXPIRED = 'expired';
 
     public const REFERENCE_PREFIX = 'BKO-';
     public const REFERENCE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
@@ -36,6 +40,10 @@ class Booking extends Model
         'cancellation_reason',
         'confirmation_email_sent_at',
         'locale',
+        'anonymized_at',
+        'stripe_payment_intent_id',
+        'payment_confirmed_at',
+        'pending_expires_at',
     ];
 
     protected function casts(): array
@@ -48,6 +56,9 @@ class Booking extends Model
             'cancellation_window_hours' => 'integer',
             'cancelled_at' => 'datetime',
             'confirmation_email_sent_at' => 'datetime',
+            'anonymized_at' => 'datetime',
+            'payment_confirmed_at' => 'datetime',
+            'pending_expires_at' => 'datetime',
         ];
     }
 
@@ -64,6 +75,11 @@ class Booking extends Model
     public function auditLogs(): HasMany
     {
         return $this->hasMany(BookingAuditLog::class);
+    }
+
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
     }
 
     public static function generateReference(): string

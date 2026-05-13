@@ -142,14 +142,18 @@
     "priceBreakdown": "Riepilogo Prezzi",
     "perPerson": "/ persona",
     "total": "Totale",
-    "confirmButton": "Conferma Prenotazione",
-    "confirming": "Conferma in corso...",
+    "confirmButton": "Conferma e Paga",
+    "confirming": "Prenotazione in corso...",
+    "payButton": "Paga Ora",
+    "paying": "Elaborazione...",
     "reference": "Riferimento Prenotazione",
     "status": "Stato",
     "statusConfirmed": "confermata",
     "statusCompleted": "completata",
     "statusCancelled": "cancellata",
     "statusNoShow": "mancata presentazione",
+    "statusPendingPayment": "pagamento_in_sospeso",
+    "statusExpired": "scaduta",
     "cancellationPolicy": "Politica di Cancellazione",
     "cancelBooking": "Cancella Prenotazione",
     "cancelConfirm": "Sei sicuro? Il rimborso sarà elaborato entro 5-10 giorni lavorativi.",
@@ -163,7 +167,28 @@
       "invalidDetails": "Dettagli della prenotazione non validi. Controlla la tua selezione.",
       "rateLimit": "Troppi tentativi di prenotazione. Attendi un momento e riprova.",
       "generic": "Qualcosa è andato storto. Riprova.",
-      "cancelWindowPassed": "La finestra di cancellazione è scaduta o la prenotazione non è idonea alla cancellazione"
+      "cancelWindowPassed": "La finestra di cancellazione è scaduta o la prenotazione non è idonea alla cancellazione",
+      "paymentFailed": "Pagamento fallito. Per favore riprova."
+    }
+  },
+  "payment": {
+    "title": "Dettagli del Pagamento",
+    "status": "Stato",
+    "statusPending": "Pagamento in Sospeso",
+    "statusSucceeded": "Pagamento Riuscito",
+    "statusFailed": "Pagamento Fallito",
+    "statusRefunded": "Rimborsato",
+    "statusDisputed": "Contestato",
+    "amount": "Importo",
+    "card": "Carta",
+    "paidAt": "Pagato il",
+    "financialSummary": {
+      "totalRevenue": "Ricavi Totali",
+      "totalRefunds": "Rimborsi Totali",
+      "netRevenue": "Ricavi Netti",
+      "bookingCount": "Prenotazioni",
+      "refundCount": "Rimborsi",
+      "averageBookingValue": "Valore Medio Prenotazione"
     }
   }
 }

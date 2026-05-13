@@ -48,6 +48,21 @@ class BookingResponseDTO
             $data['traveler_name'] = $booking->traveler->name;
         }
 
+        // Add payment details when loaded
+        if ($booking->relationLoaded('payment') && $booking->payment) {
+            $data['payment'] = [
+                'status' => $booking->payment->status,
+                'amount' => [
+                    'amount' => $booking->payment->amount,
+                    'currency' => $booking->payment->currency,
+                    'formatted' => Booking::formatPrice($booking->payment->amount, $booking->payment->currency),
+                ],
+                'card_last_four' => $booking->payment->card_last_four,
+                'card_brand' => $booking->payment->card_brand,
+                'paid_at' => $booking->payment_confirmed_at?->toIso8601String(),
+            ];
+        }
+
         // Add richer tour detail when available
         if ($tour->relationLoaded('translations')) {
             $translation = $tour->translations->firstWhere('locale', $booking->locale)

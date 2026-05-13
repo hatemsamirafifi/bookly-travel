@@ -2,7 +2,7 @@
 
 **Feature Branch**: `007-tour-booking`  
 **Created**: 2026-05-09  
-**Status**: Draft  
+**Status**: In Progress  
 **Input**: User description: "Phase 7 — Tour booking flow with instant confirmation, real-time availability validation, and booking lifecycle management"
 
 ## User Scenarios & Testing *(mandatory)*
@@ -110,7 +110,7 @@ Every booking status change is recorded in an immutable audit log. Administrator
 
 **Booking Creation & Confirmation**
 
-- **FR-001**: System MUST validate availability in real-time (not from search index) before creating a booking, and reject bookings where the requested participant count exceeds remaining availability on that date.
+- **FR-001**: System MUST validate availability in real-time (not from search index) before creating a booking, and reject bookings where the requested participant count exceeds remaining availability on that date. *(See also FR-023 for the atomicity implementation requirement.)*
 - **FR-002**: System MUST capture the tour price at the moment of booking confirmation — if the price changed since the traveler loaded the tour detail page, the confirmation-time price applies.
 - **FR-003**: System MUST require a client-generated UUID as an `Idempotency-Key` header on every booking request. The server MUST store the key with the booking and, on receiving a duplicate key, return the existing confirmed booking response (200 OK) rather than creating a duplicate or returning an error.
 - **FR-004**: System MUST return a confirmed booking response synchronously — no "request to book," waitlist, or manual approval flow. The response includes: booking ID, booking reference (human-readable), status (`confirmed`), tour name, date, participant count, pricing breakdown, and cancellation policy summary.
@@ -119,6 +119,8 @@ Every booking status change is recorded in an immutable audit log. Administrator
 - **FR-007**: System MUST reject bookings for past dates with a validation error.
 - **FR-008**: System MUST reject bookings for tours that are not in `published` status (draft, pending_review, rejected, archived) at the time of booking.
 - **FR-026**: System MUST dispatch a localized booking confirmation email via a queued job (Redis) upon successful booking creation. The email MUST include: booking reference, tour name, date, participant count, pricing breakdown, cancellation policy summary, and meeting point. Email delivery failure MUST NOT affect the confirmed status of the booking — the booking remains confirmed regardless.
+- **FR-027**: System MUST surface a price-change confirmation step to the traveler when the price at confirmation time differs from the price displayed on the tour detail page at the time of page load. The step MUST clearly state the current price and require explicit re-confirmation before the booking is created; the original request MUST NOT be silently confirmed at the new price.
+- **FR-028**: When a queued email delivery job has exhausted all configured retry attempts and failed, the system MUST emit an admin-visible alert (log entry at ERROR severity + operator notification via configured channel) so that the undelivered confirmation can be actioned for manual resolution. This MUST NOT block or revert the confirmed booking.
 - **FR-009**: System MUST serve the booking flow UI (forms, confirmation page, validation errors, empty states, and action buttons) in the traveler's active locale (EN/ES/IT), consistent with the localized discovery experience defined in spec 006.
 - **FR-010**: System MUST enforce a strict rate limit of 10 booking creation attempts per minute per unique identifier (IP for unauthenticated, user ID for authenticated). When exceeded, the system MUST respond with 429 Too Many Requests, a user-friendly message, and a Retry-After header.
 
@@ -148,9 +150,15 @@ Every booking status change is recorded in an immutable audit log. Administrator
 
 **Atomicity & Data Integrity**
 
-- **FR-023**: System MUST use atomic operations for availability checks to prevent overbooking when multiple travelers attempt to book the same remaining spots concurrently.
+- **FR-023**: System MUST use atomic operations for availability checks to prevent overbooking when multiple travelers attempt to book the same remaining spots concurrently. *(Implements the atomicity mandate referenced by FR-001; uses `SELECT FOR UPDATE` row-level locking via AvailabilityService.)*
 - **FR-024**: System MUST maintain referential integrity between bookings and tours — if a tour is archived, existing bookings remain valid and accessible.
 - **FR-025**: System MUST apply tiered data retention: financial ledger entries (charges, refunds, pricing) retained immutably for 7 years; personal data (traveler name, contact details) anonymized 90 days after tour completion; de-identified booking metadata (tour ID, date, participant count, status) retained indefinitely for analytics and operational history.
+- **FR-029**: System MUST implement a scheduled background job (artisan command or queued job, scheduled daily) that anonymizes personal identifiers (traveler name, email, phone) on bookings where the tour date is more than 90 days in the past, replacing them with a system-generated anonymous token. Anonymization MUST be irreversible, idempotent (re-running on already-anonymized records produces no side effects), and MUST create a `data_anonymized` audit log entry for each affected booking.
+
+**Performance & Accessibility**
+
+- **FR-030**: Booking and my-bookings pages MUST achieve a Lighthouse Performance score ≥ 90, measured against a production-equivalent build. Optimization strategies MUST include: lazy-loaded images, code splitting for the booking flow bundle, and the font loading strategy established in spec 006.
+- **FR-031**: Booking flow UI and my-bookings pages MUST comply with WCAG 2.1 Level AA. Compliance MUST be verified by an automated audit and manual keyboard-navigation check covering: focus trap in the booking form, tab-order through ParticipantSelector and Confirm button, screen-reader labels on the participant stepper, color contrast on all status badges, and visible focus indicators throughout.
 
 ### Key Entities
 
@@ -176,6 +184,7 @@ Every booking status change is recorded in an immutable audit log. Administrator
 
 ## Assumptions
 
+- **Spec 006 dependency**: The booking flow builds directly on the localized routing (`/[locale]/`), i18n infrastructure, font/CSS baseline, and tour detail page CTA defined in spec 006. Spec 006 MUST be implemented before the booking frontend pages are deployed. Booking UI components inherit the Tailwind CSS design system established in spec 006.
 - Tour availability, pricing, and cancellation policies are managed by partners through the workflows defined in specs 003 and 004 and are queryable in real-time at booking time.
 - Authentication is provided by Laravel Sanctum (specs 003/004). The booking flow requires a valid authenticated session.
 - Payment processing (charges, refunds, Stripe integration) is handled separately by spec 008. The booking domain triggers payment events and reacts to payment outcomes but does not own the payment logic.

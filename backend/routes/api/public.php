@@ -82,3 +82,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             ->middleware('throttle:booking.create');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Stripe Webhook Route (Feature: 008-payment-processing)
+|--------------------------------------------------------------------------
+| Unauthenticated — validated via Stripe webhook signature.
+*/
+Route::post('webhooks/stripe', \App\Domains\Payment\Controllers\Public\StripeWebhookController::class);

@@ -15,4 +15,7 @@ Route::middleware(['auth:sanctum', 'role:partner'])->group(function () {
         Route::get('/', [\App\Domains\Booking\Controllers\Partner\PartnerBookingController::class, 'index']);
         Route::patch('{reference}/status', [\App\Domains\Booking\Controllers\Partner\PartnerBookingController::class, 'updateStatus']);
     });
+
+    Route::get('financial-summary', [\App\Domains\Payment\Controllers\Partner\FinancialSummaryController::class, 'index'])
+        ->middleware('throttle:booking.get');
 });

@@ -144,7 +144,7 @@ A traveler accesses Bookly in their preferred language — English, Spanish, or 
 - **FR-014**: System MUST display aggregated review information (average rating, total review count, individual reviews) on the tour detail page.
 - **FR-015**: System MUST show a prominent booking call-to-action on the tour detail page for tours with availability.
 - **FR-016**: System MUST show a "Currently Unavailable" state on the detail page for published tours with no upcoming availability, with the booking CTA rendered in a disabled state (visually grayed out, `aria-disabled="true"`, non-clickable) rather than hidden, preserving page layout and informing screen reader users.
-- **FR-017**: System MUST return a 404 or appropriate not-found page for URLs corresponding to unpublished, rejected, or non-existent tours.
+- **FR-017**: System MUST return a 404 not-found page for URLs corresponding to non-existent, draft, pending_review, or rejected tours, and a 410 Gone response for tours that were previously published but are now archived.
 
 **Homepage & Discovery**
 

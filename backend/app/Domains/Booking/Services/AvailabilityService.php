@@ -16,7 +16,7 @@ class AvailabilityService
         $rows = DB::table('bookings')
             ->where('tour_id', $tour->id)
             ->where('tour_date', $date)
-            ->whereIn('status', ['confirmed', 'completed'])
+            ->whereIn('status', ['pending_payment', 'confirmed', 'completed'])
             ->lockForUpdate()
             ->get(['participant_count']);
 

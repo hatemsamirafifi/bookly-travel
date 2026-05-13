@@ -188,7 +188,7 @@
 - [x] T079 [P] Create `frontend/src/components/layout/Header.tsx` with Bookly logo, main navigation (Home, Categories, Destinations), `<LocaleSwitcher>`, and mobile hamburger menu
 - [x] T080 [P] Create `frontend/src/components/layout/Footer.tsx` with footer links, copyright, social placeholders, and locale-specific content
 - [x] T081 Update `frontend/src/app/[locale]/layout.tsx` to include `<Header>` and `<Footer>` wrapping all pages
-- [x] T082 Run Lighthouse audit on homepage, search results, and tour detail pages — optimize to achieve score ≥ 90 on Performance per SC-004: image optimization (WebP, lazy loading, responsive sizes), font loading strategy, bundle size analysis, CDN caching headers
+- [x] T082 Run Lighthouse audit on homepage, search results, and tour detail pages — optimize to achieve score ≥ 90 on Performance per SC-004: image optimization (WebP, lazy loading, responsive sizes), font loading strategy, bundle size analysis, CDN caching headers. Additionally, verify backend filter/sort endpoint latency < 1.5s p95 per SC-008 using the scale test data set from T090.
 - [x] T083 Run WCAG 2.1 AA accessibility audit across all page types per FR-035: verify color contrast ratios, keyboard navigation (tab order, focus indicators, skip-to-content), screen reader labels (aria-labels, roles, alt text), form input labeling — fix all AA-level violations
 - [x] T084 [P] Add `backend/app/Domains/Search/Actions/IndexTourAction.php` and `backend/app/Domains/Search/Actions/RemoveFromIndexAction.php` — queued jobs for async index updates per FR-036, dispatched via Tour model events (created, updated, deleted) with 5-minute processing window
 - [x] T085 [P] Wire Tour model observers/listeners in `backend/app/Providers/EventServiceProvider.php` to dispatch `IndexTourAction` on Tour saved (when shouldBeSearchable) and `RemoveFromIndexAction` on Tour deleted/unpublished
@@ -196,6 +196,9 @@
 - [x] T087 [P] Create backend feature test `backend/tests/Feature/Search/RateLimitTest.php` verifying 429 response after exceeding per-endpoint limits, Retry-After header present, rate limit resets after window expiry
 - [x] T088 [P] Create backend feature test `backend/tests/Feature/Search/SitemapTest.php` verifying sitemap XML structure, hreflang alternates present per URL, only published tours listed, valid XML schema
 - [x] T089 [P] Create `frontend/src/components/search/SearchUnavailable.tsx` rendering a graceful degradation message ("Search is temporarily unavailable, please try again shortly") when the search API returns a 503 or network error — used as fallback in SearchResults and search page error boundary
+- [ ] T090 [P] Create backend scale test `backend/tests/Feature/Search/ScaleTest.php` seeding 10,000 published tours across 50 categories and verifying: search p95 latency < 2s per SC-002, filter/sort p95 < 1.5s per SC-008, pagination stays performant at deep offsets per SC-010
+- [ ] T091 [P] Create backend concurrency test `backend/tests/Feature/Search/ConcurrencyTest.php` simulating 500 concurrent search requests (distributed across search, detail, category, and destination endpoints) and verifying: all requests complete without errors, p95 latency targets met per SC-011, no rate-limit false positives, no connection pool exhaustion
+- [ ] T092 [P] Add responsive viewport tests to `frontend/tests/e2e/search.spec.ts` and `frontend/tests/e2e/tour-detail.spec.ts` covering mobile (375px), tablet (768px), and desktop (1280px) viewports per FR-032: verify layout adapts without horizontal scroll, tour cards reflow correctly, filter panel collapses on mobile, navigation switches to hamburger menu
 
 ---
 

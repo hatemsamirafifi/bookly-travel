@@ -38,6 +38,16 @@ class EventServiceProvider extends ServiceProvider
         \App\Domains\Auth\Events\GuestConvertedToAccount::class => [
             \App\Domains\Auth\Listeners\LogAuthEvent::class,
         ],
+        // FR-028: notify admins when booking confirmation email delivery is exhausted
+        \App\Events\BookingEmailDeliveryFailed::class => [
+            \App\Listeners\NotifyAdminOnEmailDeliveryFailure::class,
+        ],
+        \App\Domains\Payment\Events\PaymentSucceeded::class => [
+            \App\Domains\Payment\Listeners\ConfirmBookingOnPayment::class,
+        ],
+        \App\Domains\Payment\Events\PaymentFailed::class => [
+            \App\Domains\Payment\Listeners\ExpireBookingOnPaymentFailure::class,
+        ],
     ];
 
     /**

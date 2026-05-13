@@ -33,7 +33,7 @@ class TravelerBookingController
 
     public function show(Request $request, string $reference): JsonResponse
     {
-        $booking = Booking::with('tour.translations')
+        $booking = Booking::with(['tour.translations', 'payment'])
             ->where('reference', $reference)
             ->first();
 
@@ -65,6 +65,8 @@ class TravelerBookingController
             ]);
         } catch (NotFoundHttpException $e) {
             return response()->json(['message' => $e->getMessage()], 404);
+        } catch (AccessDeniedHttpException $e) {
+            return response()->json(['message' => $e->getMessage()], 403);
         } catch (ConflictHttpException $e) {
             return response()->json(['message' => $e->getMessage()], 409);
         } catch (UnprocessableEntityHttpException $e) {

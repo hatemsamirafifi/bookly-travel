@@ -142,14 +142,18 @@
     "priceBreakdown": "Price Breakdown",
     "perPerson": "/ person",
     "total": "Total",
-    "confirmButton": "Confirm Booking",
-    "confirming": "Confirming...",
+    "confirmButton": "Confirm & Pay",
+    "confirming": "Reserving...",
+    "payButton": "Pay Now",
+    "paying": "Processing...",
     "reference": "Booking Reference",
     "status": "Status",
     "statusConfirmed": "confirmed",
     "statusCompleted": "completed",
     "statusCancelled": "cancelled",
     "statusNoShow": "no_show",
+    "statusPendingPayment": "pending_payment",
+    "statusExpired": "expired",
     "cancellationPolicy": "Cancellation Policy",
     "cancelBooking": "Cancel Booking",
     "cancelConfirm": "Are you sure? Refund will be processed within 5-10 business days.",
@@ -163,6 +167,28 @@
       "invalidDetails": "Invalid booking details. Please check your selection.",
       "rateLimit": "Too many booking attempts. Please wait a moment and try again.",
       "generic": "Something went wrong. Please try again.",
-      "cancelWindowPassed": "Cancellation window has passed or booking is not eligible for cancellation"
+      "cancelWindowPassed": "Cancellation window has passed or booking is not eligible for cancellation",
+      "paymentFailed": "Payment failed. Please try again."
+    }
+  },
+  "payment": {
+    "title": "Payment Details",
+    "status": "Status",
+    "statusPending": "Payment Pending",
+    "statusSucceeded": "Payment Successful",
+    "statusFailed": "Payment Failed",
+    "statusRefunded": "Refunded",
+    "statusDisputed": "Disputed",
+    "amount": "Amount",
+    "card": "Card",
+    "paidAt": "Paid at",
+    "financialSummary": {
+      "totalRevenue": "Total Revenue",
+      "totalRefunds": "Total Refunds",
+      "netRevenue": "Net Revenue",
+      "bookingCount": "Bookings",
+      "refundCount": "Refunds",
+      "averageBookingValue": "Avg Booking Value"
     }
   }
+}

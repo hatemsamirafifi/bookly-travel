@@ -1,0 +1,318 @@
+version: "2"
+type: backend
+tech_stack:
+  - php 8.2
+  - laravel 11.0
+  - laravel sanctum 4.0
+  - meilisearch (laravel/scout 10.0)
+  - postgresql
+  - redis
+  - next.js 16.2.3 (react 19.2.4)
+  - tailwindcss v4
+  - next-intl 4.9.1
+  - react-hook-form 7.54.0
+  - zod 4.3.6
+  - typescript 5.x
+  - pest 3.0 (testing)
+  - playwright (frontend e2e)
+features:
+  - name: Traveler Authentication
+    description: Registration, login, logout, email verification with brute force lockout protection and audit logging
+    files:
+      - backend/app/Http/Controllers/Public/Auth/RegisterController.php
+      - backend/app/Http/Controllers/Public/Auth/LoginController.php
+      - backend/app/Http/Controllers/Public/Auth/LogoutController.php
+      - backend/app/Http/Controllers/Public/Auth/EmailVerificationController.php
+      - backend/app/Actions/Auth/AuthenticateTravelerAction.php
+      - backend/app/Actions/Auth/RegisterTravelerAction.php
+      - backend/app/Http/Requests/Auth/LoginRequest.php
+      - backend/app/Http/Requests/Auth/RegisterRequest.php
+      - backend/app/Models/User.php
+      - backend/app/Models/AuthAuditLog.php
+      - backend/app/Models/GuestIdentity.php
+      - backend/app/Mail/VerificationMail.php
+      - backend/app/Mail/AccountLockedOutMail.php
+      - backend/app/Jobs/SendVerificationEmail.php
+    endpoints:
+      - method: POST
+        path: /api/public/auth/register
+        description: Register a new traveler account
+        auth_required: false
+        request_schema:
+          body:
+            name: string (max:255)
+            email: string (email, unique)
+            password: string (min:8, must contain lowercase+uppercase+digit)
+            locale: string (optional, in:en,es,it)
+        response_schema:
+          "201": User + token
+          "422": Validation error
+      - method: POST
+        path: /api/public/auth/login
+        description: Authenticate a traveler
+        auth_required: false
+        request_schema:
+          body:
+            email: string (email)
+            password: string (min:1)
+        response_schema:
+          "200": User + token
+          "401": Invalid credentials
+          "422": Validation error
+          "423": Account locked (brute force protection)
+      - method: POST
+        path: /api/public/auth/logout
+        description: Logout (revoke current token)
+        auth_required: true (Bearer token)
+        response_schema:
+          "204": No content
+      - method: GET
+        path: /api/public/auth/verify-email/{id}/{hash}
+        description: Verify email via signed URL
+        auth_required: false (signed URL)
+        response_schema:
+          "200": Email verified
+    depends_on: []
+
+  - name: Public Homepage API
+    description: Returns featured tours, popular categories, and featured destinations for the homepage
+    files:
+      - backend/app/Domains/Search/Controllers/Public/HomepageController.php
+    endpoints:
+      - method: GET
+        path: /api/public/homepage
+        description: Get homepage data with featured tours, categories, and destinations
+        auth_required: false
+        response_schema:
+          "200": HomepageData (featured_tours, popular_categories, featured_destinations)
+        query_params:
+          locale: string (en,es,it)
+    depends_on:
+      - Search Indexing
+
+  - name: Tour Search & Discovery
+    description: Full-text search with filters (category, location, price, duration, date), facets, sorting, and pagination via Meilisearch
+    files:
+      - backend/app/Domains/Search/Controllers/Public/SearchController.php
+      - backend/app/Domains/Search/Actions/SearchToursAction.php
+      - backend/app/Domains/Search/Actions/ConfigureSearchIndexAction.php
+      - backend/app/Domains/Search/Actions/IndexTourAction.php
+      - backend/app/Domains/Search/Actions/RemoveFromIndexAction.php
+      - backend/app/Models/Tour.php
+      - backend/app/Models/TourTranslation.php
+      - backend/config/scout.php
+      - frontend/src/app/[locale]/search/page.tsx
+      - frontend/src/components/search/SearchBar.tsx
+      - frontend/src/components/search/FilterPanel.tsx
+      - frontend/src/components/search/SearchResults.tsx
+      - frontend/src/components/search/TourCard.tsx
+      - frontend/src/components/search/Pagination.tsx
+      - frontend/src/components/search/SortDropdown.tsx
+      - frontend/src/lib/api/search.ts
+    endpoints:
+      - method: GET
+        path: /api/public/search/tours
+        description: Search tours with full-text query, filters, facets, sort, and pagination
+        auth_required: false
+        query_params:
+          locale: string (required, en/es/it)
+          q: string (optional, max:255)
+          category: string (optional)
+          location: string (optional)
+          price_min: integer (optional, min:0)
+          price_max: integer (optional, min:0)
+          duration: string (optional, in:half-day,full-day,multi-day)
+          date: string (optional, Y-m-d)
+          sort: string (optional, in:relevance,price_asc,price_desc,rating,newest)
+          page: integer (optional, min:1)
+        response_schema:
+          "200": SearchResponse (data, pagination, facets)
+          "422": Validation error
+          "429": Rate limit exceeded (60/min for search)
+          "503": Search unavailable
+    depends_on:
+      - Search Indexing
+
+  - name: Tour Detail
+    description: Tour detail with full content, gallery, pricing, availability, and reviews
+    files:
+      - backend/app/Domains/Search/Controllers/Public/TourDetailController.php
+      - frontend/src/app/[locale]/tours/[slug]/page.tsx
+      - frontend/src/components/tour/TourDetail.tsx
+      - frontend/src/components/tour/ImageGallery.tsx
+      - frontend/src/components/tour/BookingCTA.tsx
+      - frontend/src/components/tour/AvailabilityCalendar.tsx
+      - frontend/src/components/tour/ReviewList.tsx
+      - frontend/src/lib/api/tours.ts
+    endpoints:
+      - method: GET
+        path: /api/public/tours/{slug}
+        description: Get full tour detail by slug
+        auth_required: false
+        query_params:
+          locale: string (en/es/it)
+        response_schema:
+          "200": TourDetail (tour data, translations, gallery, pricing, availability, reviews, SEO metadata)
+          "404": Tour not found
+    depends_on:
+      - Search Indexing
+
+  - name: Categories
+    description: Category listing and category-specific tour browsing
+    files:
+      - backend/app/Domains/Search/Controllers/Public/CategoryController.php
+      - backend/app/Models/Category.php
+      - frontend/src/app/[locale]/categories/[slug]/page.tsx
+      - frontend/src/lib/api/categories.ts
+    endpoints:
+      - method: GET
+        path: /api/public/categories
+        description: List all active categories
+        auth_required: false
+        response_schema:
+          "200": Category[]
+      - method: GET
+        path: /api/public/categories/{slug}/tours
+        description: List tours within a category
+        auth_required: false
+        query_params:
+          locale: string (en/es/it)
+          sort: string (optional)
+          page: integer (optional)
+        response_schema:
+          "200": Paginated tour results
+          "404": Category not found
+    depends_on:
+      - Search Indexing
+
+  - name: Destinations
+    description: Destination listing and destination-specific tour browsing
+    files:
+      - backend/app/Domains/Search/Controllers/Public/DestinationController.php
+      - frontend/src/app/[locale]/destinations/[slug]/page.tsx
+      - frontend/src/lib/api/destinations.ts
+    endpoints:
+      - method: GET
+        path: /api/public/destinations
+        description: List all destinations
+        auth_required: false
+        response_schema:
+          "200": Destination[]
+      - method: GET
+        path: /api/public/destinations/{slug}/tours
+        description: List tours within a destination
+        auth_required: false
+        query_params:
+          locale: string (en/es/it)
+          sort: string (optional)
+          page: integer (optional)
+        response_schema:
+          "200": Paginated tour results
+          "404": Destination not found
+    depends_on:
+      - Search Indexing
+
+  - name: XML Sitemap
+    description: Auto-generated XML sitemap with hreflang alternates for SEO
+    files:
+      - backend/app/Domains/Search/Controllers/Public/SitemapController.php
+    endpoints:
+      - method: GET
+        path: /api/public/sitemap
+        description: Get XML sitemap with hreflang alternates
+        auth_required: false
+        response_schema:
+          "200": XML sitemap
+
+  - name: i18n & Localization
+    description: 3 locales (en, es, it) with next-intl frontend and Laravel backend translations
+    files:
+      - frontend/src/i18n/routing.ts
+      - frontend/src/i18n/request.ts
+      - frontend/src/middleware.ts
+      - frontend/messages/en.json
+      - frontend/messages/es.json
+      - frontend/messages/it.json
+      - backend/lang/en/emails.php
+      - backend/lang/es/emails.php
+      - backend/lang/it/emails.php
+      - backend/app/Http/Middleware/SetLocaleFromRequest.php
+    endpoints: []
+    depends_on: []
+
+  - name: Brute Force & Rate Limiting
+    description: Account lockout (escalating tiers: 1m/5m/30m), per-endpoint rate limiting (60-120/min), IP-based keying
+    files:
+      - backend/app/Http/Middleware/RateLimitSearchMiddleware.php
+      - backend/app/Actions/Auth/AuthenticateTravelerAction.php
+      - backend/app/Events/Auth/AccountLockedOut.php
+    endpoints: []
+    depends_on:
+      - Traveler Authentication
+
+  - name: Frontend SEO
+    description: Dynamic metadata, JSON-LD structured data (Organization, TouristTrip), canonical URLs, hreflang
+    files:
+      - frontend/src/components/seo/StructuredData.tsx
+    endpoints: []
+    depends_on: []
+
+  - name: Search Indexing (Infrastructure)
+    description: Meilisearch index configuration, queued indexing/de-indexing, searchable/filterable/sortable attributes
+    files:
+      - backend/app/Domains/Search/Actions/ConfigureSearchIndexAction.php
+      - backend/app/Domains/Search/Actions/IndexTourAction.php
+      - backend/app/Domains/Search/Actions/RemoveFromIndexAction.php
+      - backend/app/Providers/EventServiceProvider.php
+      - backend/config/scout.php
+    endpoints: []
+    depends_on: []
+
+known_limitations:
+  - issue: Route files missing — routes/api/public.php, routes/api/partner.php, and routes/api/admin.php do not exist
+    location: backend/routes/
+    impact: All API endpoints return 404. Application cannot serve any requests despite controllers being fully implemented.
+
+  - issue: Missing database migrations for tours, tour_translations, and categories tables
+    location: backend/database/migrations/
+    impact: Cannot create core data tables via php artisan migrate. Only users, personal_access_tokens, guest_identities, and auth_audit_logs tables can be created.
+
+  - issue: Tour model placeholder methods (lowestPriceAmount, averageRating, reviewCount, upcomingAvailableDates) return zero/empty values
+    location: backend/app/Models/Tour.php
+    impact: shouldBeSearchable() always returns false, preventing all tours from being indexed in Meilisearch.
+
+  - issue: Custom middleware (RateLimitSearchMiddleware, SetLocaleFromRequest) not registered
+    location: backend/bootstrap/app.php (empty withMiddleware callback)
+    impact: Rate limiting and locale detection middleware never execute.
+
+  - issue: No persistent auth token storage — token only in React state, lost on page refresh
+    location: frontend/src/lib/hooks/useAuth.tsx
+    impact: Users lose session on refresh. Session restoration endpoint /api/auth/session does not exist.
+
+  - issue: No Sanctum/api guard defined in auth config
+    location: backend/config/auth.php
+    impact: Only web (session) guard exists. Token-based auth works via direct createToken() but guard structure is incomplete.
+
+  - issue: Inconsistent API base URLs between client.ts and auth.ts
+    location: frontend/src/lib/api/client.ts, frontend/src/lib/api/auth.ts
+    impact: client.ts defaults to http://localhost/api while auth.ts defaults to http://localhost:8000/api. Configuration drift risk.
+
+  - issue: Forgot password link is a non-functional span element
+    location: frontend/src/components/auth/LoginForm.tsx line 118
+    impact: Users cannot navigate to password reset page.
+
+  - issue: No /booking page exists but BookingCTA links to it
+    location: frontend/src/app/[locale]/ (missing booking directory)
+    impact: Book Now button leads to 404.
+
+  - issue: No top-level /categories or /destinations index pages
+    location: frontend/src/app/[locale]/
+    impact: Header/footer links to /categories and /destinations result in 404; only [slug] pages exist.
+
+  - issue: Mobile hamburger menu has no click handler
+    location: frontend/src/components/layout/Header.tsx
+    impact: Mobile navigation unusable.
+
+  - issue: No error boundaries or loading.tsx Suspense fallbacks
+    location: frontend/src/app/[locale]/
+    impact: Blank page during route transitions; default error UI on uncaught runtime errors.

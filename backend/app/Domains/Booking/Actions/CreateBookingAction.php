@@ -7,9 +7,11 @@ use App\Domains\Booking\DTOs\CreateBookingDTO;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
 use App\Domains\Booking\Services\AvailabilityService;
+use App\Domains\Payment\Actions\CreatePaymentIntentAction;
 use App\Models\Tour;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
@@ -18,6 +20,7 @@ class CreateBookingAction
     public function __construct(
         private readonly AvailabilityService $availability,
         private readonly AuditService $audit,
+        private readonly CreatePaymentIntentAction $createPaymentIntent,
     ) {}
 
     public function execute(CreateBookingDTO $dto): array
@@ -52,14 +55,14 @@ class CreateBookingAction
         }
 
         // Everything below runs inside a single transaction:
-        // idempotency re-check → availability lock → insert → audit
-        $booking = DB::transaction(function () use ($dto, $tour) {
+        // idempotency re-check → availability lock → insert → Payment Intent → audit
+        [$booking, $priceChanged, $clientSecret] = DB::transaction(function () use ($dto, $tour) {
             // Re-check idempotency under transaction to close race window
             $existing = Booking::where('idempotency_key', $dto->idempotencyKey)
                 ->lockForUpdate()
                 ->first();
             if ($existing) {
-                return $existing;
+                return [$existing, false, null];
             }
 
             $availability = $this->availability->checkAndReserve($tour, $dto->tourDate, $dto->participantCount);
@@ -73,6 +76,9 @@ class CreateBookingAction
             $pricePerPerson = $tour->lowestPriceAmount();
             $totalPrice = $pricePerPerson * $dto->participantCount;
 
+            // FR-027: detect price drift between page load and confirmation time
+            $priceChanged = $dto->pageLoadPrice !== null && $dto->pageLoadPrice !== $pricePerPerson;
+
             $booking = Booking::create([
                 'reference' => Booking::generateReference(),
                 'traveler_id' => $dto->travelerId,
@@ -82,12 +88,21 @@ class CreateBookingAction
                 'price_per_person' => $pricePerPerson,
                 'total_price' => $totalPrice,
                 'currency' => $tour->currency(),
-                'status' => Booking::STATUS_CONFIRMED,
+                'status' => Booking::STATUS_PENDING_PAYMENT,
                 'idempotency_key' => $dto->idempotencyKey,
                 'cancellation_policy' => $tour->cancellation_policy ?? 'Free cancellation up to 24 hours before the tour start time.',
                 'cancellation_window_hours' => $tour->cancellation_window_hours ?? 24,
                 'locale' => $dto->locale,
+                'pending_expires_at' => now()->addMinutes(15),
             ]);
+
+            try {
+                $clientSecret = $this->createPaymentIntent->execute($booking);
+
+                $booking->update(['stripe_payment_intent_id' => $this->extractIntentId($clientSecret)]);
+            } catch (\Throwable $e) {
+                throw new HttpException(503, 'Payment service temporarily unavailable. Please try again.');
+            }
 
             $this->audit->log(
                 $booking,
@@ -95,20 +110,28 @@ class CreateBookingAction
                 null,
                 'created',
                 null,
-                Booking::STATUS_CONFIRMED,
+                Booking::STATUS_PENDING_PAYMENT,
                 ['idempotency_key' => $dto->idempotencyKey],
             );
 
-            SendBookingConfirmationEmail::dispatch($booking);
-
-            return $booking;
+            return [$booking, $priceChanged, $clientSecret];
         });
 
-        $booking->load('tour');
+        $booking->load('tour.translations');
 
         return [
-            'data' => BookingResponseDTO::fromBooking($booking),
-            'is_retry' => false,
+            'data'          => BookingResponseDTO::fromBooking($booking),
+            'is_retry'      => false,
+            'price_changed' => $priceChanged,
+            'payment'       => $clientSecret ? [
+                'client_secret' => $clientSecret,
+                'stripe_publishable_key' => config('services.stripe.key'),
+            ] : null,
         ];
+    }
+
+    private function extractIntentId(string $clientSecret): string
+    {
+        return explode('_secret_', $clientSecret)[0];
     }
 }
