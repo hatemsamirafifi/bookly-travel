@@ -1,0 +1,335 @@
+# Instincts generated from https://github.com/hatemsamirafifi/bookly-travel
+# Generated: 2026-05-10T23:39:37.988Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: bookly-travel-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Commit Length
+
+## Action
+
+Keep commit messages concise (~27 characters)
+
+## Evidence
+
+- Average commit message length: 27 chars
+- Based on 1 commits
+
+---
+id: bookly-travel-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Naming Files
+
+## Action
+
+Use PascalCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: PascalCase
+
+---
+id: bookly-travel-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Export Style
+
+## Action
+
+Prefer mixed exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: mixed
+
+---
+id: bookly-travel-arch-type-based
+trigger: "when adding new code"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: https://github.com/hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Arch Type Based
+
+## Action
+
+Place code in the appropriate type folder (components/, services/, utils/, etc.)
+
+## Evidence
+
+- Type-based module organization detected
+- Folders: 
+
+---
+id: bookly-travel-test-naming
+trigger: "when creating a test file"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Test Naming
+
+## Action
+
+Name test files using the pattern: *.test.ts
+
+## Evidence
+
+- File pattern: *.test.ts
+- Consistent across test files
+
+---
+id: bookly-travel-instinct-file-naming
+trigger: "When creating a new file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct File Naming
+
+## Action
+
+Name the file using PascalCase
+
+## Evidence
+
+- Pattern in namingConventions.files
+
+---
+id: bookly-travel-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Function Naming
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern in namingConventions.functions
+
+---
+id: bookly-travel-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern in namingConventions.classes
+
+---
+id: bookly-travel-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern in namingConventions.constants
+
+---
+id: bookly-travel-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Import Style
+
+## Action
+
+Use either default or named imports as appropriate (mixed style)
+
+## Evidence
+
+- Pattern in importStyle: mixed
+
+---
+id: bookly-travel-instinct-export-style
+trigger: "When exporting modules or members"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Export Style
+
+## Action
+
+Use either default or named exports as appropriate (mixed style)
+
+## Evidence
+
+- Pattern in exportStyle: mixed
+
+---
+id: bookly-travel-instinct-test-file-pattern
+trigger: "When creating a new test file"
+confidence: 0.9
+domain: testing
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Test File Pattern
+
+## Action
+
+Name the file with a .test.ts suffix
+
+## Evidence
+
+- Pattern in testing.filePattern
+
+---
+id: bookly-travel-instinct-test-type
+trigger: "When writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Test Type
+
+## Action
+
+Focus on unit tests
+
+## Evidence
+
+- Pattern in testing.testTypes
+
+---
+id: bookly-travel-instinct-test-location
+trigger: "When adding new tests"
+confidence: 0.7
+domain: testing
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Test Location
+
+## Action
+
+Place test files in mixed locations (not strictly separated from source)
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation
+
+---
+id: bookly-travel-instinct-commit-format
+trigger: "When writing a commit message"
+confidence: 0.8
+domain: git
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Commit Format
+
+## Action
+
+Use a short, freeform message without a required prefix
+
+## Evidence
+
+- Pattern in commits.type: freeform
+- Example: 'Add phase 8 specs and tasks'
+
+---
+id: bookly-travel-instinct-commit-length
+trigger: "When composing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Commit Length
+
+## Action
+
+Keep the commit message concise (around 27 characters on average)
+
+## Evidence
+
+- Pattern in commits.averageLength
+
+---
+id: bookly-travel-instinct-error-handling
+trigger: "When handling errors in code"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: hatemsamirafifi/bookly-travel
+---
+
+# Bookly Travel Instinct Error Handling
+
+## Action
+
+Use try-catch blocks for error handling
+
+## Evidence
+
+- Pattern in errorHandling.style: try-catch
+
