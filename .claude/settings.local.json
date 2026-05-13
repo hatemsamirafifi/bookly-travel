@@ -78,7 +78,10 @@
       "PowerShell(& \"F:\\\\Travel Website\\\\bookly travel\\\\.specify\\\\scripts\\\\powershell\\\\check-prerequisites.ps1\" -Json)",
       "Bash(powershell *)",
       "Bash(docker exec bookly-frontend *)",
-      "Bash(node node_modules/.bin/jest --testPathPatterns=\"reviews\" --passWithNoTests)"
+      "Bash(node node_modules/.bin/jest --testPathPatterns=\"reviews\" --passWithNoTests)",
+      "Bash(where lrc *)",
+      "Bash(npx lrc *)",
+      "Bash(npm list *)"
     ]
   },
   "enableAllProjectMcpServers": true,
