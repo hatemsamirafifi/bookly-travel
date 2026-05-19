@@ -40,7 +40,7 @@ function EmptyState() {
       </p>
       <a
         href="/categories"
-        className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+        className="rounded-xl bg-[#FFB800] px-6 py-2.5 text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] transition-colors"
       >
         Browse Categories
       </a>

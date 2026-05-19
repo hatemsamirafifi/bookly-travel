@@ -8,6 +8,7 @@ import {
 } from '../validators/auth';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const CSRF_COOKIE_URL = process.env.NEXT_PUBLIC_CSRF_COOKIE_URL || 'http://localhost:8000';
 
 export interface User {
   id: number;
@@ -68,6 +69,13 @@ export class AuthApiError extends Error {
   }
 }
 
+async function fetchCsrfCookie(): Promise<void> {
+  await fetch(`${CSRF_COOKIE_URL}/sanctum/csrf-cookie`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+}
+
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = {
     'Content-Type': 'application/json',
@@ -78,6 +86,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
   const response = await fetch(`${API_URL}/public/auth${endpoint}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   const data: unknown = await response.json().catch(() => null);
@@ -95,6 +104,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
 
 export const authApi = {
   login: async (credentials: z.infer<typeof loginSchema>): Promise<AuthResponse> => {
+    await fetchCsrfCookie();
     const res = await fetchApi<AuthApiResponse>('/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
@@ -103,6 +113,7 @@ export const authApi = {
   },
 
   register: async (data: z.infer<typeof registerSchema>): Promise<AuthResponse> => {
+    await fetchCsrfCookie();
     const res = await fetchApi<AuthApiResponse>('/register', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -110,10 +121,9 @@ export const authApi = {
     return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 
-  logout: async (token: string): Promise<void> => {
+  logout: async (_token: string): Promise<void> => {
     await fetchApi<void>('/logout', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
     });
   },
 
@@ -131,10 +141,9 @@ export const authApi = {
     });
   },
 
-  changePassword: async (token: string, data: z.infer<typeof changePasswordSchema>): Promise<{ message: string }> => {
+  changePassword: async (_token: string, data: z.infer<typeof changePasswordSchema>): Promise<{ message: string }> => {
     return fetchApi<{ message: string }>('/change-password', {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
     });
   },
@@ -150,10 +159,9 @@ export const authApi = {
     return data;
   },
   
-  resendVerification: async (token: string): Promise<{ message: string }> => {
+  resendVerification: async (_token: string): Promise<{ message: string }> => {
     return fetchApi<{ message: string }>('/resend-verification', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
     });
   }
 };

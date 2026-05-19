@@ -109,7 +109,7 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
               <button
                 onClick={() => loadReviews(page + 1)}
                 disabled={loadMoreLoading}
-                className="text-sm text-blue-600 hover:text-blue-800 disabled:opacity-50 font-medium"
+                className="text-sm text-[#0A2540] hover:text-[#071b2e] disabled:opacity-50 font-medium underline"
               >
                 {loadMoreLoading ? 'Loading...' : 'Load More'}
               </button>

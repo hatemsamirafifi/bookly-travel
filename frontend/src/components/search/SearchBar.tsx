@@ -39,7 +39,7 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tours, destinations, categories..."
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 pl-11 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pl-11 text-[#0A2540] shadow-sm focus:border-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#0A2540]/20"
           autoComplete="off"
         />
         <svg
@@ -58,7 +58,7 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
         </svg>
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#FFB800] px-4 py-1.5 text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2"
         >
           Search
         </button>

@@ -146,6 +146,8 @@ A traveler can sign in or register via dedicated auth pages that match the Stitc
 - How does the system handle slow image loading? → Use blurred placeholder images (blurhash or LQIP) for progressive loading.
 - What happens when a locale route doesn't exist? → Redirect to the default locale (`/en/`) with a 302.
 - What happens on a 404 (tour slug not found)? → Render a branded 404 page with search suggestions.
+- What happens when Sentry is unreachable? → Error tracking fails silently; the user experience MUST NOT be degraded by Sentry unavailability.
+- What happens when a user exceeds rate limits during booking? → Return a clear message "Too many attempts. Please wait [X] seconds and try again." with the retry-after header value displayed.
 
 ## Requirements *(mandatory)*
 
@@ -169,14 +171,19 @@ A traveler can sign in or register via dedicated auth pages that match the Stitc
 - **FR-016**: The global footer MUST include site links, language selector, and brand information.
 - **FR-017**: Image loading MUST use progressive techniques (placeholder → full resolution) to maintain perceived performance.
 - **FR-018**: The design system MUST implement the Stitch tokens: Navy (#0A2540) primary, Gold (#FFB800) accent, Off-white (#F7F9FB) background, Inter font family, 8px spacing grid, 12px border radius.
+- **FR-023**: All public pages MUST meet WCAG 2.1 AA accessibility standards (color contrast, keyboard navigation, screen reader support, semantic HTML).
 - **FR-019**: Auth pages (login, register, forgot password) MUST be accessible at `/{locale}/auth/*` with form validation.
+- **FR-021**: A cookie consent banner MUST be displayed on first visit, allowing accept/reject of non-essential cookies, with preference stored and respected across sessions.
+- **FR-022**: Privacy policy pages MUST exist at `/{locale}/privacy` and terms & conditions pages at `/{locale}/terms`, translated in all three locales (EN, ES, IT).
 - **FR-020**: Checkout MUST generate and send a unique idempotency key per attempt to prevent duplicate bookings.
+- **FR-024**: Sentry MUST be integrated for frontend (Next.js) and backend (Laravel) error monitoring, capturing payment failures, checkout errors, Stripe webhook issues, and API exceptions with contextual metadata while excluding PII.
+- **FR-025**: Laravel throttle middleware MUST protect auth endpoints (login/register: 5 req/min/IP, password reset: 3 req/min/IP) and booking/payment endpoints (3 req/min/IP), returning clear error responses when limits are exceeded.
 
 ### Key Entities
 
 - **Tour Card**: Compact visual representation of a tour (cover image, title, price, rating, location, duration). Used in listing grids, homepage features, and search results.
 - **Tour Detail**: Full tour information including gallery, translated content, availability, pricing, and reviews. Drives the booking decision.
-- **Checkout Session**: Ephemeral state tracking the selected tour, date, participants, guest details, and payment intent through the multi-step flow.
+- **Checkout Session**: Client-side state (Zustand + sessionStorage) tracking the selected tour, date, participants, guest details, current step, and payment intent through the multi-step flow. Survives back-navigation and page refresh within the same browser session. Does not store sensitive data (payment details, tokens, secrets).
 - **Booking Confirmation**: Read-only summary of a completed booking with reference number, tour details, and payment receipt.
 - **Design System Tokens**: Centralized visual language (colors, typography, spacing, radius) extracted from the Stitch design system and applied to all UI components.
 
@@ -194,6 +201,18 @@ A traveler can sign in or register via dedicated auth pages that match the Stitc
 - **SC-008**: 100% of pages pass automated SEO audit (meta tags, structured data, canonical, hreflang present).
 - **SC-009**: Successful Stripe test payment completes without errors and produces a booking confirmation with reference number.
 - **SC-010**: Image gallery on tour detail page supports swipe navigation on touch devices.
+- **SC-011**: Cookie consent banner renders on first visit and non-essential scripts are blocked until consent is given.
+- **SC-012**: All pages achieve WCAG 2.1 AA compliance verified by automated audit (axe-core or Lighthouse accessibility score ≥ 90).
+
+## Clarifications
+
+### Session 2026-05-19
+
+- Q: What GDPR/cookie consent approach is required for the EU-facing locales? → A: Full GDPR baseline: cookie consent banner with accept/reject preferences, privacy policy pages (EN/ES/IT), and terms & conditions pages linked in footer. Consent stored and respected before loading non-essential tracking scripts. MVP-level implementation.
+- Q: What WCAG accessibility conformance level is required? → A: WCAG 2.1 AA.
+- Q: What observability/error tracking should be integrated? → A: Sentry for frontend (Next.js) and backend (Laravel) error monitoring, performance tracking, and production alerts. Payment failures, checkout errors, Stripe webhook issues, and API exceptions captured with contextual metadata (booking ID, payment ID, environment). PII excluded. MVP scope only.
+- Q: Where/how should checkout session state be stored? → A: Client-side Zustand store with sessionStorage persistence. Survives back-navigation and page refresh within same browser session. Sensitive data (payment details, secrets, tokens) excluded. No server-side draft bookings for guest checkout.
+- Q: What rate limiting is required on form submissions and API endpoints? → A: Server-side Laravel throttle middleware: login/register 5 req/min per IP, password reset 3 req/min, booking/payment creation 3 req/min. Returns clear API errors. Works alongside idempotency protection. No client-side throttle for MVP.
 
 ## Assumptions
 

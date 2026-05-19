@@ -2,10 +2,22 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
 
 interface FetchOptions extends RequestInit {
   locale?: string;
+  requireCsrf?: boolean;
+}
+
+export async function fetchCsrfCookie(): Promise<void> {
+  await fetch(`${API_URL}/sanctum/csrf-cookie`, {
+    method: 'GET',
+    credentials: 'include',
+  });
 }
 
 export async function apiClient<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  const { locale, ...fetchOptions } = options;
+  const { locale, requireCsrf, ...fetchOptions } = options;
+
+  if (requireCsrf && fetchOptions.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(fetchOptions.method)) {
+    await fetchCsrfCookie();
+  }
 
   const headers: Record<string, string> = {
     'Accept': 'application/json',
@@ -20,6 +32,7 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
 
   const response = await fetch(url, {
     ...fetchOptions,
+    credentials: 'include',
     headers,
   });
 

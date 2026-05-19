@@ -204,6 +204,66 @@
     "loading": "Cargando...",
     "failed_to_load": "Error al cargar las reseñas. Por favor, inténtalo de nuevo más tarde."
   },
+  "notFound": {
+    "title": "Página No Encontrada",
+    "subtitle": "La página que buscas no existe o ha sido movida.",
+    "goHome": "Ir al Inicio",
+    "browseTours": "Explorar Tours"
+  },
+  "legal": {
+    "privacy": {
+      "metaTitle": "Política de Privacidad | Bookly",
+      "metaDescription": "Conoce cómo Bookly recopila, utiliza y protege tu información personal.",
+      "title": "Política de Privacidad",
+      "intro": "En Bookly, respetamos tu privacidad y estamos comprometidos con la protección de tus datos personales. Esta política explica cómo recopilamos, utilizamos y protegemos tu información.",
+      "dataCollection": {
+        "title": "Datos que Recopilamos",
+        "body": "Recopilamos la información que proporcionas directamente, como tu nombre, correo electrónico, número de teléfono y detalles de reserva. También recopilamos datos de uso para mejorar nuestros servicios."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "Utilizamos cookies y tecnologías similares para mejorar tu experiencia de navegación, analizar el tráfico del sitio y personalizar el contenido. Puedes gestionar las preferencias de cookies a través de la configuración de tu navegador."
+      },
+      "thirdParties": {
+        "title": "Servicios de Terceros",
+        "body": "Podemos compartir datos limitados con procesadores de pago de confianza (Stripe) y proveedores de análisis. Nunca vendemos tu información personal a terceros."
+      },
+      "rights": {
+        "title": "Tus Derechos",
+        "body": "Tienes derecho a acceder, corregir o eliminar tus datos personales. Contáctanos en privacy@bookly.travel para ejercer estos derechos."
+      },
+      "contact": {
+        "title": "Contáctanos",
+        "body": "Si tienes alguna pregunta sobre esta política de privacidad, contáctanos en privacy@bookly.travel."
+      }
+    },
+    "terms": {
+      "metaTitle": "Términos y Condiciones | Bookly",
+      "metaDescription": "Lee los términos y condiciones para usar la plataforma de reserva de tours de Bookly.",
+      "title": "Términos y Condiciones",
+      "intro": "Al usar Bookly, aceptas estos términos y condiciones. Por favor, léelos detenidamente antes de hacer una reserva.",
+      "bookings": {
+        "title": "Reservas",
+        "body": "Todas las reservas están sujetas a disponibilidad y confirmación. Los precios se muestran en el momento de la reserva y pueden estar sujetos a cambios hasta su confirmación."
+      },
+      "payments": {
+        "title": "Pagos",
+        "body": "Los pagos se procesan de forma segura a través de Stripe. Aceptas pagar el importe total mostrado en el checkout, incluyendo impuestos y tasas aplicables."
+      },
+      "cancellations": {
+        "title": "Cancelaciones y Reembolsos",
+        "body": "Las políticas de cancelación varían según el tour. Por favor, revisa los términos específicos de cancelación mostrados en cada página de tour antes de reservar."
+      },
+      "liability": {
+        "title": "Responsabilidad",
+        "body": "Bookly actúa como un marketplace que conecta viajeros con operadores de tours. No somos responsables de los actos u omisiones de los operadores de tours."
+      },
+      "contact": {
+        "title": "Contacto",
+        "body": "Para preguntas sobre estos términos, contáctanos en support@bookly.travel."
+      }
+    }
+  },
   "payment": {
     "title": "Detalles del Pago",
     "status": "Estado",

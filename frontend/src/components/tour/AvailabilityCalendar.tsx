@@ -51,10 +51,10 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
               onClick={() => setSelectedDate(date)}
               className={`rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
                 isSelected
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#0A2540] text-white'
                   : isPast
                     ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-                    : 'bg-gray-50 text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                    : 'bg-gray-50 text-[#0A2540] hover:bg-[#F7F9FB] hover:text-[#071b2e]'
               }`}
               aria-label={formatDisplay(date)}
               aria-pressed={isSelected}
@@ -66,7 +66,7 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
       </div>
 
       {selectedDate && (
-        <p className="mt-3 text-sm text-blue-700">
+        <p className="mt-3 text-sm text-[#0A2540]">
           Selected: <span className="font-medium">{formatDisplay(selectedDate)}</span>
         </p>
       )}

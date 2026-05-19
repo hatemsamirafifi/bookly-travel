@@ -14,7 +14,7 @@ export default function AggregateRating({ averageRating, reviewCount }: Aggregat
     <div className="flex items-center gap-3">
       {hasReviews ? (
         <>
-          <span className="text-2xl font-bold text-gray-900" aria-label={`Average rating ${averageRating?.toFixed(1)} out of 5`}>
+          <span className="text-2xl font-bold text-[#0A2540]" aria-label={`Average rating ${averageRating?.toFixed(1)} out of 5`}>
             {averageRating?.toFixed(1)}
           </span>
           <div>

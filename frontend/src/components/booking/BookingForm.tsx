@@ -196,7 +196,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
   if (!tourSlug || !date) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">Please select a tour and date to continue.</p>
+        <p className="text-[#5A6B7B]">Please select a tour and date to continue.</p>
       </div>
     );
   }
@@ -204,8 +204,8 @@ export default function BookingForm({ locale }: BookingFormProps) {
   if (paymentStep && stripePromise) {
     return (
       <div className="space-y-6">
-        <h2 className="text-lg font-semibold text-gray-800">Payment</h2>
-        <Elements stripe={stripePromise} options={{ clientSecret: paymentStep.clientSecret }}>
+        <h2 className="text-lg font-semibold text-[#0A2540]">Payment</h2>
+        <Elements stripe={stripePromise} options={{ clientSecret: paymentStep.clientSecret, appearance: { theme: 'stripe', variables: { colorPrimary: '#0A2540', colorBackground: '#F7F9FB', colorText: '#0A2540', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif', borderRadius: '8px', }, }, }}>
           <StripePaymentForm
             clientSecret={paymentStep.clientSecret}
             onSuccess={handlePaymentSuccess}
@@ -263,7 +263,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
         <button
           type="submit"
           disabled={submitting || !tourSlug || !date}
-          className="w-full rounded-lg bg-blue-600 py-3 text-base font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+          className="w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
         >
           {submitting ? 'Reserving...' : 'Confirm & Pay'}
         </button>

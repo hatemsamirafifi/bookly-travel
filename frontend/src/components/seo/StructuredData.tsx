@@ -13,7 +13,7 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
     '@type': 'TouristTrip',
     name: tour.title,
     description: tour.description?.substring(0, 300) || '',
-    touristType: typeof tour.category === 'string' ? tour.category : tour.category?.name || '',
+    touristType: tour.category || '',
     duration: `PT${tour.duration.minutes}M`,
     offers: {
       '@type': 'Offer',

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { getHomepageData } from '@/lib/api/homepage';
 import { OrganizationSchema } from '@/components/seo/StructuredData';
 import HeroSection from '@/components/home/HeroSection';
@@ -34,6 +35,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
+  const t = await getTranslations('home');
 
   let data;
   try {
@@ -41,7 +43,7 @@ export default async function HomePage({ params }: HomePageProps) {
   } catch {
     return (
       <main className="min-h-screen">
-        <HeroSection locale={locale} />
+        <HeroSection locale={locale} title={t('heroTitle')} subtitle={t('heroSubtitle')} />
         <div className="py-12 text-center text-gray-500">
           Unable to load homepage content. Please try again later.
         </div>
@@ -52,7 +54,7 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <OrganizationSchema locale={locale} />
-      <HeroSection locale={locale} />
+      <HeroSection locale={locale} title={t('heroTitle')} subtitle={t('heroSubtitle')} />
       <FeaturedTours tours={data.featured_tours} locale={locale} />
       <CategoryGrid categories={data.popular_categories} locale={locale} />
       <DestinationShowcase destinations={data.featured_destinations} locale={locale} />
