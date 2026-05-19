@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent-gold": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-input:focus {
+            border-color: #260a42;
+            ring-color: #260a42;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center p-4">
+<div class="w-full max-w-[480px] bg-white dark:bg-primary/5 rounded-xl shadow-xl overflow-hidden border border-primary/10">
+<!-- Top App Bar / Logo Section -->
+<div class="flex items-center bg-white dark:bg-transparent p-6 pb-2 justify-between">
+<div class="text-primary dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/5" data-icon="ArrowLeft">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<div class="flex-1 flex justify-center pr-10">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-accent-gold">
+<span class="material-symbols-outlined text-3xl">public</span>
+</div>
+</div>
+</div>
+<!-- Hero Image / Visual -->
+<div class="px-6 pt-4">
+<div class="w-full aspect-[21/9] rounded-xl bg-center bg-no-repeat bg-cover relative overflow-hidden" data-alt="Beautiful landscape of a historic European city at sunset" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCipslVN95sXWuP1NTcaw7ZfV2r-0T2NgJq9zaiKSSu_dnmo9r0kxHuBG1zldiyhoiMmV2-YJ23VNsg4gl8dPnEBSURWJqPcSerQQgzNdXONs79SYq-Wt3OOAa6QoW4rmQspBFdOXaIcI2CMH-TLtmRMhf1bv4JpUk8CX8wUyKV8Z3ph_Zd63KXU5D26Rt_BKWvF2fJtUAeh0WoWNLUTQwj1ICpbN82klymCqWt2F0AwQ0P2mC43SxWwCLWMlzeAwslesVgHYBH89L4");'>
+<div class="absolute inset-0 bg-primary/20"></div>
+</div>
+</div>
+<!-- Header Content -->
+<div class="px-6 pt-6 text-center">
+<h1 class="text-slate-900 dark:text-slate-100 tracking-tight text-3xl font-bold leading-tight">Join the Global Community</h1>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal mt-2">Experience the world like a local with curated tours.</p>
+</div>
+<!-- Registration Form -->
+<form class="p-6 space-y-4">
+<!-- Full Name -->
+<div class="flex flex-col gap-1.5">
+<label class="text-slate-900 dark:text-slate-200 text-sm font-semibold">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">person</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/10 border border-primary/10 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-900 dark:text-slate-100" placeholder="Enter your full name" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="flex flex-col gap-1.5">
+<label class="text-slate-900 dark:text-slate-200 text-sm font-semibold">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/10 border border-primary/10 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-900 dark:text-slate-100" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+<!-- Password -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-slate-900 dark:text-slate-200 text-sm font-semibold">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">lock</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/10 border border-primary/10 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-900 dark:text-slate-100" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-slate-900 dark:text-slate-200 text-sm font-semibold">Confirm</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">lock_reset</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/10 border border-primary/10 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-900 dark:text-slate-100" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<!-- Terms -->
+<div class="flex items-start gap-3 py-2">
+<input class="mt-1 size-5 rounded border-primary/20 text-primary focus:ring-primary" id="terms" type="checkbox"/>
+<label class="text-sm text-slate-600 dark:text-slate-400 leading-tight" for="terms">
+                    I agree to the <a class="text-primary font-semibold underline underline-offset-2" href="#">Terms of Service</a> and <a class="text-primary font-semibold underline underline-offset-2" href="#">Privacy Policy</a>.
+                </label>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98]" type="submit">
+                Create Account
+            </button>
+<!-- Divider -->
+<div class="relative flex items-center py-4">
+<div class="flex-grow border-t border-slate-200 dark:border-primary/20"></div>
+<span class="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">Or sign up with</span>
+<div class="flex-grow border-t border-slate-200 dark:border-primary/20"></div>
+</div>
+<!-- Social Auth -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-3 px-4 border border-slate-200 dark:border-primary/20 rounded-xl hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors" type="button">
+<img alt="Google" class="size-5" data-alt="Google logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3pyCLy7JRBI99QMUHNAUAigcO8IURkuO__L2NJNo2ourtYB6fIP2vwEPeF_bzxDfT-Etp4deH_xPMUyC0zkLhpvJWiyg8YCt_Cwc24pgv5CZuZf1OV-Yk1v_YArXpODo8JaplFuk6GhIX09NR5UxY_RqJCr_80-EvL5_YprX-Edv4XnAygrv9NbJBN9lxHM5MBKAp7B-5Ji9u9OXQbcEheW5kEzADIuAiAhH9M0wqlC50ghPYLhZ5QsM2lzAijdR-NRXC5dCo9-BD"/>
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 border border-slate-200 dark:border-primary/20 rounded-xl hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors" type="button">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">ios</span>
+<span class="text-slate-900 dark:text-slate-100 text-sm font-medium">Apple</span>
+</button>
+</div>
+</form>
+<!-- Footer Link -->
+<div class="p-6 text-center border-t border-slate-100 dark:border-primary/10">
+<p class="text-slate-600 dark:text-slate-400 text-sm">
+                Already have an account? 
+                <a class="text-primary font-bold hover:text-primary/80 transition-colors" href="#">Log In</a>
+</p>
+</div>
+<!-- Subtle Accent Decor -->
+<div class="h-1.5 w-full bg-accent-gold"></div>
+</div>
+</body></html>

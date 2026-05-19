@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-size: 24px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="flex w-72 flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800">
+<div class="flex flex-col h-full p-6 gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary rounded-lg size-10 flex items-center justify-center text-accent">
+<span class="material-symbols-outlined">travel_explore</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-white text-base font-bold leading-tight">TravelPartner</h1>
+<p class="text-slate-500 text-xs font-normal">SaaS Dashboard</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary dark:text-accent rounded-lg" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Earnings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">reviews</span>
+<span class="text-sm font-medium">Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<button class="w-full py-3 px-4 bg-primary text-white rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2">
+<span class="material-symbols-outlined !text-lg">help</span>
+                Help Center
+            </button>
+</div>
+</aside>
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Header -->
+<header class="h-20 flex items-center justify-between px-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+<div class="flex items-center gap-4 text-primary dark:text-white">
+<span class="material-symbols-outlined text-accent">account_balance_wallet</span>
+<h2 class="text-xl font-bold tracking-tight">Earnings Overview</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary" placeholder="Search transactions..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-accent rounded-full border-2 border-white"></span>
+</button>
+<div class="h-10 w-px bg-slate-200 dark:bg-slate-700"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-sm font-bold leading-none">Global Travels Ltd.</p>
+<p class="text-xs text-slate-500 mt-1">Partner Admin</p>
+</div>
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border-2 border-slate-100 dark:border-slate-800" data-alt="Corporate partner profile picture with modern professional look">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Partner dashboard user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN-wQloUKJQwL8s0X4Pj3NlRRdQLgdBAvXcUTO5wReDJsrPGfJCRWDLcxWJ56ZDJSIu6_KqCoZWmITCAAptiBrVGaRBI31drkzmWnSBxVcm99ufDwM7DXcYQdYr1MLpuVka51wSvSdvIaoilj4mfdrO4rhsXQaXahquCPs_YtoLEcmzXN4_gplV0MvaW-w1y_6xCgkiZap1ZBwgf3IImxpnemd2r_cQ63Fei0_JTHP2_hzWmGxy4zO1WMDIFALNS3i5gOjzu5d4yhK"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-10 flex flex-col gap-8">
+<!-- KPI Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 mb-1">Total Revenue</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white">$148,250.00</h3>
+</div>
+<div class="mt-4 flex items-center gap-1 text-emerald-600 text-xs font-bold">
+<span class="material-symbols-outlined !text-sm">trending_up</span>
+                        +14.2% from last month
+                    </div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 mb-1">Available for Payout</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white">$24,450.00</h3>
+</div>
+<div class="mt-4">
+<button class="w-full py-2 bg-accent text-primary font-bold text-xs rounded-lg hover:bg-accent/90 transition-all uppercase tracking-wider">Request Payout</button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<p class="text-sm font-medium text-slate-500 mb-1">Pending Payouts</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white">$8,200.00</h3>
+<p class="text-xs text-slate-400 mt-4 italic">Estimated processing: 3 days</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<p class="text-sm font-medium text-slate-500 mb-1">Next Payout Date</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white">Oct 15, 2023</h3>
+<div class="mt-4 flex items-center gap-2">
+<span class="size-2 bg-accent rounded-full animate-pulse"></span>
+<span class="text-xs text-slate-500">Auto-payout enabled</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Revenue Growth Chart -->
+<div class="xl:col-span-2 bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h4 class="text-lg font-bold text-primary dark:text-white">Revenue Growth</h4>
+<p class="text-sm text-slate-500">Monthly earnings performance</p>
+</div>
+<select class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-xs font-bold py-1 px-3 text-slate-600 focus:ring-0 cursor-pointer">
+<option>Last 6 Months</option>
+<option>Last Year</option>
+</select>
+</div>
+<div class="h-64 relative flex flex-col justify-end">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 150">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#FFB800" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#FFB800" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,130 C40,120 60,40 100,60 C140,80 180,20 220,50 C260,80 300,10 340,30 C380,50 400,20 400,20 L400,150 L0,150 Z" fill="url(#chartGradient)"></path>
+<path d="M0,130 C40,120 60,40 100,60 C140,80 180,20 220,50 C260,80 300,10 340,30 C380,50 400,20 400,20" fill="none" stroke="#FFB800" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="flex justify-between mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+<span>May</span>
+<span>Jun</span>
+<span>Jul</span>
+<span>Aug</span>
+<span>Sep</span>
+<span>Oct</span>
+</div>
+</div>
+</div>
+<!-- Payment Settings Card -->
+<div class="bg-primary text-white p-8 rounded-xl shadow-lg flex flex-col gap-6">
+<div>
+<h4 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-accent">account_balance</span>
+                            Payment Settings
+                        </h4>
+<p class="text-xs text-slate-300 mt-1">Manage your payouts and verified accounts</p>
+</div>
+<div class="bg-white/10 p-4 rounded-lg border border-white/10">
+<div class="flex items-center justify-between mb-4">
+<p class="text-xs font-bold uppercase tracking-wider text-accent">Default Method</p>
+<span class="material-symbols-outlined !text-sm">verified</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-white size-10 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">credit_card</span>
+</div>
+<div>
+<p class="text-sm font-bold">Stripe Connect</p>
+<p class="text-[10px] text-slate-300">•••• •••• •••• 5592</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full py-3 bg-white text-primary rounded-lg text-sm font-bold hover:bg-slate-100 transition-colors">Manage Accounts</button>
+<button class="w-full py-3 bg-transparent border border-white/20 text-white rounded-lg text-sm font-bold hover:bg-white/5 transition-colors">Download Tax Forms</button>
+</div>
+<div class="mt-auto pt-4 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
+<span>Last change: 24 Aug 2023</span>
+<a class="text-accent hover:underline" href="#">Security Settings</a>
+</div>
+</div>
+</div>
+<!-- Payout History Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<h4 class="text-lg font-bold text-primary dark:text-white">Payout History</h4>
+<button class="text-primary dark:text-accent text-sm font-bold flex items-center gap-1 hover:opacity-80">
+<span class="material-symbols-outlined !text-lg">download</span>
+                        Export CSV
+                    </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Payout ID</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Date</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Amount</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Method</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr>
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-200">#PY-99231</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 01, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-200">$12,450.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-500">Processing</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Stripe •••• 5592</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary dark:hover:text-accent transition-colors">
+<span class="material-symbols-outlined !text-lg">visibility</span>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-200">#PY-99114</td>
+<td class="px-6 py-4 text-sm text-slate-500">Sep 15, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-200">$9,800.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-500">Paid</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Stripe •••• 5592</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary dark:hover:text-accent transition-colors">
+<span class="material-symbols-outlined !text-lg">visibility</span>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-200">#PY-98742</td>
+<td class="px-6 py-4 text-sm text-slate-500">Sep 01, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-200">$15,200.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-500">Paid</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Bank Transfer</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary dark:hover:text-accent transition-colors">
+<span class="material-symbols-outlined !text-lg">visibility</span>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-200">#PY-98001</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 15, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-200">$8,200.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-primary/10 text-primary dark:text-accent dark:bg-primary/20">Scheduled</span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Stripe •••• 5592</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary dark:hover:text-accent transition-colors">
+<span class="material-symbols-outlined !text-lg">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+<button class="text-sm font-bold text-slate-500 hover:text-primary dark:hover:text-white transition-colors">View All Payouts</button>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="mt-auto p-10 text-center text-slate-400 text-xs">
+<p>© 2023 TravelPartner Marketplace. All transactions are securely processed via industry-standard protocols.</p>
+</footer>
+</main>
+</div>
+</body></html>

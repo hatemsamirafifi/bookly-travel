@@ -72,7 +72,7 @@
 | Field | Rule |
 |-------|------|
 | rating | Required, integer, min:1, max:5 |
-| comment | Optional, string, max:2000 |
+| comment | Optional, string, max:2000. Empty string is coerced to NULL before storage. |
 | booking_id | Must exist, must belong to traveler, must be status="completed", tour_date must be within 30 days, must not already have a review |
 | locale | Required, in:en,es,it |
 

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>History &amp; Culture - World Tours</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#051220",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen pb-20">
+<!-- Header Navigation -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-accent cursor-pointer">arrow_back</span>
+<h1 class="text-lg font-bold tracking-tight text-primary dark:text-slate-100">History &amp; Culture</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-2 rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="relative h-[400px] w-full overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent z-10"></div>
+<img alt="History &amp; Culture Hero" class="w-full h-full object-cover" data-alt="Majestic view of the Colosseum in Rome during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCejbvPnkSmMFKpjHsYZ72OjmawB-bVd2oHgKnsjp6vME_NZw0ksW3R2QfnKfrFNyX5VFQL6IclzkSefcePNH68LXpEzJkB470mAlpyZWfUPkaoW9l3LZsZeP70Ai9QQYJlVWTOCUoha53FZg8DpBNYVLXdzdyU_PCuKVxaINjF5l31iab1Xe5GYJ2nj9BzpKt2I0nP09wrG5GSBo95JE8XojBrUrAu-DP-7QAfMxlTDn5CATH9ZDCgzxuoNJg7A0fUNyX9kZU4CG2g"/>
+<div class="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-12 max-w-7xl mx-auto w-full">
+<span class="bg-accent text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider w-fit mb-4">Curated Collection</span>
+<h2 class="text-4xl md:text-6xl font-bold text-white mb-4">Timeless Wonders</h2>
+<p class="text-slate-200 text-lg max-w-2xl">
+                Journey through the corridors of time. Discover ancient civilizations, architectural marvels, and the stories that shaped our world.
+            </p>
+</div>
+</section>
+<!-- Search & Filter Bar -->
+<div class="max-w-7xl mx-auto px-4 -mt-8 relative z-30">
+<div class="bg-white dark:bg-slate-900 p-2 rounded-xl shadow-xl border border-primary/5 flex flex-col md:flex-row gap-2">
+<div class="flex-1 flex items-center px-4 py-3 bg-background-light dark:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined text-slate-400 mr-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-slate-900 dark:text-white placeholder:text-slate-500" placeholder="Search ancient ruins, museums, or cities..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-sm">tune</span>
+<span>Filters</span>
+</button>
+<button class="flex items-center justify-center gap-2 px-6 py-3 bg-accent text-primary rounded-lg font-bold hover:bg-accent/90 transition-colors">
+                    Explore
+                </button>
+</div>
+</div>
+</div>
+<!-- Sub-category Tabs -->
+<nav class="max-w-7xl mx-auto px-4 mt-8 flex gap-4 overflow-x-auto no-scrollbar pb-2">
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-white font-medium">All History</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white dark:bg-slate-800 border border-primary/10 hover:border-accent transition-colors font-medium">UNESCO Sites</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white dark:bg-slate-800 border border-primary/10 hover:border-accent transition-colors font-medium">Archaeology</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white dark:bg-slate-800 border border-primary/10 hover:border-accent transition-colors font-medium">Museums</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white dark:bg-slate-800 border border-primary/10 hover:border-accent transition-colors font-medium">Religious Heritage</button>
+</nav>
+<main class="max-w-7xl mx-auto px-4 py-12 space-y-16">
+<!-- Popular Destinations -->
+<section>
+<div class="flex items-end justify-between mb-8">
+<div>
+<h3 class="text-2xl font-bold text-primary dark:text-slate-100">Popular Destinations</h3>
+<p class="text-slate-500 dark:text-slate-400">The world's most iconic historical hubs</p>
+</div>
+<a class="text-primary dark:text-accent font-semibold flex items-center gap-1 hover:underline" href="#">
+                    View all <span class="material-symbols-outlined">chevron_right</span>
+</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="group relative h-64 rounded-xl overflow-hidden cursor-pointer">
+<img alt="Athens" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Ancient Greek temple ruins in Athens" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCluUszkMUzWdrl6bQ2tbEmGJJiPpKKmzQ6AOJ79d2Urec6Inn_nKm9Id94GC1gJwO3X9aptQEX4xRrUO8rQA9MnNVuLBTubXplqCEAsB-uhNvAMG2I_J4C3XahI7NAProsoyuV1n7EKdlMonJ5kt_AMxhboNrTy3-jQpNSodhYeUkP-PoV_dyGqM9g76NQqcbXT5xDQLnKQ8xoShbrmkVprzexHtboRUhjBg9SnP5bkuTFMGbCyqLnzEchJCoIcyJC2HbS_xbn95zE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<p class="text-white font-bold text-xl">Athens</p>
+<p class="text-accent text-sm">120+ Tours</p>
+</div>
+</div>
+<div class="group relative h-64 rounded-xl overflow-hidden cursor-pointer">
+<img alt="Cairo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Great Sphinx and Pyramids of Giza in Egypt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsdtB2RyKf1anpzUNZV4nAGR5ikP2Q0PrBmmjGtSL_cfdlLLIEcHQQmVlkyQicdDcmMtnoqaJg0VUZY94SzYGh2S-ypwTgkGMOTFXswGTCB8GYzOM3nS_nrm4LWIQohR6JEy9-J_x0lyKVa2e70Z1ErUgv7S6twDqRfPXALg81rqSBkvMh0H0c2ntmsMNkGN9NYEuiT6JmwmKHqPwsPOx2csdHacpZ0PpAlR529FgIaz_Er-LWKoeC-JPC5oH_YuFU3dHHhmcYWgJW"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<p class="text-white font-bold text-xl">Cairo</p>
+<p class="text-accent text-sm">85+ Tours</p>
+</div>
+</div>
+<div class="group relative h-64 rounded-xl overflow-hidden cursor-pointer">
+<img alt="Rome" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Ancient Roman architecture at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3oT4Dl1Tqn5eLDC2SClK4w1TcPSF6VRuNU1s4UEdHpX6LOxi60YxsXIQkaw-hsBS2m5t60d3IOyppB3NdQTTCyhKI4d5tMHhMUKIPS8OJflZJpHIfmQcOAKtFwv0vxyzt_zmIGzmrZIOWFOH01yzeHPNAJCTRhGIooWVhyBSheIizWcgHkOrYaK6O-d9p85LpKUf7Jw4g-nRi4BcvhEIb8HbMzR02T8SQx2-3MVBczXp4zFWmbRzb5f1SzGZHpl3MW7is9EcmVXXk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<p class="text-white font-bold text-xl">Rome</p>
+<p class="text-accent text-sm">210+ Tours</p>
+</div>
+</div>
+<div class="group relative h-64 rounded-xl overflow-hidden cursor-pointer">
+<img alt="Agra" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="The Taj Mahal in Agra, India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOkM1hIXL9wMuFLU-7wx2FMWffSpCfwOG_-lqq7oakY_QtrfjQp0epcO4tvGFmUmUEDz1m6CjSjhoTnWnd4OjmlOUpHNDY1QKdqsvLBQow-2MIn9HARkO9f_62i1rvQizez_aJfgl7S6ArGUkQ08xkNO1X-iNEknvZ39aaQ70yklsjKr98CLfSVrhVjlAqE_Pgfk4DvSLn8L30vv0aamy8UMsLIZCo1RaV458DPa3j5mdCRQCgesn-v7_K2Z3bAnc8Dt9PAVXQsYFH"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<p class="text-white font-bold text-xl">Agra</p>
+<p class="text-accent text-sm">45+ Tours</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Top Rated Tours Grid -->
+<section>
+<div class="mb-8">
+<h3 class="text-2xl font-bold text-primary dark:text-slate-100">Top Rated Tours</h3>
+<p class="text-slate-500 dark:text-slate-400">Hand-picked experiences with exceptional reviews</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Tour Card 1 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-primary/5 hover:shadow-2xl transition-shadow group">
+<div class="relative h-56">
+<img alt="Acropolis Tour" class="w-full h-full object-cover" data-alt="The Parthenon temple at the Acropolis of Athens" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0ZLQaMhPvuZ5OjEKY6QOTlSmFOxT1eCZlGvT-Mwi3WoMSm4SoDbQgLg2Y3VrbKoJnNl2-ccYQgd9DRUhOp66rZ-ktYI7OlwXwEN5Llo7RWJPxLdhcRGhgST0fgtp1s-h-W7BVKHaKugJinOVyc2F57u0a-qW_hTohcxpq_RWOZX9vvt7uTyT0XKHQQuGwUC3s4iP00UPFUtbZ0oduujo06GcBbOE71VXhbUobAqYhw6WpCF6yoLPnbyarjgL6a1hsTdvznq2_1tkQ"/>
+<button class="absolute top-3 right-3 p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-1 text-accent mb-2">
+<span class="material-symbols-outlined text-sm active-nav">star</span>
+<span class="text-sm font-bold text-primary dark:text-slate-300">4.9</span>
+<span class="text-xs text-slate-400">(1.2k reviews)</span>
+</div>
+<h4 class="text-lg font-bold text-primary dark:text-white mb-2 group-hover:text-accent transition-colors">VIP After-Hours: Acropolis &amp; Parthenon Secret Access</h4>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 4 Hours</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> Max 8</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+<div>
+<p class="text-xs text-slate-400 uppercase font-bold">From</p>
+<p class="text-xl font-bold text-primary dark:text-white">$129</p>
+</div>
+<button class="bg-primary/10 dark:bg-primary/30 text-primary dark:text-accent px-4 py-2 rounded-lg font-bold hover:bg-primary hover:text-white transition-all">View Tour</button>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-primary/5 hover:shadow-2xl transition-shadow group">
+<div class="relative h-56">
+<img alt="Machu Picchu Tour" class="w-full h-full object-cover" data-alt="The ruins of Machu Picchu, Peru" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoEFxY7mIuIWDBQ7WvSgqTEadkf1EoOMp_rB7fkHi1-_AYDUbpYb5bnL8N7yEDijItzTH6TM8ywFqJcf5hoEB8b8J27gl4--h65V1VoCThc4YHb5ygGw40O1djiKKheLwNtONs2zCa50tv9OMYhmal8dn_QMswifw0uy7HcbybV8dUcrjRExo2lFRa2KQvCPYooUt4U2jwaB_QQesTnaa3ssSNgUaWrKpqXU3pLjDhpVphGWuHTd-Jx1Jx5Ur9H18Th1DUseOtgeax"/>
+<button class="absolute top-3 right-3 p-2 bg-white/20 backdrop-blur-md rounded-full text-white">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-1 text-accent mb-2">
+<span class="material-symbols-outlined text-sm active-nav">star</span>
+<span class="text-sm font-bold text-primary dark:text-slate-300">4.8</span>
+<span class="text-xs text-slate-400">(850 reviews)</span>
+</div>
+<h4 class="text-lg font-bold text-primary dark:text-white mb-2 group-hover:text-accent transition-colors">Inca Trail: 2-Day Sacred Valley &amp; Machu Picchu Explorer</h4>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 2 Days</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">hiking</span> Moderate</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+<div>
+<p class="text-xs text-slate-400 uppercase font-bold">From</p>
+<p class="text-xl font-bold text-primary dark:text-white">$450</p>
+</div>
+<button class="bg-primary/10 dark:bg-primary/30 text-primary dark:text-accent px-4 py-2 rounded-lg font-bold hover:bg-primary hover:text-white transition-all">View Tour</button>
+</div>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-primary/5 hover:shadow-2xl transition-shadow group">
+<div class="relative h-56">
+<img alt="Luxor Tour" class="w-full h-full object-cover" data-alt="Ancient Egyptian hieroglyphics on a temple wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCObX-FJvoN_92SwVNKHEj6QF3ZU4s9gsLKw4HSkJJ-_LMwUEqORY5QOcFswrLq79WNbhtmfBE57EtLv7PSkzstbQGlp-slUodIiaADX76D7bta2OLjyNxMWc6D8lEtmp08pjYRe3gdoA0hei2iM14gxKatoT8OVUc1eqyeLPoyiEoI5RBmu0xJiBnTASKvakETGp5xLjyrwE3GHvgqqJELTbCZygPvdIT7yyrt91ogPHOgPRCQykJxNvWU9O9upsdriZzK5vrG8suL"/>
+<button class="absolute top-3 right-3 p-2 bg-white/20 backdrop-blur-md rounded-full text-white">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-1 text-accent mb-2">
+<span class="material-symbols-outlined text-sm active-nav">star</span>
+<span class="text-sm font-bold text-primary dark:text-slate-300">5.0</span>
+<span class="text-xs text-slate-400">(540 reviews)</span>
+</div>
+<h4 class="text-lg font-bold text-primary dark:text-white mb-2 group-hover:text-accent transition-colors">Valley of the Kings: Private Egyptologist Guided Day Trip</h4>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-sm mb-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 8 Hours</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">school</span> Expert Led</span>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+<div>
+<p class="text-xs text-slate-400 uppercase font-bold">From</p>
+<p class="text-xl font-bold text-primary dark:text-white">$185</p>
+</div>
+<button class="bg-primary/10 dark:bg-primary/30 text-primary dark:text-accent px-4 py-2 rounded-lg font-bold hover:bg-primary hover:text-white transition-all">View Tour</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Traveler Tips Section -->
+<section class="bg-primary rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -mr-32 -mt-32"></div>
+<div class="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+<div>
+<h3 class="text-3xl font-bold mb-6">Expert Travel Tips: Historical Sites</h3>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="size-12 rounded-xl bg-accent/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-accent">schedule</span>
+</div>
+<div>
+<p class="font-bold text-lg">Book Early Access</p>
+<p class="text-slate-300">The most famous sites get crowded by 10 AM. Look for 'Early Morning' or 'First Entry' tours to enjoy the sites in peace.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="size-12 rounded-xl bg-accent/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-accent">check_circle</span>
+</div>
+<div>
+<p class="font-bold text-lg">Check Dress Codes</p>
+<p class="text-slate-300">Many religious historical sites (like the Vatican or Temples in Egypt) require shoulders and knees to be covered.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="size-12 rounded-xl bg-accent/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-accent">hiking</span>
+</div>
+<div>
+<p class="font-bold text-lg">Wear Proper Shoes</p>
+<p class="text-slate-300">Archaeological sites often have uneven, ancient stones. Sturdy walking shoes are better than sandals.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="hidden md:block">
+<img alt="Traveler Tips" class="rounded-2xl shadow-2xl rotate-3" data-alt="A traveler reading a guidebook near ancient ruins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrlh4G9jzodfEsObcUuV82scQ5bn85840UHZ1h9uqCGr2hyUXMsDoNzdaksoHKZosf5X_vGhoKj3FYgQuxfuTYp8b-aF-Hvs08JMETDfYd8t8G0-a5FjPPGCU3BzspFT15vl-zTheWgp0zPd5XKyWsMKT2vFwl7Q1h4FPvaSKF151Hsg4C_YB4JIL_FXRgvjjEgJyHeF6uL4afYLUaTmNCxa9RUTD5nPeUJLQdOKSCpMy17cVuK9jTJFA4xVD-HcfsZdnrWf6cm66T"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Fixed for Mobile) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-background-dark border-t border-primary/10 px-6 py-2 z-50">
+<div class="max-w-md mx-auto flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-primary dark:text-accent" href="#">
+<span class="material-symbols-outlined active-nav">explore</span>
+<span class="text-[10px] font-bold">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-medium">Saved</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="text-[10px] font-medium">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

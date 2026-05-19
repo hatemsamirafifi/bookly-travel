@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Partner Onboarding - Step 1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex min-h-screen flex-col">
+<!-- Navigation Header -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 md:px-10 lg:px-20 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">handshake</span>
+</div>
+<div>
+<h2 class="text-primary dark:text-slate-100 text-xl font-bold leading-none tracking-tight">Partner Portal</h2>
+<p class="text-xs text-primary/60 dark:text-slate-400 font-medium uppercase tracking-wider">Enterprise Onboarding</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white text-sm font-semibold transition-colors" href="#">Help Center</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white text-sm font-semibold transition-colors" href="#">Documentation</a>
+</nav>
+<div class="h-10 w-10 rounded-full border-2 border-primary/20 bg-primary/10 overflow-hidden" data-alt="Abstract geometric avatar for partner profile">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXM0ZKLKwCa81mtTzs_UM9JAGFnFjGbzvVkz7CKDbPhaRMrzrw18hzgCanplyjnoEdVDg0aLJlTLJoe7BHcUfDApMmjPpmWayeEaMLrDQO28WG6pqtWsA-w8ZsB-1cs9BwegGt5SARRK0oiTkp4vJ-Bxfd1g5B2morT_V2cSxV7R8sAx3HRD40S7WxeX3s-uctLNAOOoRO0Joyb6x2tDfI4HEoueonhdyg71z6BLe8Cdrj30_qhwFRwm0kBxTqNHgZojjoFwDHYUT-"/>
+</div>
+</div>
+</header>
+<main class="flex-grow container mx-auto max-w-5xl px-6 py-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Sidebar Navigation -->
+<aside class="lg:col-span-4 space-y-8">
+<div class="bg-white dark:bg-slate-900/50 p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="mb-8">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Progress</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">25%</span>
+</div>
+<div class="h-2 w-full bg-primary/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 25%;"></div>
+</div>
+</div>
+<nav class="space-y-4">
+<div class="flex items-center gap-4 text-primary group">
+<div class="size-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
+<span class="font-bold text-sm">Company Profile</span>
+<span class="material-symbols-outlined ml-auto text-primary text-sm">arrow_forward_ios</span>
+</div>
+<div class="flex items-center gap-4 text-slate-400 group">
+<div class="size-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-xs font-bold">2</div>
+<span class="font-semibold text-sm">Contact Info</span>
+</div>
+<div class="flex items-center gap-4 text-slate-400 group">
+<div class="size-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-xs font-bold">3</div>
+<span class="font-semibold text-sm">Compliance Details</span>
+</div>
+<div class="flex items-center gap-4 text-slate-400 group">
+<div class="size-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-xs font-bold">4</div>
+<span class="font-semibold text-sm">Final Review</span>
+</div>
+</nav>
+</div>
+<div class="bg-primary p-8 rounded-xl text-white overflow-hidden relative group">
+<div class="relative z-10">
+<h3 class="text-xl font-bold mb-2">Need assistance?</h3>
+<p class="text-primary/70 text-sm mb-4 leading-relaxed">Our partner success team is available 24/7 to help you through the onboarding process.</p>
+<button class="bg-white text-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-lg">support_agent</span>
+                                Chat with Support
+                            </button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-8 -right-8 text-white/5 text-9xl">help_outline</span>
+</div>
+</aside>
+<!-- Form Content Area -->
+<div class="lg:col-span-8">
+<div class="mb-8">
+<h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-3">Welcome, Partner</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Let's start by setting up your company profile to get you verified. This information will be used for your public partner listing.</p>
+</div>
+<form class="space-y-10">
+<section>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">business</span>
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">General Information</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-2">
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Legal Company Name</label>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all" placeholder="e.g. Acme Corp International" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Registration Number</label>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all" placeholder="CRN-00000000" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Year Established</label>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all" placeholder="YYYY" type="number"/>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">language</span>
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Online Presence</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-2">
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Company Website</label>
+<div class="relative">
+<span class="absolute left-4 top-4 text-slate-400">https://</span>
+<input class="w-full pl-16 rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all" placeholder="www.example.com" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">LinkedIn Profile (Optional)</label>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all" placeholder="linkedin.com/company/name" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Twitter/X (Optional)</label>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all" placeholder="@handle" type="text"/>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">description</span>
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Business Bio</h2>
+</div>
+<div>
+<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Brief Description</label>
+<textarea class="w-full rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-primary focus:border-primary p-4 transition-all resize-none" placeholder="Tell us about your company and what you specialize in..." rows="4"></textarea>
+<p class="mt-2 text-xs text-slate-400">Maximum 500 characters. This will be visible to potential customers.</p>
+</div>
+</section>
+<div class="pt-10 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+<button class="px-8 py-4 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all" type="button">
+                                Save for later
+                            </button>
+<button class="px-10 py-4 rounded-xl bg-primary text-white font-bold hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all flex items-center gap-2" type="button">
+                                Continue to Step 2
+                                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<footer class="mt-auto border-t border-slate-200 dark:border-slate-800 py-10 px-6">
+<div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-6">
+<p class="text-sm text-slate-500 dark:text-slate-400">© 2024 Partner Portal. All rights reserved.</p>
+<div class="flex gap-4">
+<a class="text-xs font-bold text-slate-400 hover:text-primary transition-colors uppercase" href="#">Privacy Policy</a>
+<a class="text-xs font-bold text-slate-400 hover:text-primary transition-colors uppercase" href="#">Terms of Service</a>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">System Status: Online</span>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

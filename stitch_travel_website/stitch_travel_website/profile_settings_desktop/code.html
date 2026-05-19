@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Profile &amp; Settings</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between p-6">
+<div class="flex flex-col gap-8">
+<!-- User Profile Mini -->
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Professional headshot of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRp6uUzICmXINCpbpu5SsW0c8pOmTHwgfD2oseKsiX_79BFKB2ibl4yVfskKHsLKNssGlkSzMy4SSJWX39B3jA-aWULHdRB4sCIheMfQBiOiKGHNBYpBrwg5MxQZLuN3EAXqav7iVhVvxOf91W-T3KEGIE7vdC_m9D7fZVbNz3OBZURAU-r7oOmRep3yb4I021G8e_IBOu0-darqazCO5-TTXObM7Tzi4xtBengcaM1eFQcV21ONwOGM_1gLp8rkCMK8ok4QoRSie-"/>
+</div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-sm font-bold leading-tight">Alex Johnson</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Premium Member</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span class="text-sm font-semibold">Personal Info</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">security</span>
+<span class="text-sm font-medium">Security</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-sm font-medium">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Preferences</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="text-sm font-medium">Notifications</span>
+</a>
+</nav>
+</div>
+<button class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold text-sm hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Logout
+            </button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto p-8 lg:p-12">
+<div class="max-w-5xl mx-auto">
+<header class="mb-10">
+<h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Profile &amp; Settings</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-2">Manage your account information and platform preferences.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Personal Info Section -->
+<div class="lg:col-span-8 space-y-8">
+<section class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center gap-2 mb-6 text-primary">
+<span class="material-symbols-outlined">badge</span>
+<h3 class="text-lg font-bold">Personal Information</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">First Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="Alex"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Last Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="Johnson"/>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+<div class="relative">
+<input class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="email" value="alex.johnson@example.com"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-green-500">check_circle</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Security Section -->
+<section class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center gap-2 mb-6 text-primary">
+<span class="material-symbols-outlined">lock</span>
+<h3 class="text-lg font-bold">Login &amp; Security</h3>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-white dark:bg-slate-700 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-slate-500">password</span>
+</div>
+<div>
+<p class="text-sm font-bold">Password</p>
+<p class="text-xs text-slate-500">Last changed 3 months ago</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Update</button>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-white dark:bg-slate-700 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-slate-500">verified_user</span>
+</div>
+<div>
+<p class="text-sm font-bold">Two-Factor Authentication</p>
+<p class="text-xs text-green-600 font-medium">Enabled (SMS)</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Manage</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Side Columns: Payments & Preferences -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Payment Methods -->
+<section class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<h3 class="text-base font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">credit_card</span>
+                                Payment Methods
+                            </h3>
+<div class="space-y-3 mb-4">
+<div class="p-4 border border-primary/20 bg-primary/5 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 bg-slate-900 rounded flex items-center justify-center">
+<div class="flex -space-x-1">
+<div class="size-3 rounded-full bg-red-500"></div>
+<div class="size-3 rounded-full bg-yellow-500"></div>
+</div>
+</div>
+<div class="text-sm font-medium">•••• 4242</div>
+</div>
+<span class="text-[10px] font-bold bg-primary text-white px-2 py-0.5 rounded uppercase">Primary</span>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-700 text-slate-400 text-xs font-bold hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Add New Method
+                            </button>
+</section>
+<!-- Platform Preferences -->
+<section class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<h3 class="text-base font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">tune</span>
+                                Preferences
+                            </h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium">Dark Mode</p>
+<p class="text-[10px] text-slate-500">Auto-switch based on system</p>
+</div>
+<div class="w-10 h-5 bg-primary rounded-full relative cursor-pointer">
+<div class="size-4 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium">Email Marketing</p>
+<p class="text-[10px] text-slate-500">Receive weekly newsletters</p>
+</div>
+<div class="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full relative cursor-pointer">
+<div class="size-4 bg-white rounded-full absolute left-0.5 top-0.5"></div>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+<label class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Display Language</label>
+<select class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-none rounded-lg py-2 focus:ring-1 focus:ring-primary">
+<option>English (US)</option>
+<option>Spanish</option>
+<option>French</option>
+</select>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Footer Actions -->
+<footer class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-4">
+<button class="px-6 py-2.5 rounded-xl font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Discard Changes</button>
+<button class="px-8 py-2.5 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">Save Profile</button>
+</footer>
+</div>
+</main>
+</div>
+</body></html>

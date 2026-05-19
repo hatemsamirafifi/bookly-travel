@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Create New Tour | TourManager Pro</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary dark:text-slate-100">
+<div class="size-6">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">TourManager Pro</h2>
+</div>
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+<div class="text-slate-500 flex border-none bg-slate-100 dark:bg-slate-900 items-center justify-center pl-4 rounded-l-xl">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-0 rounded-r-xl px-4 text-sm" placeholder="Search tours..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary dark:text-slate-100 text-sm font-bold underline underline-offset-4" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary" href="#">Bookings</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary" href="#">Reports</a>
+</nav>
+<div class="flex gap-4">
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all">
+                        Save Tour
+                    </button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200" data-alt="User profile avatar portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC29rwGLHyQKgTSZieyqNOE4BR7iNssgG3R9Bf0yA84O9SLLWcV7Jm6n4jKqUN5UBqkI9c6-FxKaT0mfW8X2aSg-QyZwux4-CXNTVDAKgFgk79gi45ct-_5xfbJTTgr8lP3COkl3qk6horRxVOC0_LNKZcXmgJ-vr1gsiFkRkH8TqQjPTCzmvTuHgpYKT_cQinO5w-GMhJqnWViW12YG4Lu51RECcUuJcPw7xz82II-S85BTuEsIBmpQzX0C-YyqMc3j-xQJk0FjQAj");'></div>
+</div>
+</div>
+</header>
+<main class="flex flex-col items-center">
+<div class="w-full max-w-[1200px] px-6 py-8">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 mb-6">
+<a class="text-slate-500 text-sm font-medium hover:text-primary" href="#">Dashboard</a>
+<span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+<a class="text-slate-500 text-sm font-medium hover:text-primary" href="#">Tours</a>
+<span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100 text-sm font-bold">Create New Tour</span>
+</div>
+<!-- Page Header -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black tracking-tight">Create New Tour</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Define every detail of your unique travel experience.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-slate-50 transition-colors">Preview</button>
+<button class="px-6 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20">Publish Tour</button>
+</div>
+</div>
+<!-- Stepper Navigation -->
+<div class="mb-10 bg-white dark:bg-slate-950 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-2">
+<div class="flex w-full">
+<a class="flex-1 flex flex-col items-center justify-center py-4 border-b-4 border-primary bg-primary/5" href="#">
+<span class="material-symbols-outlined text-primary mb-1">info</span>
+<p class="text-primary text-xs font-bold uppercase tracking-wider">Basic Info</p>
+</a>
+<a class="flex-1 flex flex-col items-center justify-center py-4 border-b-4 border-transparent text-slate-400 hover:text-slate-600 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">gallery_thumbnail</span>
+<p class="text-xs font-bold uppercase tracking-wider">Media &amp; Gallery</p>
+</a>
+<a class="flex-1 flex flex-col items-center justify-center py-4 border-b-4 border-transparent text-slate-400 hover:text-slate-600 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">local_shipping</span>
+<p class="text-xs font-bold uppercase tracking-wider">Logistics</p>
+</a>
+<a class="flex-1 flex flex-col items-center justify-center py-4 border-b-4 border-transparent text-slate-400 hover:text-slate-600 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">calendar_today</span>
+<p class="text-xs font-bold uppercase tracking-wider">Itinerary</p>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Form Content (Left 2/3) -->
+<div class="lg:col-span-2 flex flex-col gap-8">
+<!-- Basic Information Section -->
+<section class="bg-white dark:bg-slate-950 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">description</span>
+                                Basic Information
+                            </h2>
+<div class="grid grid-cols-1 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Tour Title</label>
+<input class="form-input w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:border-primary focus:ring-primary" placeholder="e.g. 7-Day Swiss Alps Adventure" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Short Description</label>
+<textarea class="form-input w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:border-primary focus:ring-primary" placeholder="A brief summary to catch travelers' attention..." rows="3"></textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Category</label>
+<select class="form-select w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:border-primary focus:ring-primary">
+<option>Adventure</option>
+<option>Cultural</option>
+<option>Luxury</option>
+<option>Eco-Tour</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Base Price (USD)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+<input class="form-input w-full pl-8 rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900 focus:border-primary focus:ring-primary" placeholder="0.00" type="number"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Media Section -->
+<section class="bg-white dark:bg-slate-950 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">image</span>
+                                Media &amp; Gallery
+                            </h2>
+<div class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-10 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900/50">
+<span class="material-symbols-outlined text-4xl text-slate-400 mb-4">cloud_upload</span>
+<p class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Drop images here or click to upload</p>
+<p class="text-xs text-slate-500">JPG, PNG or WEBP (Max 5MB each)</p>
+<button class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold hover:bg-slate-50 transition-colors">Select Files</button>
+</div>
+<div class="grid grid-cols-4 gap-4 mt-6">
+<div class="aspect-square rounded-lg bg-slate-100 relative group overflow-hidden border border-slate-200">
+<img class="w-full h-full object-cover" data-alt="Landscape mountain scenic photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH3gAWb7bpzjGZps8VAKFvFcB6k04XwGwnXkO4OAQlxeG9AenwmC8ADeb3ZvIMQrhQhblf5XUdgPSEMZmHiRpHoF_E1Ww1N7zjf5BsZ1y0RmWjR1qgToXjLG8szxY4u8AlX7Q12ClV2onMuGtAxYjDsqB3q99JNBbwdFmTDAAKpw6JDbiHTsJ9TRxkw4YykEIOYagbr-fcd-MTRHoT2ovmAi18wWpwoNPTdOT0BFLLBBH3d4SAcbqvvieimjToJhaUrrffZjNtsT-E"/>
+<button class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-xs">delete</span></button>
+</div>
+<div class="aspect-square rounded-lg bg-slate-100 relative group overflow-hidden border border-slate-200">
+<img class="w-full h-full object-cover" data-alt="Snowy mountain peaks scenery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMr6EYkEgQxbws_csm_7HddMQPSS410NPeBoqBbemT9Ei9kv7_cNr-U5lbNd6YvmpQMa25VvGA2pqmUeoMoC0VuLWMBB91U0zKk3U-0ae6Xby8sg0sSZXiT4CAVlNNjMDEW8NY7Dxu2CwRCfK-QMu_JJR4HTIpNpnMrlSl8V99cFh4D8gm7y7vLGBCEjOPtOjYZ62jsfUOTcarVoLf8wpg6ayLfXz_DGXiyfU8_Er4C1UKkqXzBAuaMMtA5gWAXRzrB__NTsWdOdpv"/>
+<button class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-xs">delete</span></button>
+</div>
+<div class="aspect-square rounded-lg border-2 border-dotted border-slate-300 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-300">add_circle</span>
+</div>
+</div>
+</section>
+<!-- Timeline Itinerary Section -->
+<section class="bg-white dark:bg-slate-950 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">route</span>
+                                    Daily Itinerary
+                                </h2>
+<button class="flex items-center gap-2 text-primary font-bold text-sm">
+<span class="material-symbols-outlined text-sm">add</span> Add Day
+                                </button>
+</div>
+<div class="space-y-8 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100 dark:before:bg-slate-800">
+<!-- Day 1 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 size-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm z-10">1</div>
+<div class="flex flex-col gap-4 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-background-light dark:bg-slate-900/50">
+<div class="flex flex-wrap gap-4 items-center justify-between">
+<input class="font-bold text-lg bg-transparent border-none p-0 focus:ring-0 w-2/3" type="text" value="Arrival &amp; Welcome Dinner"/>
+<span class="text-xs font-medium px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-400">Zurich, Switzerland</span>
+</div>
+<textarea class="form-input w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900 text-sm" placeholder="Describe the day's activities..." rows="2"></textarea>
+<div class="flex gap-4">
+<div class="flex items-center gap-1 text-slate-500 text-xs">
+<span class="material-symbols-outlined text-sm">restaurant</span>
+                                                Dinner Incl.
+                                            </div>
+<div class="flex items-center gap-1 text-slate-500 text-xs">
+<span class="material-symbols-outlined text-sm">hotel</span>
+                                                Boutique Hotel
+                                            </div>
+</div>
+</div>
+</div>
+<!-- Day 2 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 size-9 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold text-sm z-10">2</div>
+<div class="flex flex-col gap-4 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex flex-wrap gap-4 items-center justify-between">
+<input class="font-bold text-lg bg-transparent border-none p-0 focus:ring-0 w-2/3" placeholder="Enter Day 2 Title..." type="text"/>
+<span class="material-symbols-outlined text-slate-300">location_on</span>
+</div>
+<button class="flex items-center justify-center border-2 border-dashed border-slate-200 py-4 rounded-lg text-slate-400 text-sm font-medium hover:bg-slate-50 transition-all">
+                                            + Add activity details
+                                        </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar (Right 1/3) -->
+<div class="flex flex-col gap-8">
+<!-- Logistics Quick Settings -->
+<section class="bg-white dark:bg-slate-950 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-8">
+<h3 class="text-lg font-bold mb-5 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">settings</span>
+                                Tour Logistics
+                            </h3>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase text-slate-500 tracking-wider">Duration</label>
+<div class="flex items-center gap-3">
+<input class="form-input w-20 rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900" type="number" value="7"/>
+<span class="text-sm text-slate-600">Days</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase text-slate-500 tracking-wider">Max Group Size</label>
+<input class="form-input w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900" type="number" value="12"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase text-slate-500 tracking-wider">Starting Location</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-sm">location_on</span>
+<input class="form-input w-full pl-9 rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-900 text-sm" type="text" value="Zurich Intl. Airport"/>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Instant Booking</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Show Map Itinerary</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Map Preview -->
+<section class="bg-white dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<h3 class="text-sm font-bold mb-3 uppercase text-slate-500 tracking-wider">Route Preview</h3>
+<div class="aspect-video w-full rounded-lg bg-slate-100 dark:bg-slate-900 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-80" data-alt="Abstract topographic map vector illustration" data-location="Zurich" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4B28PLwi3KGJfbrLRORb31Y_Atr4c2xgrwR0mNAWcdzISPKh6NCxHVRe3pCBsnR2qMJtG_yp4nXFMi75Cf-dopBfiYz6_SkbqDZTvx83Dbe-lO-Rk8IbFKXfqQeMegNx5lpYRW0rEz8k8VijMoRsFNPBTr4tmIKJlhDDfIDmSg_yW2jlbmPU8_jRDLx8mP2fF4GVEAR7UO1by_LEKshd5TAY6sD78OtW17_Y8CIhTNdy3nctV94mqdbdRoq09ktiAGnPetSD2Z1ip"/>
+</div>
+<button class="w-full mt-3 py-2 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">Edit Route on Map</button>
+</section>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="mt-12 mb-20 flex justify-between items-center py-6 border-t border-slate-200 dark:border-slate-800">
+<button class="flex items-center gap-2 text-red-500 font-bold text-sm">
+<span class="material-symbols-outlined text-sm">delete</span>
+                        Discard Draft
+                    </button>
+<div class="flex gap-4">
+<button class="px-8 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-base hover:bg-white transition-all">Save as Draft</button>
+<button class="px-8 py-3 rounded-xl bg-primary text-white font-bold text-base shadow-xl shadow-primary/30 hover:scale-[1.02] transition-transform">Continue to Logistics</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

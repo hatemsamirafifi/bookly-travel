@@ -16,11 +16,6 @@ function openModal(modal) {
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
 
-  if (!firstElement || !lastElement) {
-    modal.focus();
-    return;
-  }
-
   modal.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       if (e.shiftKey && document.activeElement === firstElement) {
@@ -32,7 +27,7 @@ function openModal(modal) {
       }
     }
     if (e.key === 'Escape') {
-      closeModal(modal);
+      closeModal();
     }
   });
 
@@ -101,13 +96,10 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
     firstError.focus();
 
-    const errors = form.querySelectorAll('[aria-invalid="true"]');
     const errorSummary = document.getElementById('error-summary');
-    if (errorSummary) {
-      errorSummary.textContent =
-        `${errors.length} errors found. Please fix them and try again.`;
-      errorSummary.focus();
-    }
+    errorSummary.textContent =
+      `${errors.length} errors found. Please fix them and try again.`;
+    errorSummary.focus();
   }
 });
 ```
@@ -203,12 +195,12 @@ Use `aria-live` to announce dynamic content changes to screen readers without mo
 
 ```html
 <!-- Status updates (polite — waits for pause in speech) -->
-<div aria-live="polite" aria-atomic="true" class="status" id="polite-announcer">
+<div aria-live="polite" aria-atomic="true" class="status">
   <!-- Content updates announced to screen readers -->
 </div>
 
 <!-- Urgent alerts (assertive — interrupts) -->
-<div role="alert" aria-live="assertive" id="assertive-announcer">
+<div role="alert" aria-live="assertive">
   <!-- Interrupts current announcement -->
 </div>
 ```
@@ -216,9 +208,6 @@ Use `aria-live` to announce dynamic content changes to screen readers without mo
 ```javascript
 function showNotification(message, type = 'polite') {
   const container = document.getElementById(`${type}-announcer`);
-  if (!container) {
-    return;
-  }
   container.textContent = '';
   requestAnimationFrame(() => {
     container.textContent = message;

@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-05-15T20:45:53.036Z",
+  "mode": "headless",
+  "workerType": "audit",
+  "model": "haiku",
+  "durationMs": 202926,
+  "executionId": "audit_1778877750110_n29p2n",
+  "success": false,
+  "findings": {
+    "parseError": true,
+    "rawOutput": "API Error: Request rejected (429) · you (goochrom312) have reached your session usage limit, upgrade for higher limits: https://ollama.com/upgrade (ref: 86fdfec0-44b6-4381-89a3-eed3a39cff35)\n"
+  },
+  "rawOutputPreview": "API Error: Request rejected (429) · you (goochrom312) have reached your session usage limit, upgrade for higher limits: https://ollama.com/upgrade (ref: 86fdfec0-44b6-4381-89a3-eed3a39cff35)\n",
+  "rawOutputLength": 191
+}

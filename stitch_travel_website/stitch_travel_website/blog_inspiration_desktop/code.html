@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>Inspirate - Blog &amp; Inspiration</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-6 md:px-20 lg:px-40 py-4 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary dark:text-slate-100">
+<div class="size-8 flex items-center justify-center bg-primary text-white rounded-lg">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">Inspirate</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white text-sm font-medium transition-colors" href="#">Blog</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white text-sm font-medium transition-colors" href="#">Inspiration</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white text-sm font-medium transition-colors" href="#">Categories</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white text-sm font-medium transition-colors" href="#">About</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-primary/5 dark:bg-white/5 border border-transparent focus-within:border-primary/20">
+<div class="text-slate-400 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-slate-900 dark:text-slate-100 focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-400 px-4 pl-2 text-sm" placeholder="Search articles..." value=""/>
+</div>
+</label>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-xl h-10 px-5 bg-primary text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95">
+<span>Subscribe</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/10 shadow-sm" data-alt="User profile avatar placeholder image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAJbWk73abc3DmRCeWKE4WQ6RtZzA_vyu4AY2s0W_ljc_qyr8_2KINvvwKfxbH6VlGDWW5_P3Si6-7K-0sMTMlZ2eQ327m-ygaUp9e6lafsxwYPXhi4FTOZ79KdjxwkiKBKVmjhRpGbzNVNtED7nDFMehtu4Nk74yFH75YdhLrTB74c45V-lE8iErtK5IY-1QcHEs0Hn55TKJs6WzFiZASQZSI0ayd-RdSpKzSxpAA5K3eivhZ9sjdsj8Cew7Od2GjDLYS4dk-u0IPo");'></div>
+</div>
+</header>
+<main class="flex-1 max-w-[1280px] mx-auto w-full px-6 md:px-20 lg:px-40 py-10">
+<!-- Featured Hero Section -->
+<section class="mb-16">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+<div class="w-full bg-center bg-no-repeat aspect-[16/10] bg-cover rounded-xl shadow-2xl overflow-hidden" data-alt="Minimalist modern living room with natural lighting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKDo0VjkYy4b4h9LK97U4imJYXnSMKf4aRdjh0sl4a_PMEIeXjS5ZPgyZ19iTiHEUof6C69tjnuuuKE8TEJ4H2SXOdqn-anVemJVWT62vzgaNxjPE5_zkDoaGJelCaxNBsj6RU3-aor9i-msnCUSl_ksnVjxF3q1d8RETdpdi7cONH9RJY2uViWcjGqiucayGc79clbfEfw-NXGimBdSl24Ll-grR_iBinaQJV2VvhwsQhE83kxTfGsJlOVj7jz8NTFoD3gUZdk7vs");'>
+</div>
+<div class="flex flex-col gap-6">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary dark:text-slate-100 text-xs font-bold uppercase tracking-wider w-fit">
+                                Featured Article
+                            </div>
+<div class="flex flex-col gap-4">
+<h1 class="text-slate-900 dark:text-white text-4xl lg:text-5xl font-black leading-tight tracking-tight">
+                                    The Future of Minimalist Interior Design
+                                </h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                    Discover how the 'less is more' philosophy is evolving in the modern era with sustainable materials, smart technology integration, and biophilic elements.
+                                </p>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-200" data-alt="Author profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzYx1Ko8P_Iyx52_FtLx-0BWyNzFqugcmkTzY3CADppNgfHQW3ZS32j2X05bjzUMWu6TBodofO85--rBa77dKbmWK4kzS-dBs57bbNpxpz2dhSWjFw6jpsxuNFJ8OZH-qATMIEzFy2nmTTyylToF3iN2xMg4_cA8R-jOsBFH07eg2DvS9RCBDyCw7n9JJg9cLo5H2fK96qL7FSDZpcCfPXAKv4jf1VPGLSwJdz_W5_6RzJtKspvaU5lVQPo7TF1T7gqIWXmfaDQt0A');"></div>
+<div>
+<p class="text-sm font-bold">Elena Vance</p>
+<p class="text-xs text-slate-500">Design Architect • 8 min read</p>
+</div>
+</div>
+<button class="flex w-fit cursor-pointer items-center justify-center rounded-xl h-12 px-8 bg-primary text-white text-base font-bold transition-all hover:shadow-lg hover:-translate-y-0.5">
+                                Read Full Story
+                            </button>
+</div>
+</div>
+</section>
+<!-- Category Filters -->
+<section class="mb-12">
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">grid_view</span>
+                        Explore Categories
+                    </h2>
+<div class="flex gap-3 flex-wrap">
+<button class="px-6 py-2 rounded-xl bg-primary text-white font-medium text-sm transition-all shadow-md">All Stories</button>
+<button class="px-6 py-2 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 text-slate-700 dark:text-slate-300 font-medium text-sm transition-all">Interior Design</button>
+<button class="px-6 py-2 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 text-slate-700 dark:text-slate-300 font-medium text-sm transition-all">Architecture</button>
+<button class="px-6 py-2 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 text-slate-700 dark:text-slate-300 font-medium text-sm transition-all">Sustainable Tech</button>
+<button class="px-6 py-2 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 text-slate-700 dark:text-slate-300 font-medium text-sm transition-all">Travel</button>
+<button class="px-6 py-2 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 text-slate-700 dark:text-slate-300 font-medium text-sm transition-all">Lifestyle</button>
+</div>
+</section>
+<!-- Latest Stories Grid -->
+<section class="mb-20">
+<div class="flex justify-between items-end mb-8">
+<h2 class="text-2xl font-bold">Latest Stories</h2>
+<a class="text-primary dark:text-slate-300 text-sm font-bold flex items-center gap-1 hover:underline underline-offset-4" href="#">
+                            View all articles <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group flex flex-col gap-4 bg-white dark:bg-white/5 rounded-2xl p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+<div class="aspect-[16/10] overflow-hidden rounded-xl">
+<img alt="Abstract blue wall decor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Modern abstract wall art in a blue themed room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZw2UjL0LR7Zs4suY9cF5a7Ef-jXUer3hRbPPiP5J7AbXf3n9kn4gTaTXi7h_HmEuwWTnYKtYRRtPiBBobt120fkzXNIV_aDphlzUeea2QIXwNnJiiMweS177U06mBj48OHK7Vgj99bL6hTbUL-3SBMiBjkFSXhvhAbaNZfcUWYlmdCJVDy2hiEggTRWyFIcS6pYqVE9gtYWSp5C_eqbs1AGz1vwWL05eSWvghw3AG8Aex-1GuIRZJSA_82g6gaRdUSWs8bkBGNyM5"/>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs font-bold text-primary dark:text-slate-300 uppercase">Sustainability</span>
+<h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors">Eco-Friendly Materials for 2024</h3>
+<p class="text-sm text-slate-500 line-clamp-2">How recycled polymers and bio-concretes are changing the way we build our homes.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+<span class="text-xs text-slate-400">Mar 12, 2024 • 5 min read</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col gap-4 bg-white dark:bg-white/5 rounded-2xl p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+<div class="aspect-[16/10] overflow-hidden rounded-xl">
+<img alt="Modern office space" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Bright and open modern office space design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcpZA8MZccKpMBfej498Q3HNP6gSGXp23nHky4BbtCMOcwgdfyeRTCYx4Kq0X9tfVpE0vKUSOHatSNS7RHXRQYTtvX8u28UFYG8nHaLpGxbXW0sYUYSghAGUymKD_On7ijf1uD0akgeapt3hBjxdO5QZ-b53f0uO5O4FYIsx8Njcc9PPCQjvqIVMJWNYCkaiJdStyGvOrjREkLUgL4GV8NyGyKmimutyun5gSTOvr3AQDaO0aIZkbgFmCqAn8CXtWXVtgI5QcQftm-"/>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs font-bold text-primary dark:text-slate-300 uppercase">Architecture</span>
+<h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors">The Resurgence of brutalism</h3>
+<p class="text-sm text-slate-500 line-clamp-2">Why architects are returning to raw concrete and honest structural forms.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+<span class="text-xs text-slate-400">Mar 10, 2024 • 12 min read</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col gap-4 bg-white dark:bg-white/5 rounded-2xl p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+<div class="aspect-[16/10] overflow-hidden rounded-xl">
+<img alt="Traveler with backpack" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Solo traveler overlooking a misty mountain range" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5MvzhZql9qLznGefj5iegxXDP_phIO62eBcpZ2GP-jBW2ZXTCpvTOvPTRX0fR2MNQ_NdOS6pImiIPPoJPxPYqxUOYGg_WPaVjUtTpVGgLQU90G_JmJcAjvDfcGmFGAV5ccQnYJzx-6LQkA2LZDnz13U2HgHO2N0bUmRfAlSKbJuPAZT5gyRsp_cXtyOYddjYUTUBlzc2ynou83aL76ytnEar2khTq1grWiGftwbANgsuBy5TA2dAl2LPr5LAPRZxWR302ovjIlE1S"/>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs font-bold text-primary dark:text-slate-300 uppercase">Travel</span>
+<h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors">Remote Living in Scandinavia</h3>
+<p class="text-sm text-slate-500 line-clamp-2">A photographic journey through the isolated cabins of the Norwegian fjords.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+<span class="text-xs text-slate-400">Mar 08, 2024 • 15 min read</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col gap-4 bg-white dark:bg-white/5 rounded-2xl p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+<div class="aspect-[16/10] overflow-hidden rounded-xl">
+<img alt="Cozy reading nook" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Small cozy library space with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpqufxz25nhIn7Ic8VzV9lGnflJz3xbSdft4XMdoYksJHCNypoZZ54T0OVCO-HL7HXVFCQjhyumqcn3MemuIZH1J_qKfAt0dFuHskD5jejqGBB2gG_F0TarR8XtK-tVpfg0uYOEFDHZ0UbEkbTpgh3Ln2TQSvOLGXxbWiizKqzPWf9weTqIlgcFUd5LIHg-8if2NFuYvmNaP5ADF-BiBKRt74np9CQ9tYoTk7b5qdvT0sUxF-aigIJvXJtv_0qxvTs6rBj6-ZDm4To"/>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs font-bold text-primary dark:text-slate-300 uppercase">Lifestyle</span>
+<h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors">Small Space, Big Impact</h3>
+<p class="text-sm text-slate-500 line-clamp-2">Creative ways to make your studio apartment feel like a luxury penthouse.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+<span class="text-xs text-slate-400">Mar 05, 2024 • 7 min read</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group flex flex-col gap-4 bg-white dark:bg-white/5 rounded-2xl p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+<div class="aspect-[16/10] overflow-hidden rounded-xl">
+<img alt="Modern kitchen" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Smart kitchen with integrated digital control systems" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjpqsw9HH8GC1RhAt6N-L9AJvEv-WpxwxkaYGlB0G_B62BNs_nYfL9Zdbnyq8cHy5z7mJN-B4Yz9opvJ1TyKABc9cXvrgnKNbvzXgMQl1Hv8yaKRDAT6HcK6PAw9N4bk8lFnb8X9hN0xl7Ww64k4cFQTdHh6_A-LsbCgXeaC9lNWuDNosqb588S0R7jjKqP6TLLrjwAdKi3jo35H5IoX4Bs78TQMR7jWn0PgyG3IWjmhJiKsGeXHc_wdyqcinu-jNBC-Fe_yFVgynq"/>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs font-bold text-primary dark:text-slate-300 uppercase">Sustainable Tech</span>
+<h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors">Smart Homes for Smart Saving</h3>
+<p class="text-sm text-slate-500 line-clamp-2">Integrating IoT devices to reduce energy consumption by up to 40% annually.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+<span class="text-xs text-slate-400">Mar 01, 2024 • 10 min read</span>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group flex flex-col gap-4 bg-white dark:bg-white/5 rounded-2xl p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+<div class="aspect-[16/10] overflow-hidden rounded-xl">
+<img alt="Plant in window" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Biophilic design elements with plants in architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChozkCr-Zguj9oVbFs93ZTEQB-ncBQOAsEI8SYqgLnlXU4-MIFgwQ8CSc8-eBm6mFV_7qNaOfk1Fznk6DrX6AIiXjcZFJRrf5BwyE2xq228j-BjxovODuMTFHKGJa8_UQFce_QnyQrGHVWjh7VVelNVcWeMh1X8wSjbwEtdsDLd7wX01c09pKgEhE2FwQpfVaCybtAVQaSB82OwmoQT5UJhu3I8xLVWSS4t5Td6ICDyWEUPg2MG873Rf6cBE_TZCDvJil3fXZQcZGz"/>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-xs font-bold text-primary dark:text-slate-300 uppercase">Interior Design</span>
+<h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors">The Biophilic Revolution</h3>
+<p class="text-sm text-slate-500 line-clamp-2">Bringing nature indoors to improve mental health and productivity in the workspace.</p>
+</div>
+<div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+<span class="text-xs text-slate-400">Feb 28, 2024 • 6 min read</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter Signup Section -->
+<section class="bg-primary rounded-3xl p-8 md:p-16 text-white relative overflow-hidden">
+<div class="relative z-10 flex flex-col lg:flex-row items-center gap-10">
+<div class="flex-1 space-y-6">
+<h2 class="text-4xl md:text-5xl font-black leading-tight">Get your weekly dose of inspiration.</h2>
+<p class="text-lg text-slate-300">Join 50,000+ subscribers who receive our curated selection of design, architecture, and lifestyle stories every Tuesday.</p>
+</div>
+<div class="w-full lg:w-auto flex-1 max-w-md">
+<form class="flex flex-col gap-4">
+<div class="relative">
+<input class="w-full bg-white/10 border-white/20 rounded-xl py-4 px-6 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-white/50 focus:border-transparent outline-none" placeholder="Enter your email address" type="email"/>
+</div>
+<button class="w-full bg-white text-primary font-bold py-4 rounded-xl hover:bg-slate-100 transition-all flex items-center justify-center gap-2" type="submit">
+                                    Subscribe Now
+                                    <span class="material-symbols-outlined">send</span>
+</button>
+<p class="text-xs text-center text-slate-400">No spam, just quality inspiration. Unsubscribe anytime.</p>
+</form>
+</div>
+</div>
+<!-- Decorative Circle Gradients -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -ml-32 -mb-32 blur-3xl"></div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-background-dark border-t border-slate-200 dark:border-white/10 py-12 px-6 md:px-20 lg:px-40">
+<div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1 flex flex-col gap-4">
+<div class="flex items-center gap-2 text-primary dark:text-slate-100">
+<div class="size-6 flex items-center justify-center bg-primary text-white rounded">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+</div>
+<span class="text-lg font-bold">Inspirate</span>
+</div>
+<p class="text-sm text-slate-500 leading-relaxed">Defining the aesthetics of tomorrow through deep dives into design, architecture, and technology.</p>
+<div class="flex gap-4 pt-2">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">language</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Explore</h4>
+<ul class="space-y-3 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Latest Stories</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Popular Categories</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Author Interviews</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Trend Reports</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Support</h4>
+<ul class="space-y-3 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Use</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Community</h4>
+<ul class="space-y-3 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Newsletter</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Discord Server</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Events</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Submit a Story</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-[1280px] mx-auto mt-12 pt-8 border-t border-slate-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 uppercase tracking-widest">
+<p>© 2024 Inspirate Magazine. All rights reserved.</p>
+<div class="flex gap-6">
+<span>Designed for the curious</span>
+<span>Built with Tailwind</span>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

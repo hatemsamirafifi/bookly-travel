@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>AdventureTours - Tour Detail Page</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 lg:px-20 py-3">
+<div class="mx-auto flex max-w-7xl items-center justify-between gap-8">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary dark:text-slate-100">
+<span class="material-symbols-outlined text-3xl">explore</span>
+<h2 class="text-xl font-bold leading-tight tracking-tight">AdventureTours</h2>
+</div>
+<div class="hidden md:flex flex-1 items-center">
+<label class="relative flex w-full max-w-sm">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+<span class="material-symbols-outlined text-xl">search</span>
+</span>
+<input class="w-full rounded-xl border-none bg-primary/5 py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search destinations..." type="text"/>
+</label>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Activities</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Deals</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex h-10 items-center justify-center rounded-xl bg-primary px-6 text-sm font-bold text-white transition-opacity hover:opacity-90">
+                            Sign Up
+                        </button>
+<div class="h-10 w-10 overflow-hidden rounded-full bg-primary/10 ring-2 ring-primary/5">
+<img class="h-full w-full object-cover" data-alt="User profile avatar smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4gp3Ft3WLDMhMIAO3oqrhDHGZo8zqYUMVC4EbJ_mwY506uTJocpH8ZxTmMj7wNNuEyb6YgR3LWT54I8MEqX4ww_V-m2IUPimI_iSd01MOCslG4ub4655lnSVia1kyd1UMsiSH2YGVFE1gkKRPrYUlMC7lrlc8wp0-uZYQBROZrS6JQRgKck_TrTcHVBvO4a5v0J7_UAKZqWoRfzszzv3lxjRCECjR4H2NuhDwxK3-wA7uEpEbPI0dSnKR5QbAZtw8cxihvRxGAZVv"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="mx-auto w-full max-w-7xl px-6 lg:px-20 py-8">
+<!-- Breadcrumbs -->
+<nav class="mb-6 flex items-center gap-2 text-sm font-medium text-slate-500">
+<a class="hover:text-primary" href="#">Home</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-primary" href="#">Europe</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100">Colosseum &amp; Roman Forum Tour</span>
+</nav>
+<!-- Title Section -->
+<div class="mb-8">
+<h1 class="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100 md:text-5xl">
+                    Colosseum &amp; Roman Forum Express Tour
+                </h1>
+<div class="mt-4 flex flex-wrap items-center gap-4 text-slate-600 dark:text-slate-400">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 fill-1">star</span>
+<span class="font-bold text-slate-900 dark:text-slate-100">4.9</span>
+<span>(1,248 reviews)</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span>Rome, Italy</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span>3 Hours</span>
+</div>
+</div>
+</div>
+<!-- Image Gallery Grid -->
+<div class="mb-12 grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[500px]">
+<div class="md:col-span-2 md:row-span-2 overflow-hidden rounded-xl bg-slate-200">
+<img class="h-full w-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Grand view of the Roman Colosseum at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoLpUDcU8Gp_kXuvVGjLPlCy8CFX53vOJXOQ4_NDCKfoSGgVUpS28NnrVykrAeIu5tfsT1wWdkke2rZZFX95t63HYj2TK6Zb43l9DwT0OzoNvDWhdAOOaF4jLFd70mw3KNWRuTrJpN-IEf68UFC_siaFlaxr-xoYjGTjm5EX0sZbLcpXRHDHck9k8QFfIJYrJGGU3xQGjaWjQuYvd-k6HNwJChtBKtjj0lWAfK93Dk4jnek84HGwSIlJaWmpcNYYjqKZRBZLfjTbQF"/>
+</div>
+<div class="hidden md:block overflow-hidden rounded-xl bg-slate-200">
+<img class="h-full w-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Detailed view of Roman Forum ruins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXyg1JTT_K3manPTcsG1rZ6RVDM1dljKCwpJKUcA_dMVKZ4QLyFxe0riN74_YnL25tOqMKDIP6WfovLCgUmpnY_gR1nnJBTsjJwQxBRXu9Z2b9ofLfxbbI3SPS2_JStE6cQLnQeRvMO-IwFppJ9FehSYGJc5cnu_sblIx2ZwDl8FOroexOg67-xtwkCRYPCmNnsFZNq03ZDexrdW9uR9kOdlOJ9Fjs1FVHLbPpXKy5M8ydDJfks8GwjPNbhUYjxxt5gPfypRuR4dty"/>
+</div>
+<div class="hidden md:block overflow-hidden rounded-xl bg-slate-200">
+<img class="h-full w-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Ancient stone arches inside the Colosseum" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeVzPYeBh1A12kfCFld1GZpxIiImwWvgoeqNPAuSZwTE9yumqQSNdXzH1Ay1VrZTTM22Fkdb1WyoCII9qCYi4Zd6nnpnmEqyNFn8s_ABKsoOmaioG6ZvN5OUPSujvh_p8g-MWJlFqZcvykAcZi39bAQRU2V6BzFRqIQf87v_S3wM9yN0Ty8nqyprcO4TqqoT_BkR4xxjkM0LJQhZjpjJ0epXokU7Tr0pG0nbISuY94qBXeDOoKM4XNf-GPBNswNfimHuZuTJ6LH4Ul"/>
+</div>
+<div class="hidden md:block overflow-hidden rounded-xl bg-slate-200">
+<img class="h-full w-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Aerial view of Rome city skyline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDurtOmtzyodq9vWQnXK1Oi0a1ZOs92vNGGKAjuEGSX4Hb9lK-d4Qko1HXDGq-abG7rmVIt_Sm9zJnyP1YTvCbgZyl0fH2U9o721lxDzP8Gso9nlMulllPdpqv78toFZ8r3YHES-fPbPZlyCUPd1armI-6i4KUWQ7JuKB5xYg8bgtC5_RCa6FNXG8eGtkpmF6cXDG-L1qiSillbQjqDIjfluZGZyDa-8pzueHMKfxgOKDeN5TwQKyjzgzgsospLeTReQpGwOCNPDiwP"/>
+</div>
+<div class="hidden md:block relative overflow-hidden rounded-xl bg-slate-200">
+<img class="h-full w-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Cobblestone street in historic Rome" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjTAhRp1eEi54K93M-F984QiLeUo3lcG55MZChScot7dLobzC2CyMtV9dbje5iZ7vBCg4pgXeK1jkGqNKcuuNNqf_bVApVLmNgs4BATlLYx9x9PVwqwwHQ8mMOfddHPkadV7J01P5faeiVuVuzGemvccBLdv_y7eJR8FRsaMNRTpPkOnuZeQtHdpWmTX_3a5DB6olyTmDotCBYi3Qngf9T2qxbpvakwj4hjSLZRJ-R8x8N9euFwt4RMMrYXGfeJkCojFTVeAYW68MN"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-bold text-lg pointer-events-none">
+                        +12 Photos
+                    </div>
+</div>
+</div>
+<!-- Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<!-- Left Column: Details -->
+<div class="lg:col-span-2 space-y-12">
+<!-- Overview -->
+<section id="overview">
+<h3 class="text-2xl font-bold mb-4">Tour Overview</h3>
+<p class="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                            Skip the long lines and step back in time on this express tour of Rome’s most iconic landmarks. Your expert guide will bring history to life as you explore the colossal arena of the Colosseum and the political heart of ancient Rome at the Roman Forum. Perfect for those who want a comprehensive look at history without spending the entire day.
+                        </p>
+</section>
+<!-- Highlights -->
+<section id="highlights">
+<h3 class="text-2xl font-bold mb-6">Highlights</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="flex items-start gap-3 p-4 rounded-xl bg-primary/5">
+<span class="material-symbols-outlined text-primary">speed</span>
+<div>
+<p class="font-bold">Skip-the-line Entry</p>
+<p class="text-sm text-slate-500">Fast-track access to all sites</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 rounded-xl bg-primary/5">
+<span class="material-symbols-outlined text-primary">groups</span>
+<div>
+<p class="font-bold">Expert Local Guide</p>
+<p class="text-sm text-slate-500">English speaking archaeology specialist</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 rounded-xl bg-primary/5">
+<span class="material-symbols-outlined text-primary">museum</span>
+<div>
+<p class="font-bold">Colosseum Access</p>
+<p class="text-sm text-slate-500">Explore first and second tiers</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 rounded-xl bg-primary/5">
+<span class="material-symbols-outlined text-primary">history_edu</span>
+<div>
+<p class="font-bold">Roman Forum &amp; Hill</p>
+<p class="text-sm text-slate-500">Full tour of the ancient civic center</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Itinerary -->
+<section id="itinerary">
+<h3 class="text-2xl font-bold mb-6">Itinerary</h3>
+<div class="space-y-6 border-l-2 border-primary/20 ml-3 pl-8 relative">
+<div class="relative">
+<div class="absolute -left-11 top-0 h-6 w-6 rounded-full bg-primary ring-4 ring-white dark:ring-background-dark"></div>
+<h4 class="font-bold text-lg">Meeting Point Check-in</h4>
+<p class="text-slate-600 dark:text-slate-400">Arrive 15 minutes early at the Arch of Constantine to meet your guide and receive your skip-the-line tickets.</p>
+</div>
+<div class="relative">
+<div class="absolute -left-11 top-0 h-6 w-6 rounded-full bg-primary ring-4 ring-white dark:ring-background-dark"></div>
+<h4 class="font-bold text-lg">Colosseum Deep Dive</h4>
+<p class="text-slate-600 dark:text-slate-400">Enter the Flavian Amphitheatre. Learn about gladiatorial combat, naval battles, and the engineering marvels of the 1st century AD.</p>
+</div>
+<div class="relative">
+<div class="absolute -left-11 top-0 h-6 w-6 rounded-full bg-primary ring-4 ring-white dark:ring-background-dark"></div>
+<h4 class="font-bold text-lg">Roman Forum Walkthrough</h4>
+<p class="text-slate-600 dark:text-slate-400">Explore the center of Roman public life. See the Temple of Vesta, the Curia, and the Arch of Septimius Severus.</p>
+</div>
+<div class="relative">
+<div class="absolute -left-11 top-0 h-6 w-6 rounded-full bg-primary ring-4 ring-white dark:ring-background-dark"></div>
+<h4 class="font-bold text-lg">Palatine Hill Finale</h4>
+<p class="text-slate-600 dark:text-slate-400">Ascend the hill where Rome was founded. Enjoy panoramic views of the city and the Imperial Palaces.</p>
+</div>
+</div>
+</section>
+<!-- Inclusions / Exclusions -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8" id="inclusions">
+<div>
+<h3 class="text-xl font-bold mb-4">What's Included</h3>
+<ul class="space-y-3">
+<li class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+                                    Skip-the-line admission fees
+                                </li>
+<li class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+                                    Professional archaeology guide
+                                </li>
+<li class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+                                    Headsets to hear the guide clearly
+                                </li>
+</ul>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-4">What's Not Included</h3>
+<ul class="space-y-3">
+<li class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-red-500">cancel</span>
+                                    Food and beverages
+                                </li>
+<li class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-red-500">cancel</span>
+                                    Hotel pickup and drop-off
+                                </li>
+<li class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-red-500">cancel</span>
+                                    Gratuities
+                                </li>
+</ul>
+</div>
+</section>
+<!-- Meeting Point -->
+<section id="meeting-point">
+<h3 class="text-2xl font-bold mb-4">Meeting Point</h3>
+<p class="mb-4 text-slate-600 dark:text-slate-400">Meet your guide at the Arch of Constantine, look for the staff holding the "AdventureTours" purple sign.</p>
+<div class="h-64 w-full overflow-hidden rounded-xl bg-primary/10 border-2 border-primary/5">
+<img class="h-full w-full object-cover opacity-60" data-alt="Map location of the meeting point in Rome" data-location="Rome, Italy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwVOXagmDsIFbX13EvcDw8bmFs1MTFBfByY5_RhqDwu9zv1Wwxwb1moZ8rERRKhcKLd6atTeLba4U0MqK2eQ6FgZhJXJrSzZR_mhmdiPcKEsfk0l1O75I16mDWNCGPAjfpPaLZ1H6oZW0V18QbvH_fwvgPazuxyw9igbqO5jGqYXYcTNFNqxzEasTaefEpiRuKLqod-2gEjYMEF0lWs8Ht-q3tJwO_pKBdH42DQkk3NDYSjRRG7ACb2wHj7IwyKc74pJqWZZJiQwQI"/>
+</div>
+</section>
+<!-- Reviews -->
+<section class="pt-8 border-t border-primary/10" id="reviews">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-2xl font-bold">Guest Reviews</h3>
+<button class="text-primary font-bold hover:underline">Write a Review</button>
+</div>
+<div class="space-y-8">
+<div class="border-b border-primary/5 pb-8">
+<div class="flex items-center gap-4 mb-3">
+<div class="h-12 w-12 rounded-full bg-slate-200 overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Reviewer profile picture woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjsRerIjpvUAMTcePWc54mSlPqLsK6eFDskWVtXiOdtBxg_NSh2EFnas0kmBshgRrUKQchepbPNYaQnqKSVuxWKTWKGOQWfRbSGqQiw9HO0P_MDp8u8Og-LJ2WfcIQKAQKPtFqh89ScngozCXr28hl8fCohuVd1qWASam6nakLwfE6QSMBGMoVZYgUdTBEt3RpOLC8nfY9S2hsuEpiyp8_txfQbCPrg96FX4ob9kSq3tXrCxAC7RQ1K3uHduQPR4vsXwo_-lvDaanY"/>
+</div>
+<div>
+<h5 class="font-bold">Sarah Jenkins</h5>
+<p class="text-sm text-slate-500">October 2023</p>
+</div>
+<div class="ml-auto flex text-yellow-500">
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+</div>
+</div>
+<p class="text-slate-600 dark:text-slate-400">"This was the highlight of our trip to Rome. Marco was so knowledgeable and the skip-the-line access saved us hours of waiting in the heat!"</p>
+</div>
+<div class="border-b border-primary/5 pb-8">
+<div class="flex items-center gap-4 mb-3">
+<div class="h-12 w-12 rounded-full bg-slate-200 overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Reviewer profile picture man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc4-_GoR-iYCFT0uUvAuh3hDqjqInkS35db3Z3rOTNhNtX5-jhQiYUcb7_0tKfQiimTHZVEW8lgRalA6qvm-eyL-PGzP0ThbmEZcTqDUoHscZKM7tfAe36WErnETV08RNRqF3FKtyn-hbHy2Av7DyfYC47i5es_C55p4Xy8HOAF9tPfzYTReG8whaAQ86ySMyrzhFfxQQhaC2OImJpTA-dBTFbsoC8BvEymbd14HSl6Nksxpie1cibdJxfPozcuWM7K6ElsBBMd7Od"/>
+</div>
+<div>
+<h5 class="font-bold">David Thompson</h5>
+<p class="text-sm text-slate-500">September 2023</p>
+</div>
+<div class="ml-auto flex text-yellow-500">
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-0">star</span>
+</div>
+</div>
+<p class="text-slate-600 dark:text-slate-400">"Great organization. The express format is perfect if you have kids who might get tired of a 6-hour tour. Everything went smoothly."</p>
+</div>
+</div>
+<button class="mt-8 w-full py-4 rounded-xl border border-primary text-primary font-bold hover:bg-primary/5 transition-colors">View All Reviews</button>
+</section>
+</div>
+<!-- Right Column: Booking Sidebar -->
+<div class="lg:col-span-1">
+<div class="sticky top-28 space-y-4">
+<div class="rounded-2xl border border-primary/10 bg-white dark:bg-background-dark p-6 shadow-xl shadow-primary/5">
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-3xl font-black text-primary">From $89</span>
+<span class="text-slate-500">/ person</span>
+</div>
+<form class="space-y-4">
+<div>
+<label class="block text-sm font-bold mb-2">Select Date</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400">calendar_today</span>
+<input class="w-full rounded-xl border-primary/10 bg-primary/5 pl-10 pr-4 py-2 font-medium focus:ring-primary" readonly="" type="text" value="Oct 24, 2023"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-bold mb-2">Adults (12+)</label>
+<div class="flex items-center justify-between rounded-xl border border-primary/10 bg-primary/5 p-2">
+<button class="h-8 w-8 rounded-lg bg-white flex items-center justify-center text-primary shadow-sm" type="button">-</button>
+<span class="font-bold">2</span>
+<button class="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-sm" type="button">+</button>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold mb-2">Children</label>
+<div class="flex items-center justify-between rounded-xl border border-primary/10 bg-primary/5 p-2">
+<button class="h-8 w-8 rounded-lg bg-white flex items-center justify-center text-primary shadow-sm" type="button">-</button>
+<span class="font-bold">0</span>
+<button class="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-sm" type="button">+</button>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-primary/5 space-y-2">
+<div class="flex justify-between text-slate-600">
+<span>$89.00 x 2 adults</span>
+<span>$178.00</span>
+</div>
+<div class="flex justify-between text-slate-600">
+<span>Service fee</span>
+<span>$12.00</span>
+</div>
+<div class="flex justify-between text-xl font-bold pt-2">
+<span>Total</span>
+<span>$190.00</span>
+</div>
+</div>
+<button class="w-full rounded-xl bg-primary py-4 text-center font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+                                    Reserve Now
+                                </button>
+<p class="text-center text-xs text-slate-500 font-medium italic">No payment required today</p>
+</form>
+</div>
+<!-- Special Badge/Notice -->
+<div class="flex items-center gap-3 rounded-2xl bg-green-50 p-4 border border-green-100">
+<span class="material-symbols-outlined text-green-600">verified</span>
+<div>
+<p class="text-sm font-bold text-green-900 leading-tight">Free Cancellation</p>
+<p class="text-xs text-green-800">Up to 24 hours in advance</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-20 border-t border-primary/10 bg-primary/5 py-12">
+<div class="mx-auto max-w-7xl px-6 lg:px-20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-xl font-bold">AdventureTours</span>
+</div>
+<p class="text-sm text-slate-500">Discover the world's most breathtaking destinations with expert local guides and unique experiences.</p>
+</div>
+<div>
+<h4 class="font-bold mb-4">Quick Links</h4>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Contact</a></li>
+<li><a class="hover:text-primary" href="#">Partner with us</a></li>
+<li><a class="hover:text-primary" href="#">Gift Cards</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">Support</h4>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a class="hover:text-primary" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary" href="#">Sitemap</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">Follow Us</h4>
+<div class="flex gap-4">
+<a class="h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">language</span>
+</a>
+<a class="h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">camera</span>
+</a>
+<a class="h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">play_circle</span>
+</a>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-primary/5 text-center text-sm text-slate-400">
+                    © 2023 AdventureTours Inc. All rights reserved.
+                </div>
+</div>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Global Tours Partner Analytics Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42", // Updated to match requested deep palette within theme rules
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full z-20">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-accent">
+<span class="material-symbols-outlined">public</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-primary dark:text-white">GlobalTours</h1>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-medium text-sm">Tours</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-medium text-sm">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary dark:text-accent rounded-lg border-l-4 border-accent" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-medium text-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium text-sm">Earnings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2">
+<div class="size-10 rounded-full bg-slate-200 overflow-hidden bg-cover bg-center" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAWFst08RHkT132EGP_WQ_hLHeOy1Q0TEe2VJvaDFFwBFpCKCkY5iUbiNoMytg64d_iHhxY9ko5WN3JoIG0aK4-Msxj_2Vi0kJPVCZ3VXy8fdvb8sYj-nbZcATxAxCVAljxL72jPKxdXexZTSP0O9y7saPrjc_wwobUibb6OTpPZyZ8kNKRoE1Q4mNbW-4gzvyhofiLFQx3HI2pfnafOJ9myXAK5jPVtQGc9107QfHjizThwZV_oks-0yVriWwgkfIUURAG-Wp3hA4x')"></div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold truncate">Alex Rivera</p>
+<p class="text-[10px] text-slate-500">Premium Partner</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 min-h-screen">
+<!-- Header -->
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search analytics, bookings, tours..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-2">
+<span class="text-sm font-medium">Partner Portal</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Page Title & Filters -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-bold text-primary dark:text-white">Partner Performance Analytics</h2>
+<p class="text-slate-500 text-sm">Real-time insights for your tour inventory</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex rounded-lg border border-slate-200 dark:border-slate-800 p-1 bg-white dark:bg-slate-900 shadow-sm">
+<button class="px-3 py-1.5 text-xs font-semibold bg-primary text-white rounded-md">Last 30 Days</button>
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-50 rounded-md">Last Quarter</button>
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-50 rounded-md">Year to Date</button>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium shadow-sm">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                            Filter Tours
+                        </button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-50 px-2 py-1 rounded">+8.4%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Total Views</p>
+<p class="text-2xl font-bold mt-1">124,500</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-accent/10 rounded-lg text-accent">
+<span class="material-symbols-outlined">conversion_path</span>
+</div>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-50 px-2 py-1 rounded">+2.4%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Conversion Rate</p>
+<p class="text-2xl font-bold mt-1">3.2%</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-50 px-2 py-1 rounded">+1.8%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Avg. Order Value</p>
+<p class="text-2xl font-bold mt-1">$145.00</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-red-50 rounded-lg text-red-600">
+<span class="material-symbols-outlined">shopping_cart_off</span>
+</div>
+<span class="text-red-500 text-xs font-bold bg-red-50 px-2 py-1 rounded">-0.5%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Abandonment Rate</p>
+<p class="text-2xl font-bold mt-1">24%</p>
+</div>
+</div>
+<!-- Main Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Booking Trends Line Chart -->
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-lg">Booking Trends</h3>
+<button class="text-sm text-primary font-medium hover:underline">Download Report</button>
+</div>
+<div class="h-64 w-full relative">
+<!-- SVG Placeholder for Line Chart -->
+<svg class="w-full h-full" viewbox="0 0 800 240">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#260a42" stop-opacity="0.1"></stop>
+<stop offset="100%" stop-color="#260a42" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,180 Q100,160 200,120 T400,140 T600,60 T800,90 L800,240 L0,240 Z" fill="url(#chartGradient)"></path>
+<path d="M0,180 Q100,160 200,120 T400,140 T600,60 T800,90" fill="none" stroke="#260a42" stroke-width="3"></path>
+<circle cx="200" cy="120" fill="#FFB800" r="4" stroke="white" stroke-width="2"></circle>
+<circle cx="600" cy="60" fill="#FFB800" r="4" stroke="white" stroke-width="2"></circle>
+</svg>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-slate-400">
+<span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span><span>JUL</span><span>AUG</span>
+</div>
+</div>
+</div>
+<!-- Traffic Sources Doughnut Chart -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<h3 class="font-bold text-lg mb-6">Traffic Sources</h3>
+<div class="relative h-48 w-48 mx-auto mb-6">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<circle class="stroke-slate-100" cx="18" cy="18" fill="none" r="16" stroke-width="3.5"></circle>
+<circle class="stroke-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="45, 100" stroke-dashoffset="0" stroke-width="3.5"></circle>
+<circle class="stroke-accent" cx="18" cy="18" fill="none" r="16" stroke-dasharray="25, 100" stroke-dashoffset="-45" stroke-width="3.5"></circle>
+<circle class="stroke-slate-400" cx="18" cy="18" fill="none" r="16" stroke-dasharray="20, 100" stroke-dashoffset="-70" stroke-width="3.5"></circle>
+<circle class="stroke-slate-200" cx="18" cy="18" fill="none" r="16" stroke-dasharray="10, 100" stroke-dashoffset="-90" stroke-width="3.5"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold">45%</span>
+<span class="text-[10px] text-slate-500 font-medium">DIRECT</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span> <span>Direct</span></div>
+<span class="font-bold">45%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-accent"></span> <span>Search</span></div>
+<span class="font-bold">25%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400"></span> <span>Social</span></div>
+<span class="font-bold">20%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-200"></span> <span>Referral</span></div>
+<span class="font-bold">10%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Table & Map -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<!-- Top Performing Tours Table -->
+<div class="xl:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold text-lg">Top Performing Tours</h3>
+<button class="text-sm font-medium text-slate-500 flex items-center gap-1">View All <span class="material-symbols-outlined text-[16px]">arrow_forward</span></button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-[10px] uppercase tracking-wider">
+<th class="px-6 py-4 font-bold">Tour Name</th>
+<th class="px-6 py-4 font-bold text-right">Views</th>
+<th class="px-6 py-4 font-bold text-right">Bookings</th>
+<th class="px-6 py-4 font-bold text-right">Conv. %</th>
+<th class="px-6 py-4 font-bold text-right">Revenue</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-200 bg-cover bg-center" data-alt="Tour thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfE5adBhAeL9JHO-vNoTdymWpgypLsDutwHXBEvyq3OSKfrLt0R_ksgAZ5Job_uYIzDLEiQWxluxDMk5sD4U7GBPn7Z10Ihrxeo-N76qkcTJUfoe6o_GM5uW28g9hPd8CaKF0SMywe4m5kpitI90aRG8fA3imUoGo6yYbgHFfOsq5V-bb9bxphm77-Hd3RZfyLH1RU0BmYvHBcRc9EL2VeKod-ZL2hYm3Y3BCVsCIhAe4AnDDUDdEwe9JqTh5NjHCM7l64IbZ3gHvZ')"></div>
+<span class="text-sm font-semibold">Tokyo Midnight Food Tour</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-right">42,300</td>
+<td class="px-6 py-4 text-sm text-right">1,240</td>
+<td class="px-6 py-4 text-sm text-right text-emerald-600 font-medium">2.9%</td>
+<td class="px-6 py-4 text-sm text-right font-bold">$18,450</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-200 bg-cover bg-center" data-alt="Tour thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzYvIrtGDEhAYqwLemVKp3vSlSiBDiomqGogumNYP-WkuxgnXpI0a5x2yTBq97RFExMCg73nW3hzXPVAkVLRA_lfa6Yzzli7WCg3Qooh_Cd-Kdo-zgMHRH6Gs9jNMsQdpzD8wdGBAZt8IPXGhI-I-el-iHJXwvZOuLzvTf7SsbIxZ_Do-5g0msvxGurX-0SYxGG-6wW9xS9KgrAlvQtQt0f20QMjwtUcQbGVPbRP7zLR5BU_gLTctJWasOylDruoHE_qs1GNPdozcK')"></div>
+<span class="text-sm font-semibold">Swiss Alps Luxury Heli-Tour</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-right">38,150</td>
+<td class="px-6 py-4 text-sm text-right">860</td>
+<td class="px-6 py-4 text-sm text-right text-emerald-600 font-medium">2.2%</td>
+<td class="px-6 py-4 text-sm text-right font-bold">$42,900</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-200 bg-cover bg-center" data-alt="Tour thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB_M142ceeJDKjiezqfbK-mWyHhUvsodAyTDP_UUsQ4K_EamVQoCYY6rQ6WDK7MNp5MRa6-iVRDBFy_bFWsagQYqIVMi-BfUrCpAVqwUw4-I1V7JhTCaqD-U3Rb2EkcaHq1Cd-QTLssv4w9NRLhBbVwANcjQll9cFucgYGKP7aU1Nz992mMLfzuhf-HvZuQVi065DaNzvLAH6nuXPqsS0c49FKTqFXH83R4xdD0XGKPSv_KCKaQHkpPyCADRj1tx0TIu6Lkqi4wsSKT')"></div>
+<span class="text-sm font-semibold">Bali Spiritual Retreat &amp; Spa</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-right">29,400</td>
+<td class="px-6 py-4 text-sm text-right">1,120</td>
+<td class="px-6 py-4 text-sm text-right text-emerald-600 font-medium">3.8%</td>
+<td class="px-6 py-4 text-sm text-right font-bold">$12,100</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Geographic Distribution -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
+<h3 class="font-bold text-lg mb-6">Geographic Distribution</h3>
+<div class="flex-1 min-h-[250px] relative rounded-lg overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
+<!-- Abstract World Map Pattern -->
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[80px] text-primary/20">map</span>
+</div>
+<!-- Map Data Points -->
+<div class="absolute top-1/4 left-1/4 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
+<div class="absolute top-1/2 right-1/3 w-3 h-3 bg-primary rounded-full"></div>
+<div class="absolute bottom-1/3 left-1/2 w-4 h-4 bg-accent rounded-full animate-pulse"></div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 65%"></div>
+</div>
+<span class="text-xs font-bold w-12 text-right">USA</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 42%"></div>
+</div>
+<span class="text-xs font-bold w-12 text-right">UK</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-accent h-2 rounded-full" style="width: 35%"></div>
+</div>
+<span class="text-xs font-bold w-12 text-right">GER</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

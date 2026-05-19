@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-white text-slate-900 font-display">
+<!-- Navigation -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-10">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl text-accent">explore</span>
+<span class="text-2xl font-extrabold tracking-tight">GlobalTours</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary/70 transition-colors" href="#">Destinations</a>
+<a class="text-sm font-semibold hover:text-primary/70 transition-colors" href="#">Tours</a>
+<a class="text-sm font-semibold hover:text-primary/70 transition-colors" href="#">Experience</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border-r border-slate-200 pr-4 mr-2">
+<button class="flex items-center gap-1 text-sm font-medium hover:bg-slate-100 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">language</span>
+<span>EN</span>
+</button>
+<button class="flex items-center gap-1 text-sm font-medium hover:bg-slate-100 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span>USD</span>
+</button>
+</div>
+<a class="text-sm font-semibold hover:text-primary/70 transition-colors px-4" href="#">Log in</a>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-all shadow-md">
+                    Sign Up
+                </button>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[640px] flex items-center justify-center px-6 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/40 to-primary/80 z-10"></div>
+<img class="w-full h-full object-cover" data-alt="Beautiful landscape with mountain and road" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtXyJ6kETEBZ41POWt587oTLSsXW-Cv0VVxpUitLqPWVXPRnpxgnZnbequ5vOfbFshxhEmxzdxVPHGIcWlEb-XTwAPxUlH8mmU68--05YUkdmGTFClIYxtek0WCkYS4JX-IOM_Fuhpmg94oNeinqxrnPyKybxNy1SbIOIfzw4ZTnLiNFbDugXQSY2J712JFXyjvqIY9-VHr1-eXbQCO3hzkyxQUIZYMqy8tSmvtAif1kJeUF8NV0kAypVUTH36Nk9NB77BPMM_C77A"/>
+</div>
+<div class="relative z-20 max-w-4xl w-full text-center">
+<h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    Escape the Ordinary <br/>
+<span class="text-accent italic">Explore</span> the World
+                </h1>
+<p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto font-medium">
+                    Book unique experiences and hidden gems across 120+ countries. Curated tours by local experts.
+                </p>
+<!-- Search Bar -->
+<div class="bg-white p-3 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-2">
+<div class="flex-1 flex items-center gap-3 px-4 py-3 border-r border-slate-100">
+<span class="material-symbols-outlined text-primary/50">location_on</span>
+<div class="text-left flex-1">
+<span class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Location</span>
+<input class="w-full border-none p-0 focus:ring-0 text-primary font-semibold placeholder:text-slate-300" placeholder="Where are you going?" type="text"/>
+</div>
+</div>
+<div class="flex-1 flex items-center gap-3 px-4 py-3 border-r border-slate-100">
+<span class="material-symbols-outlined text-primary/50">calendar_month</span>
+<div class="text-left flex-1">
+<span class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Dates</span>
+<input class="w-full border-none p-0 focus:ring-0 text-primary font-semibold placeholder:text-slate-300" placeholder="Add dates" type="text"/>
+</div>
+</div>
+<div class="flex-1 flex items-center gap-3 px-4 py-3">
+<span class="material-symbols-outlined text-primary/50">group</span>
+<div class="text-left flex-1">
+<span class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Guests</span>
+<input class="w-full border-none p-0 focus:ring-0 text-primary font-semibold placeholder:text-slate-300" placeholder="Add guests" type="text"/>
+</div>
+</div>
+<button class="bg-primary text-white h-14 w-full md:w-40 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/95 transition-all">
+<span class="material-symbols-outlined">search</span>
+                        Search
+                    </button>
+</div>
+</div>
+</section>
+<!-- Categories -->
+<section class="max-w-7xl mx-auto px-6 py-16">
+<div class="flex items-center justify-between mb-10">
+<h2 class="text-3xl font-extrabold text-primary">Discover your passion</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+<a class="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-4xl text-accent group-hover:text-white transition-colors">hiking</span>
+<span class="font-bold">Adventure</span>
+</a>
+<a class="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-4xl text-accent group-hover:text-white transition-colors">museum</span>
+<span class="font-bold">Culture</span>
+</a>
+<a class="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-4xl text-accent group-hover:text-white transition-colors">restaurant</span>
+<span class="font-bold">Food</span>
+</a>
+<a class="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-4xl text-accent group-hover:text-white transition-colors">forest</span>
+<span class="font-bold">Nature</span>
+</a>
+<a class="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-4xl text-accent group-hover:text-white transition-colors">waves</span>
+<span class="font-bold">Water</span>
+</a>
+<a class="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-4xl text-accent group-hover:text-white transition-colors">nightlife</span>
+<span class="font-bold">Nightlife</span>
+</a>
+</div>
+</section>
+<!-- Featured Destinations -->
+<section class="bg-background-light py-20 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-end justify-between mb-12">
+<div>
+<h2 class="text-4xl font-extrabold text-primary mb-2">High Impact Destinations</h2>
+<p class="text-slate-500 font-medium">Trending spots for your next big adventure.</p>
+</div>
+<button class="text-primary font-bold flex items-center gap-2 group">
+                        Explore all <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Dest Card 1 -->
+<div class="group relative h-[450px] overflow-hidden rounded-2xl cursor-pointer">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="London Big Ben during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuu0BNUqYqG2xqBOLAa_9dlbi6XSSDOAoUi6SFFn9R7zQZoGVXMqy5R4cqO6e3K8KtYBh6u7u8fj7kiqMWQrj0pU7SSBFYijsbcSJQFrQhbr9SrGE1LTg09E_P3FVZTVl5lS-4gTINLf7bhvqU0YO2TzLijA-RmqhmRe2lsSfEPC39zhGxHF0stchb7Su2c2CxE2m5oCU0lqFXbu623W-k6suLQusDkw9Cg-ZaBBs_dBeTCK07JzXC6OZVOmbUXAKah-VPGpS13wzs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<h3 class="text-2xl font-bold text-white mb-1">London, UK</h3>
+<p class="text-white/80 font-medium">850+ Tours available</p>
+</div>
+</div>
+<!-- Dest Card 2 -->
+<div class="group relative h-[450px] overflow-hidden rounded-2xl cursor-pointer">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Canals of Venice with boats" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkZ9K1qassWtoJH5Hj06xXX9ZZMRbKc3yqp7nfHhcWWcyxO_8Zsq2HSuEOsdb0KKhjWPwZaPKBVw4uUxDT3hH3f_F9HDYw_-ppz-goQMGll5gsi0uu-lePc5EIZPOEUJ3k4vDDtYjtdabjPhsvOsPkGnsHjTSIOdMTijvzFQqoh4i11Skb-KWWCrOxCts_a4t5tm4hp8Y8F8-izASWl5kQjHHyjUnb8ReItIThudLs8wiT8rcxFfTFsfINRcPoa8Sy9HRsXTKEEcBh"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<h3 class="text-2xl font-bold text-white mb-1">Venice, Italy</h3>
+<p class="text-white/80 font-medium">420+ Tours available</p>
+</div>
+</div>
+<!-- Dest Card 3 -->
+<div class="group relative h-[450px] overflow-hidden rounded-2xl cursor-pointer">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Traditional Kyoto street and pagoda" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRIgH35h6SCT-s2biVDfJnj5zOaa6aFBG5zEWNpUTysI3koCb8ipZkWgCAfpMAxw3YWzDHgumf8b1HwunADu0FpX6juw-rmh8vHoe8ovHQuzdS1b36Hj3QPEdcycJ3Shcm4Q-cdVPtyu_5cPSpuMdqidGNyA4pJ2h2xSJ6tl9KbSxzbQblgdx2bTP-9XBm5ZbYX_23wmvMaVDRKxx2mF4CZqVtSiINt31TcDuFPRTdyyPUcXgEoJj_yl0fE62wMLc1Xl6ivnEAJO3C"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<h3 class="text-2xl font-bold text-white mb-1">Kyoto, Japan</h3>
+<p class="text-white/80 font-medium">310+ Tours available</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Tours Grid -->
+<section class="py-24 px-6 max-w-7xl mx-auto">
+<h2 class="text-4xl font-extrabold text-primary mb-12">Trending Tours</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Tour Card 1 -->
+<div class="bg-white rounded-2xl overflow-hidden border border-slate-100 group hover:shadow-xl transition-shadow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Great Pyramids of Giza" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdZt53W62oDRcDeTQ_0GNWXPKftX0sXJsQFyhU1_oZ5ymPZE9gcr-UkiswLHxZKr1MzbamsnOFlQkx5q9qTrqkZuIuuJtKlN30Ihi7a8lAgmXZW98U8oSlDpj7-zKr-Q5RQWrVxmu_0NL6Y_cUIJaULxJILm4mzx5ns_M-JBpTngKejbPlRBN6Gl72XkU0YBMPR1gBKmIQPtATRuZGfN93mMR1wWiiA6iu7pFJLv9paqS3ZKXzrmXIhmU-FBVScrePZoS1lGm2ryCt"/>
+<button class="absolute top-4 right-4 bg-white/90 p-2 rounded-full text-slate-900 shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+<div class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Top Rated</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-accent text-sm fill-accent">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-sm text-slate-400 font-medium">(2.4k reviews)</span>
+</div>
+<h4 class="font-bold text-lg mb-4 line-clamp-2">Private Giza Pyramids, Sphinx with Lunch</h4>
+<div class="flex items-center justify-between border-t border-slate-50 pt-4">
+<div>
+<p class="text-slate-400 text-xs font-medium uppercase">From</p>
+<p class="text-primary font-extrabold text-xl">$85.00</p>
+</div>
+<span class="material-symbols-outlined text-primary/20">schedule</span>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="bg-white rounded-2xl overflow-hidden border border-slate-100 group hover:shadow-xl transition-shadow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Taj Mahal in India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn1T9IxSUZQyN0QAUkluK6RDgJWTTr-BtZL-csuNx1FqWLMudqbQxntX6WfY5sY-042pOKapVq0fuuSriDoObSItIiRBF4LNjdjIsSOnUPY9WVdU9CBwuBah1re9QosytIOSYYT-xGZ0Brv29jQUrRumcpjyj1JYhdR4VHx6QQyVOWgagQSb319HhkgetaSEeW1FzAnWTTGlmN7UG4damQd-WIp1U8R8KDfuJ4oQ9jEgwz-1yNaCVtPft23e7yD0GQ2dAcLJ56b9kq"/>
+<button class="absolute top-4 right-4 bg-white/90 p-2 rounded-full text-slate-900 shadow-sm">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-accent text-sm fill-accent">star</span>
+<span class="text-sm font-bold">4.8</span>
+<span class="text-sm text-slate-400 font-medium">(1.8k reviews)</span>
+</div>
+<h4 class="font-bold text-lg mb-4 line-clamp-2">Taj Mahal Sunrise Private Guided Tour</h4>
+<div class="flex items-center justify-between border-t border-slate-50 pt-4">
+<div>
+<p class="text-slate-400 text-xs font-medium uppercase">From</p>
+<p class="text-primary font-extrabold text-xl">$120.00</p>
+</div>
+<span class="material-symbols-outlined text-primary/20">schedule</span>
+</div>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="bg-white rounded-2xl overflow-hidden border border-slate-100 group hover:shadow-xl transition-shadow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Eiffel Tower Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxgUEOjLuh0g3gpZvp_KVNbMlVdHSKRog5CutB0l8Q8i7ktAtFvQVW1xnaw5Ur6vssRvxA_DZMpSl7TE-2oAxb7TReMXC-Xxrj80YHZRgaqSDpx0T4DzRiOv-TygICxzADG7Ih6O5i0A6SnrXX5JJHqcEGfhsCX2lhCK26O6l6Df0A1a1fkvP_S2nPSIfID0h2vx0H-s2mKU1uQxStkCmWph1XjvAdcEPzMAPQrJq7TnAne1KnuEonwLahzItAv3d_GK9nDavUQCGO"/>
+<button class="absolute top-4 right-4 bg-white/90 p-2 rounded-full text-slate-900 shadow-sm">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-accent text-sm fill-accent">star</span>
+<span class="text-sm font-bold">4.7</span>
+<span class="text-sm text-slate-400 font-medium">(3.2k reviews)</span>
+</div>
+<h4 class="font-bold text-lg mb-4 line-clamp-2">Louvre Museum Masterpieces Priority Tour</h4>
+<div class="flex items-center justify-between border-t border-slate-50 pt-4">
+<div>
+<p class="text-slate-400 text-xs font-medium uppercase">From</p>
+<p class="text-primary font-extrabold text-xl">$65.00</p>
+</div>
+<span class="material-symbols-outlined text-primary/20">schedule</span>
+</div>
+</div>
+</div>
+<!-- Tour Card 4 -->
+<div class="bg-white rounded-2xl overflow-hidden border border-slate-100 group hover:shadow-xl transition-shadow">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Hot air balloons in Cappadocia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrB-jXTGOtNs-ZzIVEKnnAwvx-KBww7TzuahkGMVKLshOJpWlbcieVyBH3WvVXekWLDlPNUJwvIgKL6Pm5YVjqr0Amk4XFlOhncAO76B3OKBPkIpaPd2dZkr_APIp6iqvfqi2UbnE_FhcObnCgrojF4j84Tc7F4RyIeC754J6Yb8wKd8_j258t6JSq0rz4yc30S8Pf0oJpos0X3cu3HIrtK93aTW-GhSonPE_XqmK-1S4FQi28UIYpcbCJVRsZUx3NipJT3I30JaZT"/>
+<button class="absolute top-4 right-4 bg-white/90 p-2 rounded-full text-slate-900 shadow-sm">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-accent text-sm fill-accent">star</span>
+<span class="text-sm font-bold">5.0</span>
+<span class="text-sm text-slate-400 font-medium">(950 reviews)</span>
+</div>
+<h4 class="font-bold text-lg mb-4 line-clamp-2">Cappadocia Hot Air Balloon Deluxe Flight</h4>
+<div class="flex items-center justify-between border-t border-slate-50 pt-4">
+<div>
+<p class="text-slate-400 text-xs font-medium uppercase">From</p>
+<p class="text-primary font-extrabold text-xl">$210.00</p>
+</div>
+<span class="material-symbols-outlined text-primary/20">schedule</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Choose Us -->
+<section class="bg-primary text-white py-24 px-6 overflow-hidden relative">
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="text-center max-w-3xl mx-auto mb-20">
+<h2 class="text-4xl font-extrabold mb-6">Why travelers choose us</h2>
+<p class="text-white/70 text-lg">We provide the most comprehensive platform for curated experiences with the best prices guaranteed.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="text-center group">
+<div class="w-20 h-20 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-8 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-4xl text-accent">verified_user</span>
+</div>
+<h3 class="text-2xl font-bold mb-4">Ultimate Flexibility</h3>
+<p class="text-white/60 font-medium">Free cancellation and payment options that work with any budget and any schedule.</p>
+</div>
+<div class="text-center group">
+<div class="w-20 h-20 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-8 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-4xl text-accent">local_activity</span>
+</div>
+<h3 class="text-2xl font-bold mb-4">Memorable Experiences</h3>
+<p class="text-white/60 font-medium">Browse and book tours and activities so incredible, you’ll want to tell your friends.</p>
+</div>
+<div class="text-center group">
+<div class="w-20 h-20 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-8 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-4xl text-accent">support_agent</span>
+</div>
+<h3 class="text-2xl font-bold mb-4">Award-winning Support</h3>
+<p class="text-white/60 font-medium">Found a lower price? We'll match it. 24/7 support standing by to help you anywhere.</p>
+</div>
+</div>
+</div>
+<!-- Decorative circle -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-accent/5 rounded-full"></div>
+<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full"></div>
+</section>
+<!-- Become a Partner -->
+<section class="max-w-7xl mx-auto px-6 py-24">
+<div class="bg-slate-900 rounded-[2.5rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 relative overflow-hidden">
+<div class="flex-1 z-10">
+<h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">Share your world with <br/> <span class="text-accent">GlobalTours</span></h2>
+<p class="text-white/70 text-lg mb-10 max-w-md">Become a tour operator partner today and reach millions of travelers across the globe.</p>
+<button class="bg-accent text-primary px-10 py-4 rounded-xl font-extrabold text-lg hover:bg-accent/90 transition-all shadow-lg hover:-translate-y-1">
+                        Become a Partner
+                    </button>
+</div>
+<div class="flex-1 relative z-10">
+<div class="grid grid-cols-2 gap-4">
+<img class="rounded-2xl h-48 w-full object-cover" data-alt="Tour guide with tourists" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB79plPagcf00WVLpgWa8qnJPzSX6_HiLmS9CvsxL5RINzCjJBBtmRgWopbY3gs2TTLNfuvia70eackb9X5ZI2L7lUXMkDpSpMSFo6eBr6XnUP8Vr1bYO47bpro3Ou1VnikwXkKv5qUvTth6Mh6gYC8uYhSA7KzRGisvnvHisc3eiJ7GfvBA65hK7pj2mE0Dtv3zR2YHcns5lcYED30nZWNkv-mk20pIyiYveHJ8VluWnz3wj0n_TLFXWuxoi3HaLN_AFfcikAmZZyI"/>
+<img class="rounded-2xl h-48 w-full object-cover mt-8" data-alt="Tourists taking photos" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpMHbqwZLfdTiWkC_Cq-rr16Qg8KsdIXGzktbjmiWHnRJw1tfLg5b3jv3d_TONxXd569TPVSAEn1G9AqSOydDZgOuWQv7kM0YMFmfN2nalEyBu7b9lYTrfSsvkOIg8HdGZdekWkQDVfInkGagl9diDe6CInCrVqFZcwc6YyeQFtIgOqwckItzf4-A4i8OYd_U6L6xASv47GlpmAhTGQlfmytz2lNGHIZGR-Lq5OoKOyY9pSHBhTWCM-AnJwQ8Y_s8YH0Md4SWuK-B2"/>
+</div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-primary to-transparent opacity-50"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 pt-20 pb-10 border-t border-slate-200">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-12 mb-20">
+<div class="col-span-2">
+<div class="flex items-center gap-2 text-primary mb-6">
+<span class="material-symbols-outlined text-3xl text-accent">explore</span>
+<span class="text-2xl font-extrabold tracking-tight">GlobalTours</span>
+</div>
+<p class="text-slate-500 font-medium max-w-sm mb-8 leading-relaxed">
+                        Leading the way in global tourism experiences. We connect adventurous souls with the heart of every destination.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">public</span>
+</a>
+<a class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">share</span>
+</a>
+<a class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg">play_arrow</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-primary mb-6">Support</h4>
+<ul class="space-y-4 text-sm text-slate-500 font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Safety Information</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Cancellation Options</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Our Response to COVID-19</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-primary mb-6">Company</h4>
+<ul class="space-y-4 text-sm text-slate-500 font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Press</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Blog</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-primary mb-6">Legal</h4>
+<ul class="space-y-4 text-sm text-slate-500 font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Cookie Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Trust &amp; Safety</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-sm text-slate-400 font-medium">© 2024 GlobalTours Marketplace Inc. All rights reserved.</p>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-sm font-bold text-slate-600 cursor-pointer">
+<span class="material-symbols-outlined text-lg">language</span>
+                        English (US)
+                    </div>
+<div class="flex items-center gap-2 text-sm font-bold text-slate-600 cursor-pointer">
+<span class="material-symbols-outlined text-lg">payments</span>
+                        USD
+                    </div>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

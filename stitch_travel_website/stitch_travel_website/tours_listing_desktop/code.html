@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#260a42",
+                "background-light": "#f7f6f8",
+                "background-dark": "#191121",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<title>Tours Listing Page</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Navbar -->
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons text-white">explore</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-primary dark:text-white">LUXETOURS</span>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-white" href="#">Home</a>
+<a class="font-medium text-primary dark:text-white border-b-2 border-primary" href="#">Tours</a>
+<a class="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-white" href="#">Destinations</a>
+<a class="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-white" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-icons">search</span>
+</button>
+<button class="bg-primary text-white px-5 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                        Sign In
+                    </button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Header & Breadcrumbs -->
+<div class="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<nav class="flex text-sm mb-4 text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary" href="#">Home</a>
+<span class="mx-2">/</span>
+<span class="text-primary dark:text-slate-200">Europe Tours</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold mb-2">Discovery Tours in Europe</h1>
+<p class="text-slate-500 dark:text-slate-400">Explore 142 unique curated experiences across the continent.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-medium text-slate-500">Sort by:</span>
+<select class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-primary">
+<option>Most Popular</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Top Rated</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Area -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Sidebar Filters -->
+<aside class="w-full lg:w-64 flex-shrink-0">
+<div class="space-y-8">
+<!-- Category -->
+<div>
+<h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+<span class="material-icons text-primary text-xl">category</span>
+                            Category
+                        </h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Adventure</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Cultural</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Luxury</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Food &amp; Wine</span>
+</label>
+</div>
+</div>
+<!-- Price Range -->
+<div>
+<h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+<span class="material-icons text-primary text-xl">payments</span>
+                            Price Range
+                        </h3>
+<div class="px-2">
+<input class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
+<div class="flex justify-between mt-2 text-sm text-slate-500">
+<span>$0</span>
+<span>$5,000+</span>
+</div>
+</div>
+</div>
+<!-- Duration -->
+<div>
+<h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+<span class="material-icons text-primary text-xl">schedule</span>
+                            Duration
+                        </h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="border-slate-300 text-primary focus:ring-primary" name="duration" type="radio"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">1-3 Days</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="border-slate-300 text-primary focus:ring-primary" name="duration" type="radio"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">4-7 Days</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="border-slate-300 text-primary focus:ring-primary" name="duration" type="radio"/>
+<span class="text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">8+ Days</span>
+</label>
+</div>
+</div>
+<!-- Rating -->
+<div>
+<h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+<span class="material-icons text-primary text-xl">star</span>
+                            Rating
+                        </h3>
+<div class="space-y-3">
+<button class="flex items-center gap-1 w-full p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="ml-2 text-sm text-slate-600 dark:text-slate-400">(4.5+)</span>
+</button>
+<button class="flex items-center gap-1 w-full p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-yellow-400 text-sm">star</span>
+<span class="material-icons text-slate-300 dark:text-slate-600 text-sm">star</span>
+<span class="ml-2 text-sm text-slate-600 dark:text-slate-400">(4.0+)</span>
+</button>
+</div>
+</div>
+<!-- Map Search Placeholder -->
+<div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 relative group">
+<img class="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Stylized topographic map of European coastline" data-location="Europe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT_UaNEsIUh3kSyh_TdQJ5t1AzEg4B9lOFOzLLoo1ofapNeHApDbq4c0TczZF8uJ5gIuCL0XMsSd6T1WWnZ4QeRcoHtPtYJhC6g45UnqNtHFF1t8vFCWle0LO7FeaFBSTFRhaU-s3zzaQKuILOLENoJETgw_mXG_SU3PCQE9omU1byy2_Ob7ozNsdDgPQZbPNNHBiSjUHkZQJ9q9_EPcFw--eI4HjTZXcfsa-HrrHp2KClUVLPFvuMt7wABcI7PSFAxtZvfo5dNnLp"/>
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center">
+<button class="bg-white text-primary px-4 py-2 rounded-lg text-sm font-bold shadow-lg hover:bg-primary hover:text-white transition-colors">
+                                View on Map
+                            </button>
+</div>
+</div>
+</div>
+</aside>
+<!-- Grid Content -->
+<div class="flex-1">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Tour Card 1 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-800 flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Beautiful aerial view of Amalfi Coast colorful buildings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKTmT-qK3gSGdwOD84Kr9uxKbaaem-eBcVSbSlf7CvrAOi5VOQhEBvJl4tUM3zyvkzgvet6dOE01RgqaKUr1NNWVHVLIGO24tXGUR3zbsXUJw2cBsAsE5FQ0v7q7o9i91ineudZezQO9GpAkr3RMHGHKEfH9VdYpmvxsWRqtI-CyIin1AXMpWro707aFeNNcpj8jJXyzoNvIPIpgwGk0TmdrK_YNWbf0bDFH47ax06QftXbFdjoeQelty-sBE-HQadNZM1RNzWX0JC"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Top Rated</span>
+<span class="bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">7 Days</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-red-500 transition-colors">
+<span class="material-icons text-xl">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest font-bold">
+<span class="material-icons text-sm">location_on</span> Italy
+                            </div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Amalfi Coast Wonders</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-yellow-400">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+</div>
+<span class="text-xs font-semibold text-slate-500">(128 reviews)</span>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div>
+<span class="text-xs text-slate-500 block">Starting from</span>
+<span class="text-xl font-bold text-primary dark:text-slate-100">$1,499</span>
+</div>
+<button class="bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-200 px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-800 flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Northern lights glowing over snow capped mountains in Iceland" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXcm-pdKMtnxGbD81NOXs5QTwuH8b5f6QJdtVH-FoWHdW86Ft7Gm58smdJ3oOa-UqWPDkgQr5vRE0BD74p88oguSR7lURdN7H_qVxCiHbI_8qQfezhzhtUpfmCRmfs-7O4ymYbLrze1ZdhyNQhZR_GFSngseVOYNo1Ky8GWPo_w83m3YYib1unAAn1sryd8khk6iYoOmORZdkhU2gokvh6DscZdlYaPSWtMhW0ADxx1406WANBCwFcfD65Om--Y5XKeEB0f3yuf4eV"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Adventure</span>
+<span class="bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">5 Days</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-red-500 transition-colors">
+<span class="material-icons text-xl">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest font-bold">
+<span class="material-icons text-sm">location_on</span> Iceland
+                            </div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Aurora Borealis Quest</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-yellow-400">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star_half</span>
+</div>
+<span class="text-xs font-semibold text-slate-500">(84 reviews)</span>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div>
+<span class="text-xs text-slate-500 block">Starting from</span>
+<span class="text-xl font-bold text-primary dark:text-slate-100">$2,150</span>
+</div>
+<button class="bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-200 px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-800 flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Traditional Japanese pagoda during autumn with red leaves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsALyH3e6aR-4InzlsY7Tk-3YvhsokGYWThXttDcWBlzIg2jV_w3QuLTZg-bFKctVDNezBIEVx0_-2TgZD1VRDf8dC4jT3vq1ve3gV8DmDP8aRfAAjcQ24xoCYvHT1pS_S37dBBmmwIk4xB6NvtO2v_6QQvdahnAYFyJdH5dImDR0z69r9cZmqyoVccUhvkkObvlUJI02Fe9oCCzUF2hRihFI_19uM69o7gq-anU1PQy3BG01TGe-JDiNXBH_AlXHpQSdzSVmQbdre"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-amber-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Culture</span>
+<span class="bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">12 Days</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-red-500 transition-colors">
+<span class="material-icons text-xl">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest font-bold">
+<span class="material-icons text-sm">location_on</span> Japan
+                            </div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Samurai &amp; Tea Rituals</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-yellow-400">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+</div>
+<span class="text-xs font-semibold text-slate-500">(210 reviews)</span>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div>
+<span class="text-xs text-slate-500 block">Starting from</span>
+<span class="text-xl font-bold text-primary dark:text-slate-100">$3,800</span>
+</div>
+<button class="bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-200 px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 4 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-800 flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="The Taj Mahal reflect in the water at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu7roP2jsozEU5fu_ILqlLwYDnKq4mzJFirzJvRQsLWvhrKRek3j97qlDPn8eoNP03pynCs_hIExjFAFrsS6afs4_qKeS1xeieMe5srGTSqScNzxz_Ar8ax6Abvoj6fPoTL8-cKwTIPr2Xwm7VNHRuAt2ybQ2gkDYrGF7U-xWHsDGRCM8Pha0lK6tmXYpFWPHpSWxjpt1JVoqBgQMAB17UOXP7El1-bopENLcqFiTsoSoEXeSDe-htzLILW2FM35gr261EcEVAYV1M"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Heritage</span>
+<span class="bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">10 Days</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-red-500 transition-colors">
+<span class="material-icons text-xl">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest font-bold">
+<span class="material-icons text-sm">location_on</span> India
+                            </div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Golden Triangle Exclusive</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-yellow-400">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star_outline</span>
+</div>
+<span class="text-xs font-semibold text-slate-500">(56 reviews)</span>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div>
+<span class="text-xs text-slate-500 block">Starting from</span>
+<span class="text-xl font-bold text-primary dark:text-slate-100">$1,850</span>
+</div>
+<button class="bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-200 px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 5 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-800 flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Crystal clear turquoise water on a tropical beach" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC44cXtFStgMyKDMYaCJxv1x3JWw1fF-qoEviBh5k2o1ej3AEtl9vLZkQ4Dj7GE5BGLTX7x2KHn82ztHtWIZuGl2lrB3PIzXsh6KFXwbqYaC5zZQVbqXTYrnkH7Yr3R4U1W9kJWc2F4ypRBcmsWi5S2Uz5YVEl8nswL-FWXoarg76UuGXJcEL8rqCJN9txTmWMkoeunjp6b72Cj8QxE4U2GrYU77UjAkxwb5A4paa05DQEtwvfzWZr0odlflAmaxn-NAPTfXYGWHaMa"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Luxury</span>
+<span class="bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">14 Days</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-red-500 transition-colors">
+<span class="material-icons text-xl">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest font-bold">
+<span class="material-icons text-sm">location_on</span> Maldives
+                            </div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Ultra-Luxury Atoll Escape</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-yellow-400">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+</div>
+<span class="text-xs font-semibold text-slate-500">(42 reviews)</span>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div>
+<span class="text-xs text-slate-500 block">Starting from</span>
+<span class="text-xl font-bold text-primary dark:text-slate-100">$6,200</span>
+</div>
+<button class="bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-200 px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 6 -->
+<div class="group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-800 flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Santorini white architecture against the bright blue Aegean sea" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMXvQ1s47leuH3JS1-JZvE0aXw-S_GTXPhJpurJgKGDNfQR2K4XXMCCCoVimFe8cIW3517HPNrpw_-y_NnWM_9aL2uklOhqgnCiRBZbM6YX8CP8fVULVtrDNnE7_VQxJBi9LNNm9XtVqX9YxOB06OhP8zVqzxwIsq5RTQMssbzESw6tBhNt1tLDb0XZoshbz98SRMUHknG52BPNshLxnHSQ07Bp5y5DZPFyrSkJGHP2k_q78ALupge_8SYdnsaKjloBGn8wNZ3PQCv"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Honeymoon</span>
+<span class="bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">8 Days</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-red-500 transition-colors">
+<span class="material-icons text-xl">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest font-bold">
+<span class="material-icons text-sm">location_on</span> Greece
+                            </div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">Aegean Island Hopping</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-yellow-400">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+</div>
+<span class="text-xs font-semibold text-slate-500">(156 reviews)</span>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div>
+<span class="text-xs text-slate-500 block">Starting from</span>
+<span class="text-xl font-bold text-primary dark:text-slate-100">$2,400</span>
+</div>
+<button class="bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-200 px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-colors">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex justify-center">
+<nav class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-primary hover:text-white transition-colors">
+<span class="material-icons">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-white font-bold">1</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-primary hover:text-white transition-colors">2</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-primary hover:text-white transition-colors">3</button>
+<span class="mx-2">...</span>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-primary hover:text-white transition-colors">12</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-800 hover:bg-primary hover:text-white transition-colors">
+<span class="material-icons">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+</main>
+<!-- CTA Section -->
+<section class="mt-20 py-16 bg-primary text-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<h2 class="text-3xl font-bold mb-4">Can't find your perfect tour?</h2>
+<p class="text-lg opacity-80 mb-8 max-w-2xl mx-auto">Our travel experts can design a custom itinerary just for you. Tell us your dreams and we'll make them a reality.</p>
+<button class="bg-white text-primary px-8 py-3 rounded-xl font-bold text-lg hover:shadow-2xl transition-all active:scale-95">
+                Contact an Expert
+            </button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-white dark:bg-background-dark py-12 border-t border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white text-sm">explore</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-primary dark:text-white">LUXETOURS</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 mb-6 max-w-sm">Curating extraordinary travel experiences for the discerning modern explorer since 2012.</p>
+<div class="flex gap-4">
+<a class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#"><span class="material-icons text-sm">facebook</span></a>
+<a class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#"><span class="material-icons text-sm">alternate_email</span></a>
+<a class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#"><span class="material-icons text-sm">share</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Destinations</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Europe</a></li>
+<li><a class="hover:text-primary" href="#">Asia</a></li>
+<li><a class="hover:text-primary" href="#">Africa</a></li>
+<li><a class="hover:text-primary" href="#">Americas</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Company</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Our Story</a></li>
+<li><a class="hover:text-primary" href="#">Contact Us</a></li>
+<li><a class="hover:text-primary" href="#">Careers</a></li>
+<li><a class="hover:text-primary" href="#">Affiliates</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Support</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">FAQs</a></li>
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Use</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 text-center text-sm text-slate-500">
+                © 2024 LUXETOURS Travel Group. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Detail | Premium Travel Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent": "#d4af37",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation -->
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary dark:text-slate-100">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight">Booking Detail</h1>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary dark:text-slate-100">share</span>
+</button>
+</nav>
+<main class="max-w-2xl mx-auto p-4 space-y-6 pb-24">
+<!-- Header Section -->
+<header class="space-y-3">
+<div class="flex items-center justify-between">
+<h2 class="text-3xl font-bold tracking-tight text-primary dark:text-white">#TRV-88291</h2>
+<span class="px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold">
+                    Confirmed
+                </span>
+</div>
+</header>
+<!-- Hero Card -->
+<section class="bg-white dark:bg-primary/10 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="aspect-video w-full bg-cover bg-center" data-alt="Ancient Roman Colosseum architecture at sunset" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7D_am_cFhoFyiiWXUWckTov35MJjj--dGBnwXEon97eAAL1NDJstanOv6Xuk1Ea-8832W-tVlBtW9z5KarWto8xQWsC4FiGS3Wkjfro-cm5ja_ikXm6pr5W_MF0jgrihoo2UvQ5MFQenQmnDwHvymsdHERmAEqoXuAQpRZrjixyIhc5ESnWHlYx0S9NMXpwF8xwKbwdjuLxez8tV10ig34ZprEyVppZI20Fv67tvmH2U2IuLfMk_kY5ig_o2FBvAjzYT02dMM79Fv')"></div>
+<div class="p-5 space-y-4">
+<div class="flex justify-between items-start gap-4">
+<div>
+<h3 class="text-xl font-bold text-primary dark:text-white leading-tight">Colosseum &amp; Ancient Rome Tour</h3>
+<p class="text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span> Rome, Italy
+                        </p>
+</div>
+<a class="text-accent font-semibold text-sm hover:underline shrink-0" href="#">View Original Tour</a>
+</div>
+</div>
+</section>
+<!-- Logistics Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-white dark:bg-primary/10 p-4 rounded-xl border border-primary/5 flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary dark:text-accent">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Date &amp; Time</p>
+<p class="font-semibold text-sm">Oct 24, 09:30 AM</p>
+</div>
+</div>
+<div class="bg-white dark:bg-primary/10 p-4 rounded-xl border border-primary/5 flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary dark:text-accent">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Guests</p>
+<p class="font-semibold text-sm">2 Adults</p>
+</div>
+</div>
+<div class="bg-white dark:bg-primary/10 p-4 rounded-xl border border-primary/5 flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary dark:text-accent">
+<span class="material-symbols-outlined">translate</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Language</p>
+<p class="font-semibold text-sm">English</p>
+</div>
+</div>
+</section>
+<!-- Digital Ticket Section -->
+<section class="bg-primary text-white rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-accent/20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+<div class="relative z-10 flex flex-col items-center text-center space-y-6">
+<h4 class="text-lg font-bold">Your Digital Ticket</h4>
+<div class="bg-white p-4 rounded-xl">
+<div class="size-48 bg-slate-100 flex items-center justify-center">
+<img alt="Booking QR Code" class="size-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy8TedbEpipVka6pzEZuVYDysioAOPeQEt2-JcQ_gJnU1bAVhKDmSORdLpuFBvFS-A5W9TjXN6arBAx_OGgvqoUa85HC4Q985R5-WWxfZ7_xTWayk6O_oD8eCtUAUgPXkiEDoW18SccGjP8a8Q_OzBeCznv2d-lrh6OvaQLhjw9YB3dfE8GhafVEsweAvIH6q17sETzzrcu8Uz0XJIW-Lj8w7Q2R8xChuu1_JW9AKN9aUmAbH-eUAqVqe45SEtsetS1AuQtGB1q_P8"/>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 w-full">
+<button class="flex-1 bg-black text-white h-12 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-slate-900 transition-colors">
+<span class="material-symbols-outlined">wallet</span>
+                        Add to Apple Wallet
+                    </button>
+<button class="flex-1 bg-white text-black h-12 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined">gpay</span>
+                        Google Pay
+                    </button>
+</div>
+</div>
+</section>
+<!-- Meeting Point Map -->
+<section class="space-y-3">
+<h4 class="text-lg font-bold text-primary dark:text-white">Meeting Point</h4>
+<div class="bg-white dark:bg-primary/10 rounded-xl overflow-hidden border border-primary/5">
+<div class="h-48 w-full bg-slate-200" data-location="Rome, Italy" style="">
+<!-- Placeholder for Map -->
+<div class="w-full h-full bg-center bg-cover" data-alt="Stylized map showing Rome city center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBokB_9OyWMdm3FWCVryuIg0irxBBL02PQ3_ZUDpLNaOlDOGIjq45jakGLAWTz4aegp0VOlnIUHD3KFugwkTwFceH7c4x9F9cSgc-tIxRnihtyC0V_ecPmT2DtP2ExZJouwgbgqQ5fvUFewYypMcoKYN5q9ecPTMQyZpU_BuGU8uy7__wMYRCdMldB-5aQx6o7vwz34QGYspFFmSFgLfQfdKFGgmh7GVYNop7pSBIM7fh7fFd_FyNWummuEOy1NJlKPnHfgXcdZ5dIo')"></div>
+</div>
+<div class="p-4 flex items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accent mt-1">pin_drop</span>
+<div>
+<p class="font-bold text-sm">Piazza del Colosseo, 1</p>
+<p class="text-xs text-slate-500">Meet next to the Arch of Constantine</p>
+</div>
+</div>
+<button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 shrink-0">
+                        Get Directions
+                    </button>
+</div>
+</div>
+</section>
+<!-- What to Bring -->
+<section class="space-y-3">
+<h4 class="text-lg font-bold text-primary dark:text-white">What to Bring</h4>
+<div class="bg-white dark:bg-primary/10 rounded-xl p-4 border border-primary/5">
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                        Comfortable walking shoes
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                        Valid Photo ID or Passport
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                        Water bottle
+                    </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                        Sunscreen and Hat
+                    </li>
+</ul>
+</div>
+</section>
+<!-- Support Actions -->
+<section class="grid grid-cols-2 gap-4">
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-primary/10 bg-white dark:bg-primary/10 hover:bg-primary/5 transition-colors text-center space-y-2">
+<span class="material-symbols-outlined text-primary dark:text-accent">chat</span>
+<span class="text-sm font-bold">Contact Operator</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-primary/10 bg-white dark:bg-primary/10 hover:bg-primary/5 transition-colors text-center space-y-2">
+<span class="material-symbols-outlined text-primary dark:text-accent">help_center</span>
+<span class="text-sm font-bold">Help Center</span>
+</button>
+</section>
+<!-- Dangerous Actions -->
+<div class="pt-6 border-t border-primary/10 flex justify-center">
+<button class="text-rose-500 dark:text-rose-400 text-sm font-semibold hover:bg-rose-50 px-6 py-2 rounded-lg transition-colors">
+                Cancel Booking
+            </button>
+</div>
+</main>
+<!-- Bottom Padding for Mobile Spacing -->
+<div class="h-8"></div>
+</body></html>

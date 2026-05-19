@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#260a42",
+                "accent": "#FFB800",
+                "background-light": "#f7f6f8",
+                "background-dark": "#191121",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<title>Reviews Management - Partner Dashboard</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-72 bg-white dark:bg-background-dark border-r border-primary/10 flex flex-col fixed h-full z-50">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-center gap-3 mb-10">
+<div class="bg-primary rounded-lg size-10 flex items-center justify-center text-white">
+<span class="material-symbols-outlined">travel_explore</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-white text-base font-bold leading-none">Global Tours</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Verified Partner</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">map</span>
+<span class="text-sm font-semibold">Tours</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="text-sm font-semibold">Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">calendar_month</span>
+<span class="text-sm font-semibold">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="text-sm font-semibold">Earnings</span>
+</a>
+<div class="my-4 border-t border-primary/10"></div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-sm font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full bg-primary text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">support_agent</span>
+                        Support
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-72 flex-1 flex flex-col min-h-screen">
+<!-- Header -->
+<header class="h-20 bg-white dark:bg-background-dark border-b border-primary/10 px-8 flex items-center justify-between sticky top-0 z-40">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-background-light dark:bg-primary/10 border-none rounded-xl pl-12 pr-4 h-11 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="Search reviews, tours, or travelers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="relative p-2 text-slate-500 hover:bg-primary/5 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-primary/5 rounded-full transition-colors">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+<div class="h-8 w-px bg-primary/10"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold leading-none">Johnathan Miller</p>
+<p class="text-xs text-slate-500 mt-1">Senior Manager</p>
+</div>
+<div class="size-10 rounded-full bg-primary/10 border border-primary/20 overflow-hidden">
+<img alt="Partner Profile" class="w-full h-full object-cover" data-alt="Portrait of a smiling professional male manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzT_QGK14RcnAy0rTewFgLqLnltZFYOmb6emtnHskeswnRuK_YMID_pg8lV7epDERDcVR0duVBQUgP-VFagXDVpvyAgnqGpAQTdhxzrIb2zomLvCZPemhtmTkpAooBXRSutrS72686hQ6Avb7b4go0DWItzmCls_iSh9j7kJnwFjwCkDFjUyJd9BkMMcJxl0MR2y0D7AneDD_o-miRzZLkKlfdTQu455bhWy5HsRrZnu6i4rUSmJXlJy5dyrk5pFQ28dgiQiAvjEPp"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Body -->
+<div class="p-8 space-y-8">
+<!-- Title and KPIs -->
+<div class="flex flex-col gap-6">
+<div>
+<h2 class="text-3xl font-black text-primary dark:text-white tracking-tight">Reviews Management</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Monitor guest satisfaction and build trust through engagement.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-primary/10 p-6 rounded-xl border border-primary/5 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Average Rating</p>
+<div class="flex items-center gap-3 mt-2">
+<h3 class="text-3xl font-black text-primary dark:text-white">4.8</h3>
+<div class="flex">
+<span class="material-symbols-outlined text-accent" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent" style="font-variation-settings: 'FILL' 0.5">star_half</span>
+</div>
+</div>
+</div>
+<div class="size-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
+<span class="material-symbols-outlined text-2xl">grade</span>
+</div>
+</div>
+<div class="bg-white dark:bg-primary/10 p-6 rounded-xl border border-primary/5 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Total Reviews</p>
+<h3 class="text-3xl font-black text-primary dark:text-white mt-2">12,450</h3>
+<p class="text-green-600 text-xs font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                                    +12% from last month
+                                </p>
+</div>
+<div class="size-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary dark:text-white">
+<span class="material-symbols-outlined text-2xl">reviews</span>
+</div>
+</div>
+<div class="bg-white dark:bg-primary/10 p-6 rounded-xl border border-primary/5 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Review Sentiment</p>
+<h3 class="text-3xl font-black text-primary dark:text-white mt-2">92%</h3>
+<div class="w-32 h-2 bg-slate-200 dark:bg-slate-700 rounded-full mt-2 overflow-hidden">
+<div class="bg-green-500 h-full w-[92%]"></div>
+</div>
+<p class="text-slate-400 text-xs mt-1">Mainly Positive Sentiment</p>
+</div>
+<div class="size-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined text-2xl">sentiment_very_satisfied</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Filters -->
+<div class="bg-white dark:bg-primary/5 p-4 rounded-xl border border-primary/5 shadow-sm flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-xl">filter_list</span>
+<span class="text-sm font-bold text-slate-700 dark:text-slate-300">Filter By:</span>
+</div>
+<select class="bg-background-light dark:bg-background-dark border-none rounded-lg text-sm font-medium px-4 py-2 focus:ring-1 focus:ring-primary/20">
+<option>Rating: All Stars</option>
+<option>5 Stars</option>
+<option>4 Stars</option>
+<option>3 Stars &amp; Below</option>
+</select>
+<select class="bg-background-light dark:bg-background-dark border-none rounded-lg text-sm font-medium px-4 py-2 focus:ring-1 focus:ring-primary/20">
+<option>All Tours</option>
+<option>Alpine Peaks Expedition</option>
+<option>Tokyo Night Food Tour</option>
+<option>Safari Wonders Tanzania</option>
+</select>
+<select class="bg-background-light dark:bg-background-dark border-none rounded-lg text-sm font-medium px-4 py-2 focus:ring-1 focus:ring-primary/20">
+<option>Date: Last 30 Days</option>
+<option>Last 90 Days</option>
+<option>This Year</option>
+<option>Custom Range</option>
+</select>
+<select class="bg-background-light dark:bg-background-dark border-none rounded-lg text-sm font-medium px-4 py-2 focus:ring-1 focus:ring-primary/20">
+<option>Status: All Reviews</option>
+<option>Unreplied</option>
+<option>Replied</option>
+</select>
+<button class="ml-auto text-primary dark:text-white text-sm font-bold hover:underline">Clear All</button>
+</div>
+<!-- Reviews List -->
+<div class="space-y-4">
+<!-- Review Row 1 (Unreplied) -->
+<div class="bg-white dark:bg-primary/10 rounded-xl border border-primary/5 shadow-sm p-6 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+<div class="flex-shrink-0 flex flex-col items-center">
+<div class="size-16 rounded-full overflow-hidden border-4 border-background-light">
+<img alt="Customer" class="w-full h-full object-cover" data-alt="Portrait of a happy young woman traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsPycUfGCAx6NG0bAjbDXBkg8MqVz7eNBLupOMy9M3LX4F0RaoJUg8-R1NBMPs5-V37dJwCuLwru8J-z0OGBiXyFMF3gasihidI46yEHRJH2bcPt7vLSuZqMNkoKu8khKSEhiAccLnpVMXenHzAH27FGFsY6OEN3Ud_pPnoLmj4yrBOsJYdcmSVCNxolleaCtlLmmsRW0E4KRZm4Fgkx3F7o3A0FozzkSqEN3J2a6awNt8zHUAT3ruL0caIt5aIZ7jPvuGce5rZXLa"/>
+</div>
+</div>
+<div class="flex-grow space-y-3">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div>
+<h4 class="font-bold text-lg">Sarah Jenkins</h4>
+<p class="text-sm text-slate-500 font-medium">Tour: <span class="text-primary dark:text-accent">Alpine Peaks Expedition</span></p>
+</div>
+<div class="text-right">
+<div class="flex text-accent">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">October 24, 2023</p>
+</div>
+</div>
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
+                                "An absolutely breathtaking experience! Our guide, Marco, was incredibly knowledgeable about the local flora and fauna. The summit view was everything I hoped for and more. The equipment provided was top-notch, though I would recommend bringing extra wool socks for the morning climb."
+                                <button class="text-primary dark:text-accent font-bold text-xs ml-1 hover:underline">Read more</button>
+</p>
+<div class="flex items-center gap-4 pt-2">
+<button class="bg-primary text-white text-sm font-bold px-6 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-base">reply</span>
+                                    Reply to Sarah
+                                </button>
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">flag</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Review Row 2 (Replied) -->
+<div class="bg-white dark:bg-primary/10 rounded-xl border border-primary/5 shadow-sm p-6 flex flex-col md:flex-row gap-6">
+<div class="flex-shrink-0 flex flex-col items-center">
+<div class="size-16 rounded-full overflow-hidden border-4 border-background-light">
+<img alt="Customer" class="w-full h-full object-cover" data-alt="Portrait of a man wearing a backpack outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOs8-Sjmt31sMKYj-hLEpK0E3PkjxIMzmGsj15mzDglY01hTVmzNsMrWxKj4ZcZAsItYow8OvNaRUre2is5Hat24AdLBeNDEfNJNZisQKty2LhtmytU45nz1nGv4Wue5EzxxrVzBQxXewYHRqNXDUBUos851sG-rEYGwQQra-RN0nTB0BuPO4T1nxpmSwzQ6YbUgjLt2HfTsTmbnIo0U_bgAHDpvqOCEOTKmiorDr0TTO9kMo_JhheqI0xv6vJayGDE4OzfFivfReV"/>
+</div>
+</div>
+<div class="flex-grow space-y-3">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div>
+<h4 class="font-bold text-lg">Michael Chen</h4>
+<p class="text-sm text-slate-500 font-medium">Tour: <span class="text-primary dark:text-accent">Tokyo Night Food Tour</span></p>
+</div>
+<div class="text-right">
+<div class="flex text-accent">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">October 21, 2023</p>
+</div>
+</div>
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
+                                "Great way to see the hidden alleys of Shinjuku! The food was authentic and plentiful. Only reason for 4 stars is that the group was a bit large (12 people), making it hard to hear the guide sometimes."
+                            </p>
+<!-- Partner Response -->
+<div class="bg-background-light dark:bg-primary/20 p-4 rounded-xl border-l-4 border-primary mt-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs font-bold text-primary dark:text-accent uppercase tracking-wider">Your Response</span>
+<span class="text-[10px] text-slate-400">Replied on Oct 22, 2023</span>
+</div>
+<p class="text-sm italic text-slate-600 dark:text-slate-400">
+                                    "Thank you for the feedback, Michael! We're glad you enjoyed the food. We take your note about group size seriously and are currently exploring ways to cap groups at 8 for a more intimate experience. Hope to see you again!"
+                                </p>
+<div class="mt-2 flex gap-3">
+<button class="text-xs font-bold text-slate-500 hover:text-primary transition-colors">Edit Response</button>
+<button class="text-xs font-bold text-red-400 hover:text-red-600 transition-colors">Delete</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Review Row 3 (Unreplied) -->
+<div class="bg-white dark:bg-primary/10 rounded-xl border border-primary/5 shadow-sm p-6 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+<div class="flex-shrink-0 flex flex-col items-center">
+<div class="size-16 rounded-full overflow-hidden border-4 border-background-light">
+<img alt="Customer" class="w-full h-full object-cover" data-alt="Portrait of a smiling mature man with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF2SFXJocW0CGkDewTGRKTpo1rpERYwpPQfyM_13zxHqs7SmtyvZEoEnt3B4Rh-IjlCGr6RAf9TDVlZcvHuODbTubz-Cohr9I0mhL8JKklchNNlu92vuHFobRbT-0Horgaau6zumJEdl-6RcGU3syQXeslHZuiLRJagrO8zSJeqcb8qupZ8iMyAcW18OaFpT-t8voQI1l3zz2CjfE2kLnm7lmWzIZyxIzfwdLFyihYc6aQrlj_djIzYqDo2uSoxemZ3HzJtE5_g-T_"/>
+</div>
+</div>
+<div class="flex-grow space-y-3">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div>
+<h4 class="font-bold text-lg">David Ross</h4>
+<p class="text-sm text-slate-500 font-medium">Tour: <span class="text-primary dark:text-accent">Safari Wonders Tanzania</span></p>
+</div>
+<div class="text-right">
+<div class="flex text-accent">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">October 19, 2023</p>
+</div>
+</div>
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
+                                "Beyond my wildest dreams. Saw the Big Five in the first two days! The lodges were surprisingly luxurious and the food was outstanding. Highly recommend the hot air balloon extension!"
+                            </p>
+<div class="flex items-center gap-4 pt-2">
+<button class="bg-primary text-white text-sm font-bold px-6 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-base">reply</span>
+                                    Reply to David
+                                </button>
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">flag</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between py-6">
+<p class="text-sm text-slate-500">Showing 1 to 10 of 1,245 reviews</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-primary/10 rounded bg-white hover:bg-primary/5 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="px-3 py-1 border border-primary/10 rounded bg-primary text-white font-bold">1</button>
+<button class="px-3 py-1 border border-primary/10 rounded bg-white hover:bg-primary/5">2</button>
+<button class="px-3 py-1 border border-primary/10 rounded bg-white hover:bg-primary/5">3</button>
+<button class="px-3 py-1 border border-primary/10 rounded bg-white hover:bg-primary/5">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

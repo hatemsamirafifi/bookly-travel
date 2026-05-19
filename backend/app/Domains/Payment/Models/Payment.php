@@ -12,7 +12,9 @@ class Payment extends Model
     {
         static::creating(function (Payment $payment) {
             if (empty($payment->stripe_payment_intent_id)) {
-                $payment->stripe_payment_intent_id = 'pi_test_' . \Illuminate\Support\Str::random(24);
+                throw new \InvalidArgumentException(
+                    'stripe_payment_intent_id is required when creating a Payment.'
+                );
             }
         });
     }

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col max-w-2xl mx-auto bg-white dark:bg-background-dark shadow-xl">
+<!-- Header -->
+<div class="flex items-center bg-white dark:bg-background-dark p-4 pb-2 justify-between border-b border-primary/10">
+<div class="text-primary dark:text-slate-100 flex size-12 shrink-0 items-center cursor-pointer" data-icon="ArrowLeft">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-primary dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1">Partner Onboarding</h2>
+<div class="text-primary dark:text-slate-100 flex size-12 shrink-0 items-center justify-end" data-icon="Help">
+<span class="material-symbols-outlined">help_outline</span>
+</div>
+</div>
+<!-- Progress Stepper Section -->
+<div class="flex flex-col gap-3 p-6 bg-primary/5 dark:bg-primary/20">
+<div class="flex gap-6 justify-between items-center">
+<div class="flex flex-col">
+<p class="text-primary dark:text-slate-100 text-base font-bold leading-normal">Company Profile</p>
+<p class="text-primary/60 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">Step 1 of 3</p>
+</div>
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">1</div>
+<div class="h-1 w-8 rounded bg-primary/20"></div>
+<div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary/40 text-xs font-bold">2</div>
+<div class="h-1 w-8 rounded bg-primary/20"></div>
+<div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary/40 text-xs font-bold">3</div>
+</div>
+</div>
+<div class="mt-2 rounded-full bg-primary/10 h-2.5 overflow-hidden">
+<div class="h-full rounded-full bg-primary" style="width: 33%;"></div>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-primary/70 dark:text-slate-400 text-sm font-normal">Next: Verification &amp; Compliance</p>
+<p class="text-primary/70 dark:text-slate-400 text-sm font-medium">33% Complete</p>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex flex-col p-6 space-y-8">
+<div class="space-y-2">
+<h3 class="text-primary dark:text-slate-100 tracking-tight text-3xl font-extrabold leading-tight">Tell us about your company</h3>
+<p class="text-primary/70 dark:text-slate-400 text-base font-normal leading-relaxed">Join our global marketplace. Complete your profile to start listing unique travel experiences for millions of travelers.</p>
+</div>
+<!-- Form Fields -->
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="text-primary dark:text-slate-200 text-sm font-semibold">Legal Company Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary/40">business</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-primary/20 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="e.g. Global Adventures Ltd." type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-primary dark:text-slate-200 text-sm font-semibold">Company Website</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary/40">language</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-primary/20 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="https://www.yourcompany.com" type="url"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-primary dark:text-slate-200 text-sm font-semibold">Business Type</label>
+<select class="w-full px-4 py-3 rounded-lg border border-primary/20 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none appearance-none transition-all cursor-pointer">
+<option value="">Select type</option>
+<option value="operator">Tour Operator</option>
+<option value="agency">Travel Agency</option>
+<option value="experience">Experience Host</option>
+<option value="other">Other</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-primary dark:text-slate-200 text-sm font-semibold">Primary Market</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary/40">public</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-primary/20 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="e.g. Europe" type="text"/>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-primary dark:text-slate-200 text-sm font-semibold">Company Bio</label>
+<textarea class="w-full px-4 py-3 rounded-lg border border-primary/20 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none" placeholder="Briefly describe your company's mission and the types of tours you offer..." rows="4"></textarea>
+<p class="text-xs text-primary/50 dark:text-slate-500">Max 500 characters. This will be visible to travelers.</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row items-center gap-4 pt-4">
+<button class="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 group">
+                    Next Step
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="w-full sm:w-auto px-8 py-4 bg-transparent text-primary dark:text-slate-300 font-semibold hover:bg-primary/5 rounded-xl transition-all">
+                    Save for later
+                </button>
+</div>
+</div>
+<!-- Trust Badge -->
+<div class="mt-auto p-6 border-t border-primary/10 bg-background-light dark:bg-background-dark/50">
+<div class="flex items-center gap-4 opacity-70">
+<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+<div>
+<p class="text-xs font-bold text-primary dark:text-slate-200">Secure Registration</p>
+<p class="text-[10px] text-primary/60 dark:text-slate-400">Your data is encrypted and protected under our global privacy policy.</p>
+</div>
+</div>
+</div>
+</div>
+</body></html>

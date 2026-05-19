@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reviews Moderation | Global Tours Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .status-pill-published { @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400; }
+        .status-pill-flagged { @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400; }
+        .status-pill-review { @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 border-r border-primary/10 bg-white dark:bg-background-dark/50 flex flex-col fixed h-full">
+<div class="p-6 flex items-center gap-3 border-b border-primary/5">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-accent">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div>
+<h1 class="text-primary dark:text-slate-100 text-base font-bold leading-tight">Tours Global</h1>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-wider">Admin Console</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-6 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Partners</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-medium">Tours</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-primary text-white rounded-lg transition-colors shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined">reviews</span>
+<span class="text-sm font-medium">Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-primary/5">
+<div class="flex items-center gap-3 p-2 rounded-xl bg-background-light dark:bg-primary/10">
+<div class="size-8 rounded-full bg-accent flex items-center justify-center text-primary font-bold text-xs" data-alt="User profile avatar circle">
+                        JD
+                    </div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold truncate">Jane Doe</p>
+<p class="text-[10px] text-slate-500 truncate">Senior Moderator</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 p-8">
+<header class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-extrabold text-primary dark:text-slate-100 tracking-tight">Reviews Moderation</h2>
+<p class="text-slate-500 mt-1">Monitor and manage customer feedback across the global marketplace.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-primary/10 rounded-lg text-sm font-semibold bg-white dark:bg-slate-800 hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-lg">download</span> Export CSV
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold shadow-md hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-lg">auto_awesome</span> AI Auto-Mod
+                    </button>
+</div>
+</header>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 text-sm font-medium">Total Reviews</p>
+<span class="material-symbols-outlined text-primary/40">rate_review</span>
+</div>
+<p class="text-2xl font-bold text-primary dark:text-slate-100">12,842</p>
+<div class="flex items-center gap-1 mt-2 text-green-600 text-xs font-bold">
+<span class="material-symbols-outlined text-xs">trending_up</span> +12% this month
+                    </div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border-2 border-red-200 dark:border-red-900/50 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 bg-red-500 text-white text-[10px] font-bold uppercase tracking-tighter">High Priority</div>
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 text-sm font-medium">Flagged for Review</p>
+<span class="material-symbols-outlined text-red-500">warning</span>
+</div>
+<p class="text-2xl font-bold text-red-600 dark:text-red-400">156</p>
+<div class="flex items-center gap-1 mt-2 text-red-600 dark:text-red-400 text-xs font-bold">
+<span class="material-symbols-outlined text-xs">priority_high</span> Needs immediate action
+                    </div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 text-sm font-medium">Average Rating</p>
+<span class="material-symbols-outlined text-accent">stars</span>
+</div>
+<p class="text-2xl font-bold text-primary dark:text-slate-100">4.8<span class="text-slate-400 text-lg">/5</span></p>
+<div class="flex items-center gap-1 mt-2 text-amber-600 text-xs font-bold">
+<span class="material-symbols-outlined text-xs">remove</span> No change
+                    </div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<p class="text-slate-500 text-sm font-medium">Moderation Throughput</p>
+<span class="material-symbols-outlined text-primary/40">speed</span>
+</div>
+<p class="text-2xl font-bold text-primary dark:text-slate-100">92%</p>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full" style="width: 92%"></div>
+</div>
+</div>
+</div>
+<!-- Filter & Search Bar -->
+<div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-primary/5 shadow-sm mb-6">
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[300px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-background-light dark:bg-slate-900 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search by keyword, customer name, or tour..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<select class="text-sm border-none bg-background-light dark:bg-slate-900 rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-primary/20">
+<option>Rating: All</option>
+<option>5 Stars</option>
+<option>4 Stars</option>
+<option>3 Stars</option>
+<option>2 Stars</option>
+<option>1 Star</option>
+</select>
+<select class="text-sm border-none bg-background-light dark:bg-slate-900 rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-primary/20">
+<option>Status: All</option>
+<option>Published</option>
+<option>Under Review</option>
+<option>Flagged</option>
+<option>Removed</option>
+</select>
+<select class="text-sm border-none bg-background-light dark:bg-slate-900 rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-primary/20">
+<option>Date: Last 30 Days</option>
+<option>Today</option>
+<option>Last 7 Days</option>
+<option>Last Quarter</option>
+</select>
+<button class="p-2 bg-primary/5 hover:bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined text-xl">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-primary/5 shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-primary/5">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Review Date</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tour &amp; Partner</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Rating</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Snippet</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<p class="text-sm font-medium">Oct 24, 2023</p>
+<p class="text-[10px] text-slate-400">14:22 PM</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary" data-alt="Reviewer initial avatar">MK</div>
+<p class="text-sm font-semibold">Marco K.</p>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium truncate max-w-[180px]">Amalfi Coast Sunset Boat Tour</p>
+<p class="text-xs text-slate-400">Positano Sails Ltd.</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex text-accent">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-600 dark:text-slate-400 truncate max-w-[200px]">"Absolutely incredible experience. The guide was knowledgeable and..."</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide status-pill-published">Published</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-600 transition-colors" title="Remove"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors bg-red-50/20 dark:bg-red-900/5">
+<td class="px-6 py-4 whitespace-nowrap border-l-4 border-red-500">
+<p class="text-sm font-medium">Oct 23, 2023</p>
+<p class="text-[10px] text-slate-400">09:15 AM</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary" data-alt="Reviewer initial avatar">AS</div>
+<p class="text-sm font-semibold">Alice S.</p>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium truncate max-w-[180px]">Great Wall Hiking Expedition</p>
+<p class="text-xs text-slate-400">Beijing Treks</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex text-accent">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm text-slate-300">star</span>
+<span class="material-symbols-outlined text-sm text-slate-300">star</span>
+<span class="material-symbols-outlined text-sm text-slate-300">star</span>
+<span class="material-symbols-outlined text-sm text-slate-300">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-600 dark:text-slate-400 truncate max-w-[200px]">"The guide never showed up. No one answered my calls. Refund me now!"</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide status-pill-flagged">Flagged</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-2">
+<button class="px-3 py-1 bg-green-600 text-white text-[10px] font-bold rounded uppercase hover:bg-green-700">Approve</button>
+<button class="px-3 py-1 bg-red-600 text-white text-[10px] font-bold rounded uppercase hover:bg-red-700">Remove</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<p class="text-sm font-medium">Oct 23, 2023</p>
+<p class="text-[10px] text-slate-400">22:05 PM</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary" data-alt="Reviewer initial avatar">JR</div>
+<p class="text-sm font-semibold">James R.</p>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium truncate max-w-[180px]">Tokyo Sushi Making Class</p>
+<p class="text-xs text-slate-400">Zen Kitchens</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex text-accent">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm text-slate-300">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-600 dark:text-slate-400 truncate max-w-[200px]">"Fun experience but the location was a bit hard to find..."</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide status-pill-review">Under Review</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-600 transition-colors" title="Remove"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<p class="text-sm font-medium">Oct 22, 2023</p>
+<p class="text-[10px] text-slate-400">11:10 AM</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary" data-alt="Reviewer initial avatar">LM</div>
+<p class="text-sm font-semibold">Lucia M.</p>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium truncate max-w-[180px]">Private Louvre Museum Tour</p>
+<p class="text-xs text-slate-400">Paris Guides Elite</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex text-accent">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm text-slate-300">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-600 dark:text-slate-400 truncate max-w-[200px]">"Our guide Chloe was fantastic, she knew so much history..."</p>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300">Removed</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors" title="View History"><span class="material-symbols-outlined text-lg">history</span></button>
+<button class="p-1.5 text-slate-400 hover:text-green-600 transition-colors" title="Restore"><span class="material-symbols-outlined text-lg">settings_backup_restore</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center border-t border-primary/5">
+<p class="text-xs text-slate-500 font-medium">Showing 1 to 4 of 12,842 reviews</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-white dark:bg-slate-800 border border-primary/10 rounded-md text-xs font-semibold hover:bg-slate-100 transition-colors">Previous</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-800 border border-primary/10 rounded-md text-xs font-semibold hover:bg-slate-100 transition-colors">Next</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

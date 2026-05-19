@@ -186,6 +186,7 @@
     "edit_review": "Modifica Recensione",
     "update_review": "Aggiorna Recensione",
     "no_reviews_yet": "Nessuna recensione ancora. Sii il primo!",
+    "review_count": "{count, plural, =1 {# recensione} other {# recensioni}}",
     "edited": "Modificato",
     "char_count": "{count}/2000",
     "rate_limit_message": "Stai inviando recensioni troppo velocemente. Attendi un momento prima di riprovare.",

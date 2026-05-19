@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent": "#d4af37",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-size: 24px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen overflow-x-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-background-dark border-r border-primary/10 flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary rounded-lg p-2 text-accent">
+<span class="material-symbols-outlined">travel_explore</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-slate-100 text-sm font-bold leading-tight">Travel Partner</h1>
+<p class="text-primary/60 dark:text-slate-400 text-xs font-medium">SaaS Dashboard</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-primary/70 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary/70 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary dark:text-accent rounded-lg" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-bold">Pricing Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary/70 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary/70 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-primary/10">
+<div class="flex items-center gap-3 p-2 bg-primary/5 rounded-xl">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_circle</span>
+</div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-xs font-bold truncate">Premium Tours Ltd.</p>
+<p class="text-[10px] text-primary/60">Partner Account</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-y-auto">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10 px-8 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100">Pricing Management</h2>
+<div class="h-6 w-[1px] bg-primary/10"></div>
+<div class="flex items-center gap-2">
+<label class="text-xs font-semibold text-primary/50 uppercase tracking-wider">Current Tour:</label>
+<select class="bg-primary/5 border-none rounded-lg text-sm font-medium focus:ring-primary/20 cursor-pointer">
+<option>Grand Canyon Helicopter Tour</option>
+<option>Antelope Canyon Day Trip</option>
+<option>Las Vegas Strip Walking Tour</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 text-primary/70 hover:bg-primary/5 rounded-lg text-sm font-bold transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                    View Live Store
+                </button>
+<button class="bg-primary text-accent px-6 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                    Save Changes
+                </button>
+</div>
+</header>
+<div class="p-8 space-y-8 max-w-7xl mx-auto w-full">
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-background-dark border border-primary/10 p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<p class="text-sm font-medium text-primary/60 dark:text-slate-400">Current Avg. Price</p>
+<span class="material-symbols-outlined text-accent">analytics</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-primary dark:text-slate-100">$245.00</h3>
+<span class="text-green-600 text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> 2.5%
+                        </span>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark border border-primary/10 p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<p class="text-sm font-medium text-primary/60 dark:text-slate-400">Seasonal Adjustment</p>
+<span class="material-symbols-outlined text-accent">event_note</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-primary dark:text-slate-100">+15% Peak</h3>
+<span class="text-red-600 text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">trending_down</span> 5%
+                        </span>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark border border-primary/10 p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<p class="text-sm font-medium text-primary/60 dark:text-slate-400">Profit Margin</p>
+<span class="material-symbols-outlined text-accent">payments</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-primary dark:text-slate-100">22.5%</h3>
+<span class="text-red-600 text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">trending_down</span> 1.2%
+                        </span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-8">
+<!-- Standard Pricing Table -->
+<div class="col-span-2 space-y-8">
+<section class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-primary/10 flex items-center justify-between">
+<h4 class="font-bold text-primary dark:text-slate-100">Standard Pricing</h4>
+<span class="text-xs bg-accent/10 text-primary px-2 py-1 rounded font-bold">DEFAULT RATES</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-primary/5 text-primary/70 text-xs font-bold uppercase tracking-wider">
+<tr>
+<th class="px-6 py-3">Traveler Type</th>
+<th class="px-6 py-3">Base Price (Retail)</th>
+<th class="px-6 py-3">Net Rate (Cost)</th>
+<th class="px-6 py-3">Margin</th>
+<th class="px-6 py-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5 text-sm">
+<tr>
+<td class="px-6 py-4 font-bold">Adult (18+)</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-primary/5 border-none rounded text-sm font-medium focus:ring-accent" type="text" value="$299.00"/>
+</td>
+<td class="px-6 py-4 text-primary/60">$215.00</td>
+<td class="px-6 py-4 font-medium text-green-600">28.1%</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary/40 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-bold">Child (3-17)</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-primary/5 border-none rounded text-sm font-medium focus:ring-accent" type="text" value="$199.00"/>
+</td>
+<td class="px-6 py-4 text-primary/60">$140.00</td>
+<td class="px-6 py-4 font-medium text-green-600">29.6%</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary/40 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-bold">Senior (65+)</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-primary/5 border-none rounded text-sm font-medium focus:ring-accent" type="text" value="$259.00"/>
+</td>
+<td class="px-6 py-4 text-primary/60">$190.00</td>
+<td class="px-6 py-4 font-medium text-green-600">26.6%</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary/40 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-bold">Infant (0-2)</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-primary/5 border-none rounded text-sm font-medium focus:ring-accent" type="text" value="$49.00"/>
+</td>
+<td class="px-6 py-4 text-primary/60">$20.00</td>
+<td class="px-6 py-4 font-medium text-green-600">59.1%</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary/40 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Seasonal Pricing -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-lg font-bold text-primary dark:text-slate-100">Seasonal &amp; Event Pricing</h4>
+<button class="flex items-center gap-2 bg-primary/5 text-primary border border-primary/10 px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                                Add Seasonal Rule
+                            </button>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Rule 1 -->
+<div class="bg-white dark:bg-background-dark border border-primary/10 p-6 rounded-xl flex items-center justify-between shadow-sm border-l-4 border-l-accent">
+<div class="flex items-center gap-6">
+<div class="bg-accent/10 p-3 rounded-full text-accent">
+<span class="material-symbols-outlined">wb_sunny</span>
+</div>
+<div>
+<h5 class="font-bold text-primary">Summer Peak Season</h5>
+<p class="text-xs text-primary/60">June 01, 2024 - August 31, 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-xs font-bold text-primary/40 uppercase tracking-tighter">Adjustment</p>
+<p class="text-lg font-bold text-primary">+15% on Base</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-primary/40 hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-primary/40 hover:text-red-500 transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Rule 2 -->
+<div class="bg-white dark:bg-background-dark border border-primary/10 p-6 rounded-xl flex items-center justify-between shadow-sm border-l-4 border-l-primary">
+<div class="flex items-center gap-6">
+<div class="bg-primary/10 p-3 rounded-full text-primary">
+<span class="material-symbols-outlined">ac_unit</span>
+</div>
+<div>
+<h5 class="font-bold text-primary">Holiday Special</h5>
+<p class="text-xs text-primary/60">December 20, 2024 - January 05, 2025</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-xs font-bold text-primary/40 uppercase tracking-tighter">Adjustment</p>
+<p class="text-lg font-bold text-primary">Flat +$50.00</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-primary/40 hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-primary/40 hover:text-red-500 transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar Settings Panel -->
+<div class="space-y-6">
+<!-- Currency & Tax -->
+<section class="bg-primary text-white p-6 rounded-xl shadow-xl shadow-primary/20">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-accent">settings_suggest</span>
+<h4 class="font-bold">Currency &amp; Tax Settings</h4>
+</div>
+<div class="space-y-4">
+<div>
+<label class="text-[10px] font-bold text-white/50 uppercase block mb-1">Display Currency</label>
+<select class="w-full bg-white/10 border-white/20 rounded-lg text-sm text-white focus:ring-accent cursor-pointer">
+<option>USD - US Dollar ($)</option>
+<option>EUR - Euro (€)</option>
+<option>GBP - British Pound (£)</option>
+</select>
+</div>
+<div>
+<label class="text-[10px] font-bold text-white/50 uppercase block mb-1">Tax Configuration</label>
+<div class="space-y-3 mt-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-white/30 bg-transparent text-accent focus:ring-accent" type="checkbox"/>
+<span class="text-sm text-white/90 group-hover:text-white transition-colors">Include Local Sales Tax (8.5%)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-white/30 bg-transparent text-accent focus:ring-accent" type="checkbox"/>
+<span class="text-sm text-white/90 group-hover:text-white transition-colors">Add Booking Fee to Client</span>
+</label>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/10">
+<p class="text-xs text-white/60 leading-relaxed italic">
+                                *All changes to tax rates will be audited and reflected in next month's settlements.
+                            </p>
+</div>
+</section>
+<!-- Quick Tools -->
+<section class="bg-white dark:bg-background-dark border border-primary/10 p-6 rounded-xl shadow-sm space-y-4">
+<h4 class="font-bold text-primary dark:text-slate-100 mb-4">Pricing Tools</h4>
+<button class="w-full flex items-center justify-between p-3 rounded-lg border border-primary/5 hover:bg-primary/5 transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-accent">calculate</span>
+<span class="text-sm font-medium">Bulk Price Update</span>
+</div>
+<span class="material-symbols-outlined text-primary/40">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg border border-primary/5 hover:bg-primary/5 transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-accent">history</span>
+<span class="text-sm font-medium">Pricing History</span>
+</div>
+<span class="material-symbols-outlined text-primary/40">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg border border-primary/5 hover:bg-primary/5 transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:text-accent">content_copy</span>
+<span class="text-sm font-medium">Clone Pricing to Others</span>
+</div>
+<span class="material-symbols-outlined text-primary/40">chevron_right</span>
+</button>
+</section>
+<!-- Information Card -->
+<div class="bg-accent/10 border border-accent/20 p-4 rounded-xl">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-accent">info</span>
+<div class="space-y-1">
+<p class="text-sm font-bold text-primary">Dynamic Pricing Notice</p>
+<p class="text-xs text-primary/70 leading-relaxed">
+                                    Your account is eligible for <strong>Dynamic Yield</strong>. Our AI can automatically adjust your rates based on marketplace demand.
+                                </p>
+<a class="text-xs font-bold text-primary underline block mt-2" href="#">Learn more about AI pricing</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

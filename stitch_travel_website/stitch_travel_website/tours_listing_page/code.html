@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center p-4 justify-between gap-4">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-primary/5 text-primary dark:text-slate-100">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex-1">
+<h1 class="text-lg font-bold leading-tight tracking-tight text-primary dark:text-slate-100">Tours in Rome</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400">124 experiences found</p>
+</div>
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-primary/5 text-primary dark:text-slate-100">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+<!-- Filter/Sort Bar -->
+<div class="flex gap-2 px-4 pb-4 overflow-x-auto no-scrollbar">
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-white dark:bg-slate-800 border border-primary/10 px-4 shadow-sm">
+<span class="material-symbols-outlined text-primary dark:text-slate-300 text-sm">tune</span>
+<p class="text-primary dark:text-slate-100 text-sm font-semibold">Filter</p>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-white dark:bg-slate-800 border border-primary/10 px-4 shadow-sm">
+<p class="text-primary dark:text-slate-100 text-sm font-medium">Sort: Price Low to High</p>
+<span class="material-symbols-outlined text-primary dark:text-slate-300 text-sm">expand_more</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-white dark:bg-slate-800 border border-primary/10 px-4 shadow-sm">
+<p class="text-primary dark:text-slate-100 text-sm font-medium">Dates</p>
+</button>
+</div>
+</header>
+<main class="p-4 space-y-6">
+<!-- Tour Card 1 -->
+<div class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="relative w-full aspect-[4/3] bg-slate-200 overflow-hidden">
+<img alt="Colosseum at sunset" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sunlit majestic ancient Roman Colosseum amphitheater" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAELreqr9mYQ78BtXPK_-saGdw5kOcetj9PZpbShbz0m0ClA2pS0_l1EWQQSWytFJTd6h63DIptlSJIvr1wfkDos3ulsZtaC_itIKSi6Ib0tJxQ4mRdtqBIB5HTLpwwp7Vl24-LmX5ECoUAtEHWdiCPmlpaCTdLftmRvUMPx955XRbZ0CMtZExir3H-i2Qjc3CTenFK1ErULE0f9dHJGc5IRPKhBEEL_CBqHJsEfdM3YXqNt1MrCWqpFXfF2Rw-lBu1Tifws9R4hnGC"/>
+<button class="absolute top-3 right-3 z-10 size-10 flex items-center justify-center bg-white/80 dark:bg-black/40 backdrop-blur rounded-full text-primary dark:text-white shadow-lg">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">Best Seller</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined fill-icon text-sm">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">4.8</span>
+<span class="text-sm font-normal text-slate-500 dark:text-slate-400">(1.2k reviews)</span>
+<span class="mx-1 text-slate-300">•</span>
+<span class="text-sm font-normal text-slate-500 dark:text-slate-400">3 Hours</span>
+</div>
+<h3 class="text-lg font-bold text-primary dark:text-slate-100 leading-snug">Skip-the-Line Colosseum &amp; Roman Forum Tour</h3>
+<div class="flex flex-wrap gap-2 my-1">
+<span class="px-2 py-1 rounded-md bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-[11px] font-bold">Free Cancellation</span>
+<span class="px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 text-[11px] font-bold">Instant Confirmation</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400">From</span>
+<span class="text-xl font-black text-primary dark:text-slate-100">$59 <span class="text-sm font-normal text-slate-500">/ person</span></span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold transition-colors">
+                        Book Now
+                    </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="relative w-full aspect-[4/3] bg-slate-200 overflow-hidden">
+<img alt="Vatican Museums Hallway" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Intricately painted ceiling of a Vatican Museum hallway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT_g43-i_vfh_HqsoFk92ftO0uYEYUBoPtR9d3MYPVfnPcc6Z9u64jbdrgFs1v2BVPuWT1rt476L8xbJ2HjxkGQ64ARpwy6cNwHI9miaubb2Ag3zjq7YI1IhobyHVpFgCUJG4s1Zbk76aW_MMJM4_ldi1AqBpUZhXFtaETzAR5JyaLypogevKyutOl8xKO3umcrmM8SyPaJttNhWhm5wnyOd-QI50VOjbwAt7Jem_pEb4UmnHzUv8urqk0jDmTBdGxsl_YpoNUaqz6"/>
+<button class="absolute top-3 right-3 z-10 size-10 flex items-center justify-center bg-white/80 dark:bg-black/40 backdrop-blur rounded-full text-primary dark:text-white shadow-lg">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined fill-icon text-sm">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">4.9</span>
+<span class="text-sm font-normal text-slate-500 dark:text-slate-400">(2.5k reviews)</span>
+<span class="mx-1 text-slate-300">•</span>
+<span class="text-sm font-normal text-slate-500 dark:text-slate-400">2.5 Hours</span>
+</div>
+<h3 class="text-lg font-bold text-primary dark:text-slate-100 leading-snug">Vatican Museums &amp; Sistine Chapel Guided Tour</h3>
+<div class="flex flex-wrap gap-2 my-1">
+<span class="px-2 py-1 rounded-md bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-[11px] font-bold">Free Cancellation</span>
+<span class="px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 text-[11px] font-bold">Instant Confirmation</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400">From</span>
+<span class="text-xl font-black text-primary dark:text-slate-100">$45 <span class="text-sm font-normal text-slate-500">/ person</span></span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold transition-colors">
+                        Book Now
+                    </button>
+</div>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="group flex flex-col bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="relative w-full aspect-[4/3] bg-slate-200 overflow-hidden">
+<img alt="Trevi Fountain at night" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="The ornate Trevi Fountain illuminated at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdKUzZSJ5gfq97ZrEv-7_hB3ra7iDG6JFpCIJYIE_0bS4uNNIgalbK4jyBwcozhFhKpD9JbB649YxjV2B0sBi6hoWAtQpgjysm17ig3Des_jJ7dGxHCXp4E9NHhyLfADYorE-hP_eCOL44uMRteL74HWVfAPJnAP9jedgdG_LzQI_zTUCADSXC2qfgYRVJELRGeO0mTn3bBJsX1ES8Evs5O9ecgq-SSk6Zhz5RlwLiEHukEj6ZyaEjZMWW5KgmDdL-3TGO4rBLIUDd"/>
+<button class="absolute top-3 right-3 z-10 size-10 flex items-center justify-center bg-white/80 dark:bg-black/40 backdrop-blur rounded-full text-primary dark:text-white shadow-lg">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined fill-icon text-sm">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">4.7</span>
+<span class="text-sm font-normal text-slate-500 dark:text-slate-400">(840 reviews)</span>
+<span class="mx-1 text-slate-300">•</span>
+<span class="text-sm font-normal text-slate-500 dark:text-slate-400">2 Hours</span>
+</div>
+<h3 class="text-lg font-bold text-primary dark:text-slate-100 leading-snug">Rome Street Food Tour &amp; Night Walk</h3>
+<div class="flex flex-wrap gap-2 my-1">
+<span class="px-2 py-1 rounded-md bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-[11px] font-bold">Free Cancellation</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400">From</span>
+<span class="text-xl font-black text-primary dark:text-slate-100">$38 <span class="text-sm font-normal text-slate-500">/ person</span></span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold transition-colors">
+                        Book Now
+                    </button>
+</div>
+</div>
+</div>
+<!-- Load More Button -->
+<div class="flex flex-col items-center py-6 gap-4">
+<button class="flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-slate-800 text-primary dark:text-slate-100 font-bold rounded-xl border-2 border-primary/20 w-full shadow-sm hover:bg-primary/5 transition-colors">
+<span>Load More Experiences</span>
+<span class="material-symbols-outlined">refresh</span>
+</button>
+<p class="text-sm text-slate-500 dark:text-slate-400 text-center">Showing 3 of 124 tours in Rome</p>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-background-dark p-8 border-t border-primary/10 mb-24">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<h4 class="text-primary dark:text-slate-100 font-black text-xl uppercase tracking-tighter italic">GlobalTours</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400 max-w-xs">Helping you find the best experiences around the globe since 2012.</p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-3">
+<h5 class="text-sm font-bold text-primary dark:text-slate-100">About</h5>
+<a class="text-sm text-slate-500 dark:text-slate-400" href="#">Careers</a>
+<a class="text-sm text-slate-500 dark:text-slate-400" href="#">Press</a>
+<a class="text-sm text-slate-500 dark:text-slate-400" href="#">Blog</a>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="text-sm font-bold text-primary dark:text-slate-100">Support</h5>
+<a class="text-sm text-slate-500 dark:text-slate-400" href="#">Help Center</a>
+<a class="text-sm text-slate-500 dark:text-slate-400" href="#">Cancelations</a>
+<a class="text-sm text-slate-500 dark:text-slate-400" href="#">Contact Us</a>
+</div>
+</div>
+<div class="flex gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">social_leaderboard</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">share</span></a>
+</div>
+<p class="text-xs text-slate-400">© 2024 GlobalTours Marketplace. All rights reserved.</p>
+</div>
+</footer>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex gap-2 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-background-dark px-4 pb-6 pt-3 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary dark:text-slate-100" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-icon">explore</span>
+</div>
+<p class="text-xs font-bold leading-normal tracking-[0.015em]">Explore</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">favorite</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Wishlists</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">confirmation_number</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Bookings</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">account_circle</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profile</p>
+</a>
+</nav>
+</body></html>

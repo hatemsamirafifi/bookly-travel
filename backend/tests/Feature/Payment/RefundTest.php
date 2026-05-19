@@ -38,7 +38,7 @@ function createPaidBooking(User $traveler, Tour $tour): Booking
         'payment_confirmed_at' => now(),
     ]);
 
-    Payment::create([
+    $payment = Payment::create([
         'booking_id' => $booking->id,
         'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
         'type' => 'charge',
@@ -51,7 +51,7 @@ function createPaidBooking(User $traveler, Tour $tour): Booking
 
     FinancialLedgerEntry::create([
         'booking_id' => $booking->id,
-        'payment_id' => 1,
+        'payment_id' => $payment->id,
         'entry_type' => 'debit',
         'amount' => 10000,
         'currency' => 'EUR',

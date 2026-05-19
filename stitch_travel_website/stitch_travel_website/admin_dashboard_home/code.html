@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent": "#d4af37",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Global Tours Marketplace Admin</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 h-screen flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-accent">
+<span class="material-symbols-outlined text-2xl">public</span>
+</div>
+<div>
+<h1 class="font-bold text-primary dark:text-white leading-tight">Global Tours</h1>
+<p class="text-xs text-slate-500 font-medium">Marketplace Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">handshake</span>
+                Partners
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+                Tours
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+                Bookings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">reviews</span>
+                Reviews
+            </a>
+<div class="pt-4 pb-2">
+<p class="px-4 text-[10px] uppercase tracking-widest text-slate-400 font-bold">Management</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">article</span>
+                CMS
+            </a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="bg-primary/5 rounded-xl p-4">
+<p class="text-xs text-primary/70 dark:text-slate-400 font-medium mb-2">Used Storage</p>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mb-2 overflow-hidden">
+<div class="bg-accent h-full w-[65%]"></div>
+</div>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-tight">6.5 GB / 10 GB</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Header -->
+<header class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+<div class="flex-1 max-w-xl">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-2.5 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 placeholder:text-slate-500 text-sm" placeholder="Search partners, tours, or bookings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="size-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2.5 size-2 bg-red-500 border-2 border-white dark:border-slate-900 rounded-full"></span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-slate-900 dark:text-white leading-none">Alexander Pierce</p>
+<p class="text-xs text-slate-500 font-medium mt-1">Super Admin</p>
+</div>
+<div class="size-10 rounded-full border-2 border-accent/20 p-0.5">
+<img alt="Admin Profile" class="size-full rounded-full object-cover" data-alt="Professional portrait of an administrative user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwFkNCbrK_czH1TERPQ_dEa07dEfaakpaiK3ImKXgNlJz9pTdN_eDukQfppUzSlabYHHFLhcqp33IvL_V24PgKy_ojfsgic3PlNDyJrdhdzyd4KMd6WkU_FcY1lWmHnoywqahpDWmhVMTU31pQEI4ufStZmFKKdz73_HtGa9nCg3g9Q1M_swVdTPlxkreos9xzdnKSvghoYV4csLFsSy0Wa0Hld2ovnC7-6tRKiRcvWKomQ5K1KwrsFWkl2HwU_UUVcPpzKCO2J5YE"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Body -->
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto w-full">
+<!-- KPI Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Revenue Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<p class="text-sm font-medium text-slate-500">Marketplace Revenue</p>
+<span class="text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded text-xs font-bold">+12.5%</span>
+</div>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-primary dark:text-white">$1,284,500</h3>
+<div class="w-16 h-8">
+<svg class="w-full h-full stroke-emerald-500 stroke-2 fill-none" viewbox="0 0 100 40">
+<path d="M0,35 Q20,30 30,15 T50,20 T70,5 T100,25"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Partners Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<p class="text-sm font-medium text-slate-500">Active Partners</p>
+<span class="text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded text-xs font-bold">+3.2%</span>
+</div>
+<h3 class="text-3xl font-bold text-primary dark:text-white">1,420</h3>
+<p class="text-xs text-slate-400 mt-2">86 onboarded this month</p>
+</div>
+<!-- Approvals Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<p class="text-sm font-medium text-slate-500">Pending Approvals</p>
+<span class="text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded text-xs font-bold">Action Needed</span>
+</div>
+<h3 class="text-3xl font-bold text-primary dark:text-white">42</h3>
+<div class="flex gap-3 mt-2">
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">12 Partners</span>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">30 Tours</span>
+</div>
+</div>
+<!-- Bookings Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<p class="text-sm font-medium text-slate-500">Bookings (30d)</p>
+<span class="text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded text-xs font-bold">+8.4%</span>
+</div>
+<h3 class="text-3xl font-bold text-primary dark:text-white">8,640</h3>
+<p class="text-xs text-slate-400 mt-2">Peak: Sat, Oct 12</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Main Trends Area -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Global Booking Trends -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-800">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="text-lg font-bold text-primary dark:text-white">Global Booking Trends</h2>
+<p class="text-sm text-slate-500">Volume distribution over time</p>
+</div>
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+<button class="px-3 py-1 text-xs font-bold rounded-md bg-white dark:bg-slate-700 shadow-sm text-primary dark:text-white">1M</button>
+<button class="px-3 py-1 text-xs font-bold text-slate-500">6M</button>
+<button class="px-3 py-1 text-xs font-bold text-slate-500">1Y</button>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#260a42" stop-opacity="0.1"></stop>
+<stop offset="100%" stop-color="#260a42" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,250 Q100,220 200,240 T400,100 T600,180 T800,50 T1000,120 V300 H0 Z" fill="url(#gradient)"></path>
+<path d="M0,250 Q100,220 200,240 T400,100 T600,180 T800,50 T1000,120" fill="none" stroke="#260a42" stroke-width="3"></path>
+</svg>
+<div class="absolute bottom-0 left-0 w-full flex justify-between px-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+<span class="text-[10px] text-slate-400 font-bold uppercase">Week 1</span>
+<span class="text-[10px] text-slate-400 font-bold uppercase">Week 2</span>
+<span class="text-[10px] text-slate-400 font-bold uppercase">Week 3</span>
+<span class="text-[10px] text-slate-400 font-bold uppercase">Week 4</span>
+</div>
+</div>
+</div>
+<!-- Recent Partner Applications -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200/60 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+<h2 class="text-lg font-bold text-primary dark:text-white">Recent Partner Applications</h2>
+<button class="text-primary dark:text-accent text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Applicant</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Location</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Type</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Status</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">SV</div>
+<span class="text-sm font-semibold">Safari Ventures Ltd.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Nairobi, Kenya</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Eco-Tours</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-amber-50 text-amber-600 dark:bg-amber-500/10">Pending</span>
+</td>
+<td class="px-6 py-4">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">AE</div>
+<span class="text-sm font-semibold">Alps Explorer</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Chamonix, FR</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Adventure</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-blue-50 text-blue-600 dark:bg-blue-500/10">Under Review</span>
+</td>
+<td class="px-6 py-4">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">QT</div>
+<span class="text-sm font-semibold">Quartz Travel Group</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Dubai, UAE</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Luxury</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-amber-50 text-amber-600 dark:bg-amber-500/10">Pending</span>
+</td>
+<td class="px-6 py-4">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Sidebar Content -->
+<div class="space-y-8">
+<!-- Moderation Queue -->
+<div class="bg-primary text-white rounded-xl p-6 shadow-xl relative overflow-hidden">
+<div class="absolute -right-8 -top-8 size-32 bg-accent opacity-10 rounded-full"></div>
+<h2 class="text-lg font-bold mb-6">Moderation Queue</h2>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent">map</span>
+<div>
+<p class="text-sm font-bold">New Tour Listings</p>
+<p class="text-xs text-white/60">Waiting for QA check</p>
+</div>
+</div>
+<span class="bg-accent text-primary px-2 py-1 rounded-md text-xs font-black">18</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent">star_half</span>
+<div>
+<p class="text-sm font-bold">Flagged Reviews</p>
+<p class="text-xs text-white/60">Potential policy violation</p>
+</div>
+</div>
+<span class="bg-accent text-primary px-2 py-1 rounded-md text-xs font-black">24</span>
+</div>
+</div>
+<button class="w-full mt-6 py-2 bg-accent text-primary font-bold rounded-lg text-sm hover:brightness-110 transition-all">Clear All Pending</button>
+</div>
+<!-- Marketplace Health -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-800">
+<h2 class="text-lg font-bold text-primary dark:text-white mb-6">Marketplace Health</h2>
+<div class="space-y-6">
+<!-- Health KPI 1 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<p class="text-sm text-slate-500 font-medium">Conversion Rate</p>
+<p class="text-sm font-bold text-primary dark:text-white">3.8%</p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[76%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-emerald-500 font-bold mt-1">+0.4% vs last week</p>
+</div>
+<!-- Health KPI 2 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<p class="text-sm text-slate-500 font-medium">Customer Satisfaction</p>
+<p class="text-sm font-bold text-primary dark:text-white">4.9/5.0</p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-accent h-full w-[98%] rounded-full"></div>
+</div>
+<div class="flex gap-1 mt-2">
+<span class="material-symbols-outlined text-[14px] text-accent fill-[1]">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent fill-[1]">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent fill-[1]">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent fill-[1]">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent fill-[1]">star</span>
+</div>
+</div>
+<!-- Health KPI 3 -->
+<div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full border-4 border-emerald-100 dark:border-emerald-500/20 flex items-center justify-center">
+<span class="text-xs font-black text-emerald-500">92%</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Platform Uptime</p>
+<p class="text-xs text-slate-400">All systems operational</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Tour Details - Colosseum Underground</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-primary/10 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary dark:text-slate-100">arrow_back</span>
+</button>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary dark:text-slate-100">share</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary dark:text-slate-100">favorite</span>
+</button>
+</div>
+</header>
+<main class="max-w-5xl mx-auto pb-32">
+<!-- Image Gallery Hero -->
+<div class="relative px-0 md:px-4 py-4">
+<div class="relative h-[300px] md:h-[500px] w-full overflow-hidden md:rounded-xl group">
+<img alt="Colosseum" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105" data-alt="Wide shot of the ancient Roman Colosseum at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4mYoPWi5EFTZMUyVwYGN_5g7eoyTIu4W2Imf2U_F2m_l35mSsikWIKzOAy5DRgioRRe7AAiWtpHaZZJqjKRRVssg55qX4mPew8cZmAeud55GPI4Fpp0YrU0CWZe15t4A1FDAIv8e86OTI9QSiO6xhKzTFhyTklKvBca8BipZS9f5VCdDdVkl4IToZQIByiAYk9JtQ_FzBCYVi274leLqvsKdG2sh_heoddiW0oZgOloh10_hzTClNK7U8iq6kFZzmbb9MjuqeN9bW"/>
+<div class="absolute bottom-4 right-4">
+<button class="bg-white/90 backdrop-blur px-4 py-2 rounded-lg text-primary text-sm font-bold flex items-center gap-2 shadow-lg hover:bg-white">
+<span class="material-symbols-outlined text-sm">grid_view</span>
+                        See all photos
+                    </button>
+</div>
+</div>
+</div>
+<!-- Title & Basic Info -->
+<section class="px-4 py-6">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div class="flex-1">
+<h1 class="text-3xl md:text-4xl font-extrabold text-primary dark:text-slate-100 leading-tight">
+                        Colosseum Underground and Ancient Rome Small-Group Tour
+                    </h1>
+<div class="flex items-center gap-4 mt-4 text-sm font-medium">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-accent fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="text-primary dark:text-slate-100 font-bold">4.9</span>
+<span class="text-slate-500 underline decoration-slate-300">2.4k reviews</span>
+</div>
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-lg">location_on</span>
+<span>Rome, Italy</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Facts Row -->
+<div class="grid grid-cols-3 gap-2 md:gap-4 mt-8 py-6 border-y border-primary/5">
+<div class="flex flex-col items-center text-center p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent mb-2">schedule</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Duration</span>
+<span class="text-sm font-bold text-primary dark:text-slate-100">3 Hours</span>
+</div>
+<div class="flex flex-col items-center text-center p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent mb-2">group</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Group Size</span>
+<span class="text-sm font-bold text-primary dark:text-slate-100">Max 12</span>
+</div>
+<div class="flex flex-col items-center text-center p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent mb-2">translate</span>
+<span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Language</span>
+<span class="text-sm font-bold text-primary dark:text-slate-100">English</span>
+</div>
+</div>
+</section>
+<!-- Overview Section -->
+<section class="px-4 py-8">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100 mb-4">Overview</h2>
+<div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed">
+<p>
+                    Descend into the heart of Ancient Rome on this exclusive underground tour of the Colosseum. While most visitors only see the arena floor from above, you'll walk through the dark tunnels where gladiators prepared for battle and wild animals were kept in cages before being hoisted into the sunlight.
+                </p>
+<p class="mt-4">
+                    Following your subterranean exploration, walk the footsteps of emperors through the Roman Forum and climb the Palatine Hill for breathtaking views of the eternal city. This small-group experience ensures personalized attention from your expert historian guide.
+                </p>
+</div>
+</section>
+<!-- Highlights -->
+<section class="px-4 py-8 bg-primary/5 md:rounded-xl mx-4">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100 mb-6">Experience Highlights</h2>
+<ul class="grid md:grid-cols-2 gap-4">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-accent font-bold">check_circle</span>
+<span class="text-slate-700 dark:text-slate-300">Exclusive access to the Colosseum's underground chambers</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-accent font-bold">check_circle</span>
+<span class="text-slate-700 dark:text-slate-300">Skip-the-line entry to all sites (Colosseum, Forum, Palatine)</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-accent font-bold">check_circle</span>
+<span class="text-slate-700 dark:text-slate-300">Professional English-speaking archeologist guide</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-accent font-bold">check_circle</span>
+<span class="text-slate-700 dark:text-slate-300">Small-group format limited to 12 participants</span>
+</li>
+</ul>
+</section><section class="px-4 py-8 border-t border-primary/5">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100 underline decoration-2 underline-offset-8">Itinerary</h2>
+<span class="material-symbols-outlined text-primary dark:text-slate-100">expand_less</span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+        One of the best ways to see Egypt's pyramids, the Egyptian Museum, and the bazaar is by booking this tour, where your guide and driver will take care of all the logistics, so you don't need to worry about anything.
+    </p>
+<button class="flex items-center gap-1 text-sm font-semibold text-primary dark:text-slate-100 mb-8">
+        Read more <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<div class="relative space-y-12">
+<!-- Vertical Line -->
+<div class="absolute left-[15px] top-4 bottom-4 w-[2px] bg-primary dark:bg-slate-700"></div>
+<!-- Item 1 -->
+<div class="relative flex gap-6">
+<div class="z-10 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold flex-shrink-0">
+                1
+            </div>
+<div>
+<h3 class="font-bold text-primary dark:text-slate-100 mb-2">The Pyramids Of Giza</h3>
+<p class="text-slate-600 dark:text-slate-400 mb-2">Pyramid of Cheops Pyramid of Chephren Pyramid of Mycerinus Camel ride Sphinx</p>
+<p class="text-xs text-slate-500 font-medium">3 hours • Admission Ticket Not Included</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative flex gap-6">
+<div class="z-10 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold flex-shrink-0">
+                2
+            </div>
+<div class="flex-1">
+<h3 class="font-bold text-primary dark:text-slate-100 mb-2">Gran Museu Egipci</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-2">
+                    Step into the awe-inspiring Grand Egyptian Museum, where 5,000 years of history come to life beneath the golden light of Giza. As you walk through its vast galleries, the treasures of ancient Egypt unfold before you — colossal statues of pharaohs, intricate jewelry, and the full collection of Tutankhamun's tomb displayed
+                </p>
+<button class="flex items-center gap-1 text-sm font-semibold text-primary dark:text-slate-100">
+                    Read more <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Inclusions / Exclusions -->
+<section class="px-4 py-12">
+<div class="grid md:grid-cols-2 gap-12">
+<div>
+<h3 class="text-xl font-bold text-primary dark:text-slate-100 mb-6">What's Included</h3>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500">check</span>
+                            Entry fees for all locations
+                        </li>
+<li class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500">check</span>
+                            Headsets to hear the guide clearly
+                        </li>
+<li class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500">check</span>
+                            Access to restricted arena floor
+                        </li>
+</ul>
+</div>
+<div>
+<h3 class="text-xl font-bold text-primary dark:text-slate-100 mb-6">What's Excluded</h3>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-rose-500">close</span>
+                            Hotel pickup and drop-off
+                        </li>
+<li class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-rose-500">close</span>
+                            Food and drinks
+                        </li>
+<li class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-rose-500">close</span>
+                            Gratuities
+                        </li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Logistics / Map -->
+<section class="px-4 py-8">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100 mb-4">Meeting Point</h2>
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-primary/10 shadow-sm">
+<div class="h-64 bg-slate-200 relative">
+<img alt="Map" class="w-full h-full object-cover grayscale opacity-50" data-alt="Map view showing the meeting point near the Colosseum Metro station" data-location="Rome, Italy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwMiSmkFNVjMOgvlzkYBxxOfvh3b-4HXx3nCGQZ-6HLtH2U1wYo6zFZgCjiQURDYLkDY8fFUo94eODkXbDjII0GBnK3lr01LQi4M3oSNQGGAobrom0_zpHmeSfhQ0bte4SFKA2FqXQJJfjbj3UfYpRwQwdKPQkpDtGW0Suc7DVBCfTBr9CEwEcwGCgwPHdKjCuTD16QvC-hWfDZa8azPBbYWO2yUcpkM74Z7dMOAJ3I9WaqIZf0kqTo5ijVuCPji7-z26nR7w4Hpn4"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-accent p-3 rounded-full animate-bounce">
+<span class="material-symbols-outlined fill-1" style="font-variation-settings: 'FILL' 1">location_on</span>
+</div>
+</div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-primary dark:text-slate-100">Colosseo Metro Station</h4>
+<p class="text-sm text-slate-500 mt-1">Ground level exit next to the newsstand. Look for your guide wearing a gold 'V' badge.</p>
+</div>
+</div>
+</section>
+<!-- Reviews Section -->
+<section class="px-4 py-12">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100">Customer Reviews</h2>
+<button class="text-primary dark:text-accent font-bold text-sm underline">Write a review</button>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+<!-- Review Card 1 -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-slate-700 dark:text-slate-300 italic mb-4">"Absolutely incredible. Seeing the underground tunnels really changed my perspective on the Colosseum's history. Highly recommend the small group!"</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">SJ</div>
+<div>
+<p class="text-sm font-bold text-primary dark:text-slate-100">Sarah Jenkins</p>
+<p class="text-[10px] text-slate-500">Visited June 2023</p>
+</div>
+</div>
+</div>
+<!-- Review Card 2 -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-accent text-sm fill-1" style="font-variation-settings: 'FILL' 1">star</span>
+</div>
+<p class="text-slate-700 dark:text-slate-300 italic mb-4">"Our guide was an actual archaeologist. The depth of knowledge was insane. Worth every penny to skip those massive lines."</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-primary text-xs font-bold">MR</div>
+<div>
+<p class="text-sm font-bold text-primary dark:text-slate-100">Marco Rossi</p>
+<p class="text-[10px] text-slate-500">Visited August 2023</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Accordion -->
+<section class="px-4 py-8">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100 mb-6">Frequently Asked Questions</h2>
+<div class="space-y-3">
+<div class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-primary/10 flex items-center justify-between cursor-pointer">
+<span class="font-semibold text-primary dark:text-slate-100">Is this tour wheelchair accessible?</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+<div class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-primary/10 flex items-center justify-between cursor-pointer">
+<span class="font-semibold text-primary dark:text-slate-100">What should I wear?</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+<div class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-primary/10 flex items-center justify-between cursor-pointer">
+<span class="font-semibold text-primary dark:text-slate-100">Can I bring a large backpack?</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+</div>
+</section>
+<!-- Related Tours Horizontal Scroll -->
+<section class="py-12">
+<h2 class="text-2xl font-bold text-primary dark:text-slate-100 px-4 mb-6">More in Rome</h2>
+<div class="flex overflow-x-auto gap-4 px-4 pb-4 no-scrollbar">
+<!-- Tour Card 1 -->
+<div class="min-w-[280px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="h-40 bg-slate-200">
+<img alt="Vatican" class="w-full h-full object-cover" data-alt="The Vatican Museums and Sistine Chapel corridor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsSK20PwakomnW-hlwmd-G43YawpDPNyaYdspjAEnpPsj0-5gCdqzi9zUXifq4eeM-1UUNbRH9wZiHNRHL5SMLr5gqlW4h-GylAeyObWHYc3OU83q9hQcwwDQXk2TK4PJZfHBRN_FmUV6muARMZkjI55eSBBh48eKuG9EJXnRfEwJYNSK0oDCCejHckgSFNlzChgEqQ61WdQcB_krmhpFS5ticnQF55t4EHDb_a1Huiaw0AHHq0HBOjS5i4BRqYMV0PrTbQenRGa8g"/>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-primary dark:text-slate-100 truncate">Vatican Museums &amp; Sistine Chapel</h4>
+<p class="text-accent font-bold mt-2">From $89.00</p>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="min-w-[280px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="h-40 bg-slate-200">
+<img alt="Food Tour" class="w-full h-full object-cover" data-alt="Authentic Italian pasta cooking class in a cozy kitchen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1ffaoL3aVUF4w8RVDbZC7WxN4_WuwQvxNtjeofE3-kySXo0MtuoAkkY6Dkb0g-AgK3wCqzvhDK3vnj1cOAxNd10RxECdvTL9qSR08moReavY1hhQo0jzLPK6Cx7stM8fQ4RjbrV36FEKDtddN_0nfgwpysxDxOpZdqs9BnbKbYDqxR_UlSOmU1dozc0QIGwuu9XEP_SkAnEQXWHwcAhUUFPou9wh4KJE0h6oAqQNAG988ut9bYte5nbOjv7pY1QTorkxl46tfJedQ"/>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-primary dark:text-slate-100 truncate">Trastevere Street Food &amp; Pasta Class</h4>
+<p class="text-accent font-bold mt-2">From $110.00</p>
+</div>
+</div>
+<!-- Tour Card 3 -->
+<div class="min-w-[280px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="h-40 bg-slate-200">
+<img alt="Trevi Fountain" class="w-full h-full object-cover" data-alt="The Trevi Fountain in Rome at night with bright lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7sMpwZONsyY1A3g2PgkL3FJKubBMsJjE69WYlWqU9OKAmHZ2dqGaW5eX4IplBeDO1WqmmSPA7j4INTScPAvKrSS7gUbNAlYaF03G7LJyRRtmUaAbvSzJIFw9cVNKGEiPBjTo0QNaZWJzamhzv9q-dOKwYQ30HY5MKEwwC8vEch0ZNZ87frJ12LGEOuhG5Jcs52T-jbpRonlEIvj4yj6HGLKyTU095_TFiNryJACukgM-GuF4ZqfDqCIffC_QHrUtgL06x_dU5tP01"/>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-primary dark:text-slate-100 truncate">Rome by Night: Fountains &amp; Piazzas</h4>
+<p class="text-accent font-bold mt-2">From $45.00</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Booking Footer -->
+<footer class="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-background-dark border-t border-primary/10 px-4 py-4 md:py-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="max-w-5xl mx-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Starting at</span>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-black text-primary dark:text-slate-100">$125.00</span>
+<span class="text-sm text-slate-500 font-medium">/ person</span>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-accent px-8 py-3 rounded-lg font-bold text-base transition-transform active:scale-95 shadow-lg shadow-primary/20">
+                Check Availability
+            </button>
+</div>
+</footer>
+</body></html>

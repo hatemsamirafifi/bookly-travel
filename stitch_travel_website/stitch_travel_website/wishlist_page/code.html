@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent-gold": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-background-dark shadow-2xl overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center bg-white dark:bg-background-dark p-4 sticky top-0 z-10 border-b border-primary/10">
+<div class="text-primary dark:text-slate-100 flex size-10 shrink-0 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-primary dark:text-slate-100 text-lg font-bold leading-tight flex-1 text-center">My Wishlist</h2>
+<div class="flex size-10 items-center justify-center">
+<button class="flex items-center justify-center text-primary dark:text-slate-100">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</header>
+<!-- Categories / Tabs -->
+<div class="bg-white dark:bg-background-dark px-4">
+<div class="flex border-b border-primary/10 gap-8">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary dark:text-slate-100 pb-3 pt-4" href="#">
+<p class="text-sm font-bold tracking-tight">Tours</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-400 pb-3 pt-4" href="#">
+<p class="text-sm font-bold tracking-tight">Stays</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-400 pb-3 pt-4" href="#">
+<p class="text-sm font-bold tracking-tight">Flights</p>
+</a>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto p-4 space-y-6">
+<!-- Wishlist Item 1 -->
+<div class="group flex flex-col items-stretch justify-start rounded-xl shadow-sm bg-white dark:bg-slate-900 border border-primary/5 overflow-hidden">
+<div class="relative w-full aspect-[16/9] bg-center bg-no-repeat bg-cover" data-alt="Luxury yacht cruising the turquoise Amalfi Coast waters" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCuah5soOq4uo96cMgG1Wb5ljjW6WJRc4X7OY9VQrht72jfLFMA3cMBuc69olXt227c9CaKd1p2fD5yej0MaUwSBnR8hyUN8VFPkjmhZHxBAASOF5edOwmvFB4pdMRq4jzFLZWGfG_4GqO_KNxJ61c17u-g9ArCZHKFMaUVU80Uyb1XAhZTY69KrRd92-M8LQzGsmz4Twk__PEUKDrghs4KMPAIc17I7af71L4NEHYB-Qz8JVNfw69cAZUiUINM9LAlKZwkOq7OEnD2");'>
+<button class="absolute top-3 right-3 size-10 bg-white/90 dark:bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-md">
+<span class="material-symbols-outlined fill">favorite</span>
+</button>
+<div class="absolute bottom-3 left-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
+                        MOST POPULAR
+                    </div>
+</div>
+<div class="flex w-full flex-col p-4 gap-2">
+<div class="flex justify-between items-start">
+<h3 class="text-primary dark:text-slate-100 text-lg font-bold leading-tight">Private Yacht Tour - Amalfi Coast</h3>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-accent-gold text-sm fill">star</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">4.9</p>
+<p class="text-slate-500 text-sm">(128 reviews)</p>
+</div>
+<p class="text-slate-500 text-sm line-clamp-1">Full-day private excursion with gourmet lunch and snorkeling.</p>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-primary/5">
+<div class="flex flex-col">
+<p class="text-slate-400 text-xs uppercase tracking-wider font-semibold">From</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">$1,200</p>
+</div>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                            Book Now
+                        </button>
+</div>
+</div>
+</div>
+<!-- Wishlist Item 2 -->
+<div class="group flex flex-col items-stretch justify-start rounded-xl shadow-sm bg-white dark:bg-slate-900 border border-primary/5 overflow-hidden">
+<div class="relative w-full aspect-[16/9] bg-center bg-no-repeat bg-cover" data-alt="Dozens of colorful hot air balloons over Cappadocia landscape" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIwaEKRQ--dtP7EXglFJGaDvZZSskj3IjBnFVCLQxFAKumTGbO5tmvLuvLkT8k6OtLTPQrtQ_Tl29jargZtT2_czQ_cwD4lit9IL-xOeHqiIrP65QOSKr0ZYoiaYIX1KKSPkKK5RT7YFDQMDfANw4eo__MtXn1iykPeJLToK1TR41cCVvnXEtLV-LQq3KM3kwlDr16QZuh3Eq90oWFrp5I3Owq0I46Dj7GeRRTAMKhdNJDbqFM23T-39duvBSraI_bUyOO3ZySSoOn");'>
+<button class="absolute top-3 right-3 size-10 bg-white/90 dark:bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-md">
+<span class="material-symbols-outlined fill">favorite</span>
+</button>
+</div>
+<div class="flex w-full flex-col p-4 gap-2">
+<div class="flex justify-between items-start">
+<h3 class="text-primary dark:text-slate-100 text-lg font-bold leading-tight">Hot Air Balloon Ride - Cappadocia</h3>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-accent-gold text-sm fill">star</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">5.0</p>
+<p class="text-slate-500 text-sm">(312 reviews)</p>
+</div>
+<p class="text-slate-500 text-sm line-clamp-1">Sunrise flight with premium champagne breakfast.</p>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-primary/5">
+<div class="flex flex-col">
+<p class="text-slate-400 text-xs uppercase tracking-wider font-semibold">From</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">$450</p>
+</div>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                            Book Now
+                        </button>
+</div>
+</div>
+</div>
+<!-- Wishlist Item 3 -->
+<div class="group flex flex-col items-stretch justify-start rounded-xl shadow-sm bg-white dark:bg-slate-900 border border-primary/5 overflow-hidden">
+<div class="relative w-full aspect-[16/9] bg-center bg-no-repeat bg-cover" data-alt="Northern lights aurora borealis over a snowy mountain range" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuADH7nh8AUlTFW_WglfjpDSyuJcQ9NIy-4UTgMSXJjAC31MD0Be7gflvTCyJDEBqbUtNvL2gIjcCZqDm69pANAhk9VllncPeNLT9P8VsCsAIz8A8WJUC0nykneUY7hELi-k2P39kFCPC03r5BmMjp_5R-NRLYQMm3y3n1WxGBawCSTGSQsagMWMO4Oz0eqM_9QW0B-W2IanCBt47Vg0qAK_cThGOxGWsbDtLLBV1o-M_T1jDbBWPpph0a1FrKILhMslaxea4agovQjz");'>
+<button class="absolute top-3 right-3 size-10 bg-white/90 dark:bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-md">
+<span class="material-symbols-outlined fill">favorite</span>
+</button>
+</div>
+<div class="flex w-full flex-col p-4 gap-2">
+<div class="flex justify-between items-start">
+<h3 class="text-primary dark:text-slate-100 text-lg font-bold leading-tight">Arctic Aurora Expedition - Tromsø</h3>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-accent-gold text-sm fill">star</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">4.8</p>
+<p class="text-slate-500 text-sm">(86 reviews)</p>
+</div>
+<p class="text-slate-500 text-sm line-clamp-1">Guided night hunt for the Northern Lights with photography.</p>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-primary/5">
+<div class="flex flex-col">
+<p class="text-slate-400 text-xs uppercase tracking-wider font-semibold">From</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">$185</p>
+</div>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                            Book Now
+                        </button>
+</div>
+</div>
+</div>
+<div class="h-10"></div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 border-t border-primary/5 bg-white/90 dark:bg-background-dark/90 backdrop-blur-lg px-4 pb-6 pt-3 flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">explore</span>
+<p class="text-[10px] font-medium">Explore</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary dark:text-slate-100" href="#">
+<span class="material-symbols-outlined fill">favorite</span>
+<p class="text-[10px] font-bold">Wishlist</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<p class="text-[10px] font-medium">Bookings</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<p class="text-[10px] font-medium">Inbox</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-medium">Profile</p>
+</a>
+</nav>
+</div>
+</body></html>

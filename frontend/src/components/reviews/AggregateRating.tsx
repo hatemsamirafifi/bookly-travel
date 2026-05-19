@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import StarRating from './StarRating';
 
 interface AggregateRatingProps {
@@ -6,6 +7,7 @@ interface AggregateRatingProps {
 }
 
 export default function AggregateRating({ averageRating, reviewCount }: AggregateRatingProps) {
+  const t = useTranslations('reviews');
   const hasReviews = reviewCount > 0 && averageRating !== null;
 
   return (
@@ -18,14 +20,14 @@ export default function AggregateRating({ averageRating, reviewCount }: Aggregat
           <div>
             <StarRating value={Math.round(averageRating!)} readOnly size="sm" />
             <p className="text-xs text-gray-500 mt-0.5">
-              {reviewCount} review{reviewCount !== 1 ? 's' : ''}
+              {t('review_count', { count: reviewCount })}
             </p>
           </div>
         </>
       ) : (
         <div>
           <StarRating value={0} readOnly size="sm" />
-          <p className="text-xs text-gray-400 mt-0.5">No reviews yet. Be the first!</p>
+          <p className="text-xs text-gray-400 mt-0.5">{t('no_reviews_yet')}</p>
         </div>
       )}
     </div>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Availability &amp; Slots Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-accent">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-white text-sm font-bold leading-tight">Tour Partner</h1>
+<p class="text-slate-500 text-xs font-medium">Grand Canyon Ops</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-medium">My Tours</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary dark:bg-primary/20 dark:text-accent rounded-lg" href="#">
+<span class="material-symbols-outlined filled-icon">calendar_today</span>
+<span class="text-sm font-semibold">Availability</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Payouts</span>
+</a>
+<div class="pt-4 pb-2 px-3">
+<p class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Settings</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Configurations</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-slate-100 dark:border-slate-800">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-white py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-opacity-90 transition-all">
+<span class="material-symbols-outlined text-accent text-sm">add_circle</span>
+                    New Tour
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Header -->
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between z-10">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+<span class="text-sm font-medium">Tours</span>
+</div>
+<span class="text-slate-300">/</span>
+<div class="relative group cursor-pointer flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+<span class="text-sm font-bold text-primary dark:text-white">Grand Canyon Helicopter Tour</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">Discard</button>
+<button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg shadow-sm hover:shadow-md transition-shadow">Save Changes</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="size-9 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden ring-2 ring-white dark:ring-slate-800">
+<img alt="User Avatar" data-alt="User profile picture operator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARjVuU1UhMfbGniiu9Jp9vT01cleh6jUijdpPFBxCjyfejmUvluc8b2fJQBPjmuesfeBQp6NOzLgYYBB3VhiOJdZAubvDxpZBbtfEuombis2CHht1VFxHNNxdrCWQ9NIHxikmGzvGIB2kZnDIh2yslj0dAUEz1vKG4YPzIJ7X1Yt7Pq74lehElhj0Z3YtvDexcAv8Urb0e4_nAYzm1usXvFoeGGe2amviLdVKuRSZS902nsb6HubiZUM6jo24b-BngBjBmUKI_2cgk"/>
+</div>
+</div>
+</header>
+<!-- Content Body -->
+<div class="flex-1 overflow-y-auto p-8 bg-slate-50 dark:bg-background-dark space-y-8">
+<!-- KPI Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Total Monthly Slots</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white leading-none">1,240</h3>
+</div>
+<div class="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                            +12%
+                        </div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Avg. Occupancy</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white leading-none">78.4%</h3>
+</div>
+<div class="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                            +5.2%
+                        </div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Available Today</p>
+<h3 class="text-2xl font-bold text-primary dark:text-white leading-none">42 <span class="text-slate-400 font-normal text-sm">/ 120</span></h3>
+</div>
+<div class="bg-rose-50 dark:bg-rose-900/20 text-rose-600 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_down</span>
+                            -2.1%
+                        </div>
+</div>
+</div>
+<!-- Calendar & Details Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Calendar Section -->
+<div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h4 class="text-lg font-bold text-primary dark:text-white">October 2023</h4>
+<div class="flex items-center bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">chevron_left</span></button>
+<div class="w-px h-4 bg-slate-200 dark:bg-slate-700"></div>
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">chevron_right</span></button>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 text-xs font-bold bg-primary/5 text-primary dark:text-accent rounded-lg border border-primary/10">Month</button>
+<button class="px-3 py-1.5 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">Week</button>
+<button class="px-3 py-1.5 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">List</button>
+</div>
+</div>
+<div class="grid grid-cols-7 border-b border-slate-100 dark:border-slate-800">
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sun</div>
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Mon</div>
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tue</div>
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Wed</div>
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Thu</div>
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fri</div>
+<div class="py-3 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sat</div>
+</div>
+<div class="grid grid-cols-7">
+<!-- Dummy Calendar Days -->
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-300">24</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-300">25</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-300">26</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-300">27</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-300">28</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-300">29</div>
+<div class="h-28 p-2 border-b border-slate-100 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-medium">1</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">2</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-800">12 Slots • Open</div>
+<div class="text-[10px] px-1.5 py-0.5 bg-primary/10 text-primary dark:text-accent rounded border border-primary/20">85% Filled</div>
+</div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative bg-primary/[0.02]">
+<span class="text-sm font-bold text-primary dark:text-accent underline underline-offset-4 decoration-2">3</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-800">12 Slots • Open</div>
+<div class="text-[10px] px-1.5 py-0.5 bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 rounded border border-rose-200 dark:border-rose-800">100% Filled</div>
+</div>
+<div class="absolute inset-0 border-2 border-accent pointer-events-none rounded-sm"></div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">4</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-800">12 Slots • Open</div>
+</div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">5</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded border border-amber-200 dark:border-amber-800">8 Slots • Ltd</div>
+</div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">6</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-800">12 Slots • Open</div>
+</div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">7</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-rose-50 dark:bg-rose-900/20 text-rose-500 rounded border border-rose-100 dark:border-rose-800">Closed</div>
+</div>
+</div>
+<div class="h-28 p-2 border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium text-slate-400">8</span>
+</div>
+<!-- Row 3 dummy -->
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">9</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-800">12 Slots • Open</div>
+</div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">10</span>
+<div class="mt-2 space-y-1">
+<div class="text-[10px] px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded border border-emerald-200 dark:border-emerald-800">12 Slots • Open</div>
+</div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">11</span>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">12</span>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium text-primary dark:text-accent font-bold">13</span>
+<div class="mt-1 flex items-center gap-1 text-[10px] font-bold text-accent uppercase">
+<span class="material-symbols-outlined text-[12px] filled-icon">star</span>
+                                    Holiday
+                                </div>
+</div>
+<div class="h-28 p-2 border-r border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">14</span>
+</div>
+<div class="h-28 p-2 border-b border-slate-100 dark:border-slate-800 relative">
+<span class="text-sm font-medium">15</span>
+</div>
+</div>
+</div>
+<!-- Daily Time Slots Management Side Panel -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Selected Day Header -->
+<div class="bg-primary text-white p-6 rounded-lg shadow-lg">
+<div class="flex items-center justify-between mb-2">
+<p class="text-xs font-bold text-accent uppercase tracking-widest">Selected Day</p>
+<span class="material-symbols-outlined text-accent">event</span>
+</div>
+<h3 class="text-2xl font-bold">Tuesday, Oct 3</h3>
+<div class="mt-4 flex gap-4">
+<div class="flex-1 bg-white/10 p-2.5 rounded-lg border border-white/10">
+<p class="text-[10px] font-medium text-white/60 uppercase">Bookings</p>
+<p class="text-lg font-bold">48 <span class="text-white/40 font-normal">/ 60</span></p>
+</div>
+<div class="flex-1 bg-white/10 p-2.5 rounded-lg border border-white/10">
+<p class="text-[10px] font-medium text-white/60 uppercase">Status</p>
+<p class="text-lg font-bold text-accent flex items-center gap-1">Open <span class="size-2 bg-accent rounded-full animate-pulse"></span></p>
+</div>
+</div>
+</div>
+<!-- Slots List -->
+<div class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<h5 class="text-sm font-bold text-primary dark:text-white">Daily Time Slots</h5>
+<button class="p-1 hover:bg-slate-50 dark:hover:bg-slate-800 rounded text-primary dark:text-accent">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<div class="p-2 space-y-2 max-h-[400px] overflow-y-auto">
+<!-- Slot Card -->
+<div class="p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-900/50 hover:border-accent/50 transition-all group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded flex items-center justify-center font-bold text-primary dark:text-white text-xs">09:00</div>
+<div>
+<p class="text-xs font-bold text-primary dark:text-white">Morning Flight</p>
+<p class="text-[10px] text-slate-500">12 Max • 10 Booked</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="bg-emerald-100 dark:bg-emerald-900/40 px-2 py-0.5 rounded text-[10px] font-bold text-emerald-700 dark:text-emerald-400">OPEN</div>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+</div>
+</div>
+</div>
+<!-- Slot Card -->
+<div class="p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-900/50 hover:border-accent/50 transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded flex items-center justify-center font-bold text-primary dark:text-white text-xs">11:30</div>
+<div>
+<p class="text-xs font-bold text-primary dark:text-white">Midday Expedition</p>
+<p class="text-[10px] text-slate-500">12 Max • 12 Booked</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="bg-rose-100 dark:bg-rose-900/40 px-2 py-0.5 rounded text-[10px] font-bold text-rose-700 dark:text-rose-400">FULL</div>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+</div>
+</div>
+</div>
+<!-- Slot Card -->
+<div class="p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-900/50 hover:border-accent/50 transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded flex items-center justify-center font-bold text-primary dark:text-white text-xs">14:00</div>
+<div>
+<p class="text-xs font-bold text-primary dark:text-white">Afternoon Sky</p>
+<p class="text-[10px] text-slate-500">12 Max • 8 Booked</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="bg-emerald-100 dark:bg-emerald-900/40 px-2 py-0.5 rounded text-[10px] font-bold text-emerald-700 dark:text-emerald-400">OPEN</div>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+</div>
+</div>
+</div>
+<!-- Slot Card -->
+<div class="p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-900/50 hover:border-accent/50 transition-all opacity-60">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded flex items-center justify-center font-bold text-primary dark:text-white text-xs">16:30</div>
+<div>
+<p class="text-xs font-bold text-primary dark:text-white">Sunset Private</p>
+<p class="text-[10px] text-slate-500">6 Max • 0 Booked</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold text-slate-500">CLOSED</div>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bulk Actions Tool -->
+<div class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="bg-slate-50 dark:bg-slate-800 p-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-accent">bolt</span>
+<h5 class="text-sm font-bold text-primary dark:text-white">Bulk Actions</h5>
+</div>
+<div class="p-4 space-y-4">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-slate-500 uppercase">Apply pattern to</label>
+<div class="flex gap-1.5 flex-wrap">
+<button class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded">Mon</button>
+<button class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded">Tue</button>
+<button class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded">Wed</button>
+<button class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded">Thu</button>
+<button class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded">Fri</button>
+<button class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-400 text-[10px] font-bold rounded">Sat</button>
+<button class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-400 text-[10px] font-bold rounded">Sun</button>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-slate-500 uppercase">Date Range</label>
+<div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 rounded-lg text-xs font-medium">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+                                        Oct 1 - Oct 31
+                                    </div>
+</div>
+<button class="w-full py-2 bg-accent text-primary font-bold text-xs rounded-lg shadow-sm hover:brightness-105 transition-all">
+                                    Apply Schedule Bulk
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

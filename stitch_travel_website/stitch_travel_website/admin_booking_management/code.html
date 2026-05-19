@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Management | Global Tours Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42", // Navy primary from prompt
+                        "accent": "#d4af37",  // Gold accent from prompt
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                        "neutral-soft": "#f1f0f3",
+                        "success": "#059669",
+                        "warning": "#d97706",
+                        "danger": "#dc2626",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem", // 12px as requested
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col sticky top-0 h-screen">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-accent">
+<span class="material-symbols-outlined text-3xl">travel_explore</span>
+</div>
+<div>
+<h1 class="text-primary dark:text-white font-bold text-lg leading-tight">Global Tours</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Marketplace Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">handshake</span>
+<span class="text-sm font-semibold">Partner Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-semibold">Tour Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary dark:text-accent rounded-lg transition-colors border-l-4 border-accent" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-sm font-bold">Booking Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">star</span>
+<span class="text-sm font-semibold">Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-semibold">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-semibold">CMS</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-semibold">Settings</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-3 py-2 bg-neutral-soft dark:bg-slate-800 rounded-lg">
+<div class="size-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold" data-alt="User avatar placeholder">JD</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-bold truncate">John Doe</p>
+<p class="text-[10px] text-slate-500 truncate">Senior Admin</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">unfold_more</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col">
+<!-- Header -->
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<h2 class="text-xl font-bold text-primary dark:text-white whitespace-nowrap">Booking Management</h2>
+<div class="relative w-full ml-4">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-neutral-soft dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-accent transition-all placeholder:text-slate-400" placeholder="Search by ID, customer, or partner..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-danger rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-full">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex items-center gap-2">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Profile picture of the administrator" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYeecnBQvIjUTV4vRAdWx0Ho_evaCA5V_poqQjn3QXnu7xL3M5AhcdNPqN-sskS4103wsyrHUa1z-O-om1Zv_hFU6YzqJtLj9EeIURqz5IHNbY84_g-WxlU5pLaSef2Zm0orTZ2xeavF_wYzoZVJ89DPict6xyhgIBeM8aRtHbOUboGBM54-2azO0HbZrfHQaPCpvkzgduIsaAjHREK-mGV1dNOCTSRh1C-UWwkDi_FcKjsuMndshH2e7zAcos52vhBrthqtue2mJa')"></div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 space-y-8">
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-primary/5 text-primary rounded-lg"><span class="material-symbols-outlined">payments</span></span>
+<span class="text-success text-xs font-bold flex items-center gap-1 bg-success/10 px-2 py-1 rounded-full">+12.5% <span class="material-symbols-outlined text-[14px]">trending_up</span></span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Revenue</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">$1,284,500.00</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-accent/10 text-accent rounded-lg"><span class="material-symbols-outlined">confirmation_number</span></span>
+<span class="text-success text-xs font-bold flex items-center gap-1 bg-success/10 px-2 py-1 rounded-full">+5.2% <span class="material-symbols-outlined text-[14px]">trending_up</span></span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Bookings</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">14,205</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 ring-2 ring-danger/20 relative overflow-hidden">
+<div class="absolute top-0 right-0">
+<div class="bg-danger text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">ACTION NEEDED</div>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-danger/10 text-danger rounded-lg"><span class="material-symbols-outlined">assignment_return</span></span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Refund Requests</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">28</h3>
+<p class="text-xs text-danger font-medium mt-2">12 overdue by 24h+</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg"><span class="material-symbols-outlined">bar_chart</span></span>
+<span class="text-success text-xs font-bold flex items-center gap-1 bg-success/10 px-2 py-1 rounded-full">+3.8% <span class="material-symbols-outlined text-[14px]">trending_up</span></span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Avg. Order Value</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">$142.50</h3>
+</div>
+</div>
+<!-- Main Content: Data Table -->
+<div class="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<!-- Filters & Tabs -->
+<div class="border-b border-slate-200 dark:border-slate-800 px-6 pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex gap-8 overflow-x-auto">
+<button class="pb-4 text-sm font-bold border-b-2 border-primary dark:border-accent text-primary dark:text-accent whitespace-nowrap">All Bookings</button>
+<button class="pb-4 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 whitespace-nowrap">Pending</button>
+<button class="pb-4 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 whitespace-nowrap">Confirmed</button>
+<button class="pb-4 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 whitespace-nowrap">Cancelled</button>
+<button class="pb-4 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 whitespace-nowrap">Refunds</button>
+</div>
+<div class="flex items-center gap-3 pb-4">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-neutral-soft dark:bg-slate-800 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                            </button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-neutral-soft dark:bg-slate-800 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-sm">file_download</span> Export
+                            </button>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Booking ID</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tour Name</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Partner</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-mono text-sm text-primary dark:text-accent font-semibold">#BK-9021</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Customer avatar for Sarah Wilson" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAahWltlwltL7CLo0I7f-_n93I3jvte4chcZVhi0Q1-ZAN_oOS12S6SIZ0L6j30TbzkjW2iosRK8KqoGX6GM4U0-mYCGPaj7pCi4rM1Vn5uUX4rh5vRf033_6q6gLsIpI-ipf3xc1sBG68WfX1WCjBOUIGhJQBePlTaNASmO7VSd_JtgjeJIAWi9gygtH0-uAwER67UacNVPat-EsR6pKn38W44hb_f7UvZ0GSV3cRxMKwJg1ZomD1NvrR5QsAwe-SK47KG4u8uaWrq')"></div>
+<span class="text-sm font-semibold">Sarah Wilson</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">Amalfi Coast Day Trip</td>
+<td class="px-6 py-4 text-sm font-medium">ItaliaVibe Tours</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 24, 2023</td>
+<td class="px-6 py-4 text-sm font-bold">$240.00</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-success/10 text-success border border-success/20">Confirmed</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">visibility</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-mono text-sm text-primary dark:text-accent font-semibold">#BK-8842</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Customer avatar for Marcus Chen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA8eZ2A1rPxq--9BSXqxdrZfXAnXXseTGbHYh1AYrEamuPGmbLUonyNAeTivCCKfroFfjxfqj2D54C78FGRiQ4HPF8uISqCtGqHEos45M-RX7G1tQ9FaxwOTLSYC5ARK_tSmRYhKDO1T3w6MYrRHSbumWWM_k7LDZjiz2E3yo05l2dp93-Hy2q7z-t1MmLjZXniBaJ061AHuG2nfSSvEGuF6uQBEHR76m3A8Q4BlATB2T5YIzNfYTLEfFvs4sY_JZ214oBP1g1sXLSp')"></div>
+<span class="text-sm font-semibold">Marcus Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">Tokyo Neon Nights</td>
+<td class="px-6 py-4 text-sm font-medium">Nippon Explore</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 22, 2023</td>
+<td class="px-6 py-4 text-sm font-bold">$185.50</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-warning/10 text-warning border border-warning/20">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">visibility</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-mono text-sm text-primary dark:text-accent font-semibold">#BK-8519</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Customer avatar for Elena Rodriguez" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4cGAOYaGq1G9SNu5jQPHhZPMA14yy-oM9ZiJa3pea2tp757Ng0dlR45WMJJAU2trzRUB2W0vWbxOFXDo7u9B074ebzJTue7UUp_WFWtxxOk0nanjsuIic7l369mQKIebpvW83AboQCITfJYpqK7Js-PG_LMxFZjIGEgBxL50A1LpKm9DVXQm1yQ2pzuS9FqRZsA5F4mtNA6hLjh5FLtb6cWx3oXyOXe_llkuTNGI2fpGMkpeMhKfQ2LSFITDOBLvp9xY5Wp8eCuEK')"></div>
+<span class="text-sm font-semibold">Elena Rodriguez</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">Great Barrier Reef Diving</td>
+<td class="px-6 py-4 text-sm font-medium">Oceanic Adventures</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 21, 2023</td>
+<td class="px-6 py-4 text-sm font-bold">$420.00</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-danger/10 text-danger border border-danger/20">Refunded</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">visibility</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-mono text-sm text-primary dark:text-accent font-semibold">#BK-7721</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="Customer avatar for David Smith" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDs9ZnUAVpSIoUz67oF0RvkyvqLnyDwE3c1kh-rLQqcqoLj5BDxpEKpQuY4HN9MDJn81PxgylyH0ikyIrvpmJMW7UeByIPfSyBFD5vDh5E5SpPhQ6pnmi3DtQvBPfI4a8hOZfXT-g5U2Psxez74QBYXLI3ZOfwZzhSnUj_9emOhISZbdr8ngsmrFjqL9ZlOJ5xshVd0HEJ8zGFjnBCpJHNgEu52S3xCatSy4jQobWWS70IcLrSZh4AyQnUs60qqIRslQhtur384aGvv')"></div>
+<span class="text-sm font-semibold">David Smith</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">Swiss Alps Hiking</td>
+<td class="px-6 py-4 text-sm font-medium">Mountain High Co.</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 20, 2023</td>
+<td class="px-6 py-4 text-sm font-bold">$1,120.00</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">Cancelled</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">visibility</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="p-1.5 hover:bg-neutral-soft dark:hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 flex items-center justify-between">
+<p class="text-xs text-slate-500 dark:text-slate-400">Showing <span class="font-bold">1 - 4</span> of <span class="font-bold">14,205</span> results</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1 bg-primary text-accent rounded-lg text-xs font-bold">1</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-neutral-soft dark:hover:bg-slate-800">2</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-neutral-soft dark:hover:bg-slate-800">3</button>
+<button class="px-3 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-neutral-soft dark:hover:bg-slate-800">Next</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto p-8 text-center text-[10px] text-slate-400 uppercase tracking-widest border-t border-slate-200 dark:border-slate-800">
+                © 2024 Global Tours Marketplace. All Rights Reserved. SaaS Platform v2.4.1
+            </footer>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-05-15T20:44:51.618Z",
+  "mode": "headless",
+  "workerType": "optimize",
+  "model": "sonnet",
+  "durationMs": 192487,
+  "executionId": "optimize_1778877699131_5hswm5",
+  "success": false,
+  "findings": {
+    "sections": [],
+    "codeBlocks": []
+  },
+  "rawOutputPreview": "API Error: Request rejected (429) · you (goochrom312) have reached your session usage limit, upgrade for higher limits: https://ollama.com/upgrade (ref: 9360ac3f-0282-4488-8f9e-ead1b24a246d)\n",
+  "rawOutputLength": 191
+}

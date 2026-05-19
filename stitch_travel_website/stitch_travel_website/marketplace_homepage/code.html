@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#260a42", // Deep Navy / Purple Hue from provided theme
+                "accent": "#d4af37",  // Warm Gold
+                "background-light": "#f7f6f8",
+                "background-dark": "#191121",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<!-- Top Navigation Bar -->
+<nav class="sticky top-0 z-50 flex items-center bg-white dark:bg-background-dark border-b border-primary/10 px-4 py-3 justify-between">
+<div class="text-primary dark:text-white flex size-10 shrink-0 items-center">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</div>
+<div class="flex-1 flex justify-center">
+<h1 class="text-primary dark:text-white text-2xl font-bold tracking-tight italic">VIATOR</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/5 dark:bg-white/5 border border-primary/10">
+<span class="text-xs font-bold text-primary dark:text-slate-300">EN</span>
+<span class="text-xs text-primary/40">|</span>
+<span class="text-xs font-bold text-primary dark:text-slate-300">USD</span>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="@container">
+<div class="relative min-h-[420px] flex flex-col justify-center px-6 overflow-hidden bg-primary">
+<div class="absolute inset-0 opacity-60">
+<img class="w-full h-full object-cover" data-alt="Aerial view of a tropical turquoise beach paradise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChtGBqoyDZGfy3LaY1kH-cuIKSnPvWeDytNHZENmv7i9H0d8gsFNcq_69323R8Jzhf--CUFJEIGOQdwJmZ3c_qAVeNVdjALRU-wtzZQIpzgO564NvGPEUz5-mO7VpKTv-8skHp6yC0wdufNEh5Ft0EyGdsPlciFcK8unKHcMhsjLHjkCLFIfJ1eQq3yKt-huP2j7Mdeu1cDJrdjq2_wmtMWP01dfdZuj_35lmAADeWGcTvvqnttK6DcbKL0VrZ48WUE5f8f8ex-kq8"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
+<div class="relative z-10 mt-12">
+<h2 class="text-white text-4xl font-bold leading-tight mb-6">Discover Your Next Adventure</h2>
+<!-- Search Bar -->
+<div class="bg-white dark:bg-slate-900 p-2 rounded-xl shadow-2xl space-y-2">
+<div class="flex items-center gap-3 px-4 py-3 bg-background-light dark:bg-white/5 rounded-lg border border-primary/5">
+<span class="material-symbols-outlined text-primary/60 dark:text-accent">location_on</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-400" placeholder="Where to?" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center gap-3 px-4 py-3 bg-background-light dark:bg-white/5 rounded-lg border border-primary/5">
+<span class="material-symbols-outlined text-primary/60 dark:text-accent text-xl">calendar_today</span>
+<span class="text-sm text-slate-500">Date</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 bg-background-light dark:bg-white/5 rounded-lg border border-primary/5">
+<span class="material-symbols-outlined text-primary/60 dark:text-accent text-xl">group</span>
+<span class="text-sm text-slate-500">Guests</span>
+</div>
+</div>
+<button class="w-full bg-accent hover:bg-yellow-600 text-primary font-bold py-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">search</span>
+                        Search Experiences
+                    </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Popular Categories -->
+<section class="py-8 px-4 overflow-x-auto hide-scrollbar flex gap-4">
+<div class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="w-14 h-14 rounded-full bg-white dark:bg-primary/20 shadow-sm flex items-center justify-center border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent">hiking</span>
+</div>
+<span class="text-xs font-semibold">Adventure</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="w-14 h-14 rounded-full bg-white dark:bg-primary/20 shadow-sm flex items-center justify-center border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent">museum</span>
+</div>
+<span class="text-xs font-semibold">Culture</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="w-14 h-14 rounded-full bg-white dark:bg-primary/20 shadow-sm flex items-center justify-center border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent">restaurant</span>
+</div>
+<span class="text-xs font-semibold">Food</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="w-14 h-14 rounded-full bg-white dark:bg-primary/20 shadow-sm flex items-center justify-center border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent">park</span>
+</div>
+<span class="text-xs font-semibold">Nature</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[80px]">
+<div class="w-14 h-14 rounded-full bg-white dark:bg-primary/20 shadow-sm flex items-center justify-center border border-primary/5">
+<span class="material-symbols-outlined text-primary dark:text-accent">directions_boat</span>
+</div>
+<span class="text-xs font-semibold">Cruises</span>
+</div>
+</section>
+<!-- Featured Destinations -->
+<section class="py-6">
+<div class="px-4 flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold text-primary dark:text-white">Top Destinations</h2>
+<a class="text-primary dark:text-accent text-sm font-semibold" href="#">View all</a>
+</div>
+<div class="flex gap-4 overflow-x-auto px-4 hide-scrollbar">
+<div class="relative min-w-[160px] h-48 rounded-xl overflow-hidden shadow-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Eiffel Tower at dusk in Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB728-pj-0oSzgvnhrS8dVijcblPDh_wZVYn1NVIbooUScuBD3GsSsBycAMOr-8-Cx0EQ1VbSKhakrHeslIzY_sBw4WGjsCgOuxmO8vBBENll21eM7sPC6PZoWeN2BCtzmqoo5J732EGUZIcym4FFY_foqbWVGrWOv0ZS7swoCpHHiqDkjvWSyvv7-T4fkoQOELtPa1BK82Ncjjd2CB9brYnl-kjDklJEtVJjVCEeVKIXpnxFWMkC7tewf5iYPiKrQxcEFy3uKSjFn3"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+<p class="absolute bottom-3 left-3 text-white font-bold">Paris</p>
+</div>
+<div class="relative min-w-[160px] h-48 rounded-xl overflow-hidden shadow-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Cinque Terre colorful coastal village in Italy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnblPiqFnelGc2KAjOAjpqjhCgIXEA_eDKuYtVvxuLyfoif0p788tfwDoZXIWrNJEGqaMWJc6gTru9a-EOal8Qo0BLOEgbPrj9EporQO_h3tZ_qfiDx48EJSd-99tauBc8CBpemBXrdb7h9F6Tqi_lGjvLFpEPtyrZce3Cn25DPjRJqqijduhtnT1oHq1u-V6vD7rEPORQ5ZfHRsojpzlJ13BiY1e9z0Z--7sEaKmdRkFbDx8dTMJd3eslaAgBEXF5f_U8n3VsxCyW"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+<p class="absolute bottom-3 left-3 text-white font-bold">Italy</p>
+</div>
+<div class="relative min-w-[160px] h-48 rounded-xl overflow-hidden shadow-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Shibuya Crossing at night in Tokyo Japan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC00iiUSHPH5rqA7TSAW5xVa-tdVhvZb4cP-qzCYvwO-LzZy459lLBegS1Oom9KN7tiOKh2DpcfbV-ufwCwCjFM-LGyY893Qrad1_2lQDzS7hfF3WSyHUwvjY3o1YwfLC6VwfSRXw_weUU-9nM5RDsXSwFty1cC5Aqqv7D6amNuM7VuFtbAXBzAIqXuLR8_oubcF86FC78j3hyPPu0KUpsny675VpeygU7hl8T_PFp8Fe4I5Sl18itTiNVhmAIS5ETuT-SceDn5Il3e"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+<p class="absolute bottom-3 left-3 text-white font-bold">Tokyo</p>
+</div>
+</div>
+</section>
+<!-- Featured Tours -->
+<section class="py-6 px-4 bg-white dark:bg-background-dark/50">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-xl font-bold text-primary dark:text-white">Trending Tours</h2>
+</div>
+<div class="space-y-6">
+<!-- Tour Card 1 -->
+<div class="flex flex-col rounded-xl overflow-hidden border border-primary/5 bg-white dark:bg-white/5 shadow-sm">
+<div class="relative h-56">
+<img class="w-full h-full object-cover" data-alt="Roman Colosseum interior golden hour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfyksi2zg1qcJwaerieCkR1z4fqFknRVhoJkHYK-X0blRLOlvaO_QuA9KmrHMhguwSCiarznuDYdYsWCiGxFUKXxbZBsybM5NQ0tK4Juf_4_AHmVgATSubAXwIcTTOuPMv9jvQkrTLI1CKsDho8Kx1pyva-I3bBhp7OvD0jki66DN7QChgZ1_w3bIJnD8UPk2z5KJVBQtGGWM2m2Nmid1D1yHsplJQQwW2vWMNJ5l9wKuysUOj2OKcUz8ugH9ZM17qAUZhS8YMbSOJ"/>
+<div class="absolute top-3 left-3 bg-accent text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Best Seller</div>
+<button class="absolute top-3 right-3 bg-white/20 backdrop-blur-md p-1.5 rounded-full text-white">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+</div>
+<div class="p-4">
+<p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Rome, Italy</p>
+<h3 class="text-lg font-bold text-primary dark:text-white leading-tight mb-2">Colosseum Underground and Ancient Rome Small-Group Tour</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-accent text-sm fill-current">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-sm text-slate-400">(2.4k reviews)</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-slate-500 text-xs">From <span class="text-xl font-bold text-primary dark:text-accent block">$125.00</span></div>
+<button class="bg-primary dark:bg-accent dark:text-primary text-white px-5 py-2 rounded-lg font-bold text-sm">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="flex flex-col rounded-xl overflow-hidden border border-primary/5 bg-white dark:bg-white/5 shadow-sm">
+<div class="relative h-56">
+<img class="w-full h-full object-cover" data-alt="Traditional long tail boat in Halong Bay Vietnam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgW9aOMRr7Hqd26iCW2jvFXHTKko_DKzVtQtT5bqEiRyRs1YNdkIcbA-XrGYpxA_60MT3FN3EwyiOw2G7TPXcsEmJ7rZzzUMv4f2h4ccygO4Yu8sV6n81SZw8F_-8affF7L0Tgn49HbxwPgP8s9YELAEfxsp2nFeIc5b5v9QgUyE_MRQnwCE__O2kSuvMqd7khft45EPgSSZ8aWBIzSj8YKsSEN3IEwORm6lXdMtVls-m25A2xcJBz3oU35gMKewSF3SE9e4Qs2-w4"/>
+<div class="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Top Rated</div>
+<button class="absolute top-3 right-3 bg-white/20 backdrop-blur-md p-1.5 rounded-full text-white">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+</div>
+<div class="p-4">
+<p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Ha Long Bay, Vietnam</p>
+<h3 class="text-lg font-bold text-primary dark:text-white leading-tight mb-2">Luxury Cruise with Kayaking and Cave Exploration</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-accent text-sm fill-current">star</span>
+<span class="text-sm font-bold">4.8</span>
+<span class="text-sm text-slate-400">(1.1k reviews)</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-slate-500 text-xs">From <span class="text-xl font-bold text-primary dark:text-accent block">$89.00</span></div>
+<button class="bg-primary dark:bg-accent dark:text-primary text-white px-5 py-2 rounded-lg font-bold text-sm">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Book With Us -->
+<section class="py-12 px-6 bg-primary text-white">
+<h2 class="text-2xl font-bold text-center mb-10">Why Choose Viator?</h2>
+<div class="grid grid-cols-1 gap-8">
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl text-accent">verified_user</span>
+</div>
+<h4 class="text-lg font-bold mb-1">Secure Booking</h4>
+<p class="text-sm text-slate-300">Industry standard encryption and fraud protection on every transaction.</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl text-accent">support_agent</span>
+</div>
+<h4 class="text-lg font-bold mb-1">24/7 Global Support</h4>
+<p class="text-sm text-slate-300">Our support team is here for you around the clock, anywhere in the world.</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-3xl text-accent">local_activity</span>
+</div>
+<h4 class="text-lg font-bold mb-1">Local Expert Guides</h4>
+<p class="text-sm text-slate-300">Hand-picked tours led by passionate locals who know the hidden gems.</p>
+</div>
+</div>
+</section>
+<!-- Become a Partner CTA -->
+<section class="p-6">
+<div class="relative bg-accent rounded-2xl p-8 overflow-hidden shadow-xl">
+<div class="relative z-10 flex flex-col items-center text-center">
+<h2 class="text-primary text-2xl font-black mb-3 leading-tight">Host Your Own Tour</h2>
+<p class="text-primary/80 text-sm mb-6 max-w-xs">Reach millions of travelers worldwide. List your experiences for free.</p>
+<button class="bg-primary text-white font-bold px-8 py-3 rounded-xl shadow-lg">Become a Partner</button>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-slate-100 dark:bg-background-dark pt-12 pb-24 px-6 border-t border-primary/5">
+<div class="grid grid-cols-2 gap-8 mb-12">
+<div>
+<h5 class="text-sm font-bold text-primary dark:text-white mb-4">About</h5>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a href="#">Careers</a></li>
+<li><a href="#">Press</a></li>
+<li><a href="#">Sustainability</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-sm font-bold text-primary dark:text-white mb-4">Support</h5>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a href="#">Help Center</a></li>
+<li><a href="#">Cancel Booking</a></li>
+<li><a href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="flex justify-center gap-6 mb-8 text-slate-400">
+<span class="material-symbols-outlined">social_leaderboard</span>
+<span class="material-symbols-outlined">public</span>
+<span class="material-symbols-outlined">mail</span>
+</div>
+<p class="text-center text-xs text-slate-400">© 2024 Viator, Inc. All rights reserved.</p>
+</footer>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex gap-2 border-t border-primary/10 bg-white dark:bg-background-dark px-4 pb-4 pt-2 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary dark:text-accent" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-current">home</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Search</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">confirmation_number</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Bookings</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Profile</p>
+</a>
+</div>
+</body></html>

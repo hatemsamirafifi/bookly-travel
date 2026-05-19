@@ -7,7 +7,7 @@ metadata:
   version: "1.0"
 ---
 
-# SEO
+# SEO optimization
 
 Search engine optimization based on Lighthouse SEO audits and Google Search guidelines. Focus on technical SEO, on-page optimization, and structured data.
 
@@ -69,8 +69,9 @@ Sitemap: https://example.com/sitemap.xml
 <!-- Self-referencing canonical (recommended) -->
 <link rel="canonical" href="https://example.com/current-page">
 
-<!-- For paginated content, use self-referencing canonical on each page -->
-<link rel="canonical" href="https://example.com/products?page=2">
+<!-- For paginated content -->
+<link rel="canonical" href="https://example.com/products">
+<!-- Or use rel="prev" / rel="next" for explicit pagination -->
 ```
 
 ### XML sitemap
@@ -102,7 +103,7 @@ Sitemap: https://example.com/sitemap.xml
 
 ### URL structure
 
-```text
+```
 ✅ Good URLs:
 https://example.com/products/blue-widget
 https://example.com/blog/how-to-use-widgets
@@ -122,7 +123,7 @@ https://example.com/products/item/category/subcategory/blue-widget-2024-sale-dis
 
 ### HTTPS & security
 
-```http
+```html
 <!-- Ensure all resources use HTTPS -->
 <img src="https://example.com/image.jpg">
 
@@ -446,10 +447,10 @@ body {
 
 ```html
 <!-- For multi-language sites -->
-<link rel="alternate" hreflang="en" href="https://example.com/en/page">
+<link rel="alternate" hreflang="en" href="https://example.com/page">
 <link rel="alternate" hreflang="es" href="https://example.com/es/page">
-<link rel="alternate" hreflang="it" href="https://example.com/it/page">
-<link rel="alternate" hreflang="x-default" href="https://example.com/en/page">
+<link rel="alternate" hreflang="fr" href="https://example.com/fr/page">
+<link rel="alternate" hreflang="x-default" href="https://example.com/page">
 ```
 
 ### Language declaration

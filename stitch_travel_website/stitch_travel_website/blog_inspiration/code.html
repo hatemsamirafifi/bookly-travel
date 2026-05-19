@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Global Tours Marketplace - Travel Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+<!-- Top Navigation Header -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10 px-4 md:px-8 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">explore</span>
+<h1 class="text-primary dark:text-white text-xl font-bold tracking-tight">Vanderlust</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-primary/70 dark:text-slate-300">
+<a class="hover:text-primary transition-colors" href="#">Tours</a>
+<a class="hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-primary font-bold" href="#">Blog</a>
+<a class="hover:text-primary transition-colors" href="#">About</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+<button class="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-primary/90 transition-all">Book Now</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
+<!-- Search & Welcome Section -->
+<section class="mb-12">
+<div class="max-w-2xl">
+<h2 class="text-4xl md:text-5xl font-bold text-primary dark:text-white mb-4 leading-tight">Travel Insights &amp; <span class="text-accent">Global Stories</span></h2>
+<p class="text-lg text-primary/60 dark:text-slate-400 mb-8">Discover your next adventure through the eyes of local experts and seasoned travelers.</p>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary/40 group-focus-within:text-primary">search</span>
+</div>
+<input class="block w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-800 border-none rounded-xl shadow-sm ring-1 ring-primary/10 focus:ring-2 focus:ring-accent outline-none transition-all placeholder:text-primary/30" placeholder="Search for 'Solo travel in Japan' or 'Best food in Italy'..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Hero Featured Article -->
+<section class="mb-16">
+<div class="relative w-full aspect-[21/9] rounded-xl md:rounded-3xl overflow-hidden group shadow-xl">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Beautiful coastal village in Italy with colorful houses and clear blue water" style="background-image: linear-gradient(to top, rgba(10, 37, 64, 0.9) 0%, rgba(10, 37, 64, 0.2) 60%, transparent 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuDWlDKVn8TlBKZxAzK2D8RSe1qZupV-og1MnQk5F9HUGBbh3EoepOnSNjphISIPFO9nkrWtcsb6tOATl-eARW93pS278V9QpyNKc1GKLI5gkt02o265M3g84qw-mXmUreYb-hRUqfLFAiXog43ZmBSeObr56P7jQ6RAxONNmJGYWQm9C_ozmhn967H0JogNTS5_ZYlS5KNVHKQjT79D2KQaoSH5RE1s083RQ96MutnRmas7YyAZzHSV_DdAgraHad3ldx6T6jnq52rS');">
+</div>
+<div class="absolute bottom-0 left-0 p-6 md:p-12 w-full md:w-2/3">
+<span class="inline-block bg-accent text-primary text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">Featured Story</span>
+<h3 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">The Amalfi Coast: A Journey Through Lemon Groves and Azure Seas</h3>
+<div class="flex items-center gap-4 text-white/80 text-sm mb-6">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 12 min read</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> by Elena Rossi</span>
+</div>
+<button class="bg-accent hover:bg-white text-primary px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2 group/btn">
+                        Read Article <span class="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Categories Scroll -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h4 class="text-xl font-bold text-primary dark:text-white">Inspiration by Vibe</h4>
+<a class="text-sm font-semibold text-primary/60 hover:text-primary" href="#">View all tags</a>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<button class="flex-shrink-0 px-6 py-3 bg-primary text-white rounded-full font-medium flex items-center gap-2">
+<span class="material-symbols-outlined">star</span> Recommended
+                </button>
+<button class="flex-shrink-0 px-6 py-3 bg-white dark:bg-slate-800 border border-primary/10 rounded-full font-medium flex items-center gap-2 hover:border-accent transition-colors">
+<span class="material-symbols-outlined text-accent">hiking</span> Adventure
+                </button>
+<button class="flex-shrink-0 px-6 py-3 bg-white dark:bg-slate-800 border border-primary/10 rounded-full font-medium flex items-center gap-2 hover:border-accent transition-colors">
+<span class="material-symbols-outlined text-accent">restaurant</span> Foodie Guides
+                </button>
+<button class="flex-shrink-0 px-6 py-3 bg-white dark:bg-slate-800 border border-primary/10 rounded-full font-medium flex items-center gap-2 hover:border-accent transition-colors">
+<span class="material-symbols-outlined text-accent">person_pin_circle</span> Solo Travel
+                </button>
+<button class="flex-shrink-0 px-6 py-3 bg-white dark:bg-slate-800 border border-primary/10 rounded-full font-medium flex items-center gap-2 hover:border-accent transition-colors">
+<span class="material-symbols-outlined text-accent">museum</span> Cultural Insights
+                </button>
+<button class="flex-shrink-0 px-6 py-3 bg-white dark:bg-slate-800 border border-primary/10 rounded-full font-medium flex items-center gap-2 hover:border-accent transition-colors">
+<span class="material-symbols-outlined text-accent">eco</span> Sustainable
+                </button>
+</div>
+</section>
+<!-- Content Grid with Sidebar -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Articles Feed -->
+<div class="lg:col-span-8">
+<h4 class="text-xl font-bold text-primary dark:text-white mb-8">Latest Adventures</h4>
+<div class="space-y-10">
+<!-- Article Item -->
+<article class="flex flex-col md:flex-row gap-6 group cursor-pointer">
+<div class="w-full md:w-64 h-48 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Traditional temple in Kyoto" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Stunning Japanese temple during autumn surrounded by red maple leaves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFNktkZ28zJBNtbjRKgh_r-Yg4skXfqmIF9XLyUoVdW1wTdZ-2mSQvBOMJBf5PKg0u08N5iQ4Rtf0FTlP3wOEqjLD6Hqr3b1jXtdXH2D-I2eGQJ7lrCnPvwShxZxzeuxzr1kr0U8NQCmdmM8XeLC5uZ-7dC1VjIlDwpEFxyrTcYK6cghuLk9M4S3AfNclGL4mYvnFDHi8I0HtxrBvUv0usFNb_cDhFh-8UFlJ82jREFxohSeWW2g1ygieM5uiWGZ7v8-b8ycYvr25H"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 text-xs font-bold text-primary/40 dark:text-slate-500 uppercase tracking-widest mb-2">
+<span>Cultural Insights</span>
+<span>•</span>
+<span>8 min read</span>
+</div>
+<h5 class="text-2xl font-bold text-primary dark:text-white mb-3 group-hover:text-accent transition-colors">Kyoto's Forgotten Alleys: A Guide to the Real Gion</h5>
+<p class="text-primary/60 dark:text-slate-400 line-clamp-2 mb-4 leading-relaxed">Beyond the main streets of Higashiyama lie centuries of history preserved in the quiet, narrow stone-paved lanes of the ancient capital...</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 overflow-hidden">
+<img alt="Author" data-alt="Portrait of a travel writer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQjOZiKSDXES9ACSe6aYdVev4_nzkifYZYPvLwx-tESo6CndPfUoRt2pTNJCUOHOylS3H4dEIN-TA4iHmneIHDkdje5Ufha2XuZm5ygIrjuWyjA3Ff8SIU4qYaUMSfLy6mwFSH4rnZisWtkAC0S894WGLXhpzOU1wnLkOsJH0IMN3AqwW00i_EIZs_2fYRHMDk_LtYlV584FsopynIZXYRWuk7ZEsQR0XqtpO9XP4XOQ49_OXwnl91u_MmPhL3Hg83mfABOY_rCRfp"/>
+</div>
+<span class="text-sm font-semibold text-primary/80 dark:text-slate-300">Kenji Tanaka</span>
+</div>
+</div>
+</article>
+<article class="flex flex-col md:flex-row gap-6 group cursor-pointer">
+<div class="w-full md:w-64 h-48 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Venice canals" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Gondola moving through a narrow Venice canal at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCznoHH6xJ2DGRLukPdFy-xMz7kZp9BgjljvfgdCBHZG0IZeahpASaynujfNEQu-jclPx_A8q7ifDJf_8pob_rwnfXRPa1K1bOFs2ruBVz0gLwzd9BL5E6aGiq_7uQyahJO864MJSKD8xdcL0HH1h5flSW7hhgkiER2UN5gXGNkBrMJ_srLorodBhzVyVS9sdyuje39gbJvdgnuWhIzKRPArzr-Ba4N-_QKoMLSdlhIhGiKuNeWaf21O8cNrWZFn7tDAcaO6-Z7oyHz"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 text-xs font-bold text-primary/40 dark:text-slate-500 uppercase tracking-widest mb-2">
+<span>Solo Travel</span>
+<span>•</span>
+<span>6 min read</span>
+</div>
+<h5 class="text-2xl font-bold text-primary dark:text-white mb-3 group-hover:text-accent transition-colors">Navigating Venice Solo: Tips for the Lonely Hearted</h5>
+<p class="text-primary/60 dark:text-slate-400 line-clamp-2 mb-4 leading-relaxed">Venice is often sold as the ultimate romantic getaway, but exploring its maze of canals alone offers a unique type of serenity...</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 overflow-hidden">
+<img alt="Author" data-alt="Portrait of a lifestyle blogger" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP5u-KkY6H9KXDtrMSeM7xlXxZjvPWp1-dPRgk7IdwlJ7Y-ZvTIqk3VkZubpjINutrtSMSZbgT0V8CLWYsNNu5cfcjwJzd958Seh2W1WiW2iIkE8HbQB23W7JUhB53lEio-o6csT_ZXJZSLbJ9lkDm-K6gEc8HU5UQQ__Lo0mJ3Kd59oFm1li9T1mGozQOW_h5oMjsyji9MQS8z9qwJu5dlq0WjfOlOyVFDLoAYTgSwvOL78uSV6W9JqtO6R1JsPhkUmwZ9iNjEPhw"/>
+</div>
+<span class="text-sm font-semibold text-primary/80 dark:text-slate-300">Sarah Jenkins</span>
+</div>
+</div>
+</article>
+<article class="flex flex-col md:flex-row gap-6 group cursor-pointer">
+<div class="w-full md:w-64 h-48 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Exotic food market" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Colorful street food market in Bangkok with steam rising from pots" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2ByyYPziK-yydyOGC6RtQQQMrvDzw1ELavU0pEbODbVU59u5wzIcWIJIeB9OCOyngR0e69klZ4fM9eSyJzkCJQM6br3Qg1XKMyPrmkjQt2oeFXxXuHCAblQ4oI25mDGeZ3ERshoLgHZVevnMvqdJrw3088l8iEYHIUmqlRLgrHoHieOouJDFi4H48hLDKHhk3C_1YEBYGP5A4TnZqLB9Z6ddVjqF_dApubFu8BXh8BoIRTwfWHVpDgKY5L4CHJp5VHp9xb64_k9fL"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 text-xs font-bold text-primary/40 dark:text-slate-500 uppercase tracking-widest mb-2">
+<span>Foodie Guides</span>
+<span>•</span>
+<span>15 min read</span>
+</div>
+<h5 class="text-2xl font-bold text-primary dark:text-white mb-3 group-hover:text-accent transition-colors">Street Food Heaven: 48 Hours in Bangkok's Night Markets</h5>
+<p class="text-primary/60 dark:text-slate-400 line-clamp-2 mb-4 leading-relaxed">From spicy papaya salad to the legendary crab omelette, we dive deep into the smoky heart of Thailand's culinary scene...</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 overflow-hidden">
+<img alt="Author" data-alt="Portrait of a chef and travel writer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN3Qe3VWAtlG1OKzPLc7zmq3vtc05ZtKfiEB5V-x0dlY3hLlSYBIiVWBBe4CXBca0L2sLvW91DeoeUeG41LXpupbdT_Jtk4nAjYCAymnoVG6XrOXLUU_rFYwAu5zTjULG6Gjvfq196fnLkVQnnTZFUFA2IJYGmZMcXVYdiY2kBSGYMHLN6vpV3R0Q9uC-SVh6lJBp4oPEF6Lw-DnxDTxoEVzWPey_phtLBrd8_kyFfRdwimc17-2NDG_akXd4mmPbjmpYrOWz_XGfs"/>
+</div>
+<span class="text-sm font-semibold text-primary/80 dark:text-slate-300">Marco Polo Jr.</span>
+</div>
+</div>
+</article>
+</div>
+<div class="mt-12 flex justify-center">
+<button class="bg-primary/5 hover:bg-primary/10 text-primary px-8 py-3 rounded-xl font-bold transition-all">Load More Articles</button>
+</div>
+</div>
+<!-- Sidebar -->
+<aside class="lg:col-span-4 space-y-12">
+<!-- Top Destinations Section -->
+<div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-primary/5">
+<h4 class="text-xl font-bold text-primary dark:text-white mb-6">Trending Destinations</h4>
+<div class="space-y-6">
+<a class="flex items-center gap-4 group" href="#">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Iceland" class="w-full h-full object-cover" data-alt="Northern lights over a snowy landscape in Iceland" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiXTWP3MM71vXzs6BuPp68sdfyeZQSuKKyM6OQ-tbafbQuGOQlleUCv4vroxaWkGMaHqvd1Sk1JxF77t_Lv5tmHUCncmFqcRDERoALcQMNPy3whd4vlSjJyF9VIl-ZZ1wK8mJKdgBhjvwyFia7SH1mT1npiSXAqG6Ly1hSOfsbee-BunzQdD-Wf_xkuN0ovIrCh4vq4hxbdcVC5myaI8o-UbHsRA7yOfhiENcNw9QcpBwBHZCn74igHRWLHrhQaTi_EhEBYSAbN_58"/>
+</div>
+<div>
+<h6 class="font-bold text-primary dark:text-white group-hover:text-accent transition-colors">Reykjavík, Iceland</h6>
+<p class="text-xs text-primary/40 dark:text-slate-500">24 Tours Available</p>
+</div>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="India" class="w-full h-full object-cover" data-alt="The Taj Mahal at sunrise reflecting in a pool" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFhPnaebbEefcmHeIZKwypnpd0SdOaVsiD18iZlnP5nI90_mqA24-DmmRl_dBMmFVTgIaw1S7JYSlvPFDiUEUUvnj1EOQZhOk5QKxTAt_nUDNq5KuREekz5ntc1Ee9qYiAF2hSpZR6r1__iSHdrumg3D3MfIDc9b_MocWysw1c8-lPeQrXD5aTz4AYZeReuM0C9N9QeR14tpZNoEmBD2dzUG85Wu170dTCAWB8yyUn0wn-ee0Yv9pgUVMHB0WYOA2sO9hpUWWcccXZ"/>
+</div>
+<div>
+<h6 class="font-bold text-primary dark:text-white group-hover:text-accent transition-colors">Agra, India</h6>
+<p class="text-xs text-primary/40 dark:text-slate-500">18 Tours Available</p>
+</div>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Swiss Alps" class="w-full h-full object-cover" data-alt="Traditional Swiss chalet overlooking snow-capped mountains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLK1QneJH7yrUxsZRIUEZ0Em4g_MQh1Tw7mjsZmuoEeLUFFBM-Nn05U6DodfVpUnnl6LS6Kg1S271OFoYv6DFfkKMNg7-r4tHhaLpLhjiM1cWS3JyPE0sWvnH0Z1nWipJdEuDT_W12rcZvxpG0afu0D5h3dnWM2Ygk8RueruNwKwkIv29zH64FiPRc_nYEBC-gYyo-k0MBBbkS9RVjg4o5QhafudnasBdMWUli6yMnFutUb1kLYNYW8VpdW3mrUPWIXSVrTwSSgMcI"/>
+</div>
+<div>
+<h6 class="font-bold text-primary dark:text-white group-hover:text-accent transition-colors">Zermatt, Switzerland</h6>
+<p class="text-xs text-primary/40 dark:text-slate-500">12 Tours Available</p>
+</div>
+</a>
+</div>
+</div>
+<!-- Newsletter Signup -->
+<div class="bg-primary p-8 rounded-2xl text-white relative overflow-hidden">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-accent text-4xl mb-4">mail</span>
+<h4 class="text-2xl font-bold mb-3">Don't miss a trip</h4>
+<p class="text-white/70 text-sm mb-6 leading-relaxed">Get weekly travel inspiration, insider tips, and exclusive tour deals delivered to your inbox.</p>
+<div class="space-y-3">
+<input class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:ring-2 focus:ring-accent outline-none" placeholder="Enter your email" type="email"/>
+<button class="w-full bg-accent text-primary font-bold py-3 rounded-xl hover:bg-white transition-all">Subscribe Now</button>
+</div>
+<p class="text-[10px] text-white/30 mt-4 text-center">We respect your privacy. Unsubscribe at any time.</p>
+</div>
+<!-- Decorative Circle -->
+<div class="absolute -top-20 -right-20 w-48 h-48 bg-accent/10 rounded-full"></div>
+</div>
+<!-- Ad/Promo Card -->
+<div class="relative rounded-2xl overflow-hidden aspect-square">
+<img alt="Travel Promo" class="w-full h-full object-cover" data-alt="Adventurer looking out over a canyon from a high peak" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3nsAy-TUIxiMJhIcTmVicj-9fGFqHFokwM-_PZlHxj2QyTQNh_KzTxYqMyFVGKwtPjwOy_hWHJcvGDlU7S6JLvBq83AtjutFqurmTQkevwwSmKztHlg3eK86Nn9yJzDcPq0SIWOQEJtA8heIszkIulONcJlR83qNslJEvHQTiLmUGwydI1PdBkT769fSZk6EPM3qBJ5LPM5lWvfLGXGHhLshG-8d6GNeCEOGJnqvEM9il8m0ZdrGkf0CPKSzEAPaf4wcumu_k7prJ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent flex flex-col justify-end p-8">
+<p class="text-accent text-xs font-bold uppercase mb-2">Exclusive Offer</p>
+<h5 class="text-xl font-bold text-white mb-4">Plan your summer getaway early and save 25%</h5>
+<button class="bg-white text-primary text-sm font-bold py-2 px-4 rounded-lg w-fit">Browse Deals</button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary text-white py-16 mt-20">
+<div class="max-w-7xl mx-auto px-4 md:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
+<div class="col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-accent text-3xl">explore</span>
+<span class="text-2xl font-bold tracking-tight">Vanderlust</span>
+</div>
+<p class="text-white/60 mb-8 max-w-xs leading-relaxed">Crafting unforgettable global experiences for modern explorers. From local hidden gems to world-renowned landmarks.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined text-xl">language</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined text-xl">camera</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined text-xl">smart_display</span>
+</a>
+</div>
+</div>
+<div>
+<h6 class="font-bold mb-6">Marketplace</h6>
+<ul class="space-y-4 text-white/60 text-sm">
+<li><a class="hover:text-accent" href="#">Browse Tours</a></li>
+<li><a class="hover:text-accent" href="#">Destinations</a></li>
+<li><a class="hover:text-accent" href="#">Travel Guides</a></li>
+<li><a class="hover:text-accent" href="#">Special Deals</a></li>
+</ul>
+</div>
+<div>
+<h6 class="font-bold mb-6">Support</h6>
+<ul class="space-y-4 text-white/60 text-sm">
+<li><a class="hover:text-accent" href="#">Help Center</a></li>
+<li><a class="hover:text-accent" href="#">Contact Us</a></li>
+<li><a class="hover:text-accent" href="#">Terms of Service</a></li>
+<li><a class="hover:text-accent" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h6 class="font-bold mb-6">For Partners</h6>
+<ul class="space-y-4 text-white/60 text-sm">
+<li><a class="hover:text-accent" href="#">List your Tour</a></li>
+<li><a class="hover:text-accent" href="#">Affiliate Program</a></li>
+<li><a class="hover:text-accent" href="#">Partner Portal</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-white/10 mt-16 pt-8 text-center text-white/40 text-xs">
+                © 2024 Vanderlust Global Tours Marketplace. All rights reserved.
+            </div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation (Simulated from component list) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-primary/10 px-4 py-2 flex items-center justify-around z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary/40" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-[10px] font-bold">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary/40" href="#">
+<span class="material-symbols-outlined">article</span>
+<span class="text-[10px] font-bold">Insights</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary/40" href="#">
+<span class="material-symbols-outlined">bookmark</span>
+<span class="text-[10px] font-bold">Saved</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary/40" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</a>
+</div>
+</body></html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tour Management | Travel Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent-gold": "#d4af37",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Side Navigation -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between p-6">
+<div class="space-y-8">
+<!-- Branding -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-accent-gold shadow-lg">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<div>
+<h1 class="text-sm font-bold text-primary dark:text-white uppercase tracking-wider leading-none">Travel Marketplace</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Partner Portal</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-primary/10 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary dark:group-hover:text-white">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary dark:text-white rounded-lg border-l-4 border-primary" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-semibold">Tour Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-primary/10 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary dark:group-hover:text-white">calendar_today</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-primary/10 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary dark:group-hover:text-white">reviews</span>
+<span class="text-sm font-medium">Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-primary/10 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary dark:group-hover:text-white">payments</span>
+<span class="text-sm font-medium">Payouts</span>
+</a>
+</nav>
+</div>
+<div class="space-y-4">
+<div class="bg-primary p-4 rounded-xl text-center space-y-3">
+<p class="text-xs text-slate-300 font-medium">Pro Plan active</p>
+<button class="w-full py-2 bg-accent-gold text-primary text-xs font-bold rounded-lg hover:brightness-110 transition-all">
+                        Upgrade Tier
+                    </button>
+</div>
+<div class="flex items-center gap-3 px-2 py-3 border-t border-slate-100 dark:border-slate-800">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar of dashboard manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEGxN_mlsMErJWCNfA6kAJbuNSfwe3o2I7O7sH5g1p_p_r6lIKhdNeQj06DiSMhOZ6KsooZdptK3M7oaP2dzD2Q69oHhmA5fcX6DrE5IiJqkcbLtH68m0EWKwFpoKPSbz57i813X8_2B3ZbXdiqCCeJRr3NsDPqgpih182cM3jRecxCPk684VTIhQoKmpoxiTEq6Ix9lE15Hzi7keAQoIU3klV2EhwxiZkrUfQgV3NC4OamrUmZVdPlMwh0HmwDj2n2LA6F0eP_QEa"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-bold truncate">Alex Morgan</p>
+<p class="text-[10px] text-slate-500 truncate">alex@travel.com</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary">settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Page Header -->
+<header class="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-8 py-6 flex flex-wrap justify-between items-center gap-4 shrink-0">
+<div>
+<h2 class="text-2xl font-black text-primary dark:text-white tracking-tight">Tour Management</h2>
+<p class="text-sm text-slate-500 font-medium">Manage your active, draft and expired tours from one place • <span class="text-primary dark:text-accent-gold">124 Total Tours</span></p>
+</div>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                    Add New Tour
+                </button>
+</header>
+<!-- Filters Bar -->
+<section class="px-8 py-4 bg-white/50 dark:bg-background-dark/50 border-b border-slate-200 dark:border-slate-800 flex flex-wrap gap-4 items-center shrink-0">
+<div class="relative flex-1 min-w-[300px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Search tours by name, ID, or tag..." type="text"/>
+</div>
+<div class="flex gap-2">
+<select class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-primary">
+<option>Status: All</option>
+<option>Active</option>
+<option>Draft</option>
+<option>Inactive</option>
+</select>
+<select class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-primary">
+<option>Category: All</option>
+<option>Adventure</option>
+<option>Cultural</option>
+<option>Culinary</option>
+</select>
+<select class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-primary">
+<option>Sort by: Newest</option>
+<option>Sort by: Price High-Low</option>
+<option>Sort by: Price Low-High</option>
+<option>Sort by: Alphabetical</option>
+</select>
+</div>
+</section>
+<!-- Table View -->
+<div class="flex-1 overflow-auto p-8 bg-slate-50 dark:bg-slate-950/20">
+<div class="bg-white dark:bg-background-dark rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Thumbnail</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Tour Details</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Category</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Price</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover" data-alt="Tropical beach coast for tour thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClpR9BYon6YDCX5J04DQk-UIUCQF9gT9g1N6zUS4wiKddDme_1hdUaMGQC6DBsgR53MT79a7S9pbalx7SI2ywH5a9UlFgXlF5rpWmCXR6l7PgdZof4qCQHVllpZLYhA2RI_dXKT1a0V4c6b0OKYEm_Vl8hoXtyaDDwuaniQQ9oHKMmVzgOrX1aJClIUQ77XE533BTGttk4a7yHjhRq7g8cK3rRyH8DT-PGcnj0KdqhBhtI8Z3DZArSGvPYMKskcsSsVtL2aLk3lFVI"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Golden Coast Sail</span>
+<span class="text-xs text-slate-500">ID: #TC102</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 dark:text-slate-400">Water Sports</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-sm font-bold text-primary dark:text-accent-gold">$85.00</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">Active</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">content_copy</span></button>
+<button class="hover:text-rose-500 transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover" data-alt="High mountain peaks for adventure tour thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6zZBFnW_4kSxfu952Tlf_GnQna0uCTNKzUPXK1pLSbjUaefVQteTqIS44moDy9eh0QK-3_qZ6tZws_lDDiP62xGblgLLOjggjV9EQ3qTGUkNYHx37AnEv9ZHmL34Vgh8NRgGAT3ftdGAtWkO578qyIk57J8UvGJogtUbigzmzRh46DxRTm0dXP_PJGaCLMgkq5iMv8BnXI420-hn6GIlNjXPORSkYdeK2SykPaDEtvjYwS5nKXiuFOmn7gUJFvVUZhYxkktkdu_jf"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Alps Explorer</span>
+<span class="text-xs text-slate-500">ID: #TC105</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 dark:text-slate-400">Adventure</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-sm font-bold text-primary dark:text-accent-gold">$120.00</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400">Draft</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">content_copy</span></button>
+<button class="hover:text-rose-500 transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover" data-alt="Paris city street cafe for culinary tour thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMtNxOrygQ0GcMmEcA4g3LlU8GRK2cKNQXMFsP1yWBCgUZ0-H9VYjn7FYM46tBuj-OBbo7XTwI6C4ehxEeietgqDYWOabvLAIjLAK4ZEM7lAVoe6WozBhQ4oP7RDLkEJv8xZvQNjZYT5MJzmQUK0JI20O4CrNLts-pjD4ZgsJXMGsVE7sLm9PRZEAyinNi8fyPvfF2j4G3ky3sJ1VaOVVTGdJqL-LIjd7q7WQqcjJ_DHUWFWJQwfAiXLOv4x9H_NdPfS92u8LMVqke"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Parisian Delights</span>
+<span class="text-xs text-slate-500">ID: #TC108</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 dark:text-slate-400">Culinary</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-sm font-bold text-primary dark:text-accent-gold">$65.00</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">Active</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">content_copy</span></button>
+<button class="hover:text-rose-500 transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+<td class="px-6 py-4">
+<div class="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover" data-alt="Desert sand dunes for adventure tour thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH2i7n1X_yZWd8J0UL-bwHJQIVML_7U6NitxoMqbnCrGD3AmdVJ23abgimylO4lUJhPgtyk-zaCCXT0CGSC_NO-wBPYt_sOSyAONRArmYWFuzT2iqZQINALJW5wQ7yL0f5m-DFnX9aCLVg2vsCV8BfVMUqSXYwbDCERRMIwzPOUJf9DZ7SuwCi2RH3H5TPDKGHvcrpYmNW1XjDA884szxY8LOfSgo67qz4wN3B7Ia7k5YLZsiT3-2uFnkZ23Pf88gifTLNpwZTqeaB"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Dune Basher</span>
+<span class="text-xs text-slate-500">ID: #TC110</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm text-slate-600 dark:text-slate-400">Adventure</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-sm font-bold text-primary dark:text-accent-gold">$95.00</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-slate-100 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400">Inactive</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">content_copy</span></button>
+<button class="hover:text-rose-500 transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Empty State Hidden by default, just as template component -->
+<div class="hidden flex flex-col items-center justify-center py-24 text-center">
+<div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 mb-4">
+<span class="material-symbols-outlined text-4xl">search_off</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">No tours found</h3>
+<p class="text-slate-500 max-w-xs mx-auto">Try adjusting your filters or search terms to find what you're looking for.</p>
+<button class="mt-6 text-primary dark:text-accent-gold font-bold text-sm underline decoration-2 underline-offset-4">Clear all filters</button>
+</div>
+<!-- Pagination -->
+<div class="mt-8 flex items-center justify-between">
+<p class="text-sm text-slate-500 font-medium">Showing <span class="text-slate-900 dark:text-white">1 - 4</span> of <span class="text-slate-900 dark:text-white">124</span> tours</p>
+<div class="flex gap-2">
+<button class="p-2 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-400 hover:bg-white dark:hover:bg-slate-900 disabled:opacity-50 transition-colors" disabled="">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-md">1</button>
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium hover:bg-white dark:hover:bg-slate-900 transition-colors">2</button>
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium hover:bg-white dark:hover:bg-slate-900 transition-colors">3</button>
+<span class="px-2 py-2 text-slate-400">...</span>
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium hover:bg-white dark:hover:bg-slate-900 transition-colors">31</button>
+<button class="p-2 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-900 transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
