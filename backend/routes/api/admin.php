@@ -18,4 +18,10 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::get('financial-ledger', [\App\Domains\Payment\Controllers\Admin\FinancialLedgerController::class, 'index'])
         ->middleware('throttle:booking.get');
+
+    Route::prefix('reviews')->middleware('throttle:booking.get')->group(function () {
+        Route::get('/', [\App\Domains\Reviews\Controllers\Admin\AdminReviewController::class, 'index']);
+        Route::post('{review}/hide', [\App\Domains\Reviews\Controllers\Admin\AdminReviewController::class, 'hide']);
+        Route::post('{review}/reinstate', [\App\Domains\Reviews\Controllers\Admin\AdminReviewController::class, 'reinstate']);
+    });
 });

@@ -27,11 +27,15 @@ class StripeService
         return $intent->client_secret;
     }
 
-    public function refund(string $paymentIntentId): string
+    public function refund(string $paymentIntentId, ?string $idempotencyKey = null): string
     {
-        $refund = Refund::create([
-            'payment_intent' => $paymentIntentId,
-        ]);
+        $params = ['payment_intent' => $paymentIntentId];
+
+        if ($idempotencyKey !== null) {
+            $params['idempotency_key'] = $idempotencyKey;
+        }
+
+        $refund = Refund::create($params);
 
         return $refund->id;
     }

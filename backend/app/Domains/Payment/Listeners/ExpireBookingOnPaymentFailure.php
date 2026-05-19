@@ -7,8 +7,30 @@ use App\Domains\Payment\Events\PaymentFailed;
 
 class ExpireBookingOnPaymentFailure
 {
+    public function __construct(
+        private readonly \App\Domains\Booking\Services\AuditService $auditService
+    ) {}
+
     public function handle(PaymentFailed $event): void
     {
-        $event->booking->update(['status' => Booking::STATUS_EXPIRED]);
+        $booking = $event->booking;
+        $beforeState = $booking->status;
+
+        $user = auth()->user();
+        // Since $event->actor is not defined on PaymentFailed, we fallback to auth()->user() or system
+        $actorType = $user ? 'user' : 'system';
+        $actorId = $user ? $user->id : null;
+
+        $booking->update(['status' => Booking::STATUS_EXPIRED]);
+
+        $this->auditService->log(
+            $booking,
+            $actorType,
+            $actorId,
+            'booking.status_changed',
+            $beforeState,
+            Booking::STATUS_EXPIRED,
+            ['reason' => 'payment_failed']
+        );
     }
 }

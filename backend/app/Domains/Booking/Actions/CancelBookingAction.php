@@ -31,6 +31,12 @@ class CancelBookingAction
             throw new AccessDeniedHttpException('You do not have access to this booking.');
         }
 
+        if ($booking->status === Booking::STATUS_CANCELLED) {
+            $booking->load('tour');
+
+            return BookingResponseDTO::fromBooking($booking);
+        }
+
         if ($booking->status !== Booking::STATUS_CONFIRMED) {
             throw new UnprocessableEntityHttpException('Only confirmed bookings can be cancelled.');
         }

@@ -5,6 +5,7 @@ namespace App\Domains\Payment\Actions;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Services\StripeService;
+use Illuminate\Support\Facades\DB;
 
 class CreatePaymentIntentAction
 {
@@ -14,24 +15,40 @@ class CreatePaymentIntentAction
 
     public function execute(Booking $booking): string
     {
-        $clientSecret = $this->stripe->createPaymentIntent(
-            amount: $booking->total_price,
-            currency: $booking->currency,
-            idempotencyKey: $booking->idempotency_key,
-        );
+        $existing = Payment::where('booking_id', $booking->id)
+            ->where('type', 'charge')
+            ->first();
 
-        $intentId = $this->extractPaymentIntentId($clientSecret);
+        if ($existing) {
+            return $existing->metadata['client_secret']
+                ?? $this->stripe->createPaymentIntent(
+                    amount: $booking->total_price,
+                    currency: $booking->currency,
+                    idempotencyKey: $booking->idempotency_key,
+                );
+        }
 
-        Payment::create([
-            'booking_id' => $booking->id,
-            'stripe_payment_intent_id' => $intentId,
-            'type' => 'charge',
-            'amount' => $booking->total_price,
-            'currency' => $booking->currency,
-            'status' => 'pending',
-        ]);
+        return DB::transaction(function () use ($booking) {
+            $clientSecret = $this->stripe->createPaymentIntent(
+                amount: $booking->total_price,
+                currency: $booking->currency,
+                idempotencyKey: $booking->idempotency_key,
+            );
 
-        return $clientSecret;
+            $intentId = $this->extractPaymentIntentId($clientSecret);
+
+            Payment::create([
+                'booking_id' => $booking->id,
+                'stripe_payment_intent_id' => $intentId,
+                'type' => 'charge',
+                'amount' => $booking->total_price,
+                'currency' => $booking->currency,
+                'status' => 'pending',
+                'metadata' => ['client_secret' => $clientSecret],
+            ]);
+
+            return $clientSecret;
+        });
     }
 
     private function extractPaymentIntentId(string $clientSecret): string

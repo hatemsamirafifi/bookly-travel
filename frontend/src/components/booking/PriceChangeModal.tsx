@@ -1,41 +1,14 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface PriceChangeModalProps {
   oldPrice: string;
   newPrice: string;
   onConfirm: () => void;
   onCancel: () => void;
-  locale: string;
 }
-
-const copy: Record<string, Record<string, string>> = {
-  en: {
-    title: 'Price has changed',
-    body: 'The price for this tour has changed since you loaded the page.',
-    from: 'Original price',
-    to: 'Current price',
-    confirm: 'Confirm at new price',
-    cancel: 'Cancel',
-  },
-  es: {
-    title: 'El precio ha cambiado',
-    body: 'El precio de este tour ha cambiado desde que cargaste la página.',
-    from: 'Precio original',
-    to: 'Precio actual',
-    confirm: 'Confirmar al nuevo precio',
-    cancel: 'Cancelar',
-  },
-  it: {
-    title: 'Il prezzo è cambiato',
-    body: 'Il prezzo di questo tour è cambiato da quando hai caricato la pagina.',
-    from: 'Prezzo originale',
-    to: 'Prezzo attuale',
-    confirm: 'Conferma al nuovo prezzo',
-    cancel: 'Annulla',
-  },
-};
 
 /**
  * WCAG 2.1 AA compliant modal for FR-027 price-change re-confirmation.
@@ -49,9 +22,8 @@ export default function PriceChangeModal({
   newPrice,
   onConfirm,
   onCancel,
-  locale,
 }: PriceChangeModalProps) {
-  const lang = copy[locale] ?? copy.en;
+  const t = useTranslations('booking.priceChangeModal');
   const confirmRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -121,20 +93,20 @@ export default function PriceChangeModal({
         </div>
 
         <h2 id="price-change-title" className="mb-2 text-lg font-semibold text-gray-900">
-          {lang.title}
+          {t('title')}
         </h2>
         <p id="price-change-desc" className="mb-4 text-sm text-gray-600">
-          {lang.body}
+          {t('body')}
         </p>
 
         {/* Price comparison */}
         <div className="mb-6 space-y-2 rounded-xl bg-gray-50 p-4">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">{lang.from}</span>
+            <span className="text-gray-500">{t('from')}</span>
             <span className="text-gray-400 line-through">{oldPrice}</span>
           </div>
           <div className="flex items-center justify-between text-sm font-semibold">
-            <span className="text-gray-700">{lang.to}</span>
+            <span className="text-gray-700">{t('to')}</span>
             <span className="text-emerald-600">{newPrice}</span>
           </div>
         </div>
@@ -147,7 +119,7 @@ export default function PriceChangeModal({
             onClick={onConfirm}
             className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            {lang.confirm}
+            {t('confirm')}
           </button>
           <button
             ref={cancelRef}
@@ -155,7 +127,7 @@ export default function PriceChangeModal({
             onClick={onCancel}
             className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
           >
-            {lang.cancel}
+            {t('cancel')}
           </button>
         </div>
       </div>

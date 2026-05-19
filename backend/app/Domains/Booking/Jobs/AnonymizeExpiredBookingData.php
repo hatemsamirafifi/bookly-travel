@@ -29,8 +29,6 @@ class AnonymizeExpiredBookingData implements ShouldQueue
 
     public int $tries = 1;
 
-    public string $queue = 'default';
-
     /**
      * AuditService is resolved from the container at execution time (not at
      * serialization time) to avoid queue serialization failures.
@@ -80,7 +78,6 @@ class AnonymizeExpiredBookingData implements ShouldQueue
 
         Log::info('Booking personal data anonymized', [
             'booking_reference' => $booking->reference,
-            'token'             => $token,
         ]);
     }
 }

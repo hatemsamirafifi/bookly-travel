@@ -241,7 +241,7 @@ features:
     depends_on: []
 
   - name: Brute Force & Rate Limiting
-    description: Account lockout (escalating tiers: 1m/5m/30m), per-endpoint rate limiting (60-120/min), IP-based keying
+    description: "Account lockout (escalating tiers: 1m/5m/30m), per-endpoint rate limiting (60-120/min), IP-based keying"
     files:
       - backend/app/Http/Middleware/RateLimitSearchMiddleware.php
       - backend/app/Actions/Auth/AuthenticateTravelerAction.php

@@ -1,7 +1,7 @@
 import type { TourDetail as TourDetailType } from '@/lib/api/types';
 import ImageGallery from './ImageGallery';
 import AvailabilityCalendar from './AvailabilityCalendar';
-import ReviewList from './ReviewList';
+import ReviewList from '@/components/reviews/ReviewList';
 import BookingCTA from './BookingCTA';
 
 interface TourDetailProps {
@@ -166,7 +166,7 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
 
         {/* Sidebar: Reviews */}
         <div className="lg:col-span-1">
-          <ReviewList reviews={tour.reviews} />
+          <ReviewList tourSlug={tour.slug} locale={locale} />
         </div>
       </div>
     </div>

@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
+    protected static function booted(): void
+    {
+        static::creating(function (Payment $payment) {
+            if (empty($payment->stripe_payment_intent_id)) {
+                $payment->stripe_payment_intent_id = 'pi_test_' . \Illuminate\Support\Str::random(24);
+            }
+        });
+    }
+
     protected $fillable = [
         'booking_id',
         'stripe_payment_intent_id',

@@ -18,4 +18,7 @@ Route::middleware(['auth:sanctum', 'role:partner'])->group(function () {
 
     Route::get('financial-summary', [\App\Domains\Payment\Controllers\Partner\FinancialSummaryController::class, 'index'])
         ->middleware('throttle:booking.get');
+
+    Route::get('reviews', [\App\Domains\Reviews\Controllers\Partner\PartnerReviewController::class, 'index'])
+        ->middleware('throttle:booking.get');
 });

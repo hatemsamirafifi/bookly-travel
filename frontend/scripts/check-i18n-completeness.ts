@@ -2,7 +2,7 @@
 /**
  * i18n completeness validator (T055 / SC-009)
  *
- * Loads en.json, es.json, and it.json from src/i18n/, computes the symmetric
+ * Loads en.json, es.json, and it.json from messages/, computes the symmetric
  * difference of top-level keys, and exits non-zero if any locale is missing
  * a key present in en.json or contains extra keys not in en.json.
  *
@@ -15,7 +15,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const I18N_DIR = path.resolve(__dirname, '../src/i18n');
+const I18N_DIR = path.resolve(__dirname, '../messages');
 const REFERENCE_LOCALE = 'en';
 const CHECK_LOCALES = ['es', 'it'];
 

@@ -1,10 +1,10 @@
 # Bookly — Phase 1 Implementation Plan
 
-> **Version**: 1.0.0
-> **Date**: 2026-04-13
-> **Constitution**: v1.0.0 (patch to v1.1.0 pending — Filament addition)
-> **Specification Strategy**: v1.0.0
-> **Status**: Draft
+> **Version**: 2.0.0
+> **Date**: 2026-04-13 (revised 2026-05-13)
+> **Constitution**: v1.0.1
+> **Specification Strategy**: v2.0.0
+> **Status**: In Progress
 
 ---
 
@@ -33,7 +33,7 @@ Bookly Phase 1 delivers the **core booking MVP** for a tours-only marketplace. I
 
 ### Goals
 
-- Enable travelers to search, discover, and book tours with instant confirmation
+- ~~Enable travelers to search, discover, and book tours with instant confirmation~~ ✅ (search, discovery, booking implemented)
 - Enable partners to create, price, and manage tour listings
 - Enable admins to moderate partners, tours, and oversee operations
 - Support multi-language content (EN, ES, IT)
@@ -259,10 +259,16 @@ bookly-travel/
 │   └── tests/
 ├── docs/                            → Project documentation
 ├── specs/                           → Feature specifications
-│   ├── 001-traveler-auth/
-│   ├── 002-partner-onboarding/
-│   ├── ...
-│   └── 011-traveler-account-bookings/
+│   ├── 001-traveler-auth/           → ✅ Implemented
+│   ├── 002-foundational-impl/       → ✅ Implemented
+│   ├── 003-traveler-registration/   → ✅ Implemented
+│   ├── 004-traveler-signin/         → ✅ Implemented
+│   ├── 005-brute-force-protection/  → ✅ Implemented
+│   ├── 006-public-search-discovery/ → ✅ Implemented
+│   ├── 007-tour-booking/            → ✅ Implemented
+│   ├── 008-payment-processing/      → 📋 Ready to build
+│   ├── 009-reviews-ratings/         → 📝 Partial spec
+│   └── 010–015 (TBD)               → 🔲 Not started
 └── .specify/                        → Spec Kit config and templates
 ```
 
@@ -272,156 +278,190 @@ bookly-travel/
 
 Implementation is organized into **5 phases**, following the dependency graph defined in the specification strategy. Each phase groups features that can be worked on in parallel after their dependencies are satisfied.
 
+> **NOTE — v2.0.0 Revision**: The original plan used numbering from
+> the v1.0.0 specification strategy (11 features, 001–011). During
+> implementation, the Traveler Auth feature (original 001) was
+> expanded into 5 granular specs (001–005), and subsequent features
+> were renumbered. See the updated specification strategy v2.0.0 for
+> the full numbering mapping.
+
 ### Phase Overview
 
 ```mermaid
 gantt
-    title Bookly Phase 1 — Implementation Timeline
+    title Bookly Phase 1 — Implementation Timeline (Actual)
     dateFormat  YYYY-MM-DD
     axisFormat  %b %d
 
-    section Phase A: Foundation
-    Project scaffolding & infrastructure       :a1, 2026-04-14, 5d
-    001 Traveler Auth                          :a2, after a1, 7d
-    002 Partner Onboarding                     :a3, after a1, 7d
+    section Phase A: Foundation ✅
+    Project scaffolding & infrastructure       :done, a1, 2026-04-14, 5d
+    001 Traveler Auth (Spec)                   :done, a2, after a1, 3d
+    002 Foundational Implementation            :done, a3, after a2, 5d
+    003 Traveler Registration                  :done, a4, after a3, 5d
+    004 Traveler Sign-in                       :done, a5, after a4, 3d
+    005 Brute Force Protection                 :done, a6, after a5, 3d
 
-    section Phase B: Tour Core
-    003 Tour Management                        :b1, after a3, 10d
-    004 Pricing & Availability                 :b2, after b1, 7d
+    section Phase B: Discovery ✅
+    006 Public Search & Discovery              :done, b1, after a6, 10d
 
-    section Phase C: Admin & Discovery
-    005 Admin Moderation                       :c1, after b1, 8d
-    006 Public Search & Discovery              :c2, after b2, 10d
+    section Phase C: Booking ✅
+    007 Tour Booking                           :done, c1, after b1, 10d
 
-    section Phase D: Booking Flow
-    007 Booking & Checkout                     :d1, after c2, 10d
-    008 Payments & Finance                     :d2, after d1, 8d
+    section Phase D: Payments 📋
+    008 Payment Processing                     :active, d1, after c1, 8d
 
-    section Phase E: Post-Booking
-    009 Notifications & Vouchers               :e1, after d1, 7d
-    010 Traveler Reviews                       :e2, after d1, 5d
-    011 Traveler Account & Bookings            :e3, after d1, 7d
+    section Phase E: Post-Booking 🔲
+    009 Reviews & Ratings                      :e1, after d1, 5d
+    014 Notifications & Vouchers               :e2, after d1, 7d
+    015 Traveler Account & Bookings            :e3, after d1, 7d
+
+    section Phase F: Partner & Admin 🔲
+    010 Partner Onboarding                     :f1, after a6, 7d
+    011 Tour Management                        :f2, after f1, 10d
+    012 Pricing & Availability                 :f3, after f2, 7d
+    013 Admin Moderation                       :f4, after f2, 8d
 ```
 
 ---
 
-### Phase A: Foundation (Specs 001, 002)
+### Phase A: Foundation (Specs 001–005) — ✅ COMPLETE
 
-**Objective**: Scaffold the project, establish core authentication, and set up both traveler and partner identity systems.
+**Objective**: Scaffold the project, establish core authentication, and implement traveler identity with security hardening.
 
 | Task | Status | Description | Priority |
 |------|--------|------------|----------|
 | A.0 | ✅ Done | Project scaffolding — initialize Laravel backend with PostgreSQL, Redis, and Filament. Initialize Next.js frontend with TypeScript, Tailwind, and i18n. Set up Docker dev environment. | **Critical** |
-| A.1 | ✅ Done | Constitution patch v1.1.0 — add Filament to approved stack table, codify three-surface architecture | **Critical** |
-| A.2 | 🔄 In Progress | 001 — Traveler Auth — Registration, login, session management, guest identity, password reset | **Critical** |
-| A.3 | ⏳ Pending | 002 — Partner Onboarding — Self-registration, admin invitation, account states, approval gate | **Critical** |
+| A.1 | ✅ Done | Constitution patch to v1.0.1 — add Filament to approved stack table, codify three-surface architecture | **Critical** |
+| A.2 | ✅ Done | 001 — Traveler Auth — Architecture, data model, event infrastructure spec | **Critical** |
+| A.3 | ✅ Done | 002 — Foundational Implementation — Database schema, models, events, API scaffolding, frontend auth infra | **Critical** |
+| A.4 | ✅ Done | 003 — Traveler Registration — Registration flow, email verification, guest booking linkage, multi-language | **Critical** |
+| A.5 | ✅ Done | 004 — Traveler Sign-in — Login, logout, session management with Sanctum tokens | **Critical** |
+| A.6 | ✅ Done | 005 — Brute Force Protection — Account lockout, rate limiting, login failure tracking | **Critical** |
 
 **Dependencies**: None (foundation layer)
 
-**Deliverables**:
-- Working Laravel API with Sanctum authentication
-- Working Next.js frontend with i18n routing
-- Filament admin dashboard scaffolded
-- Traveler registration/login/logout flows
-- Partner registration and profile management
-- Admin ability to approve/reject partners
-- Docker Compose development environment
+**Deliverables** (all completed):
+- ✅ Working Laravel API with Sanctum authentication
+- ✅ Working Next.js frontend with i18n routing
+- ✅ Docker Compose development environment
+- ✅ Traveler registration/login/logout flows
+- ✅ Brute force protection and account lockout
+- ✅ Event infrastructure and audit logging
 
 ---
 
-### Phase B: Tour Core (Specs 003, 004)
+### Phase B: Discovery (Spec 006) — ✅ COMPLETE
 
-**Objective**: Build the tour creation, management, pricing, and availability systems.
+**Objective**: Build public-facing search and discovery experience.
 
-| Task | Description | Priority |
-|------|------------|----------|
-| B.1 | 003 — Tour Management — Partner tour CRUD, multi-language content (EN/ES/IT), image uploads to R2, draft/submit/publish workflow | **Critical** |
-| B.2 | 004 — Pricing & Availability — Per-person pricing, currency handling, availability calendar, capacity management, overbooking protection | **Critical** |
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| B.1 | ✅ Done | 006 — Public Search & Discovery — Homepage, tour search with filters, tour detail pages, SEO optimization, localized routes | **Critical** |
 
-**Dependencies**: Phase A (Partner authentication required)
+**Dependencies**: Phase A (auth infrastructure required)
 
-**Deliverables**:
-- Partner can create, edit, and submit tours for review
-- Multi-language content entry for all translatable fields
-- Image upload to Cloudflare R2 with cover image designation
-- Tour status lifecycle (draft → pending_review → published/rejected)
-- Pricing model with per-person rates
-- Availability calendar with capacity per departure
-- Real-time availability validation
+**Deliverables** (all completed):
+- ✅ Public homepage with featured tours and categories
+- ✅ Search with text, filters (location, category, price, date, duration), and sorting
+- ✅ Tour detail pages with full information
+- ✅ SEO: SSR/SSG, meta tags, Open Graph, structured data
+- ✅ Localized URLs (`/en/tours/...`, `/es/tours/...`, `/it/tours/...`)
 
 ---
 
-### Phase C: Admin & Discovery (Specs 005, 006)
+### Phase C: Booking (Spec 007) — ✅ COMPLETE
 
-**Objective**: Build admin moderation tools and public-facing search/discovery experience.
+**Objective**: Implement the booking and checkout pipeline.
 
-| Task | Description | Priority |
-|------|------------|----------|
-| C.1 | 005 — Admin Moderation — Filament resources for partner/tour moderation, booking oversight, refund tracking, audit logging | **High** |
-| C.2 | 006 — Public Search & Discovery — Homepage, tour search with filters, tour detail pages, SEO optimization, localized routes | **Critical** |
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| C.1 | ✅ Done | 007 — Tour Booking — Checkout flow, guest/authenticated, booking lifecycle, cancellation, auto-completion, idempotency, concurrency control, audit trail | **Critical** |
 
-**Dependencies**: Phase B (Tours must exist to moderate and discover)
+**Dependencies**: Phase B (Public tour pages must exist)
 
-**Deliverables**:
-- Filament admin dashboard with partner and tour moderation workflows
-- Audit log for all admin actions
-- Public homepage with featured tours and categories
-- Search with text, filters (location, category, price, date, duration), and sorting
-- Tour detail pages with full information, image gallery, pricing, availability
-- SEO: SSR/SSG, meta tags, Open Graph, structured data, sitemap
-- Localized URLs (`/en/tours/...`, `/es/tours/...`, `/it/tours/...`)
-- Lighthouse Performance score ≥ 90
+**Deliverables** (all completed):
+- ✅ Multi-step checkout flow
+- ✅ Guest checkout with post-booking account creation offer
+- ✅ Booking lifecycle (created → confirmed → completed, with cancelled/refunded branches)
+- ✅ Idempotent booking creation (duplicate submission protection)
+- ✅ Race condition handling for availability
+- ✅ Scheduled job for auto-completing bookings after tour date
+- ✅ Traveler cancellation flow (before tour date only)
 
 ---
 
-### Phase D: Booking Flow (Specs 007, 008)
+### Phase D: Payments (Spec 008) — ✅ COMPLETE
 
-**Objective**: Implement the complete booking and payment pipeline.
+**Objective**: Implement Stripe payment processing with financial auditability.
 
-| Task | Description | Priority |
-|------|------------|----------|
-| D.1 | 007 — Booking & Checkout — Checkout flow, guest/authenticated, booking lifecycle, cancellation, auto-completion, idempotency | **Critical** |
-| D.2 | 008 — Payments & Finance — Stripe Payment Intents, webhook handling, financial ledger, refund tracking | **Critical** |
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| D.1 | ✅ Done | 008 — Payment Processing — Stripe Payment Intents, Stripe Elements, two-step booking/payment orchestration, webhook handling, immutable financial ledger, refund tracking | **Critical** |
 
-**Dependencies**: Phase C (Public tour pages and search must exist)
+**Dependencies**: Phase C (Booking system must exist) ✅
 
 **Deliverables**:
-- Multi-step checkout flow (date/participants → details → payment → confirmation)
-- Guest checkout with post-booking account creation offer
-- Booking lifecycle (created → confirmed → completed, with cancelled/refunded branches)
-- Idempotent booking creation (duplicate submission protection)
-- Race condition handling for availability
-- Stripe Payment Intents integration
+- Stripe Payment Intents integration with Stripe Elements
+- Two-step orchestration: reserve availability → confirm payment
+- `pending_payment` and `expired` booking statuses
 - Webhook handling for payment events
-- Immutable financial ledger
-- Scheduled job for auto-completing bookings after tour date
-- Traveler cancellation flow (before tour date only)
+- Immutable financial ledger (append-only)
+- Automatic refund on eligible cancellation
+- Partner financial summary (visibility only, no payouts)
+- Admin payment failure alerts
 
 ---
 
-### Phase E: Post-Booking (Specs 009, 010, 011)
+### Phase E: Post-Booking (Specs 009, 014, 015) — 🔲 PENDING
 
-**Objective**: Deliver post-booking experiences — notifications, vouchers, reviews, and account management.
+**Objective**: Deliver post-booking experiences — reviews, notifications, vouchers, and account management.
 
-| Task | Description | Priority |
-|------|------------|----------|
-| E.1 | 009 — Notifications & Vouchers — Email notifications (queued), booking voucher generation (PDF), multi-language templates | **High** |
-| E.2 | 010 — Traveler Reviews — Review submission for completed bookings, rating + comment, display on tour pages, admin moderation | **Medium** |
-| E.3 | 011 — Traveler Account & Bookings — Traveler dashboard, booking history, voucher download, profile management, language preference | **High** |
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| E.1 | 📝 Partial | 009 — Reviews & Ratings — Review submission for completed bookings, rating + comment, display on tour pages, partner views, admin moderation | **Medium** |
+| E.2 | 🔲 Not started | 014 — Notifications & Vouchers — Email notifications (queued), booking voucher generation (PDF), multi-language templates | **High** |
+| E.3 | 🔲 Not started | 015 — Traveler Account & Bookings — Traveler dashboard, booking history, voucher download, profile management, language preference | **High** |
 
-**Dependencies**: Phase D (Bookings must exist)
+**Dependencies**: Phase D (Payments must exist for 009; Bookings must exist for 014, 015)
 
 **Deliverables**:
+- Review submission with 1–5 star rating and text comment
+- Review display on tour detail pages (average rating, individual reviews)
+- Admin review moderation in Filament
 - Queued email notifications for all booking events
 - Multi-language email templates (EN, ES, IT)
 - PDF voucher generation with booking details and QR code
 - Voucher download from traveler account
-- Review submission with 1–5 star rating and text comment
-- Review display on tour detail pages (average rating, individual reviews)
-- Admin review moderation in Filament
 - Traveler dashboard with booking list/detail views
 - Profile management (name, email, phone, password, language preference)
 - Booking history with status filtering
+
+---
+
+### Phase F: Partner & Admin (Specs 010, 011, 012, 013) — 🔲 PENDING
+
+**Objective**: Build the partner onboarding, tour management, pricing/availability, and admin moderation systems.
+
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| F.1 | 🔲 Not started | 010 — Partner Onboarding — Self-registration, admin invitation, account states, approval gate | **Critical** |
+| F.2 | 🔲 Not started | 011 — Tour Management — Partner tour CRUD, multi-language content (EN/ES/IT), image uploads to R2, draft/submit/publish workflow | **Critical** |
+| F.3 | 🔲 Not started | 012 — Pricing & Availability — Per-person pricing, currency handling, availability calendar, capacity management, overbooking protection | **Critical** |
+| F.4 | 🔲 Not started | 013 — Admin Moderation — Filament resources for partner/tour moderation, booking oversight, refund tracking, audit logging | **High** |
+
+**Dependencies**: Phase A (auth infrastructure) ✅; F.2 depends on F.1; F.3 and F.4 depend on F.2
+
+**Deliverables**:
+- Partner registration and profile management
+- Admin ability to approve/reject/suspend partners
+- Partner tour CRUD with multi-language content
+- Image upload to Cloudflare R2 with cover image designation
+- Tour status lifecycle (draft → pending_review → published/rejected)
+- Pricing model with per-person rates
+- Availability calendar with capacity per departure
+- Filament admin dashboard with full moderation workflows
+- Audit log for all admin actions
+- Lighthouse Performance score ≥ 90
 
 ---
 
@@ -1170,24 +1210,41 @@ Push to feature branch
 
 ## 14. Pre-Implementation Checklist
 
-Before beginning Phase A implementation:
-
-- [x] Constitution patched to v1.1.0 (add Filament, codify three-surface architecture)
+- [x] Constitution patched to v1.0.1 (add Filament, codify three-surface architecture)
 - [x] `specs/` directory created at project root
 - [x] Specification strategy document saved and committed
 - [x] Docker Compose configuration prepared (PostgreSQL, Redis, Nginx)
 - [x] Laravel project initialized in `backend/`
 - [x] Next.js project initialized in `frontend/`
 - [x] Git branching strategy documented (feature branches per spec)
-- [ ] CI/CD pipeline configured (lint, type-check, test)
+- [x] CI/CD pipeline configured (GitHub Actions — lint, type-check, test)
 - [ ] Cloudflare R2 bucket created and credentials provisioned
 - [ ] Stripe test API keys provisioned
-- [ ] All 11 feature specs written via `/speckit.specify` and clarified via `/speckit.clarify`
+- [ ] All feature specs written and clarified
 
 ---
 
-> **Next Steps**: Upon approval of this plan, proceed with Phase A — Project Scaffolding and Foundation (Specs 001, 002).
+## 15. Current Status (as of 2026-05-13)
+
+### Progress Summary
+
+| Phase | Features | Status |
+|-------|----------|--------|
+| Phase A: Foundation | 001–005 | ✅ Complete |
+| Phase B: Discovery | 006 | ✅ Complete |
+| Phase C: Booking | 007 | ✅ Complete |
+| Phase D: Payments | 008 | 📋 Ready to build |
+| Phase E: Post-Booking | 009, 014, 015 | 🔲 Pending (009 partially specified) |
+| Phase F: Partner & Admin | 010–013 | 🔲 Not started |
+
+### Recommended Next Actions
+
+1. **Implement 008 (Payment Processing)** — fully specified, ready to build
+2. **Complete 009 (Reviews & Ratings) planning** — needs `/speckit.tasks`
+3. **Specify 014 (Notifications & Vouchers)** — dependencies satisfied
+4. **Specify 015 (Traveler Account & Bookings)** — dependencies satisfied
+5. **Specify 010 (Partner Onboarding)** — unlocks 011 → 012 → 013 chain
 
 ---
 
-*This plan is derived from the [Bookly Constitution v1.0.0](.specify/memory/constitution.md) and the [Specification Strategy](docs/specification-strategy.md). All implementation decisions are subject to constitution compliance review.*
+*This plan is derived from the [Bookly Constitution v1.0.1](.specify/memory/constitution.md) and the [Specification Strategy v2.0.0](docs/specification-strategy.md). All implementation decisions are subject to constitution compliance review.*

@@ -37,4 +37,15 @@ class FinancialLedgerEntry extends Model
     {
         return $this->belongsTo(Payment::class);
     }
+
+    protected static function booted(): void
+    {
+        static::updating(function () {
+            return false;
+        });
+
+        static::deleting(function () {
+            return false;
+        });
+    }
 }
