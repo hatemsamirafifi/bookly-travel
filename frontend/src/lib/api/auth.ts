@@ -121,7 +121,7 @@ export const authApi = {
     return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 
-  logout: async (_token: string): Promise<void> => {
+  logout: async (): Promise<void> => {
     await fetchApi<void>('/logout', {
       method: 'POST',
     });
@@ -141,7 +141,7 @@ export const authApi = {
     });
   },
 
-  changePassword: async (_token: string, data: z.infer<typeof changePasswordSchema>): Promise<{ message: string }> => {
+  changePassword: async (data: z.infer<typeof changePasswordSchema>): Promise<{ message: string }> => {
     return fetchApi<{ message: string }>('/change-password', {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -159,7 +159,7 @@ export const authApi = {
     return data;
   },
   
-  resendVerification: async (_token: string): Promise<{ message: string }> => {
+  resendVerification: async (): Promise<{ message: string }> => {
     return fetchApi<{ message: string }>('/resend-verification', {
       method: 'POST',
     });

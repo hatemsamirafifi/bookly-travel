@@ -12,8 +12,6 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
-  const availableSet = useMemo(() => new Set(availableDates), [availableDates]);
-
   const formatDisplay = (dateStr: string) => {
     const d = new Date(dateStr + 'T00:00:00');
     return d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });

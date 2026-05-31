@@ -1,296 +1,698 @@
-# Frontend Implementation Plan — Stitch → Spec-Kit Pipeline
+# Frontend Implementation Plan - Stitch to Spec-Kit Pipeline
 
-> **Goal**: Map the 60+ Stitch UI screens to the existing spec-kit feature specs and build the complete Bookly frontend using spec-kit's `specify → clarify → plan → tasks → implement` workflow.
-> **Status**: ✅ Decisions locked — ready for execution
-
----
+> **Goal**: Map every Stitch UI screen (~47 total; 34 Next.js + 13 Filament reference) to Spec-Kit specs and build the Bookly frontend through `specify -> clarify -> plan -> tasks -> implement`.
+> **Status**: Ready for task generation after applying the traceability rules below.
 
 ## Resolved Decisions
 
 | # | Question | Decision |
 |---|----------|----------|
-| D1 | Wishlist & Blog screens? | **Create new specs** (016-Blog, 017-Wishlist) |
-| D2 | Frontend implementation order? | **Finish existing frontend (006–008) first**, then new specs |
-| D3 | Stitch code export strategy? | **Use Stitch as UI scaffolding** → rebuild as reusable Next.js components |
-| D4 | Admin dashboard approach? | **Keep Laravel Filament**, use Stitch screens as design inspiration only |
+| D1 | Wishlist and Blog screens? | Create new specs: `016-blog-travel-insights` and `017-wishlist-saved-tours`. |
+| D2 | Frontend implementation order? | Finish Public Frontend spec `010`, then Tour Management `011`, Reviews `009`, and other remaining specs. |
+| D3 | Stitch export strategy? | Use Stitch as visual scaffolding only; rebuild as reusable Next.js components. |
+| D4 | Admin dashboard approach? | Keep Laravel Filament; use Stitch admin screens as design reference only. |
+| D5 | Existing spec update strategy? | Use `010-public-frontend` and `011-tour-management` as the consolidated specifications for public website and traveler area. |
 
----
+## Spec-Kit Strategy
+
+### Spec Directory Mapping
+
+The plan uses logical spec IDs. This table maps each to the actual directory and required action.
+
+| Spec ID | Plan Label | Actual Directory | Action |
+|---------|-----------|-----------------|--------|
+| `001-005` | Traveler Auth | `001-traveler-auth` through `005-brute-force-protection` | Amend `001-traveler-auth` with frontend login/register tasks |
+| `006-008` | Public, Booking & Payments | Map to `010-public-frontend` | Reconcile with frontend implementation in Spec `010` |
+| `009` | Reviews and Ratings | `009-reviews-ratings` | Amend with frontend requirements |
+| `010` | Public Frontend | `010-public-frontend` | Completed (frontend search, checkout & payment) |
+| `011` | Tour Management (Traveler Account) | `011-tour-management` | In progress (frontend traveler dashboard, profile & wishlists) |
+| `012` | Pricing and Availability | Create `012-pricing-availability` | Create new directory |
+| `013` | Admin Moderation | Create `013-admin-moderation` | Create new directory |
+| `014` | Notifications and Vouchers | Create `014-notifications-vouchers` | Create new directory |
+| `015` | Partner Onboarding | Create `015-partner-onboarding` | Create new directory |
+| `016` | Blog and Travel Insights | Create `016-blog-travel-insights` | Create new directory |
+| `017` | Wishlist / Saved Tours | Create `017-wishlist-saved-tours` | Create new directory |
+
+### Existing Specs `001-015`
+
+- Keep the existing feature directory as the source of truth.
+- Add frontend requirements to the existing `spec.md`.
+- Update `plan.md` with routes, components, APIs, state, i18n, and verification.
+- Add frontend tasks to `tasks.md` with Stitch screen IDs.
+- If backend tasks are complete, add a new frontend phase instead of rewriting backend history.
+
+### New Specs `016-017`
+
+- Create new feature directories only for `016-blog-travel-insights` and `017-wishlist-saved-tours`.
+- Each new spec must define product requirements, data/API ownership, frontend routes, admin or partner touchpoints, and verification gates.
+
+### Required Task Traceability
+
+Every implementation task generated from this plan must include: Spec ID, Stitch screen ID, route or component path, API endpoint or data source where applicable, and verification command or acceptance check.
+
+```text
+T006-FE-014 Build tour detail gallery from ST-006-005 for /tours/[slug]
+```
 
 ## Current State
 
-### Backend Specs (Implemented ✅)
+### Backend Specs Implemented
 
 | Spec | Feature | Backend | Frontend |
 |------|---------|---------|----------|
-| 001–005 | Traveler Auth (Registration, Sign-in, Brute Force) | ✅ | ✅ Partial |
-| 006 | Public Search & Discovery | ✅ | ✅ Partial |
-| 007 | Tour Booking | ✅ | ✅ Partial |
-| 008 | Payment Processing | ✅ | ⚠️ Stripe Elements pending |
+| `001-005` | Traveler Auth, Registration, Sign-in, Brute Force | Done | Partial |
+| `006-008` | Public, Booking & Payments | Done | Done via `010` |
 
-### Remaining Specs (Not Implemented)
+### Remaining Specs
 
 | Spec | Feature | Status |
 |------|---------|--------|
-| 009 | Reviews & Ratings | 📝 Partial spec |
-| 010 | Partner Onboarding | 🔲 Not started |
-| 011 | Tour Management | 🔲 Not started |
-| 012 | Pricing & Availability | 🔲 Not started |
-| 013 | Admin Moderation | 🔲 Not started |
-| 014 | Notifications & Vouchers | 🔲 Not started |
-| 015 | Traveler Account & Bookings | 🔲 Not started |
-| **016** | **Blog & Travel Insights** | **🆕 New — needs spec** |
-| **017** | **Wishlist / Saved Tours** | **🆕 New — needs spec** |
+| `009` | Reviews and Ratings | Partial spec |
+| `010` | Public Frontend | Done |
+| `011` | Tour Management (Traveler Account) | Done |
+| `012` | Pricing and Availability | Not started |
+| `013` | Admin Moderation | Not started |
+| `014` | Notifications and Vouchers | Not started |
+| `015` | Partner Onboarding | Not started |
+| `016` | Blog and Travel Insights | New spec needed |
+| `017` | Wishlist / Saved Tours | New spec needed |
 
----
+## Stitch Screen Inventory
 
-## Stitch Screens Inventory (Mapped to Specs)
+### Screen Count Summary
 
-### 🌐 Public Traveler Website (Next.js SSR/SSG)
+| Surface | Next.js Screens | Filament Reference | Total |
+|---------|----------------|-------------------|-------|
+| Public Traveler Website | 18 | 0 | 18 |
+| Customer / Traveler Dashboard | 8 | 0 | 8 |
+| Partner Dashboard | 8 | 0 | 8 |
+| Admin Dashboard | 0 | 13 | 13 |
+| **Total** | **34** | **13** | **47** |
 
-| Stitch Screen | Maps to Spec | Device | Stitch Strategy |
-|---------------|-------------|--------|-----------------|
-| BooklyTravel Marketplace Home | 006 | Desktop | Scaffold → Next.js components |
-| BooklyTravel Home Mobile | 006 | Mobile | Scaffold → responsive variant |
-| Explore Tours & Experiences (×2) | 006 | Desktop | Scaffold → tour listing |
-| Explore Tours Mobile | 006 | Mobile | Scaffold → responsive |
-| Tour Details - BooklyTravel (×2) | 006 | Desktop | Scaffold → tour detail page |
-| Tour Details Mobile | 006 | Mobile | Scaffold → responsive |
-| Explore Destination - Rome (×2) | 006 | Desktop | Scaffold → destination landing |
-| Explore Rome Mobile | 006 | Mobile | Scaffold → responsive |
-| History & Culture Desktop Category | 006 | Desktop | Scaffold → category page |
-| History & Culture Mobile Category | 006 | Mobile | Scaffold → responsive |
-| Booking Detail Mobile | 007/015 | Desktop | Scaffold → booking detail |
-| Login to BooklyTravel (×2) | 001–004 | Desktop | Scaffold → auth pages |
-| Login Mobile | 001–004 | Mobile | Scaffold → responsive |
-| Travel Insights Desktop Blog | **016** | Desktop | Scaffold → blog page |
-| Travel Insights Mobile Blog | **016** | Mobile | Scaffold → responsive |
+Desktop + mobile variants of the same page count as separate screens because each has its own Stitch design and requires independent visual verification.
 
-### 👤 Customer / Traveler Dashboard (Next.js CSR)
+### Public Traveler Website - Next.js SSR/SSG
 
-| Stitch Screen | Maps to Spec | Device | Stitch Strategy |
-|---------------|-------------|--------|-----------------|
-| Customer Dashboard Desktop | 015 | Desktop | Scaffold → dashboard layout |
-| Customer Dashboard Mobile | 015 | Mobile | Scaffold → responsive |
-| My Bookings - Customer Dashboard | 015 | Desktop | Scaffold → booking list |
-| My Bookings Mobile | 015 | Mobile | Scaffold → responsive |
-| My Wishlist - BooklyTravel | **017** | Desktop | Scaffold → wishlist page |
-| My Wishlist Mobile | **017** | Mobile | Scaffold → responsive |
-| Account Settings - BooklyTravel | 015 | Desktop | Scaffold → settings |
-| Profile Settings Mobile | 015 | Mobile | Scaffold → responsive |
+| Stitch ID | Stitch Screen | Spec | Device | Strategy |
+|-----------|---------------|------|--------|----------|
+| ST-006-001 | BooklyTravel Marketplace Home | `010` | Desktop | Homepage |
+| ST-006-002 | BooklyTravel Home Mobile | `010` | Mobile | Responsive homepage |
+| ST-006-003 | Explore Tours and Experiences A | `010` | Desktop | Tour listing |
+| ST-006-004 | Explore Tours and Experiences B | `010` | Desktop | Listing variant / filter state |
+| ST-006-005 | Explore Tours Mobile | `010` | Mobile | Responsive listing |
+| ST-006-006 | Tour Details - BooklyTravel A | `010` | Desktop | Tour detail |
+| ST-006-007 | Tour Details - BooklyTravel B | `010` | Desktop | Detail variant / booking panel |
+| ST-006-008 | Tour Details Mobile | `010` | Mobile | Responsive detail |
+| ST-006-009 | Explore Destination - Rome A | `010` | Desktop | Destination landing |
+| ST-006-010 | Explore Destination - Rome B | `010` | Desktop | Destination variant |
+| ST-006-011 | Explore Rome Mobile | `010` | Mobile | Responsive destination |
+| ST-006-012 | History and Culture Desktop Category | `010` | Desktop | Category page |
+| ST-006-013 | History and Culture Mobile Category | `010` | Mobile | Responsive category |
+| ST-007-001 | Booking Detail Mobile | `011` (primary), `010` (booking data) | Mobile | Booking detail and voucher touchpoint |
+| ST-001-001 | Login to BooklyTravel A | `001-traveler-auth` | Desktop | Auth page |
+| ST-001-002 | Login to BooklyTravel B | `001-traveler-auth` | Desktop | Auth variant / error state |
+| ST-001-003 | Login Mobile | `001-traveler-auth` | Mobile | Responsive auth |
+| ST-016-001 | Travel Insights Desktop Blog | `016` | Desktop | Blog listing |
+| ST-016-002 | Travel Insights Mobile Blog | `016` | Mobile | Responsive blog listing |
 
-### 🏢 Partner Dashboard (Next.js CSR)
+### Customer / Traveler Dashboard - Next.js CSR
 
-| Stitch Screen | Maps to Spec | Device | Stitch Strategy |
-|---------------|-------------|--------|-----------------|
-| Partner Dashboard Overview (×2) | 010 | Desktop | Scaffold → partner home |
-| Partner Dashboard Mobile | 010 | Mobile | Scaffold → responsive |
-| My Tours - Partner Portal | 011 | Desktop | Scaffold → tour list |
-| My Tours Partner Mobile | 011 | Mobile | Scaffold → responsive |
-| Create New Tour Desktop | 011 | Desktop | Scaffold → tour form |
-| Tour Editor Dashboard | 011 | Desktop | Scaffold → tour editor |
-| Availability Slots Management | 012 | Desktop | Scaffold → calendar |
+| Stitch ID | Stitch Screen | Spec | Device | Strategy |
+|-----------|---------------|------|--------|----------|
+| ST-015-001 | Customer Dashboard Desktop | `011` | Desktop | Dashboard layout |
+| ST-015-002 | Customer Dashboard Mobile | `011` | Mobile | Responsive dashboard |
+| ST-015-003 | My Bookings - Customer Dashboard | `011` | Desktop | Booking list |
+| ST-015-004 | My Bookings Mobile | `011` | Mobile | Responsive booking list |
+| ST-017-001 | My Wishlist - BooklyTravel | `011` | Desktop | Wishlist page |
+| ST-017-002 | My Wishlist Mobile | `011` | Mobile | Responsive wishlist |
+| ST-015-005 | Account Settings - BooklyTravel | `011` | Desktop | Account settings |
+| ST-015-006 | Profile Settings Mobile | `011` | Mobile | Responsive profile settings |
 
-### 🛡️ Admin Dashboard (Laravel Filament — Design Reference Only)
+### Partner Dashboard - Next.js CSR
 
-> [!NOTE]
-> Admin screens use **Filament server-rendered views**, NOT Next.js. Stitch screens serve as **design inspiration** for Filament resource customization.
+| Stitch ID | Stitch Screen | Spec | Device | Strategy |
+|-----------|---------------|------|--------|----------|
+| ST-010-001 | Partner Dashboard Overview A | `010` | Desktop | Partner home |
+| ST-010-002 | Partner Dashboard Overview B | `010` | Desktop | Overview variant / data state |
+| ST-010-003 | Partner Dashboard Mobile | `010` | Mobile | Responsive partner home |
+| ST-011-001 | My Tours - Partner Portal | `011` | Desktop | Tour list |
+| ST-011-002 | My Tours Partner Mobile | `011` | Mobile | Responsive tour list |
+| ST-011-003 | Create New Tour Desktop | `011` | Desktop | Tour creation form |
+| ST-011-004 | Tour Editor Dashboard | `011` | Desktop | Tour editor |
+| ST-012-001 | Availability Slots Management | `012` | Desktop | Availability calendar |
 
-| Stitch Screen | Filament Resource | Purpose |
-|---------------|------------------|---------|
-| Platform Overview Dashboard (×2) | Custom Filament Widget | Dashboard layout reference |
-| Marketplace Admin Home (×2) | Filament Dashboard | Navigation/stats layout |
-| Partner Approvals Admin | PartnerResource | Approval workflow UI |
-| Tours Moderation Admin | TourResource | Moderation table/actions |
-| Booking Management Admin (×2) | BookingResource | Booking table layout |
-| Reviews Moderation Admin | ReviewResource | Review moderation table |
-| Availability & Slots Admin | AvailabilityResource | Calendar/slots UI |
-| Admin Settings Dashboard | Settings Page | Settings layout |
-| Content Management Admin | CMS Resource | Content editing reference |
-| Site Pages CMS Admin | PageResource | Static pages reference |
+### Admin Dashboard - Laravel Filament Reference Only
 
----
+Admin screens use Filament server-rendered views, not Next.js routes.
 
-## Execution Plan — 7 Phases
+| Stitch ID | Stitch Screen | Filament Resource | Purpose |
+|-----------|---------------|------------------|---------|
+| ST-013-001 | Platform Overview Dashboard A | Custom Filament Widget | Dashboard layout |
+| ST-013-002 | Platform Overview Dashboard B | Custom Filament Widget | Dashboard variant |
+| ST-013-003 | Marketplace Admin Home A | Filament Dashboard | Navigation and stats |
+| ST-013-004 | Marketplace Admin Home B | Filament Dashboard | Dashboard variant |
+| ST-013-005 | Partner Approvals Admin | PartnerResource | Approval workflow |
+| ST-013-006 | Tours Moderation Admin | TourResource | Moderation actions |
+| ST-013-007 | Booking Management Admin A | BookingResource | Booking table |
+| ST-013-008 | Booking Management Admin B | BookingResource | Booking variant |
+| ST-013-009 | Reviews Moderation Admin | ReviewResource | Review moderation |
+| ST-013-010 | Availability and Slots Admin | AvailabilityResource | Calendar/slots |
+| ST-013-011 | Admin Settings Dashboard | Settings Page | Settings layout |
+| ST-013-012 | Content Management Admin | CMS Resource | Content editing |
+| ST-013-013 | Site Pages CMS Admin | PageResource | Static pages |
 
-### Phase 1: Complete Existing Frontend (Specs 006–008) ← **START HERE**
+## Execution Plan - 7 Phases
 
-> [!IMPORTANT]
-> These specs have backend done. Frontend needs to match Stitch designs. Use Stitch HTML as scaffolding, rebuild into reusable Next.js components.
+### Phase 1: Public Frontend - Spec `010`
 
-**Spec-Kit Workflow:**
+**Objective**: Complete public discovery, booking, and payment frontend work against implemented backend APIs.
+
+```text
+1. /speckit.specify - Create or amend Spec 010 with public-facing requirements.
+   Target directory: specs/010-public-frontend/ (completed).
+2. /speckit.clarify - Resolve component structure, breakpoints, API contracts, and states.
+3. /speckit.plan - Define routes, component tree, state, API integration, and verification.
+4. /speckit.tasks - Generate frontend tasks with Stitch screen IDs.
+5. /speckit.implement - Build components from Stitch scaffolding.
 ```
-For each of 006, 007, 008:
-  1. /speckit.specify  — Frontend-specific spec referencing Stitch screens  
-  2. /speckit.clarify  — Resolve component structure, responsive breakpoints
-  3. /speckit.plan     — Component tree, state management, API integration
-  4. /speckit.tasks    — Task breakdown with Stitch screen references
-  5. /speckit.implement — Build components from Stitch scaffolding
+
+**Deliverables**: Homepage, listing, tour detail, category, destination, checkout, confirmation, Stripe Elements, payment success/failure states.
+
+**API Endpoints Consumed**:
+- `GET /api/public/tours` - Tour listing with search/filter
+- `GET /api/public/tours/{slug}` - Tour detail
+- `GET /api/public/tours/{slug}/availability` - Availability calendar
+- `GET /api/public/tours/{slug}/reviews` - Tour reviews
+- `POST /api/public/bookings` - Create booking
+- `GET /api/public/bookings/{reference}` - Booking confirmation
+- Stripe Payment Intents API via `@stripe/react-stripe-js`
+
+**Verification**:
+- Visual diff of `ST-006-*` screens against Stitch at 390px, 780px, 1280px
+- Visual diff of `ST-007-001` against Stitch at 390px
+- E2E test: homepage -> search -> tour detail -> checkout -> payment -> confirmation
+- `npm run build` - No TypeScript errors
+- `npm run lint` - No lint errors
+- `npm run test:e2e` (Playwright) - Booking flow passes
+- Lighthouse Performance >= 90 for `/`, `/tours`, `/tours/[slug]`
+
+**Done When**: All `ST-006-*` and `ST-007-001` screens are implemented, E2E booking flow passes, and Lighthouse >= 90 on public pages.
+
+### Phase 2: Tour Management (Traveler Account) - Spec `011`
+
+**Objective**: Build authenticated traveler dashboard, booking history, booking detail, profile settings, and voucher access.
+
+```text
+1. /speckit.specify - Create or amend Spec 011 with dashboard and booking-management requirements.
+   Target directory: specs/011-tour-management/ (completed).
+2. /speckit.clarify - Resolve account states, empty states, pagination, voucher permissions, and mobile nav.
+3. /speckit.plan - Define dashboard routes, protected layout, API clients, forms, and verification.
+4. /speckit.tasks - Generate tasks for ST-015-* and ST-007-001.
+5. /speckit.implement - Build account frontend.
 ```
 
-**Key deliverables:**
-- 006: Homepage, tour listing, tour detail, category pages, destination pages (desktop + mobile)
-- 007: Checkout flow (multi-step), booking confirmation
-- 008: Stripe Elements integration, payment confirmation
+**Dependencies**: `001-005` auth (done), `010` public frontend (done).
 
-**Stitch screens to scaffold from:** 20+ screens across desktop and mobile
+**Deliverables**: Dashboard, bookings list, booking detail with voucher download, profile/settings, wishlist save/remove, loading/error/empty states.
 
----
+**API Endpoints Consumed**:
+- `GET /api/public/my-bookings` - Booking list with status filter
+- `GET /api/public/my-bookings/{reference}` - Booking detail
+- `POST /api/public/my-bookings/{reference}/cancel` - Cancel booking
+- `GET /api/public/profile` - Traveler profile
+- `PUT /api/public/profile` - Update profile
+- `POST /api/public/profile/password` - Change password
+- `GET /api/public/wishlist` - Wishlist items
+- `POST /api/public/wishlist/{tour_slug}` - Add to wishlist
+- `DELETE /api/public/wishlist/{tour_slug}` - Remove from wishlist
+- `GET /api/public/my-bookings/{reference}/voucher` - Voucher PDF download
 
-### Phase 2: Traveler Account (Spec 015)
+**Verification**:
+- Guest visiting `/[locale]/my-bookings` redirects to `/[locale]/auth/login?returnUrl=...`
+- Voucher download returns 403 for non-owner
+- Profile form validates phone format and shows field-level errors
+- Wishlist heart icon optimistic update within 100ms
+- Mobile dashboard navigation tested at 390px
+- `npm run test:e2e` - Dashboard and cancellation flows pass
 
-**Dependencies satisfied:** ✅ 001 (Auth), ✅ 007 (Booking)
+**Done When**: All `ST-015-*` and `ST-017-*` screens implemented, auth guard redirects work, voucher download authorized, profile save persists, and wishlist toggling is functional.
 
-**Stitch screens:**
-- Customer Dashboard (Desktop + Mobile)
-- My Bookings (Desktop + Mobile)
-- Account Settings (Desktop + Mobile)
-- Profile Settings (Desktop + Mobile)
-- Booking Detail with voucher download
+### Phase 3: Reviews - Spec `009`
 
----
+**Objective**: Complete traveler review display and submission, plus Filament moderation reference work.
 
-### Phase 3: Reviews (Spec 009)
-
-**Dependencies:** ✅ 007 (Booking), ✅ 008 (Payment)
-
-**Stitch screens:**
-- Review sections within Tour Details pages
-- Reviews Moderation Admin (Filament reference)
-
----
-
-### Phase 4: Partner Dashboard (Specs 010–012)
-
-**Dependency chain:** 010 → 011 → 012
-
-**Stitch screens:**
-- Partner Dashboard Overview (Desktop + Mobile)
-- My Tours Portal (Desktop + Mobile)
-- Create New Tour, Tour Editor
-- Availability Slots Management
-
----
-
-### Phase 5: Admin Moderation (Spec 013)
-
-**Approach:** Laravel Filament resources styled to match Stitch admin designs
-
-**Stitch screens (as reference):** 10+ admin screens for layout/UX guidance
-
----
-
-### Phase 6: Notifications & Vouchers (Spec 014)
-
-**Primarily backend** — email templates, PDF generation.
-Frontend touchpoint: voucher download button on booking detail page (built in Phase 2).
-
----
-
-### Phase 7: New Features (Specs 016–017)
-
-#### 016 — Blog & Travel Insights
+```text
+1. /speckit.specify - Complete Spec 009 with review display, eligibility, and moderation requirements.
+   Target directory: specs/009-reviews-ratings/ (amend existing).
+2. /speckit.clarify - Resolve verified-booking rules, rating scale, media policy, and abuse states.
+3. /speckit.plan - Define tour detail review components, dashboard entry points, and Filament references.
+4. /speckit.tasks - Generate tasks for review sections and ST-013-009 reference work.
+5. /speckit.implement - Build review UI and moderation resources.
 ```
-/speckit.specify Create the blog and travel insights specification for 
-Bookly. This is a content-driven section for SEO and traveler engagement.
 
-Stitch reference screens:
-- Travel Insights Desktop Blog
-- Travel Insights Mobile Blog
+**Dependencies**: `007` (done), `008` (Phase 1), `015` (Phase 2).
+
+**Deliverables**: Review summary/list on tour detail, eligible submission flow, pending/rejected/approved states, Filament moderation styling.
+
+**API Endpoints Consumed**:
+- `GET /api/public/tours/{slug}/reviews` - Paginated reviews
+- `POST /api/public/bookings/{id}/reviews` - Submit review
+- Review eligibility check (booking must be `completed`, one review per booking)
+
+**Verification**:
+- Only travelers with completed bookings can submit reviews
+- Review form validates rating (1-5) and comment (10-2000 chars)
+- Review appears on tour detail page after submission
+- `npm run test` - Review component unit tests pass
+
+**Done When**: Review display on tour detail, submission flow for eligible travelers, moderation states visible in Filament.
+
+### Phase 4: Partner Dashboard - Specs `010-012`
+
+**Objective**: Build partner onboarding, tour management, and availability management.
+
+```text
+For each of 010, 011, and 012:
+1. /speckit.specify - Define partner-facing frontend requirements.
+   Target directories:
+   - 010: specs/010-public-frontend/ (amend existing)
+   - 011: specs/011-tour-management/ (amend existing)
+   - 012: specs/012-pricing-availability/ (create new)
+2. /speckit.clarify - Resolve permissions, validation, draft states, and responsive behavior.
+3. /speckit.plan - Define protected partner routes, forms, API clients, and calendar behavior.
+4. /speckit.tasks - Generate tasks with ST-010-*, ST-011-*, or ST-012-* references.
+5. /speckit.implement - Build partner frontend.
+```
+
+**Dependency chain**: `010 -> 011 -> 012`.
+
+**Deliverables**: Partner overview, approval status UI, tour list, create/edit tour forms, availability calendar.
+
+**API Endpoints Consumed**:
+- `GET /api/partner/profile` - Partner profile and approval status
+- `PUT /api/partner/profile` - Update partner profile
+- `GET /api/partner/tours` - Partner tour list
+- `POST /api/partner/tours` - Create tour
+- `GET /api/partner/tours/{id}` - Tour detail
+- `PUT /api/partner/tours/{id}` - Update tour
+- `POST /api/partner/tours/{id}/submit` - Submit for review
+- `POST /api/partner/tours/{id}/archive` - Archive tour
+- `POST /api/partner/tours/{id}/images` - Upload images
+- `DELETE /api/partner/tours/{id}/images/{imageId}` - Delete image
+- `PUT /api/partner/tours/{id}/pricing` - Set pricing
+- `GET /api/partner/tours/{id}/availability` - Get availability
+- `POST /api/partner/tours/{id}/availability` - Add slots
+- `PUT /api/partner/tours/{id}/availability/{slotId}` - Update slot
+- `DELETE /api/partner/tours/{id}/availability/{slotId}` - Remove slot
+
+**Verification**:
+- Non-partner users cannot access `/partner/*` routes
+- Tour form validates all required fields (title, description, duration, location, category)
+- Tour creation with EN/ES/IT translations saves correctly
+- Image upload respects max 10 images, 5MB per image, JPEG/PNG/WebP
+- Availability calendar shows empty/full/partially booked states
+- `npm run test:e2e` - Partner tour creation flow passes
+
+**Done When**: All `ST-010-*`, `ST-011-*`, `ST-012-*` screens implemented, partner CRUD works, availability calendar functional.
+
+### Phase 5: Admin Moderation - Spec `013`
+
+**Objective**: Customize Filament admin resources using Stitch admin screens as reference.
+
+```text
+1. /speckit.specify - Define moderation workflows, resources, permissions, and admin UX.
+   Target directory: specs/013-admin-moderation/ (create new).
+2. /speckit.clarify - Resolve statuses, bulk actions, audit requirements, and dashboard metrics.
+3. /speckit.plan - Map Stitch admin IDs to Filament widgets/resources/actions.
+4. /speckit.tasks - Generate Filament-specific implementation tasks.
+5. /speckit.implement - Build or customize Filament resources.
+```
+
+**Deliverables**: Dashboard widgets, partner approvals, tour moderation, booking management, review moderation, settings/CMS/static page resources.
+
+**Integrations**: Laravel models, policies, Filament resources/widgets, audit logs.
+
+**Verification**:
+- Admin permissions enforced (non-admin users cannot access Filament panel)
+- Status changes on partners and tours produce audit log entries
+- Filament screens are usable on desktop at 1280px+
+- All `ST-013-*` screens have corresponding Filament resources
+
+**Done When**: All 13 admin screens have Filament counterparts, audit logging works, approval/rejection workflows functional.
+
+### Phase 6: Notifications and Vouchers - Spec `014`
+
+**Objective**: Build notification and voucher backend work with the frontend voucher download touchpoint.
+
+```text
+1. /speckit.specify - Define email, notification, voucher, and frontend download requirements.
+   Target directory: specs/014-notifications-vouchers/ (create new).
+2. /speckit.clarify - Resolve template languages, resend rules, voucher permissions, and failure states.
+3. /speckit.plan - Define backend jobs/templates and frontend download integration.
+4. /speckit.tasks - Generate tasks for backend delivery plus the Spec 015 frontend touchpoint.
+5. /speckit.implement - Build notifications, voucher generation, and download action.
+```
+
+**Deliverables**: Notification templates, voucher PDF generation, download endpoint/action, missing/expired/unauthorized states.
+
+**Integrations**: Booking events, mail/notification queue (Redis), PDF service (DomPDF or Browsershot), voucher storage and authorization.
+
+**Verification**:
+- Voucher download returns 403 for unauthorized users
+- EN/ES/IT email templates render correctly
+- Booking confirmation email triggers on successful payment
+- Voucher PDF contains booking reference, QR code, tour details
+- Download action in booking detail page works end-to-end
+
+**Done When**: All notification templates exist in 3 locales, voucher PDF generates correctly, download authorization enforced.
+
+### Phase 7: New Features - Specs `016-017`
+
+#### `016` - Blog and Travel Insights
+
+```text
+/speckit.specify Create the blog and travel insights specification for Bookly.
+Target directory: specs/016-blog-travel-insights/ (create new).
+Reference screens: ST-016-001, ST-016-002.
 
 The spec MUST define:
-- Blog listing page with categories, featured posts, pagination
-- Individual blog post page with rich content, related tours
-- SEO optimization (structured data, meta tags, Open Graph)
-- Content authoring (admin CMS via Filament or markdown-based)
-- Multi-language support (EN, ES, IT)
-- Integration with tour discovery (link blog posts to tours)
-- Mobile-responsive layouts
+- Blog listing with categories, featured posts, pagination, and empty states.
+- Blog post page with rich content, author metadata, related tours, and related posts.
+- SEO: structured data, canonical URLs, meta tags, Open Graph, and sitemap inclusion.
+- Content ownership: Filament CMS resource or markdown-based content, chosen explicitly.
+- EN, ES, and IT support.
+- Integration with tour discovery through related tour links.
+- Backend model for posts, categories, authors, translations, slugs, publication status, and related tours.
+- API/data contract for listing, detail, category filtering, search, and preview.
+
+Backend implementation follows the same Laravel patterns as specs 006-008.
 ```
 
-#### 017 — Wishlist / Saved Tours
-```
-/speckit.specify Create the wishlist and saved tours specification for
-Bookly. Travelers can save tours they're interested in for later.
+#### `017` - Wishlist / Saved Tours
 
-Stitch reference screens:
-- My Wishlist - BooklyTravel (Desktop)
-- My Wishlist Mobile
+```text
+/speckit.specify Create the wishlist and saved tours specification for Bookly.
+Target directory: specs/017-wishlist-saved-tours/ (create new).
+Reference screens: ST-017-001, ST-017-002.
 
 The spec MUST define:
-- Save/unsave tour action (heart icon on tour cards and detail pages)
-- Wishlist page in traveler dashboard (list of saved tours)
-- Guest vs authenticated behavior (require account to save)
-- Wishlist persistence and limits
-- Tour card display with availability status
-- Empty states
-- Mobile-responsive layouts
+- Save/unsave from tour cards and detail pages.
+- Wishlist page in traveler dashboard.
+- Guest sign-in prompt with post-login return handling.
+- Authenticated persistence to the traveler account.
+- Wishlist limits, duplicate handling, and deleted/unavailable tour behavior.
+- Tour card display with price, image, rating, availability, destination, and next available date.
+- Empty, loading, error, and unavailable states.
+- Backend model for wishlist items keyed by traveler and tour.
+- API contract for list, create, delete, and existence checks.
+
+Backend implementation follows the same Laravel patterns as specs 006-008.
 ```
 
----
+## Frontend Architecture
 
-## Component Architecture (Stitch → Next.js)
+### Route Structure
 
-When scaffolding from Stitch HTML, extract into this structure:
+Routes are nested under `[locale]/` for i18n (handled by `next-intl` middleware). Route groups `(public)`, `(auth)`, `(traveler)`, and `(partner)` organize layouts and middleware.
 
+```text
+frontend/src/app/
+  [locale]/
+    (public)/
+      page.tsx                              # Homepage
+      tours/page.tsx                        # Tour listing
+      tours/[slug]/page.tsx                 # Tour detail
+      destinations/[slug]/page.tsx          # Destination landing
+      categories/[slug]/page.tsx            # Category page
+      blog/page.tsx                         # Blog listing
+      blog/[slug]/page.tsx                  # Blog post detail
+    (auth)/
+      auth/login/page.tsx                   # Login
+      auth/register/page.tsx                # Register
+    (traveler)/
+      my-bookings/page.tsx                  # Dashboard / booking list
+      my-bookings/[reference]/page.tsx      # Booking detail
+      wishlist/page.tsx                     # Wishlist
+      profile/page.tsx                      # Profile settings
+      my-reviews/page.tsx                   # My reviews
+    (partner)/
+      partner/page.tsx                      # Partner dashboard
+      partner/tours/page.tsx                # Partner tour list
+      partner/tours/new/page.tsx            # Create tour
+      partner/tours/[id]/edit/page.tsx      # Edit tour
+      partner/availability/page.tsx         # Availability calendar
 ```
+
+**Existing route reconciliation**: The current codebase already has `[locale]/my-bookings/`, `[locale]/search/`, `[locale]/booking/`, `[locale]/auth/`, `[locale]/tours/`, `[locale]/destinations/`, and `[locale]/categories/` under `frontend/src/app/[locale]/`. New route groups will wrap these existing routes; no existing routes need deletion.
+
+### Rendering Strategy
+
+| Route Group | Rendering | Rationale |
+|-------------|-----------|-----------|
+| `(public)` | SSR/SSG via React Server Components | SEO-critical pages need crawlable HTML |
+| `(auth)` | SSR for initial load, client-side form handling | Login/register need fast first paint |
+| `(traveler)` | CSR with auth middleware guard | Protected user data, no SEO needed |
+| `(partner)` | CSR with role-based middleware guard | Protected partner data, no SEO needed |
+
+### Middleware
+
+The existing `middleware.ts` uses `next-intl` for locale routing. Auth protection requires extending it:
+
+```text
+1. next-intl middleware handles [locale] routing (already exists).
+2. Auth middleware checks session for (traveler) and (partner) route groups.
+3. Role middleware verifies user.role === 'partner' for (partner) routes.
+4. Unauthenticated visitors are redirected to /[locale]/auth/login?returnUrl=<intended-path>.
+```
+
+### Component Structure
+
+```text
 frontend/src/
-├── components/
-│   ├── ui/                    ← Design system (from Stitch design tokens)
-│   │   ├── Button.tsx
-│   │   ├── Card.tsx
-│   │   ├── Input.tsx
-│   │   ├── Badge.tsx
-│   │   ├── Modal.tsx
-│   │   └── ...
-│   ├── layout/                ← Shared layout components
-│   │   ├── Header.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Sidebar.tsx
-│   │   └── MobileNav.tsx
-│   ├── tours/                 ← Tour-specific components
-│   │   ├── TourCard.tsx
-│   │   ├── TourGrid.tsx
-│   │   ├── TourDetail.tsx
-│   │   ├── TourGallery.tsx
-│   │   ├── TourFilters.tsx
-│   │   └── SearchBar.tsx
-│   ├── booking/               ← Booking components
-│   │   ├── CheckoutStepper.tsx
-│   │   ├── BookingCard.tsx
-│   │   ├── BookingDetail.tsx
-│   │   └── PaymentForm.tsx
-│   ├── account/               ← Traveler account
-│   │   ├── DashboardStats.tsx
-│   │   ├── BookingList.tsx
-│   │   ├── ProfileForm.tsx
-│   │   └── WishlistGrid.tsx
-│   └── partner/               ← Partner dashboard
-│       ├── PartnerStats.tsx
-│       ├── TourForm.tsx
-│       ├── TourList.tsx
-│       └── AvailabilityCalendar.tsx
+  components/
+    ui/Button.tsx
+    ui/Card.tsx
+    ui/Input.tsx
+    ui/Badge.tsx
+    ui/Modal.tsx
+    ui/Select.tsx
+    ui/Tabs.tsx
+    ui/Toast.tsx
+    ui/EmptyState.tsx
+    ui/ErrorState.tsx
+    ui/LoadingSkeleton.tsx
+    layout/Header.tsx
+    layout/Footer.tsx
+    layout/Sidebar.tsx
+    layout/MobileNav.tsx
+    layout/ProtectedLayout.tsx
+    layout/AuthenticatedHeader.tsx
+    layout/AuthGuard.tsx
+    tours/TourCard.tsx
+    tours/TourGrid.tsx
+    tours/TourDetail.tsx
+    tours/TourGallery.tsx
+    tours/TourFilters.tsx
+    tours/SearchBar.tsx
+    booking/CheckoutStepper.tsx
+    booking/BookingCard.tsx
+    booking/BookingDetail.tsx
+    booking/PaymentForm.tsx
+    booking/CancelBookingModal.tsx
+    account/DashboardStats.tsx
+    account/BookingList.tsx
+    account/ProfileForm.tsx
+    account/PasswordChangeForm.tsx
+    account/WishlistGrid.tsx
+    account/WishlistButton.tsx
+    reviews/ReviewSummary.tsx
+    reviews/ReviewForm.tsx
+    reviews/MyReviewCard.tsx
+    partner/PartnerStats.tsx
+    partner/TourForm.tsx
+    partner/TourList.tsx
+    partner/AvailabilityCalendar.tsx
+  lib/
+    api/              # API client functions (traveler, partner, public)
+    auth/             # Auth context, session management
+    i18n/             # Locale config, message files (EN/ES/IT)
+    hooks/            # Custom hooks (useBookings, useProfile, useWishlist, etc.)
+    stores/           # Zustand stores (checkout session, UI state)
+    stripe/           # Stripe Elements integration
+    validators/       # Zod schemas for form validation
+    design-tokens.ts  # Centralized design tokens
 ```
 
-**Design token extraction from Stitch design system:**
-- Primary: `#0A2540` (Navy)
-- Secondary: `#FFB800` (Gold) 
-- Background: `#F7F9FB` (Off-white)
-- Font: Inter (all weights)
-- Radius: 8px default, 12px cards
-- Spacing: 8px base grid
+### Data and Rendering Boundaries
 
----
+- Public discovery pages use SSR or SSG where SEO matters.
+- Traveler and partner dashboards use authenticated CSR or server actions only where compatible with session handling.
+- API responses are validated at the frontend boundary before rendering critical UI.
+- Forms use Zod schema validation via `react-hook-form` + `@hookform/resolvers` before submission and show field-level errors.
+- Payment UI must use Stripe Elements; never collect raw card data in Bookly components.
+- Protected routes enforce role and session checks before fetching private data.
+- Data fetching uses TanStack React Query for server state caching, deduplication, and background refetching.
+
+## Design System Tokens
+
+All tokens below align with the existing `frontend/src/lib/design-tokens.ts` file and extend it where needed.
+
+### Color
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `color.brand.navy` | `#0A2540` | Navigation, headings, high-emphasis UI |
+| `color.brand.gold` | `#FFB800` | Primary calls to action, highlights, star ratings |
+| `color.background.page` | `#F7F9FB` | App background |
+| `color.background.surface` | `#FFFFFF` | Cards, panels, forms |
+| `color.background.elevated` | `#FFFFFF` | Modals, dropdowns (with shadow) |
+| `color.text.primary` | `#102033` | Body and headings |
+| `color.text.secondary` | `#5D6B7A` | Supporting copy |
+| `color.text.inverse` | `#FFFFFF` | Text on dark backgrounds |
+| `color.border.default` | `#DDE5EE` | Inputs, cards, separators |
+| `color.border.focus` | `#0A2540` | Focus rings on interactive elements |
+| `color.state.success` | `#11845B` | Success states, confirmed badges |
+| `color.state.warning` | `#B76E00` | Warnings and pending states |
+| `color.state.danger` | `#C62828` | Errors and destructive actions |
+| `color.interactive.hover` | `rgba(10, 37, 64, 0.08)` | Hover overlay on interactive surfaces |
+| `color.interactive.pressed` | `rgba(10, 37, 64, 0.12)` | Active/pressed state overlay |
+
+### Typography
+
+| Token | Desktop | Mobile | Usage |
+|-------|---------|--------|-------|
+| `type.pageTitle` | 32px / 1.2 / 700 | 26px / 1.2 / 700 | Page headings (h1) |
+| `type.sectionTitle` | 24px / 1.25 / 600 | 21px / 1.25 / 600 | Section headings (h2) |
+| `type.cardTitle` | 18px / 1.3 / 600 | 18px / 1.3 / 600 | Card titles (h3) |
+| `type.subheading` | 16px / 1.35 / 600 | 16px / 1.35 / 600 | Subheadings (h4) |
+| `type.body` | 16px / 1.5 / 400 | 16px / 1.5 / 400 | Body text |
+| `type.small` | 14px / 1.4 / 400 | 14px / 1.4 / 400 | Supporting text, labels |
+| `type.caption` | 12px / 1.4 / 400 | 12px / 1.4 / 400 | Captions, metadata |
+
+Font: Inter via Google Fonts. Weights: 400 (regular), 500 (medium), 600 (semibold), 700 (bold). Letter spacing: 0.
+
+### Spacing
+
+8px base grid with the following scale: 4, 8, 12, 16, 24, 32, 48, 64px.
+
+| Alias | Value | Usage |
+|-------|-------|-------|
+| `space.pagePadding` | 24px (mobile) / 64px (desktop) | Page-level horizontal padding |
+| `space.sectionGap` | 48px (mobile) / 64px (desktop) | Vertical gap between major sections |
+| `space.cardPadding` | 16px (mobile) / 24px (desktop) | Internal card padding |
+| `space.formGap` | 16px | Gap between form fields |
+| `space.inlineGap` | 8px | Gap between inline elements (icon + text) |
+
+### Shadows
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `shadow.sm` | `0 1px 2px 0 rgb(0 0 0 / 0.05)` | Subtle elevation (badges, chips) |
+| `shadow.card` | `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)` | Cards, panels |
+| `shadow.dropdown` | `0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)` | Dropdowns, popovers |
+| `shadow.modal` | `0 25px 50px -12px rgb(0 0 0 / 0.25)` | Modals, dialogs |
+
+### Radius
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `radius.sm` | 8px | Buttons, inputs, small cards |
+| `radius.default` | 12px | Standard cards, panels |
+| `radius.lg` | 16px | Large media cards, hero sections |
+| `radius.full` | 9999px | Avatars, pills, toggles |
+
+### Breakpoints
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `breakpoint.mobile` | 390px | Mobile verification target |
+| `breakpoint.tablet` | 780px | Tablet verification target |
+| `breakpoint.desktop` | 1280px | Desktop verification target |
+
+### Animation
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `transition.fast` | 150ms ease-out | Hover states, toggles |
+| `transition.default` | 200ms ease-in-out | Dropdowns, accordions |
+| `transition.slow` | 300ms ease-in-out | Modals, page transitions |
+
+### Z-Index Scale
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `z.dropdown` | 10 | Dropdowns, popovers |
+| `z.sticky` | 20 | Sticky headers, footers |
+| `z.modal` | 30 | Modals, dialogs |
+| `z.toast` | 40 | Toast notifications |
+| `z.tooltip` | 50 | Tooltips |
 
 ## Verification Plan
 
-### Per-Phase Verification
-- Visual diff against Stitch screenshots
-- Lighthouse Performance ≥ 90 for public pages
-- Mobile responsiveness tested at 390px and 780px breakpoints
-- API integration tests with backend
-- i18n verified for EN, ES, IT routes
+### Commands
 
-### End-to-End
-- Full booking flow: homepage → search → detail → checkout → payment → confirmation
-- Partner flow: login → dashboard → create tour → manage availability
-- Traveler flow: login → dashboard → view bookings → download voucher → write review
+These scripts exist in `frontend/package.json` and are verified:
+
+```bash
+npm run build       # Next.js production build (TypeScript check included)
+npm test            # Jest unit tests
+npm run lint        # ESLint
+npm run test:e2e    # Playwright E2E tests
+npm run test:a11y   # Playwright accessibility tests (axe-core)
+```
+
+**Not yet available** (add to `package.json` during Phase 1 setup):
+
+```bash
+npm run typecheck   # Add: "typecheck": "tsc --noEmit"
+npm run lighthouse  # Add: "lighthouse": "lhci autorun" (uses existing lighthouserc.js)
+```
+
+### Visual Verification
+
+Visual verification uses manual screenshot comparison against Stitch exports. If the team adopts a visual diff tool (Chromatic, Percy, or BackstopJS), update tasks to include automated visual regression.
+
+| Area | Routes | Stitch IDs | Viewports |
+|------|--------|-----------|-----------|
+| Public discovery | `/`, `/tours`, `/tours/[slug]`, `/destinations/rome`, `/categories/history-culture` | ST-006-001 through ST-006-013 | 390px, 780px, 1280px |
+| Booking/payment | `/checkout`, `/booking/confirmation`, payment success/failure states | ST-007-001 | 390px, 780px, 1280px |
+| Auth | `/auth/login`, `/auth/register` | ST-001-001 through ST-001-003 | 390px, 1280px |
+| Traveler account | `/my-bookings`, `/my-bookings/[ref]`, `/wishlist`, `/profile` | ST-015-001 through ST-015-006, ST-017-001, ST-017-002 | 390px, 780px, 1280px |
+| Partner dashboard | `/partner`, `/partner/tours`, `/partner/tours/new`, `/partner/tours/[id]/edit`, `/partner/availability` | ST-010-001 through ST-010-003, ST-011-001 through ST-011-004, ST-012-001 | 390px, 780px, 1280px |
+| Blog | `/blog`, `/blog/[slug]` | ST-016-001, ST-016-002 | 390px, 780px, 1280px |
+
+### Acceptance Thresholds
+
+- Lighthouse Performance >= 90 for public pages.
+- Lighthouse Accessibility >= 95 for public pages and forms.
+- No TypeScript or lint errors (`npm run build` and `npm run lint` pass).
+- E2E coverage for homepage -> search -> detail -> checkout -> payment -> confirmation.
+- E2E coverage for login -> dashboard -> bookings -> voucher download.
+- E2E coverage for login -> wishlist save -> wishlist page -> remove saved tour.
+- E2E coverage for partner login -> dashboard -> create tour -> manage availability.
+- i18n verification for EN, ES, and IT routes where the spec requires localized content.
+
+### Per-Phase Verification Gates
+
+| Phase | Gate | Command/Check |
+|-------|------|---------------|
+| Phase 1 | All ST-006-* screens match Stitch | Manual visual diff at 3 viewports |
+| Phase 1 | Booking E2E passes | `npm run test:e2e -- --grep "booking"` |
+| Phase 1 | Lighthouse >= 90 | `npm run lighthouse` on `/`, `/tours`, `/tours/[slug]` |
+| Phase 2 | Auth guard redirects | `npm run test:e2e -- --grep "auth"` |
+| Phase 2 | Voucher download works | Manual test: download PDF, verify content |
+| Phase 3 | Review eligibility enforced | `npm run test:e2e -- --grep "review"` |
+| Phase 4 | Partner role gate | `npm run test:e2e -- --grep "partner"` |
+| Phase 5 | Filament resources match ST-013-* | Manual visual check in Filament panel |
+| Phase 6 | Voucher PDF has QR code | Manual download and verify |
+| Phase 7 | Blog SEO metadata present | Lighthouse SEO audit on `/blog`, `/blog/[slug]` |
+
+## Implementation Guardrails
+
+- Keep public pages inspectable and SEO-friendly.
+- Keep admin screens in Filament unless a spec explicitly changes ownership.
+- Do not copy Stitch output directly into production components without extracting reusable components and tokens.
+- Validate user input at form boundaries before API submission.
+- Add empty, loading, error, and permission-denied states for every data-driven surface.
+- Ensure every frontend task references a Spec ID and Stitch ID.
+- All new backend models, migrations, and API endpoints for specs 016-017 follow existing Laravel patterns from spec 010.

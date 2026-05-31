@@ -3,12 +3,11 @@
 import SearchBar from '@/components/search/SearchBar';
 
 interface HeroSectionProps {
-  locale: string;
   title: string;
   subtitle: string;
 }
 
-export default function HeroSection({ locale, title, subtitle }: HeroSectionProps) {
+export default function HeroSection({ title, subtitle }: HeroSectionProps) {
   return (
     <section className="relative flex flex-col items-center justify-center bg-gradient-to-b from-[#0A2540] to-[#071b2e] px-4 py-20 text-center text-white"
     >

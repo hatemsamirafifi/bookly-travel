@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import BookingList from '@/components/my-bookings/BookingList';
 
 interface Props {
@@ -7,34 +9,25 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-
-  const titles: Record<string, string> = {
-    en: 'My Bookings | Bookly',
-    es: 'Mis Reservas | Bookly',
-    it: 'Le Mie Prenotazioni | Bookly',
-  };
-
-  const descriptions: Record<string, string> = {
-    en: 'View and manage your tour bookings.',
-    es: 'Vea y gestione sus reservas de tours.',
-    it: 'Visualizza e gestisci le tue prenotazioni di tour.',
-  };
+  const t = await getTranslations({ locale, namespace: 'traveler.pages.myBookings' });
 
   return {
-    title: titles[locale] || titles.en,
-    description: descriptions[locale] || descriptions.en,
+    title: t('metaTitle'),
+    description: t('metaDescription'),
   };
 }
 
 export default async function MyBookingsPage({ params }: Props) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'traveler.pages.myBookings' });
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
-        {locale === 'es' ? 'Mis Reservas' : locale === 'it' ? 'Le Mie Prenotazioni' : 'My Bookings'}
-      </h1>
-      <BookingList locale={locale} />
-    </main>
+    <AuthGuard>
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
+        <h1 className="mb-2 text-2xl font-bold text-gray-900">{t('title')}</h1>
+        <p className="mb-6 text-sm text-gray-600">{t('subtitle')}</p>
+        <BookingList locale={locale} />
+      </main>
+    </AuthGuard>
   );
 }

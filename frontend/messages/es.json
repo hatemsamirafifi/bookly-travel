@@ -130,8 +130,12 @@
   },
   "nav": {
     "home": "Inicio",
+    "search": "Buscar",
     "categories": "Categorías",
-    "destinations": "Destinos"
+    "destinations": "Destinos",
+    "skipToContent": "Saltar al contenido principal",
+    "mainNavigation": "Navegacion principal",
+    "openMenu": "Abrir menu"
   },
   "booking": {
     "title": "Completar Reserva",
@@ -203,6 +207,174 @@
     "load_more": "Cargar Más",
     "loading": "Cargando...",
     "failed_to_load": "Error al cargar las reseñas. Por favor, inténtalo de nuevo más tarde."
+  },
+  "traveler": {
+    "pages": {
+      "myBookings": {
+        "metaTitle": "Mis reservas | Bookly",
+        "metaDescription": "Consulta y gestiona tus reservas de tours.",
+        "title": "Mis reservas",
+        "subtitle": "Revisa tours proximos, recibos y estado del viaje en un solo lugar."
+      },
+      "bookingDetail": {
+        "metaTitle": "Reserva {reference} | Bookly",
+        "title": "Detalle de reserva"
+      },
+      "profile": {
+        "metaTitle": "Perfil | Bookly",
+        "metaDescription": "Gestiona perfil, contrasena, idioma, moneda y preferencias de comunicacion.",
+        "title": "Perfil",
+        "subtitle": "Mantiene actualizados tus datos de contacto y preferencias de reserva."
+      },
+      "wishlist": {
+        "metaTitle": "Lista de deseos | Bookly",
+        "metaDescription": "Consulta y gestiona los tours guardados en tu lista de deseos de Bookly.",
+        "title": "Lista de deseos",
+        "subtitle": "Los tours guardados permanecen aqui hasta que estes listo para reservar."
+      },
+      "myReviews": {
+        "metaTitle": "Mis resenas | Bookly",
+        "metaDescription": "Revisa los comentarios de tours que has enviado en Bookly.",
+        "title": "Mis resenas",
+        "subtitle": "Consulta las calificaciones y notas que compartiste despues de tours completados."
+      }
+    },
+    "nav": {
+      "dashboard": "Panel",
+      "myBookings": "Mis reservas",
+      "wishlist": "Lista de deseos",
+      "myReviews": "Mis resenas",
+      "profile": "Perfil",
+      "signOut": "Cerrar sesion",
+      "signIn": "Iniciar sesion",
+      "signUp": "Registrarse"
+    },
+    "dashboard": {
+      "summaryLabel": "Resumen de reservas",
+      "summaryTotal": "Reservas totales",
+      "summaryUpcoming": "Proximas",
+      "summaryCompleted": "Completadas",
+      "summaryCancelled": "Canceladas",
+      "recentActivity": "Actividad reciente",
+      "noRecentActivity": "Todavia no hay actividad reciente.",
+      "quickActions": "Acciones rapidas",
+      "browseTours": "Explorar tours",
+      "viewWishlist": "Ver lista de deseos",
+      "editProfile": "Editar perfil",
+      "filterLabel": "Filtrar por estado",
+      "tryAgain": "Intentar de nuevo",
+      "empty": "Aun no hay reservas - busca un tour para empezar tu aventura",
+      "loadError": "No se pudieron cargar las reservas.",
+      "fallbackTour": "Tour",
+      "filters": {
+        "all": "Todas",
+        "confirmed": "Confirmadas",
+        "completed": "Completadas",
+        "cancelled": "Canceladas"
+      },
+      "status": {
+        "confirmed": "Confirmada",
+        "completed": "Completada",
+        "cancelled": "Cancelada",
+        "pending_payment": "Pago pendiente",
+        "expired": "Expirada",
+        "no_show": "No presentado"
+      }
+    },
+    "bookingDetail": {
+      "notFound": "Reserva no encontrada.",
+      "tryAgain": "Intentar de nuevo",
+      "bookingCreated": "Reserva creada",
+      "paymentConfirmed": "Pago confirmado",
+      "bookingConfirmed": "Reserva confirmada",
+      "cancelled": "Cancelada",
+      "fallbackTour": "Tour",
+      "reference": "Referencia",
+      "tour": "Tour",
+      "dateTime": "Fecha y hora",
+      "participants": "Participantes",
+      "price": "Precio",
+      "perPerson": "{price} por persona",
+      "total": "{total} total",
+      "specialRequests": "Solicitudes especiales",
+      "tripDetails": "Detalles del viaje",
+      "meetingPoint": "Punto de encuentro",
+      "meetingPointFallback": "El punto de encuentro se confirmara antes de la salida.",
+      "included": "Incluido",
+      "statusTimeline": "Cronologia del estado",
+      "paymentReceipt": "Recibo de pago",
+      "status": "Estado",
+      "amount": "Importe",
+      "method": "Metodo",
+      "card": "Tarjeta",
+      "ending": "terminada en",
+      "transactionDate": "Fecha de transaccion",
+      "receiptUnavailable": "El recibo de pago aun no esta disponible.",
+      "cancellationFallback": "La cancelacion gratuita esta sujeta a la politica del operador."
+    },
+    "cancelBooking": {
+      "button": "Cancelar reserva",
+      "title": "Confirmar cancelacion",
+      "reference": "Referencia",
+      "tour": "Tour",
+      "date": "Fecha",
+      "body": "Estas seguro? El reembolso se procesara en 5-10 dias habiles.",
+      "windowWarning": "Las cancelaciones solo son elegibles si se solicitan al menos 24 horas antes del inicio del tour.",
+      "confirm": "Si, cancelar reserva",
+      "cancelling": "Cancelando...",
+      "keep": "Mantener reserva",
+      "disabledTitle": "La ventana de cancelacion ha pasado o la reserva no es elegible",
+      "error": "No se pudo cancelar la reserva."
+    },
+    "profile": {
+      "loadError": "No se pudo cargar el perfil.",
+      "saveError": "No se pudo guardar el perfil.",
+      "saved": "Perfil guardado.",
+      "invalidPhone": "Introduce un telefono valido.",
+      "passwordUpdated": "Contrasena actualizada.",
+      "passwordError": "No se pudo actualizar la contrasena.",
+      "personalInfo": "Informacion personal",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo electronico",
+      "phone": "Telefono",
+      "phoneHint": "Usa digitos, espacios, parentesis, guiones o un signo mas inicial.",
+      "preferredLanguage": "Idioma preferido",
+      "currency": "Moneda",
+      "marketing": "Enviame ofertas de viaje y consejos de reserva.",
+      "saving": "Guardando...",
+      "saveChanges": "Guardar cambios",
+      "changePassword": "Cambiar contrasena",
+      "currentPassword": "Contrasena actual",
+      "newPassword": "Nueva contrasena",
+      "confirmPassword": "Confirmar nueva contrasena",
+      "updating": "Actualizando...",
+      "updatePassword": "Actualizar contrasena"
+    },
+    "wishlist": {
+      "loadError": "No se pudo cargar la lista de deseos.",
+      "removeError": "No se pudo eliminar ese tour. Intentalo de nuevo.",
+      "empty": "Tu lista de deseos esta vacia.",
+      "exploreTours": "Explorar tours",
+      "remove": "Eliminar",
+      "removeAria": "Eliminar {tour} de la lista de deseos",
+      "rating": "{rating} estrellas ({count})",
+      "unavailable": "Ya no disponible"
+    },
+    "wishlistButton": {
+      "save": "Guardar en lista de deseos",
+      "remove": "Eliminar de lista de deseos",
+      "promptTitle": "Inicia sesion para guardar tours",
+      "promptBody": "Inicia sesion o crea una cuenta para agregar tours a tu lista de deseos.",
+      "signIn": "Iniciar sesion",
+      "notNow": "Ahora no"
+    },
+    "myReviews": {
+      "loadError": "No se pudieron cargar las resenas.",
+      "empty": "Reserva un tour y comparte tu experiencia despues del viaje.",
+      "browseTours": "Explorar tours",
+      "rating": "{rating} / 5 estrellas"
+    }
   },
   "notFound": {
     "title": "Página No Encontrada",

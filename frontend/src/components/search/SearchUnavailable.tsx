@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface SearchUnavailableProps {
   /** Optional retry callback to re-attempt the search */
@@ -81,12 +82,12 @@ export default function SearchUnavailable({ onRetry, retryAfter }: SearchUnavail
       )}
 
       {!onRetry && (
-        <a
+        <Link
           href="/"
           className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
         >
           Return to Homepage
-        </a>
+        </Link>
       )}
     </div>
   );

@@ -6,9 +6,8 @@ interface Props {
   searchParams: Promise<{ ref?: string }>;
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const sp = await searchParams;
 
   const titles: Record<string, string> = {
     en: 'Booking Confirmed | Bookly',

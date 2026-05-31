@@ -1,4 +1,5 @@
 import type { TourCard as TourCardType } from '@/lib/api/types';
+import Link from 'next/link';
 import TourCard from './TourCard';
 
 interface SearchResultsProps {
@@ -28,7 +29,7 @@ function LoadingSkeleton() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ locale }: { locale: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <svg className="mb-4 h-16 w-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -38,12 +39,12 @@ function EmptyState() {
       <p className="mb-6 text-gray-500">
         Try broadening your search terms or browse tours by category.
       </p>
-      <a
-        href="/categories"
+      <Link
+        href={`/${locale}/categories`}
         className="rounded-xl bg-[#FFB800] px-6 py-2.5 text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] transition-colors"
       >
         Browse Categories
-      </a>
+      </Link>
     </div>
   );
 }
@@ -54,7 +55,7 @@ export default function SearchResults({ tours, locale, isLoading = false }: Sear
   }
 
   if (tours.length === 0) {
-    return <EmptyState />;
+    return <EmptyState locale={locale} />;
   }
 
   return (

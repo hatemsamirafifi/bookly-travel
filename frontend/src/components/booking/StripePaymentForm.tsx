@@ -65,7 +65,7 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
 
     if (error) {
       onError(error.message || 'Payment failed. Please try again.');
-    } else if (paymentIntent && (paymentIntent.status === 'succeeded' || paymentIntent.status === 'requires_capture')) {
+    } else if (!paymentIntent || paymentIntent.status === 'succeeded' || paymentIntent.status === 'requires_capture') {
       onSuccess();
     }
 
@@ -73,7 +73,7 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" data-client-secret-present={Boolean(clientSecret)}>
       <PaymentElement />
       <button
         type="submit"

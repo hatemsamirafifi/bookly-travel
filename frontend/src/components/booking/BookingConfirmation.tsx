@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { getBookingDetail } from '@/lib/api/my-bookings';
-import type { BookingResponse } from '@/lib/api/bookings';
+import type { TravelerBooking } from '@/types/traveler';
 
 interface BookingConfirmationProps {
   reference: string;
   locale: string;
 }
 
-export default function BookingConfirmation({ reference, locale }: BookingConfirmationProps) {
-  const [booking, setBooking] = useState<BookingResponse | null>(null);
+export default function BookingConfirmation({ reference }: BookingConfirmationProps) {
+  const [booking, setBooking] = useState<TravelerBooking | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +31,10 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
     return <p className="text-[#5A6B7B]">Booking not found.</p>;
   }
 
+  const tourName = booking.tour.name || booking.tour.title || 'Tour';
+  const participants = booking.participants ?? booking.participant_count ?? 1;
+  const total = formatMoneyValue(booking.total_amount ?? booking.total_price);
+
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -47,7 +51,7 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
       <div className="rounded-lg border border-gray-200 divide-y divide-gray-200">
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">Tour</span>
-          <span className="text-sm font-medium text-[#0A2540]">{booking.tour.title}</span>
+          <span className="text-sm font-medium text-[#0A2540]">{tourName}</span>
         </div>
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">Date</span>
@@ -55,11 +59,11 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
         </div>
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">Participants</span>
-          <span className="text-sm font-medium text-[#0A2540]">{booking.participant_count}</span>
+          <span className="text-sm font-medium text-[#0A2540]">{participants}</span>
         </div>
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">Total</span>
-          <span className="text-sm font-semibold text-[#0A2540]">{booking.total_price.formatted}</span>
+          <span className="text-sm font-semibold text-[#0A2540]">{total}</span>
         </div>
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">Status</span>
@@ -70,8 +74,15 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
       </div>
 
       <div className="rounded-lg bg-[#F7F9FB] p-4">
-        <p className="text-sm text-[#5A6B7B]">{booking.cancellation_policy}</p>
+        <p className="text-sm text-[#5A6B7B]">{booking.cancellation_policy || 'Keep this reference for your records.'}</p>
       </div>
     </div>
   );
+}
+
+function formatMoneyValue(value?: number | { amount?: number; formatted?: string }) {
+  if (typeof value === 'object' && value?.formatted) return value.formatted;
+  const amount = typeof value === 'object' ? value.amount : value;
+  if (typeof amount !== 'number') return '';
+  return new Intl.NumberFormat('en', { style: 'currency', currency: 'EUR' }).format(amount / 100);
 }

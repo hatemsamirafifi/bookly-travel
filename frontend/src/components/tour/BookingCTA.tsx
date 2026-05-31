@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { PricingInfo, AvailabilityInfo } from '@/lib/api/types';
+import WishlistButton from '@/components/wishlist/WishlistButton';
 
 interface BookingCTAProps {
   pricing: PricingInfo;
@@ -10,18 +11,22 @@ interface BookingCTAProps {
   groupSize: { min: number; max: number };
   locale: string;
   slug: string;
+  tourId: string | number;
 }
 
-export default function BookingCTA({ pricing, availability, groupSize, locale, slug }: BookingCTAProps) {
+export default function BookingCTA({ pricing, availability, groupSize, locale, slug, tourId }: BookingCTAProps) {
   const [participants, setParticipants] = useState(groupSize.min);
 
   const isAvailable = availability.next_available_date !== null && availability.available_dates.length > 0;
 
   return (
     <div className="sticky top-4 rounded-lg border border-gray-200 bg-white p-5 shadow-md">
-      <div className="mb-4">
-        <span className="text-2xl font-bold text-gray-900">{pricing.base_price.formatted}</span>
-        <span className="text-sm text-gray-500"> / person</span>
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <span className="text-2xl font-bold text-gray-900">{pricing.base_price.formatted}</span>
+          <span className="text-sm text-gray-500"> / person</span>
+        </div>
+        <WishlistButton tourId={tourId} locale={locale} />
       </div>
 
       {isAvailable ? (

@@ -133,12 +133,15 @@ export default function BookingForm({ locale }: BookingFormProps) {
       } else {
         router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
       }
-    } catch (err: any) {
-      if (err.status === 409) {
+    } catch (err: unknown) {
+      const status = typeof err === 'object' && err !== null && 'status' in err
+        ? (err as { status?: number }).status
+        : undefined;
+      if (status === 409) {
         setError('This tour date is sold out. Please select a different date.');
-      } else if (err.status === 422) {
+      } else if (status === 422) {
         setError('Invalid booking details. Please check your selection.');
-      } else if (err.status === 429) {
+      } else if (status === 429) {
         setError('Too many booking attempts. Please wait a moment and try again.');
       } else {
         setError('Something went wrong. Please try again.');

@@ -75,6 +75,8 @@ test.describe('Booking Flow', () => {
 
     // Should show the same reference (idempotent)
     const secondRef = await page.textContent('text=BKO-');
+    expect(firstRef).toBeTruthy();
+    expect(secondRef).toBeTruthy();
     // Note: The actual idempotency key would differ on browser back, so this
     // test verifies it doesn't crash — real idempotency needs the same UUID.
   });

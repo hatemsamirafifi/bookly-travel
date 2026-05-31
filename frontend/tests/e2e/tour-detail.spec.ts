@@ -81,6 +81,7 @@ test.describe('Tour Detail Page', () => {
       await increaseBtn.click();
       // Count should change - exact value depends on tour's group size
       await expect(page.getByText(/allowed/)).toBeVisible();
+      await expect(decreaseBtn).toBeVisible();
     }
   });
 

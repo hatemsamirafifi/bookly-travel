@@ -70,6 +70,7 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
             groupSize={tour.group_size}
             locale={locale}
             slug={tour.slug}
+            tourId={tour.id}
           />
           <AvailabilityCalendar
             availableDates={tour.availability.available_dates}
