@@ -40,7 +40,6 @@ export default function ReviewList({ reviews }: ReviewListProps) {
         <div className="flex-1 space-y-1">
           {[5, 4, 3, 2, 1].map((star) => {
             const val = reviews.distribution[String(star)] || 0;
-            const pct = total > 0 ? (val / total) * 100 : 0;
             const barWidth = (val / maxBar) * 100;
 
             return (

@@ -11,6 +11,7 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'TouristTrip',
+    inLanguage: locale,
     name: tour.title,
     description: tour.description?.substring(0, 300) || '',
     touristType: tour.category || '',
@@ -37,6 +38,7 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
       address: tour.meeting_point || tour.location,
     },
     image: tour.images.length > 0 ? tour.images[0].url : undefined,
+    url: `${baseUrl}/${locale}/tours/${tour.slug}`,
   };
 
   return (
@@ -59,6 +61,7 @@ export function OrganizationSchema({ locale }: OrganizationSchemaProps) {
     '@type': 'Organization',
     name: 'Bookly',
     url: baseUrl,
+    inLanguage: locale,
     description: 'Discover and instantly book the best tours worldwide.',
     sameAs: [],
   };

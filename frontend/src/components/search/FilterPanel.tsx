@@ -44,7 +44,7 @@ function CollapsibleSection({ title, defaultOpen = true, children }: Collapsible
 }
 
 export default function FilterPanel({ filterData }: FilterPanelProps) {
-  const { filters, setFilter, setMultipleFilters, activeFilterCount, clearAll } = useFilters();
+  const { filters, setFilter, activeFilterCount, clearAll } = useFilters();
 
   return (
     <aside className="w-full rounded-xl border border-gray-200 bg-white p-4 lg:w-64" aria-label="Search filters">

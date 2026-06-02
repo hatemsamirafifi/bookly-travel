@@ -43,7 +43,7 @@ export default async function HomePage({ params }: HomePageProps) {
   } catch {
     return (
       <main className="min-h-screen">
-        <HeroSection locale={locale} title={t('heroTitle')} subtitle={t('heroSubtitle')} />
+        <HeroSection title={t('heroTitle')} subtitle={t('heroSubtitle')} />
         <div className="py-12 text-center text-gray-500">
           Unable to load homepage content. Please try again later.
         </div>
@@ -54,7 +54,7 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <OrganizationSchema locale={locale} />
-      <HeroSection locale={locale} title={t('heroTitle')} subtitle={t('heroSubtitle')} />
+      <HeroSection title={t('heroTitle')} subtitle={t('heroSubtitle')} />
       <FeaturedTours tours={data.featured_tours} locale={locale} />
       <CategoryGrid categories={data.popular_categories} locale={locale} />
       <DestinationShowcase destinations={data.featured_destinations} locale={locale} />

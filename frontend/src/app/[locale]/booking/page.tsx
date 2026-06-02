@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
 export default async function BookingPage({ params, searchParams }: Props) {
   const { locale } = await params;
-  const sp = await searchParams;
+  await searchParams;
 
   return (
     <main className="mx-auto max-w-lg px-4 py-8 sm:py-12">

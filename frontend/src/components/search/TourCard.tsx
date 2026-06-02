@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { TourCard as TourCardType } from '@/lib/api/types';
+import { getImagePlaceholderProps } from '@/lib/images';
+import WishlistButton from '@/components/wishlist/WishlistButton';
 
 interface TourCardProps {
   tour: TourCardType;
@@ -40,6 +42,7 @@ export default function TourCard({ tour, locale }: TourCardProps) {
             fill
             sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
+            {...getImagePlaceholderProps()}
           />
         ) : (
           <div className="flex h-full items-center justify-center text-gray-400">
@@ -53,6 +56,9 @@ export default function TourCard({ tour, locale }: TourCardProps) {
             Next: {new Date(tour.next_available_date).toLocaleDateString()}
           </span>
         )}
+        <div className="absolute right-3 top-3" onClick={(event) => event.preventDefault()}>
+          <WishlistButton tourId={tour.id} locale={locale} compact />
+        </div>
       </div>
 
       <div className="p-4">

@@ -11,7 +11,8 @@ const config: Config = {
       tsconfig: 'tsconfig.json',
     }],
   },
-  testPathIgnorePatterns: ['/node_modules/', '/tests/e2e/'],
+  testPathIgnorePatterns: ['/node_modules/', '/tests/e2e/', '/.next/'],
+  modulePathIgnorePatterns: ['<rootDir>/.next/'],
 };
 
 export default config;

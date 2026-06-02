@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import type { TourImage } from '@/lib/api/types';
+import { getImagePlaceholderProps } from '@/lib/images';
 
 interface ImageGalleryProps {
   images: TourImage[];
@@ -49,6 +50,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
               className="object-cover cursor-pointer"
               onClick={() => setLightboxOpen(true)}
               priority
+              {...getImagePlaceholderProps(currentImage)}
             />
           ) : (
             <div className="flex h-full items-center justify-center text-gray-400">
@@ -102,6 +104,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
                     fill
                     sizes="96px"
                     className="object-cover"
+                    {...getImagePlaceholderProps(img)}
                   />
                 ) : null}
               </button>
@@ -138,6 +141,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
                 fill
                 sizes="90vw"
                 className="object-contain"
+                {...getImagePlaceholderProps(currentImage)}
               />
             )}
           </div>

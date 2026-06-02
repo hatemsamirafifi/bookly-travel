@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { User, authApi, AuthApiError } from '../api/auth';
+import { User, authApi } from '../api/auth';
 import { z } from 'zod';
 import { loginSchema, registerSchema } from '../validators/auth';
 
@@ -35,10 +35,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (data && data.user && data.token) {
             setUser(data.user);
             setToken(data.token);
+            localStorage.setItem('auth_token', data.token);
           }
         } else if (res.status === 401) {
           setUser(null);
           setToken(null);
+          localStorage.removeItem('auth_token');
           const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
           router.push(`/${locale}/auth/login?sessionExpired=1&returnUrl=${returnUrl}`);
         }
@@ -49,11 +51,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
     restoreSession();
-  }, []);
+  }, [locale, router]);
 
   const setAuth = (newUser: User, newToken: string) => {
     setUser(newUser);
     setToken(newToken);
+    localStorage.setItem('auth_token', newToken);
   };
 
   const login = async (credentials: z.infer<typeof loginSchema>) => {
@@ -81,12 +84,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       setIsLoading(true);
       try {
-        await authApi.logout(token);
+        await authApi.logout();
       } catch (e) {
         console.error('Logout failed', e);
       } finally {
         setUser(null);
         setToken(null);
+        localStorage.removeItem('auth_token');
         setIsLoading(false);
         // Clear httpOnly cookie here
         router.push(`/${locale}/`);

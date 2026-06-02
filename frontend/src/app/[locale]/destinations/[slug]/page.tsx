@@ -13,7 +13,7 @@ interface DestinationPageProps {
 }
 
 export async function generateMetadata({ params }: DestinationPageProps): Promise<Metadata> {
-  const { locale, slug } = await params;
+  const { slug } = await params;
   const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
   return {

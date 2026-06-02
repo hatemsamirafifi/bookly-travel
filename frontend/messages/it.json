@@ -130,8 +130,12 @@
   },
   "nav": {
     "home": "Home",
+    "search": "Cerca",
     "categories": "Categorie",
-    "destinations": "Destinazioni"
+    "destinations": "Destinazioni",
+    "skipToContent": "Vai al contenuto principale",
+    "mainNavigation": "Navigazione principale",
+    "openMenu": "Apri menu"
   },
   "booking": {
     "title": "Completa Prenotazione",
@@ -203,6 +207,174 @@
     "load_more": "Carica Altro",
     "loading": "Caricamento...",
     "failed_to_load": "Impossibile caricare le recensioni. Per favore riprova più tardi."
+  },
+  "traveler": {
+    "pages": {
+      "myBookings": {
+        "metaTitle": "Le mie prenotazioni | Bookly",
+        "metaDescription": "Visualizza e gestisci le tue prenotazioni di tour.",
+        "title": "Le mie prenotazioni",
+        "subtitle": "Controlla tour futuri, ricevute e stato del viaggio in un unico posto."
+      },
+      "bookingDetail": {
+        "metaTitle": "Prenotazione {reference} | Bookly",
+        "title": "Dettaglio prenotazione"
+      },
+      "profile": {
+        "metaTitle": "Profilo | Bookly",
+        "metaDescription": "Gestisci profilo, password, lingua, valuta e preferenze di comunicazione.",
+        "title": "Profilo",
+        "subtitle": "Mantieni aggiornati i dati di contatto e le preferenze di prenotazione."
+      },
+      "wishlist": {
+        "metaTitle": "Lista desideri | Bookly",
+        "metaDescription": "Visualizza e gestisci i tour salvati nella tua lista desideri Bookly.",
+        "title": "Lista desideri",
+        "subtitle": "I tour salvati restano qui finche non sei pronto a prenotare."
+      },
+      "myReviews": {
+        "metaTitle": "Le mie recensioni | Bookly",
+        "metaDescription": "Rivedi i feedback sui tour che hai inviato su Bookly.",
+        "title": "Le mie recensioni",
+        "subtitle": "Vedi valutazioni e note condivise dopo i tour completati."
+      }
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "myBookings": "Le mie prenotazioni",
+      "wishlist": "Lista desideri",
+      "myReviews": "Le mie recensioni",
+      "profile": "Profilo",
+      "signOut": "Esci",
+      "signIn": "Accedi",
+      "signUp": "Registrati"
+    },
+    "dashboard": {
+      "summaryLabel": "Riepilogo prenotazioni",
+      "summaryTotal": "Prenotazioni totali",
+      "summaryUpcoming": "Prossime",
+      "summaryCompleted": "Completate",
+      "summaryCancelled": "Cancellate",
+      "recentActivity": "Attivita recente",
+      "noRecentActivity": "Nessuna attivita recente.",
+      "quickActions": "Azioni rapide",
+      "browseTours": "Sfoglia tour",
+      "viewWishlist": "Vedi lista desideri",
+      "editProfile": "Modifica profilo",
+      "filterLabel": "Filtra per stato",
+      "tryAgain": "Riprova",
+      "empty": "Non hai ancora prenotazioni - trova un tour per iniziare la tua avventura",
+      "loadError": "Impossibile caricare le prenotazioni.",
+      "fallbackTour": "Tour",
+      "filters": {
+        "all": "Tutte",
+        "confirmed": "Confermate",
+        "completed": "Completate",
+        "cancelled": "Cancellate"
+      },
+      "status": {
+        "confirmed": "Confermata",
+        "completed": "Completata",
+        "cancelled": "Cancellata",
+        "pending_payment": "Pagamento in sospeso",
+        "expired": "Scaduta",
+        "no_show": "No-show"
+      }
+    },
+    "bookingDetail": {
+      "notFound": "Prenotazione non trovata.",
+      "tryAgain": "Riprova",
+      "bookingCreated": "Prenotazione creata",
+      "paymentConfirmed": "Pagamento confermato",
+      "bookingConfirmed": "Prenotazione confermata",
+      "cancelled": "Cancellata",
+      "fallbackTour": "Tour",
+      "reference": "Riferimento",
+      "tour": "Tour",
+      "dateTime": "Data e ora",
+      "participants": "Partecipanti",
+      "price": "Prezzo",
+      "perPerson": "{price} a persona",
+      "total": "{total} totale",
+      "specialRequests": "Richieste speciali",
+      "tripDetails": "Dettagli del viaggio",
+      "meetingPoint": "Punto di incontro",
+      "meetingPointFallback": "Il punto di incontro sara confermato prima della partenza.",
+      "included": "Incluso",
+      "statusTimeline": "Timeline stato",
+      "paymentReceipt": "Ricevuta di pagamento",
+      "status": "Stato",
+      "amount": "Importo",
+      "method": "Metodo",
+      "card": "Carta",
+      "ending": "che termina con",
+      "transactionDate": "Data transazione",
+      "receiptUnavailable": "La ricevuta di pagamento non e ancora disponibile.",
+      "cancellationFallback": "La cancellazione gratuita dipende dalla politica dell'operatore."
+    },
+    "cancelBooking": {
+      "button": "Cancella prenotazione",
+      "title": "Conferma cancellazione",
+      "reference": "Riferimento",
+      "tour": "Tour",
+      "date": "Data",
+      "body": "Sei sicuro? Il rimborso sara elaborato entro 5-10 giorni lavorativi.",
+      "windowWarning": "Le cancellazioni sono idonee solo se richieste almeno 24 ore prima dell'inizio del tour.",
+      "confirm": "Si, cancella prenotazione",
+      "cancelling": "Cancellazione...",
+      "keep": "Mantieni prenotazione",
+      "disabledTitle": "La finestra di cancellazione e scaduta o la prenotazione non e idonea",
+      "error": "Impossibile cancellare la prenotazione."
+    },
+    "profile": {
+      "loadError": "Impossibile caricare il profilo.",
+      "saveError": "Impossibile salvare il profilo.",
+      "saved": "Profilo salvato.",
+      "invalidPhone": "Inserisci un numero di telefono valido.",
+      "passwordUpdated": "Password aggiornata.",
+      "passwordError": "Impossibile aggiornare la password.",
+      "personalInfo": "Informazioni personali",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "phone": "Telefono",
+      "phoneHint": "Usa cifre, spazi, parentesi, trattini o un piu iniziale.",
+      "preferredLanguage": "Lingua preferita",
+      "currency": "Valuta",
+      "marketing": "Inviami offerte di viaggio e consigli di prenotazione.",
+      "saving": "Salvataggio...",
+      "saveChanges": "Salva modifiche",
+      "changePassword": "Cambia password",
+      "currentPassword": "Password attuale",
+      "newPassword": "Nuova password",
+      "confirmPassword": "Conferma nuova password",
+      "updating": "Aggiornamento...",
+      "updatePassword": "Aggiorna password"
+    },
+    "wishlist": {
+      "loadError": "Impossibile caricare la lista desideri.",
+      "removeError": "Impossibile rimuovere quel tour. Riprova.",
+      "empty": "La tua lista desideri e vuota.",
+      "exploreTours": "Sfoglia tour",
+      "remove": "Rimuovi",
+      "removeAria": "Rimuovi {tour} dalla lista desideri",
+      "rating": "{rating} stelle ({count})",
+      "unavailable": "Non piu disponibile"
+    },
+    "wishlistButton": {
+      "save": "Salva nella lista desideri",
+      "remove": "Rimuovi dalla lista desideri",
+      "promptTitle": "Accedi per salvare tour",
+      "promptBody": "Accedi o crea un account per aggiungere tour alla lista desideri.",
+      "signIn": "Accedi",
+      "notNow": "Non ora"
+    },
+    "myReviews": {
+      "loadError": "Impossibile caricare le recensioni.",
+      "empty": "Prenota un tour e condividi la tua esperienza dopo il viaggio.",
+      "browseTours": "Sfoglia tour",
+      "rating": "{rating} / 5 stelle"
+    }
   },
   "notFound": {
     "title": "Pagina Non Trovata",

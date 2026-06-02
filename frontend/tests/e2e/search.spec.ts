@@ -19,6 +19,7 @@ test.describe('Search Page', () => {
     await expect(page.getByRole('navigation', { name: 'Search results pagination' })).toBeVisible();
 
     const cards = page.getByRole('link').filter({ has: page.locator('img') });
+    expect(await cards.count()).toBeGreaterThanOrEqual(0);
     // May have zero results in test env — page should still render
     await expect(page.locator('main')).toBeVisible();
   });

@@ -132,7 +132,7 @@ specs/
 │   ├── quickstart.md
 │   ├── contracts/
 │   └── checklists/
-├── 008-payment-processing/          📋 Specified (ready for implementation)
+├── 008-payment-processing/          ✅ Implemented (Stripe payments & ledger)
 │   ├── spec.md
 │   ├── plan.md
 │   ├── tasks.md
@@ -141,12 +141,42 @@ specs/
 │   ├── quickstart.md
 │   ├── contracts/
 │   └── checklists/
-├── 009-reviews-ratings/             📝 Partially specified (needs tasks)
+├── 009-reviews-ratings/             ✅ Implemented (Ratings & traveler reviews)
 │   ├── spec.md
 │   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   │   └── api.md
 │   └── checklists/
-├── 010-TBD/                         🔲 Not yet started
-├── 011-TBD/                         🔲 Not yet started
+├── 010-public-frontend/             ✅ Implemented (Public search, booking, payment)
+│   ├── spec.md
+│   ├── plan.md
+│   ├── tasks.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   │   ├── auth-api.md
+│   │   ├── booking-api.md
+│   │   └── tours-api.md
+│   └── checklists/
+│       └── requirements.md
+├── 011-tour-management/             ✅ Implemented (Traveler dashboard, bookings, profile & wishlist)
+│   ├── spec.md
+│   ├── plan.md
+│   ├── research.md
+│   ├── data-model.md
+│   ├── quickstart.md
+│   ├── contracts/
+│   │   ├── bookings-api.contract.md
+│   │   ├── profile-api.contract.md
+│   │   ├── reviews-api.contract.md
+│   │   └── wishlist-api.contract.md
+│   └── checklists/
+│       └── requirements.md
 ├── 012-TBD/                         🔲 Not yet started
 ├── 013-TBD/                         🔲 Not yet started
 ├── 014-TBD/                         🔲 Not yet started
@@ -155,7 +185,7 @@ specs/
 
 ### 4.2 Feature Summary Table
 
-#### Completed Features (001–007)
+#### Completed Features (001–011)
 
 | Spec | Feature | Surface(s) | Key Domains | Status |
 |------|---------|-----------|-------------|--------|
@@ -166,27 +196,22 @@ specs/
 | 005 | Brute Force Protection | Backend | Auth, Security | ✅ Implemented |
 | 006 | Public Search & Discovery | Public, Backend | Tours, Search, SEO | ✅ Implemented |
 | 007 | Tour Booking | Public, Backend | Bookings, Availability | ✅ Implemented |
+| 008 | Payment Processing | Public, Backend | Payments, Finance, Stripe | ✅ Implemented |
+| 009 | Reviews & Ratings | Public, Backend | Reviews | ✅ Implemented |
+| 010 | Public Frontend | Public, Backend | Discovery, Checkout, Stripe | ✅ Implemented |
+| 011 | Tour Management (Traveler Account) | Public, Backend | Traveler Area, Booking Details, Profile | ✅ Implemented |
 
-#### In-Progress Features (008–009)
-
-| Spec | Feature | Surface(s) | Key Domains | Status |
-|------|---------|-----------|-------------|--------|
-| 008 | Payment Processing | Public, Backend | Payments, Finance, Stripe | 📋 Ready for implementation |
-| 009 | Reviews & Ratings | Public, Backend | Reviews | 📝 Needs tasks, contracts, data-model |
-
-#### Remaining Features (010–015) — Not Yet Specified
+#### Remaining Features (012–015) — Not Yet Specified
 
 These features from the original strategy have NOT been specified yet
 and need to be created as new specs:
 
 | Spec | Feature | Surface(s) | Key Domains | Depends On |
 |------|---------|-----------|-------------|------------|
-| 010 | Partner Onboarding | Partner, Admin, Backend | Partners, Auth | — |
-| 011 | Tour Management | Partner, Backend | Tours, Translation | 010 |
-| 012 | Pricing & Availability | Partner, Backend | Pricing, Availability | 011 |
-| 013 | Admin Moderation | Admin, Backend | Admin Ops, Partners, Tours | 010, 011 |
+| 012 | Pricing & Availability | Partner, Backend | Pricing, Availability | 015 |
+| 013 | Admin Moderation | Admin, Backend | Admin Ops, Partners, Tours | 015 |
 | 014 | Notifications & Vouchers | Backend | Notifications | 007 |
-| 015 | Traveler Account & Bookings | Public, Backend | Bookings, Auth | 001, 007 |
+| 015 | Partner Onboarding | Partner, Admin, Backend | Partners, Auth | — |
 
 ### 4.3 Dependency Graph (Updated)
 
@@ -199,17 +224,25 @@ and need to be created as new specs:
                                                                               007 Booking
                                                                                  │
                                                            ┌─────────────────────┼────────────┐
---- IN PROGRESS ---                                        ↓                     ↓            ↓
+                                                           ↓                     ↓            ↓
                                                     008 Payments          009 Reviews    (future)
+                                                           │                     │
+                                                           └──────────┬──────────┘
+                                                                      │
+                                                                      ▼
+                                                            010 Public Frontend
+                                                                      │
+                                                                      ▼
+                                                            011 Tour Management
 
 --- REMAINING ---
-010 Partner Onboarding ──→ 011 Tour Management
+015 Partner Onboarding ──→ 012 Pricing & Availability
                                │
-                               ├──→ 012 Pricing & Availability
                                └──→ 013 Admin Moderation
 
 014 Notifications & Vouchers  (depends on 007 ✅)
-015 Traveler Account          (depends on 001 ✅, 007 ✅)
+010 Public Frontend           (✅ Done)
+011 Tour Management           (✅ Done, depends on 001 ✅, 007 ✅)
 ```
 
 ### 4.4 Execution Order (Updated)
@@ -223,33 +256,33 @@ and need to be created as new specs:
 | 5 | 005 | Brute Force Protection | 004 | ✅ Done |
 | 6 | 006 | Public Search & Discovery | — | ✅ Done |
 | 7 | 007 | Tour Booking | 001, 006 | ✅ Done |
-| 8 | 008 | Payment Processing | 007 | 📋 Ready |
-| 9 | 009 | Reviews & Ratings | 007, 008 | 📝 Partial |
-| 10 | 010 | Partner Onboarding | — | 🔲 Not started |
-| 11 | 011 | Tour Management | 010 | 🔲 Not started |
-| 12 | 012 | Pricing & Availability | 011 | 🔲 Not started |
-| 13 | 013 | Admin Moderation | 010, 011 | 🔲 Not started |
+| 8 | 008 | Payment Processing | 007 | ✅ Done |
+| 9 | 009 | Reviews & Ratings | 007, 008 | ✅ Done |
+| 10 | 010 | Public Frontend | — | ✅ Done |
+| 11 | 011 | Tour Management (Traveler Account) | 001, 007 | ✅ Done |
+| 12 | 012 | Pricing & Availability | 015 | 🔲 Not started |
+| 13 | 013 | Admin Moderation | 015 | 🔲 Not started |
 | 14 | 014 | Notifications & Vouchers | 007 | 🔲 Not started |
-| 15 | 015 | Traveler Account & Bookings | 001, 007 | 🔲 Not started |
+| 15 | 015 | Partner Onboarding | — | 🔲 Not started |
 
 ### 4.5 Original → Current Numbering Mapping
 
 For reference, this maps the original v1.0.0 feature numbers to the
-current v2.0.0 numbers:
+current v2.0.0 numbers in the actual workspace directory structure:
 
-| Original (v1.0.0) | Feature | Current (v2.0.0) | Notes |
-|--------------------|---------|------------------|-------|
-| 001 | Traveler Auth | 001–005 | Split into 5 granular phases |
-| 002 | Partner Onboarding | 010 | Not yet specified |
-| 003 | Tour Management | 011 | Not yet specified |
-| 004 | Pricing & Availability | 012 | Not yet specified |
-| 005 | Admin Moderation | 013 | Not yet specified |
-| 006 | Public Search & Discovery | 006 | Same number, implemented |
-| 007 | Booking & Checkout | 007 | Same number, implemented |
-| 008 | Payments & Finance | 008 | Same number, specified |
-| 009 | Notifications & Vouchers | 014 | Not yet specified |
-| 010 | Traveler Reviews | 009 | Renumbered, partially specified |
-| 011 | Traveler Account & Bookings | 015 | Not yet specified |
+| Original (v1.0.0) | Feature | Current (v2.0.0) | Directory in Workspace | Notes |
+|--------------------|---------|------------------|-----------------------|-------|
+| 001 | Traveler Auth | 001–005 | `001-traveler-auth` through `005-brute-force-protection` | Split into 5 granular auth phases |
+| 002 | Partner Onboarding | 015 | Create `015-partner-onboarding` | Partner dashboard onboarding |
+| 003 | Tour Management | 011 | `011-tour-management` | Traveler Dashboard, bookings, wishlist |
+| 004 | Pricing & Availability | 012 | Create `012-pricing-availability` | Partner pricing & capacity calendar |
+| 005 | Admin Moderation | 013 | Create `013-admin-moderation` | Filament admin dashboard widgets |
+| 006 | Public Search & Discovery | 010 (consolidated) | `010-public-frontend` | Homepage, tour listings, filters, category |
+| 007 | Booking & Checkout | 010 (consolidated) | `010-public-frontend` | Booking details, customer inputs, checkout |
+| 008 | Payments & Finance | 010 (consolidated) | `010-public-frontend` | Stripe Elements, ledger tracking, confirmation |
+| 009 | Notifications & Vouchers | 014 | Create `014-notifications-vouchers` | Queued async emails, PDF generation |
+| 010 | Traveler Reviews | 009 | `009-reviews-ratings` | Ratings, reviews on detail page |
+| 011 | Traveler Account & Bookings | 011 | `011-tour-management` | Authenticated traveler dashboard & settings |
 
 ---
 
@@ -734,29 +767,19 @@ For each feature spec, the workflow is:
 
 ---
 
-## 9. Current Project Status (as of 2026-05-13)
+## 9. Current Project Status (as of 2026-05-31)
 
 ### Progress Summary
 
-| Category | Count |
-|----------|-------|
-| Features implemented | 7 (001–007) |
-| Features ready to build | 1 (008) |
-| Features partially specified | 1 (009) |
-| Features not yet specified | 6 (010–015) |
-| **Total Phase 1 features** | **15** |
+| Category | Count | Features |
+|----------|-------|----------|
+| Features implemented | 11 | 001–007, 008, 009, 010, 011 |
+| Features ready to build | 0 | |
+| Features partially specified | 0 | |
+| Features not yet specified | 4 | 012–015 |
+| **Total Phase 1 features** | **15** | |
 
 ### Recommended Next Actions
 
-1. **Implement 008 (Payment Processing)** — fully specified with
-   spec, plan, tasks, contracts, and data-model. Ready to build.
-2. **Complete 009 (Reviews & Ratings)** — has spec and plan, needs
-   `/speckit.tasks` to generate task breakdown, plus contracts and
-   data-model artifacts.
-3. **Specify 014 (Notifications & Vouchers)** — all dependencies
-   satisfied (007 ✅). Can be specified in parallel with 008
-   implementation.
-4. **Specify 015 (Traveler Account & Bookings)** — all dependencies
-   satisfied (001 ✅, 007 ✅). Can be specified in parallel.
-5. **Specify 010 (Partner Onboarding)** — no dependencies. Unlocks
-   011 → 012 → 013 chain.
+1. **Specify 014 (Notifications & Vouchers)** — all dependencies satisfied (007 ✅). Can be specified in parallel.
+2. **Specify 015 (Partner Onboarding)** — no dependencies. Unlocks 012 → 013 chain.
