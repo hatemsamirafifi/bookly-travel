@@ -16,10 +16,7 @@ export const registerSchema = z.object({
   name: z.string().min(1, 'auth.errors.nameRequired').max(255),
   email: z.string().email({ message: "auth.errors.invalidCredentials" }),
   password: passwordSchema,
-  locale: z.enum(['en', 'es', 'it'], { 
-    required_error: "auth.errors.invalidLocale", 
-    invalid_type_error: "auth.errors.invalidLocale" 
-  }).optional(),
+  locale: z.enum(['en', 'es', 'it']).optional(),
 });
 
 export const forgotPasswordSchema = z.object({

@@ -108,7 +108,7 @@
 ```html
 <a href="/page">Descriptive link text</a>
 <!-- External links -->
-<a href="https://external.com" target="_blank" rel="noopener noreferrer">
+<a href="https://external.com" target="_blank" rel="noopener">
   External site
   <span class="visually-hidden">(opens in new tab)</span>
 </a>

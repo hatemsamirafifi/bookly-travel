@@ -58,7 +58,7 @@ export default function BookingCTA({ pricing, availability, groupSize, locale, s
 
           <Link
             href={`/${locale}/booking?tour=${slug}&participants=${participants}&date=${availability.next_available_date}`}
-            className="block w-full rounded-lg bg-blue-600 py-2.5 text-center text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            className="block w-full rounded-xl bg-[#FFB800] py-2.5 text-center text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 transition-colors"
           >
             Book Now
           </Link>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Global Tours Marketplace - Admin CMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 bg-primary text-white flex flex-col fixed h-full z-50">
+<div class="p-6 flex items-center gap-3">
+<div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary font-bold">travel_explore</span>
+</div>
+<div>
+<h1 class="text-lg font-bold leading-tight">Tours Global</h1>
+<p class="text-xs text-slate-400">Marketplace Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-accent text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Content Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-medium">Tour Operators</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold">System</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-white/10">
+<button class="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-sm">help</span>
+                    Support
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 flex flex-col">
+<!-- Header -->
+<header class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-40">
+<div class="flex items-center gap-8 flex-1">
+<h2 class="text-xl font-bold text-primary dark:text-white">Content Management</h2>
+<div class="max-w-md w-full relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary text-sm" placeholder="Search pages, posts, media..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<button class="bg-primary hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+                        Create New Content
+                    </button>
+<div class="h-10 w-10 rounded-full bg-slate-200 overflow-hidden border-2 border-slate-100">
+<img alt="Admin Avatar" data-alt="Professional user profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAVM0y8BNji0CD_uo9p0EUeEoeaBhC0xsVCg_JjMBLAAjquA3nFshE9q5n-5oiKwPn6pmcpWi9zkGVFGn1XkH3umhvS4ym67zy-3QXIzeiRK-K9h1ezsRpNfVUHsyMODJY6LrzqYm0B-koEqFaD6qGsjcboSXMgiHaNdzIJ8DN1nxguOBTRDyeZ-uSP4MxutRgMPnl8KrM_4iZ88nh8nw1_xnu3cLNLYYy6djvJkvhH4QwXn-1BKzuSeUTs5sNPMiE9weWKIjj41dE"/>
+</div>
+</div>
+</header>
+<!-- Tabs -->
+<div class="bg-white dark:bg-slate-900 px-8 border-b border-slate-200 dark:border-slate-800">
+<div class="flex gap-8">
+<button class="py-4 border-b-2 border-primary text-primary font-semibold text-sm">Pages</button>
+<button class="py-4 border-b-2 border-transparent text-slate-500 hover:text-primary font-medium text-sm transition-colors">Blog Posts</button>
+<button class="py-4 border-b-2 border-transparent text-slate-500 hover:text-primary font-medium text-sm transition-colors">Media Library</button>
+<button class="py-4 border-b-2 border-transparent text-slate-500 hover:text-primary font-medium text-sm transition-colors">Global Elements</button>
+</div>
+</div>
+<div class="p-8 space-y-8">
+<!-- Pages Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-primary dark:text-white">Active Pages</h3>
+<div class="flex gap-2">
+<button class="flex items-center gap-1 text-sm text-slate-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-50">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                            </button>
+<button class="flex items-center gap-1 text-sm text-slate-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-50">
+<span class="material-symbols-outlined text-sm">sort</span> Sort
+                            </button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Page Name</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Last Updated</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Author</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">home</span>
+<span class="text-sm font-semibold text-primary dark:text-slate-200">Homepage</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 24, 2023 at 2:30 PM</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-600">SC</div>
+<span class="text-sm text-slate-600 dark:text-slate-400">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Published</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-xl">delete</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">location_on</span>
+<span class="text-sm font-semibold text-primary dark:text-slate-200">Destinations</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 22, 2023 at 11:15 AM</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-[10px] font-bold text-purple-600">JW</div>
+<span class="text-sm text-slate-600 dark:text-slate-400">James Wilson</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Published</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-xl">delete</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">local_offer</span>
+<span class="text-sm font-semibold text-primary dark:text-slate-200">Summer Deals 2024</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 20, 2023 at 4:50 PM</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-600">SC</div>
+<span class="text-sm text-slate-600 dark:text-slate-400">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">Draft</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">edit</span></button>
+<button class="text-slate-400 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-xl">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Featured Content Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-primary dark:text-white">Featured Content Management</h3>
+<p class="text-sm text-slate-500">Manage homepage hero and curated collections</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Hero Banner Control -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-primary dark:text-white">Homepage Hero Banner</h4>
+<span class="px-2 py-0.5 bg-accent/20 text-accent text-[10px] font-bold uppercase rounded">Active</span>
+</div>
+<div class="aspect-video rounded-lg bg-slate-200 mb-4 overflow-hidden relative group">
+<img alt="Hero Banner Preview" class="w-full h-full object-cover" data-alt="Tropical beach sunset panoramic landscape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARyG0ipDZCPhtnnIppdEw4fBClB00KuzNMcZlp10o6Liyiy5M_ffYZNR3OkmKX5Zzz53UFQfbc_z1IdMjYs9hyJhgTfef1s2vPm5-rKqpqksqRBnZUDBbs53uGwOlA6FXFQxAx_NvVZKCl69vTOqjZFvmE-tzrhtsmuqDSlwz-VGkfEi7uOnEPC2yos8bptAdtjnwN3DaoYswROOoU_InE76wU85Q8ecJOfsc0MDg0ISesa9PE55xjzEMVxEgMGkBbwFAOnbm2Mdmb"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-white text-primary px-4 py-2 rounded-lg font-bold text-sm">Change Image</button>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-1">Headline</label>
+<input class="w-full border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm" type="text" value="Discover the World's Best Tours"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-1">CTA Link</label>
+<input class="w-full border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm" type="text" value="/destinations/top-rated"/>
+</div>
+<button class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-primary dark:text-white py-2 rounded-lg text-sm font-bold transition-colors">
+                                    Save Banner Changes
+                                </button>
+</div>
+</div>
+<!-- Featured Collections -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-primary dark:text-white">Featured Collections</h4>
+<button class="text-sm font-bold text-primary hover:underline">Reorder</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-800/30">
+<div class="w-12 h-12 rounded bg-slate-300 flex-shrink-0 overflow-hidden">
+<img alt="Mountain Collection" class="w-full h-full object-cover" data-alt="Snowy mountain peaks under blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8L8C-BHYVH3ZdUGsJEaoqmYsvFlOZp9PvOTHoKoJRhdPNneBoL2fAftJJI8hWQw5lAQ-GKbL9N_p9ckLfvm-GuwmCpiHD-YouHZ2PmanJT2bkEJok2468_a2Wu61mzXueyX17mkGEhEnYgEWFxv7RnkY7qItNP0d-sASghm9H33TGeNAxY3ncGbEhEYNqHozS1Bl93kWuTL8qYkKaUw0mSSakkN-Qz12stf2RmxAEvhKu26cu9Ajo4dNSzs0kTqPEk7iqjnwiqtoD"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-primary dark:text-white">Mountain Adventures</p>
+<p class="text-xs text-slate-500">12 Active Tours</p>
+</div>
+<button class="material-symbols-outlined text-slate-400">drag_indicator</button>
+</div>
+<div class="flex items-center gap-4 p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-800/30">
+<div class="w-12 h-12 rounded bg-slate-300 flex-shrink-0 overflow-hidden">
+<img alt="City Collection" class="w-full h-full object-cover" data-alt="Illuminated city skyline at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqGbDaI6cP4C6vvud1bMvaA7af4_cRf1FwofqQ8gIsQrnWlshN1mUN6dLKFjE1yQ4Z3LZMWU_NzEv81j6FFUyUch9eC_dmrbZEL4UKc1IH4oAHHHw63IbmsizAHQs0zLasmmRpjw3_gCXkKYPcOctIqzrNN26HuFC4EJyJOJd64HDiOHSzMA5kj7JnbwUo9AhApSZhPZSXBwtJBw_v_PCb-NYVdlKrOFG_p-izHWtQNEu_djCmQ3nPCEHeDkOQZIS4ho3tQNol-vj3"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-primary dark:text-white">Urban Escapes</p>
+<p class="text-xs text-slate-500">24 Active Tours</p>
+</div>
+<button class="material-symbols-outlined text-slate-400">drag_indicator</button>
+</div>
+<div class="flex items-center gap-4 p-3 border border-slate-100 dark:border-slate-800 rounded-lg bg-slate-50/50 dark:bg-slate-800/30">
+<div class="w-12 h-12 rounded bg-slate-300 flex-shrink-0 overflow-hidden">
+<img alt="Island Collection" class="w-full h-full object-cover" data-alt="Turquoise water and tropical island aerial view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDapJjDycsAaA_DmrVEw3NOgcj16WJnFGsTbD4r65kAaADdz0tvaRv_eTaOdJUmrJvT5Rguoe6ZjkbqMitE9M9iowqVS-w8ccSqOrAXr1FJ_zQWYYbodiJDObpgf8NDtXiJ-g_sBj0tN2ePTUNzGWRcyzLBXcHja1lrLjuETqZrIJKRWr4tgSlcLnFxUfGAv8OiN_ctyjYxMNUs5_KYWj_uz476Ugszf6E0KExsMHHF9z--uCfFILgIqpmFfRDxRU7Wlnnti6GODuCa"/>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-primary dark:text-white">Island Hopping</p>
+<p class="text-xs text-slate-500">8 Active Tours</p>
+</div>
+<button class="material-symbols-outlined text-slate-400">drag_indicator</button>
+</div>
+<button class="w-full border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-500 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-all">
+<span class="material-symbols-outlined text-sm">add_circle</span> Add New Collection
+                                </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Dashboard - TravelEase</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-6 md:px-10 py-3 bg-white dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<h2 class="text-primary text-xl font-bold leading-tight tracking-tight">TravelEase</h2>
+</div>
+<label class="hidden md:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+<div class="text-primary/60 flex border-none bg-primary/5 items-center justify-center pl-4 rounded-l-xl" data-icon="search">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-xl text-slate-900 focus:outline-0 focus:ring-0 border-none bg-primary/5 focus:border-none h-full placeholder:text-primary/40 px-4 pl-2 text-sm font-normal" placeholder="Search destinations..."/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-primary font-semibold text-sm hover:opacity-80 transition-opacity" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium text-sm hover:text-primary transition-colors" href="#">My Bookings</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium text-sm hover:text-primary transition-colors" href="#">Rewards</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium text-sm hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-primary/5 text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-primary/5 text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-primary/20" data-alt="User profile avatar smiling man" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCUEfJiuUbrX-VatI0HG6FmABhRQLl7OuRt1vjzHQ-mZRleS4FEEQKTbOfTTc0ND1Z7X40eKcBN_HSjzkEktbg61ee-uKuWFY-skvuHCLK9cQCSZZ4RHb-wLmu5KtuEhtboHoP2F92kBU2xXArCzUXyj168OVoaCoxwp-09ZIgtbzkY-lapEezhprWWUbINaFFFjTwH73y4s1IDXs6ZAbycwmW-naMkWm9cAnyn6LlcDPEiGvOdv34wS-wPKeO4oPpTeOQewcoGm9u4");'></div>
+</div>
+</header>
+<main class="flex-1 max-w-7xl mx-auto w-full p-6 md:p-10 space-y-8">
+<!-- Welcome Header -->
+<div class="flex flex-col md:flex-row justify-between items-end gap-4">
+<div class="space-y-1">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Welcome back, Alex!</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Your next adventure to the Swiss Alps is just 12 days away.</p>
+</div>
+<button class="bg-primary text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">add</span>
+                    Plan New Trip
+                </button>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800/50 border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold uppercase tracking-wider">Total Bookings</p>
+<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">+2%</span>
+</div>
+<div class="flex items-end gap-2">
+<p class="text-slate-900 dark:text-white text-3xl font-bold leading-none">12</p>
+<p class="text-slate-400 text-sm mb-1">trips completed</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800/50 border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold uppercase tracking-wider">Reward Points</p>
+<span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">+150 today</span>
+</div>
+<div class="flex items-end gap-2">
+<p class="text-slate-900 dark:text-white text-3xl font-bold leading-none">4,250</p>
+<p class="text-slate-400 text-sm mb-1">Elite Member</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-primary text-white shadow-xl shadow-primary/20">
+<div class="flex justify-between items-start">
+<p class="text-primary-100/70 text-sm font-semibold uppercase tracking-wider">Travel Savings</p>
+<span class="material-symbols-outlined">savings</span>
+</div>
+<div class="flex items-end gap-2">
+<p class="text-3xl font-bold leading-none">$1,420</p>
+<p class="text-primary-100/70 text-sm mb-1">saved this year</p>
+</div>
+</div>
+</div>
+<!-- Main Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Upcoming Trip Card (2 columns) -->
+<div class="lg:col-span-2 space-y-4">
+<h2 class="text-slate-900 dark:text-white text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">event</span>
+                        Upcoming Trip
+                    </h2>
+<div class="relative group overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-primary/10 shadow-md">
+<div class="h-64 bg-cover bg-center" data-alt="Snowy Swiss Alps mountain landscape" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOmxXDDJav3h8iTZbxnxmBHdnija8FkwS7FrbRP-Z-tyDTvejXNuu39APW4VjMln_4s5enm8gjuN0cqTwyaLy5wOrrEe0BZdcGO9sESk2J4jnxQBqPWHV9Sl1jisRkArDYDQ77pM5IlSRt4IiE3ScWYZWdeMc_Eir3OzVK4Fh7p96svvq736AlKGV9BjdPOifsFTPislmoCJo3J1Nc8HP0mHg9xHrDl6rfYJkfIkjnAX4szh7i5eFiskKNzrWlZpZSfWVw5ioSnmpT');">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 text-white">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-primary-200 text-sm font-bold uppercase tracking-widest mb-1">Zermatt, Switzerland</p>
+<h3 class="text-3xl font-black">Swiss Alps Adventure</h3>
+<p class="text-slate-200 mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+                                            Dec 14 - Dec 21, 2024
+                                        </p>
+</div>
+<div class="text-right">
+<p class="text-sm font-medium opacity-80">Booking Status</p>
+<span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Confirmed</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold">Flight</p>
+<p class="text-sm font-bold">LX 102</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">hotel</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold">Stay</p>
+<p class="text-sm font-bold">The Omnia</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold">Guide</p>
+<p class="text-sm font-bold">Private Tour</p>
+</div>
+</div>
+<button class="border-2 border-primary text-primary font-bold rounded-xl py-2 hover:bg-primary hover:text-white transition-all text-sm">
+                                View Details
+                            </button>
+</div>
+</div>
+</div>
+<!-- Quick Actions & Recommendations -->
+<div class="space-y-8">
+<div class="space-y-4">
+<h2 class="text-slate-900 dark:text-white text-xl font-bold">Quick Actions</h2>
+<div class="grid grid-cols-2 gap-3">
+<a class="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-primary/5 hover:border-primary/30 transition-all hover:shadow-md group" href="#">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">confirmation_number</span>
+<span class="text-xs font-bold">Boarding Pass</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-primary/5 hover:border-primary/30 transition-all hover:shadow-md group" href="#">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">receipt_long</span>
+<span class="text-xs font-bold">Invoices</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-primary/5 hover:border-primary/30 transition-all hover:shadow-md group" href="#">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">support_agent</span>
+<span class="text-xs font-bold">Help Desk</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-primary/5 hover:border-primary/30 transition-all hover:shadow-md group" href="#">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">wallet</span>
+<span class="text-xs font-bold">Refunds</span>
+</a>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="text-slate-900 dark:text-white text-xl font-bold">Nearby Tours</h2>
+<a class="text-primary text-sm font-bold" href="#">See all</a>
+</div>
+<div class="space-y-3">
+<div class="flex gap-4 p-3 bg-white dark:bg-slate-800 rounded-xl items-center border border-primary/5 hover:shadow-sm">
+<div class="size-16 rounded-lg bg-cover bg-center shrink-0" data-alt="Eiffel Tower Paris morning sun" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhYhnJa-hNjE-Oppw_QdcFCIKYKmvmSryCSDNYb_IYfKsjZz28Iom_RAxBSy6jp0ERK2mfh-XSppMKIt5rXi3nmCwI9UWyr0q9CTiZMsR2yHalvHltY1lCmGt7yk4Ax0mNths7dxceiYL49p3dyxnKsONTvRPCtwiTA5wieN2HzQSlRWp2iAyGljUVWNKYZb0vQCQLbAx82w-BrZrxIRcgOxPV1n-g8BP57L2Oaufn0x17XZUy4XJbw7NfOClkgqEmK-PY1oHFVfrr');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-sm truncate">Parisian Street Food</p>
+<p class="text-xs text-slate-500">4.8 ★ (1.2k reviews)</p>
+<p class="text-primary font-bold text-sm mt-1">$45</p>
+</div>
+<button class="text-primary"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+<div class="flex gap-4 p-3 bg-white dark:bg-slate-800 rounded-xl items-center border border-primary/5 hover:shadow-sm">
+<div class="size-16 rounded-lg bg-cover bg-center shrink-0" data-alt="London skyline evening" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBT8F2xG7T8ru7MbqiYMS9O3tPozicfhEdqnZrS-20b99yGhTgpXQ732FIX0PSrJc4nL_3OcnWA4TAUgw9YpNL_qDOBE2CPrf0LAs9DH9tKQxGBSMKkClau14ceAvjPIJoXPuG0bW6w1-fa_fIl1BLr4a5Qv0tAVIP1lFaIQExuT8qyYDlCEy-IIIFp4swbXNUMSuuBCZgi91RS84B5b9DxhT1HfTOeIvGOqdziZyRtwlF9jMttah0EruK18YoOP_DB1Q0nbzFmbfZP');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-bold text-sm truncate">London Night Walk</p>
+<p class="text-xs text-slate-500">4.9 ★ (850 reviews)</p>
+<p class="text-primary font-bold text-sm mt-1">$28</p>
+</div>
+<button class="text-primary"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Personalized Recommendations Section -->
+<div class="space-y-6 pt-6">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-2xl font-black text-slate-900 dark:text-white">Recommended for You</h2>
+<p class="text-slate-500">Based on your interest in mountain adventures.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100"><span class="material-symbols-outlined">arrow_back</span></button>
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-100"><span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Rec 1 -->
+<div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-primary/5">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Beautiful lake with mountains in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB55xeZnmXbh0ksr25x6ijRvQQugMGbs4nV_ETrVS5iPDUZgLGhPJ1UO0vgeFjvwh7cAVgd4j_HMOG-qaI0bN2G632FQ_Ipz5eVV3_0mtun0fIPfpGDshEdjfzksmRrGHRNFEfZwYN4jDVRp64Fm9eOVV8tE0OVtwsgvy3qX1Etm1ziyVlGNaJrJooNnpnaCkPWfgA2nMUy_q9F5xWa3YQOdIj4LW_YFEyCnZMj7VcIbypmV7g2TXL02XjikcrgVofZZtDnlHXbN_Cs"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-lg px-2 py-1 text-xs font-bold text-primary">4.9 ★</div>
+</div>
+<div class="p-4 space-y-2">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Nature • Iceland</p>
+<h4 class="font-bold text-slate-900 dark:text-white">Northern Lights Expedition</h4>
+<div class="flex justify-between items-center pt-2">
+<p class="font-black text-lg text-primary">$1,299</p>
+<button class="p-2 rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Rec 2 -->
+<div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-primary/5">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Traditional Japanese temple with cherry blossoms" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlWxiXdaUTTXNGT4yVJ213EIJGOgabNni2SJrB8Af0N1v30BCN4yS9FtF1lQepdSTyHx6Se9vqzNcg_IJdLnGgk68peLW_uWZxvzeydMrIj63YuSCsk76ZRmL4UHOWyxB3wUlsN7hqmxr9uR6DCFQ2l14b-l_aSkekobJ5f5w0ydVmPaPvQVqkbWWu_oKJpPsCJCfXmHTLgpb2IdwYf7tRXrNcsUIFVGxrMtueQ5GRCZ-9TnOzWfdhUOYU0CLvvdOtysh_4AnY22Lo"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-lg px-2 py-1 text-xs font-bold text-primary">4.8 ★</div>
+</div>
+<div class="p-4 space-y-2">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Culture • Japan</p>
+<h4 class="font-bold text-slate-900 dark:text-white">Kyoto Heritage Tour</h4>
+<div class="flex justify-between items-center pt-2">
+<p class="font-black text-lg text-primary">$850</p>
+<button class="p-2 rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Rec 3 -->
+<div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-primary/5">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Greek islands white buildings and blue sea" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOi6GSWo8fpcQTEgUXuFCVdqep6iFF9NOFhqIqtCCOJg7LAOEYCF9WsDWcSLHHuIacxSkwJG6fVoxPFEk1qnoYfOEcEhgg9PhQBv9I1w0xqChAHQtZ7f7MkAn4FFoFPOn0EGJ69y4JyoyiD31jH2uw3nVDb5FgFIj8RuUaCjj8YcLqzi0SaQzd60iNy3EMtiwoTqM0jtCXk1cH51pz8KE7z3yXnlnGlPBxFVntAmKRB2IyxnYZJzdVHJ5G7dbiMYCVNmE6RJO-KuPH"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-lg px-2 py-1 text-xs font-bold text-primary">4.7 ★</div>
+</div>
+<div class="p-4 space-y-2">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Leisure • Greece</p>
+<h4 class="font-bold text-slate-900 dark:text-white">Santorini Island Escape</h4>
+<div class="flex justify-between items-center pt-2">
+<p class="font-black text-lg text-primary">$990</p>
+<button class="p-2 rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Rec 4 -->
+<div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-primary/5">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Vibrant tropical landscape with mountains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNV-NyNVpgqKcEAqwZxt9tCkU-iMxZthNB4pgm3pjP2-ymNYh_8d3kt5VxLoi0GnvAfbjJHSSivaLMqHYkp33qRrURVPxmK4Q5kUnoGpJzsKNULRj36y_HI_KkW8o1IMiuzb03SuCxkEuxZjlXRYHlYUMrhMgvFTmt5TTQBZb3D6XqKs4FSWow9y92QfSHe-QMFESbztOk00u7nZy-qULz0SyACf-WHCgyyEyzfCPqKOSw0ILRaFQFPfCnZwUQ_NMa7SgLY-YOw6Ex"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur rounded-lg px-2 py-1 text-xs font-bold text-primary">5.0 ★</div>
+</div>
+<div class="p-4 space-y-2">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Adventure • Peru</p>
+<h4 class="font-bold text-slate-900 dark:text-white">Machu Picchu Trek</h4>
+<div class="flex justify-between items-center pt-2">
+<p class="font-black text-lg text-primary">$1,500</p>
+<button class="p-2 rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-12 border-t border-primary/10 py-12 px-10 bg-white dark:bg-background-dark/80">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3 text-primary opacity-60">
+<span class="material-symbols-outlined">explore</span>
+<h2 class="text-lg font-bold">TravelEase</h2>
+</div>
+<div class="flex gap-8 text-sm font-medium text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+<p class="text-xs text-slate-400">© 2024 TravelEase Inc. All rights reserved.</p>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

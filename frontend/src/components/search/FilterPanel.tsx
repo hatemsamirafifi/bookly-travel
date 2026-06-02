@@ -23,12 +23,12 @@ function CollapsibleSection({ title, defaultOpen = true, children }: Collapsible
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex w-full items-center justify-between py-3 text-sm font-semibold text-gray-700 hover:text-gray-900"
+          className="flex w-full items-center justify-between py-3 text-sm font-semibold text-[#0A2540] hover:text-[#071b2e]"
           aria-expanded={isOpen}
         >
           {title}
           <svg
-            className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            className={`h-4 w-4 text-[#5A6B7B] transition-transform ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -49,11 +49,11 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
   return (
     <aside className="w-full rounded-xl border border-gray-200 bg-white p-4 lg:w-64" aria-label="Search filters">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-base font-semibold text-gray-900">Filters</h2>
+        <h2 className="text-base font-semibold text-[#0A2540]">Filters</h2>
         {activeFilterCount > 0 && (
           <button
             onClick={clearAll}
-            className="text-xs font-medium text-blue-600 hover:text-blue-800"
+            className="text-xs font-medium text-[#0A2540] hover:text-[#071b2e] underline"
             aria-label={`Clear all ${activeFilterCount} active filters`}
           >
             Clear all ({activeFilterCount})
@@ -72,7 +72,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
                   name="category"
                   checked={filters.category === cat.slug}
                   onChange={() => setFilter('category', filters.category === cat.slug ? null : cat.slug)}
-                  className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 border-gray-300 text-[#0A2540] focus:ring-[#0A2540]"
                 />
                 <span className="flex-1">{cat.name}</span>
                 <span className="text-xs text-gray-400">({cat.count})</span>
@@ -93,7 +93,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
                   name="location"
                   checked={filters.location === (loc.slug ?? loc.name)}
                   onChange={() => setFilter('location', filters.location === (loc.slug ?? loc.name) ? null : (loc.slug ?? loc.name as string))}
-                  className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 border-gray-300 text-[#0A2540] focus:ring-[#0A2540]"
                 />
                 <span className="flex-1">{loc.name}</span>
                 <span className="text-xs text-gray-400">({loc.count})</span>
@@ -112,7 +112,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
             placeholder="Min"
             value={filters.price_min || ''}
             onChange={(e) => setFilter('price_min', e.target.value || null)}
-            className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
+            className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-[#0A2540] focus:outline-none focus:ring-1 focus:ring-[#0A2540]/20"
             aria-label="Minimum price"
           />
           <span className="text-gray-400">-</span>
@@ -122,7 +122,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
             placeholder="Max"
             value={filters.price_max || ''}
             onChange={(e) => setFilter('price_max', e.target.value || null)}
-            className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
+            className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-[#0A2540] focus:outline-none focus:ring-1 focus:ring-[#0A2540]/20"
             aria-label="Maximum price"
           />
         </div>
@@ -139,7 +139,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
                   name="duration"
                   checked={filters.duration === d.value}
                   onChange={() => setFilter('duration', filters.duration === d.value ? null : d.value)}
-                  className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 border-gray-300 text-[#0A2540] focus:ring-[#0A2540]"
                 />
                 <span className="flex-1">{d.label}</span>
                 <span className="text-xs text-gray-400">({d.count})</span>
@@ -156,7 +156,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
           value={filters.date || ''}
           onChange={(e) => setFilter('date', e.target.value || null)}
           min={new Date().toISOString().split('T')[0]}
-          className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
+          className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-[#0A2540] focus:outline-none focus:ring-1 focus:ring-[#0A2540]/20"
           aria-label="Filter by available date"
         />
       </CollapsibleSection>

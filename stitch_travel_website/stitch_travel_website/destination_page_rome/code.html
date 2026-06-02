@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent-gold": "#d4af37",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Header Section -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center justify-between px-4 h-16 max-w-md mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-accent-gold">arrow_back</span>
+<h1 class="font-bold text-lg tracking-tight">Rome, Italy</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-1 text-xs font-semibold bg-primary/5 dark:bg-white/5 px-2 py-1 rounded-full border border-primary/10">
+<span class="material-symbols-outlined text-sm">language</span>
+<span>EN</span>
+</button>
+<button class="flex items-center gap-1 text-xs font-semibold bg-primary/5 dark:bg-white/5 px-2 py-1 rounded-full border border-primary/10">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span>EUR</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-md mx-auto pb-24">
+<!-- Hero Section -->
+<section class="p-4">
+<div class="relative h-80 w-full overflow-hidden rounded-xl shadow-xl group">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent z-10"></div>
+<img alt="Colosseum at sunset" class="absolute inset-0 w-full h-full object-cover" data-alt="Majestic view of the Colosseum in Rome during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBir_JiriD9yhpjmPRU2xX3UH08e0pWB2Q5RQwNd79FAE41AE-CvujagbiKn921Fl4iSrjjCJnveMIBssCaL37L3iYFcBTdUP4dnnOOB9oDIwR2goHhd9NxtLAn_yoMwaElHjvkFQY1P3AKZ20qUbvk2guLLvkiDIOFVLaZdHPo5pFKZBNalKl8bi-wh3kfSqFAcAJjAsTW-NGjv_PIztF-AbQ-WXZ9fOAAv2pdfQ5-VaLk2tE_0VKL-DTVyRMhtYY31ANNv-Pucne9"/>
+<div class="absolute bottom-6 left-6 z-20">
+<span class="inline-block px-3 py-1 bg-accent-gold text-primary text-[10px] font-bold uppercase tracking-widest rounded-full mb-2">Featured Destination</span>
+<h2 class="text-white text-3xl font-bold leading-tight">Discover the <br/>Eternal City</h2>
+</div>
+</div>
+</section>
+<!-- Quick Facts -->
+<section class="px-4 py-2">
+<div class="grid grid-cols-3 gap-3">
+<div class="bg-white dark:bg-primary/20 p-4 rounded-xl border border-primary/5 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-accent-gold mb-1">euro</span>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Currency</p>
+<p class="text-xs font-bold text-primary dark:text-slate-100">Euro (EUR)</p>
+</div>
+<div class="bg-white dark:bg-primary/20 p-4 rounded-xl border border-primary/5 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-accent-gold mb-1">translate</span>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Language</p>
+<p class="text-xs font-bold text-primary dark:text-slate-100">Italian</p>
+</div>
+<div class="bg-white dark:bg-primary/20 p-4 rounded-xl border border-primary/5 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-accent-gold mb-1">calendar_today</span>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Best Time</p>
+<p class="text-xs font-bold text-primary dark:text-slate-100">Apr - Oct</p>
+</div>
+</div>
+</section>
+<!-- Top Experiences -->
+<section class="py-6">
+<div class="flex items-center justify-between px-4 mb-4">
+<h3 class="text-xl font-bold text-primary dark:text-slate-100">Top Experiences</h3>
+<a class="text-xs font-semibold text-accent-gold uppercase tracking-wider" href="#">View All</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 no-scrollbar">
+<!-- Tour Card 1 -->
+<div class="min-w-[280px] bg-white dark:bg-primary/10 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="relative h-44">
+<img alt="Colosseum" class="w-full h-full object-cover" data-alt="Interior view of the ancient Colosseum stadium" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8IRAotsDkwXOJfrV8HKL1nv0B6EgG5ZKxdiJsMP57LH_xJQQjuRu7yzfgEtVzBiiLT5KclfHreJwbhAS3CCwM8aqTAlPzYoQ1-kBn60tN2D7cv0ONUMTh0CxHpOwY0fqTnY211REMedPefURRoOigy3iM1wJEDscCgeknL3xfDeXpwnmwHjPcu99AmOLA6ubGOlfTkKn5Zg46iUvIWceAielvHYdzXacGI3TL7LUmWJAAt6p2L8TXzp0fyPmQgQgHuo4Ld9wqQMtX"/>
+<div class="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full shadow-md">
+<span class="material-symbols-outlined text-primary text-sm">favorite</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-accent-gold text-xs">star</span>
+<span class="text-xs font-bold">4.9</span>
+<span class="text-xs text-slate-400">(1.2k reviews)</span>
+</div>
+<h4 class="font-bold text-primary dark:text-slate-100 mb-2 leading-tight">Colosseum Underground &amp; Arena Tour</h4>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-xs">schedule</span>
+<span class="text-[10px]">3 Hours</span>
+</div>
+<p class="text-sm font-bold text-primary dark:text-accent-gold">From €89</p>
+</div>
+</div>
+</div>
+<!-- Tour Card 2 -->
+<div class="min-w-[280px] bg-white dark:bg-primary/10 rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<div class="relative h-44">
+<img alt="Vatican Museum" class="w-full h-full object-cover" data-alt="The ornate spiral staircase of the Vatican Museum" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp9ZZaCE5lStsuGg4iasxaWV1uAecOKpGJxZp7SsyJVV4ZCUJkbR6K2kYqw2hk43YXs1sioLDCHFMd0lFsrf9pZwffOcLOslP39zdsQq2uaZwyGrLZyq1EH5kKnxFm2MOvxqO4nwjEdgglwT62GDNTJl8iH4Bmia0_stU7buloYhlE5lu54YxZm-8YNhvQVibjrwk1VG77B-NMRHOBgBv-t8oMpzIhnjG_t-hKCI0H0T2tsRgOOb9E2q228oXG69Z5t7Cc7PFIDciy"/>
+<div class="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full shadow-md">
+<span class="material-symbols-outlined text-primary text-sm">favorite</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-accent-gold text-xs">star</span>
+<span class="text-xs font-bold">4.8</span>
+<span class="text-xs text-slate-400">(940 reviews)</span>
+</div>
+<h4 class="font-bold text-primary dark:text-slate-100 mb-2 leading-tight">Vatican Museums &amp; Sistine Chapel</h4>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-xs">schedule</span>
+<span class="text-[10px]">4 Hours</span>
+</div>
+<p class="text-sm font-bold text-primary dark:text-accent-gold">From €55</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Explore by Category -->
+<section class="px-4 py-6">
+<h3 class="text-xl font-bold text-primary dark:text-slate-100 mb-4">Explore by Category</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="relative h-24 rounded-xl overflow-hidden group">
+<div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-all z-10"></div>
+<img alt="Italian Food" class="absolute inset-0 w-full h-full object-cover" data-alt="A spread of traditional Italian pasta and wine" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWyEdYkTmTk9aaqISY642hfMYq0RbFqpV8f5C67cEx-PqpFQ4fKibCBOvrONmiMW5AJRhUsJNn2lGLrK8ujbxLUD6WE67tgoB82HTFRrLPADjrKGVbvoSmGUvOT1A2YMNPyQwEf1_dwqpve1zaDDJIDPBPrywFStbz-FN5PAKyzSsJOEk27mZhv0WYJoTQ-JgLM_zRu0ZS4ve1jGoiIRP8TlhhLF2YJ-uRfbMHbj30yA6bt3sS0OkoZZKWMKNAw6iIN5UXSayDX4Ls"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<p class="text-white font-bold text-sm tracking-wide">Food &amp; Wine</p>
+</div>
+</div>
+<div class="relative h-24 rounded-xl overflow-hidden group">
+<div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-all z-10"></div>
+<img alt="Roman History" class="absolute inset-0 w-full h-full object-cover" data-alt="Statue in front of ancient Roman ruins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7g1XMIYyYUEErFGTvBKQsFmHFFT0MmcEmPjQpdDwoGxXZsbzw-E359F7IlwYr78Wtu-3lhqOLDNsCMuyMRiy1W0ME1q_VkAWfjqZe34LXk2eLBy_eFd49wbjZW44zS9429tWXDpy9T1SsCKvXkVK6EU9-PjNHZ-FN_9Fjq5cHzsw1RjMEEZ0Ovlk6xvcK_XSiCec1ksvxoXbmLURAiH-1ASWzXropEKJHNa89JYzuvI_DzFWOnpzkYqiZWNzyGlV8ZjLNPKFpJrq_"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<p class="text-white font-bold text-sm tracking-wide">History</p>
+</div>
+</div>
+<div class="relative h-24 rounded-xl overflow-hidden group">
+<div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-all z-10"></div>
+<img alt="Tuscany Trip" class="absolute inset-0 w-full h-full object-cover" data-alt="Scenic hills of the Italian countryside" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAknFOEC7N1PdS2q9YpH5d201j4A4S5NgKXFuaaNmPm6Nia3pJEGE2QWyrjqV2mO0h5K7BlY-ik1UxQx8EiF7qxp_AlnA_Ppf7GLbSYfLRmXuOaVJuqYCWr8VyaapwDnx_2mMxZynP1NguXxrHYVrF7Ust5jB6U3p0AS6Kpmb6ejFd3-x-ZibT7PiEW2B6RrZBD2x_As_t5wjB87BMxvYXuqGqkY3J9zPTE6edjJlTnZyQcYcTmlFhAKOrfEPFiXEKiIuQ3VovHcqaY"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<p class="text-white font-bold text-sm tracking-wide">Day Trips</p>
+</div>
+</div>
+<div class="relative h-24 rounded-xl overflow-hidden group">
+<div class="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-all z-10"></div>
+<img alt="Photography" class="absolute inset-0 w-full h-full object-cover" data-alt="Scenic view of a Roman narrow street" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6ZUHfk4SdRkatz-QFXg11HC-Dz21B0vQVrUhhJ22gL7u-gCxFxf8AVYjM-LbvVgThpu5hn0hILWKOsTZpcPND2P8ywyQaAKbPSexrSMjIjVBVWQKIfgx9ZRY0KbNoPfH4mOdTr8DaWWMgKLKO7IuRURHMNK4mEhmVRqaj5P_WX43S_H99QBONQJV5hAJsNGA0kBKQDlRtqgZT7n5s4cAbUTzjlb-eOm5RzA8ONpd667L_Sl2bxc11P5C22IyrE3ESRRQQEFJ41TPW"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<p class="text-white font-bold text-sm tracking-wide">Photography</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Local Tips Snippet -->
+<section class="px-4 py-4">
+<div class="bg-primary text-slate-100 p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">lightbulb</span>
+</div>
+<h4 class="text-accent-gold font-bold text-sm mb-2 uppercase tracking-widest">Insider Guide</h4>
+<p class="text-lg font-medium leading-snug mb-4">"Book tickets for the Vatican at least 2 weeks in advance, and try to visit Trastevere at dusk for the best local vibe."</p>
+<button class="bg-accent-gold text-primary font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-2">
+                    Read Travel Guide
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Map Snippet -->
+<section class="px-4 py-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-primary dark:text-slate-100">Explore Nearby</h3>
+</div>
+<div class="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl relative overflow-hidden border border-primary/5">
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-primary text-4xl animate-bounce">location_on</span>
+</div>
+<img alt="Map of Rome" class="w-full h-full object-cover opacity-50" data-alt="Stylized map showing main attractions in Rome" data-location="Rome, Italy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg3nLXwBS9vcjicohvAxPKNHERODaXJc3HtwSe0sWYYFwncSfLDY-d2hO8m3oE5rkSEUHNlggfCsBg0UozPxE3Q2dMBfAcsGWHF2wQJMnPj92wRYpsSja-F6Ltjp99PlJ-CZQRBfb5GjrI1l5Fr0hPI7QLCBB_gX1g42L62Nqm1_kazVrAixi78yBHUYX_zN7NEoA4b77qc-oMzKjPGWd6uSR-u2AkqEukoI7KVFIMLxVpVi3rbiIG8z4C9kocWGMpNxve5yMAu-s7"/>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-background-dark border-t border-primary/10 px-4 py-2 z-50">
+<div class="max-w-md mx-auto flex items-center justify-around">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-[10px] font-medium">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-medium">Saved</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

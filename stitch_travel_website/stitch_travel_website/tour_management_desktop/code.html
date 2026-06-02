@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary dark:text-slate-100">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">travel_explore</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">TourManager Pro</h2>
+</div>
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-slate-100 dark:bg-slate-800">
+<div class="text-slate-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-slate-500 px-4 pl-2 text-sm" placeholder="Search tours, IDs, or guides..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary dark:text-white text-sm font-bold border-b-2 border-primary" href="#">Tours</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Bookings</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Customers</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Reports</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="bg-primary/10 rounded-full p-0.5 border border-primary/20">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9" data-alt="User professional profile portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBEdyjWmUSrKNcZ4gAXDE5J_eJOh7FbtFzKjNYIeMhPeZGLZhe5oIRB4LQ2BqbB7ciHYH6fMl45TpaLPC0U4zJSCuNe3uw_JN429DInz0gDjENWbox4eBY07qTmJBy_4p7j7qf0ReCdfjnBFli1hEQYUCsr7_2xgK_brM0Z3Aj9Ntmyee8dIhG_fk-Yl8_VnGyRhAqToGjcVfWFP_fxYSFtXOkG5GTlg7pR-EwkD6VQfn-31FGCjy_GI77u6v8cQCSihuahpVaTKtpx");'></div>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark p-6 flex flex-col gap-6 hidden lg:flex">
+<div class="flex flex-col gap-1">
+<p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Main Menu</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="text-sm font-semibold">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary dark:text-primary dark:bg-primary/20 transition-all" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-bold">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">calendar_month</span>
+<span class="text-sm font-semibold">Schedule</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">sell</span>
+<span class="text-sm font-semibold">Pricing</span>
+</a>
+</div>
+<div class="mt-auto p-4 bg-primary rounded-xl text-white">
+<p class="text-xs font-medium opacity-80">Storage Usage</p>
+<p class="text-sm font-bold mt-1">78% of 500GB</p>
+<div class="w-full bg-white/20 h-1.5 rounded-full mt-2">
+<div class="bg-white h-full rounded-full" style="width: 78%"></div>
+</div>
+<button class="mt-4 w-full py-2 bg-white text-primary rounded-lg text-xs font-bold hover:bg-slate-100 transition-colors">Upgrade Plan</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Header Section -->
+<div class="p-8 pb-0">
+<div class="flex flex-wrap justify-between items-end gap-4 mb-6">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Tour Listings</h1>
+<p class="text-slate-500 dark:text-slate-400">Review and manage your active and upcoming tour catalog.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 h-10 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50">
+<span class="material-symbols-outlined text-xl">file_download</span>
+                            Export
+                        </button>
+<button class="flex items-center gap-2 px-5 h-10 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-xl">add</span>
+                            Create New Tour
+                        </button>
+</div>
+</div>
+<!-- Stats Bar -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Tours</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">128</h3>
+</div>
+<span class="p-2 bg-blue-50 text-blue-600 rounded-lg material-symbols-outlined">inventory_2</span>
+</div>
+<p class="text-xs font-medium text-emerald-600 mt-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +4% from last month
+                        </p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Active</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">84</h3>
+</div>
+<span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg material-symbols-outlined">check_circle</span>
+</div>
+<p class="text-xs font-medium text-emerald-600 mt-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +2% new active
+                        </p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Pending Approval</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">32</h3>
+</div>
+<span class="p-2 bg-amber-50 text-amber-600 rounded-lg material-symbols-outlined">pending_actions</span>
+</div>
+<p class="text-xs font-medium text-rose-600 mt-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_down</span> -1% backlog
+                        </p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Drafts</p>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">12</h3>
+</div>
+<span class="p-2 bg-slate-50 text-slate-600 rounded-lg material-symbols-outlined">drafts</span>
+</div>
+<p class="text-xs font-medium text-slate-400 mt-3 flex items-center gap-1">
+                            Stable volume
+                        </p>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-3 mb-4 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+<div class="relative">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-lg">public</span>
+                            All Regions
+                            <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="relative">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-lg">filter_alt</span>
+                            Status: Active
+                            <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="relative">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-lg">payments</span>
+                            Price Range
+                            <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="relative">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-lg">category</span>
+                            Adventure
+                            <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
+<button class="text-sm font-bold text-primary dark:text-slate-300 hover:underline px-2">Clear All</button>
+</div>
+</div>
+<!-- Table Section -->
+<div class="px-8 pb-8 flex-1">
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-12">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tour Details</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Region</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Bookings</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Price</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors group">
+<td class="px-6 py-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-cover bg-center shrink-0 border border-slate-200 dark:border-slate-600" data-alt="Majestic mountain landscape at sunrise" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDLNQ0KOFNPmR3ukoB1PEj3rbPf1kmVcpQdiIIN5hg2tzLPX0y3VpiQVatDj4MX_hHkhRnPXvfuQ9iER1fqsJwGwwhlGA_mQyKyrAy5wWddp8fiiFfIenCfJwvQWynWoH9SrAz6MFdw2oMjN-cIxT5fhQVi4m0eynPlgD6KjyERIGIoEkAsv7QX6n6BSydW3OomfdLR2FG2nMXZE6DZiJFgQ5-R1bzygxC02lIZccjDuE4-tjYgnPcOJlLBnHhSiMdp0w1vMN1mYfbt");'></div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Swiss Alps Expedition</p>
+<p class="text-xs text-slate-500 font-medium">ID: TOUR-0923-SA</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">location_on</span>
+<span class="text-sm text-slate-600 dark:text-slate-300" data-location="Zermatt, Switzerland">Zermatt, Switzerland</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold text-slate-900 dark:text-white">1,248</p>
+<div class="w-24 bg-slate-100 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full" style="width: 85%"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-slate-900 dark:text-white">$2,450</p>
+<p class="text-[10px] font-medium text-slate-400 uppercase">Per Person</p>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 hover:bg-rose-50 hover:text-rose-600 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="px-6 py-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-cover bg-center shrink-0 border border-slate-200 dark:border-slate-600" data-alt="Ancient Japanese temple surrounded by autumn leaves" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDh_ZlvEf4plesfAG5wWDKcnCBrWx6I-eJkfMvwH-pS41GhsREIa0b92_tDhAF2bzOqIArxMWDprd8e2ijiLhCyzCgiNC3wWsCrWWVE1ZiJMcFCouskzsMcS7TNJnHZ89rZZ3xnk6GH-2_1xLlLKjafeLSKYTwpOv9XV7iAG5_zahKyKLP_rfChKjWjs_y0BZ9Msk0K8VGVPF4HZZK2IXddm3zWxzQUj_hybtUIPjMBXgMZ2GboTTvYZMl2cxJToOD0uXDnsgamSLtf");'></div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Kyoto Heritage Walk</p>
+<p class="text-xs text-slate-500 font-medium">ID: TOUR-1104-KY</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">location_on</span>
+<span class="text-sm text-slate-600 dark:text-slate-300" data-location="Kyoto, Japan">Kyoto, Japan</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Pending</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold text-slate-900 dark:text-white">432</p>
+<div class="w-24 bg-slate-100 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
+<div class="bg-amber-500 h-full" style="width: 30%"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-slate-900 dark:text-white">$890</p>
+<p class="text-[10px] font-medium text-slate-400 uppercase">Per Person</p>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 hover:bg-rose-50 hover:text-rose-600 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="px-6 py-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-cover bg-center shrink-0 border border-slate-200 dark:border-slate-600" data-alt="Blue water and white buildings of Santorini" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCArARIHWgSn_V6AEu8ky5W_o2Qch_Q9a0kT-seESFbnVITsXtEbv4v1jeLnwElGPB0wAwfxUcdISjTqQWQmD18Xb-Rjj7TDDnuveC59pEOko0EjkAt5_h1JYsCLhBI3_UsmX1HBlrt9-CbY0ayBJAkWBaAOXOZDAPR0nyYE7UBhJPiUgCITegFQWHJQIMGULfQoeEbbvlbEf92lSWOyorgpnBuW0eQAwgsNf_vst88SQ31LesKxLIt7saycABTW5-yKODwZ4ZazsKn");'></div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Santorini Sunsets</p>
+<p class="text-xs text-slate-500 font-medium">ID: TOUR-0518-GR</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">location_on</span>
+<span class="text-sm text-slate-600 dark:text-slate-300" data-location="Oia, Greece">Oia, Greece</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold text-slate-900 dark:text-white">2,105</p>
+<div class="w-24 bg-slate-100 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full" style="width: 95%"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-slate-900 dark:text-white">$1,120</p>
+<p class="text-[10px] font-medium text-slate-400 uppercase">Per Person</p>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 hover:bg-rose-50 hover:text-rose-600 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
+<td class="px-6 py-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-cover bg-center shrink-0 border border-slate-200 dark:border-slate-600" data-alt="Venice canal with gondolas" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCpOqj5gYg1r1ihqlibVtQvYCD5rwk6SEhJrA46GnNBxJfiEF1JxM_14B7Y08bPDqMeQTFZPKoeK6zvUCZmONgtLjYrG4gS9730Qe9u_ug3s_RlrM81qpiQ-1GvZ7U0HqMwrib8V15aXuY64oH2LPIeLpHFx25_iKsWYMWQJdMMwc5itUj6378qCvvsv35QqWBgT6kT6eetJxgrESJiEv6jci_1_RuTTZ3maQ4rtDzNfYjk4VEYDmmThqeqsBW9CzTvWnNDuLIFl6k");'></div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Venetian Gondola Night</p>
+<p class="text-xs text-slate-500 font-medium">ID: TOUR-0209-IT</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">location_on</span>
+<span class="text-sm text-slate-600 dark:text-slate-300" data-location="Venice, Italy">Venice, Italy</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300">Draft</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold text-slate-900 dark:text-white">0</p>
+<div class="w-24 bg-slate-100 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
+<div class="bg-slate-400 h-full" style="width: 0%"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-slate-900 dark:text-white">$145</p>
+<p class="text-[10px] font-medium text-slate-400 uppercase">Per Person</p>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 hover:bg-rose-50 hover:text-rose-600 rounded-lg text-slate-500 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+<p class="text-xs font-bold text-slate-500 uppercase">Showing 1-10 of 128 tours</p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-400 cursor-not-allowed">Previous</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50">2</button>
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50">3</button>
+<button class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

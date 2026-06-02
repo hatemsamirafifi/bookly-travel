@@ -21,33 +21,33 @@ class CancelBookingAction
 
     public function execute(string $reference, int $travelerId, ?string $reason = null): array
     {
-        $booking = Booking::where('reference', $reference)->first();
+        return DB::transaction(function () use ($reference, $travelerId, $reason) {
+            $booking = Booking::where('reference', $reference)->lockForUpdate()->first();
 
-        if (! $booking) {
-            throw new NotFoundHttpException('Booking not found.');
-        }
+            if (! $booking) {
+                throw new NotFoundHttpException('Booking not found.');
+            }
 
-        if ($booking->traveler_id !== $travelerId) {
-            throw new AccessDeniedHttpException('You do not have access to this booking.');
-        }
+            if ($booking->traveler_id !== $travelerId) {
+                throw new AccessDeniedHttpException('You do not have access to this booking.');
+            }
 
-        if ($booking->status === Booking::STATUS_CANCELLED) {
-            $booking->load('tour');
+            if ($booking->status === Booking::STATUS_CANCELLED) {
+                $booking->load('tour');
 
-            return BookingResponseDTO::fromBooking($booking);
-        }
+                return BookingResponseDTO::fromBooking($booking);
+            }
 
-        if ($booking->status !== Booking::STATUS_CONFIRMED) {
-            throw new UnprocessableEntityHttpException('Only confirmed bookings can be cancelled.');
-        }
+            if ($booking->status !== Booking::STATUS_CONFIRMED) {
+                throw new UnprocessableEntityHttpException('Only confirmed bookings can be cancelled.');
+            }
 
-        if (! $booking->canCancel()) {
-            throw new ConflictHttpException(
-                'This booking cannot be cancelled — the cancellation window has passed.'
-            );
-        }
+            if (! $booking->canCancel()) {
+                throw new ConflictHttpException(
+                    'This booking cannot be cancelled — the cancellation window has passed.'
+                );
+            }
 
-        DB::transaction(function () use ($booking, $reason) {
             $beforeState = $booking->status;
 
             $booking->update([
@@ -67,10 +67,10 @@ class CancelBookingAction
                 Booking::STATUS_CANCELLED,
                 $reason ? ['cancellation_reason' => $reason] : null,
             );
+
+            $booking->refresh()->load('tour');
+
+            return BookingResponseDTO::fromBooking($booking);
         });
-
-        $booking->refresh()->load('tour');
-
-        return BookingResponseDTO::fromBooking($booking);
     }
 }

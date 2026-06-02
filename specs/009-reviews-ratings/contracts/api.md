@@ -65,7 +65,6 @@ Submit a new review.
     "rating": 4,
     "comment": "Amazing boat tour along the Amalfi coast!",
     "status": "visible",
-    "flagged": false,
     "created_at": "2026-05-12T14:30:00Z"
   }
 }
@@ -77,7 +76,7 @@ Submit a new review.
 - 422 Unprocessable — validation failure (invalid rating, comment too long)
 - 429 Too Many Requests — rate limit exceeded
 
-**Note**: If profanity filter matches, `status` is still "visible" but `flagged` is true. The review appears publicly immediately.
+**Note**: If profanity filter matches, `status` is `"flagged"`. Flagged reviews remain publicly visible (treated same as `visible` for display).
 
 ### PUT /api/reviews/{review:id}
 
@@ -121,7 +120,7 @@ Edit an existing review (within 48-hour window).
 List reviews for the authenticated partner's tours.
 
 **Auth**: Sanctum (partner)
-**Query Params**: `tour_id` (optional, filter by tour), `sort` (optional, `rating` or `created_at`, default `created_at`)
+**Query Params**: `tour_id` (optional, filter by tour)
 
 **Response 200**:
 ```json
@@ -171,7 +170,7 @@ List all reviews across the platform for moderation.
       "rating": 4,
       "comment": "Amazing boat tour!",
       "status": "flagged",
-      "flagged_reason": "profanity_match",
+      "flag_reason": "profanity_match",
       "audit_trail": [
         {
           "action": "submit",

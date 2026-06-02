@@ -15,14 +15,14 @@ export default function DateConfirmation({ date, tourSlug, locale }: DateConfirm
   );
 
   return (
-    <div className="flex items-center justify-between rounded-lg bg-blue-50 px-4 py-3">
+    <div className="flex items-center justify-between rounded-lg bg-[#F7F9FB] border border-gray-200 px-4 py-3">
       <div>
-        <p className="text-sm font-medium text-blue-900">Selected Date</p>
-        <p className="text-lg font-semibold text-blue-700">{formattedDate}</p>
+        <p className="text-sm font-medium text-[#0A2540]">Selected Date</p>
+        <p className="text-lg font-semibold text-[#0A2540]">{formattedDate}</p>
       </div>
       <Link
         href={`/${locale}/tours/${tourSlug}`}
-        className="text-sm font-medium text-blue-600 hover:text-blue-800 underline"
+        className="text-sm font-medium text-[#0A2540] hover:text-[#071b2e] underline"
       >
         Change date
       </Link>

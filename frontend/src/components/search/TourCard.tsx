@@ -30,7 +30,7 @@ export default function TourCard({ tour, locale }: TourCardProps) {
   return (
     <Link
       href={`/${locale}/tours/${tour.slug}`}
-      className="group block overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="group block overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
         {tour.cover_image_url ? (
@@ -62,7 +62,7 @@ export default function TourCard({ tour, locale }: TourCardProps) {
           <span>{tour.duration_label}</span>
         </div>
 
-        <h3 className="mb-2 text-lg font-semibold text-gray-900 group-hover:text-blue-600 line-clamp-2">
+        <h3 className="mb-2 text-lg font-semibold text-[#0A2540] group-hover:text-[#071b2e] line-clamp-2">
           {tour.title}
         </h3>
 
@@ -72,10 +72,10 @@ export default function TourCard({ tour, locale }: TourCardProps) {
         </div>
 
         <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-          <span className="text-xs rounded-full bg-blue-50 px-2.5 py-0.5 font-medium text-blue-700">
+          <span className="text-xs rounded-full bg-[#F7F9FB] px-2.5 py-0.5 font-medium text-[#0A2540]">
             {tour.category}
           </span>
-          <span className="text-lg font-bold text-gray-900">{tour.price.formatted}</span>
+          <span className="text-lg font-bold text-[#0A2540]">{tour.price.formatted}</span>
         </div>
       </div>
     </Link>

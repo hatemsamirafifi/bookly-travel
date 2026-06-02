@@ -23,7 +23,7 @@ class ReviewValidationService
             throw new HttpException(403, 'You can only review your own bookings.');
         }
 
-        if ($booking->tour_date === null || now()->gt($booking->tour_date->addDays(30))) {
+        if ($booking->tour_date === null || now()->gt($booking->tour_date->copy()->addDays(30))) {
             throw new HttpException(403, 'The review window (30 days after tour date) has closed.');
         }
 

@@ -27,15 +27,36 @@ class NotifyAdminOnPaymentFailure
             return;
         }
 
-        Http::post($webhookUrl, [
-            'text' => sprintf(
-                ':warning: *Bookly Alert* — Payment failed for booking `%s`.'
-                . ' Booking has been expired.'
-                . "\n*Amount*: %d %s  |  Check application logs for details.",
-                $booking->reference,
-                $payment->amount,
-                $payment->currency,
-            ),
-        ]);
+        try {
+            $response = Http::timeout(5)->post($webhookUrl, [
+                'text' => sprintf(
+                    ':warning: *Bookly Alert* — Payment failed for booking `%s`.'
+                    . ' Booking has been expired.'
+                    . "\n*Amount*: %d %s  |  Check application logs for details.",
+                    $booking->reference,
+                    $payment->amount,
+                    $payment->currency,
+                ),
+            ]);
+
+            if (! $response->successful()) {
+                Log::error('Slack webhook returned non-success status', [
+                    'webhook_url'     => $webhookUrl,
+                    'booking_reference' => $booking->reference,
+                    'amount'          => $payment->amount,
+                    'currency'        => $payment->currency,
+                    'response_status' => $response->status(),
+                    'response_body'   => $response->body(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Slack webhook call failed', [
+                'webhook_url'       => $webhookUrl,
+                'booking_reference' => $booking->reference,
+                'amount'            => $payment->amount,
+                'currency'          => $payment->currency,
+                'exception'         => $e->getMessage(),
+            ]);
+        }
     }
 }

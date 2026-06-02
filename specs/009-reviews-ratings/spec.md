@@ -109,7 +109,7 @@ An admin needs the ability to view and moderate reviews to ensure platform conte
 
 - **FR-001**: System MUST allow travelers to submit exactly one review per completed booking, consisting of a mandatory rating (1-5 stars) and an optional written comment (max 2000 characters).
 - **FR-002**: System MUST validate that a traveler can only review a booking if: (a) the booking belongs to them, (b) the booking status is "completed", (c) the tour date is within the last 30 days, and (d) they have not already submitted a review for that booking.
-- **FR-003**: System MUST calculate and display an aggregate rating (average of all visible reviews) and total review count for each tour.
+- **FR-003**: System MUST calculate and display an aggregate rating (average of all publicly displayed reviews — status = visible or flagged) and total review count for each tour.
 - **FR-004**: System MUST display paginated reviews on the tour detail page, each showing: reviewer first name, star rating, comment (if provided), and submission date.
 - **FR-005**: System MUST allow partners to view reviews and aggregate ratings for their own tours only.
 - **FR-006**: System MUST allow admins to view all reviews, filter by tour/status/date/flagged, and hide or reinstate individual reviews.
@@ -131,11 +131,11 @@ An admin needs the ability to view and moderate reviews to ensure platform conte
 
 ### Measurable Outcomes
 
-- **SC-001**: Travelers can submit a review in under 2 minutes from the booking detail page.
+- **SC-001**: Travelers can submit a review in under 2 minutes from the booking detail page. (Qualitative UX target; not gated by automated testing.)
 - **SC-002**: Tour detail pages display review data (aggregate rating + review list) in under 3 seconds.
-- **SC-003**: At least 20% of completed bookings result in a submitted review within 30 days of tour completion.
+- **SC-003**: At least 20% of completed bookings result in a submitted review within 30 days of tour completion. (Post-launch business KPI tracked via analytics; not a build-time gate.)
 - **SC-004**: Partners can see all reviews for their tours in a single consolidated view without needing admin assistance.
-- **SC-005**: Admins can moderate (hide/reinstate) a review with 2 clicks from the review management interface.
+- **SC-005**: Admins can moderate (hide/reinstate) a review with 2 clicks from the review management interface. (Qualitative UX target; not gated by automated testing.)
 - **SC-006**: No review can be submitted without a verified completed booking and payment record (zero fraudulent reviews).
 
 ## Assumptions

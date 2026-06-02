@@ -132,3 +132,118 @@ export interface HomepageData {
     };
   };
 }
+
+// ── Contract-aligned types (contracts/) ──────────────────────
+
+export interface ContractPrice {
+  amount: number;
+  currency: string;
+}
+
+export interface ContractTourCard {
+  id: number;
+  slug: string;
+  title: string;
+  cover_image: string;
+  cover_image_blur?: string;
+  price_per_person: ContractPrice;
+  average_rating: number;
+  total_reviews: number;
+  location: string;
+  duration: string;
+  category: { slug: string; name: string };
+}
+
+export interface ContractTourImage {
+  url: string;
+  alt: string;
+  blur_data_url?: string;
+}
+
+export interface ContractReview {
+  id: number;
+  author: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+}
+
+export interface ContractAvailabilitySlot {
+  date: string;
+  time_slot: string;
+  price_per_person: ContractPrice;
+  remaining_capacity: number;
+}
+
+export interface ContractTourDetail extends ContractTourCard {
+  description: string;
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  meeting_point: string;
+  images: ContractTourImage[];
+  destination: { slug: string; name: string };
+  reviews: ContractReview[];
+  availability: ContractAvailabilitySlot[];
+}
+
+export interface ContractPaginatedResponse<T> {
+  data: T[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
+export interface ContractBookingRequest {
+  tour_id: number;
+  date: string;
+  time_slot: string;
+  participants: number;
+  guest_name: string;
+  guest_email: string;
+  guest_phone?: string;
+  special_requests?: string;
+  locale: string;
+}
+
+export interface ContractBookingResponse {
+  booking_id: number;
+  payment_intent?: {
+    client_secret: string;
+    amount: number;
+    currency: string;
+  };
+  tour_title: string;
+  idempotency_key: string;
+}
+
+export interface ContractBookingConfirmation {
+  reference: string;
+  tour_title: string;
+  date: string;
+  time_slot: string;
+  participants: number;
+  amount: ContractPrice;
+  guest_name: string;
+  guest_email: string;
+  meeting_point: string;
+  created_at: string;
+}
+
+export interface ContractAvailabilityCheck {
+  available: boolean;
+  remaining_capacity: number;
+  price_per_person?: ContractPrice;
+  total_price?: ContractPrice;
+  message?: string;
+}
+
+export interface ContractAuthUser {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+}

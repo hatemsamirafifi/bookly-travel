@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<title>Rome Travel Guide | TravelGuide</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary dark:text-slate-100">
+<div class="size-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">temple_buddhist</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">TravelGuide</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Destinations</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Experiences</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Stays</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Guides</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-slate-100 dark:bg-slate-800">
+<div class="text-slate-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 text-sm font-normal px-2" placeholder="Search destinations..." value=""/>
+</div>
+</label>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold transition-opacity hover:opacity-90">
+                        Sign Up
+                    </button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/10" data-alt="User profile picture showing a friendly face" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBkidQu41XMoJlY_AMiCshtreClihbr7NLqc44YRBBmukQPBiWo3V8LVxeRzeynZoYIb8URe_SgMx9_oqpqY6uu2KGBTdhCeZcETCIEp8Qw5Psrm486JvpstQYfgwC8PQ7U5nxQyrglNytMyUrKPywyIzZjhtS52_MjvLmYut4VfBt6HaPQAuA4k-bNmFKkuP8NUTP0aPqoKuVIRYuxLU7dhPOIQyfcEZSfsdOuC9xJ-cb76MZTeSvyY5ZlBd4AJphxrQwbGgx06026");'></div>
+</div>
+</header>
+<main class="flex flex-col flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-10 py-8 gap-8">
+<!-- Hero Section -->
+<section class="@container">
+<div class="flex min-h-[520px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-center p-8 text-center" data-alt="Wide shot of the Roman Colosseum at sunset with warm lighting" style='background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAfTvqRthB4UbpgOXHXVs2QPiuu78fRFuhWKQu8gKN14c68ARsH9K_pTr28XLxDO_daE6F9yQMBdQgkVaRzZeh6_lZfSgF3bgTE7U7qN_jTOYoMS99NXfyGnBrXiHfy9C1bfHazN2viFrRNrnRm1bQTQqdFCLI-lAS5rEFHKRxALd-oUtDLWpStkajj2j-N8J0GpHyafZateZVcE610KHTwgrPQJCgYMEnEVCZddsQTZYgjTIaY_bagMjUQCamiDUxoisOSgcMZnTT7");'>
+<div class="flex flex-col gap-4 max-w-2xl">
+<h1 class="text-white text-5xl font-black leading-tight tracking-tight md:text-6xl">
+                                Rome: The Eternal City
+                            </h1>
+<p class="text-white/90 text-lg font-normal leading-relaxed">
+                                From the majesty of the Colosseum to the hidden gems of Trastevere, experience three millennia of history, art, and world-class cuisine.
+                            </p>
+</div>
+<div class="flex gap-4">
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center rounded-xl h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:scale-105 transition-transform">
+                                Book a Tour
+                            </button>
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center rounded-xl h-12 px-6 bg-white/20 backdrop-blur-md text-white border border-white/30 text-base font-bold hover:bg-white/30 transition-colors">
+                                View Map
+                            </button>
+</div>
+</div>
+</section>
+<!-- Travel Info Cards -->
+<section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="text-primary dark:text-slate-400 mb-1">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Best Time to Visit</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">April — October</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="text-primary dark:text-slate-400 mb-1">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Currency</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">Euro (EUR)</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="text-primary dark:text-slate-400 mb-1">
+<span class="material-symbols-outlined">translate</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Language</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">Italian</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="text-primary dark:text-slate-400 mb-1">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Timezone</p>
+<p class="text-primary dark:text-slate-100 text-xl font-bold">GMT +1 (CET)</p>
+</div>
+</section>
+<!-- Category Discovery -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-bold tracking-tight">Explore by Category</h2>
+<a class="text-primary font-semibold text-sm hover:underline" href="#">View all</a>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<button class="flex flex-col items-center gap-3 min-w-[120px] p-4 rounded-xl bg-primary/10 border border-primary/20 text-primary">
+<span class="material-symbols-outlined text-3xl">history_edu</span>
+<span class="text-sm font-bold">History</span>
+</button>
+<button class="flex flex-col items-center gap-3 min-w-[120px] p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">restaurant</span>
+<span class="text-sm font-bold">Cuisine</span>
+</button>
+<button class="flex flex-col items-center gap-3 min-w-[120px] p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">palette</span>
+<span class="text-sm font-bold">Art</span>
+</button>
+<button class="flex flex-col items-center gap-3 min-w-[120px] p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">shopping_bag</span>
+<span class="text-sm font-bold">Fashion</span>
+</button>
+<button class="flex flex-col items-center gap-3 min-w-[120px] p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">church</span>
+<span class="text-sm font-bold">Religion</span>
+</button>
+<button class="flex flex-col items-center gap-3 min-w-[120px] p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">nightlife</span>
+<span class="text-sm font-bold">Nightlife</span>
+</button>
+</div>
+</section>
+<!-- Top Experiences Grid -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-bold tracking-tight">Must-Do Experiences</h2>
+<div class="flex gap-2">
+<button class="p-2 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative overflow-hidden rounded-xl aspect-[4/3]">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Interior of the Vatican Museums showing grand ceiling frescoes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6ntBiDTQxh3dtnFcqPEWP1N4tBF0U9fTTuLk7NMCzueHUuUN6JPjakJ_mTqhFH1oCsJYA4HXEjUEd2oNe_pEeGPrMiw7zJlP8tCGcEujp18Fa53NoXsDm4xq9mN2cwNsCHfFURv0gV0cayI2cOXcjWp_h64YXYVcCO6967JgHAZKJyao2vAFrBm96kSStmSVeZ-5KFmJLh7W_J20PTZ4zaKPsRa8E4AyqFuGDRiSb8bcsXfFAxHGG5LPvZg8-lAsb3FNEM2MMtf0U"/>
+<div class="absolute top-3 right-3 bg-white/90 backdrop-blur rounded-lg px-2 py-1 text-xs font-bold text-primary">
+                                    Top Rated
+                                </div>
+</div>
+<div>
+<p class="text-lg font-bold group-hover:text-primary transition-colors">Vatican Museums &amp; Sistine Chapel</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mt-1">Explore the world's most impressive art collection and Michelangelo's masterpiece.</p>
+<div class="flex items-center gap-1 mt-2 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">4.9</span>
+<span class="text-xs text-slate-400 ml-1">(12k reviews)</span>
+</div>
+</div>
+</div>
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative overflow-hidden rounded-xl aspect-[4/3]">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Close up of a classic Roman pasta dish with carbonara sauce" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1BZ9zQXSe4_Pxdetb0wL3WY0P3knFPrfW57EG-3BESpnIEGFO6VUNgrevWvXvd0mAGHgE5aXoLrBmCPvKZfL1dtpDywrlggttgQu6XvGrO7WGX7jItv4W2Zl1YlE9kmirRfslxF39DPjEb7AQ9UVRNwUZCR-wRKm9BiRplsQ-TLBfBrfp4HrT-fszoj4h0Rks0eAJGhJi8PUUi2kDMwI1Nyji1GTBDfcOaWARBp38xpTsJBMmrY_vHoviYW9NN3HbyO5XvQA0GW9N"/>
+</div>
+<div>
+<p class="text-lg font-bold group-hover:text-primary transition-colors">Trastevere Street Food Tour</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mt-1">Taste authentic Roman Suppli, Pizza al Taglio, and artisan Gelato in a charming district.</p>
+<div class="flex items-center gap-1 mt-2 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">4.8</span>
+<span class="text-xs text-slate-400 ml-1">(8k reviews)</span>
+</div>
+</div>
+</div>
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative overflow-hidden rounded-xl aspect-[4/3]">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="The Trevi Fountain in Rome with blue water and ornate sculptures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAschQa9XU5TPEoREe4EJEgjaM9Qv3XYcxQm5F84fevFqOOZK6ScdxfnNTmkpjiVubEazBd6vpVlKwukNqjNzvqbZwbAAuudYh2QHJoN5CqD0g93-GWq0yZ13Okob7_DGP0J6nSk7E3xJ9Bbyh3W8I7Roa9kLNyiQCpdtXgnjT2qDdqGB62fh3ajScT4nd6aNJnNq51vHydVrni_NJi-TqmcuFT5Tj4coE7RyqnPiGqqFk8HxtuuLv_HEVtqxdumM1u1z1_7hUCSUWu"/>
+</div>
+<div>
+<p class="text-lg font-bold group-hover:text-primary transition-colors">Rome by Night: Segway Tour</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mt-1">Glide through illuminated piazzas and see the fountains come alive under the stars.</p>
+<div class="flex items-center gap-1 mt-2 text-yellow-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">4.7</span>
+<span class="text-xs text-slate-400 ml-1">(3.5k reviews)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Insider Guide Section -->
+<section class="bg-primary/5 dark:bg-slate-900/50 rounded-2xl p-8 md:p-12 border border-primary/10">
+<div class="flex flex-col lg:flex-row gap-12 items-center">
+<div class="flex-1 space-y-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">verified</span>
+                                Insider Guide
+                            </div>
+<h2 class="text-3xl md:text-4xl font-bold leading-tight">Secret Spots Only Romans Know</h2>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                Avoid the tourist traps and discover the "Buco della Serratura" (The Keyhole) for a unique view of St. Peter's, or find the best "Cacio e Pepe" in the hidden alleys of Testaccio.
+                            </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex items-start gap-3">
+<div class="p-2 rounded-lg bg-white dark:bg-slate-800 shadow-sm text-primary">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div>
+<p class="font-bold">Pro Tip</p>
+<p class="text-sm text-slate-500">Order your coffee at the bar to pay the 'local' price.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="p-2 rounded-lg bg-white dark:bg-slate-800 shadow-sm text-primary">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div>
+<p class="font-bold">Hidden Gem</p>
+<p class="text-sm text-slate-500">The Orange Garden (Giardino degli Aranci) at sunset.</p>
+</div>
+</div>
+</div>
+<button class="bg-primary text-white font-bold py-3 px-8 rounded-xl hover:opacity-90 transition-opacity">
+                                Download Digital Guide
+                            </button>
+</div>
+<div class="flex-1 w-full max-w-md">
+<div class="relative bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl transform lg:rotate-3">
+<img class="rounded-xl w-full h-auto aspect-square object-cover" data-alt="A narrow cobblestone street in Rome decorated with plants and flowers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZRoOBPQb5h8WyINcTWSwlwlGDfPj55uH3zaOiHRMQP63Jg_JFKw5jyp3ciD2kQMMgZ0MPOin6iCww4a5ec-P5Za4Ni5gAiZranY9kAqLj6ySzBKgCujyiJAjmclqoqvNkFVnISoYMsA7KKlkqC_e2LwUvuuf7qQ25zolwTqSQHahMqzcDXnvihuWpmP6B37_PSh2t84n1njNnmAJ17ll9AT8B_OQOjQPjeP7We_YaF4Ltlu5GQyaZBWhIvv9ScYban7PPT96gLfz_"/>
+<div class="absolute -bottom-6 -left-6 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-lg border border-slate-100 dark:border-slate-800 flex items-center gap-4">
+<div class="size-12 rounded-full overflow-hidden">
+<img data-alt="Local guide portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsZdb91KkmGqOw8t88DmMgxunABmhebY-EhcBTuQGpWwhv2Q7NmoD1zxPHs2bruhIcd-0T-u2d7yQWCQit6CRMFyEEi3rpLFNybw61OzmFpo0oCBBE6WEzvuH0epWdqhf5AaGuN48GEbjSptJHyG8G0IL6Ir9PKU9Vh4bcD1Mm91aVh6iWFhBTuYDdQFKN28eFfTl6gj_oZXTSg_-Gt05fwwGQr5Bgj_7x3_yayp1h8F2RoImg5AO-U9YqnbghhehsTSbHVv-jwpv5"/>
+</div>
+<div>
+<p class="font-bold text-sm">Marco Rossi</p>
+<p class="text-xs text-slate-500">Local Guide since 2012</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Map Preview Section -->
+<section>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold tracking-tight">Locate Attractions</h2>
+<button class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined">fullscreen</span>
+                                Full View
+                            </button>
+</div>
+<div class="w-full h-[400px] rounded-2xl overflow-hidden relative border border-slate-200 dark:border-slate-800">
+<img class="w-full h-full object-cover opacity-50 grayscale" data-alt="Minimalist map representation of central Rome showing key landmarks" data-location="Rome" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN-wS2QAwlW1n3beJtiySn-KWuUXYkGo3Yctz1SsVBXf8lNr7pDszDIj-8X-LRnApIZJTD_e0hgP7Xew4wj4NEcYzsuYdwNm8_FlO6sjkOfkwzvCUg636YC-jAvKbdgNt_-FySR9NvKNSeeQa0Ofj0aqlJVO8o31JHd2N8DDu1A1Z-o1sqaMFnRAr_Yqoxn-rv5c6yTyEKmTaNgCE_0tYLJAbLdeZVW5EWjy5qtV_wkVDyWwdsEhhKlAa-hB0EjpTLT7ZVG0fYNle5"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl text-center max-w-sm">
+<span class="material-symbols-outlined text-primary text-4xl mb-2">location_on</span>
+<h3 class="font-bold text-lg">Interactive Map</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-4">Discover hotels, restaurants, and sights near your preferred neighborhood.</p>
+<button class="w-full bg-primary text-white font-bold py-2 rounded-lg">Open Map</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 mt-12 py-12">
+<div class="max-w-[1280px] mx-auto px-10 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="space-y-4">
+<div class="flex items-center gap-3 text-primary dark:text-slate-100">
+<span class="material-symbols-outlined text-2xl">temple_buddhist</span>
+<h2 class="text-lg font-bold">TravelGuide</h2>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Inspiring the world to explore more of what Italy has to offer, one city at a time.
+                        </p>
+</div>
+<div>
+<h4 class="font-bold mb-4">Discover</h4>
+<ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">Destinations</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Tours &amp; Activities</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Travel Stories</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Car Rentals</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">Company</h4>
+<ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4">Follow Us</h4>
+<div class="flex gap-4">
+<a class="size-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="size-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">camera</span>
+</a>
+<a class="size-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+</div>
+</div>
+</div>
+<div class="max-w-[1280px] mx-auto px-10 mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 text-center text-sm text-slate-400">
+                    © 2024 TravelGuide Media. All rights reserved.
+                </div>
+</footer>
+</div>
+</div>
+</body></html>

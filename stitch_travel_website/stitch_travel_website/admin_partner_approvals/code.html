@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Partner Approvals</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 border-r border-primary/10 bg-white dark:bg-background-dark/50 hidden md:flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">shield_person</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary font-bold text-lg leading-tight">Partner Portal</h1>
+<p class="text-primary/60 text-xs font-medium uppercase tracking-wider">Administration</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary text-white rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined text-[22px]">verified_user</span>
+<span class="text-sm font-medium">Partner Approvals</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">gavel</span>
+<span class="text-sm font-medium">Moderation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">bar_chart</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-3 text-[10px] font-bold text-primary/40 uppercase tracking-widest">System</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-primary/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-primary/10">
+<div class="flex items-center gap-3 p-2 rounded-xl bg-primary/5">
+<div class="size-9 rounded-full bg-primary/20 border border-primary/10 flex items-center justify-center overflow-hidden">
+<img alt="Admin Avatar" class="size-full object-cover" data-alt="Professional portrait of a male administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIInsHqINv2WbqesLeDf1bL_ge7yYTvy2z-pX4s1a5u8xQWAP_1TtJddOK91m25JPmzi1wgTGSODMXncriBGk6cOzWnMr4ZjLErR3-fzEG6Sa8DQWes-aRWj6gzqSMf8jS_XSm7DCDno0foYGciDkQFdg38jxOZUo-WEjwQHttvJ5ugCWOP6BvQ73XVKpn9ZFKNiKLTvbJr62dt99LjXVcwjhH9VF0rkTZugRMMUG8lbpQgEz3SXbG0leMWJQtygGdXcCogmyKSDlA"/>
+</div>
+<div class="flex flex-col min-w-0">
+<p class="text-xs font-bold truncate">Alex Morgan</p>
+<p class="text-[10px] text-primary/60 truncate">Super Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- Header -->
+<header class="h-16 flex-shrink-0 border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 flex items-center justify-between z-10">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary/40 text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-xl bg-primary/5 border-none focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-primary/30" placeholder="Search partners, applications, or locations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="size-9 rounded-xl bg-primary/5 flex items-center justify-center text-primary/70 hover:bg-primary/10 transition-colors relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+</button>
+<button class="size-9 rounded-xl bg-primary/5 flex items-center justify-center text-primary/70 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[22px]">chat_bubble</span>
+</button>
+<div class="h-6 w-px bg-primary/10 mx-1"></div>
+<div class="size-9 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Profile" class="size-full object-cover" data-alt="Small circular avatar of the current admin user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPSPlSjxtlhnEfKf73i-TnrjewSTmI89X3uJ56lrageU5q-uK7dy9Rr_nRjaGVAQXj9RzFFjIf6glCTSgsonXT8B3HA482fCxZsMExUMyPWnfvzojyP7D7rjq9_f6alzWRP39hLfKnpWHiZEv-ckRPAnrMN_71SgM-_SiYp_p44_Ru1g33m9p4B67rrRsz5k17MoHG09JFRF8652Nqq0Fsc6vc1WTYWW2Tm1MDWYp7Aay50NhprBFIHGNnnkgM3bm9bRENA1AnGUoV"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Page Area -->
+<div class="flex-1 overflow-y-auto p-6 space-y-8">
+<!-- Page Title -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-black text-primary tracking-tight">Partner Approvals</h2>
+<p class="text-slate-500 text-sm mt-1">Review and manage new partner onboarding applications.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-primary/10 rounded-xl text-sm font-semibold text-primary hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Export Report
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            Invite Partner
+                        </button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-background-dark/40 p-6 rounded-xl border border-primary/5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="size-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">pending_actions</span>
+</div>
+<span class="text-emerald-500 text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                                12%
+                            </span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Pending Applications</p>
+<p class="text-3xl font-black text-primary mt-1">124</p>
+</div>
+<div class="bg-white dark:bg-background-dark/40 p-6 rounded-xl border border-primary/5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="size-12 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">verified</span>
+</div>
+<span class="text-rose-500 text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+                                5%
+                            </span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Approved this Month</p>
+<p class="text-3xl font-black text-primary mt-1">45</p>
+</div>
+<div class="bg-white dark:bg-background-dark/40 p-6 rounded-xl border border-primary/5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<div class="size-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">timer</span>
+</div>
+<span class="text-emerald-500 text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                                0.2%
+                            </span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Avg. Review Time</p>
+<p class="text-3xl font-black text-primary mt-1">1.2 days</p>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap gap-3">
+<div class="relative group">
+<button class="h-10 px-4 flex items-center gap-2 bg-white border border-primary/10 rounded-xl text-sm font-medium text-slate-700 hover:border-primary/30">
+                            Status: <span class="text-primary font-bold">All</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+<div class="relative">
+<button class="h-10 px-4 flex items-center gap-2 bg-white border border-primary/10 rounded-xl text-sm font-medium text-slate-700 hover:border-primary/30">
+                            Type: <span class="text-primary font-bold">All Types</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+<div class="relative">
+<button class="h-10 px-4 flex items-center gap-2 bg-white border border-primary/10 rounded-xl text-sm font-medium text-slate-700 hover:border-primary/30">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                            Date Range
+                            <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+<button class="h-10 px-4 flex items-center gap-2 bg-primary/5 text-primary rounded-xl text-sm font-bold hover:bg-primary/10 transition-colors ml-auto">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+<!-- Data Table -->
+<div class="bg-white dark:bg-background-dark/40 rounded-xl border border-primary/5 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-primary/5 border-b border-primary/10">
+<th class="px-6 py-4 text-xs font-bold text-primary uppercase tracking-wider">Partner Name</th>
+<th class="px-6 py-4 text-xs font-bold text-primary uppercase tracking-wider">Business Type</th>
+<th class="px-6 py-4 text-xs font-bold text-primary uppercase tracking-wider">Location</th>
+<th class="px-6 py-4 text-xs font-bold text-primary uppercase tracking-wider">Applied Date</th>
+<th class="px-6 py-4 text-xs font-bold text-primary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-primary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<!-- Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden">
+<img alt="Logo" class="size-full object-cover" data-alt="Colorful geometric company logo for Alpine Travels" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaV0E-LToAtTqOpnQITjXzQlR-O9dhcB7rAKdvoIUzBrQOmXNzSIYxFe6Ik43AAQR5VPjOuPuQ26dprMvqJg0BbPLhsxhTg5MsbJwhhwehk9kAbeKtt78KsLr6jfilkyp4ViqhLE7Qd1OeQtedTkc5dJrrjKUF9o1y5_uDXTI5013sGXHw95zaQZ5QpHLrNMtxqeLNkWgH87AvM1PvS-vxeNz_uyG2xnMBFpoeXBupsU1hfzB-vCd_11vjcSdz4G4_3R8AqMK5KOTx"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Alpine Travels</p>
+<p class="text-xs text-slate-500">alpine.travels@contact.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600">Tour Operator</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-sm text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary/40">location_on</span>
+                                            Zurich, CH
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 font-medium">Oct 12, 2023</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wide">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Review">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 transition-colors" title="Approve">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</button>
+<button class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors" title="Reject">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden">
+<img alt="Logo" class="size-full object-cover" data-alt="Minimalist abstract blue brand logo for SkyBlue Agency" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR5EUSY-YXRdrryeNCr1GvUWfAcwMBMZmXSgxJh8EvkeVg3MD2KLNpcEIHx5kxsjG_NRMAI_uc8_qF3tNyouj8MwxyjHUBEyG8kohxf8RSu5Awod15dbvNLHZdIpM4ZRXX8xgW3YqBdHNUUiJRdBVWDqdqwJCxlVozxd8tdTl04RWUinmOjZrQ8mELMWVta0yTaEEfLcoQgwK7l4IZTzFhTmRhd6J4wxQuBmTsY2vdiF6mExNngpZeS8L9tZ0fBEdy3KdJtz7d9N9A"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">SkyBlue Agency</p>
+<p class="text-xs text-slate-500">operations@skyblue.io</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600">Travel Agency</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-sm text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary/40">location_on</span>
+                                            London, UK
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 font-medium">Oct 14, 2023</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-700 uppercase tracking-wide">Under Review</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Review">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 transition-colors" title="Approve">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</button>
+<button class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors" title="Reject">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden">
+<img alt="Logo" class="size-full object-cover" data-alt="Golden sun style logo for Desert Oasis Tours" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYCRm8vuZRpYKOXHNQccPse_Izf2ppAEYN2tiOsRdebhna4LS9r6ESnK9tFKx57FgkjSZMkmlZc0Srt8FHWkteo0SWZ1sJOVOMJxkjZZ5fCauJ8GQScBRmyXCudwE0wOa3rZzA30DQbSts6QX0vtwu1LabU-mfvb6F8gTgfNYd0noXsFYbPztXsxTXAHaZTBsFYi0-3HaUafRiDCpYrrPYJe3OP0uNIVqOEmpmlUk3bY0KM3xsIlh2rpR744voW_f8hS9H9PTWjbwf"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Desert Oasis Tours</p>
+<p class="text-xs text-slate-500">info@oasis.ae</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600">Boutique Agency</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-sm text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary/40">location_on</span>
+                                            Dubai, UAE
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 font-medium">Oct 15, 2023</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 uppercase tracking-wide">Approved</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Review">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-slate-300 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</button>
+<button class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors" title="Revoke">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden">
+<img alt="Logo" class="size-full object-cover" data-alt="Red modern corporate logo for FastPass Holidays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyjGAG6WNE3oL3aul6c0CPZ5iwG7Nt_VdNKdGimtq6oPwh-XbYCf1uJdKAnp8_6TKsmofAjZjZ0zlBqBJYTe5r_nXvqkNPZlsU-tjlcyjo9ulr1mbeZMFQGSVWakn9Ji4GF40gzxSj88SfAcnlUTfv3Q21ar_uB8tbRs1CjUSN3EBIcJSDvfA2DxPbiw6M9WpPuxOm3soFayXEDE27weFKRvvrq6AxD2AR2384pIuQt_kqSRlrTv6gO5FMQ6mY3Ck6XNcgHar2TgjV"/>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">FastPass Holidays</p>
+<p class="text-xs text-slate-500">support@fastpass.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600">OTA</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-sm text-slate-600">
+<span class="material-symbols-outlined text-[16px] text-primary/40">location_on</span>
+                                            New York, US
+                                        </div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 font-medium">Oct 16, 2023</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 uppercase tracking-wide">Rejected</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Review">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Re-evaluate">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-primary/5 flex items-center justify-between bg-primary/5">
+<p class="text-xs text-slate-500">Showing <span class="font-bold text-primary">1 - 4</span> of <span class="font-bold text-primary">124</span> applications</p>
+<div class="flex items-center gap-1">
+<button class="size-8 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-400 hover:text-primary disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold shadow-sm">1</button>
+<button class="size-8 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-600 text-xs font-bold hover:bg-primary/5">2</button>
+<button class="size-8 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-600 text-xs font-bold hover:bg-primary/5">3</button>
+<button class="size-8 flex items-center justify-center rounded-lg border border-primary/10 bg-white text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

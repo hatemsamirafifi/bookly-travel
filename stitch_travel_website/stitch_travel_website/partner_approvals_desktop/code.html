@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Partner Approvals | Workflow Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Header Section -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 bg-white dark:bg-background-dark px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary dark:text-slate-100">
+<div class="size-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">verified_user</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">Admin Portal</h2>
+</div>
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+<div class="text-primary/60 flex border-none bg-primary/5 items-center justify-center pl-4 rounded-l-xl" data-icon="search">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-slate-900 dark:text-slate-100 focus:outline-0 focus:ring-0 border-none bg-primary/5 focus:border-none h-full placeholder:text-primary/40 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal" placeholder="Search partners..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-6">
+<a class="text-primary/70 hover:text-primary dark:text-slate-300 dark:hover:text-white text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-primary dark:text-white text-sm font-bold border-b-2 border-primary leading-normal" href="#">Partners</a>
+<a class="text-primary/70 hover:text-primary dark:text-slate-300 dark:hover:text-white text-sm font-medium leading-normal" href="#">Applications</a>
+<a class="text-primary/70 hover:text-primary dark:text-slate-300 dark:hover:text-white text-sm font-medium leading-normal" href="#">Reports</a>
+</nav>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-primary/5 text-primary dark:text-slate-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-primary/5 text-primary dark:text-slate-100">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-primary/20" data-alt="Admin user profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZwAedsFk8jPXoJRfnTYTro87AEBAZQ7fCvAnJ_DjrKYZagZmrPsZrA8lUwESvOzIHHsEfaCtvq8OBWr53mmZG2pWGf4ahfTHlDIMsIm8Ayz42upS2eo9X9IuxmadHpGHyvI7hR83ZYiqao3sWPEsStNgtBT2V5VfIfTYM1VhQgCdz9CZmqmWSHOxefHGk6CeTD1K_ICqT8Pi3O-yLIkHDkNtTA4ULylmnqrBz4uGF2hu_1aG-DS3bSTM4lyZgOGnKzLeTS3bVIsg2");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 px-4 sm:px-10 lg:px-40 py-8">
+<!-- Title and Export -->
+<div class="flex flex-wrap justify-between items-end gap-4 pb-8">
+<div class="flex flex-col gap-1">
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-black leading-tight tracking-tight">Partner Approvals</h1>
+<p class="text-primary/60 dark:text-slate-400 text-base font-normal">Workflow management for active vetting and compliance checks.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-xl h-10 px-4 bg-primary/5 text-primary dark:text-slate-100 text-sm font-bold border border-primary/10">
+<span class="material-symbols-outlined mr-2 text-lg">download</span>
+                        Export CSV
+                    </button>
+<button class="flex items-center justify-center rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold">
+<span class="material-symbols-outlined mr-2 text-lg">add</span>
+                        New Application
+                    </button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="pb-6">
+<div class="flex border-b border-primary/10 px-2 gap-8 overflow-x-auto">
+<a class="flex items-center gap-2 border-b-[3px] border-primary text-primary dark:text-white pb-3 pt-2" href="#">
+<span class="text-sm font-bold">Pending Approval</span>
+<span class="px-2 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold">12</span>
+</a>
+<a class="flex items-center gap-2 border-b-[3px] border-transparent text-primary/50 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors" href="#">
+<span class="text-sm font-bold">Under Review</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">5</span>
+</a>
+<a class="flex items-center gap-2 border-b-[3px] border-transparent text-primary/50 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors" href="#">
+<span class="text-sm font-bold">Verified Partners</span>
+</a>
+<a class="flex items-center gap-2 border-b-[3px] border-transparent text-primary/50 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors" href="#">
+<span class="text-sm font-bold">Rejected</span>
+</a>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-primary/60 dark:text-slate-400 text-sm font-medium">New This Week</p>
+<span class="material-symbols-outlined text-primary/40">trending_up</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight">28</p>
+<div class="flex items-center gap-1">
+<span class="text-emerald-600 text-xs font-bold">+12.5%</span>
+<span class="text-primary/40 text-[10px]">vs last week</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-primary/60 dark:text-slate-400 text-sm font-medium">Avg. Review Time</p>
+<span class="material-symbols-outlined text-primary/40">timer</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight">4.2h</p>
+<div class="flex items-center gap-1">
+<span class="text-orange-600 text-xs font-bold">-5%</span>
+<span class="text-primary/40 text-[10px]">efficiency improved</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-primary/10 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-primary/60 dark:text-slate-400 text-sm font-medium">Approval Rate</p>
+<span class="material-symbols-outlined text-primary/40">check_circle</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight">84.2%</p>
+<div class="flex items-center gap-1">
+<span class="text-emerald-600 text-xs font-bold">+2.1%</span>
+<span class="text-primary/40 text-[10px]">quality stable</span>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-hidden rounded-xl border border-primary/10 bg-white dark:bg-background-dark shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-primary/5 dark:bg-primary/20">
+<th class="px-6 py-4 text-primary dark:text-slate-200 text-xs font-bold uppercase tracking-wider">Partner Entity</th>
+<th class="px-6 py-4 text-primary dark:text-slate-200 text-xs font-bold uppercase tracking-wider">Category</th>
+<th class="px-6 py-4 text-primary dark:text-slate-200 text-xs font-bold uppercase tracking-wider">Submitted</th>
+<th class="px-6 py-4 text-primary dark:text-slate-200 text-xs font-bold uppercase tracking-wider">Risk Score</th>
+<th class="px-6 py-4 text-primary dark:text-slate-200 text-xs font-bold uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-right text-primary dark:text-slate-200 text-xs font-bold uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<!-- Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">Global Logistics Corp</p>
+<p class="text-primary/50 text-xs">ID: PART-89231</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-primary dark:text-slate-300 text-xs font-semibold">Shipping</span>
+</td>
+<td class="px-6 py-5">
+<p class="text-primary/70 dark:text-slate-400 text-sm">Oct 24, 2023</p>
+<p class="text-primary/40 text-[10px]">10:24 AM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 overflow-hidden rounded-full bg-primary/10">
+<div class="h-full bg-emerald-500" style="width: 85%;"></div>
+</div>
+<p class="text-emerald-600 text-xs font-bold">85/100</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-amber-600">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+</span>
+<span class="text-xs font-bold">Reviewing</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="h-8 px-3 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90">Approve</button>
+<button class="h-8 px-3 rounded-lg bg-red-50 text-red-600 border border-red-100 text-xs font-bold hover:bg-red-100">Reject</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-primary/5 text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">TechSolutions Ltd</p>
+<p class="text-primary/50 text-xs">ID: PART-11204</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-primary dark:text-slate-300 text-xs font-semibold">IT Services</span>
+</td>
+<td class="px-6 py-5">
+<p class="text-primary/70 dark:text-slate-400 text-sm">Oct 25, 2023</p>
+<p class="text-primary/40 text-[10px]">02:15 PM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 overflow-hidden rounded-full bg-primary/10">
+<div class="h-full bg-amber-500" style="width: 40%;"></div>
+</div>
+<p class="text-amber-600 text-xs font-bold">40/100</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-primary/50">
+<span class="h-2 w-2 rounded-full bg-primary/20"></span>
+<span class="text-xs font-bold">Pending</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="h-8 px-3 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90">Approve</button>
+<button class="h-8 px-3 rounded-lg bg-red-50 text-red-600 border border-red-100 text-xs font-bold hover:bg-red-100">Reject</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-primary/5 text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">eco</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">Green Energy Inc</p>
+<p class="text-primary/50 text-xs">ID: PART-45512</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-primary dark:text-slate-300 text-xs font-semibold">Utilities</span>
+</td>
+<td class="px-6 py-5">
+<p class="text-primary/70 dark:text-slate-400 text-sm">Oct 26, 2023</p>
+<p class="text-primary/40 text-[10px]">09:00 AM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 overflow-hidden rounded-full bg-primary/10">
+<div class="h-full bg-emerald-500" style="width: 92%;"></div>
+</div>
+<p class="text-emerald-600 text-xs font-bold">92/100</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-primary/50">
+<span class="h-2 w-2 rounded-full bg-primary/20"></span>
+<span class="text-xs font-bold">Pending</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="h-8 px-3 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90">Approve</button>
+<button class="h-8 px-3 rounded-lg bg-red-50 text-red-600 border border-red-100 text-xs font-bold hover:bg-red-100">Reject</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-primary/5 text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-bold">Secure FinTech Co</p>
+<p class="text-primary/50 text-xs">ID: PART-22001</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-primary dark:text-slate-300 text-xs font-semibold">Finance</span>
+</td>
+<td class="px-6 py-5">
+<p class="text-primary/70 dark:text-slate-400 text-sm">Oct 26, 2023</p>
+<p class="text-primary/40 text-[10px]">11:45 AM</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 overflow-hidden rounded-full bg-primary/10">
+<div class="h-full bg-red-500" style="width: 15%;"></div>
+</div>
+<p class="text-red-600 text-xs font-bold">15/100</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-primary/50">
+<span class="h-2 w-2 rounded-full bg-primary/20"></span>
+<span class="text-xs font-bold">Pending</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="h-8 px-3 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90">Approve</button>
+<button class="h-8 px-3 rounded-lg bg-red-50 text-red-600 border border-red-100 text-xs font-bold hover:bg-red-100">Reject</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-primary/5 text-primary hover:bg-primary/10">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between px-6 py-4 border-t border-primary/5 bg-primary/5 dark:bg-primary/10">
+<p class="text-xs text-primary/60 dark:text-slate-400">Showing 1 to 4 of 12 applications</p>
+<div class="flex gap-1">
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-primary/10 text-primary disabled:opacity-50">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-primary/10 text-primary text-xs font-bold">2</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-primary/10 text-primary text-xs font-bold">3</button>
+<button class="h-8 w-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-primary/10 text-primary hover:bg-primary/5">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

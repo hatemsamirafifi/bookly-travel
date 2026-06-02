@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Tour | Partner Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "accent": "#d4af37",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav { background-color: rgba(38, 10, 66, 0.08); border-right: 4px solid #260a42; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col sticky top-0 h-screen">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary rounded-lg p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-accent">travel_explore</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-white text-base font-bold leading-tight">Tours Hub</h1>
+<p class="text-slate-500 text-xs font-medium">Partner Dashboard</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 mt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-primary bg-primary/5 rounded-lg border-r-4 border-primary transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-sm font-semibold">My Tours</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">star</span>
+<span class="text-sm font-medium">Reviews</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Earnings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800 rounded-xl">
+<div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-primary font-bold">JD</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-semibold truncate">John Doe</p>
+<p class="text-xs text-slate-500 truncate">Premium Partner</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Header -->
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+<div class="flex items-center gap-2 text-slate-500">
+<span class="text-sm">My Tours</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-sm font-semibold text-primary dark:text-white">Create New Tour</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">Cancel</button>
+<button class="px-4 py-2 text-sm font-semibold text-primary border border-primary hover:bg-primary/5 rounded-lg transition-colors">Save Draft</button>
+<button class="px-6 py-2 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-sm transition-colors">Publish Tour</button>
+</div>
+</header>
+<div class="p-8 max-w-5xl mx-auto w-full">
+<div class="mb-8">
+<h2 class="text-3xl font-extrabold text-primary dark:text-white tracking-tight">Create New Tour</h2>
+<p class="text-slate-500 mt-1">Provide accurate details to attract more travelers to your experience.</p>
+</div>
+<form class="space-y-8 pb-20">
+<!-- Section 1: Basic Info -->
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<h3 class="font-bold text-lg">1. Basic Information</h3>
+</div>
+<div class="p-6 space-y-6">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Tour Title</label>
+<input class="w-full px-4 py-3 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="e.g. Private Sunset Gondola Ride through Venice Canals" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Category</label>
+<select class="w-full px-4 py-3 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary">
+<option>Select a category</option>
+<option>Walking Tour</option>
+<option>Food &amp; Drink</option>
+<option>Adventure</option>
+<option>Cultural &amp; History</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Short Description</label>
+<input class="w-full px-4 py-3 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="One sentence summary" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Long Description</label>
+<div class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+<div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-2 flex gap-2">
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded" type="button"><span class="material-symbols-outlined text-sm">link</span></button>
+</div>
+<textarea class="w-full border-none focus:ring-0 px-4 py-3 dark:bg-slate-800" placeholder="Describe the full experience, history, and what makes it unique..." rows="6"></textarea>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Media -->
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">image</span>
+<h3 class="font-bold text-lg">2. Media &amp; Gallery</h3>
+</div>
+<div class="p-6">
+<div class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-10 flex flex-col items-center justify-center bg-slate-50/30 dark:bg-slate-800/30">
+<span class="material-symbols-outlined text-slate-400 text-5xl mb-4">cloud_upload</span>
+<p class="text-sm font-semibold text-slate-700 dark:text-slate-300">Drag and drop tour images here</p>
+<p class="text-xs text-slate-500 mt-1">JPEG, PNG or WEBP. Max 5MB per file.</p>
+<button class="mt-4 px-4 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm font-semibold shadow-sm" type="button">Browse Files</button>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 mt-6">
+<div class="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+<img alt="Tour Preview" class="w-full h-full object-cover" data-alt="Venice canal with sunset lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlK3meJI8mFskQmysQr4W9BaTqV0oZVUvjlnm-uaE4QGitCHwXJynqLiwf195m_-zzrjaLlJDkJr48CAgqxcmx2ujyC9Bm6YVX3iAuH8mVo6j2gswAk2ZbqmMsXjbk7iKYWnIJUDDawTeljHlQRSALw7Zr6ipe_FJ_ku1oDp5zCNrzaMUhvU5rRGDxIqcgRLXqUHjvCuInttd3tBZzndGeguK4tm0UPxklnkSKxgeRb_6PX9dBc6IXK0EpEuHjcJOvXNjm_wHritAe"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<button class="p-1.5 bg-red-500 text-white rounded-full" type="button"><span class="material-symbols-outlined text-xs">delete</span></button>
+</div>
+<div class="absolute bottom-1 left-1 bg-primary text-accent text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">Main</div>
+</div>
+<div class="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+<img alt="Tour Preview" class="w-full h-full object-cover" data-alt="Traditional venetian gondola close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJJh70v_yN8h6AFqhKUc3BicWOgltgOAnDaw3R8LVZU30On5xnit_yhBb6SPqbHQzjO59gbc15ch0dBaTXwfntyRgOJa7OWA8j7WeoYht6BDNUV9wBrVbKlZnXjIimCZKkCkclciRLokDBui4i6HAtLVzFqqT1p5ANcp3r6RsVWydlBvmLWSAS1r7_07CXWf7ebrImzWqdkAsHJp5Cb-vr46xcajoHcZdgHcS0kVss-7RDwrjIjeQmdHOHVzZY2qoMlrjwWi4AGD5H"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<button class="p-1.5 bg-red-500 text-white rounded-full" type="button"><span class="material-symbols-outlined text-xs">delete</span></button>
+</div>
+</div>
+<div class="aspect-square rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-300">
+<span class="material-symbols-outlined">add</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Location & Logistics -->
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="font-bold text-lg">3. Location &amp; Logistics</h3>
+</div>
+<div class="p-6 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Meeting Point Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Search address..." type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Duration</label>
+<div class="flex">
+<input class="w-20 px-3 py-3 rounded-l-lg border-r-0 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary" type="number" value="2"/>
+<select class="flex-1 px-3 py-3 rounded-r-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary">
+<option>Hours</option>
+<option>Days</option>
+<option>Minutes</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Languages</label>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="bg-primary text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">English <button><span class="material-symbols-outlined text-[10px]">close</span></button></span>
+<span class="bg-primary text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">Italian <button><span class="material-symbols-outlined text-[10px]">close</span></button></span>
+<button class="border border-slate-200 dark:border-slate-700 text-xs px-2 py-1 rounded-full" type="button">+ Add</button>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 h-64 relative bg-slate-100">
+<div class="absolute inset-0 bg-[url('https://placeholder.pics/svg/800x600/f0f0f0/999999/Map%20Placeholder')] bg-center bg-cover" data-alt="Map showing Venice city center" data-location="Venice, Italy" style=""></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 dark:bg-slate-900/90 p-4 rounded-xl shadow-lg text-center">
+<span class="material-symbols-outlined text-primary text-3xl">map</span>
+<p class="text-sm font-bold mt-1 text-primary">Interactive Map</p>
+<p class="text-[10px] text-slate-500">Click to set coordinates</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Inclusions/Exclusions -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-500">check_circle</span>
+<h3 class="font-bold text-lg">Inclusions</h3>
+</div>
+<div class="p-6 space-y-3">
+<div class="flex items-center gap-3">
+<input class="flex-1 px-4 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" type="text" value="Professional gondolier guide"/>
+<button class="text-slate-400 hover:text-red-500" type="button"><span class="material-symbols-outlined">remove_circle</span></button>
+</div>
+<div class="flex items-center gap-3">
+<input class="flex-1 px-4 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" type="text" value="Glass of Prosecco"/>
+<button class="text-slate-400 hover:text-red-500" type="button"><span class="material-symbols-outlined">remove_circle</span></button>
+</div>
+<button class="text-primary dark:text-accent text-sm font-bold flex items-center gap-1 mt-2" type="button">
+<span class="material-symbols-outlined text-lg">add</span> Add Item
+                                </button>
+</div>
+</section>
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-red-500">cancel</span>
+<h3 class="font-bold text-lg">Exclusions</h3>
+</div>
+<div class="p-6 space-y-3">
+<div class="flex items-center gap-3">
+<input class="flex-1 px-4 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" type="text" value="Hotel pickup/drop-off"/>
+<button class="text-slate-400 hover:text-red-500" type="button"><span class="material-symbols-outlined">remove_circle</span></button>
+</div>
+<div class="flex items-center gap-3">
+<input class="flex-1 px-4 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" type="text" value="Gratuities (optional)"/>
+<button class="text-slate-400 hover:text-red-500" type="button"><span class="material-symbols-outlined">remove_circle</span></button>
+</div>
+<button class="text-primary dark:text-accent text-sm font-bold flex items-center gap-1 mt-2" type="button">
+<span class="material-symbols-outlined text-lg">add</span> Add Item
+                                </button>
+</div>
+</section>
+</div>
+<!-- Section 5: Itinerary -->
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">timeline</span>
+<h3 class="font-bold text-lg">5. Itinerary &amp; Highlights</h3>
+</div>
+<div class="p-8 space-y-0">
+<!-- Timeline Entry 1 -->
+<div class="relative pl-8 pb-10 border-l-2 border-slate-100 dark:border-slate-800 ml-4 last:pb-0">
+<div class="absolute -left-[11px] top-0 w-5 h-5 rounded-full bg-primary border-4 border-white dark:border-slate-900"></div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-100 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-1">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time/Stop</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" type="text" value="0:00 - Meeting"/>
+</div>
+<div class="md:col-span-3">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Activity Title &amp; Details</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 mb-2 font-semibold" type="text" value="Piazza San Marco - Meet at the Clock Tower"/>
+<textarea class="w-full px-3 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" placeholder="Brief activity description..." rows="2"></textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Entry 2 -->
+<div class="relative pl-8 pb-10 border-l-2 border-slate-100 dark:border-slate-800 ml-4 last:pb-0">
+<div class="absolute -left-[11px] top-0 w-5 h-5 rounded-full bg-accent border-4 border-white dark:border-slate-900"></div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-100 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-1">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time/Stop</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" type="text" value="0:30 - Departure"/>
+</div>
+<div class="md:col-span-3">
+<label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Activity Title &amp; Details</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 mb-2 font-semibold" type="text" value="Gondola Embarkation"/>
+<textarea class="w-full px-3 py-2 text-sm rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800" placeholder="Boarding the traditional venetian boat..." rows="2"></textarea>
+</div>
+</div>
+</div>
+<button class="absolute -right-4 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-red-500" type="button"><span class="material-symbols-outlined">delete</span></button>
+</div>
+<div class="ml-4 pl-8 pt-2">
+<button class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg text-sm font-bold flex items-center gap-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 transition-colors" type="button">
+<span class="material-symbols-outlined">add_circle</span> Add Timeline Stop
+                                </button>
+</div>
+</div>
+</section>
+<!-- Footer Actions -->
+<div class="pt-10 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+<button class="text-slate-500 hover:text-red-500 font-semibold flex items-center gap-2" type="button">
+<span class="material-symbols-outlined">delete_forever</span> Delete Draft
+                        </button>
+<div class="flex gap-4">
+<button class="px-8 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-primary dark:text-white font-bold hover:shadow-md transition-all" type="button">Save Draft</button>
+<button class="px-10 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all" type="submit">Review &amp; Publish</button>
+</div>
+</div>
+</form>
+</div>
+</main>
+</div>
+</body></html>

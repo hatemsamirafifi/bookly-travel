@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col fixed h-full">
+<div class="p-6 flex flex-col gap-8 h-full">
+<!-- Logo/Brand -->
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-primary dark:text-white text-base font-bold leading-none">Global Tours</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Admin Console</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary dark:group-hover:text-white">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-white" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="text-sm font-bold">Tours Moderation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary dark:group-hover:text-white">group</span>
+<span class="text-sm font-medium">Partners</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary dark:group-hover:text-white">calendar_month</span>
+<span class="text-sm font-medium">Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary dark:group-hover:text-white">payments</span>
+<span class="text-sm font-medium">Payouts</span>
+</a>
+<div class="mt-auto border-t border-slate-200 dark:border-slate-800 pt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary dark:group-hover:text-white">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</nav>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 flex flex-col min-w-0">
+<!-- Header -->
+<header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between px-8">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full max-w-sm">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search by tour name or ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 border-2 border-white dark:border-slate-900 rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-6">
+<div class="text-right">
+<p class="text-sm font-bold leading-none">Alex Rivera</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Senior Moderator</p>
+</div>
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden" data-alt="Headshot of Alex Rivera admin user" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBa-x0YyFaOJHq65kUPWoZZCLrDt4YaLZJp1oY_ch7TjSAHNELcsf8YQ4bd0rsvtjvQpeUQSFK-KuHr9E87WRxF-UAgkNEQ6SNpZADPv9lBlOnYkhZseg_9i-XIk9Of0xXMJfrDKvz8SC-W-fbUsj-rFpZqy60FV44RuFjTF-Aw86ArwGjRtyLq2g-a9fpAM-XILglIZWFVLNrCDr0hprUv4fmMT6okrwvd7kMyQ2yzztB8dvlw0Wkqnf4K_u8FcoqxcqnW26qYgjbf'); background-size: cover;"></div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 flex flex-col gap-8 max-w-[1400px]">
+<!-- Title & Bulk Action -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-black tracking-tight text-primary dark:text-white">Tours Moderation</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-2">Review and verify tour submissions from global marketplace partners.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                            Advanced Filters
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-opacity-90 transition-colors">
+<span class="material-symbols-outlined text-lg">layers</span>
+                            Bulk Actions
+                        </button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Pending Review</p>
+<h3 class="text-3xl font-black mt-1 text-primary dark:text-white">124</h3>
+<div class="flex items-center gap-1 text-orange-600 text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-sm">priority_high</span>
+                                Requires urgent attention
+                            </div>
+</div>
+<div class="size-14 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined text-3xl">pending_actions</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Approved Today</p>
+<h3 class="text-3xl font-black mt-1 text-primary dark:text-white">42</h3>
+<div class="flex items-center gap-1 text-emerald-600 text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                +12.5% from yesterday
+                            </div>
+</div>
+<div class="size-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined text-3xl">verified</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Avg. Review Time</p>
+<h3 class="text-3xl font-black mt-1 text-primary dark:text-white">4.2h</h3>
+<div class="flex items-center gap-1 text-blue-600 text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                Meeting SLA targets
+                            </div>
+</div>
+<div class="size-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined text-3xl">timer</span>
+</div>
+</div>
+</div>
+<!-- Table Controls -->
+<div class="flex flex-wrap items-center gap-3 p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl">
+<button class="px-4 py-2 bg-white dark:bg-slate-800 rounded-lg text-sm font-bold text-primary dark:text-white shadow-sm flex items-center gap-2">
+                        Status: All
+                        <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="px-4 py-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 transition-all flex items-center gap-2">
+                        Category: Adventure
+                        <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="px-4 py-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 transition-all flex items-center gap-2">
+                        Partner: Global Partners
+                        <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<div class="h-6 w-px bg-slate-300 dark:bg-slate-700 mx-2"></div>
+<button class="px-4 py-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 transition-all flex items-center gap-2">
+                        Sort: Newest First
+                        <span class="material-symbols-outlined text-lg">swap_vert</span>
+</button>
+</div>
+<!-- Data Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="p-4 w-12">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tour Details</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Partner</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Category</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Submitted Date</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Status</th>
+<th class="p-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="p-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 bg-cover bg-center" data-alt="Sunset Gondola Ride in Venice" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIHE_9HJ507kXtdHlpaHVgHFd8OjUaM_KxZdNDVWL6jOvM5fiHlcx6T8EHDRgZo3e5AbxL440KxId0Jx3XYPv57k0qKb1ekPQAh8G58tRT5cSxBY1HhoP7MBEBita4Es977NPZoGwmIdl9Eqp0i4JOoCbdv2EjaLgnC-aEUulHpJjUnEP-VhaVPOMKpMrUwV6t8-AoBnF6B1oS8rhppzuJaFm24_Ob506WGgvPQ_KevXlWlG9gTNzLI4TSo8WieIr-Op4paZki-N4C')"></div>
+<div>
+<p class="font-bold text-sm">Sunset Gondola Ride</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">ID: VEN-99432</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<p class="text-sm font-medium">Venice Dreams Ltd.</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Italy</p>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-medium">Romantic</span>
+</td>
+<td class="p-4">
+<p class="text-sm">Oct 24, 2023</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">14:22 PM</p>
+</td>
+<td class="p-4">
+<span class="px-3 py-1 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 text-xs font-bold flex items-center gap-1 w-fit">
+<span class="size-1.5 rounded-full bg-orange-500"></span>
+                                        Pending
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-primary dark:text-slate-300 hover:text-primary transition-colors" title="Review">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 hover:bg-emerald-50 text-emerald-600 rounded-lg transition-colors" title="Approve">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</button>
+<button class="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors" title="Reject">
+<span class="material-symbols-outlined text-xl">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="p-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 bg-cover bg-center" data-alt="Great Egyptian Pyramids Giza" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxNcAm7q7rsPW1ZnURXS_40m1PyHyYJIt6uKTLc26eoC2JizIXchJT2OZZ-nE72vgH1sQNM5Mq7wOV3Hsvwpl6HDEqgn7EaZXZSth3kLJEvat_OaK3CXwbcnDCjcVSKoStgrwBaXGG8GWGPROTw_grRRAWDp8ofDiN3qHJ_4uzq1nkD95mFSxuGNJGrNSStDvkTnMuT_FnfQk9y9_NrJdG1s-Oemgdcgc_3qJRGWYd1ItRLRJCcqBIUS72N8u6mcWaHu4LLsRkUxVZ')"></div>
+<div>
+<p class="font-bold text-sm">Egyptian Pyramids Day Trip</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">ID: EGY-11204</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<p class="text-sm font-medium">Cairo Wonders</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Egypt</p>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-medium">History</span>
+</td>
+<td class="p-4">
+<p class="text-sm">Oct 24, 2023</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">11:05 AM</p>
+</td>
+<td class="p-4">
+<span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 text-xs font-bold flex items-center gap-1 w-fit">
+<span class="size-1.5 rounded-full bg-blue-500"></span>
+                                        Changes Req.
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-primary dark:text-slate-300 transition-colors">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 hover:bg-emerald-50 text-emerald-600 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</button>
+<button class="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group border-b-0">
+<td class="p-4">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 bg-cover bg-center" data-alt="Swiss Alps skydiving adventure" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDSRieap2uvu5Jhp0uI6gbWFTCdV0hOpwoSOLDc3lDhSjrBNqPx7g8BFKDbQps5xl52SKo1_uXbTD6Vjw5yejsc4kujYkfQMK0ke4iDmLsnS8HAs_iwxj8qkSfyatgdotXZk41AIxz7p8VjYFw39WBNPL6ey4zxrE6ztSGE1PeXZM6U9ZBn77LR1YCap1mFnqI04CMYhTROzpX_sBCBMdX3sOKUr3KvZlaAOzPCnhzAT2kaqkCoabe5eBrxUq70f78Ocw3iuYMlmbws')"></div>
+<div>
+<p class="font-bold text-sm">Swiss Alps Skydiving</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">ID: SWI-44811</p>
+</div>
+</div>
+</td>
+<td class="p-4">
+<p class="text-sm font-medium">Alpine Adventures</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Switzerland</p>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-xs font-medium">Extreme Sports</span>
+</td>
+<td class="p-4">
+<p class="text-sm">Oct 23, 2023</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">09:45 AM</p>
+</td>
+<td class="p-4">
+<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-xs font-bold flex items-center gap-1 w-fit">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                        Approved
+                                    </span>
+</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-primary/10 rounded-lg text-primary dark:text-slate-300 transition-colors">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 hover:bg-emerald-50 text-emerald-600 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</button>
+<button class="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="bg-white dark:bg-slate-900 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                            Showing <span class="text-primary dark:text-white font-bold">1 - 3</span> of <span class="text-primary dark:text-white font-bold">124</span> tours
+                        </p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors" disabled="">
+                                Previous
+                            </button>
+<button class="size-9 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold shadow-md shadow-primary/20">1</button>
+<button class="size-9 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">2</button>
+<button class="size-9 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">3</button>
+<span class="flex items-center px-1">...</span>
+<button class="size-9 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-medium transition-colors">42</button>
+<button class="px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                Next
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>My Wishlist | TravelWise</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<div class="relative flex min-h-screen flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-4 lg:px-10">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary dark:text-slate-100">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-xl">travel_explore</span>
+</div>
+<h2 class="text-xl font-extrabold tracking-tight">TravelWise</h2>
+</div>
+<div class="hidden md:block">
+<label class="relative flex w-64 items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400">search</span>
+<input class="w-full rounded-xl border-none bg-slate-100 dark:bg-white/5 py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search destinations..." type="text"/>
+</label>
+</div>
+</div>
+<div class="flex items-center gap-6 lg:gap-8">
+<nav class="hidden items-center gap-6 md:flex">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Explore</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Trips</a>
+<a class="text-sm font-semibold text-primary" href="#">Wishlist</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Inbox</a>
+</nav>
+<div class="h-10 w-10 overflow-hidden rounded-full border-2 border-primary/20 bg-slate-200" data-alt="User profile avatar portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA-y1JrbVipCAsyr7hPWfJPzG7IvxLped00Q6Iwo9iR5AWcKQiXmO9tWKGRA8l5skktqj4i0JjFvPWlXC1rT-C40BvQ0JNzX1u66JytGnka79AQg2ez6pOIHfqRVZd7c6OS89sZ_S-4oG3BbFsCEtle70R8ygNPbOUD3wnfWlm7FAQnBxtmObB_fsbpPyhMbtJJkAloU2tkCZ4_th_m0U0u4gMStZqVvT5aGdIjA6CcBDd7iYOWN0ps4pfyeSxpzqEG0-EVtoTIZOmf')">
+</div>
+</div>
+</div>
+</header>
+<main class="mx-auto w-full max-w-[1280px] flex-1 px-6 py-8 lg:px-10">
+<!-- Breadcrumbs -->
+<nav class="mb-6 flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary" href="#">Home</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary dark:text-slate-200">Wishlist</span>
+</nav>
+<!-- Page Header -->
+<div class="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+<div>
+<h1 class="text-4xl font-black tracking-tight text-primary dark:text-white">My Wishlist</h1>
+<p class="mt-2 text-lg text-slate-600 dark:text-slate-400">6 items saved for your next adventure</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 rounded-xl bg-white dark:bg-white/5 px-4 py-2 text-sm font-bold border border-primary/10 hover:bg-slate-50">
+<span class="material-symbols-outlined text-lg">share</span>
+                        Share List
+                    </button>
+<button class="flex items-center gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-bold text-white hover:bg-primary/90">
+<span class="material-symbols-outlined text-lg">sort</span>
+                        Filter
+                    </button>
+</div>
+</div>
+<!-- Wishlist Grid -->
+<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+<!-- Card 1 -->
+<div class="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white/5 border border-primary/5 shadow-sm hover:shadow-md transition-all">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Amalfi Coast colorful houses on cliffside during sunset" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBgss2NHkRtaemyjaCZvXGnkJPeAEI4O4icQTVNZghnFCieSqb9DacRVHV9by01vj6wAukbuTvhyhvl6syM6-iTzGm_T6IDLBkY7q0Y7zNl89BYunot-ZLiftpmKfj6DoLgQqmX4fQu6ss8nDwu7_-4E8jP0Fped-Qw3JWgSo_RNVi2fcpUxL0rLkwxW6lMUufHPCOkL3tc7LDVW7bP6sut9gJ2_HhgU7Y1X_1MOXGw_TsEip84aUYqAe_CIqLNJrZzAKBMS8JwPCUY')"></div>
+<button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm hover:bg-white">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+<div class="absolute bottom-3 left-3 rounded-lg bg-primary/90 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+                            Best Seller
+                        </div>
+</div>
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-2 flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-primary/60 dark:text-slate-400">Italy • Full Day</span>
+<div class="flex items-center gap-1 text-sm font-bold text-amber-500">
+<span class="material-symbols-outlined text-base fill-1">star</span>
+                                4.9 (2.4k)
+                            </div>
+</div>
+<h3 class="mb-1 text-lg font-bold leading-tight">Amalfi Coast Sunset Yacht Tour</h3>
+<p class="mb-4 text-sm text-slate-500 line-clamp-2">Experience the breathtaking Amalfi Coast from the water. Includes dinner and local wine.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/5 pt-4">
+<div>
+<p class="text-xs text-slate-400">From</p>
+<p class="text-xl font-black text-primary dark:text-white">$299</p>
+</div>
+<button class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white/5 border border-primary/5 shadow-sm hover:shadow-md transition-all">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="The Eiffel Tower in Paris at night with lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBQRUmQy-r9LHNJD_o7tcEUmfYXuCkLTDVALCqbdjjNgkA1x4LAXQsZxeTvhAPYtJ9Lri8pbr7RCq7Llv9_R0vcZJ5jaZEN5A94Q0MpHdxqRTnuAkmyTC9RjrsOOvtJGzxaaRo1pF-ZTNIxZvuw4uAQQvmpsUHvaXGFQDeFiQ1SzSH38RKzCKkeDs4wcEXZljRAjDOLpTDraSLGGgjAfmhEsQhGZgfJhEB2afFeu2GCmS2E6bnc-YacGstMF51E3zx4rg5m9tO06idA')"></div>
+<button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm hover:bg-white">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-2 flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-primary/60 dark:text-slate-400">France • Cultural</span>
+<div class="flex items-center gap-1 text-sm font-bold text-amber-500">
+<span class="material-symbols-outlined text-base fill-1">star</span>
+                                4.8 (1.2k)
+                            </div>
+</div>
+<h3 class="mb-1 text-lg font-bold leading-tight">Private Louvre Museum Guided Walk</h3>
+<p class="mb-4 text-sm text-slate-500 line-clamp-2">Skip the line and explore the world's most famous art gallery with an expert historian.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/5 pt-4">
+<div>
+<p class="text-xs text-slate-400">From</p>
+<p class="text-xl font-black text-primary dark:text-white">$145</p>
+</div>
+<button class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white/5 border border-primary/5 shadow-sm hover:shadow-md transition-all">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Traditional Japanese temple architecture in Kyoto with cherry blossoms" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBurxrIzJE7LlAzoibXdmRnSw5-sSoEGC4N1_FSmq5aoyhaqRKw_tpp72TCQugFV05_6bJBAKtu1atgdt17UjBth_vQdzWgd599L7lSHZARDqr98NwptiJiiejROdh2jPTbho8LPMZpsHKmd1SbG8S47jOp_0oT-_VhIpPQujWA5ytaLmszZ3mxdlt8PWWk2IYeVnVHu4klVl6x43qH6fjGOa_bgutlIkqZQTEz9de459hfdZWeIqcOE3RzOPY3VfDGafJ4Y2q-m4cG')"></div>
+<button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm hover:bg-white">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-2 flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-primary/60 dark:text-slate-400">Japan • Wellness</span>
+<div class="flex items-center gap-1 text-sm font-bold text-amber-500">
+<span class="material-symbols-outlined text-base fill-1">star</span>
+                                5.0 (840)
+                            </div>
+</div>
+<h3 class="mb-1 text-lg font-bold leading-tight">Kyoto Spiritual Temple &amp; Tea Ceremony</h3>
+<p class="mb-4 text-sm text-slate-500 line-clamp-2">Connect with Japanese traditions in this intimate small-group experience through Kyoto's Gion district.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/5 pt-4">
+<div>
+<p class="text-xs text-slate-400">From</p>
+<p class="text-xl font-black text-primary dark:text-white">$110</p>
+</div>
+<button class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white/5 border border-primary/5 shadow-sm hover:shadow-md transition-all">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="A wild elephant walking through the African savanna safari" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAwD-AnJq2NQXB8PYyHSDGJw1nQ-OaMLZfz57YL-uozcdC7JB6OsxRRgY_NEzL-oOiPycWrqB-JSCzQ7QmQHHkeicEE_FQeTdfepP8B7otNPUHwtfIhQ_l-ij5jCrj8GbQz3vdF3ZtWL95ZHQYpfykxzn9XmE6nUYvTOEnssm_3o2MolX0o6rrWMB_iuXZX4JyNpOO17Ka4o6kCXjCrukd2GwfKnCoAdVKNVhN7CpX15vQjuF5U5j12EYFeol3G1xfu2vWhM937vbHb')"></div>
+<button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm hover:bg-white">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-2 flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-primary/60 dark:text-slate-400">Kenya • Adventure</span>
+<div class="flex items-center gap-1 text-sm font-bold text-amber-500">
+<span class="material-symbols-outlined text-base fill-1">star</span>
+                                4.9 (420)
+                            </div>
+</div>
+<h3 class="mb-1 text-lg font-bold leading-tight">7-Day Masai Mara Luxury Safari</h3>
+<p class="mb-4 text-sm text-slate-500 line-clamp-2">The ultimate wildlife expedition with professional photographers and luxury camping.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/5 pt-4">
+<div>
+<p class="text-xs text-slate-400">From</p>
+<p class="text-xl font-black text-primary dark:text-white">$2,450</p>
+</div>
+<button class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white/5 border border-primary/5 shadow-sm hover:shadow-md transition-all">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Snowy mountain peaks in the Swiss Alps under a clear blue sky" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDuawszq9-DMQrQxKtTle6eyqIJM2lavCKrQA20xdX4MwBtlziSewksBhpwtSCDmBVZWDChIni3w3054HNSlQ9XC3zlyytSbIdaZ4uQSqVOWTmSsi7FKcFKgSZ_TXsek4A0hIY5KUgJHaUAGzvVnbQPGf-nZtnW1uSNlH9bjKBawdrpqg__qz4WYQUcT8g135ZwRvVMzGE7WDEseH5JGoCC6sSIkx8Zd431evQCcOxpQR2m2MJKgCD-qYqBB_L7Kc6A9K8gFNi9GEoD')"></div>
+<button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm hover:bg-white">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-2 flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-primary/60 dark:text-slate-400">Switzerland • Sports</span>
+<div class="flex items-center gap-1 text-sm font-bold text-amber-500">
+<span class="material-symbols-outlined text-base fill-1">star</span>
+                                4.7 (530)
+                            </div>
+</div>
+<h3 class="mb-1 text-lg font-bold leading-tight">Zermatt Ski Adventure Week</h3>
+<p class="mb-4 text-sm text-slate-500 line-clamp-2">5 days of guided skiing in the shadow of the Matterhorn with equipment included.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/5 pt-4">
+<div>
+<p class="text-xs text-slate-400">From</p>
+<p class="text-xl font-black text-primary dark:text-white">$890</p>
+</div>
+<button class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group flex flex-col overflow-hidden rounded-xl bg-white dark:bg-white/5 border border-primary/5 shadow-sm hover:shadow-md transition-all">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Ancient Greek temple ruins on a hill overlooking the ocean" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbbta19H0OPv5HYTNlggyL8q5jKiZr3J58nht9GvqV8PpVmu2hASwVRIxPAnJQQ2XqCd9TOwd1fvaL24lCqo39Dt-5s2-6V5aJa1hjADpzGsUDBwG19WRoZ5lJGosvR0ZvDdqH-FRHV0ZceOpYrUORsP221sq--2_GLdIZaKmjV6m_7GCYSfcA1ec0JSZJA60TbaUUOkQv9Wp4Bvn10u8vktpXGLtRWjuzJE1v3lViYwXHJXz1GDsaauM6VZnYdbLH7fyoJsuGkMjP')"></div>
+<button class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm hover:bg-white">
+<span class="material-symbols-outlined fill-1">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-2 flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-primary/60 dark:text-slate-400">Greece • History</span>
+<div class="flex items-center gap-1 text-sm font-bold text-amber-500">
+<span class="material-symbols-outlined text-base fill-1">star</span>
+                                4.8 (910)
+                            </div>
+</div>
+<h3 class="mb-1 text-lg font-bold leading-tight">Athens Acropolis Mythology Tour</h3>
+<p class="mb-4 text-sm text-slate-500 line-clamp-2">Walk through the cradle of civilization and hear the myths of the Greek gods.</p>
+<div class="mt-auto flex items-center justify-between border-t border-primary/5 pt-4">
+<div>
+<p class="text-xs text-slate-400">From</p>
+<p class="text-xl font-black text-primary dark:text-white">$85</p>
+</div>
+<button class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggestion Section -->
+<section class="mt-20 border-t border-primary/10 pt-16">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-black text-primary dark:text-white tracking-tight">You might also like...</h2>
+<a class="text-sm font-bold text-primary flex items-center gap-1 hover:underline" href="#">
+                        View more recommendations
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-6 no-scrollbar">
+<div class="min-w-[300px] flex gap-4 p-4 rounded-xl bg-white dark:bg-white/5 border border-primary/5">
+<div class="h-24 w-24 rounded-lg bg-cover bg-center shrink-0" data-alt="The Taj Mahal in Agra India under a hazy sky" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBYOLbXgypQtpol7EDKjlODx3Mw0M2a7fcG21ZdBa_hxc2RWsLP2g2XDLFkOFWUhwk4M4ziY0s39Pckt8bPyw76Ioh8Gs65zGcrBY7Drggn6O5FuV0IuEJcX8Cn0YeK4Yecb9wy-kG09WJeeFu2C3lWn7k7nhn_xq_MfZuSbx6gJEAUmdnj5JBWxddbBIFPOKhnoh_mW03Z8vURZXAxSzyI3V3jID8BmmTKX0vsIr3RXGCMFe_clnWmH-36M8hxzH751kxBbiBDUw5_')"></div>
+<div class="flex flex-col justify-center">
+<p class="text-sm font-bold">Taj Mahal Private Day Trip</p>
+<p class="text-xs text-slate-500">India • Cultural</p>
+<p class="mt-1 text-sm font-black text-primary">$180</p>
+</div>
+</div>
+<div class="min-w-[300px] flex gap-4 p-4 rounded-xl bg-white dark:bg-white/5 border border-primary/5">
+<div class="h-24 w-24 rounded-lg bg-cover bg-center shrink-0" data-alt="The Sydney Opera House at sunset across the water" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2fJbbU8KjLGuiWAQAe-ybatGt6rz22ESrfuHTo-zvns3zFcumdzN-skg5JM7MYBbqoSKw77rJ1D_hCCFlUGyjt5HuKEvyoPkoeIDlG_H7OXtIsVMhS_OlUMbvqKwioPOV_eCB-IhLKHvUeHKK3A7-bX8v9QOSa_0N4DphAJnl3i4VMB3SL4mDpk0wAorB9Jc6N5I3wsqyArFZ2FmFNnvbsQgmcY8x8RaG5X6vuM33o2mk9Rxuz25UpDWpOEd_vEzmvnXAD8QpLuZb')"></div>
+<div class="flex flex-col justify-center">
+<p class="text-sm font-bold">Sydney Opera House Tour</p>
+<p class="text-xs text-slate-500">Australia • Iconic</p>
+<p class="mt-1 text-sm font-black text-primary">$45</p>
+</div>
+</div>
+<div class="min-w-[300px] flex gap-4 p-4 rounded-xl bg-white dark:bg-white/5 border border-primary/5">
+<div class="h-24 w-24 rounded-lg bg-cover bg-center shrink-0" data-alt="Tropical island with turquoise water and palm trees in Maldives" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOLYz0SOkhz0HS1bxfcApLEXtERJkLgnrzWY118-pQt_svrG9ac5WaXCOWjA-9I5LUKQL5M5Ob3XMFL57pcx3t_FY1eBnpq9hfArYBTrIJzZVm8xM90hHgeCjHnug0EDcZzDDqtGucjotPOkvLAMRDUleFQe_1islLQLXT5aNDFdE7rfHqsPjz_1OsF_DT8Xbf89arcqEfVnRtXGOFXu7fnbBk8csj2qnqbXUQs94HCB0Xzc9peMonwZ3u8PhCLx2Y2ej6PNKW07p2')"></div>
+<div class="flex flex-col justify-center">
+<p class="text-sm font-bold">Maldives Snorkeling Trip</p>
+<p class="text-xs text-slate-500">Maldives • Nature</p>
+<p class="mt-1 text-sm font-black text-primary">$120</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="mt-16 bg-primary py-12 text-white/80">
+<div class="mx-auto max-w-[1280px] px-6 lg:px-10">
+<div class="grid grid-cols-1 gap-12 md:grid-cols-4">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 text-white mb-6">
+<span class="material-symbols-outlined">travel_explore</span>
+<h2 class="text-xl font-extrabold tracking-tight">TravelWise</h2>
+</div>
+<p class="text-sm leading-relaxed">
+                            Crafting unforgettable memories across the globe. We help you find the most authentic travel experiences tailored just for you.
+                        </p>
+</div>
+<div>
+<h4 class="mb-6 font-bold text-white">Quick Links</h4>
+<ul class="space-y-3 text-sm">
+<li><a class="hover:text-white transition-colors" href="#">Find Tours</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Gift Cards</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Partner With Us</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Travel Guides</a></li>
+</ul>
+</div>
+<div>
+<h4 class="mb-6 font-bold text-white">Support</h4>
+<ul class="space-y-3 text-sm">
+<li><a class="hover:text-white transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Safety Information</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Cancellation Options</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="mb-6 font-bold text-white">Newsletter</h4>
+<p class="mb-4 text-xs">Join our list for exclusive travel deals.</p>
+<div class="flex">
+<input class="w-full rounded-l-lg border-none bg-white/10 p-2 text-sm focus:ring-0" placeholder="Email address" type="email"/>
+<button class="rounded-r-lg bg-white px-4 py-2 text-sm font-bold text-primary">Join</button>
+</div>
+</div>
+</div>
+<div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
+<p class="text-xs">© 2024 TravelWise Inc. All rights reserved.</p>
+<div class="flex gap-6 text-xs">
+<a class="hover:text-white" href="#">Privacy</a>
+<a class="hover:text-white" href="#">Terms</a>
+<a class="hover:text-white" href="#">Cookies</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

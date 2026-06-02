@@ -186,6 +186,7 @@
     "edit_review": "Edit Review",
     "update_review": "Update Review",
     "no_reviews_yet": "No reviews yet. Be the first!",
+    "review_count": "{count, plural, =1 {# review} other {# reviews}}",
     "edited": "Edited",
     "char_count": "{count}/2000",
     "rate_limit_message": "You are submitting reviews too quickly. Please wait before trying again.",
@@ -202,6 +203,66 @@
     "load_more": "Load More",
     "loading": "Loading...",
     "failed_to_load": "Failed to load reviews. Please try again later."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "subtitle": "The page you are looking for does not exist or has been moved.",
+    "goHome": "Go Home",
+    "browseTours": "Browse Tours"
+  },
+  "legal": {
+    "privacy": {
+      "metaTitle": "Privacy Policy | Bookly",
+      "metaDescription": "Learn how Bookly collects, uses, and protects your personal information.",
+      "title": "Privacy Policy",
+      "intro": "At Bookly, we respect your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and safeguard your information.",
+      "dataCollection": {
+        "title": "Data We Collect",
+        "body": "We collect information you provide directly, such as your name, email, phone number, and booking details. We also collect usage data to improve our services."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, and personalize content. You can manage cookie preferences through your browser settings."
+      },
+      "thirdParties": {
+        "title": "Third-Party Services",
+        "body": "We may share limited data with trusted payment processors (Stripe) and analytics providers. We never sell your personal information to third parties."
+      },
+      "rights": {
+        "title": "Your Rights",
+        "body": "You have the right to access, correct, or delete your personal data. Contact us at privacy@bookly.travel to exercise these rights."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "body": "If you have any questions about this privacy policy, please contact us at privacy@bookly.travel."
+      }
+    },
+    "terms": {
+      "metaTitle": "Terms & Conditions | Bookly",
+      "metaDescription": "Read the terms and conditions for using Bookly's tour booking platform.",
+      "title": "Terms & Conditions",
+      "intro": "By using Bookly, you agree to these terms and conditions. Please read them carefully before making a booking.",
+      "bookings": {
+        "title": "Bookings",
+        "body": "All bookings are subject to availability and confirmation. Prices are displayed at the time of booking and may be subject to change until confirmed."
+      },
+      "payments": {
+        "title": "Payments",
+        "body": "Payments are processed securely via Stripe. You agree to pay the total amount displayed at checkout, including any applicable taxes and fees."
+      },
+      "cancellations": {
+        "title": "Cancellations & Refunds",
+        "body": "Cancellation policies vary by tour. Please review the specific cancellation terms shown on each tour page before booking."
+      },
+      "liability": {
+        "title": "Liability",
+        "body": "Bookly acts as a marketplace connecting travelers with tour operators. We are not liable for the acts or omissions of tour operators."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "For questions about these terms, contact us at support@bookly.travel."
+      }
+    }
   },
   "payment": {
     "title": "Payment Details",

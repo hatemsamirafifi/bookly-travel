@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#260a42",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Admin CMS - Site Management</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex flex-col min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-primary/20 px-6 py-3">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary text-white p-2 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">dashboard_customize</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-primary dark:text-slate-100">Lumina CMS</h1>
+</div>
+<!-- Search Bar -->
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-primary/10 rounded-xl px-3 py-1.5 w-72 border border-transparent focus-within:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-slate-400 text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-400" placeholder="Search pages, assets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-sm font-semibold text-primary dark:text-slate-300 hover:opacity-70" href="#">Dashboard</a>
+<a class="text-sm font-semibold text-primary dark:text-slate-300 hover:opacity-70" href="#">Analytics</a>
+<a class="text-sm font-semibold text-primary dark:text-slate-300 hover:opacity-70" href="#">Users</a>
+</nav>
+<div class="flex items-center gap-3 border-l border-slate-200 dark:border-primary/20 pl-6">
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-primary/20 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-primary/20 rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-9 w-9 rounded-full bg-primary/10 border border-primary/20 overflow-hidden ml-2">
+<img class="w-full h-full object-cover" data-alt="Admin user profile avatar thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUVb1L1SLmRntmDkqqy7YdRdFDHJLnEoFwvtlNUwpNW-wK8612o-yEgDsv6Gjy9KlnIT66IJsjjBleM_zQGEBCe4nioKn6B1QHMUZYZj9JJdf6dseAJuVkLIxInzMFPGsYun4K2QK_jyYkk0Y-eofjlJZu532bCdPvY5HM5ZqLn2XpYFDgQigmNiGhcJJHLd4JrA5uoy4hVzNDAqjeMbOCTJf_HDZ9LT_SgmAOiWJW7DPN7h0wLWzc0BnAL-g8jifRq-vzCeM4tqPQ"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Wrapper -->
+<main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h2 class="text-3xl font-black text-slate-900 dark:text-slate-100 mb-2">Content Management</h2>
+<p class="text-slate-500 dark:text-slate-400 max-w-2xl">Orchestrate your digital presence. Manage site architecture, dynamic blog content, and high-fidelity media assets from one central hub.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-primary/30 bg-white dark:bg-background-dark font-bold text-sm hover:bg-slate-50 dark:hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                        View Live Site
+                    </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Create New
+                    </button>
+</div>
+</div>
+<!-- Tabbed Navigation -->
+<div class="border-b border-slate-200 dark:border-primary/20 mb-8">
+<div class="flex gap-10 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center gap-2 pb-4 border-b-2 border-primary text-primary dark:text-slate-100" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-bold tracking-wide">Site Pages</span>
+</a>
+<a class="flex flex-col items-center gap-2 pb-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined">article</span>
+<span class="text-sm font-bold tracking-wide">Blog Content</span>
+</a>
+<a class="flex flex-col items-center gap-2 pb-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined">perm_media</span>
+<span class="text-sm font-bold tracking-wide">Media Library</span>
+</a>
+<a class="flex flex-col items-center gap-2 pb-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="text-sm font-bold tracking-wide">Collections</span>
+</a>
+</div>
+</div>
+<!-- Content Area: Specialized Homepage Sections Editor -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">layers</span>
+                        Homepage Configuration
+                    </h3>
+<div class="flex gap-2">
+<button class="p-1.5 rounded-lg border border-slate-200 dark:border-primary/30 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-1.5 rounded-lg border border-primary/50 bg-primary/10 text-primary transition-colors">
+<span class="material-symbols-outlined">list</span>
+</button>
+</div>
+</div>
+<!-- Specialized Table for Sections -->
+<div class="bg-white dark:bg-background-dark rounded-xl border border-slate-200 dark:border-primary/20 overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-primary/5 border-b border-slate-200 dark:border-primary/20">
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Order</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Section Identity</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Component Type</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Last Modified</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-primary/10">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-300 cursor-move">drag_indicator</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-8 rounded bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+<div class="w-full h-1 bg-primary/40 rounded"></div>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Hero Banner</p>
+<p class="text-xs text-slate-500">ID: sec_hero_01</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">Full Width Hero</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Published
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">2 hours ago by Alex</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary rounded-lg hover:bg-slate-100 dark:hover:bg-primary/20">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-300 cursor-move">drag_indicator</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-8 rounded bg-primary/10 border border-primary/20 flex gap-1 p-1 items-center justify-center overflow-hidden">
+<div class="w-1/3 h-full bg-primary/40 rounded-sm"></div>
+<div class="w-1/3 h-full bg-primary/40 rounded-sm"></div>
+<div class="w-1/3 h-full bg-primary/40 rounded-sm"></div>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Featured Services</p>
+<p class="text-xs text-slate-500">ID: sec_grid_05</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">3-Column Grid</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            Draft
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Yesterday at 4:12 PM</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary rounded-lg hover:bg-slate-100 dark:hover:bg-primary/20">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-300 cursor-move">drag_indicator</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-8 rounded bg-primary/10 border border-primary/20 flex flex-col gap-1 p-1 items-center justify-center overflow-hidden">
+<div class="w-full h-1 bg-primary/40 rounded-sm"></div>
+<div class="w-3/4 h-1 bg-primary/20 rounded-sm"></div>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100">Client Testimonials</p>
+<p class="text-xs text-slate-500">ID: sec_test_02</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400">Slider Carousel</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Published
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 12, 2023</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary rounded-lg hover:bg-slate-100 dark:hover:bg-primary/20">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer Stats for the CMS Page -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+<div class="p-5 bg-white dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-xl">
+<div class="flex items-center gap-4 mb-3">
+<div class="p-2 bg-primary/10 text-primary rounded-lg">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h4 class="font-bold text-slate-700 dark:text-slate-200">Total Page Views</h4>
+</div>
+<p class="text-2xl font-black text-slate-900 dark:text-white">128.4k <span class="text-sm font-normal text-green-500">+12%</span></p>
+</div>
+<div class="p-5 bg-white dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-xl">
+<div class="flex items-center gap-4 mb-3">
+<div class="p-2 bg-primary/10 text-primary rounded-lg">
+<span class="material-symbols-outlined">speed</span>
+</div>
+<h4 class="font-bold text-slate-700 dark:text-slate-200">Site Performance</h4>
+</div>
+<p class="text-2xl font-black text-slate-900 dark:text-white">98/100 <span class="text-sm font-normal text-slate-400">Optimal</span></p>
+</div>
+<div class="p-5 bg-white dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-xl">
+<div class="flex items-center gap-4 mb-3">
+<div class="p-2 bg-primary/10 text-primary rounded-lg">
+<span class="material-symbols-outlined">storage</span>
+</div>
+<h4 class="font-bold text-slate-700 dark:text-slate-200">Media Storage</h4>
+</div>
+<p class="text-2xl font-black text-slate-900 dark:text-white">2.4 GB <span class="text-sm font-normal text-slate-400">of 10 GB</span></p>
+</div>
+</div>
+</div>
+</main>
+<!-- CMS Footer Actions -->
+<footer class="mt-auto bg-slate-50 dark:bg-background-dark/50 border-t border-slate-200 dark:border-primary/20 py-4 px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-500">
+<div class="flex items-center gap-4">
+<span>© 2024 Lumina Admin CMS</span>
+<span class="w-1 h-1 rounded-full bg-slate-300"></span>
+<a class="hover:text-primary" href="#">System Status: All systems operational</a>
+</div>
+<div class="flex items-center gap-6">
+<a class="hover:text-primary" href="#">API Documentation</a>
+<a class="hover:text-primary" href="#">Help Center</a>
+<a class="hover:text-primary" href="#">Legal</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

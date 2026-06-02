@@ -34,7 +34,7 @@ export default async function BookingPage({ params, searchParams }: Props) {
 
   return (
     <main className="mx-auto max-w-lg px-4 py-8 sm:py-12">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
+      <h1 className="text-2xl font-bold text-[#0A2540] mb-6">
         {locale === 'es' ? 'Completar Reserva' : locale === 'it' ? 'Completa Prenotazione' : 'Complete Your Booking'}
       </h1>
       <BookingForm locale={locale} />

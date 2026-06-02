@@ -78,7 +78,7 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
       <button
         type="submit"
         disabled={!stripe || processing}
-        className="w-full rounded-lg bg-blue-600 py-3 text-base font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+        className="w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
       >
         {processing ? 'Processing...' : 'Pay Now'}
       </button>

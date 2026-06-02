@@ -11,13 +11,13 @@ export default function FeaturedTours({ tours, locale }: FeaturedToursProps) {
   if (tours.length === 0) return null;
 
   return (
-    <section className="py-12">
+    <section className="py-12 bg-[#F7F9FB]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">Featured Tours</h2>
+          <h2 className="text-2xl font-bold text-[#0A2540]">Featured Tours</h2>
           <Link
             href={`/${locale}/search`}
-            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+            className="text-sm font-medium text-[#0A2540] hover:text-[#FFB800]"
           >
             View all &rarr;
           </Link>

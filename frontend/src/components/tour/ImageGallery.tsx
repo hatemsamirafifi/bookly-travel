@@ -62,7 +62,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
             <>
               <button
                 onClick={() => goTo(activeIndex - 1)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
                 aria-label="Previous image"
               >
                 <svg className="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -71,7 +71,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
               </button>
               <button
                 onClick={() => goTo(activeIndex + 1)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
                 aria-label="Next image"
               >
                 <svg className="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -89,7 +89,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
                 key={i}
                 onClick={() => setActiveIndex(i)}
                 className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
-                  i === activeIndex ? 'border-blue-500' : 'border-transparent hover:border-gray-300'
+                  i === activeIndex ? 'border-[#0A2540]' : 'border-transparent hover:border-gray-300'
                 }`}
                 aria-label={`View image ${i + 1}`}
                 aria-current={i === activeIndex ? 'true' : undefined}

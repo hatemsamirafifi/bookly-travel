@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Global Tours Marketplace Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "accent": "#FFB800",
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#111827",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-slate-900 font-display">
+<div class="relative flex min-h-screen w-full flex-col pb-24">
+<!-- Header Section -->
+<header class="flex items-center bg-white border-b border-slate-100 p-4 justify-between sticky top-0 z-50">
+<div class="flex size-10 shrink-0 items-center overflow-hidden rounded-full">
+<img alt="Alex Profile" class="h-full w-full object-cover" data-alt="Professional headshot of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdM0Z_vaqalt0xH5lWfkQCBxLMVRi_06_qrNa1_Glg8tUBzJYEmXYRyRcZw-gne2Z5yjeMRmFsk6URHaYJVF5kolqhQULoDZtWlMzSkPLQ4Xv0LfAlWzjHEp6hGTJsax3C0fLeSA24xGry4wGDFK8t7u7DrWl3-B9nPe2ukVqngUvRh23Ap3Ogoq1HsrUFfhVMVf6-FN5O9U5Nj6TbkMzd01JdB0H_7jWwpQRyE1a8C81ioA4rd8zT3fMuAI6432hSQyGFxEHi9pd4"/>
+</div>
+<div class="flex-1 px-3">
+<p class="text-slate-500 text-xs font-medium">Good morning</p>
+<h2 class="text-primary text-lg font-bold leading-tight">Welcome back, Alex!</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full bg-slate-50 text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Summary Stats -->
+<div class="flex gap-4 p-4 overflow-x-auto no-scrollbar">
+<div class="flex min-w-[160px] flex-1 flex-col gap-1 rounded-xl p-5 bg-primary text-white shadow-lg">
+<p class="text-white/70 text-sm font-medium">Active Bookings</p>
+<div class="flex items-baseline gap-2">
+<p class="text-2xl font-bold">3</p>
+<p class="text-accent text-xs font-bold">+1 new</p>
+</div>
+</div>
+<div class="flex min-w-[160px] flex-1 flex-col gap-1 rounded-xl p-5 bg-white border border-slate-100 shadow-sm">
+<p class="text-slate-500 text-sm font-medium">Reward Points</p>
+<div class="flex items-baseline gap-2">
+<p class="text-primary text-2xl font-bold">12,450</p>
+<span class="material-symbols-outlined text-accent text-sm">stars</span>
+</div>
+</div>
+</div>
+<!-- Upcoming Booking -->
+<section class="px-4 py-4">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-primary text-lg font-bold">Upcoming Trip</h3>
+<a class="text-primary text-sm font-semibold" href="#">See all</a>
+</div>
+<div class="group relative flex flex-col overflow-hidden rounded-xl bg-white border border-slate-100 shadow-sm transition-all hover:shadow-md">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Serengeti Safari" class="h-full w-full object-cover transition-transform group-hover:scale-105" data-alt="Golden sunset over African savanna with acacia trees" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7AdKjOmv9HPR5MHJ8GygGlmMQ-PTp4abnp-tVPw06c8QnO_49tlt8xvR3bbbELttebkLdnrcT4bYJo6ym_3iX6RbesETO6v9MRZrZ1eTS4x2OUgilSs7EGaTZhiB7fAsDp8YutY-YyssvqiZNiqssIfTgFK9fAfyEpfSqTzuXUkUU5JgVRladMSSuug9PmPnAMW4LqtfxGAoWGJYsQxRrFdxOIlpWGjZwMpmSKJLzAt4mEdGRniFeowgolHbgWVwbcuplzYkrhOV4"/>
+<div class="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary backdrop-blur-sm">
+                        Confimed
+                    </div>
+</div>
+<div class="flex flex-col p-4">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h4 class="text-primary text-lg font-bold">Safari in Serengeti</h4>
+<p class="text-slate-500 text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+                                Oct 15 - Oct 22 • Tanzania
+                            </p>
+</div>
+</div>
+<p class="text-slate-600 text-sm mb-4">Your next adventure starts in <span class="text-primary font-bold">12 days</span>.</p>
+<button class="w-full rounded-lg bg-primary py-2.5 text-center text-sm font-bold text-white transition-colors hover:bg-slate-800">
+                        View Details
+                    </button>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="px-4 py-4">
+<h3 class="text-primary text-lg font-bold mb-3">Quick Actions</h3>
+<div class="grid grid-cols-3 gap-3">
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 border border-slate-100 shadow-sm">
+<div class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">search</span>
+</div>
+<span class="text-xs font-semibold text-slate-700">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 border border-slate-100 shadow-sm">
+<div class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">manage_accounts</span>
+</div>
+<span class="text-xs font-semibold text-slate-700">Profile</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white p-4 border border-slate-100 shadow-sm">
+<div class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<span class="text-xs font-semibold text-slate-700">Support</span>
+</button>
+</div>
+</section>
+<!-- My Wishlist -->
+<section class="py-4">
+<div class="flex items-center justify-between px-4 mb-3">
+<h3 class="text-primary text-lg font-bold">My Wishlist</h3>
+<a class="text-primary text-sm font-semibold" href="#">View List</a>
+</div>
+<div class="flex gap-4 overflow-x-auto px-4 no-scrollbar">
+<div class="min-w-[200px] flex-shrink-0 group">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl mb-2">
+<img alt="Iceland Aurora" class="h-full w-full object-cover transition-transform group-hover:scale-110" data-alt="Vibrant green northern lights over a snowy landscape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhp4vDMhTb_j0StUS44Qrcn4X1GoqCxj4ya2LSsSqaqAwePr8aERScYbn19Evb-o7J2JNLBCq3Bva4mt_Qvo1rtP9mJaq4Xz06i-7wuec1xKWI-XHLVLY-0ElxJe-JUDzaLF0samAiteoiDYoSVNVQNy0kQCbEqMVBXaEWQVjPyoJXqwr-ypbT-kCATjPqZ_xsVTqNoYLb9Zg0UEb3cwd6gTDQK8InX1kGJEtNdcDS5PadbkYwVuDOKu3gsZn43rG7xDWl7u1Mf2i4"/>
+<button class="absolute top-2 right-2 flex size-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md">
+<span class="material-symbols-outlined text-sm fill-current text-accent">heart_check</span>
+</button>
+</div>
+<p class="text-primary font-bold text-sm truncate">Northern Lights Hunting</p>
+<p class="text-slate-500 text-xs">Reykjavik, Iceland</p>
+</div>
+<div class="min-w-[200px] flex-shrink-0 group">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl mb-2">
+<img alt="Taj Mahal" class="h-full w-full object-cover transition-transform group-hover:scale-110" data-alt="The Taj Mahal reflecting in its garden pools" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQHaPBMA-Seq5V1Xl4H-xbSMTrgZT4SBcGIzuD8-moxXB8W42SZM3gyShhc0WsQXrAnDFBd0jIubRJPzvsJ8r-5LZsfe9I-90AeyNUZUEyKDw7IT26rBETh8TIZpw5w3vsh-rnZTLvbq5TpTEcGGSMFXL2JfmlO95_tBcCdZCDZmNim7g5EWoEWZU4hVNIW_flq7mfMwWxnaqttvt4kSIpk7oVRIitdvIm6DFk-EHFXH_Df2SL3-kojP1PQaITT-3XVMYuWQE3ic2s"/>
+<button class="absolute top-2 right-2 flex size-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md">
+<span class="material-symbols-outlined text-sm fill-current text-accent">heart_check</span>
+</button>
+</div>
+<p class="text-primary font-bold text-sm truncate">Taj Mahal Private Tour</p>
+<p class="text-slate-500 text-xs">Agra, India</p>
+</div>
+<div class="min-w-[200px] flex-shrink-0 group">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl mb-2">
+<img alt="Sydney Opera House" class="h-full w-full object-cover transition-transform group-hover:scale-110" data-alt="Sydney Opera House at sunset with calm harbor water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJqhkWgxPJ9CVaVg2sUZeOhtmHllKyyespC2ZVOtevsPBVsi5Pj9Qjt_nyrJ1Ktf5lmAMNOta6w_n-WWym5Z_X0sWkt-hLejl48kBf7pGIXDSJ5olv8YRGJUHQI6Iwrh_lkZb-Wq7ByEGlrUjwZMhCbxqvcs1GvIsQmVO9v44P9QUi4fwJpLE06Yse67seOTvhRakfDLDUiHnTt9dVEjiSKAZpaZ0NXftXpyK4sVA5JY98zK421I8Mjj24nyACX9k4BTF9KT_9-oVv"/>
+<button class="absolute top-2 right-2 flex size-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md">
+<span class="material-symbols-outlined text-sm fill-current text-accent">heart_check</span>
+</button>
+</div>
+<p class="text-primary font-bold text-sm truncate">Sydney Harbour Cruise</p>
+<p class="text-slate-500 text-xs">Sydney, Australia</p>
+</div>
+</div>
+</section>
+<!-- Personalized Recommendations -->
+<section class="px-4 py-4">
+<h3 class="text-primary text-lg font-bold mb-3">Picked for You</h3>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+<div class="size-20 overflow-hidden rounded-lg shrink-0">
+<img alt="Santorini" class="h-full w-full object-cover" data-alt="White and blue buildings overlooking the Mediterranean sea" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY6j3Q0Fr1UpgE3ICUKluCXhLKmYWLmHg2I2xpvFu9Vuv7S0QTCS9omtSFkYjbIuGj0o4izBoVy8LchHlnI5mwEzIrm8NM45IGyD1MI6f1PnPghiDGx64j_fxOZrjahAgoeRk_i-gOaHmDP0l-VJxXqBS3sfkPst5lFaTywRfrDrkdks_QFkiIXRqzREBlrWUxPWkYL0BZr7z6aos0ZAEt0w7gSBpvECIfwBr9-eJ9pkuqUwFdgaIzAPxf3Z6JKk-AjmJ7vnGc9ssp"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-primary font-bold text-sm truncate">Aegean Sea Yacht Tour</p>
+<p class="text-slate-500 text-xs mb-1">Santorini, Greece</p>
+<div class="flex items-center justify-between">
+<p class="text-primary font-bold text-sm">$450 <span class="text-slate-400 font-normal text-xs">/ person</span></p>
+<div class="flex items-center text-accent">
+<span class="material-symbols-outlined text-xs fill-current">star</span>
+<span class="text-xs font-bold text-slate-700 ml-1">4.9</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+<div class="size-20 overflow-hidden rounded-lg shrink-0">
+<img alt="Swiss Alps" class="h-full w-full object-cover" data-alt="Majestic snow-capped mountain peaks under a clear sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM3GHawaCt8t-95yKmCHotzX56eq6NYkM7FPaEEWhSYjoT5foGVmtaQkz-aQawO9MCr_X5ODOBeUKkprVOc6qx_jt2gQoZ06apIMx9_c6xxqL3Q3gqjyAAgdJAt8THvYWibeTFYM-vUM5EFbBER-wYWMFcESuynEZKo5AeMtG9nyPoi_YNCXoOwjggp0IGnzh-lywqKjGRedztVVTI7kgahKrWsrgII_X3U9fm8EEaamgpQuWFRJkh3znUSCNatok8tfKJAjXFVWqF"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-primary font-bold text-sm truncate">Alps Glacier Hike</p>
+<p class="text-slate-500 text-xs mb-1">Zermatt, Switzerland</p>
+<div class="flex items-center justify-between">
+<p class="text-primary font-bold text-sm">$280 <span class="text-slate-400 font-normal text-xs">/ person</span></p>
+<div class="flex items-center text-accent">
+<span class="material-symbols-outlined text-xs fill-current">star</span>
+<span class="text-xs font-bold text-slate-700 ml-1">4.8</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-100 px-6 pb-6 pt-3 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+<div class="flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-slate-400 transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Saved</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-current">calendar_month</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Bookings</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>
