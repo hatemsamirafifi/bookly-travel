@@ -29,6 +29,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'locale',
+        'first_name',
+        'last_name',
+        'phone',
+        'preferred_currency',
+        'marketing_emails',
+        'avatar_url',
         'failed_login_count',
         'locked_until',
         'last_lockout_email_sent_at',
@@ -48,6 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'locked_until' => 'datetime',
             'last_lockout_email_sent_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'marketing_emails' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -61,10 +68,35 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Wishlist items for this user.
+     */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Wishlist\Models\Wishlist::class);
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getFullNameAttribute(): string
+    {
+        if ($this->first_name || $this->last_name) {
+            return trim("{$this->first_name} {$this->last_name}");
+        }
+
+        return $this->name;
+    }
+
+    /**
      * Audit logs representing authentication events for this user.
      */
     public function auditLogs(): HasMany
     {
         return $this->hasMany(AuthAuditLog::class);
+    }
+
+    public function partner()
+    {
+        return $this->hasOne(\App\Domains\Partner\Models\Partner::class);
     }
 }

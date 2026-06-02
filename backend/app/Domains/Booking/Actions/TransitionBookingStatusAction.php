@@ -7,7 +7,7 @@ use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException; // kept for other uses
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -27,7 +27,8 @@ class TransitionBookingStatusAction
         }
 
         if ($booking->tour->partner_id !== $partner->id) {
-            throw new AccessDeniedHttpException('You do not own this tour.');
+            // Return 404 instead of 403 to prevent information leakage about other partners' bookings
+            throw new NotFoundHttpException('Booking not found.');
         }
 
         if (! in_array($targetStatus, [Booking::STATUS_COMPLETED, Booking::STATUS_NO_SHOW], true)) {

@@ -1,0 +1,1 @@
+﻿export default function AnalyticsPage() { return <h1 className="text-2xl font-bold text-[#0A2540]">Analytics</h1>; }

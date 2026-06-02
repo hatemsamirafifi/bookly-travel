@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 
-export default async function NotFound({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
+export default async function NotFound({ params }: { params?: Promise<{ locale: string }> }) {
+  const locale = params ? (await params).locale : routing.defaultLocale;
   const t = await getTranslations({ locale, namespace: 'notFound' });
 
   return (

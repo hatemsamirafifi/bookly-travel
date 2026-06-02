@@ -62,14 +62,14 @@ async function apiFetch(url: string, options?: RequestInit) {
 }
 
 export async function submitReview(payload: SubmitReviewPayload): Promise<ReviewResponse> {
-  return apiFetch('/reviews', {
+  return apiFetch('/public/reviews', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 }
 
 export async function editReview(reviewId: number, payload: EditReviewPayload): Promise<ReviewResponse> {
-  return apiFetch(`/reviews/${reviewId}`, {
+  return apiFetch(`/public/reviews/${reviewId}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   });
@@ -81,6 +81,6 @@ export async function fetchTourReviews(
   perPage = 5,
 ): Promise<TourReviewsResponse> {
   return apiFetch(
-    `/tours/${tourSlug}/reviews?page=${page}&per_page=${perPage}`,
+    `/public/tours/${tourSlug}/reviews?page=${page}&per_page=${perPage}`,
   );
 }

@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { User, authApi } from '../api/auth';
+import { setTokenGetter } from '../auth/token';
 import { z } from 'zod';
 import { loginSchema, registerSchema } from '../validators/auth';
 
@@ -25,6 +26,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Register token getter so api/traveler.ts and others use a single source of truth
+  useEffect(() => {
+    setTokenGetter(() => token);
+  }, [token]);
 
   useEffect(() => {
     const restoreSession = async () => {

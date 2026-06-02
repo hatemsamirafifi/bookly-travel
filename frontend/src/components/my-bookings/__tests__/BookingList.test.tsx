@@ -1,9 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import BookingList from '../BookingList';
-import { getMyBookings } from '@/lib/api/my-bookings';
+import { getMyBookings, getMyBookingsSummary } from '@/lib/api/my-bookings';
+import type { TravelerBooking } from '@/types/traveler';
 
 jest.mock('@/lib/api/my-bookings', () => ({
   getMyBookings: jest.fn(),
+  getMyBookingsSummary: jest.fn(),
 }));
 
 jest.mock('next/navigation', () => ({
@@ -11,11 +13,11 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-const bookings = [
+const bookings: TravelerBooking[] = [
   {
     id: '1',
     reference: 'BKO-1',
-    status: 'confirmed',
+    status: 'confirmed' as const,
     tour_date: '2026-07-01',
     created_at: '2026-05-01T10:00:00Z',
     participants: 2,
@@ -30,7 +32,7 @@ const bookings = [
   {
     id: '2',
     reference: 'BKO-2',
-    status: 'completed',
+    status: 'completed' as const,
     tour_date: '2026-04-01',
     created_at: '2026-05-02T10:00:00Z',
     participants: 1,
@@ -53,6 +55,15 @@ describe('BookingList', () => {
         last_page: 1,
         per_page: 12,
         total: bookings.length,
+      },
+    });
+    jest.mocked(getMyBookingsSummary).mockResolvedValue({
+      data: {
+        total: 2,
+        confirmed: 1,
+        completed: 1,
+        cancelled: 0,
+        no_show: 0,
       },
     });
   });

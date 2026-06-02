@@ -2,7 +2,13 @@
 
 namespace App\Models;
 
+use App\Domains\Partner\Models\AvailabilityException;
+use App\Domains\Partner\Models\AvailabilityRule;
+use App\Domains\Partner\Models\PricingTier;
+use App\Domains\Partner\Models\TourDraft;
+use App\Domains\Partner\Models\TourMedia;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class Tour extends Model
@@ -158,5 +164,35 @@ class Tour extends Model
             'USD' => '$' . number_format($amount / 100, 2),
             default => number_format($amount / 100, 2) . ' ' . $currency,
         };
+    }
+
+    public function media(): HasMany
+    {
+        return $this->hasMany(TourMedia::class)->orderBy('sort_order');
+    }
+
+    public function pricingTiers(): HasMany
+    {
+        return $this->hasMany(PricingTier::class);
+    }
+
+    public function availabilityRules(): HasMany
+    {
+        return $this->hasMany(AvailabilityRule::class);
+    }
+
+    public function availabilityExceptions(): HasMany
+    {
+        return $this->hasMany(AvailabilityException::class);
+    }
+
+    public function drafts(): HasMany
+    {
+        return $this->hasMany(TourDraft::class);
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Booking\Models\Booking::class);
     }
 }

@@ -27,6 +27,7 @@ class Booking extends Model
     public const STATUS_CANCELLED = 'cancelled';
     public const STATUS_NO_SHOW = 'no_show';
     public const STATUS_EXPIRED = 'expired';
+    public const STATUS_CANCELLATION_REQUESTED = 'cancellation_requested';
 
     public const REFERENCE_PREFIX = 'BKO-';
     public const REFERENCE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';

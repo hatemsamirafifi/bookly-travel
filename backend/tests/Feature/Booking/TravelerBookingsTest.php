@@ -132,8 +132,37 @@ it('cancels an eligible booking', function () {
     expect(Booking::find($booking->id)->status)->toBe('cancelled');
 });
 
-it('returns 422 for already cancelled booking', function () {
-    $booking = Booking::create([
+it('returns summary counts grouped by status', function () {
+    $statuses = ['confirmed', 'confirmed', 'completed', 'cancelled', 'cancelled', 'cancelled'];
+    foreach ($statuses as $status) {
+        Booking::create([
+            'reference' => Booking::generateReference(),
+            'traveler_id' => $this->traveler->id,
+            'tour_id' => $this->tour->id,
+            'tour_date' => now()->addDays(rand(1, 90))->toDateString(),
+            'participant_count' => 1,
+            'price_per_person' => 8900,
+            'total_price' => 8900,
+            'currency' => 'EUR',
+            'status' => $status,
+            'idempotency_key' => Str::uuid()->toString(),
+            'locale' => 'en',
+        ]);
+    }
+
+    $response = getJson('/api/public/my-bookings/summary', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.total', 6)
+        ->assertJsonPath('data.confirmed', 2)
+        ->assertJsonPath('data.completed', 1)
+        ->assertJsonPath('data.cancelled', 3)
+        ->assertJsonPath('data.no_show', 0);
+});
+
+it('returns 422 for already cancelled booking', function () {    $booking = Booking::create([
         'reference' => Booking::generateReference(),
         'traveler_id' => $this->traveler->id,
         'tour_id' => $this->tour->id,

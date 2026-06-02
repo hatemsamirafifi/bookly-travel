@@ -77,6 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('my-bookings')->middleware('throttle:booking.get')->group(function () {
         Route::get('/', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'index']);
+        Route::get('summary', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'summary']);
         Route::get('{reference}', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'show']);
         Route::post('{reference}/cancel', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'cancel'])
             ->middleware('throttle:booking.create');
@@ -105,3 +106,34 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::get('tours/{slug}/reviews', [\App\Domains\Reviews\Controllers\Public\ReviewController::class, 'index'])
     ->middleware('throttle:detail');
+
+/*
+|--------------------------------------------------------------------------
+| Traveler API Routes (Feature: 011-tour-management)
+|--------------------------------------------------------------------------
+| Authenticated traveler endpoints for profile, wishlist, and reviews.
+| Rate limit: 120 req/min per user.
+*/
+Route::middleware(['auth:sanctum'])->prefix('traveler')->middleware('throttle:traveler')->group(function () {
+    Route::prefix('bookings')->middleware('throttle:booking.get')->group(function () {
+        Route::get('/', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'index']);
+        Route::get('{reference}', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'show']);
+        Route::post('{reference}/cancel', [\App\Domains\Booking\Controllers\Public\TravelerBookingController::class, 'cancel'])
+            ->middleware('throttle:booking.create');
+    });
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [\App\Domains\Traveler\Controllers\Public\ProfileController::class, 'show']);
+        Route::put('/', [\App\Domains\Traveler\Controllers\Public\ProfileController::class, 'update']);
+        Route::post('change-password', [\App\Domains\Traveler\Controllers\Public\ProfileController::class, 'changePassword']);
+    });
+
+    Route::prefix('wishlist')->group(function () {
+        Route::get('/', [\App\Domains\Traveler\Controllers\Public\WishlistController::class, 'index']);
+        Route::post('/', [\App\Domains\Traveler\Controllers\Public\WishlistController::class, 'store']);
+        Route::delete('{tour_id}', [\App\Domains\Traveler\Controllers\Public\WishlistController::class, 'destroy']);
+        Route::get('status', [\App\Domains\Traveler\Controllers\Public\WishlistController::class, 'status']);
+    });
+
+    Route::get('reviews', [\App\Domains\Traveler\Controllers\Public\ReviewController::class, 'index']);
+});

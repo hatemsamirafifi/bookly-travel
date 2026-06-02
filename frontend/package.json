@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "jest",
     "test:e2e": "playwright test",
-    "test:a11y": "playwright test --project=a11y"
+    "test:a11y": "playwright test --project=a11y",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags=\"--headless\" --only-categories=performance,accessibility,best-practices,seo",
+    "lhci": "lhci autorun"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
@@ -42,6 +44,8 @@
     "eslint-config-next": "16.2.3",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
+    "@lhci/cli": "^0.14",
+    "lighthouse": "^12",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.9",
     "typescript": "^5"
