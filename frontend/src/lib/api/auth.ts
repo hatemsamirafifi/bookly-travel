@@ -83,7 +83,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     ...options.headers,
   };
 
-  const response = await fetch(`${API_URL}/public/auth${endpoint}`, {
+  const response = await fetch(`${API_URL}/api/public/auth${endpoint}`, {
     ...options,
     headers,
     credentials: 'include',

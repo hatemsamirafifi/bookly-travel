@@ -3,11 +3,13 @@
 namespace App\Domains\Reviews\Models;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\ReviewResponse;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Review extends Model
 {
@@ -56,6 +58,11 @@ class Review extends Model
     public function auditTrails(): HasMany
     {
         return $this->hasMany(ReviewAuditTrail::class);
+    }
+
+    public function reviewResponse(): HasOne
+    {
+        return $this->hasOne(ReviewResponse::class);
     }
 
     public function isEdited(): bool

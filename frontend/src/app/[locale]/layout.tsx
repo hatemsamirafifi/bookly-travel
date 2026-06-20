@@ -5,11 +5,10 @@ import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/routing';
 import { AuthProvider } from '@/lib/hooks/useAuth';
 import QueryProvider from '@/lib/query-provider';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Inter } from "next/font/google";
 import ErrorBoundary from '@/components/shared/ErrorBoundary';
 import CookieConsentBanner from '@/components/shared/CookieConsent';
+import '../globals.css';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,9 +41,7 @@ export default async function LocaleLayout({
           <QueryProvider>
             <AuthProvider>
               <ErrorBoundary>
-                <Header locale={locale} />
-                <main id="main-content" className="flex-1">{children}</main>
-                <Footer locale={locale} />
+                {children}
                 <CookieConsentBanner />
               </ErrorBoundary>
             </AuthProvider>

@@ -55,6 +55,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
             });
 
+            RateLimiter::for('traveler', function (Request $request) {
+                return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+            });
+
             Route::middleware('api')
                 ->prefix('api/public')
                 ->group(base_path('routes/api/public.php'));
@@ -71,6 +75,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'partner' => \App\Domains\Partner\Middleware\PartnerRoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

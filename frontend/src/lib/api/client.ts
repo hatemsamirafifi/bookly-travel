@@ -1,4 +1,12 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
+// Use internal Docker URL for SSR, public URL for browser
+const API_URL =
+  typeof window === 'undefined' && process.env.API_INTERNAL_URL
+    ? process.env.API_INTERNAL_URL
+    : process.env.NEXT_PUBLIC_API_URL;
+
+if (!API_URL) {
+  throw new Error('NEXT_PUBLIC_API_URL environment variable is required');
+}
 
 interface FetchOptions extends RequestInit {
   locale?: string;

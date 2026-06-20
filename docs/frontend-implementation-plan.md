@@ -1,4 +1,4 @@
-# Frontend Implementation Plan - Stitch to Spec-Kit Pipeline
+﻿# Frontend Implementation Plan - Stitch to Spec-Kit Pipeline
 
 > **Goal**: Map every Stitch UI screen (~47 total; 34 Next.js + 13 Filament reference) to Spec-Kit specs and build the Bookly frontend through `specify -> clarify -> plan -> tasks -> implement`.
 > **Status**: Ready for task generation after applying the traceability rules below.
@@ -237,35 +237,89 @@ Admin screens use Filament server-rendered views, not Next.js routes.
 
 **Done When**: All `ST-015-*` and `ST-017-*` screens implemented, auth guard redirects work, voucher download authorized, profile save persists, and wishlist toggling is functional.
 
-### Phase 3: Reviews - Spec `009`
+### Phase 3: Reviews and Ratings - Spec `009`
 
-**Objective**: Complete traveler review display and submission, plus Filament moderation reference work.
+**Objective**: Complete the reviews and ratings frontend for travelers, partners, and admin moderation. Covers review display on tour detail, submission and editing from booking history, My Reviews dashboard, partner review analytics, and Filament moderation reference (ST-013-009).
 
 ```text
-1. /speckit.specify - Complete Spec 009 with review display, eligibility, and moderation requirements.
+1. /speckit.specify - Amend Spec 009 with frontend review display, eligibility, and moderation requirements.
    Target directory: specs/009-reviews-ratings/ (amend existing).
-2. /speckit.clarify - Resolve verified-booking rules, rating scale, media policy, and abuse states.
-3. /speckit.plan - Define tour detail review components, dashboard entry points, and Filament references.
-4. /speckit.tasks - Generate tasks for review sections and ST-013-009 reference work.
-5. /speckit.implement - Build review UI and moderation resources.
+2. /speckit.clarify - Resolve verified-booking rules, 48-hour edit window, rating scale, and empty states.
+3. /speckit.plan - Define tour detail review components, booking detail review CTA, My Reviews dashboard, partner view, and Filament references.
+4. /speckit.tasks - Generate frontend tasks with ST-009-* and ST-013-009 references.
+5. /speckit.implement - Build and wire review UI, E2E tests, and a11y coverage.
 ```
 
-**Dependencies**: `007` (done), `008` (Phase 1), `015` (Phase 2).
+**Dependencies**: `006-008` (done), `010` (Phase 1), `011` (Phase 2).
 
-**Deliverables**: Review summary/list on tour detail, eligible submission flow, pending/rejected/approved states, Filament moderation styling.
+**Deliverables**:
+- Review aggregate rating and paginated list on tour detail page
+- Review submission form on completed booking detail (eligible within 30 days)
+- Review editing within 48-hour window with "Edited" indicator
+- My Reviews dashboard with pagination, edit links, and empty states
+- Partner reviews dashboard (read-only analytics)
+- Filament moderation reference (ST-013-009)
+- E2E and a11y test coverage for all review surfaces
 
 **API Endpoints Consumed**:
-- `GET /api/public/tours/{slug}/reviews` - Paginated reviews
-- `POST /api/public/bookings/{id}/reviews` - Submit review
-- Review eligibility check (booking must be `completed`, one review per booking)
+- GET /api/public/tours/{slug}/reviews - Paginated tour reviews with aggregate stats (unauthenticated)
+- POST /api/public/reviews - Submit review (authenticated, requires booking_reference, rating, comment, locale)
+- PUT /api/public/reviews/{review} - Edit review within 48h window (authenticated, owner-only)
+- GET /api/traveler/reviews - Traveler's own reviews with pagination
+- GET /api/partner/reviews - Partner's tour reviews (read-only)
+- GET /api/admin/reviews - Admin moderation queue
+- POST /api/admin/reviews/{review}/hide - Hide review
+- POST /api/admin/reviews/{review}/reinstate - Reinstate review
+
+**Frontend Components & Routes**:
+
+| Stitch ID | Component / Route | Spec | Purpose |
+|-----------|------------------|------|---------|
+| ST-009-001 | components/reviews/ReviewList.tsx | 009 | Paginated review list on tour detail |
+| ST-009-002 | components/reviews/AggregateRating.tsx | 009 | Average rating + review count display |
+| ST-009-003 | components/reviews/ReviewCard.tsx | 009 | Individual review item with name, rating, date, comment |
+| ST-009-004 | components/reviews/StarRating.tsx | 009 | Interactive 5-star rating input |
+| ST-009-005 | components/reviews/ReviewForm.tsx | 009 | Submit / edit review form with validation |
+| ST-009-006 | app/[locale]/my-bookings/[reference]/client.tsx | 009 | Booking detail with review CTA and existing review display |
+| ST-015-004 | app/[locale]/my-reviews/page.tsx | 009 | My Reviews dashboard (SSR shell + CSR list) |
+| ST-015-004 | components/reviews/MyReviewsList.tsx | 009 | Paginated list of user's reviews with edit links |
+| ST-010-00* | app/[locale]/partner/reviews/page.tsx | 009 | Partner reviews dashboard (new route) |
+| ST-013-009 | Filament ReviewResource | 009 | Admin moderation UI (design reference only) |
+
+**Task Traceability**:
+
+| Task ID | Description | Spec | Stitch | Route / Component | API | Verification |
+|---------|-------------|------|--------|------------------|-----|------------|
+| T009-FE-001 | Integrate ReviewList into tour detail sidebar | 009 | ST-009-001 | /tours/[slug] | GET /api/public/tours/{slug}/reviews | Unit + visual diff |
+| T009-FE-002 | Wire AggregateRating in tour header | 009 | ST-009-002 | TourDetail.tsx | Tour detail API meta | Unit test |
+| T009-FE-003 | Enhance ReviewForm with edit mode and 48h guard | 009 | ST-009-005 | BookingDetailClient | PUT /api/public/reviews/{review} | E2E: edit within 48h |
+| T009-FE-004 | Show existing review in booking detail with "Edited" badge | 009 | ST-009-006 | BookingDetailClient | GET /api/public/my-bookings/{reference} | E2E: read-only after 48h |
+| T009-FE-005 | Add pagination to MyReviewsList | 009 | ST-015-004 | /my-reviews | GET /api/traveler/reviews | Unit test |
+| T009-FE-006 | Add edit links to MyReviewsList within 48h window | 009 | ST-015-004 | /my-reviews | PUT /api/public/reviews/{review} | E2E: navigate and edit |
+| T009-FE-007 | Create partner reviews page | 009 | ST-010-00* | /partner/reviews | GET /api/partner/reviews | Visual diff + unit |
+| T009-FE-008 | Add review a11y tests | 009 | - | Review components | - | npm run test:a11y |
+| T009-FE-009 | Add review E2E tests (submit, display, edit, eligibility) | 009 | - | All review routes | All review APIs | npm run test:e2e -- --grep "review" |
+| T009-FE-010 | Add i18n keys for review flows | 009 | - | messages/en.json, es.json, it.json | - | All three locales complete |
+
+**Backend Dependencies for Frontend Completion**:
+- BookingResponseDTO must include review relation so the booking detail page knows whether a review exists and whether it is still editable.
+- GET /api/traveler/reviews endpoint must exist and return paginated reviews with tour.slug, rating, text, submitted_at, and edited flags.
 
 **Verification**:
-- Only travelers with completed bookings can submit reviews
-- Review form validates rating (1-5) and comment (10-2000 chars)
-- Review appears on tour detail page after submission
-- `npm run test` - Review component unit tests pass
+- `npm run build` - No TypeScript errors in review components
+- `npm run lint` - No ESLint errors in review components
+- `npm run test` - Review component unit tests pass (ReviewForm, ReviewList, StarRating, AggregateRating)
+- `npm run test:e2e -- --grep "review"` - Review submission, display, and edit flows pass
+- `npm run test:a11y` - Review components pass axe-core checks (star rating keyboard accessibility, form labels)
+- Review eligibility enforced: only completed bookings within 30 days show the "Write a Review" CTA
+- 48-hour edit window: edit button visible within window, hidden after expiry; "Edited" badge shown on updated reviews
+- Rate limiting: backend enforces 10 reviews/hour per traveler; frontend surfaces 429 error with retry messaging
+- Review appears on tour detail within 2 seconds of submission (optimistic UI or refetch)
+- Empty states render correctly when no reviews exist ("No reviews yet. Be the first!")
+- Mobile layout verified at 390px for tour detail reviews, booking detail review form, and My Reviews dashboard
 
-**Done When**: Review display on tour detail, submission flow for eligible travelers, moderation states visible in Filament.
+
+**Done When**: Review display integrated on tour detail, submission and editing flows work from booking detail, My Reviews dashboard has pagination and edit links, partner review page exists, all E2E and a11y tests pass, and Filament moderation resources match ST-013-009 reference.
 
 ### Phase 4: Partner Dashboard - Specs `010-012`
 

@@ -15,6 +15,24 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TravelerBookingController
 {
+    public function summary(Request $request): JsonResponse
+    {
+        $counts = Booking::where('traveler_id', (int) $request->user()->id)
+            ->selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        return response()->json([
+            'data' => [
+                'total' => $counts->sum(),
+                'confirmed' => (int) ($counts['confirmed'] ?? 0),
+                'completed' => (int) ($counts['completed'] ?? 0),
+                'cancelled' => (int) ($counts['cancelled'] ?? 0),
+                'no_show' => (int) ($counts['no_show'] ?? 0),
+            ],
+        ]);
+    }
+
     public function index(Request $request, GetTravelerBookingsAction $action): JsonResponse
     {
         $validated = $request->validate([

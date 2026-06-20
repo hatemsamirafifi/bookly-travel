@@ -30,12 +30,12 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
     setBusy(true);
     try {
       if (previous) {
-        await apiClient<void>(`/traveler/wishlist/${encodeURIComponent(String(tourId))}`, {
+        await apiClient<void>(`/api/public/traveler/wishlist/${encodeURIComponent(String(tourId))}`, {
           method: 'DELETE',
           requireCsrf: true,
         });
       } else {
-        await apiClient('/traveler/wishlist', {
+        await apiClient('/api/public/traveler/wishlist', {
           method: 'POST',
           requireCsrf: true,
           headers: { 'Content-Type': 'application/json' },

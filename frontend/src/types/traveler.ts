@@ -99,4 +99,5 @@ export interface TravelerReview {
   rating: number;
   text: string;
   submitted_at: string;
+  can_edit?: boolean;
 }

@@ -9,7 +9,7 @@ interface ReviewFormData {
 }
 
 interface ReviewFormProps {
-  bookingReference: string;
+  bookingReference?: string;
   locale: string;
   existingReview?: {
     id: number;
@@ -125,7 +125,7 @@ export default function ReviewForm({
       )}
 
       <input type="hidden" name="locale" value={locale} />
-      <input type="hidden" name="booking_reference" value={bookingReference} />
+      {bookingReference && <input type="hidden" name="booking_reference" value={bookingReference} />}
 
       <div className="flex items-center gap-2">
         <button

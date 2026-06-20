@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import BookingCard from './BookingCard';
-import { getMyBookings } from '@/lib/api/my-bookings';
+import { getMyBookings, getMyBookingsSummary } from '@/lib/api/my-bookings';
 import type { TravelerBooking } from '@/types/traveler';
 
 interface BookingListProps {
@@ -14,12 +14,19 @@ interface BookingListProps {
 
 const STATUS_FILTERS = ['', 'confirmed', 'completed', 'cancelled'] as const;
 
+interface Summary {
+  total: number;
+  confirmed: number;
+  completed: number;
+  cancelled: number;
+}
+
 export default function BookingList({ locale }: BookingListProps) {
   const t = useTranslations('traveler.dashboard');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [bookings, setBookings] = useState<TravelerBooking[]>([]);
-  const [summaryBookings, setSummaryBookings] = useState<TravelerBooking[]>([]);
+  const [summary, setSummary] = useState<Summary>({ total: 0, confirmed: 0, completed: 0, cancelled: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const activeFilter = searchParams.get('status') || '';
@@ -29,11 +36,11 @@ export default function BookingList({ locale }: BookingListProps) {
     setError(null);
     Promise.all([
       getMyBookings(activeFilter || undefined, 1),
-      activeFilter ? getMyBookings(undefined, 1) : Promise.resolve(null),
+      getMyBookingsSummary(),
     ])
-      .then(([filtered, all]) => {
+      .then(([filtered, summaryData]) => {
         setBookings(filtered.data);
-        setSummaryBookings(all?.data || filtered.data);
+        setSummary(summaryData.data);
       })
       .catch(() => setError(t('loadError')))
       .finally(() => setLoading(false));
@@ -53,14 +60,7 @@ export default function BookingList({ locale }: BookingListProps) {
     router.push(`/${locale}/my-bookings${params.toString() ? `?${params}` : ''}`);
   };
 
-  const summary = {
-    total: summaryBookings.length,
-    upcoming: summaryBookings.filter((booking) => booking.status === 'confirmed').length,
-    completed: summaryBookings.filter((booking) => booking.status === 'completed').length,
-    cancelled: summaryBookings.filter((booking) => booking.status === 'cancelled').length,
-  };
-
-  const recentActivity = [...summaryBookings]
+  const recentActivity = [...bookings]
     .sort((a, b) => {
       const aDate = a.created_at || a.booking_date || a.tour_date;
       const bDate = b.created_at || b.booking_date || b.tour_date;
@@ -91,7 +91,7 @@ export default function BookingList({ locale }: BookingListProps) {
     <div>
       <section className="mb-6 grid gap-3 sm:grid-cols-4" aria-label={t('summaryLabel')}>
         <SummaryCard label={t('summaryTotal')} value={summary.total} />
-        <SummaryCard label={t('summaryUpcoming')} value={summary.upcoming} />
+        <SummaryCard label={t('summaryUpcoming')} value={summary.confirmed} />
         <SummaryCard label={t('summaryCompleted')} value={summary.completed} />
         <SummaryCard label={t('summaryCancelled')} value={summary.cancelled} />
       </section>
