@@ -96,6 +96,16 @@ class Booking extends Model
         return $this->hasMany(BookingAuditLog::class);
     }
 
+    /**
+     * Unified governance audit entries written by admin actions (Spec 013).
+     * Inverse of GovernanceAuditLog::target() morphTo — target_type='booking'.
+     */
+    public function governanceAuditLogs(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Admin\Models\GovernanceAuditLog::class, 'target_id')
+            ->where('target_type', 'booking');
+    }
+
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
@@ -131,6 +141,33 @@ class Booking extends Model
         $deadline = (clone $this->tour_date)->subHours($this->cancellation_window_hours);
 
         return now()->lt($deadline);
+    }
+
+    /**
+     * Guard admin booking-status transitions (FR-009, data-model.md §5).
+     *
+     * Returns true only for admin-initiated transitions the admin surface is
+     * allowed to record. Transitions with a financial side-effect
+     * (confirmed → cancellation_requested|cancelled) are allowed here — the
+     * TransitionBookingStatusAction delegates the refund to Spec 008 and only
+     * logs the booking.transition audit entry; this guard does NOT execute
+     * the refund.
+     */
+    public function canTransitionTo(string $to): bool
+    {
+        $allowed = [
+            self::STATUS_CONFIRMED => [
+                self::STATUS_COMPLETED,
+                self::STATUS_NO_SHOW,
+                self::STATUS_CANCELLATION_REQUESTED,
+                self::STATUS_CANCELLED,
+            ],
+            self::STATUS_PENDING_PAYMENT => [
+                self::STATUS_EXPIRED,
+            ],
+        ];
+
+        return in_array($to, $allowed[$this->status] ?? [], true);
     }
 
     public static function formatPrice(int $amount, string $currency): string

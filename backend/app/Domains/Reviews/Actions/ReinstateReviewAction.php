@@ -2,14 +2,22 @@
 
 namespace App\Domains\Reviews\Actions;
 
+use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Reviews\Events\ReviewSubmitted;
 use App\Domains\Reviews\Models\Review;
 use App\Domains\Reviews\Models\ReviewAuditTrail;
+use App\Models\User;
 
 class ReinstateReviewAction
 {
+    public function __construct(private readonly GovernanceAuditService $audit)
+    {
+    }
+
     public function execute(Review $review, int $adminId, string $reason): Review
     {
+        $before = ['status' => $review->status];
+
         $review->update(['status' => 'visible']);
 
         ReviewAuditTrail::create([
@@ -20,6 +28,20 @@ class ReinstateReviewAction
             'reason' => $reason,
             'created_at' => now(),
         ]);
+
+        // Unified governance audit (Spec 013): actor resolves to the User morph
+        // map (admin => User), fixing the legacy actor_type='admin' string.
+        $actor = User::find($adminId);
+        if ($actor !== null) {
+            $this->audit->log(
+                $actor,
+                'review.reinstate',
+                $review,
+                $before,
+                ['status' => 'visible'],
+                ['reason' => $reason],
+            );
+        }
 
         event(new ReviewSubmitted($review));
 

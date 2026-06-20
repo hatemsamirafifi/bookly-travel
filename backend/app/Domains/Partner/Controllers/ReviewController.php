@@ -21,16 +21,28 @@ class ReviewController
         $filters = $request->validate([
             'tour_id' => 'sometimes|integer',
             'rating' => 'sometimes|integer|min:1|max:5',
-            'has_response' => 'sometimes|boolean',
+            'has_response' => 'sometimes|in:true,false,1,0,True,False',
             'date_from' => 'sometimes|date_format:Y-m-d',
             'date_to' => 'sometimes|date_format:Y-m-d',
             'sort' => 'sometimes|string|in:newest,rating_asc,rating_desc',
             'per_page' => 'sometimes|integer|min:1|max:100',
         ]);
 
+        if (isset($filters['has_response'])) {
+            $filters['has_response'] = filter_var($filters['has_response'], FILTER_VALIDATE_BOOLEAN);
+        }
+
         $result = $this->service->listForPartner($partnerId, $filters);
 
-        return response()->json($result);
+        return response()->json([
+            'data' => $result->items(),
+            'meta' => [
+                'current_page' => $result->currentPage(),
+                'last_page' => $result->lastPage(),
+                'per_page' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ]);
     }
 
     public function storeResponse(StoreReviewResponseRequest $request, string $id): JsonResponse
@@ -44,7 +56,7 @@ class ReviewController
             abort(404, 'Review not found.');
         }
 
-        return response()->json($response, 201);
+        return response()->json(['data' => $response], 201);
     }
 
     public function updateResponse(StoreReviewResponseRequest $request, string $id): JsonResponse
@@ -58,6 +70,6 @@ class ReviewController
             abort(404, 'Review not found or no existing response.');
         }
 
-        return response()->json($response);
+        return response()->json(['data' => $response]);
     }
 }

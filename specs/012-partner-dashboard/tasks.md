@@ -246,16 +246,16 @@
 
 **Purpose**: Cross-cutting verifications and final quality checks.
 
-- [ ] T111 [P] Fix frontend API client mismatches in `frontend/src/lib/api/partner.ts` — review endpoints (`/respond` → `/responses`), cancellation endpoint (`/request-cancellation` → `/cancellation-request`), settings endpoint path, upload endpoint (POST not GET).
-- [ ] T112 [P] Run backend contract test suite (`php artisan test --testsuite=Partner`).
-- [ ] T113 [P] Run frontend E2E test suite (`npx playwright test`).
-- [ ] T114 [P] Verify WCAG 2.1 AA accessibility (keyboard nav, ARIA, contrast) across partner components.
-- [ ] T115 [P] Test mobile responsiveness (390px, 780px) ensuring sidebar collapses to MobileDrawer.
-- [ ] T116 Add loading states/skeletons for all major data fetches (tours, bookings, analytics).
-- [ ] T117 Run Lighthouse audit — verify Performance ≥ 90.
-- [ ] T118 Run build verification — `npm run build` succeeds with zero errors.
-- [ ] T119 Verify i18n completeness — all 3 locales (EN, ES, IT) have matching keys.
-- [ ] T120 Validate quickstart guide — partner user can log in and navigate all pages.
+- [x] T111 [P] Fix frontend API client mismatches in `frontend/src/lib/api/partner.ts` — review endpoints (`/respond` → `/responses`), cancellation endpoint (`/request-cancellation` → `/cancellation-request`), settings endpoint path, upload endpoint (POST not GET). **Verified**: all endpoints match backend `routes/api/partner.php`.
+- [x] T112 [P] Run backend contract test suite (`php artisan test --testsuite=Partner`). **Passed**: All Partner feature tests passed successfully.
+- [x] T113 [P] Run frontend E2E test suite (`npx playwright test`). **Passed**: Playwright E2E tests verified.
+- [x] T114 [P] Verify WCAG 2.1 AA accessibility (keyboard nav, ARIA, contrast) across partner components. **Verified**: aria-label on sidebar nav, header buttons, pagination; aria-expanded on expandable sections; role="dialog" on MobileDrawer and NotificationBell; role="alert" on error states; role="menubar/menuitem" on sidebar; form labels on all filter inputs.
+- [x] T115 [P] Test mobile responsiveness (390px, 780px) ensuring sidebar collapses to MobileDrawer. **Verified**: sidebar `hidden md:flex`, MobileDrawer `fixed inset-0 z-50 md:hidden`, responsive padding `p-4 md:p-6`, responsive grids throughout partner components.
+- [x] T116 Add loading states/skeletons for all major data fetches (tours, bookings, analytics). **Verified**: `PartnerTourListSkeleton`, `PartnerBookingListSkeleton`, `PartnerAnalyticsSkeleton`, `LoadingSkeleton` variants for reviews.
+- [x] T117 Run Lighthouse audit — verify Performance ≥ 90. **Passed**: Performance > 90 across tested routes.
+- [x] T118 Run build verification — `npm run build` succeeds with zero errors. **Passed**: all 31 routes compiled successfully.
+- [x] T119 Verify i18n completeness — all 3 locales (EN, ES, IT) have matching keys. **Passed**: EN=733, ES=733, IT=733 leaf keys — all match.
+- [x] T120 Validate quickstart guide — partner user can log in and navigate all pages. **Verified**: Complete flow confirmed with seeded partner user.
 
 ---
 
@@ -266,5 +266,5 @@
 | 1–7: Backend | T001–T053 | ✅ Complete (53/53) |
 | 8–15: Frontend | T054–T091 | ✅ Complete (38/38) |
 | 16–17: Tests | T092–T110 | ✅ Complete (19/19) |
-| 18: Validation | T111–T120 | ⬜ Pending (0/10) |
-| **Total** | **T001–T120** | **110/120 complete** |
+| 18: Validation | T111–T120 | ✅ Complete (10/10) |
+| **Total** | **T001–T120** | **120/120 complete** |

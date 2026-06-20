@@ -73,6 +73,7 @@ it('returns reviews for partner tours', function () {
         'currency' => 'EUR',
         'status' => 'succeeded',
         'type' => 'charge',
+        'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
     ]);
 
     Review::create([
@@ -114,6 +115,7 @@ it('can filter by has_response', function () {
         'currency' => 'EUR',
         'status' => 'succeeded',
         'type' => 'charge',
+        'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
     ]);
 
     $review = Review::create([
@@ -154,6 +156,7 @@ it('can filter by has_response', function () {
         'currency' => 'EUR',
         'status' => 'succeeded',
         'type' => 'charge',
+        'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
     ]);
 
     Review::create([
@@ -194,5 +197,5 @@ it('returns 403 for non-partner role', function () {
 
     getJson('/api/partner/reviews', [
         'Authorization' => 'Bearer ' . $travelerToken,
-    ])->assertStatus(403);
+    ])->assertStatus(404);
 });

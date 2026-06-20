@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Models\User;
 
 class UserPolicy
@@ -56,9 +57,17 @@ class UserPolicy
 
     /**
      * Check if the user has the given permission.
+     *
+     * Admins: delegated to AdminAuthorizationService, which resolves the
+     * per-action flags persisted on the admin_permissions row (Spec 013,
+     * data-model.md §2). Travelers/partners keep the static role map.
      */
     public function hasPermission(User $user, string $permission): bool
     {
+        if ($user->role === 'admin') {
+            return app(AdminAuthorizationService::class)->can($user, $permission);
+        }
+
         $rolePermissions = [
             'traveler' => [
                 'book_tour',
@@ -74,14 +83,6 @@ class UserPolicy
                 'view_partner_bookings',
                 'view_partner_analytics',
                 'respond_to_review',
-            ],
-            'admin' => [
-                'manage_users',
-                'manage_tours',
-                'manage_bookings',
-                'manage_partners',
-                'moderate_reviews',
-                'view_all_analytics',
             ],
         ];
 

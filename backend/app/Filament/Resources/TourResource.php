@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Actions\ApproveTourAction;
+use App\Domains\Admin\Actions\RejectTourAction;
+use App\Domains\Admin\Actions\UnpublishTourAction;
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Filament\Resources\TourResource\Pages;
 use App\Models\Tour;
 use Filament\Forms;
@@ -11,6 +15,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class TourResource extends Resource
 {
@@ -108,16 +113,10 @@ class TourResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Publish Tour')
                     ->modalDescription('This tour will become visible to travelers on the public site.')
-                    ->visible(fn (Tour $record) => in_array($record->status, ['pending_review', 'rejected']))
+                    ->visible(fn (Tour $record) => auth()->user()?->can('publish', $record) && in_array($record->status, ['pending_review', 'rejected']))
                     ->action(function (Tour $record) {
-                        $record->update([
-                            'status' => 'published',
-                            'published_at' => now(),
-                        ]);
-                        Notification::make()
-                            ->title('Tour published')
-                            ->success()
-                            ->send();
+                        app(ApproveTourAction::class)->execute(auth()->user(), $record);
+                        Notification::make()->title('Tour published')->success()->send();
                     }),
                 Tables\Actions\Action::make('reject')
                     ->label('Reject')
@@ -132,16 +131,10 @@ class TourResource extends Resource
                             ->maxLength(500)
                             ->placeholder('Explain what needs to change for this tour to be approved...'),
                     ])
-                    ->visible(fn (Tour $record) => $record->status === 'pending_review')
+                    ->visible(fn (Tour $record) => auth()->user()?->can('reject', $record) && $record->status === 'pending_review')
                     ->action(function (Tour $record, array $data) {
-                        $record->update([
-                            'status' => 'rejected',
-                        ]);
-                        Notification::make()
-                            ->title('Tour rejected')
-                            ->warning()
-                            ->body("Reason: {$data['rejection_reason']}")
-                            ->send();
+                        app(RejectTourAction::class)->execute(auth()->user(), $record, $data);
+                        Notification::make()->title('Tour rejected')->warning()->body("Reason: {$data['rejection_reason']}")->send();
                     }),
                 Tables\Actions\Action::make('unpublish')
                     ->label('Unpublish')
@@ -150,13 +143,10 @@ class TourResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Unpublish Tour')
                     ->modalDescription('This tour will be removed from the public site. Existing bookings will not be affected.')
-                    ->visible(fn (Tour $record) => $record->status === 'published')
+                    ->visible(fn (Tour $record) => auth()->user()?->can('unpublish', $record) && $record->status === 'published')
                     ->action(function (Tour $record) {
-                        $record->update(['status' => 'draft']);
-                        Notification::make()
-                            ->title('Tour unpublished')
-                            ->warning()
-                            ->send();
+                        app(UnpublishTourAction::class)->execute(auth()->user(), $record);
+                        Notification::make()->title('Tour unpublished')->warning()->send();
                     }),
             ])
             ->bulkActions([
@@ -165,10 +155,50 @@ class TourResource extends Resource
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->action(fn ($records) => $records->each(fn ($r) => $r->update([
-                        'status' => 'published',
-                        'published_at' => now(),
-                    ]))),
+                    ->visible(fn () => app(AdminAuthorizationService::class)->can(auth()->user(), 'manage_tours'))
+                    ->action(function (EloquentCollection $records) {
+                        $actor = auth()->user();
+                        $failed = 0;
+                        foreach ($records as $record) {
+                            try {
+                                app(ApproveTourAction::class)->execute($actor, $record);
+                            } catch (\Throwable) {
+                                $failed++;
+                            }
+                        }
+                        Notification::make()
+                            ->title($failed ? "{$failed} tour(s) could not be published" : 'Selected tours published')
+                            ->{$failed ? 'warning' : 'success'}()
+                            ->send();
+                    }),
+                Tables\Actions\BulkAction::make('bulk_reject')
+                    ->label('Reject Selected')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->visible(fn () => app(AdminAuthorizationService::class)->can(auth()->user(), 'manage_tours'))
+                    ->form([
+                        Forms\Components\Textarea::make('rejection_reason')
+                            ->label('Rejection Reason')
+                            ->required()
+                            ->maxLength(500)
+                            ->placeholder('Explain what needs to change for these tours to be approved...'),
+                    ])
+                    ->action(function (EloquentCollection $records, array $data) {
+                        $actor = auth()->user();
+                        $failed = 0;
+                        foreach ($records as $record) {
+                            try {
+                                app(RejectTourAction::class)->execute($actor, $record, $data);
+                            } catch (\Throwable) {
+                                $failed++;
+                            }
+                        }
+                        Notification::make()
+                            ->title($failed ? "{$failed} tour(s) could not be rejected" : 'Selected tours rejected')
+                            ->{$failed ? 'warning' : 'warning'}()
+                            ->send();
+                    }),
             ])
             ->defaultSort('created_at', 'desc');
     }

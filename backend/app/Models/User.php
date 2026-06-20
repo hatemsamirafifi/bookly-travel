@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domains\Admin\Models\AdminPermission;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Wishlist\Models\Wishlist;
 use Database\Factories\UserFactory;
@@ -103,6 +104,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function partner()
     {
         return $this->hasOne(Partner::class);
+    }
+
+    /**
+     * Per-action admin permission flags (Spec 013, data-model.md §2).
+     * One row per admin user; null for non-admins.
+     */
+    public function adminPermission()
+    {
+        return $this->hasOne(AdminPermission::class);
     }
 
     /**

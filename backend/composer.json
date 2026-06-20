@@ -12,6 +12,7 @@
         "laravel/scout": "^11.1",
         "laravel/tinker": "^2.9",
         "meilisearch/meilisearch-php": "^1.10",
+        "spatie/laravel-settings": "^3.9",
         "stripe/stripe-php": "^13.0"
     },
     "require-dev": {

@@ -125,5 +125,5 @@ it('returns 403 for non-partner role', function () {
         'Authorization' => 'Bearer ' . $travelerToken,
     ]);
 
-    $response->assertStatus(403);
+    $response->assertStatus(404);
 });

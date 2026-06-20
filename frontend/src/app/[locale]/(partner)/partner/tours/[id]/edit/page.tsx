@@ -82,7 +82,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       });
       if (!res.ok) throw new Error('Failed to load tour details');
       const json = await res.json();
-      const t: Tour = json;
+      const t: Tour = json.data;
       setTour(t);
 
       // Populate states

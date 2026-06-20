@@ -7,6 +7,8 @@ use App\Domains\Partner\Models\PartnerSettings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+use App\Domains\Partner\Requests\UpdateProfileRequest;
+
 class ProfileController
 {
     public function show(Request $request): JsonResponse
@@ -21,25 +23,10 @@ class ProfileController
         ]);
     }
 
-    public function update(Request $request): JsonResponse
+    public function update(UpdateProfileRequest $request): JsonResponse
     {
         $partnerId = $request->attributes->get('partner_id');
-        $data = $request->validate([
-            'company_name' => 'required|string|max:255',
-            'business_description' => 'nullable|string|max:5000',
-            'logo_url' => 'nullable|string|url|max:2048',
-            'contact_email' => 'required|email|max:255',
-            'contact_phone' => 'nullable|string|max:50',
-            'website' => 'nullable|string|url|max:2048',
-            'business_address' => 'nullable|array',
-            'tax_id' => 'nullable|string|max:100',
-            'payout_holder_name' => 'nullable|string|max:255',
-            'payout_bank_name' => 'nullable|string|max:255',
-            'payout_account_number' => 'nullable|string|max:100',
-            'payout_iban' => 'nullable|string|max:34',
-            'payout_swift_bic' => 'nullable|string|max:11',
-            'payout_country' => 'nullable|string|size:2',
-        ]);
+        $data = $request->validated();
 
         $profile = PartnerProfile::updateOrCreate(
             ['partner_id' => $partnerId],

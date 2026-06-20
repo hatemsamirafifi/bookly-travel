@@ -16,7 +16,10 @@ class TourService
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
         return Tour::where('partner_id', $partnerId)
-            ->when($filters['status'] ?? null, fn ($q, $status) => $q->where('status', $status))
+            ->when($filters['status'] ?? null, 
+                fn ($q, $status) => $q->where('status', $status),
+                fn ($q) => $q->where('status', '!=', 'archived')
+            )
             ->orderByDesc('updated_at')
             ->paginate($filters['per_page'] ?? 20);
     }
@@ -201,7 +204,8 @@ class TourService
     {
         return TourDraft::where('partner_id', $partnerId)
             ->where('tour_id', $tourId)
-            ->orderByDesc('updated_at')
+            ->orderByDesc('auto_saved_at')
+            ->orderByDesc('id')
             ->first();
     }
 

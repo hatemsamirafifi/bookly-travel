@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Actions\TransitionBookingStatusAction;
 use App\Domains\Booking\Models\Booking;
 use App\Filament\Resources\BookingResource\Pages;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -93,6 +96,66 @@ class BookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('mark_completed')
+                    ->label('Mark Completed')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('primary')
+                    ->requiresConfirmation()
+                    ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_COMPLETED))
+                    ->action(function (Booking $record) {
+                        app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_COMPLETED);
+                        Notification::make()->title('Booking marked completed')->success()->send();
+                    }),
+                Tables\Actions\Action::make('mark_no_show')
+                    ->label('Mark No-Show')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('gray')
+                    ->requiresConfirmation()
+                    ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_NO_SHOW))
+                    ->action(function (Booking $record) {
+                        app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_NO_SHOW);
+                        Notification::make()->title('Booking marked no-show')->warning()->send();
+                    }),
+                Tables\Actions\Action::make('mark_expired')
+                    ->label('Mark Expired')
+                    ->icon('heroicon-o-clock')
+                    ->color('gray')
+                    ->requiresConfirmation()
+                    ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_EXPIRED))
+                    ->action(function (Booking $record) {
+                        app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_EXPIRED);
+                        Notification::make()->title('Booking marked expired')->warning()->send();
+                    }),
+                Tables\Actions\Action::make('request_cancellation')
+                    ->label('Request Cancellation')
+                    ->icon('heroicon-o-exclamation-circle')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Request Cancellation')
+                    ->modalDescription('Flags this booking as cancellation-requested. The refund is processed by the payment domain (Spec 008); this records the status and audit only.')
+                    ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_CANCELLATION_REQUESTED))
+                    ->action(function (Booking $record) {
+                        app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLATION_REQUESTED);
+                        Notification::make()->title('Cancellation requested — refund routed to payments')->warning()->send();
+                    }),
+                Tables\Actions\Action::make('cancel')
+                    ->label('Cancel Booking')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Cancel Booking')
+                    ->form([
+                        Textarea::make('cancellation_reason')
+                            ->label('Reason')
+                            ->required()
+                            ->maxLength(500),
+                    ])
+                    ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_CANCELLED))
+                    ->action(function (Booking $record, array $data) {
+                        app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLED);
+                        $record->update(['cancellation_reason' => $data['cancellation_reason']]);
+                        Notification::make()->title('Booking cancelled — refund routed to payments')->danger()->send();
+                    }),
             ])
             ->bulkActions([])
             ->defaultSort('created_at', 'desc');
@@ -194,6 +257,31 @@ class BookingResource extends Resource
                                     ->dateTime(),
                             ])
                             ->columns(3),
+                    ])
+                    ->collapsible(),
+                Infolists\Components\Section::make('Governance Audit')
+                    ->schema([
+                        Infolists\Components\RepeatableEntry::make('governanceAuditLogs')
+                            ->schema([
+                                Infolists\Components\TextEntry::make('action')
+                                    ->label('Action')
+                                    ->badge(),
+                                Infolists\Components\TextEntry::make('actor.email')
+                                    ->label('Admin Actor')
+                                    ->placeholder('System'),
+                                Infolists\Components\TextEntry::make('after_state.status')
+                                    ->label('After Status')
+                                    ->badge()
+                                    ->placeholder('—'),
+                                Infolists\Components\TextEntry::make('metadata.financial')
+                                    ->label('Financial')
+                                    ->badge()
+                                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
+                                Infolists\Components\TextEntry::make('created_at')
+                                    ->label('When')
+                                    ->dateTime(),
+                            ])
+                            ->columns(5),
                     ])
                     ->collapsible(),
             ]);

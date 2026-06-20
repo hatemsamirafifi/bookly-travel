@@ -2,7 +2,7 @@
 
 > **Version**: 2.0.0
 > **Date**: 2026-04-11 (revised 2026-05-13)
-> **Constitution**: v1.0.1
+> **Constitution**: v1.1.0
 > **Status**: In Progress
 
 ---
@@ -66,6 +66,17 @@ The constitution has been patched to v1.0.1, reflecting:
    - Public website → Next.js 16 (SSR/SSG)
    - Partner dashboard → Next.js 16
    - Admin dashboard → Laravel Filament (server-rendered)
+
+### Amendment v1.1.0 — Internal Admin Exception (2026-06-20)
+
+The constitution was amended from v1.0.1 → **v1.1.0** to formally ratify
+the API-first exception for the admin surface. The "Internal Admin
+Exception" subsection was added under **API-First**, stating that Laravel
+Filament is the sole approved server-rendered surface, applies only to
+authenticated admin users, and MUST NOT be extended to public or
+partner-facing surfaces — which remain API-first Next.js 16. Filament
+was also added to the Approved Core Stack table as the Admin Surface row.
+No other principles changed; API-First remains the default architecture.
 
 ---
 
@@ -748,6 +759,7 @@ or notification behavior (those are in specs 007, 008, 009).
 ## 7. Pre-Execution Checklist
 
 - [x] Constitution patched to v1.0.1
+- [x] Constitution amended to v1.1.0 (Internal Admin Exception under API-First)
 - [x] `specs/` directory created at project root
 - [x] This document saved and committed
 - [x] Docker dev environment operational

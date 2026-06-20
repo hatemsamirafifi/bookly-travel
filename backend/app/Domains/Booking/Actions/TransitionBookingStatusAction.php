@@ -25,7 +25,8 @@ class TransitionBookingStatusAction
             throw new NotFoundHttpException('Booking not found.');
         }
 
-        if ($booking->tour->partner_id !== $partner->id) {
+        $partner->loadMissing('partner');
+        if ($booking->tour->partner_id !== ($partner->partner?->id ?? $partner->id)) {
             // Return 404 instead of 403 to prevent information leakage about other partners' bookings
             throw new NotFoundHttpException('Booking not found.');
         }

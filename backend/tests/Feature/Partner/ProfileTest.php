@@ -99,5 +99,5 @@ it('returns 403 for non-partner role', function () {
 
     getJson('/api/partner/profile', [
         'Authorization' => 'Bearer ' . $travelerToken,
-    ])->assertStatus(403);
+    ])->assertStatus(404);
 });

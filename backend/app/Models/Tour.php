@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityException;
 use App\Domains\Partner\Models\AvailabilityRule;
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Partner\Models\TourDraft;
 use App\Domains\Partner\Models\TourMedia;
+use App\Enums\TourStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
@@ -212,5 +214,53 @@ class Tour extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * The Partner record owning this tour (Spec 013, data-model.md §5).
+     *
+     * NOTE: `tours.partner_id` references `partners.id` (repinned by the
+     * `fix_tours_partner_id_to_partners_table` migration), not users.id. The
+     * legacy `partner()` relation still resolves to a User and is left as-is
+     * for backward compatibility with existing columns; this relation gives
+     * the authoritative Partner for governance guards.
+     */
+    public function partnerRecord()
+    {
+        return $this->belongsTo(Partner::class, 'partner_id');
+    }
+
+    /**
+     * Guard tour lifecycle transitions (FR-005).
+     *
+     * Allowed transitions (data-model.md §5):
+     *  draft → pending_review; pending_review → published|rejected;
+     *  rejected → pending_review; published → archived|draft.
+     *
+     * Publishing (→ published) is blocked unless the owning partner is
+     * approved — `onboarding_status === 'approved'`.
+     */
+    public function canTransitionTo(TourStatus|string $to): bool
+    {
+        $to = $to instanceof TourStatus ? $to->value : $to;
+        $from = $this->status;
+
+        $allowed = [
+            'draft' => ['pending_review'],
+            'pending_review' => ['published', 'rejected'],
+            'rejected' => ['pending_review'],
+            'published' => ['archived', 'draft'],
+            'archived' => [],
+        ];
+
+        if (! in_array($to, $allowed[$from] ?? [], true)) {
+            return false;
+        }
+
+        if ($to === TourStatus::Published->value) {
+            return ($this->partnerRecord?->onboarding_status ?? null) === 'approved';
+        }
+
+        return true;
     }
 }
