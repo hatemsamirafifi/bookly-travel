@@ -2,8 +2,8 @@
 
 namespace App\Domains\Search\Controllers\Public;
 
-use App\Models\Tour;
 use App\Models\Category;
+use App\Models\Tour;
 use Illuminate\Http\Response;
 
 class SitemapController
@@ -81,12 +81,12 @@ class SitemapController
     protected function renderUrl(string $loc, array $alternates, string $changefreq, string $priority): string
     {
         $xml = "  <url>\n";
-        $xml .= "    <loc>" . htmlspecialchars($loc, ENT_XML1, 'UTF-8') . "</loc>\n";
+        $xml .= '    <loc>' . htmlspecialchars($loc, ENT_XML1, 'UTF-8') . "</loc>\n";
         foreach ($alternates as $lang => $href) {
-            $xml .= "    <xhtml:link rel=\"alternate\" hreflang=\"" . htmlspecialchars($lang, ENT_XML1, 'UTF-8') . "\" href=\"" . htmlspecialchars($href, ENT_XML1, 'UTF-8') . "\"/>\n";
+            $xml .= '    <xhtml:link rel="alternate" hreflang="' . htmlspecialchars($lang, ENT_XML1, 'UTF-8') . '" href="' . htmlspecialchars($href, ENT_XML1, 'UTF-8') . "\"/>\n";
         }
-        $xml .= "    <changefreq>" . htmlspecialchars($changefreq, ENT_XML1, 'UTF-8') . "</changefreq>\n";
-        $xml .= "    <priority>" . htmlspecialchars($priority, ENT_XML1, 'UTF-8') . "</priority>\n";
+        $xml .= '    <changefreq>' . htmlspecialchars($changefreq, ENT_XML1, 'UTF-8') . "</changefreq>\n";
+        $xml .= '    <priority>' . htmlspecialchars($priority, ENT_XML1, 'UTF-8') . "</priority>\n";
         $xml .= "  </url>\n";
 
         return $xml;

@@ -18,29 +18,24 @@ class EmailVerificationController extends Controller
 {
     /**
      * Verify the traveler's email address via a signed URL.
-     *
-     * @param Request $request
-     * @param string $id
-     * @param string $hash
-     * @return JsonResponse
      */
     public function verify(Request $request, string $id, string $hash): JsonResponse
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'Invalid verification link.',
             ], 404);
         }
 
-        if (!URL::hasValidSignature($request)) {
+        if (! URL::hasValidSignature($request)) {
             return response()->json([
                 'message' => 'Invalid or expired verification link.',
             ], 403);
         }
 
-        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             return response()->json([
                 'message' => 'Invalid verification link.',
             ], 403);

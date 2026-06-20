@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Dashboard Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to partner dashboard (assumes partner is authenticated)
-    // In CI, this would use a stored auth state or a login helper
+    await partnerLogin(page);
     await page.goto('/en/partner');
   });
 
@@ -150,7 +150,7 @@ test.describe('Partner Navigation - Auth Guard', () => {
     expect(url.searchParams.get('returnUrl')).toContain('/partner');
   });
 
-  test('should redirect non-partner users to home', async ({ page }) => {
+  test('should redirect non-partner users to home', async () => {
     // This test requires a traveler-authenticated session
     // The PartnerAuthGuard checks user.role !== 'partner' and redirects to /
     // This would need a fixture for a non-partner authenticated user

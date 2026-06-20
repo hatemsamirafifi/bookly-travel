@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import WishlistButton from '../WishlistButton';
 
 jest.mock('next-intl', () => ({
-  useTranslations: (namespace: string) => {
+  useTranslations: () => {
     const keys: Record<string, string> = {
       remove: 'Remove from wishlist',
       save: 'Save to wishlist',
@@ -14,20 +14,6 @@ jest.mock('next-intl', () => ({
     return (key: string) => keys[key] || key;
   },
 }));
-
-jest.mock('@/lib/api/client', () => ({
-  apiClient: jest.fn(),
-}));
-
-const mockApiClient = jest.mocked(
-  jest.requireMock('@/lib/api/client').apiClient
-);
-
-function mockUseAuth(user: Record<string, unknown> | null) {
-  jest.doMock('@/lib/hooks/useAuth', () => ({
-    useAuth: () => ({ user }),
-  }));
-}
 
 jest.mock('next/link', () => ({
   __esModule: true,

@@ -113,8 +113,8 @@ export type TourListResponse = PaginatedPartnerResponse<Tour>;
 /* ─── Upload types ──────────────────────────────────────────────────────── */
 
 export interface ImageUploadState {
+  id?: string;
   file: File;
-  preview: string;
   progress: number; // 0-100
   status: 'idle' | 'uploading' | 'done' | 'error';
   publicUrl?: string;

@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('My Reviews', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/en/auth/login');
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'Password123!');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/en**');
-    await expect(page.locator('text=Sign Out')).toBeVisible();
-  });
+  // Auth is provided by the `-authed` Playwright projects via a shared
+  // storageState (tests/e2e/auth.setup.ts logs in once). No per-test login —
+  // that would re-hit the backend `auth` rate limiter (10/min/IP) and the old
+  // `text=Sign Out` check failed because that action is in a collapsed dropdown.
 
   test('my reviews page renders', async ({ page }) => {
     await page.goto('/en/my-reviews');
@@ -41,7 +37,7 @@ test.describe('My Reviews', () => {
     const editBtn = page.locator('button:has-text("Edit")').first();
     if (await editBtn.isVisible()) {
       await editBtn.click();
-      await expect(page.locator('text=Edit Your Review')).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Edit Review' })).toBeVisible();
       await expect(page.getByRole('button', { name: /Update Review/i })).toBeVisible();
     }
   });
@@ -52,13 +48,13 @@ test.describe('My Reviews', () => {
     const editBtn = page.locator('button:has-text("Edit")').first();
     if (await editBtn.isVisible()) {
       await editBtn.click();
-      await expect(page.locator('text=Edit Your Review')).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Edit Review' })).toBeVisible();
 
       const cancelBtn = page.getByRole('button', { name: /Cancel/i });
       await cancelBtn.click();
 
       // Should return to review list view
-      await expect(page.locator('text=Edit Your Review')).not.toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Edit Review' })).not.toBeVisible();
     }
   });
 

@@ -1,4 +1,4 @@
-﻿# Frontend Implementation Plan - Stitch to Spec-Kit Pipeline
+# Frontend Implementation Plan - Stitch to Spec-Kit Pipeline
 
 > **Goal**: Map every Stitch UI screen (~47 total; 34 Next.js + 13 Filament reference) to Spec-Kit specs and build the Bookly frontend through `specify -> clarify -> plan -> tasks -> implement`.
 > **Status**: Ready for task generation after applying the traceability rules below.
@@ -7,7 +7,7 @@
 
 | # | Question | Decision |
 |---|----------|----------|
-| D1 | Wishlist and Blog screens? | Create new specs: `016-blog-travel-insights` and `017-wishlist-saved-tours`. |
+| D1 | Wishlist and Blog screens? | Create `016-blog-travel-insights`; wishlist absorbed into `011-tour-management` (already implemented). |
 | D2 | Frontend implementation order? | Finish Public Frontend spec `010`, then Tour Management `011`, Reviews `009`, and other remaining specs. |
 | D3 | Stitch export strategy? | Use Stitch as visual scaffolding only; rebuild as reusable Next.js components. |
 | D4 | Admin dashboard approach? | Keep Laravel Filament; use Stitch admin screens as design reference only. |
@@ -26,12 +26,12 @@ The plan uses logical spec IDs. This table maps each to the actual directory and
 | `009` | Reviews and Ratings | `009-reviews-ratings` | Amend with frontend requirements |
 | `010` | Public Frontend | `010-public-frontend` | Completed (frontend search, checkout & payment) |
 | `011` | Tour Management (Traveler Account) | `011-tour-management` | In progress (frontend traveler dashboard, profile & wishlists) |
-| `012` | Pricing and Availability | Create `012-pricing-availability` | Create new directory |
+| `012` | Partner Dashboard | `012-partner-dashboard` | Already exists (spec, plan, tasks, data-model) |
 | `013` | Admin Moderation | Create `013-admin-moderation` | Create new directory |
 | `014` | Notifications and Vouchers | Create `014-notifications-vouchers` | Create new directory |
 | `015` | Partner Onboarding | Create `015-partner-onboarding` | Create new directory |
 | `016` | Blog and Travel Insights | Create `016-blog-travel-insights` | Create new directory |
-| `017` | Wishlist / Saved Tours | Create `017-wishlist-saved-tours` | Create new directory |
+| `017` | Wishlist / Saved Tours | N/A — absorbed into `011-tour-management` | Frontend implemented; no separate spec needed |
 
 ### Existing Specs `001-015`
 
@@ -41,9 +41,10 @@ The plan uses logical spec IDs. This table maps each to the actual directory and
 - Add frontend tasks to `tasks.md` with Stitch screen IDs.
 - If backend tasks are complete, add a new frontend phase instead of rewriting backend history.
 
-### New Specs `016-017`
+### New Specs
 
-- Create new feature directories only for `016-blog-travel-insights` and `017-wishlist-saved-tours`.
+- Create a new feature directory for `016-blog-travel-insights`.
+- Spec `017-wishlist-saved-tours` is **no longer needed** — wishlist functionality has been absorbed into `011-tour-management` and is already implemented.
 - Each new spec must define product requirements, data/API ownership, frontend routes, admin or partner touchpoints, and verification gates.
 
 ### Required Task Traceability
@@ -67,15 +68,15 @@ T006-FE-014 Build tour detail gallery from ST-006-005 for /tours/[slug]
 
 | Spec | Feature | Status |
 |------|---------|--------|
-| `009` | Reviews and Ratings | Partial spec |
+| `009` | Reviews and Ratings | Frontend components done; spec needs backend endpoint verification |
 | `010` | Public Frontend | Done |
-| `011` | Tour Management (Traveler Account) | Done |
-| `012` | Pricing and Availability | Not started |
+| `011` | Tour Management (Traveler Account) | Done (includes wishlist) |
+| `012` | Partner Dashboard | Spec done; frontend substantially implemented |
 | `013` | Admin Moderation | Not started |
 | `014` | Notifications and Vouchers | Not started |
 | `015` | Partner Onboarding | Not started |
 | `016` | Blog and Travel Insights | New spec needed |
-| `017` | Wishlist / Saved Tours | New spec needed |
+| `017` | Wishlist / Saved Tours | Absorbed into `011`; frontend done |
 
 ## Stitch Screen Inventory
 
@@ -321,26 +322,42 @@ Admin screens use Filament server-rendered views, not Next.js routes.
 
 **Done When**: Review display integrated on tour detail, submission and editing flows work from booking detail, My Reviews dashboard has pagination and edit links, partner review page exists, all E2E and a11y tests pass, and Filament moderation resources match ST-013-009 reference.
 
-### Phase 4: Partner Dashboard - Specs `010-012`
+### Phase 4: Partner Dashboard — Spec `012`
 
-**Objective**: Build partner onboarding, tour management, and availability management.
+> **Status**: Substantially implemented. Routes, layout, auth guard, tour CRUD, availability calendar, image upload, pricing, analytics, and partner profile all exist. This phase focuses on polish, visual verification, and E2E coverage.
+
+**Objective**: Complete and polish the partner dashboard — verify visual alignment with Stitch screens and fill remaining gaps in validation, i18n, and test coverage.
 
 ```text
-For each of 010, 011, and 012:
-1. /speckit.specify - Define partner-facing frontend requirements.
-   Target directories:
-   - 010: specs/010-public-frontend/ (amend existing)
-   - 011: specs/011-tour-management/ (amend existing)
-   - 012: specs/012-pricing-availability/ (create new)
-2. /speckit.clarify - Resolve permissions, validation, draft states, and responsive behavior.
-3. /speckit.plan - Define protected partner routes, forms, API clients, and calendar behavior.
-4. /speckit.tasks - Generate tasks with ST-010-*, ST-011-*, or ST-012-* references.
-5. /speckit.implement - Build partner frontend.
+For spec 012 (012-partner-dashboard — already exists):
+1. /speckit.clarify - Resolve remaining edge cases: draft/archive states, calendar conflicts, image reordering.
+2. /speckit.plan - Identify gaps between existing implementation and Stitch screens.
+3. /speckit.tasks - Generate tasks only for unimplemented or incomplete features.
+4. /speckit.implement - Complete remaining work and polish.
 ```
 
 **Dependency chain**: `010 -> 011 -> 012`.
 
-**Deliverables**: Partner overview, approval status UI, tour list, create/edit tour forms, availability calendar.
+**Already Implemented**:
+- Partner layout: `PartnerSidebar`, `PartnerHeader`, `MobileDrawer` with `PartnerAuthGuard`
+- Tour management: `TourList`, `TourCard`, `TourWizard` (create/edit), `ImageUploader`
+- Availability: `AvailabilityCalendar` at `partner/tours/[id]/availability`
+- Pricing: `PricingTierForm` at `partner/tours/[id]/pricing`
+- Analytics: `AnalyticsSummary`, `BookingsChart` (using Recharts)
+- Partner bookings, reviews, and profile pages
+- API client: `lib/api/partner.ts` (comprehensive endpoint coverage)
+- State: `lib/stores/tourWizard.ts` (Zustand store for multi-step tour creation)
+- Real-time hook: `lib/hooks/usePartnerRealtime.ts`
+
+**Remaining Work**:
+- Visual diff of `ST-010-*`, `ST-011-*`, `ST-012-*` against Stitch at 390px, 780px, 1280px
+- Tour form validation completeness (title, description, duration, location, category)
+- Tour creation with EN/ES/IT translations round-trip verification
+- Image upload constraints enforcement (max 10 images, 5MB per image, JPEG/PNG/WebP)
+- Availability calendar empty/full/partially-booked visual states
+- Partner approval status UI polish
+- Add Zod validators for partner forms (`lib/validators/partner.ts`)
+- E2E test coverage for partner flows
 
 **API Endpoints Consumed**:
 - `GET /api/partner/profile` - Partner profile and approval status
@@ -367,7 +384,7 @@ For each of 010, 011, and 012:
 - Availability calendar shows empty/full/partially booked states
 - `npm run test:e2e` - Partner tour creation flow passes
 
-**Done When**: All `ST-010-*`, `ST-011-*`, `ST-012-*` screens implemented, partner CRUD works, availability calendar functional.
+**Done When**: All `ST-010-*`, `ST-011-*`, `ST-012-*` screens match Stitch designs at all viewports, remaining validation gaps filled, E2E tests pass, and visual diff is clean.
 
 ### Phase 5: Admin Moderation - Spec `013`
 
@@ -420,9 +437,11 @@ For each of 010, 011, and 012:
 
 **Done When**: All notification templates exist in 3 locales, voucher PDF generates correctly, download authorization enforced.
 
-### Phase 7: New Features - Specs `016-017`
+### Phase 7: Blog and Travel Insights — Spec `016`
 
-#### `016` - Blog and Travel Insights
+> **Note**: Wishlist / Saved Tours (originally Spec `017`) has been absorbed into Spec `011` and is already implemented under `(traveler)/wishlist/` with `WishlistButton` and `WishlistGrid` components. No separate spec is needed.
+
+**Objective**: Build the blog and travel insights section for content marketing, SEO, and tour discovery integration.
 
 ```text
 /speckit.specify Create the blog and travel insights specification for Bookly.
@@ -442,26 +461,17 @@ The spec MUST define:
 Backend implementation follows the same Laravel patterns as specs 006-008.
 ```
 
-#### `017` - Wishlist / Saved Tours
+**Deliverables**: Blog listing page (`/blog`), blog post detail page (`/blog/[slug]`), category filtering, related tours integration, SEO metadata, i18n support in EN/ES/IT.
 
-```text
-/speckit.specify Create the wishlist and saved tours specification for Bookly.
-Target directory: specs/017-wishlist-saved-tours/ (create new).
-Reference screens: ST-017-001, ST-017-002.
+**Verification**:
+- Blog SEO metadata present (Lighthouse SEO audit on `/blog`, `/blog/[slug]`)
+- Blog listing pagination works
+- Blog post renders rich content correctly
+- Related tours display and link correctly
+- EN/ES/IT content renders correctly
+- Visual diff of `ST-016-001` and `ST-016-002` at 390px, 780px, 1280px
 
-The spec MUST define:
-- Save/unsave from tour cards and detail pages.
-- Wishlist page in traveler dashboard.
-- Guest sign-in prompt with post-login return handling.
-- Authenticated persistence to the traveler account.
-- Wishlist limits, duplicate handling, and deleted/unavailable tour behavior.
-- Tour card display with price, image, rating, availability, destination, and next available date.
-- Empty, loading, error, and unavailable states.
-- Backend model for wishlist items keyed by traveler and tour.
-- API contract for list, create, delete, and existence checks.
-
-Backend implementation follows the same Laravel patterns as specs 006-008.
-```
+**Done When**: Blog listing and detail pages implemented, SEO metadata passes Lighthouse audit, i18n verified, and visual diff matches Stitch screens.
 
 ## Frontend Architecture
 
@@ -473,31 +483,44 @@ Routes are nested under `[locale]/` for i18n (handled by `next-intl` middleware)
 frontend/src/app/
   [locale]/
     (public)/
-      page.tsx                              # Homepage
-      tours/page.tsx                        # Tour listing
-      tours/[slug]/page.tsx                 # Tour detail
-      destinations/[slug]/page.tsx          # Destination landing
-      categories/[slug]/page.tsx            # Category page
-      blog/page.tsx                         # Blog listing
-      blog/[slug]/page.tsx                  # Blog post detail
+      page.tsx                                    # Homepage (SSR)
+      search/page.tsx                             # Tour listing / search with filters
+      tours/[slug]/page.tsx                       # Tour detail (SSR)
+      destinations/[slug]/page.tsx                # Destination landing (SSR)
+      categories/[slug]/page.tsx                  # Category page (SSR)
+      booking/page.tsx                            # Checkout flow
+      booking/confirmation/page.tsx               # Booking confirmation
+      privacy/page.tsx                            # Privacy policy
+      terms/page.tsx                              # Terms of service
+      blog/page.tsx                               # Blog listing (Phase 7 — not yet created)
+      blog/[slug]/page.tsx                        # Blog post detail (Phase 7 — not yet created)
     (auth)/
-      auth/login/page.tsx                   # Login
-      auth/register/page.tsx                # Register
+      auth/login/page.tsx                         # Login
+      auth/register/page.tsx                      # Register
+      auth/forgot-password/page.tsx               # Forgot password
+      auth/reset-password/page.tsx                # Reset password
+      auth/verify-email/page.tsx                  # Email verification
+      auth/partner-register/page.tsx              # Partner registration
     (traveler)/
-      my-bookings/page.tsx                  # Dashboard / booking list
-      my-bookings/[reference]/page.tsx      # Booking detail
-      wishlist/page.tsx                     # Wishlist
-      profile/page.tsx                      # Profile settings
-      my-reviews/page.tsx                   # My reviews
+      my-bookings/page.tsx                        # Booking list
+      my-bookings/[reference]/page.tsx            # Booking detail
+      wishlist/page.tsx                           # Wishlist (saved tours)
+      profile/page.tsx                            # Profile settings
+      my-reviews/page.tsx                         # My reviews
     (partner)/
-      partner/page.tsx                      # Partner dashboard
-      partner/tours/page.tsx                # Partner tour list
-      partner/tours/new/page.tsx            # Create tour
-      partner/tours/[id]/edit/page.tsx      # Edit tour
-      partner/availability/page.tsx         # Availability calendar
+      partner/page.tsx                            # Partner dashboard overview
+      partner/tours/page.tsx                      # Partner tour list
+      partner/tours/create/page.tsx               # Create tour (wizard)
+      partner/tours/[id]/edit/page.tsx            # Edit tour
+      partner/tours/[id]/availability/page.tsx    # Availability calendar
+      partner/tours/[id]/pricing/page.tsx         # Pricing management
+      partner/analytics/page.tsx                  # Partner analytics
+      partner/bookings/page.tsx                   # Partner bookings
+      partner/reviews/page.tsx                    # Partner reviews
+      partner/profile/page.tsx                    # Partner profile settings
 ```
 
-**Existing route reconciliation**: The current codebase already has `[locale]/my-bookings/`, `[locale]/search/`, `[locale]/booking/`, `[locale]/auth/`, `[locale]/tours/`, `[locale]/destinations/`, and `[locale]/categories/` under `frontend/src/app/[locale]/`. New route groups will wrap these existing routes; no existing routes need deletion.
+**Route notes**: Tour listing uses `/search` (not `/tours`). Checkout is at `/booking` (not `/checkout`). Partner routes are nested under `partner/tours/[id]/` for availability and pricing (not standalone). Auth includes forgot-password, reset-password, verify-email, and partner-register in addition to login/register.
 
 ### Rendering Strategy
 
@@ -524,57 +547,130 @@ The existing `middleware.ts` uses `next-intl` for locale routing. Auth protectio
 ```text
 frontend/src/
   components/
-    ui/Button.tsx
-    ui/Card.tsx
-    ui/Input.tsx
-    ui/Badge.tsx
-    ui/Modal.tsx
-    ui/Select.tsx
-    ui/Tabs.tsx
-    ui/Toast.tsx
-    ui/EmptyState.tsx
-    ui/ErrorState.tsx
-    ui/LoadingSkeleton.tsx
-    layout/Header.tsx
-    layout/Footer.tsx
-    layout/Sidebar.tsx
-    layout/MobileNav.tsx
-    layout/ProtectedLayout.tsx
-    layout/AuthenticatedHeader.tsx
-    layout/AuthGuard.tsx
-    tours/TourCard.tsx
-    tours/TourGrid.tsx
-    tours/TourDetail.tsx
-    tours/TourGallery.tsx
-    tours/TourFilters.tsx
-    tours/SearchBar.tsx
-    booking/CheckoutStepper.tsx
-    booking/BookingCard.tsx
-    booking/BookingDetail.tsx
-    booking/PaymentForm.tsx
-    booking/CancelBookingModal.tsx
-    account/DashboardStats.tsx
-    account/BookingList.tsx
-    account/ProfileForm.tsx
-    account/PasswordChangeForm.tsx
-    account/WishlistGrid.tsx
-    account/WishlistButton.tsx
-    reviews/ReviewSummary.tsx
-    reviews/ReviewForm.tsx
-    reviews/MyReviewCard.tsx
-    partner/PartnerStats.tsx
-    partner/TourForm.tsx
-    partner/TourList.tsx
-    partner/AvailabilityCalendar.tsx
+    auth/                                 # Auth forms and guards
+      AuthGuard.tsx                       # Traveler route protection
+      PartnerAuthGuard.tsx                # Partner route protection
+      LoginForm.tsx                       # Login form with validation
+      RegisterForm.tsx                    # Registration form
+      ForgotPasswordForm.tsx              # Password reset request
+      ResetPasswordForm.tsx               # Password reset with token
+      VerifyEmailClient.tsx               # Email verification
+      PartnerRegisterForm.tsx             # Partner onboarding form
+      GuestConversionPrompt.tsx           # Guest-to-registered conversion
+    booking/                              # Checkout and payment
+      BookingForm.tsx                     # Multi-step checkout
+      BookingConfirmation.tsx             # Post-payment confirmation
+      StripePaymentForm.tsx               # Stripe Elements wrapper
+      ParticipantSelector.tsx             # Guest count selector
+      PriceBreakdown.tsx                  # Price summary display
+      PriceChangeModal.tsx                # Price change notification
+      PaymentStatus.tsx                   # Payment result display
+      DateConfirmation.tsx                # Date selection confirmation
+    home/                                 # Homepage sections
+      HeroSection.tsx                     # Hero banner
+      FeaturedTours.tsx                   # Featured tour cards
+      CategoryGrid.tsx                    # Category navigation grid
+      DestinationShowcase.tsx             # Destination highlights
+    layout/                               # Global layout
+      Header.tsx                          # Public header with nav
+      Footer.tsx                          # Site footer
+      LocaleSwitcher.tsx                  # EN/ES/IT language toggle
+      MobileNavPanel.tsx                  # Mobile navigation drawer
+      UserMenuDropdown.tsx                # Authenticated user menu
+    my-bookings/                          # Traveler booking management
+      BookingCard.tsx                     # Booking list item
+      BookingList.tsx                     # Paginated booking list
+      BookingStatusBadge.tsx              # Status indicator badge
+      CancelBookingButton.tsx             # Cancel with confirmation
+    partner/                              # Partner dashboard components
+      analytics/AnalyticsSummary.tsx       # Overview metrics
+      analytics/BookingsChart.tsx          # Recharts booking chart
+      layout/PartnerSidebar.tsx           # Dashboard sidebar nav
+      layout/PartnerHeader.tsx            # Dashboard header
+      layout/MobileDrawer.tsx             # Mobile sidebar drawer
+      tours/TourList.tsx                  # Partner tour list
+      tours/TourCard.tsx                  # Partner tour card
+      tours/TourWizard.tsx                # Multi-step tour creation/edit
+      tours/ImageUploader.tsx             # Drag-and-drop image upload
+      tours/AvailabilityCalendar.tsx       # Availability slot management
+      tours/PricingTierForm.tsx           # Pricing tier editor
+      bookings/...                        # Partner booking views
+      reviews/...                         # Partner review views
+      profile/...                         # Partner profile forms
+    profile/                              # Traveler profile
+      ProfileForm.tsx                     # Profile info editor
+      ProfileSettings.tsx                 # Settings container
+      PasswordChangeForm.tsx              # Password update form
+      PreferencesForm.tsx                 # User preferences
+    reviews/                              # Review system
+      AggregateRating.tsx                 # Average rating display
+      ReviewList.tsx                      # Paginated review list
+      ReviewCard.tsx                      # Individual review item
+      ReviewForm.tsx                      # Submit/edit review form
+      StarRating.tsx                      # Interactive star input
+      MyReviewCard.tsx                    # User's own review card
+      MyReviewsList.tsx                   # User's review list
+    search/                               # Tour search and discovery
+      SearchBar.tsx                       # Search input with autocomplete
+      FilterPanel.tsx                     # Faceted filter sidebar
+      SearchResults.tsx                   # Results grid layout
+      TourCard.tsx                        # Tour listing card
+      Pagination.tsx                      # Page navigation
+      SortDropdown.tsx                    # Sort order selector
+      SearchUnavailable.tsx               # Search error fallback
+    seo/                                  # SEO components
+      StructuredData.tsx                  # JSON-LD schema output
+    tour/                                 # Tour detail page
+      TourDetail.tsx                      # Main detail layout
+      ImageGallery.tsx                    # Photo gallery with lightbox
+      AvailabilityCalendar.tsx            # Public availability view
+      BookingCTA.tsx                      # Book now action panel
+      ReviewList.tsx                      # Tour-specific review list
+    ui/                                   # Shared primitives
+      button.tsx, input.tsx, label.tsx     # Form controls
+      select.tsx, switch.tsx, textarea.tsx # Form inputs
+      Toast.tsx                           # Notification toasts
+      EmptyState.tsx                      # No-data placeholder
+      ErrorState.tsx                      # Error boundary display
+      LoadingSkeleton.tsx                 # Loading placeholder
+    wishlist/                             # Saved tours
+      WishlistButton.tsx                  # Save/unsave toggle
+      WishlistGrid.tsx                    # Wishlist page grid
   lib/
-    api/              # API client functions (traveler, partner, public)
-    auth/             # Auth context, session management
-    i18n/             # Locale config, message files (EN/ES/IT)
-    hooks/            # Custom hooks (useBookings, useProfile, useWishlist, etc.)
-    stores/           # Zustand stores (checkout session, UI state)
-    stripe/           # Stripe Elements integration
-    validators/       # Zod schemas for form validation
-    design-tokens.ts  # Centralized design tokens
+    api/                                  # API client modules
+      client.ts                           # Base HTTP client with auth
+      auth.ts                             # Auth endpoints
+      tours.ts                            # Public tour endpoints
+      search.ts                           # Search and filter endpoints
+      bookings.ts                         # Booking CRUD
+      my-bookings.ts                      # Traveler booking endpoints
+      traveler.ts                         # Traveler profile, wishlist, reviews
+      partner.ts                          # Partner CRUD (tours, availability, pricing)
+      homepage.ts                         # Homepage data
+      categories.ts                       # Category endpoints
+      destinations.ts                     # Destination endpoints
+      types.ts                            # Shared API response types
+    auth/                                 # Auth context, session management
+    hooks/                                # Custom hooks
+      useAuth.tsx                         # Auth state and actions
+      useCheckout.ts                      # Checkout flow state
+      useFilters.ts                       # Search filter management
+      useFocusTrap.ts                     # Modal focus trap
+      usePartnerRealtime.ts               # Partner SSE/polling
+      useTour.ts                          # Single tour data
+      useTours.ts                         # Tour list data
+    reviews/                              # Review utilities
+    stores/                               # Zustand stores
+      checkout-store.ts                   # Checkout session state
+      tourWizard.ts                       # Multi-step tour creation
+    stripe/                               # Stripe integration
+      stripe-client.ts                    # Stripe.js initialization
+    validators/                           # Zod schemas
+      auth.ts                             # Auth form validation
+    design-tokens.ts                      # Centralized design tokens
+    query-provider.tsx                    # TanStack React Query provider
+    utils.ts                              # Shared utilities
+    images.ts                             # Image helpers (plaiceholder)
 ```
 
 ### Data and Rendering Boundaries
@@ -587,9 +683,18 @@ frontend/src/
 - Protected routes enforce role and session checks before fetching private data.
 - Data fetching uses TanStack React Query for server state caching, deduplication, and background refetching.
 
+### Styling and Tooling
+
+- **CSS framework**: Tailwind CSS v4 via `@tailwindcss/postcss` with `tailwind-merge` for conditional class composition.
+- **Error monitoring**: Sentry (`@sentry/nextjs`) is integrated for both client and server error tracking via `sentry.client.config.ts` and `sentry.server.config.ts`.
+- **Charts**: Recharts is used for partner analytics (booking trends, revenue charts).
+- **Image optimization**: `plaiceholder` for blur-up placeholders on SSR-rendered images.
+
 ## Design System Tokens
 
 All tokens below align with the existing `frontend/src/lib/design-tokens.ts` file and extend it where needed.
+
+> **Implementation gap**: The current `design-tokens.ts` implements basic colors (`primary`, `accent`, `background`, `surface`, `text`, `border`, `error`, `success`), typography (h1–h4 with Inter font), spacing (8px grid), border radius, and three shadow levels. The tokens below for interactive states (`hover`, `pressed`), `border.focus`, `shadow.modal`, animation/transition values, z-index scale, and mobile-specific typography sizes are **not yet implemented** and must be added before use.
 
 ### Color
 
@@ -695,11 +800,10 @@ npm run test:e2e    # Playwright E2E tests
 npm run test:a11y   # Playwright accessibility tests (axe-core)
 ```
 
-**Not yet available** (add to `package.json` during Phase 1 setup):
+**`lighthouse` is available** (already in `package.json`). Still needs to be added:
 
 ```bash
-npm run typecheck   # Add: "typecheck": "tsc --noEmit"
-npm run lighthouse  # Add: "lighthouse": "lhci autorun" (uses existing lighthouserc.js)
+npm run typecheck   # Add: "typecheck": "tsc --noEmit" to package.json
 ```
 
 ### Visual Verification
@@ -708,11 +812,11 @@ Visual verification uses manual screenshot comparison against Stitch exports. If
 
 | Area | Routes | Stitch IDs | Viewports |
 |------|--------|-----------|-----------|
-| Public discovery | `/`, `/tours`, `/tours/[slug]`, `/destinations/rome`, `/categories/history-culture` | ST-006-001 through ST-006-013 | 390px, 780px, 1280px |
-| Booking/payment | `/checkout`, `/booking/confirmation`, payment success/failure states | ST-007-001 | 390px, 780px, 1280px |
-| Auth | `/auth/login`, `/auth/register` | ST-001-001 through ST-001-003 | 390px, 1280px |
-| Traveler account | `/my-bookings`, `/my-bookings/[ref]`, `/wishlist`, `/profile` | ST-015-001 through ST-015-006, ST-017-001, ST-017-002 | 390px, 780px, 1280px |
-| Partner dashboard | `/partner`, `/partner/tours`, `/partner/tours/new`, `/partner/tours/[id]/edit`, `/partner/availability` | ST-010-001 through ST-010-003, ST-011-001 through ST-011-004, ST-012-001 | 390px, 780px, 1280px |
+| Public discovery | `/`, `/search`, `/tours/[slug]`, `/destinations/[slug]`, `/categories/[slug]` | ST-006-001 through ST-006-013 | 390px, 780px, 1280px |
+| Booking/payment | `/booking`, `/booking/confirmation`, payment success/failure states | ST-007-001 | 390px, 780px, 1280px |
+| Auth | `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` | ST-001-001 through ST-001-003 | 390px, 1280px |
+| Traveler account | `/my-bookings`, `/my-bookings/[ref]`, `/wishlist`, `/profile`, `/my-reviews` | ST-015-001 through ST-015-006, ST-017-001, ST-017-002 | 390px, 780px, 1280px |
+| Partner dashboard | `/partner`, `/partner/tours`, `/partner/tours/create`, `/partner/tours/[id]/edit`, `/partner/tours/[id]/availability` | ST-010-001 through ST-010-003, ST-011-001 through ST-011-004, ST-012-001 | 390px, 780px, 1280px |
 | Blog | `/blog`, `/blog/[slug]` | ST-016-001, ST-016-002 | 390px, 780px, 1280px |
 
 ### Acceptance Thresholds
@@ -749,4 +853,8 @@ Visual verification uses manual screenshot comparison against Stitch exports. If
 - Validate user input at form boundaries before API submission.
 - Add empty, loading, error, and permission-denied states for every data-driven surface.
 - Ensure every frontend task references a Spec ID and Stitch ID.
-- All new backend models, migrations, and API endpoints for specs 016-017 follow existing Laravel patterns from spec 010.
+- All new backend models, migrations, and API endpoints for spec 016 follow existing Laravel patterns from spec 010.
+- Use Tailwind utility classes consistent with the existing component patterns; avoid mixing raw CSS with Tailwind.
+- Extend `design-tokens.ts` before adding new hardcoded values — the token file is currently incomplete (missing interactive states, z-index, animations, and mobile typography scales).
+- Add Zod validators to `lib/validators/` for all new forms (currently only `auth.ts` exists; profile, booking, review, and partner validators are needed).
+- Report frontend errors to Sentry via the existing `@sentry/nextjs` integration.

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import LocaleSwitcher from './LocaleSwitcher';
+import UserMenuDropdown from './UserMenuDropdown';
+import MobileNavPanel from './MobileNavPanel';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface HeaderProps {
@@ -15,13 +17,7 @@ export default function Header({ locale }: HeaderProps) {
   const travelerT = useTranslations('traveler.nav');
   const { user, isLoading, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const travelerLinks = [
-    { href: `/${locale}/my-bookings`, label: travelerT('myBookings') },
-    { href: `/${locale}/wishlist`, label: travelerT('wishlist') },
-    { href: `/${locale}/my-reviews`, label: travelerT('myReviews') },
-    { href: `/${locale}/profile`, label: travelerT('profile') },
-  ];
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
@@ -67,45 +63,16 @@ export default function Header({ locale }: HeaderProps) {
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                 </button>
-                {menuOpen && (
-                  <div
-                    className="absolute right-0 mt-2 w-56 rounded-lg border border-gray-200 bg-white p-2 shadow-lg"
-                    role="menu"
-                  >
-                    <Link
-                      href={`/${locale}/my-bookings`}
-                      className="block rounded-md px-3 py-2 text-sm font-semibold text-[#0A2540] hover:bg-gray-50"
-                      role="menuitem"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {travelerT('dashboard')}
-                    </Link>
-                    {travelerLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="block rounded-md px-3 py-2 text-sm text-[#5A6B7B] hover:bg-gray-50 hover:text-[#0A2540]"
-                        role="menuitem"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                    <button
-                      onClick={() => {
-                        setMenuOpen(false);
-                        void logout();
-                      }}
-                      className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50"
-                      role="menuitem"
-                    >
-                      {travelerT('signOut')}
-                    </button>
-                  </div>
-                )}
+                <UserMenuDropdown
+                  locale={locale}
+                  userName={user.name}
+                  isOpen={menuOpen}
+                  onClose={() => setMenuOpen(false)}
+                  onLogout={logout}
+                />
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-2">
                 <Link
                   href={`/${locale}/auth/login`}
                   className="text-sm text-[#5A6B7B] hover:text-[#0A2540] transition-colors"
@@ -122,9 +89,10 @@ export default function Header({ locale }: HeaderProps) {
             )
           )}
           <button
+            onClick={() => setMobileOpen(true)}
             className="sm:hidden rounded-md p-2 text-[#5A6B7B] hover:bg-gray-100"
             aria-label={t('openMenu')}
-            aria-expanded="false"
+            aria-expanded={mobileOpen}
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -132,6 +100,15 @@ export default function Header({ locale }: HeaderProps) {
           </button>
         </div>
       </div>
+
+      <MobileNavPanel
+        locale={locale}
+        userName={user?.name}
+        isAuthenticated={Boolean(user)}
+        isOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        onLogout={logout}
+      />
     </header>
   );
 }

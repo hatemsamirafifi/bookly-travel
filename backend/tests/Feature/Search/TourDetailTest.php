@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\Tour;
 use App\Models\Category;
+use App\Models\Tour;
 use App\Models\TourTranslation;
 use Illuminate\Testing\Fluent\AssertableJson;
+
 use function Pest\Laravel\getJson;
 
 it('returns tour detail for a valid slug and locale', function () {
@@ -38,21 +39,19 @@ it('returns tour detail for a valid slug and locale', function () {
         'cancellation_policy' => 'Free cancellation 24h before',
     ]);
 
-    getJson("/api/public/tours/test-adventure?locale=en")
+    getJson('/api/public/tours/test-adventure?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', fn (AssertableJson $data) =>
-                $data->where('slug', 'test-adventure')
-                     ->where('title', 'Test Adventure Tour')
-                     ->where('location', 'Paris, France')
-                     ->has('category')
-                     ->has('duration')
-                     ->has('pricing')
-                     ->has('availability')
-                     ->has('reviews')
-                     ->has('seo')
-                     ->etc()
-            )
+        ->assertJson(fn (AssertableJson $json) => $json->has('data', fn (AssertableJson $data) => $data->where('slug', 'test-adventure')
+            ->where('title', 'Test Adventure Tour')
+            ->where('location', 'Paris, France')
+            ->has('category')
+            ->has('duration')
+            ->has('pricing')
+            ->has('availability')
+            ->has('reviews')
+            ->has('seo')
+            ->etc()
+        )
         );
 });
 
@@ -75,7 +74,7 @@ it('returns 404 for draft tour', function () {
         'status' => 'draft',
     ]);
 
-    getJson("/api/public/tours/draft-tour?locale=en")
+    getJson('/api/public/tours/draft-tour?locale=en')
         ->assertStatus(404);
 });
 
@@ -92,7 +91,7 @@ it('returns 404 for rejected tour', function () {
         'status' => 'rejected',
     ]);
 
-    getJson("/api/public/tours/rejected-tour?locale=en")
+    getJson('/api/public/tours/rejected-tour?locale=en')
         ->assertStatus(404);
 });
 
@@ -109,7 +108,7 @@ it('returns 410 for archived tour', function () {
         'status' => 'archived',
     ]);
 
-    getJson("/api/public/tours/archived-tour?locale=en")
+    getJson('/api/public/tours/archived-tour?locale=en')
         ->assertStatus(410)
         ->assertJson(['message' => 'This tour is no longer available.']);
 });
@@ -213,14 +212,11 @@ it('includes SEO metadata in response', function () {
 
     getJson('/api/public/tours/seo-tour?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data.seo', fn (AssertableJson $seo) =>
-                $seo->has('meta_title')
-                    ->has('meta_description')
-                    ->has('canonical_url')
-                    ->has('hreflang', fn (AssertableJson $hreflang) =>
-                        $hreflang->has('en')->has('es')->has('it')
-                    )
+        ->assertJson(fn (AssertableJson $json) => $json->has('data.seo', fn (AssertableJson $seo) => $seo->has('meta_title')
+            ->has('meta_description')
+            ->has('canonical_url')
+            ->has('hreflang', fn (AssertableJson $hreflang) => $hreflang->has('en')->has('es')->has('it')
             )
+        )
         );
 });

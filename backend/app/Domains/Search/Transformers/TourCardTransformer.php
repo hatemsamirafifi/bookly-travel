@@ -39,6 +39,7 @@ class TourCardTransformer
     protected function resolveNextAvailableDate(Tour $tour): ?string
     {
         $dates = $tour->upcomingAvailableDates();
+
         return $dates[0] ?? null;
     }
 }

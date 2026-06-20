@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# generated Playwright auth storage state (created by tests/auth.setup.ts)
+/tests/.auth
+
 # next.js
 /.next/
 /out/

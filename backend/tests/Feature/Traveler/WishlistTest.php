@@ -1,10 +1,14 @@
 <?php
 
+use App\Domains\Wishlist\Models\Wishlist;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\{deleteJson, getJson, postJson};
+
+use function Pest\Laravel\deleteJson;
+use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
 
@@ -30,7 +34,7 @@ beforeEach(function () {
 });
 
 it('lists traveler wishlist', function () {
-    \App\Domains\Wishlist\Models\Wishlist::create([
+    Wishlist::create([
         'user_id' => $this->traveler->id,
         'tour_id' => $this->tour->id,
     ]);
@@ -81,11 +85,11 @@ it('adds a tour to wishlist', function () {
     $response->assertStatus(201)
         ->assertJsonStructure(['data' => ['id', 'tour_id', 'added_at']]);
 
-    expect(\App\Domains\Wishlist\Models\Wishlist::where('user_id', $this->traveler->id)->count())->toBe(1);
+    expect(Wishlist::where('user_id', $this->traveler->id)->count())->toBe(1);
 });
 
 it('returns 409 when adding duplicate tour to wishlist', function () {
-    \App\Domains\Wishlist\Models\Wishlist::create([
+    Wishlist::create([
         'user_id' => $this->traveler->id,
         'tour_id' => $this->tour->id,
     ]);
@@ -106,7 +110,7 @@ it('returns 404 when adding non-existent tour to wishlist', function () {
 });
 
 it('removes a tour from wishlist', function () {
-    \App\Domains\Wishlist\Models\Wishlist::create([
+    Wishlist::create([
         'user_id' => $this->traveler->id,
         'tour_id' => $this->tour->id,
     ]);
@@ -116,7 +120,7 @@ it('removes a tour from wishlist', function () {
     ]);
 
     $response->assertStatus(204);
-    expect(\App\Domains\Wishlist\Models\Wishlist::where('user_id', $this->traveler->id)->count())->toBe(0);
+    expect(Wishlist::where('user_id', $this->traveler->id)->count())->toBe(0);
 });
 
 it('returns 404 when removing non-existent wishlist item', function () {

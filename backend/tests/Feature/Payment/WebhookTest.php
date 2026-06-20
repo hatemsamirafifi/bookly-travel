@@ -1,12 +1,9 @@
 <?php
 
-use App\Domains\Booking\Models\Booking;
-use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Models\StripeWebhookEvent;
-use App\Models\Category;
-use App\Models\Tour;
-use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
@@ -41,5 +38,5 @@ it('stores webhook event and skips duplicates', function () {
         'event_type' => 'payment_intent.succeeded',
         'processing_status' => 'received',
         'payload_hash' => hash('sha256', '{}'),
-    ]))->toThrow(\Illuminate\Database\QueryException::class);
+    ]))->toThrow(QueryException::class);
 });

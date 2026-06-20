@@ -4,6 +4,7 @@ namespace App\Domains\Auth\Listeners;
 
 use App\Domains\Auth\Events\AccountLockedOut;
 use App\Mail\AccountLockedOutMail;
+use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
@@ -34,7 +35,7 @@ class SendAccountLockedOutEmail implements ShouldQueue
         $user = $event->user->fresh();
 
         if (
-            $user->last_lockout_email_sent_at instanceof \Carbon\Carbon &&
+            $user->last_lockout_email_sent_at instanceof Carbon &&
             $user->last_lockout_email_sent_at->equalTo($user->locked_until)
         ) {
             return;

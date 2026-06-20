@@ -71,7 +71,7 @@ class AnonymizeExpiredBookingData implements ShouldQueue
                 $booking->status,
                 [
                     'anonymization_token' => $token,
-                    'days_since_tour'     => now()->diffInDays($booking->tour_date),
+                    'days_since_tour' => now()->diffInDays($booking->tour_date),
                 ],
             );
         });
@@ -81,4 +81,3 @@ class AnonymizeExpiredBookingData implements ShouldQueue
         ]);
     }
 }
-

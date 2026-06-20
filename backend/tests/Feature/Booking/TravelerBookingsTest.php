@@ -6,7 +6,9 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use function Pest\Laravel\{getJson, postJson};
+
+use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
 
@@ -162,7 +164,8 @@ it('returns summary counts grouped by status', function () {
         ->assertJsonPath('data.no_show', 0);
 });
 
-it('returns 422 for already cancelled booking', function () {    $booking = Booking::create([
+it('returns 422 for already cancelled booking', function () {
+    $booking = Booking::create([
         'reference' => Booking::generateReference(),
         'traveler_id' => $this->traveler->id,
         'tour_id' => $this->tour->id,

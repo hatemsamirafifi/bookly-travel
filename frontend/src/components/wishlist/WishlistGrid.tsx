@@ -2,57 +2,40 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { getTravelerWishlist, removeTravelerWishlistItem } from '@/lib/api/traveler';
-import type { WishlistItem } from '@/types/traveler';
+import { useWishlist } from '@/hooks/useWishlist';
+import EmptyState from '@/components/ui/EmptyState';
+import ErrorState from '@/components/ui/ErrorState';
+import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 
-export default function WishlistGrid({ locale }: { locale: string }) {
+interface WishlistGridProps {
+  locale: string;
+}
+
+export default function WishlistGrid({ locale }: WishlistGridProps) {
   const t = useTranslations('traveler.wishlist');
-  const [items, setItems] = useState<WishlistItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: items, isLoading, error, refetch, removeItem } = useWishlist();
 
-  useEffect(() => {
-    getTravelerWishlist()
-      .then((res) => setItems(res.data))
-      .catch(() => setError(t('loadError')))
-      .finally(() => setLoading(false));
-  }, [t]);
-
-  const remove = async (tourId: string | number) => {
-    const previous = items;
-    setItems((current) => current.filter((item) => item.tour.id !== tourId));
-    try {
-      await removeTravelerWishlistItem(tourId);
-    } catch {
-      setItems(previous);
-      setError(t('removeError'));
-    }
-  };
-
-  if (loading) {
-    return <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{[1, 2, 3].map((i) => <div key={i} className="h-72 animate-pulse rounded-lg bg-gray-100" />)}</div>;
+  if (isLoading) {
+    return <LoadingSkeleton variant="grid" count={3} />;
   }
 
-  if (error && items.length === 0) {
-    return <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>;
+  if (error && (!items || items.length === 0)) {
+    return <ErrorState message={t('loadError')} onRetry={() => refetch()} />;
   }
 
-  if (items.length === 0) {
+  if (!items || items.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center">
-        <p className="text-gray-600">{t('empty')}</p>
-        <Link href={`/${locale}/search`} className="mt-4 inline-flex rounded-xl bg-[#FFB800] px-5 py-2.5 text-sm font-semibold text-[#0A2540]">
-          {t('exploreTours')}
-        </Link>
-      </div>
+      <EmptyState
+        title={t('empty')}
+        cta={{ label: t('exploreTours'), href: `/${locale}/search` }}
+      />
     );
   }
 
   return (
-    <div>
-      {error && <p className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+    <div data-testid="wishlist-grid">
+      {error && <p className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{t('removeError')}</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
           <article key={item.id} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
@@ -65,7 +48,7 @@ export default function WishlistGrid({ locale }: { locale: string }) {
                   {item.tour.name}
                 </Link>
                 <button
-                  onClick={() => remove(item.tour.id)}
+                  onClick={() => removeItem(item.tour.id)}
                   className="rounded-full border border-gray-200 px-2 py-1 text-xs font-semibold text-gray-600 hover:border-red-300 hover:text-red-700"
                   aria-label={t('removeAria', { tour: item.tour.name })}
                 >

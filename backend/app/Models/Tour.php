@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityException;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\PricingTier;
@@ -14,6 +15,23 @@ use Laravel\Scout\Searchable;
 class Tour extends Model
 {
     use Searchable;
+
+    // Meilisearch index settings for Scout sync-index-settings
+    protected array $meilisearchSettings = [
+        'filterableAttributes' => [
+            'status',
+            'category_slug',
+            'location_slug',
+            'price_amount',
+            'duration_minutes',
+            'available_dates',
+        ],
+        'sortableAttributes' => [
+            'price_amount',
+            'average_rating',
+            'created_at',
+        ],
+    ];
 
     protected $fillable = [
         'partner_id',
@@ -193,6 +211,6 @@ class Tour extends Model
 
     public function bookings(): HasMany
     {
-        return $this->hasMany(\App\Domains\Booking\Models\Booking::class);
+        return $this->hasMany(Booking::class);
     }
 }

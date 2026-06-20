@@ -28,7 +28,7 @@ class RegisterRequest extends FormRequest
                 'min:8',
                 'regex:/[a-z]/',
                 'regex:/[A-Z]/',
-                'regex:/[0-9]/'
+                'regex:/[0-9]/',
             ],
             'locale' => ['sometimes', 'filled', 'in:en,es,it'],
         ];

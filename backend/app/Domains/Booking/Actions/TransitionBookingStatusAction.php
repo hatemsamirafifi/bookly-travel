@@ -2,12 +2,11 @@
 
 namespace App\Domains\Booking\Actions;
 
-use App\Domains\Booking\DTOs\BookingResponseDTO;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException; // kept for other uses
+// kept for other uses
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;

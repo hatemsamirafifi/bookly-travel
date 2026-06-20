@@ -9,7 +9,10 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\{postJson, putJson};
+use Illuminate\Support\Str;
+
+use function Pest\Laravel\postJson;
+use function Pest\Laravel\putJson;
 
 uses(RefreshDatabase::class);
 
@@ -51,7 +54,7 @@ beforeEach(function () {
         'total_price' => 8900,
         'currency' => 'EUR',
         'status' => Booking::STATUS_COMPLETED,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
 

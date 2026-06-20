@@ -25,10 +25,10 @@ class NotifyAdminOnEmailDeliveryFailure
         // 1. Log — always present so ops can grep the log
         Log::error('ADMIN ALERT: Booking confirmation email delivery failed — manual intervention required', [
             'booking_reference' => $booking->reference,
-            'traveler_id'       => $booking->traveler_id,
-            'tour_id'           => $booking->tour_id,
-            'locale'            => $booking->locale,
-            'error'             => $event->errorMessage,
+            'traveler_id' => $booking->traveler_id,
+            'tour_id' => $booking->tour_id,
+            'locale' => $booking->locale,
+            'error' => $event->errorMessage,
         ]);
 
         // 2. Slack webhook — only if configured

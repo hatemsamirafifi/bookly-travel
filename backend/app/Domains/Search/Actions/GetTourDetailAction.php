@@ -4,7 +4,6 @@ namespace App\Domains\Search\Actions;
 
 use App\Models\Tour;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 
 class GetTourDetailAction
 {
@@ -119,5 +118,4 @@ class GetTourDetailAction
             'hreflang' => $hreflang,
         ];
     }
-
 }

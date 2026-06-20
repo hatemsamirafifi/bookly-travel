@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Testing\Fluent\AssertableJson;
+
 use function Pest\Laravel\getJson;
 
 it('returns validation error when locale is missing', function () {
@@ -18,20 +19,17 @@ it('returns validation error for invalid locale', function () {
 it('returns successful response with valid locale and expected JSON structure', function () {
     getJson('/api/public/search/tours?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
-                 ->has('meta', fn (AssertableJson $meta) =>
-                    $meta->has('current_page')
-                         ->has('last_page')
-                         ->has('per_page')
-                         ->has('total')
-                 )
-                 ->has('filters', fn (AssertableJson $filters) =>
-                    $filters->has('categories')
-                            ->has('locations')
-                            ->has('price_range')
-                            ->has('durations')
-                 )
+        ->assertJson(fn (AssertableJson $json) => $json->has('data')
+            ->has('meta', fn (AssertableJson $meta) => $meta->has('current_page')
+                ->has('last_page')
+                ->has('per_page')
+                ->has('total')
+            )
+            ->has('filters', fn (AssertableJson $filters) => $filters->has('categories')
+                ->has('locations')
+                ->has('price_range')
+                ->has('durations')
+            )
         );
 });
 
@@ -74,10 +72,9 @@ it('supports all three supported locales', function (string $locale) {
 it('handles empty query returning all available published tours', function () {
     getJson('/api/public/search/tours?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
-                 ->where('meta.current_page', 1)
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('data')
+            ->where('meta.current_page', 1)
+            ->etc()
         );
 });
 
@@ -146,23 +143,20 @@ it('rejects invalid sort value', function () {
 it('applies combined filters successfully', function () {
     getJson('/api/public/search/tours?locale=en&category=adventure&location=paris&price_min=1000&price_max=10000&duration=full-day&sort=rating')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
-                 ->has('filters')
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('data')
+            ->has('filters')
+            ->etc()
         );
 });
 
 it('returns filter metadata with categories in response', function () {
     getJson('/api/public/search/tours?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('filters.categories')
-                 ->has('filters.locations')
-                 ->has('filters.price_range', fn (AssertableJson $range) =>
-                    $range->has('min')->has('max')
-                 )
-                 ->has('filters.durations')
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('filters.categories')
+            ->has('filters.locations')
+            ->has('filters.price_range', fn (AssertableJson $range) => $range->has('min')->has('max')
+            )
+            ->has('filters.durations')
+            ->etc()
         );
 });

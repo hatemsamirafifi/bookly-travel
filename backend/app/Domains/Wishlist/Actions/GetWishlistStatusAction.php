@@ -7,8 +7,7 @@ use App\Domains\Wishlist\Models\Wishlist;
 class GetWishlistStatusAction
 {
     /**
-     * @param int $userId
-     * @param array<int|string> $tourIds
+     * @param  array<int|string>  $tourIds
      * @return array<string, bool>
      */
     public function execute(int $userId, array $tourIds): array

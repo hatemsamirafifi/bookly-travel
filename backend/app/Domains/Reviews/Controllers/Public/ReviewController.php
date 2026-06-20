@@ -6,6 +6,7 @@ use App\Domains\Reviews\Actions\EditReviewAction;
 use App\Domains\Reviews\Actions\SubmitReviewAction;
 use App\Domains\Reviews\Models\Review;
 use App\Http\Resources\ReviewResource;
+use App\Models\Tour;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -72,7 +73,7 @@ class ReviewController extends Controller
 
     public function index(Request $request, $slug): JsonResponse
     {
-        $tour = \App\Models\Tour::where('slug', $slug)->firstOrFail();
+        $tour = Tour::where('slug', $slug)->firstOrFail();
 
         $reviews = Review::where('tour_id', $tour->id)
             ->whereIn('status', ['visible', 'flagged'])

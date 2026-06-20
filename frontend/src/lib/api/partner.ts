@@ -8,9 +8,10 @@ import type {
   Notification,
   PartnerProfile,
   PartnerSettings,
-  AnalyticsSummary,
+  AnalyticsResponse,
   DateRangeFilter,
   PaginatedPartnerResponse,
+  SignedUploadUrl,
 } from '@/types/partner';
 
 function authHeaders(extra?: Record<string, string>) {
@@ -61,6 +62,14 @@ export function deleteTour(id: string | number) {
     method: 'DELETE',
     requireCsrf: true,
     headers: authHeaders(),
+  });
+}
+
+export function archiveTour(id: string | number) {
+  return apiClient<{ data: Tour }>(`/api/partner/tours/${encodeURIComponent(String(id))}/archive`, {
+    method: 'POST',
+    requireCsrf: true,
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
   });
 }
 
@@ -198,7 +207,7 @@ export function getAnalytics(range?: DateRangeFilter, tourId?: string | number) 
   }
   if (tourId) params.set('tour_id', String(tourId));
   const qs = params.toString();
-  return apiClient<{ data: AnalyticsSummary }>(`/api/partner/analytics${qs ? `?${qs}` : ''}`, {
+  return apiClient<AnalyticsResponse>(`/api/partner/analytics${qs ? `?${qs}` : ''}`, {
     headers: authHeaders(),
   });
 }
@@ -241,7 +250,7 @@ export function getSignedUploadUrl(
   fileType: string,
   fileSize: number
 ) {
-  return apiClient<{ signed_url: string; public_url: string; expires_at: string }>('/api/partner/uploads/signed-url', {
+  return apiClient<SignedUploadUrl>('/api/partner/uploads/signed-url', {
     method: 'POST',
     requireCsrf: true,
     headers: authHeaders({ 'Content-Type': 'application/json' }),

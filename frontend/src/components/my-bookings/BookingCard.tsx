@@ -1,20 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import BookingStatusBadge from './BookingStatusBadge';
 import type { TravelerBooking } from '@/types/traveler';
 
 interface BookingCardProps {
   booking: TravelerBooking;
   locale: string;
 }
-
-const statusColors: Record<string, string> = {
-  confirmed: 'bg-green-100 text-green-800',
-  completed: 'bg-blue-100 text-blue-800',
-  cancelled: 'bg-red-100 text-red-800',
-  no_show: 'bg-yellow-100 text-yellow-800',
-  pending_payment: 'bg-amber-100 text-amber-800',
-  expired: 'bg-gray-100 text-gray-800',
-};
 
 export default function BookingCard({ booking, locale }: BookingCardProps) {
   const tourName = booking.tour.name || booking.tour.title || 'Tour';
@@ -43,9 +35,7 @@ export default function BookingCard({ booking, locale }: BookingCardProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <h3 className="truncate font-semibold text-gray-900">{tourName}</h3>
-            <span className={`inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[booking.status] || 'bg-gray-100 text-gray-800'}`}>
-              {booking.status}
-            </span>
+            <BookingStatusBadge status={booking.status} />
           </div>
           <p className="mt-1 text-sm text-gray-500">{booking.tour.location}</p>
           <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-gray-600">

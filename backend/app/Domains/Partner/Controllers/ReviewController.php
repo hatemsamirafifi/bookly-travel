@@ -12,8 +12,7 @@ class ReviewController
 {
     public function __construct(
         private readonly ReviewService $service,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): JsonResponse
     {

@@ -1,13 +1,15 @@
 <?php
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\Partner;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
-use App\Domains\Partner\Models\Partner;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use function Pest\Laravel\{actingAs, deleteJson};
+
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\deleteJson;
 
 uses(RefreshDatabase::class);
 

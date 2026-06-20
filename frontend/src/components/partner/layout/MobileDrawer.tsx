@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { PartnerSidebar } from './PartnerSidebar';
+import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ interface MobileDrawerProps {
 }
 
 export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
+  const drawerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -20,16 +23,19 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     };
   }, [isOpen]);
 
+  useFocusTrap(drawerRef, isOpen);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden">
+    <div className="fixed inset-0 z-50 md:hidden">
       <div
         className="absolute inset-0 bg-black/50"
         onClick={onClose}
         aria-hidden="true"
       />
       <div
+        ref={drawerRef}
         className="absolute left-0 top-0 h-full w-60 bg-[#0A2540] shadow-xl"
         role="dialog"
         aria-modal="true"

@@ -1,24 +1,22 @@
 <?php
 
-use App\Models\Tour;
 use App\Models\Category;
+use App\Models\Tour;
 use App\Models\TourTranslation;
 use Illuminate\Testing\Fluent\AssertableJson;
+
 use function Pest\Laravel\getJson;
 
 it('returns homepage data with expected structure', function () {
     getJson('/api/public/homepage?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('featured_tours')
-                 ->has('popular_categories')
-                 ->has('featured_destinations')
-                 ->has('meta', fn (AssertableJson $meta) =>
-                    $meta->has('seo', fn (AssertableJson $seo) =>
-                        $seo->has('meta_title')
-                            ->has('meta_description')
-                    )
-                 )
+        ->assertJson(fn (AssertableJson $json) => $json->has('featured_tours')
+            ->has('popular_categories')
+            ->has('featured_destinations')
+            ->has('meta', fn (AssertableJson $meta) => $meta->has('seo', fn (AssertableJson $seo) => $seo->has('meta_title')
+                ->has('meta_description')
+            )
+            )
         );
 });
 
@@ -58,9 +56,8 @@ it('falls back to latest tours when no featured flag set', function () {
 
     getJson('/api/public/homepage?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('featured_tours')
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('featured_tours')
+            ->etc()
         );
 });
 
@@ -69,9 +66,8 @@ it('returns categories with tour counts', function () {
 
     getJson('/api/public/homepage?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('popular_categories')
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('popular_categories')
+            ->etc()
         );
 });
 

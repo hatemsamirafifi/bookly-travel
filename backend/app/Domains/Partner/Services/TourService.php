@@ -1,15 +1,15 @@
-﻿<?php
+<?php
 
 namespace App\Domains\Partner\Services;
 
-use App\Models\Tour;
-use App\Domains\Partner\Models\TourDraft;
-use App\Domains\Partner\Models\TourMedia;
-use App\Domains\Partner\Models\PricingTier;
-use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\AvailabilityException;
-use Illuminate\Support\Facades\DB;
+use App\Domains\Partner\Models\AvailabilityRule;
+use App\Domains\Partner\Models\PricingTier;
+use App\Domains\Partner\Models\TourDraft;
+use App\Models\Tour;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TourService
 {
@@ -33,20 +33,32 @@ class TourService
         return DB::transaction(function () use ($partnerId, $data) {
             $tour = Tour::create([
                 'partner_id' => $partnerId,
-                'title' => $data['title'] ?? null,
-                'description' => $data['description'] ?? null,
-                'category' => $data['category'] ?? null,
-                'destination' => $data['destination'] ?? null,
-                'duration_value' => $data['duration_value'] ?? null,
-                'duration_unit' => $data['duration_unit'] ?? null,
-                'difficulty_level' => $data['difficulty_level'] ?? null,
-                'itinerary' => $data['itinerary'] ?? null,
-                'inclusions' => $data['inclusions'] ?? null,
-                'meeting_point' => $data['meeting_point'] ?? null,
+                'category_id' => $data['category_id'] ?? null,
+                'slug' => $data['slug'] ?? Str::slug($data['title'] ?? ($data['translations']['en']['title'] ?? 'tour-' . uniqid())),
+                'location' => $data['location'] ?? $data['destination'] ?? '',
+                'location_slug' => $data['location_slug'] ?? Str::slug($data['location'] ?? $data['destination'] ?? 'location'),
+                'duration_minutes' => $data['duration_minutes'] ?? (($data['duration_unit'] ?? '') === 'day' ? ($data['duration_value'] ?? 1) * 1440 : ($data['duration_value'] ?? 1) * 60),
+                'duration_label' => $data['duration_label'] ?? (($data['duration_value'] ?? 1) . ' ' . ($data['duration_unit'] ?? 'hour') . (($data['duration_value'] ?? 1) > 1 ? 's' : '')),
+                'group_size_min' => $data['group_size_min'] ?? 1,
+                'group_size_max' => $data['group_size_max'] ?? 10,
+                'price_amount' => $data['price_amount'] ?? (int) (($data['price_from'] ?? 0) * 100),
                 'status' => $data['status'] ?? 'draft',
-                'price_from' => $data['price_from'] ?? null,
-                'currency' => $data['currency'] ?? 'EUR',
+                'cover_image_url' => $data['cover_image_url'] ?? null,
             ]);
+
+            if (! empty($data['translations'])) {
+                $this->syncTranslations($tour, $data['translations']);
+            } elseif (! empty($data['title'])) {
+                // Fallback support for single-title style create payloads
+                $this->syncTranslations($tour, [
+                    'en' => [
+                        'title' => $data['title'],
+                        'description' => $data['description'] ?? null,
+                        'inclusions' => $data['inclusions'] ?? null,
+                        'meeting_point' => $data['meeting_point'] ?? null,
+                    ],
+                ]);
+            }
 
             if (! empty($data['pricing_tiers'])) {
                 $this->syncPricingTiers($tour, $data['pricing_tiers']);
@@ -67,20 +79,52 @@ class TourService
     public function updateTour(Tour $tour, array $data): Tour
     {
         return DB::transaction(function () use ($tour, $data) {
-            $tour->update([
-                'title' => $data['title'] ?? $tour->title,
-                'description' => $data['description'] ?? $tour->description,
-                'category' => $data['category'] ?? $tour->category,
-                'destination' => $data['destination'] ?? $tour->destination,
-                'duration_value' => $data['duration_value'] ?? $tour->duration_value,
-                'duration_unit' => $data['duration_unit'] ?? $tour->duration_unit,
-                'difficulty_level' => $data['difficulty_level'] ?? $tour->difficulty_level,
-                'itinerary' => $data['itinerary'] ?? $tour->itinerary,
-                'inclusions' => $data['inclusions'] ?? $tour->inclusions,
-                'meeting_point' => $data['meeting_point'] ?? $tour->meeting_point,
-                'price_from' => $data['price_from'] ?? $tour->price_from,
-                'currency' => $data['currency'] ?? $tour->currency,
-            ]);
+            $updateFields = [];
+            if (isset($data['category_id'])) {
+                $updateFields['category_id'] = $data['category_id'];
+            }
+            if (isset($data['slug'])) {
+                $updateFields['slug'] = $data['slug'];
+            }
+            if (isset($data['location'])) {
+                $updateFields['location'] = $data['location'];
+                $updateFields['location_slug'] = Str::slug($data['location']);
+            }
+            if (isset($data['duration_value']) || isset($data['duration_unit'])) {
+                $val = $data['duration_value'] ?? ($tour->duration_minutes / 60);
+                $unit = $data['duration_unit'] ?? 'hour';
+                $updateFields['duration_minutes'] = $unit === 'day' ? $val * 1440 : $val * 60;
+                $updateFields['duration_label'] = $val . ' ' . $unit . ($val > 1 ? 's' : '');
+            }
+            if (isset($data['group_size_min'])) {
+                $updateFields['group_size_min'] = $data['group_size_min'];
+            }
+            if (isset($data['group_size_max'])) {
+                $updateFields['group_size_max'] = $data['group_size_max'];
+            }
+            if (isset($data['price_from'])) {
+                $updateFields['price_amount'] = (int) ($data['price_from'] * 100);
+            }
+            if (isset($data['cover_image_url'])) {
+                $updateFields['cover_image_url'] = $data['cover_image_url'];
+            }
+
+            if (! empty($updateFields)) {
+                $tour->update($updateFields);
+            }
+
+            if (isset($data['translations'])) {
+                $this->syncTranslations($tour, $data['translations']);
+            } elseif (isset($data['title'])) {
+                $this->syncTranslations($tour, [
+                    'en' => [
+                        'title' => $data['title'],
+                        'description' => $data['description'] ?? null,
+                        'inclusions' => $data['inclusions'] ?? null,
+                        'meeting_point' => $data['meeting_point'] ?? null,
+                    ],
+                ]);
+            }
 
             if (isset($data['pricing_tiers'])) {
                 $this->syncPricingTiers($tour, $data['pricing_tiers']);
@@ -96,6 +140,24 @@ class TourService
 
             return $tour->fresh();
         });
+    }
+
+    protected function syncTranslations(Tour $tour, array $translations): void
+    {
+        foreach ($translations as $locale => $content) {
+            $tour->translations()->updateOrCreate(
+                ['locale' => $locale],
+                [
+                    'title' => $content['title'] ?? '',
+                    'description' => $content['description'] ?? null,
+                    'highlights' => $content['highlights'] ?? null,
+                    'inclusions' => $content['inclusions'] ?? null,
+                    'exclusions' => $content['exclusions'] ?? null,
+                    'meeting_point' => $content['meeting_point'] ?? null,
+                    'cancellation_policy' => $content['cancellation_policy'] ?? null,
+                ]
+            );
+        }
     }
 
     public function submitForReview(Tour $tour): Tour

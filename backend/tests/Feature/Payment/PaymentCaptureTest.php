@@ -7,8 +7,8 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
 
@@ -39,7 +39,7 @@ it('creates booking in pending_payment status with client_secret', function () {
     $mock = $this->mock(StripeService::class);
     $mock->shouldReceive('createPaymentIntent')
         ->once()
-        ->with(15000, 'EUR', \Mockery::any())
+        ->with(15000, 'EUR', Mockery::any())
         ->andReturn('pi_test_123_secret_abc');
 
     $response = actingAs($traveler)

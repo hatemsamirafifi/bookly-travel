@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { User, authApi } from '../api/auth';
@@ -32,32 +32,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTokenGetter(() => token);
   }, [token]);
 
+  const restoreSession = useCallback(async () => {
+    const storedToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (!storedToken) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const user = await authApi.me(storedToken);
+      setUser(user);
+      setToken(storedToken);
+    } catch (error) {
+      // Token missing, invalid, or expired — clear local auth state.
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('auth_token');
+      // Only redirect to login on protected routes; public pages stay public
+      const pathname = window.location.pathname;
+      const protectedPrefixes = [`/${locale}/partner`, `/${locale}/my-bookings`, `/${locale}/profile`, `/${locale}/wishlist`, `/${locale}/reviews`];
+      const isProtected = protectedPrefixes.some(p => pathname.startsWith(p));
+      if (isProtected) {
+        const returnUrl = encodeURIComponent(pathname + window.location.search);
+        router.push(`/${locale}/auth/login?sessionExpired=1&returnUrl=${returnUrl}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [locale, router]);
+
   useEffect(() => {
-    const restoreSession = async () => {
-      try {
-        const res = await fetch('/api/auth/session');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.user && data.token) {
-            setUser(data.user);
-            setToken(data.token);
-            localStorage.setItem('auth_token', data.token);
-          }
-        } else if (res.status === 401) {
+    void restoreSession();
+  }, [restoreSession]);
+
+  // Cross-tab auth state sync
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'auth_token') {
+        if (e.newValue) {
+          // Token set in another tab — re-hydrate session
+          void restoreSession();
+        } else {
+          // Token removed in another tab — log out
           setUser(null);
           setToken(null);
-          localStorage.removeItem('auth_token');
-          const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
-          router.push(`/${locale}/auth/login?sessionExpired=1&returnUrl=${returnUrl}`);
         }
-      } catch (error) {
-        console.error('Session restore failed', error);
-      } finally {
-        setIsLoading(false);
       }
     };
-    restoreSession();
-  }, [locale, router]);
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [restoreSession]);
 
   const setAuth = (newUser: User, newToken: string) => {
     setUser(newUser);

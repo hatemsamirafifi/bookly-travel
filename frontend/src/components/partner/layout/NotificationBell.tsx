@@ -1,15 +1,21 @@
-﻿'use client';
+'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { Bell } from 'lucide-react';
 import { usePartnerRealtime } from '@/lib/hooks/usePartnerRealtime';
 import { markNotificationAsRead, markAllNotificationsAsRead } from '@/lib/api/partner';
+import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 export function NotificationBell() {
+  const t = useTranslations('partner.notifications');
   const { notifications, unreadCount, refresh } = usePartnerRealtime();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleMarkRead = async (id: number) => {
+  useFocusTrap(dropdownRef, dropdownOpen);
+
+  const handleMarkRead = async (id: string | number) => {
     await markNotificationAsRead(String(id));
     refresh();
   };
@@ -25,7 +31,7 @@ export function NotificationBell() {
         type="button"
         className="relative p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
         onClick={() => setDropdownOpen((v) => !v)}
-        aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+        aria-label={`${t('title')}${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
       >
         <Bell className="w-5 h-5" aria-hidden="true" />
         {unreadCount > 0 && (
@@ -42,23 +48,28 @@ export function NotificationBell() {
             onClick={() => setDropdownOpen(false)}
             aria-hidden="true"
           />
-          <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
+          <div 
+            ref={dropdownRef}
+            className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+          >
             <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
+              <h3 className="text-sm font-semibold text-gray-900">{t('title')}</h3>
               {unreadCount > 0 && (
                 <button
                   type="button"
                   className="text-xs text-[#0A2540] hover:underline"
                   onClick={handleMarkAllRead}
                 >
-                  Mark all as read
+                  {t('markAllRead')}
                 </button>
               )}
             </div>
             <div className="max-h-80 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="px-4 py-8 text-center text-sm text-gray-500">
-                  No new notifications
+                  {t('noNotifications')}
                 </div>
               ) : (
                 notifications.map((n) => (
@@ -68,7 +79,7 @@ export function NotificationBell() {
                     onClick={() => handleMarkRead(n.id)}
                   >
                     <p className="text-sm font-medium text-gray-900">{n.title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.message}</p>
                   </div>
                 ))
               )}

@@ -1,14 +1,14 @@
 import { z } from 'zod';
-import { 
-  loginSchema, 
-  registerSchema, 
-  forgotPasswordSchema, 
-  resetPasswordSchema, 
-  changePasswordSchema 
+import {
+  loginSchema,
+  registerSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  changePasswordSchema,
+  guestConvertSchema
 } from '../validators/auth';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-const CSRF_COOKIE_URL = process.env.NEXT_PUBLIC_CSRF_COOKIE_URL || 'http://localhost:8000';
 
 export interface User {
   id: number;
@@ -69,13 +69,6 @@ export class AuthApiError extends Error {
   }
 }
 
-async function fetchCsrfCookie(): Promise<void> {
-  await fetch(`${CSRF_COOKIE_URL}/sanctum/csrf-cookie`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-}
-
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = {
     'Content-Type': 'application/json',
@@ -104,7 +97,6 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
 
 export const authApi = {
   login: async (credentials: z.infer<typeof loginSchema>): Promise<AuthResponse> => {
-    await fetchCsrfCookie();
     const res = await fetchApi<AuthApiResponse>('/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
@@ -113,8 +105,15 @@ export const authApi = {
   },
 
   register: async (data: z.infer<typeof registerSchema>): Promise<AuthResponse> => {
-    await fetchCsrfCookie();
     const res = await fetchApi<AuthApiResponse>('/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return { data: mapUserApiToUser(res.data.user), token: res.data.token };
+  },
+
+  registerPartner: async (data: Record<string, unknown>): Promise<AuthResponse> => {
+    const res = await fetchApi<AuthApiResponse>('/partners/register', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -125,6 +124,18 @@ export const authApi = {
     await fetchApi<void>('/logout', {
       method: 'POST',
     });
+  },
+
+  /**
+   * Restore the authenticated user from a persisted bearer token.
+   * Used by useAuth.restoreSession() to survive full page navigations.
+   */
+  me: async (token: string): Promise<User> => {
+    const res = await fetchApi<AuthApiResponse>('/me', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return mapUserApiToUser(res.data.user);
   },
 
   forgotPassword: async (data: z.infer<typeof forgotPasswordSchema>): Promise<{ message: string }> => {
@@ -163,5 +174,13 @@ export const authApi = {
     return fetchApi<{ message: string }>('/resend-verification', {
       method: 'POST',
     });
+  },
+
+  guestConvert: async (data: z.infer<typeof guestConvertSchema>): Promise<AuthResponse> => {
+    const res = await fetchApi<AuthApiResponse>('/guest/convert', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   }
 };

@@ -8,6 +8,7 @@ use App\Domains\Payment\Events\PaymentSucceeded;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Models\StripeWebhookEvent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Stripe\Event;
 use Stripe\Webhook;
@@ -36,6 +37,7 @@ class ProcessStripeWebhookAction
 
             if (! $inserted) {
                 Log::info('Duplicate webhook event skipped', ['stripe_event_id' => $event->id]);
+
                 return;
             }
 
@@ -63,6 +65,7 @@ class ProcessStripeWebhookAction
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
         if (! $payment) {
             Log::warning('Payment not found for intent', ['intent_id' => $intentId]);
+
             return;
         }
 
@@ -77,8 +80,9 @@ class ProcessStripeWebhookAction
         if (! $updated) {
             Log::info('Payment not in pending state — skipping succeeded handler', [
                 'payment_id' => $payment->id,
-                'intent_id'  => $intentId,
+                'intent_id' => $intentId,
             ]);
+
             return;
         }
 
@@ -98,6 +102,7 @@ class ProcessStripeWebhookAction
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
         if (! $payment) {
             Log::warning('Payment not found for failed intent', ['intent_id' => $intentId]);
+
             return;
         }
 
@@ -108,8 +113,9 @@ class ProcessStripeWebhookAction
         if (! $updated) {
             Log::info('Payment not in pending state — skipping failed handler', [
                 'payment_id' => $payment->id,
-                'intent_id'  => $intentId,
+                'intent_id' => $intentId,
             ]);
+
             return;
         }
 
@@ -129,6 +135,7 @@ class ProcessStripeWebhookAction
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
         if (! $payment) {
             Log::warning('Payment not found for refund', ['intent_id' => $intentId]);
+
             return;
         }
 
@@ -139,8 +146,9 @@ class ProcessStripeWebhookAction
         if (! $updated) {
             Log::info('Payment not in succeeded state — skipping refunded handler', [
                 'payment_id' => $payment->id,
-                'intent_id'  => $intentId,
+                'intent_id' => $intentId,
             ]);
+
             return;
         }
 
@@ -158,6 +166,7 @@ class ProcessStripeWebhookAction
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
         if (! $payment) {
             Log::warning('Payment not found for dispute', ['intent_id' => $intentId]);
+
             return;
         }
 
@@ -168,8 +177,9 @@ class ProcessStripeWebhookAction
         if (! $updated) {
             Log::info('Payment not in succeeded state — skipping dispute handler', [
                 'payment_id' => $payment->id,
-                'intent_id'  => $intentId,
+                'intent_id' => $intentId,
             ]);
+
             return;
         }
 
@@ -182,18 +192,18 @@ class ProcessStripeWebhookAction
         Log::error('ADMIN ALERT: Dispute created for payment — admin review required', [
             'booking_reference' => $payment->booking->reference,
             'payment_intent_id' => $intentId,
-            'dispute_id'        => $dispute->id,
-            'dispute_reason'    => $dispute->reason,
-            'amount'            => $payment->amount,
-            'currency'          => $payment->currency,
+            'dispute_id' => $dispute->id,
+            'dispute_reason' => $dispute->reason,
+            'amount' => $payment->amount,
+            'currency' => $payment->currency,
         ]);
 
         $webhookUrl = config('services.slack.admin_webhook_url');
         if ($webhookUrl) {
-            \Illuminate\Support\Facades\Http::post($webhookUrl, [
+            Http::post($webhookUrl, [
                 'text' => sprintf(
                     ':warning: *Bookly Alert* — Dispute created for booking `%s`.'
-                    . " Admin must review."
+                    . ' Admin must review.'
                     . "\n*Amount*: %d %s  |  *Reason*: %s",
                     $payment->booking->reference,
                     $payment->amount,
@@ -212,6 +222,7 @@ class ProcessStripeWebhookAction
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
         if (! $payment) {
             Log::warning('Payment not found for dispute closure', ['intent_id' => $intentId]);
+
             return;
         }
 
@@ -228,8 +239,9 @@ class ProcessStripeWebhookAction
         if (! $updated) {
             Log::info('Payment not in disputed state — skipping dispute-closed handler', [
                 'payment_id' => $payment->id,
-                'intent_id'  => $intentId,
+                'intent_id' => $intentId,
             ]);
+
             return;
         }
 

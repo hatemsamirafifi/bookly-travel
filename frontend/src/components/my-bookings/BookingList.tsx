@@ -1,18 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useBookings } from '@/hooks/useBookings';
 import BookingCard from './BookingCard';
-import { getMyBookings, getMyBookingsSummary } from '@/lib/api/my-bookings';
-import type { TravelerBooking } from '@/types/traveler';
+import BookingFilters from '@/components/bookings/BookingFilters';
+import EmptyState from '@/components/ui/EmptyState';
+import ErrorState from '@/components/ui/ErrorState';
+import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 
 interface BookingListProps {
   locale: string;
 }
-
-const STATUS_FILTERS = ['', 'confirmed', 'completed', 'cancelled'] as const;
 
 interface Summary {
   total: number;
@@ -23,42 +23,11 @@ interface Summary {
 
 export default function BookingList({ locale }: BookingListProps) {
   const t = useTranslations('traveler.dashboard');
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [bookings, setBookings] = useState<TravelerBooking[]>([]);
-  const [summary, setSummary] = useState<Summary>({ total: 0, confirmed: 0, completed: 0, cancelled: 0 });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const activeFilter = searchParams.get('status') || '';
-
-  const loadBookings = useCallback(() => {
-    setLoading(true);
-    setError(null);
-    Promise.all([
-      getMyBookings(activeFilter || undefined, 1),
-      getMyBookingsSummary(),
-    ])
-      .then(([filtered, summaryData]) => {
-        setBookings(filtered.data);
-        setSummary(summaryData.data);
-      })
-      .catch(() => setError(t('loadError')))
-      .finally(() => setLoading(false));
-  }, [activeFilter, t]);
-
-  useEffect(() => {
-    void Promise.resolve().then(loadBookings);
-  }, [loadBookings]);
-
-  const selectFilter = (status: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (status) {
-      params.set('status', status);
-    } else {
-      params.delete('status');
-    }
-    router.push(`/${locale}/my-bookings${params.toString() ? `?${params}` : ''}`);
-  };
+  const { data, isLoading, error, refetch } = useBookings(activeFilter, locale);
+  const bookings = data?.bookings ?? [];
+  const summary: Summary = data?.summary ?? { total: 0, confirmed: 0, completed: 0, cancelled: 0 };
 
   const recentActivity = [...bookings]
     .sort((a, b) => {
@@ -68,23 +37,8 @@ export default function BookingList({ locale }: BookingListProps) {
     })
     .slice(0, 3);
 
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="animate-pulse rounded-lg border border-gray-200 p-4">
-            <div className="flex gap-4">
-              <div className="h-20 w-20 rounded-lg bg-gray-100" />
-              <div className="flex-1 space-y-2">
-                <div className="h-5 w-48 rounded bg-gray-100" />
-                <div className="h-4 w-32 rounded bg-gray-100" />
-                <div className="h-4 w-24 rounded bg-gray-100" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+  if (isLoading) {
+    return <LoadingSkeleton variant="card" count={3} />;
   }
 
   return (
@@ -130,43 +84,19 @@ export default function BookingList({ locale }: BookingListProps) {
         </div>
       </section>
 
-      <div className="mb-4 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label={t('filterLabel')}>
-        {STATUS_FILTERS.map((key) => (
-          <button
-            key={key}
-            role="tab"
-            aria-selected={activeFilter === key}
-            onClick={() => selectFilter(key)}
-            className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-              activeFilter === key
-                ? 'bg-[#0A2540] text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {t(`filters.${key || 'all'}`)}
-          </button>
-        ))}
-      </div>
+      <BookingFilters locale={locale} />
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
-          <p className="mb-3 text-sm text-red-700">{error}</p>
-          <button onClick={loadBookings} className="text-sm font-semibold text-red-800 underline">
-            {t('tryAgain')}
-          </button>
+        <div className="mb-4">
+          <ErrorState message={t('loadError')} onRetry={() => refetch()} />
         </div>
       )}
 
       {bookings.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center">
-          <p className="text-gray-500">{t('empty')}</p>
-          <Link
-            href={`/${locale}/search`}
-            className="mt-4 inline-flex rounded-xl bg-[#FFB800] px-5 py-2.5 text-sm font-semibold text-[#0A2540]"
-          >
-            {t('browseTours')}
-          </Link>
-        </div>
+        <EmptyState
+          title={t('empty')}
+          cta={{ label: t('browseTours'), href: `/${locale}/search` }}
+        />
       ) : (
         <div className="space-y-3">
           {bookings.map((booking) => (

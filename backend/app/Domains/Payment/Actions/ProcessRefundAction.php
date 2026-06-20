@@ -56,9 +56,9 @@ class ProcessRefundAction
             Log::error('ADMIN ALERT: Refund failed for booking — manual intervention required', [
                 'booking_reference' => $booking->reference,
                 'payment_intent_id' => $payment->stripe_payment_intent_id,
-                'amount'            => $payment->amount,
-                'currency'          => $payment->currency,
-                'error'             => $e->getMessage(),
+                'amount' => $payment->amount,
+                'currency' => $payment->currency,
+                'error' => $e->getMessage(),
             ]);
 
             $webhookUrl = config('services.slack.admin_webhook_url');
@@ -66,7 +66,7 @@ class ProcessRefundAction
                 Http::post($webhookUrl, [
                     'text' => sprintf(
                         ':warning: *Bookly Alert* — Refund failed for booking `%s`.'
-                        . " Manual resolution required."
+                        . ' Manual resolution required.'
                         . "\n*Amount*: %d %s  |  *Error*: %s",
                         $booking->reference,
                         $payment->amount,

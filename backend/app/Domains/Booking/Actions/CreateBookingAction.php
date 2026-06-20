@@ -120,10 +120,10 @@ class CreateBookingAction
         $booking->load('tour.translations');
 
         return [
-            'data'          => BookingResponseDTO::fromBooking($booking),
-            'is_retry'      => false,
+            'data' => BookingResponseDTO::fromBooking($booking),
+            'is_retry' => false,
             'price_changed' => $priceChanged,
-            'payment'       => $clientSecret ? [
+            'payment' => $clientSecret ? [
                 'client_secret' => $clientSecret,
                 'stripe_publishable_key' => config('services.stripe.key'),
             ] : null,

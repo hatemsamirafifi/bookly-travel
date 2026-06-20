@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslations, useLocale } from 'next-intl';
 import { respondToReview, updateReviewResponse } from '@/lib/api/partner';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,11 +17,13 @@ interface ReviewResponseFormProps {
 }
 
 export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProps) {
+  const t = useTranslations('partner.reviews');
+  const locale = useLocale();
   const queryClient = useQueryClient();
   const hasExistingResponse = !!review.response;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [responseText, setResponseText] = useState(review.response?.text ?? '');
+  const [responseText, setResponseText] = useState(review.response?.response_text ?? '');
   const [error, setError] = useState<string | null>(null);
 
   const respondMutation = useMutation({
@@ -32,7 +35,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
       onSuccess?.();
     },
     onError: (err) => {
-      setError(err instanceof Error ? err.message : 'Failed to submit response');
+      setError(err instanceof Error ? err.message : t('failedToSubmit'));
     },
   });
 
@@ -45,7 +48,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
       onSuccess?.();
     },
     onError: (err) => {
-      setError(err instanceof Error ? err.message : 'Failed to update response');
+      setError(err instanceof Error ? err.message : t('failedToUpdate'));
     },
   });
 
@@ -63,7 +66,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
   };
 
   const handleCancel = () => {
-    setResponseText(review.response?.text ?? '');
+    setResponseText(review.response?.response_text ?? '');
     setIsEditing(false);
     setError(null);
   };
@@ -72,26 +75,34 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
   const isOverLimit = charCount > MAX_RESPONSE_LENGTH;
   const isInvalid = !responseText.trim() || isOverLimit;
 
+  const formatDate = (isoDate: string) =>
+    new Date(isoDate).toLocaleDateString(locale, {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+
   // Show existing response (not editing)
   if (hasExistingResponse && !isEditing) {
     return (
       <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Your Response</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t('responseText')}</p>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsEditing(true)}
             className="text-xs h-auto py-1 px-2 text-[#0A2540] hover:bg-gray-100"
           >
-            Edit
+            {t('editResponse')}
           </Button>
         </div>
-        <p className="text-sm text-gray-700">{review.response!.text}</p>
+        <p className="text-sm text-gray-700">{review.response!.response_text}</p>
         <p className="text-xs text-gray-400 mt-2">
-          Responded on {new Date(review.response!.created_at).toLocaleDateString()}
+          {t('respondedOn', { date: formatDate(review.response!.created_at) })}
           {review.response!.updated_at && review.response!.updated_at !== review.response!.created_at && (
-            <> &middot; Edited on {new Date(review.response!.updated_at).toLocaleDateString()}</>
+            <> &middot; {t('editedOn', { date: formatDate(review.response!.updated_at) })}</>
           )}
         </p>
       </div>
@@ -103,7 +114,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          {hasExistingResponse ? 'Edit Response' : 'Write a Response'}
+          {hasExistingResponse ? t('editResponse') : t('writeResponse')}
         </p>
         {hasExistingResponse && (
           <button
@@ -111,7 +122,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
             onClick={handleCancel}
             className="text-xs text-gray-500 hover:text-[#0A2540] transition-colors"
           >
-            Cancel
+            {t('cancel')}
           </button>
         )}
       </div>
@@ -119,7 +130,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
       <Textarea
         value={responseText}
         onChange={(e) => setResponseText(e.target.value)}
-        placeholder="Write your public response to this review..."
+        placeholder={t('writeResponsePlaceholder')}
         rows={3}
         maxLength={MAX_RESPONSE_LENGTH}
         disabled={isPending}
@@ -134,7 +145,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
             ? 'text-amber-600'
             : 'text-gray-400'
         }`}>
-          {charCount}/{MAX_RESPONSE_LENGTH}
+          {t('charCount', { count: charCount })}
         </span>
         <div className="flex items-center gap-2">
           {hasExistingResponse && (
@@ -145,7 +156,7 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
               disabled={isPending}
               className="text-xs"
             >
-              Cancel
+              {t('cancel')}
             </Button>
           )}
           <Button
@@ -155,10 +166,10 @@ export function ReviewResponseForm({ review, onSuccess }: ReviewResponseFormProp
             className="bg-[#FFB800] hover:bg-[#e6a600] text-[#0A2540] font-semibold"
           >
             {isPending
-              ? 'Submitting...'
+              ? t('submitting')
               : hasExistingResponse
-              ? 'Update Response'
-              : 'Submit Response'}
+              ? t('updateResponse')
+              : t('submitResponse')}
           </Button>
         </div>
       </div>

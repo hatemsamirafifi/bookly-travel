@@ -3,7 +3,6 @@
 namespace App\Domains\Booking\Jobs;
 
 use App\Domains\Booking\Models\Booking;
-use Illuminate\Console\Command;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 

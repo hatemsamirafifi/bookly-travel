@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Domains\Partner\Models;
 
@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TourMedia extends Model
 {
     protected $table = 'tour_media';
+
+    public $timestamps = ['created_at'];
+
+    const UPDATED_AT = null;
 
     protected $fillable = [
         'tour_id',

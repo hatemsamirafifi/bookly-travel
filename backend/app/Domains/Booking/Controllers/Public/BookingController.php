@@ -15,12 +15,12 @@ class BookingController
     public function store(Request $request, CreateBookingAction $action): JsonResponse
     {
         $validated = $request->validate([
-            'tour_slug'        => 'required|string|max:255',
-            'tour_date'        => 'required|date_format:Y-m-d',
+            'tour_slug' => 'required|string|max:255',
+            'tour_date' => 'required|date_format:Y-m-d',
             'participant_count' => 'required|integer|min:1',
-            'locale'           => 'sometimes|string|in:en,es,it|max:2',
+            'locale' => 'sometimes|string|in:en,es,it|max:2',
             // FR-027: optional price the traveler saw on the tour detail page (cents)
-            'page_load_price'  => 'sometimes|integer|min:0',
+            'page_load_price' => 'sometimes|integer|min:0',
         ]);
 
         $idempotencyKey = $request->header('Idempotency-Key');

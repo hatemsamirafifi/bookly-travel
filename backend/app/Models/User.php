@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Domains\Partner\Models\Partner;
+use App\Domains\Wishlist\Models\Wishlist;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
@@ -24,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
     protected $fillable = [
         'name',
         'email',
@@ -72,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function wishlists(): HasMany
     {
-        return $this->hasMany(\App\Domains\Wishlist\Models\Wishlist::class);
+        return $this->hasMany(Wishlist::class);
     }
 
     /**
@@ -97,6 +102,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function partner()
     {
-        return $this->hasOne(\App\Domains\Partner\Models\Partner::class);
+        return $this->hasOne(Partner::class);
+    }
+
+    /**
+     * Determine if the user can access the Filament admin panel.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->role === 'admin';
     }
 }

@@ -185,9 +185,10 @@ export interface PartnerReview {
 
 export interface ReviewResponse {
   id: string | number;
-  text: string;
+  response_text: string;
   created_at: string;
   updated_at: string;
+  edited_at?: string | null;
 }
 
 export interface Notification {
@@ -244,22 +245,41 @@ export interface PartnerSettings {
   payout_info?: PartnerPayoutInfo | null;
 }
 
+/**
+ * Summary metrics returned by `GET /api/partner/analytics` under the `summary`
+ * key. Mirrors `AnalyticsService::getSummary` exactly:
+ * - `total_revenue` is a raw integer sum of `total_price` (major currency units).
+ * - `conversion_rate` is a percentage (e.g. `3.4` means 3.4%); the backend
+ *   currently returns `0.0` until tour-view tracking is implemented.
+ *
+ * `upcoming_bookings` and `review_count` are optional: the backend does not
+ * emit them today, so the dashboard hides those cards when absent rather than
+ * fabricating values.
+ */
 export interface AnalyticsSummary {
   total_bookings: number;
-  total_revenue: {
-    amount: number;
-    currency: string;
-    formatted: string;
-  };
+  total_revenue: number;
   average_rating: number;
-  review_count: number;
   conversion_rate: number; // percentage
-  upcoming_bookings: number;
-  bookings_over_time: {
-    date: string;
-    count: number;
-    revenue: number;
-  }[];
+  upcoming_bookings?: number;
+  review_count?: number;
+}
+
+/** A single point in the `bookings_over_time` series returned by the analytics endpoint. */
+export interface AnalyticsBookingsPoint {
+  date: string;
+  bookings: number;
+  revenue: number;
+}
+
+/** Full response of `GET /api/partner/analytics` (no `{ data }` envelope). */
+export interface AnalyticsResponse {
+  summary: AnalyticsSummary;
+  bookings_over_time: AnalyticsBookingsPoint[];
+  period: {
+    from: string;
+    to: string;
+  };
 }
 
 export interface DateRangeFilter {

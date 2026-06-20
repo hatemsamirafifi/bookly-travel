@@ -2,11 +2,14 @@
 
 namespace App\Domains\Booking\Actions;
 
-use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\DTOs\BookingResponseDTO;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
 use App\Domains\Payment\Actions\ProcessRefundAction;
+use App\Mail\BookingCancelledMail;
+use App\Mail\PartnerBookingCancelledMail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -57,6 +60,19 @@ class CancelBookingAction
             ]);
 
             $this->processRefund->execute($booking);
+
+            try {
+                $booking->load(['traveler', 'tour.partner']);
+                if ($booking->traveler?->email) {
+                    Mail::to($booking->traveler->email)->send(new BookingCancelledMail($booking));
+                }
+                if ($booking->tour?->partner?->email) {
+                    Mail::to($booking->tour->partner->email)->send(new PartnerBookingCancelledMail($booking));
+                }
+            } catch (\Exception $e) {
+                // Prevent email failures from failing the cancellation transaction
+                logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
+            }
 
             $this->audit->log(
                 $booking,

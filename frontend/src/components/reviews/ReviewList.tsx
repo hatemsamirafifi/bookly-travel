@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import AggregateRating from './AggregateRating';
 import ReviewCard from './ReviewCard';
 import { fetchTourReviews } from '@/lib/reviews/review-api';
@@ -20,6 +21,7 @@ interface ReviewData {
 }
 
 export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps) {
+  const t = useTranslations('reviews');
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const [reviewCount, setReviewCount] = useState(0);
@@ -47,12 +49,12 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
       setPage(pageNum);
       setError('');
     } catch {
-      setError('Failed to load reviews. Please try again later.');
+      setError(t('failed_to_load'));
     } finally {
       setLoading(false);
       setLoadMoreLoading(false);
     }
-  }, [tourSlug]);
+  }, [tourSlug, t]);
 
   useEffect(() => {
     loadReviews(1);
@@ -62,7 +64,7 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
-      <h3 className="mb-3 text-sm font-semibold text-gray-700">Reviews</h3>
+      <h3 className="mb-3 text-sm font-semibold text-gray-700">{t('title')}</h3>
 
       <div className="mb-4">
         <AggregateRating averageRating={averageRating} reviewCount={reviewCount} />
@@ -85,7 +87,7 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
       )}
 
       {!loading && !error && reviews.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-4">No reviews yet. Be the first!</p>
+        <p className="text-sm text-gray-400 text-center py-4">{t('no_reviews_yet')}</p>
       )}
 
       {!loading && !error && reviews.length > 0 && (
@@ -111,7 +113,7 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
                 disabled={loadMoreLoading}
                 className="text-sm text-[#0A2540] hover:text-[#071b2e] disabled:opacity-50 font-medium underline"
               >
-                {loadMoreLoading ? 'Loading...' : 'Load More'}
+                {loadMoreLoading ? t('loading') : t('load_more')}
               </button>
             </div>
           )}
@@ -120,3 +122,4 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
     </div>
   );
 }
+
