@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import BookingList from '../BookingList';
 import { getMyBookings, getMyBookingsSummary } from '@/lib/api/my-bookings';
 import type { TravelerBooking } from '@/types/traveler';
@@ -11,6 +12,29 @@ jest.mock('@/lib/api/my-bookings', () => ({
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
   useSearchParams: () => new URLSearchParams(),
+}));
+
+jest.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => {
+    const translations: Record<string, string> = {
+      summaryLabel: 'Booking summary',
+      summaryTotal: 'Total bookings',
+      summaryUpcoming: 'Upcoming',
+      summaryCompleted: 'Completed',
+      summaryCancelled: 'Cancelled',
+      recentActivity: 'Recent activity',
+      quickActions: 'Quick actions',
+      browseTours: 'Browse Tours',
+      viewWishlist: 'View Wishlist',
+      editProfile: 'Edit Profile',
+      noRecentActivity: 'No recent activity',
+      empty: 'No bookings yet',
+      loadError: 'Failed to load bookings',
+      fallbackTour: 'Unknown Tour',
+    };
+    // Handle nested keys like status.confirmed
+    return translations[key] || key;
+  },
 }));
 
 const bookings: TravelerBooking[] = [
@@ -46,6 +70,24 @@ const bookings: TravelerBooking[] = [
   },
 ];
 
+function createTestQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: 0,
+      },
+    },
+  });
+}
+
+function renderWithProviders(ui: React.ReactElement) {
+  const queryClient = createTestQueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+  );
+}
+
 describe('BookingList', () => {
   beforeEach(() => {
     jest.mocked(getMyBookings).mockResolvedValue({
@@ -73,7 +115,7 @@ describe('BookingList', () => {
   });
 
   it('renders summary counts, recent activity, and quick actions', async () => {
-    render(<BookingList locale="en" />);
+    renderWithProviders(<BookingList locale="en" />);
 
     await waitFor(() => expect(screen.getAllByText('Rome Food Walk').length).toBeGreaterThan(0));
 

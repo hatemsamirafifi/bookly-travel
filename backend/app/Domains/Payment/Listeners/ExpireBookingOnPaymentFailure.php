@@ -3,13 +3,14 @@
 namespace App\Domains\Payment\Listeners;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Booking\Services\AuditService;
 use App\Domains\Payment\Events\PaymentFailed;
 use Illuminate\Support\Facades\DB;
 
 class ExpireBookingOnPaymentFailure
 {
     public function __construct(
-        private readonly \App\Domains\Booking\Services\AuditService $auditService
+        private readonly AuditService $auditService
     ) {}
 
     public function handle(PaymentFailed $event): void

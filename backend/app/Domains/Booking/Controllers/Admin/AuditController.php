@@ -4,22 +4,15 @@ namespace App\Domains\Booking\Controllers\Admin;
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Models\BookingAuditLog;
+use App\Http\Requests\Admin\AuditIndexRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AuditController
 {
-    public function index(Request $request): JsonResponse
+    public function index(AuditIndexRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'booking_reference' => 'sometimes|string|max:12',
-            'actor_type' => 'sometimes|string|in:traveler,partner,admin,system',
-            'action' => 'sometimes|string|in:created,confirmed,completed,cancelled,no_show,anonymized',
-            'date_from' => 'sometimes|date',
-            'date_to' => 'sometimes|date',
-            'page' => 'sometimes|integer|min:1',
-        ]);
+        $validated = $request->validated();
 
         $query = BookingAuditLog::with('booking')
             ->orderBy('created_at', 'desc');

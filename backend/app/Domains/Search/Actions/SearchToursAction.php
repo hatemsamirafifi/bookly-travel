@@ -3,8 +3,8 @@
 namespace App\Domains\Search\Actions;
 
 use App\Domains\Search\Transformers\TourCardTransformer;
-use App\Models\Tour;
 use App\Models\Category;
+use App\Models\Tour;
 
 class SearchToursAction
 {
@@ -12,7 +12,7 @@ class SearchToursAction
 
     public function __construct()
     {
-        $this->transformer = new TourCardTransformer();
+        $this->transformer = new TourCardTransformer;
     }
 
     protected int $perPage = 12;

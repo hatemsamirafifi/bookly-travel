@@ -3,20 +3,14 @@
 namespace App\Domains\Payment\Controllers\Admin;
 
 use App\Domains\Payment\Models\FinancialLedgerEntry;
+use App\Http\Requests\Admin\FinancialLedgerIndexRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class FinancialLedgerController
 {
-    public function index(Request $request): JsonResponse
+    public function index(FinancialLedgerIndexRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'booking_reference' => 'sometimes|string',
-            'entry_type' => 'sometimes|string|in:debit,credit',
-            'date_from' => 'sometimes|date',
-            'date_to' => 'sometimes|date',
-            'page' => 'sometimes|integer|min:1',
-        ]);
+        $validated = $request->validated();
 
         $query = FinancialLedgerEntry::query()->with('booking');
 

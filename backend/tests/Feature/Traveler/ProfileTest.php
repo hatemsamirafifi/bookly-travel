@@ -3,7 +3,10 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use function Pest\Laravel\{getJson, postJson, putJson};
+
+use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
+use function Pest\Laravel\putJson;
 
 uses(RefreshDatabase::class);
 

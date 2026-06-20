@@ -1,12 +1,15 @@
 <?php
 
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\TourDraft;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
-use App\Domains\Partner\Models\Partner;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\{assertDatabaseHas, getJson, postJson};
+
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
 

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,7 +14,7 @@ return new class extends Migration
             $table->jsonb('itinerary')->nullable();
             $table->jsonb('inclusions')->nullable();
             $table->string('meeting_point')->nullable();
-            $table->foreignId('active_draft_id')->nullable()-\>constrained('tour_drafts')-\>nullOnDelete();
+            $table->foreignId('active_draft_id')->nullable()->constrained('tour_drafts')->nullOnDelete();
             $table->decimal('price_from', 10, 2)->nullable();
             $table->string('currency', 3)->default('EUR');
             $table->timestamp('submitted_at')->nullable();

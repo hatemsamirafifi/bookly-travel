@@ -3,6 +3,7 @@
 namespace App\Domains\Partner\Controllers;
 
 use App\Domains\Partner\Services\AnalyticsService;
+use App\Models\Tour;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,7 @@ class AnalyticsController
 {
     public function __construct(
         private readonly AnalyticsService $service,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -25,7 +25,7 @@ class AnalyticsController
 
         // Validate that tour_id belongs to this partner
         if (isset($filters['tour_id'])) {
-            $tour = \App\Models\Tour::where('id', $filters['tour_id'])
+            $tour = Tour::where('id', $filters['tour_id'])
                 ->where('partner_id', $partnerId)
                 ->exists();
 

@@ -4,7 +4,10 @@ import type { TravelerBooking } from '@/types/traveler';
 
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: Record<string, unknown>) => <img {...props} />,
+  default: (props: Record<string, unknown>) => (
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    <img {...props} />
+  ),
 }));
 
 const baseBooking: TravelerBooking = {

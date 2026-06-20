@@ -4,7 +4,9 @@ use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\{getJson, putJson};
+
+use function Pest\Laravel\getJson;
+use function Pest\Laravel\putJson;
 
 uses(RefreshDatabase::class);
 

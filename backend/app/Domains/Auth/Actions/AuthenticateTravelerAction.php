@@ -2,21 +2,18 @@
 
 namespace App\Domains\Auth\Actions;
 
-use App\Models\User;
+use App\Domains\Auth\Events\AccountLockedOut;
+use App\Domains\Auth\Events\LoginFailed;
+use App\Domains\Auth\Events\TravelerLoggedIn;
 use App\Models\AuthAuditLog;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Domains\Auth\Events\TravelerLoggedIn;
-use App\Domains\Auth\Events\LoginFailed;
-use App\Domains\Auth\Events\AccountLockedOut;
 
 class AuthenticateTravelerAction
 {
     /**
      * Authenticate a traveler.
-     *
-     * @param array $data
-     * @return array
      */
     public function execute(array $data): array
     {
@@ -24,12 +21,12 @@ class AuthenticateTravelerAction
 
         $user = User::where('email', $normalizedEmail)->first();
 
-        if (!$user) {
+        if (! $user) {
             event(new LoginFailed($normalizedEmail, null));
 
             return [
                 'success' => false,
-                'message' => 'Invalid email or password.'
+                'message' => 'Invalid email or password.',
             ];
         }
 
@@ -37,10 +34,10 @@ class AuthenticateTravelerAction
             // Re-read with row lock to prevent concurrent mutation races
             $user = User::where('id', $user->id)->lockForUpdate()->first();
 
-            if (!$user) {
+            if (! $user) {
                 return [
                     'success' => false,
-                    'message' => 'Invalid email or password.'
+                    'message' => 'Invalid email or password.',
                 ];
             }
 
@@ -52,11 +49,11 @@ class AuthenticateTravelerAction
                 return [
                     'success' => false,
                     'locked' => true,
-                    'message' => 'Too many failed attempts. Please try again later.'
+                    'message' => 'Too many failed attempts. Please try again later.',
                 ];
             }
 
-            if (!Hash::check($data['password'], $user->password)) {
+            if (! Hash::check($data['password'], $user->password)) {
                 $user->failed_login_count = ($user->failed_login_count ?? 0) + 1;
 
                 if ($user->failed_login_count > 0 && $user->failed_login_count % 5 == 0) {
@@ -95,7 +92,7 @@ class AuthenticateTravelerAction
 
                 return [
                     'success' => false,
-                    'message' => 'Invalid email or password.'
+                    'message' => 'Invalid email or password.',
                 ];
             }
 
@@ -113,7 +110,7 @@ class AuthenticateTravelerAction
             return [
                 'success' => true,
                 'user' => $user,
-                'token' => $token->plainTextToken
+                'token' => $token->plainTextToken,
             ];
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Domains\Booking\Actions;
 
 use App\Domains\Booking\Models\Booking;
+use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -86,7 +87,7 @@ class GetPartnerBookingsAction
             ->selectRaw('tour_id, status, COUNT(*) as count')
             ->groupBy('tour_id', 'status')
             ->get();
-        $tours = \App\Models\Tour::whereIn('id', $tourCounts->pluck('tour_id')->unique())->pluck('slug', 'id');
+        $tours = Tour::whereIn('id', $tourCounts->pluck('tour_id')->unique())->pluck('slug', 'id');
         foreach ($tourCounts->groupBy('tour_id') as $tourId => $rows) {
             $slug = $tours[$tourId] ?? null;
             if ($slug) {

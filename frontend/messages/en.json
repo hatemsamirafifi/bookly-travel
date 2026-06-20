@@ -9,8 +9,25 @@
   "auth": {
     "login": "Sign In",
     "logout": "Sign Out",
-    "forgotPassword": "Forgot Password?",
-    "resetPassword": "Reset Password",
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we'll send you a reset link",
+      "emailLabel": "Email Address",
+      "submitButton": "Send Reset Link",
+      "successMessage": "If an account exists with this email, you will receive a password reset link.",
+      "metaTitle": "Forgot Password | Bookly",
+      "metaDescription": "Reset your Bookly account password. We'll send you a secure link to create a new password."
+    },
+    "resetPassword": {
+      "title": "Create new password",
+      "subtitle": "Enter your new password below",
+      "passwordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm New Password",
+      "submitButton": "Reset Password",
+      "successMessage": "Your password has been reset. Redirecting to sign in...",
+      "metaTitle": "Reset Password | Bookly",
+      "metaDescription": "Create a new password for your Bookly account."
+    },
     "changePassword": "Change Password",
     "email": "Email Address",
     "password": "Password",
@@ -34,6 +51,23 @@
       "showPassword": "Show password",
       "metaTitle": "Create Account | Bookly",
       "metaDescription": "Create your Bookly traveler account. Join thousands discovering tours worldwide — registration is free and takes under a minute."
+    },
+    "verifyEmail": {
+      "title": "Email Verification",
+      "verified": "Your email has been verified successfully!",
+      "expired": "This verification link has expired.",
+      "error": "Email verification failed. The link may be invalid or expired.",
+      "resendButton": "Resend verification email",
+      "resendSuccess": "Verification email resent. Please check your inbox.",
+      "metaTitle": "Verify Email | Bookly",
+      "metaDescription": "Verify your Bookly account email address."
+    },
+    "guestConversion": {
+      "title": "Create your account",
+      "subtitle": "Save your booking details and manage future trips with one account",
+      "passwordLabel": "Password",
+      "createAccountButton": "Create Account",
+      "skipButton": "Skip for now"
     },
     "signin": {
       "title": "Welcome back",
@@ -61,7 +95,9 @@
       "linkExpired": "This link has expired. Please request a new one.",
       "passwordsMismatch": "Passwords do not match.",
       "nameRequired": "Full name is required.",
-      "invalidLocale": "Selected language is not supported."
+      "invalidLocale": "Selected language is not supported.",
+      "invalidToken": "This reset link is invalid or has expired.",
+      "resetExpired": "This password reset link has expired."
     }
   },
   "search": {
@@ -135,7 +171,8 @@
     "destinations": "Destinations",
     "skipToContent": "Skip to main content",
     "mainNavigation": "Main navigation",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "booking": {
     "title": "Complete Your Booking",
@@ -206,7 +243,14 @@
     "submitting": "Submitting...",
     "load_more": "Load More",
     "loading": "Loading...",
-    "failed_to_load": "Failed to load reviews. Please try again later."
+    "failed_to_load": "Failed to load reviews. Please try again later.",
+    "errors": {
+      "ratingRequired": "Please select a rating.",
+      "ratingInvalid": "Rating must be between 1 and 5.",
+      "commentTooLong": "Comment must be 2000 characters or fewer.",
+      "bookingReferenceRequired": "Booking reference is required."
+    },
+    "cancel": "Cancel"
   },
   "traveler": {
     "pages": {
@@ -465,7 +509,10 @@
       "reviews": "Reviews",
       "analytics": "Analytics",
       "profile": "Profile & Settings",
-      "signOut": "Sign Out"
+      "signOut": "Sign Out",
+      "sidebarLabel": "Partner dashboard navigation",
+      "appName": "Bookly",
+      "version": "v0.1.0"
     },
     "dashboard": {
       "metaTitle": "Partner Dashboard | Bookly",
@@ -477,10 +524,20 @@
       "conversionRate": "Conversion Rate",
       "recentBookings": "Recent Bookings",
       "noData": "No data available for the selected period.",
+      "loadError": "Failed to load analytics. Please try again.",
+      "retry": "Retry",
       "last30Days": "Last 30 Days",
       "last90Days": "Last 90 Days",
       "last12Months": "Last 12 Months",
-      "customRange": "Custom Range"
+      "customRange": "Custom Range",
+      "status": {
+        "verified": "Your account is verified",
+        "verifiedDescription": "Your tours are eligible to appear in public search.",
+        "notVerified": "Your account is not verified yet",
+        "notVerifiedDescription": "Some features are limited until an administrator verifies your account."
+      },
+      "upcomingBookings": "Upcoming Bookings",
+      "reviewCount": "Reviews"
     },
     "tours": {
       "metaTitle": "My Tours | Bookly",
@@ -488,7 +545,8 @@
       "title": "My Tours",
       "createTour": "Create Tour",
       "editTour": "Edit Tour",
-      "noTours": "No tours yet. Create your first tour to get started.",
+      "noTours": "No tours yet",
+      "noToursSubtitle": "Create your first tour to start earning.",
       "status": {
         "draft": "Draft",
         "pending_review": "Pending Review",
@@ -517,7 +575,8 @@
         "saving": "Saving...",
         "submitting": "Submitting...",
         "saved": "Draft saved",
-        "unsaved": "Unsaved changes"
+        "unsaved": "Unsaved changes",
+        "uploadFailed": "Upload failed"
       },
       "form": {
         "title": "Tour Title",
@@ -538,8 +597,13 @@
         "coverImage": "Cover Image",
         "galleryImages": "Gallery Images",
         "uploadImages": "Upload Images",
-        "dragDrop": "Drag and drop images here",
-        "maxFileSize": "Max 5MB per image (JPG, PNG)",
+        "dragDrop": "Drag and drop images here, or click to browse",
+        "maxFileSize": "JPG/PNG, max {mb}MB per image. Up to {count} images total.",
+        "setCover": "Set Cover",
+        "remove": "Remove",
+        "imagesCount": "{current} / {max} images",
+        "coverBadge": "Cover",
+        "galleryImageAlt": "Gallery image",
         "pricingTiers": "Pricing Tiers",
         "addTier": "Add Tier",
         "removeTier": "Remove",
@@ -567,16 +631,56 @@
         "specific": "Specific Date",
         "date": "Date",
         "priceMultiplier": "Price Multiplier",
-        "note": "Note"
+        "note": "Note",
+        "dismissErrors": "Dismiss",
+        "moveUp": "Move up",
+        "moveDown": "Move down"
       },
+      "errors": {
+        "titleRequired": "Title is required.",
+        "titleMax": "Title must be 120 characters or fewer.",
+        "descriptionMin": "Description must be at least 10 characters.",
+        "categoryRequired": "Category is required.",
+        "destinationRequired": "Destination is required.",
+        "durationPositive": "Duration must be a positive number.",
+        "meetingPointRequired": "Meeting point is required.",
+        "coverImageRequired": "At least one cover image is required.",
+        "pricingTierMin": "At least one pricing tier is required.",
+        "maxParticipantsGteMin": "Max participants must be greater than or equal to min.",
+        "availabilityRuleMin": "At least one availability rule is required.",
+        "tierNameRequired": "Tier name is required.",
+        "tierPricePositive": "Price must be a positive number.",
+        "minParticipantsPositive": "Min participants must be at least 1.",
+        "maxParticipantsPositive": "Max participants must be at least 1.",
+        "invalidTime": "Please enter a valid time.",
+        "startDateRequired": "Start date is required.",
+        "capacityMin": "Capacity must be at least 1.",
+        "dateRequired": "Date is required.",
+        "multiplierNonNegative": "Multiplier must be non-negative.",
+        "invalidUrl": "Invalid URL format.",
+        "unsupportedType": "Unsupported file type. Please use JPEG, PNG, or WebP.",
+        "fileTooLarge": "File is too large. Maximum size is {mb} MB.",
+        "maxImagesReached": "You can upload a maximum of {max} images."
+      },
+      "noCoverImage": "No cover image",
+      "untitled": "Untitled Tour",
+      "ariaEdit": "Edit tour",
+      "ariaArchive": "Archive tour",
       "archive": "Archive Tour",
       "archiveConfirm": "Are you sure? Archiving hides the tour from public search. Existing bookings will not be affected.",
-      "archiveSuccess": "Tour archived successfully."
+      "archiveSuccess": "Tour archived successfully.",
+      "statusHint": {
+        "pending_review": "Awaiting admin review.",
+        "rejected": "Needs revision before resubmitting."
+      },
+      "archiveFailed": "Failed to archive the tour. Please try again."
     },
     "bookings": {
       "metaTitle": "Bookings | Bookly",
       "metaDescription": "View and manage bookings for your tours.",
       "title": "Bookings",
+      "loading": "Loading bookings...",
+      "loadError": "Failed to load bookings.",
       "noBookings": "No bookings found.",
       "filters": {
         "all": "All",
@@ -604,13 +708,19 @@
         "requestCancellation": "Request Cancellation",
         "cancellationReason": "Cancellation Reason",
         "cancellationReasonPlaceholder": "Explain why you are requesting cancellation...",
-        "submitCancellation": "Submit Cancellation Request"
+        "submitCancellation": "Submit Cancellation Request",
+        "promptCancellationReason": "Please provide a reason for requesting cancellation:",
+        "marking": "Marking...",
+        "requesting": "Requesting..."
       },
       "status": {
         "confirmed": "Confirmed",
         "completed": "Completed",
         "cancelled": "Cancelled",
-        "cancellation_requested": "Cancellation Requested"
+        "cancellation_requested": "Cancellation Requested",
+        "pending_payment": "Pending Payment",
+        "expired": "Expired",
+        "no_show": "No Show"
       }
     },
     "reviews": {
@@ -631,7 +741,24 @@
       "filterByRating": "Filter by rating",
       "filterByResponse": "Response Status",
       "withResponse": "With Response",
-      "withoutResponse": "Awaiting Response"
+      "withoutResponse": "Awaiting Response",
+      "verifiedTraveler": "Verified Traveler",
+      "yourResponse": "Your Response",
+      "writeResponsePlaceholder": "Write your public response...",
+      "cancel": "Cancel",
+      "loadError": "Failed to load reviews.",
+      "allTours": "All Tours",
+      "reviewsCount": "{count, plural, =1 {# review} other {# reviews}}",
+      "expand": "Show",
+      "collapse": "Hide",
+      "average": "Avg",
+      "tourSummary": "Tour Summary",
+      "writeResponse": "Write a Response",
+      "respondedOn": "Responded on {date}",
+      "editedOn": "Edited on {date}",
+      "failedToSubmit": "Failed to submit response",
+      "failedToUpdate": "Failed to update response",
+      "submitting": "Submitting..."
     },
     "analytics": {
       "metaTitle": "Analytics | Bookly",
@@ -640,7 +767,8 @@
       "bookingsOverTime": "Bookings Over Time",
       "revenueOverTime": "Revenue Over Time",
       "dateRange": "Date Range",
-      "tourFilter": "Filter by Tour"
+      "tourFilter": "Filter by Tour",
+      "noData": "No bookings in the selected period."
     },
     "profile": {
       "metaTitle": "Profile & Settings | Bookly",
@@ -712,6 +840,54 @@
       "bookingCancelled": "Booking {reference} has been cancelled",
       "reviewReceived": "New review on {tour}",
       "paymentStatusChanged": "Payment status updated for booking {reference}"
+    },
+    "header": {
+      "menuLabel": "Open navigation menu",
+      "title": "Partner Dashboard",
+      "notificationsLabel": "Notifications",
+      "guest": "Partner",
+      "logout": "Sign out"
+    }
+  },
+  "admin": {
+    "reviews": {
+      "title": "Review Moderation",
+      "loadError": "Failed to load reviews.",
+      "empty": "No reviews match the selected filters.",
+      "filters": {
+        "status": "Status",
+        "all": "All",
+        "visible": "Visible",
+        "hidden": "Hidden",
+        "flagged": "Flagged",
+        "tourId": "Tour ID",
+        "dateFrom": "From",
+        "dateTo": "To",
+        "flaggedOnly": "Flagged only",
+        "apply": "Apply",
+        "clear": "Clear"
+      },
+      "reviewer": "Reviewer",
+      "rating": "Rating",
+      "comment": "Comment",
+      "status": "Status",
+      "submittedAt": "Submitted",
+      "hide": "Hide",
+      "reinstate": "Reinstate",
+      "hideConfirmTitle": "Hide Review",
+      "reinstateConfirmTitle": "Reinstate Review",
+      "hideConfirmBody": "Are you sure you want to hide this review? It will no longer be visible to the public.",
+      "reinstateConfirmBody": "Are you sure you want to reinstate this review? It will become visible to the public again.",
+      "reasonLabel": "Reason",
+      "reasonPlaceholder": "Provide a reason for this action...",
+      "reasonRequired": "Reason is required.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "auditTrail": "History",
+      "page": "Page",
+      "of": "of",
+      "previous": "Previous",
+      "next": "Next"
     }
   }
 }

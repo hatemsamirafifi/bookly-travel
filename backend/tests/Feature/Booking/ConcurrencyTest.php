@@ -6,6 +6,7 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+
 use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
@@ -16,16 +17,16 @@ it('prevents overbooking when concurrent requests compete for last spot', functi
     $traveler2 = User::factory()->traveler()->create();
 
     $tour = Tour::create([
-        'partner_id'      => User::factory()->partner()->create()->id,
-        'category_id'     => $category->id,
-        'slug'            => 'exclusive-tour-' . uniqid(),
-        'location'        => 'Venice, Italy',
+        'partner_id' => User::factory()->partner()->create()->id,
+        'category_id' => $category->id,
+        'slug' => 'exclusive-tour-' . uniqid(),
+        'location' => 'Venice, Italy',
         'duration_minutes' => 120,
-        'duration_label'  => '2 hours',
-        'group_size_min'  => 1,
-        'group_size_max'  => 2,
-        'price_amount'    => 5000,
-        'status'          => 'published',
+        'duration_label' => '2 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 2,
+        'price_amount' => 5000,
+        'status' => 'published',
         'cover_image_url' => null,
     ]);
 
@@ -39,17 +40,17 @@ it('prevents overbooking when concurrent requests compete for last spot', functi
     foreach ([$traveler1, $traveler2] as $i => $traveler) {
         try {
             $response = postJson('/api/public/bookings', [
-                'tour_slug'         => $tour->slug,
-                'tour_date'         => '2026-08-01',
+                'tour_slug' => $tour->slug,
+                'tour_date' => '2026-08-01',
                 'participant_count' => 2,
-                'locale'            => 'en',
+                'locale' => 'en',
             ], [
-                'Authorization'  => 'Bearer ' . $traveler->createToken('test')->plainTextToken,
+                'Authorization' => 'Bearer ' . $traveler->createToken('test')->plainTextToken,
                 'Idempotency-Key' => $idempotencyKeys[$i],
             ]);
 
             $results[] = $response->status();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $results[] = 409;
         }
     }
@@ -72,16 +73,16 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
     $traveler2 = User::factory()->traveler()->create();
 
     $tour = Tour::create([
-        'partner_id'      => User::factory()->partner()->create()->id,
-        'category_id'     => $category->id,
-        'slug'            => 'capacity-tour-' . uniqid(),
-        'location'        => 'Rome, Italy',
+        'partner_id' => User::factory()->partner()->create()->id,
+        'category_id' => $category->id,
+        'slug' => 'capacity-tour-' . uniqid(),
+        'location' => 'Rome, Italy',
         'duration_minutes' => 180,
-        'duration_label'  => '3 hours',
-        'group_size_min'  => 1,
-        'group_size_max'  => 5,
-        'price_amount'    => 8900,
-        'status'          => 'published',
+        'duration_label' => '3 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 5,
+        'price_amount' => 8900,
+        'status' => 'published',
         'cover_image_url' => null,
     ]);
 
@@ -89,10 +90,10 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
 
     // Pre-fill 1 spot → 4 remaining
     Booking::factory()->create([
-        'tour_id'           => $tour->id,
-        'tour_date'         => $tourDate,
+        'tour_id' => $tour->id,
+        'tour_date' => $tourDate,
         'participant_count' => 1,
-        'status'            => Booking::STATUS_CONFIRMED,
+        'status' => Booking::STATUS_CONFIRMED,
     ]);
 
     $idempotencyKeyA = Str::uuid()->toString();
@@ -100,22 +101,22 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
 
     // Both request 3 spots (1 + 3 + 3 = 7 > capacity 5 → only one can succeed)
     $responseA = postJson('/api/public/bookings', [
-        'tour_slug'         => $tour->slug,
-        'tour_date'         => $tourDate,
+        'tour_slug' => $tour->slug,
+        'tour_date' => $tourDate,
         'participant_count' => 3,
-        'locale'            => 'en',
+        'locale' => 'en',
     ], [
-        'Authorization'  => 'Bearer ' . $traveler1->createToken('test')->plainTextToken,
+        'Authorization' => 'Bearer ' . $traveler1->createToken('test')->plainTextToken,
         'Idempotency-Key' => $idempotencyKeyA,
     ]);
 
     $responseB = postJson('/api/public/bookings', [
-        'tour_slug'         => $tour->slug,
-        'tour_date'         => $tourDate,
+        'tour_slug' => $tour->slug,
+        'tour_date' => $tourDate,
         'participant_count' => 3,
-        'locale'            => 'en',
+        'locale' => 'en',
     ], [
-        'Authorization'  => 'Bearer ' . $traveler2->createToken('test')->plainTextToken,
+        'Authorization' => 'Bearer ' . $traveler2->createToken('test')->plainTextToken,
         'Idempotency-Key' => $idempotencyKeyB,
     ]);
 
@@ -136,4 +137,3 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
         'Availability must not go negative — zero overbooking invariant violated.'
     );
 });
-

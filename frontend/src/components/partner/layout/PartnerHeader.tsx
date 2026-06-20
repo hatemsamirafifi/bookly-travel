@@ -63,7 +63,7 @@ export function PartnerHeader({ onMenuClick, unreadCount = 0 }: PartnerHeaderPro
         <button
           type="button"
           onClick={onMenuClick}
-          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+          className="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
           aria-label={t('menuLabel', { defaultValue: 'Open navigation menu' })}
         >
           <MenuIcon className="h-6 w-6" />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { apiClient } from '@/lib/api/client';
@@ -19,35 +19,57 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
   const [saved, setSaved] = useState(initialSaved);
   const [showPrompt, setShowPrompt] = useState(false);
   const [busy, setBusy] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingRef = useRef<boolean>(false);
 
-  const toggle = async () => {
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
+  const toggle = useCallback(() => {
     if (!user) {
       setShowPrompt(true);
       return;
     }
+
     const previous = saved;
-    setSaved(!saved);
-    setBusy(true);
-    try {
-      if (previous) {
-        await apiClient<void>(`/api/public/traveler/wishlist/${encodeURIComponent(String(tourId))}`, {
-          method: 'DELETE',
-          requireCsrf: true,
-        });
-      } else {
-        await apiClient('/api/public/traveler/wishlist', {
-          method: 'POST',
-          requireCsrf: true,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tour_id: tourId }),
-        });
-      }
-    } catch {
-      setSaved(previous);
-    } finally {
-      setBusy(false);
+    const next = !previous;
+    setSaved(next);
+
+    // Debounce: clear pending timer and set new one
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
     }
-  };
+
+    pendingRef.current = true;
+    debounceRef.current = setTimeout(async () => {
+      setBusy(true);
+      try {
+        if (previous) {
+          await apiClient<void>(`/api/public/traveler/wishlist/${encodeURIComponent(String(tourId))}`, {
+            method: 'DELETE',
+            requireCsrf: true,
+          });
+        } else {
+          await apiClient('/api/public/traveler/wishlist', {
+            method: 'POST',
+            requireCsrf: true,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tour_id: tourId }),
+          });
+        }
+      } catch {
+        setSaved(previous);
+      } finally {
+        setBusy(false);
+        pendingRef.current = false;
+      }
+    }, 400);
+  }, [user, saved, tourId]);
 
   return (
     <>
@@ -57,6 +79,7 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
         disabled={busy}
         aria-pressed={saved}
         aria-label={saved ? t('remove') : t('save')}
+        data-testid="wishlist-button"
         className={`${compact ? 'h-9 w-9' : 'h-10 w-10'} inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/95 text-lg shadow-sm transition hover:border-[#FFB800] disabled:opacity-60`}
       >
         <span aria-hidden="true" className={saved ? 'text-red-600' : 'text-gray-500'}>{saved ? '♥' : '♡'}</span>

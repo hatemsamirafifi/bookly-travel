@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Tours List Page', () => {
   test.beforeEach(async ({ page }) => {
+    await partnerLogin(page);
     await page.goto('/en/partner/tours');
   });
 
@@ -86,7 +88,7 @@ test.describe('Partner Tours List Page', () => {
     await expect(page.getByText('Rome, Italy')).toBeVisible();
   });
 
-  test('should show tour status badges', async ({ page }) => {
+  test('should show tour status badges', async () => {
     const statuses = ['draft', 'pending_review', 'published', 'rejected', 'archived'];
 
     // Test each status badge appears correctly

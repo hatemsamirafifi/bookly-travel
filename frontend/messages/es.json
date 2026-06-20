@@ -9,8 +9,25 @@
   "auth": {
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
-    "forgotPassword": "¿Olvidaste tu contraseña?",
-    "resetPassword": "Restablecer contraseña",
+    "forgotPassword": {
+      "title": "Restablece tu contraseña",
+      "subtitle": "Introduce tu correo y te enviaremos un enlace para restablecerla",
+      "emailLabel": "Correo electrónico",
+      "submitButton": "Enviar enlace",
+      "successMessage": "Si existe una cuenta con este correo, recibirás un enlace para restablecer tu contraseña.",
+      "metaTitle": "Recuperar contraseña | Bookly",
+      "metaDescription": "Restablece la contraseña de tu cuenta Bookly. Te enviaremos un enlace seguro para crear una nueva contraseña."
+    },
+    "resetPassword": {
+      "title": "Crear nueva contraseña",
+      "subtitle": "Introduce tu nueva contraseña a continuación",
+      "passwordLabel": "Nueva contraseña",
+      "confirmPasswordLabel": "Confirmar nueva contraseña",
+      "submitButton": "Restablecer contraseña",
+      "successMessage": "Tu contraseña ha sido restablecida. Redirigiendo al inicio de sesión...",
+      "metaTitle": "Restablecer contraseña | Bookly",
+      "metaDescription": "Crea una nueva contraseña para tu cuenta Bookly."
+    },
     "changePassword": "Cambiar contraseña",
     "email": "Correo electrónico",
     "password": "Contraseña",
@@ -34,6 +51,23 @@
       "showPassword": "Mostrar contraseña",
       "metaTitle": "Crear cuenta | Bookly",
       "metaDescription": "Crea tu cuenta de viajero en Bookly. Únete a miles descubriendo tours en todo el mundo: el registro es gratuito y toma menos de un minuto."
+    },
+    "verifyEmail": {
+      "title": "Verificación de correo",
+      "verified": "¡Tu correo ha sido verificado exitosamente!",
+      "expired": "Este enlace de verificación ha expirado.",
+      "error": "La verificación del correo ha fallado. El enlace puede ser inválido o haber expirado.",
+      "resendButton": "Reenviar correo de verificación",
+      "resendSuccess": "Correo de verificación reenviado. Por favor revisa tu bandeja de entrada.",
+      "metaTitle": "Verificar correo | Bookly",
+      "metaDescription": "Verifica la dirección de correo de tu cuenta Bookly."
+    },
+    "guestConversion": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Guarda los detalles de tu reserva y gestiona futuros viajes con una sola cuenta",
+      "passwordLabel": "Contraseña",
+      "createAccountButton": "Crear cuenta",
+      "skipButton": "Saltar por ahora"
     },
     "signin": {
       "title": "Bienvenido de nuevo",
@@ -61,7 +95,9 @@
       "linkExpired": "Este enlace ha expirado. Solicita uno nuevo.",
       "passwordsMismatch": "Las contraseñas no coinciden.",
       "nameRequired": "El nombre completo es obligatorio.",
-      "invalidLocale": "El idioma seleccionado no es compatible."
+      "invalidLocale": "El idioma seleccionado no es compatible.",
+      "invalidToken": "Este enlace de restablecimiento es inválido o ha expirado.",
+      "resetExpired": "Este enlace de restablecimiento de contraseña ha expirado."
     }
   },
   "search": {
@@ -135,7 +171,8 @@
     "destinations": "Destinos",
     "skipToContent": "Saltar al contenido principal",
     "mainNavigation": "Navegacion principal",
-    "openMenu": "Abrir menu"
+    "openMenu": "Abrir menu",
+    "closeMenu": "Cerrar menu"
   },
   "booking": {
     "title": "Completar Reserva",
@@ -206,7 +243,14 @@
     "submitting": "Enviando...",
     "load_more": "Cargar Más",
     "loading": "Cargando...",
-    "failed_to_load": "Error al cargar las reseñas. Por favor, inténtalo de nuevo más tarde."
+    "failed_to_load": "Error al cargar las reseñas. Por favor, inténtalo de nuevo más tarde.",
+    "errors": {
+      "ratingRequired": "Por favor, selecciona una calificación.",
+      "ratingInvalid": "La calificación debe estar entre 1 y 5.",
+      "commentTooLong": "El comentario debe tener 2000 caracteres o menos.",
+      "bookingReferenceRequired": "La referencia de la reserva es obligatoria."
+    },
+    "cancel": "Cancelar"
   },
   "traveler": {
     "pages": {
@@ -465,7 +509,10 @@
       "reviews": "Reseñas",
       "analytics": "Analíticas",
       "profile": "Perfil y Ajustes",
-      "signOut": "Cerrar Sesión"
+      "signOut": "Cerrar Sesión",
+      "sidebarLabel": "Navegación del panel de socio",
+      "appName": "Bookly",
+      "version": "v0.1.0"
     },
     "dashboard": {
       "metaTitle": "Panel de Socio | Bookly",
@@ -477,10 +524,20 @@
       "conversionRate": "Tasa de Conversión",
       "recentBookings": "Reservas Recientes",
       "noData": "No hay datos disponibles para el período seleccionado.",
+      "loadError": "No se pudieron cargar las analíticas. Inténtalo de nuevo.",
+      "retry": "Reintentar",
       "last30Days": "Últimos 30 Días",
       "last90Days": "Últimos 90 Días",
       "last12Months": "Últimos 12 Meses",
-      "customRange": "Rango Personalizado"
+      "customRange": "Rango Personalizado",
+      "status": {
+        "verified": "Tu cuenta está verificada",
+        "verifiedDescription": "Tus tours pueden aparecer en la búsqueda pública.",
+        "notVerified": "Tu cuenta aún no está verificada",
+        "notVerifiedDescription": "Algunas funciones están limitadas hasta que un administrador verifique tu cuenta."
+      },
+      "upcomingBookings": "Próximas Reservas",
+      "reviewCount": "Reseñas"
     },
     "tours": {
       "metaTitle": "Mis Tours | Bookly",
@@ -488,7 +545,8 @@
       "title": "Mis Tours",
       "createTour": "Crear Tour",
       "editTour": "Editar Tour",
-      "noTours": "Aún no hay tours. Crea tu primer tour para comenzar.",
+      "noTours": "Aún no hay tours",
+      "noToursSubtitle": "Crea tu primer tour para comenzar.",
       "status": {
         "draft": "Borrador",
         "pending_review": "Pendiente de Revisión",
@@ -517,7 +575,8 @@
         "saving": "Guardando...",
         "submitting": "Enviando...",
         "saved": "Borrador guardado",
-        "unsaved": "Cambios sin guardar"
+        "unsaved": "Cambios sin guardar",
+        "uploadFailed": "Error al subir la imagen."
       },
       "form": {
         "title": "Título del Tour",
@@ -567,16 +626,61 @@
         "specific": "Fecha Específica",
         "date": "Fecha",
         "priceMultiplier": "Multiplicador de Precio",
-        "note": "Nota"
+        "note": "Nota",
+        "dismissErrors": "Cerrar",
+        "moveUp": "Subir",
+        "moveDown": "Bajar",
+        "setCover": "Establecer como portada",
+        "remove": "Eliminar",
+        "imagesCount": "{current} / {max} imágenes",
+        "coverBadge": "Portada",
+        "galleryImageAlt": "Imagen de la galería"
       },
+      "errors": {
+        "titleRequired": "El título es obligatorio.",
+        "titleMax": "El título debe tener 120 caracteres o menos.",
+        "descriptionMin": "La descripción debe tener al menos 10 caracteres.",
+        "categoryRequired": "La categoría es obligatoria.",
+        "destinationRequired": "El destino es obligatorio.",
+        "durationPositive": "La duración debe ser un número positivo.",
+        "meetingPointRequired": "El punto de encuentro es obligatorio.",
+        "coverImageRequired": "Se requiere al menos una imagen de portada.",
+        "pricingTierMin": "Se requiere al menos un nivel de precio.",
+        "maxParticipantsGteMin": "El número máximo de participantes debe ser mayor o igual al mínimo.",
+        "availabilityRuleMin": "Se requiere al menos una regla de disponibilidad.",
+        "tierNameRequired": "El nombre del nivel es obligatorio.",
+        "tierPricePositive": "El precio debe ser un número positivo.",
+        "minParticipantsPositive": "Los participantes mínimos deben ser al menos 1.",
+        "maxParticipantsPositive": "Los participantes máximos deben ser al menos 1.",
+        "invalidTime": "Por favor, introduce una hora válida.",
+        "startDateRequired": "La fecha de inicio es obligatoria.",
+        "capacityMin": "La capacidad debe ser al menos 1.",
+        "dateRequired": "La fecha es obligatoria.",
+        "multiplierNonNegative": "El multiplicador debe ser no negativo.",
+        "invalidUrl": "Formato de URL no válido.",
+        "unsupportedType": "Tipo de archivo no admitido. Usa JPEG, PNG o WebP.",
+        "fileTooLarge": "El archivo es demasiado grande. El tamaño máximo es {mb} MB.",
+        "maxImagesReached": "Puedes subir un máximo de {max} imágenes."
+      },
+      "noCoverImage": "Sin imagen de portada",
+      "untitled": "Tour sin título",
+      "ariaEdit": "Editar tour",
+      "ariaArchive": "Archivar tour",
       "archive": "Archivar Tour",
       "archiveConfirm": "¿Estás seguro? Archivar ocultará el tour de la búsqueda pública. Las reservas existentes no se verán afectadas.",
-      "archiveSuccess": "Tour archivado exitosamente."
+      "archiveSuccess": "Tour archivado exitosamente.",
+      "statusHint": {
+        "pending_review": "Esperando revisión del administrador.",
+        "rejected": "Necesita revisión antes de volver a enviarlo."
+      },
+      "archiveFailed": "No se pudo archivar el tour. Inténtalo de nuevo."
     },
     "bookings": {
       "metaTitle": "Reservas | Bookly",
       "metaDescription": "Ve y gestiona las reservas de tus tours.",
       "title": "Reservas",
+      "loading": "Cargando reservas...",
+      "loadError": "Error al cargar las reservas.",
       "noBookings": "No se encontraron reservas.",
       "filters": {
         "all": "Todas",
@@ -604,13 +708,19 @@
         "requestCancellation": "Solicitar Cancelación",
         "cancellationReason": "Motivo de Cancelación",
         "cancellationReasonPlaceholder": "Explica por qué solicitas la cancelación...",
-        "submitCancellation": "Enviar Solicitud de Cancelación"
+        "submitCancellation": "Enviar Solicitud de Cancelación",
+        "promptCancellationReason": "Por favor, proporciona un motivo para solicitar la cancelación:",
+        "marking": "Marcando...",
+        "requesting": "Solicitando..."
       },
       "status": {
         "confirmed": "Confirmada",
         "completed": "Completada",
         "cancelled": "Cancelada",
-        "cancellation_requested": "Cancelación Solicitada"
+        "cancellation_requested": "Cancelación Solicitada",
+        "pending_payment": "Pago Pendiente",
+        "expired": "Expirada",
+        "no_show": "No Asistió"
       }
     },
     "reviews": {
@@ -631,7 +741,24 @@
       "filterByRating": "Filtrar por calificación",
       "filterByResponse": "Estado de Respuesta",
       "withResponse": "Con Respuesta",
-      "withoutResponse": "En espera de Respuesta"
+      "withoutResponse": "En espera de Respuesta",
+      "verifiedTraveler": "Viajero Verificado",
+      "yourResponse": "Tu Respuesta",
+      "writeResponsePlaceholder": "Escribe tu respuesta pública...",
+      "cancel": "Cancelar",
+      "loadError": "Error al cargar las reseñas.",
+      "allTours": "Todos los tours",
+      "reviewsCount": "{count, plural, =1 {# reseña} other {# reseñas}}",
+      "expand": "Mostrar",
+      "collapse": "Ocultar",
+      "average": "Promedio",
+      "tourSummary": "Resumen del Tour",
+      "writeResponse": "Escribe una Respuesta",
+      "respondedOn": "Respondido el {date}",
+      "editedOn": "Editado el {date}",
+      "failedToSubmit": "Error al enviar la respuesta",
+      "failedToUpdate": "Error al actualizar la respuesta",
+      "submitting": "Enviando..."
     },
     "analytics": {
       "metaTitle": "Analíticas | Bookly",
@@ -640,7 +767,8 @@
       "bookingsOverTime": "Reservas en el Tiempo",
       "revenueOverTime": "Ingresos en el Tiempo",
       "dateRange": "Rango de Fechas",
-      "tourFilter": "Filtrar por Tour"
+      "tourFilter": "Filtrar por Tour",
+      "noData": "No hay reservas en el período seleccionado."
     },
     "profile": {
       "metaTitle": "Perfil y Ajustes | Bookly",
@@ -712,6 +840,54 @@
       "bookingCancelled": "La reserva {reference} ha sido cancelada",
       "reviewReceived": "Nueva reseña en {tour}",
       "paymentStatusChanged": "Estado de pago actualizado para la reserva {reference}"
+    },
+    "header": {
+      "menuLabel": "Abrir menú de navegación",
+      "title": "Panel de Socio",
+      "notificationsLabel": "Notificaciones",
+      "guest": "Socio",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "admin": {
+    "reviews": {
+      "title": "Moderación de Reseñas",
+      "loadError": "Error al cargar las reseñas.",
+      "empty": "Ninguna reseña coincide con los filtros seleccionados.",
+      "filters": {
+        "status": "Estado",
+        "all": "Todas",
+        "visible": "Visible",
+        "hidden": "Oculta",
+        "flagged": "Marcada",
+        "tourId": "ID del Tour",
+        "dateFrom": "Desde",
+        "dateTo": "Hasta",
+        "flaggedOnly": "Solo marcadas",
+        "apply": "Aplicar",
+        "clear": "Limpiar"
+      },
+      "reviewer": "Viajero",
+      "rating": "Calificación",
+      "comment": "Comentario",
+      "status": "Estado",
+      "submittedAt": "Enviada",
+      "hide": "Ocultar",
+      "reinstate": "Restaurar",
+      "hideConfirmTitle": "Ocultar Reseña",
+      "reinstateConfirmTitle": "Restaurar Reseña",
+      "hideConfirmBody": "¿Estás seguro de que deseas ocultar esta reseña? Ya no será visible para el público.",
+      "reinstateConfirmBody": "¿Estás seguro de que deseas restaurar esta reseña? Volverá a ser visible para el público.",
+      "reasonLabel": "Motivo",
+      "reasonPlaceholder": "Proporciona un motivo para esta acción...",
+      "reasonRequired": "El motivo es obligatorio.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "auditTrail": "Historial",
+      "page": "Página",
+      "of": "de",
+      "previous": "Anterior",
+      "next": "Siguiente"
     }
   }
 }

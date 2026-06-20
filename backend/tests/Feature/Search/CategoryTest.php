@@ -1,9 +1,8 @@
 <?php
 
 use App\Models\Category;
-use App\Models\Tour;
-use App\Models\TourTranslation;
 use Illuminate\Testing\Fluent\AssertableJson;
+
 use function Pest\Laravel\getJson;
 
 it('lists all active categories', function () {
@@ -13,9 +12,8 @@ it('lists all active categories', function () {
 
     getJson('/api/public/categories?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', 2)
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('data', 2)
+            ->etc()
         );
 });
 
@@ -24,11 +22,10 @@ it('returns tours for a valid category slug', function () {
 
     getJson('/api/public/categories/adventure/tours?locale=en')
         ->assertOk()
-        ->assertJson(fn (AssertableJson $json) =>
-            $json->has('data')
-                 ->has('meta')
-                 ->has('filters')
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('data')
+            ->has('meta')
+            ->has('filters')
+            ->etc()
         );
 });
 

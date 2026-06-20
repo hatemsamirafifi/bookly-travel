@@ -26,7 +26,7 @@ class UploadController
         $expiresAt = now()->addMinutes(15);
 
         // Mock presigned URL generator — will be wired to R2 in production
-        $signedUrl = "https://r2.bookly.test/{$path}?sig=" . Str::random(32) . "&expires=" . $expiresAt->getTimestamp();
+        $signedUrl = "https://r2.bookly.test/{$path}?sig=" . Str::random(32) . '&expires=' . $expiresAt->getTimestamp();
         $publicUrl = "https://cdn.bookly.test/{$path}";
 
         return response()->json([

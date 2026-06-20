@@ -1,5 +1,8 @@
 <?php
 
+use App\Domains\Booking\Controllers\Admin\AuditController;
+use App\Domains\Payment\Controllers\Admin\FinancialLedgerController;
+use App\Domains\Reviews\Controllers\Admin\AdminReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,16 +15,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::prefix('audit/bookings')->middleware('throttle:booking.get')->group(function () {
-        Route::get('/', [\App\Domains\Booking\Controllers\Admin\AuditController::class, 'index']);
-        Route::get('{reference}', [\App\Domains\Booking\Controllers\Admin\AuditController::class, 'show']);
+        Route::get('/', [AuditController::class, 'index']);
+        Route::get('{reference}', [AuditController::class, 'show']);
     });
 
-    Route::get('financial-ledger', [\App\Domains\Payment\Controllers\Admin\FinancialLedgerController::class, 'index'])
+    Route::get('financial-ledger', [FinancialLedgerController::class, 'index'])
         ->middleware('throttle:booking.get');
 
     Route::prefix('reviews')->middleware('throttle:booking.get')->group(function () {
-        Route::get('/', [\App\Domains\Reviews\Controllers\Admin\AdminReviewController::class, 'index']);
-        Route::post('{review}/hide', [\App\Domains\Reviews\Controllers\Admin\AdminReviewController::class, 'hide']);
-        Route::post('{review}/reinstate', [\App\Domains\Reviews\Controllers\Admin\AdminReviewController::class, 'reinstate']);
+        Route::get('/', [AdminReviewController::class, 'index']);
+        Route::post('{review}/hide', [AdminReviewController::class, 'hide']);
+        Route::post('{review}/reinstate', [AdminReviewController::class, 'reinstate']);
     });
 });

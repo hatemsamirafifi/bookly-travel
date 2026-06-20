@@ -4,7 +4,7 @@ test.describe('Auth', () => {
   test('login page renders with form fields', async ({ page }) => {
     await page.goto('/en/auth/login');
     await expect(page.getByLabel(/Email Address/i)).toBeVisible();
-    await expect(page.getByLabel(/Password/i)).toBeVisible();
+    await expect(page.getByLabel('Password', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /Sign In/i })).toBeVisible();
   });
 
@@ -12,7 +12,7 @@ test.describe('Auth', () => {
     await page.goto('/en/auth/register');
     await expect(page.getByLabel(/Full Name/i)).toBeVisible();
     await expect(page.getByLabel(/Email Address/i)).toBeVisible();
-    await expect(page.getByLabel(/Password/i)).toBeVisible();
+    await expect(page.getByLabel('Password', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /Create Account/i })).toBeVisible();
   });
 

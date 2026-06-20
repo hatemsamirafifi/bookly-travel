@@ -5,7 +5,7 @@ namespace App\Domains\Partner\Services;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class AnalyticsService
 {
@@ -15,27 +15,46 @@ class AnalyticsService
      * Returns total bookings, total revenue, average rating, and conversion rate
      * scoped to the partner's tours and optionally filtered by date range and tour.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{date_from?: string, date_to?: string, tour_id?: int} $filters
+     * The date range uses the `from` and `to` keys (matching the controller
+     * validation). Each bound is applied only when provided; when neither is
+     * provided the last 30 days are used as the default window.
+     *
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{from?: string, to?: string, tour_id?: int}  $filters
      * @return array{total_bookings: int, total_revenue: int, average_rating: float, conversion_rate: float}
      */
     public function getSummary(int $partnerId, array $filters = []): array
     {
-        $dateFrom = $filters['date_from'] ?? now()->subDays(30)->toDateString();
-        $dateTo = $filters['date_to'] ?? now()->toDateString();
+        $dateFrom = $filters['from'] ?? null;
+        $dateTo = $filters['to'] ?? null;
+
+        // Preserve existing behavior: default to the last 30 days when no range is provided.
+        if ($dateFrom === null && $dateTo === null) {
+            $dateFrom = now()->subDays(30)->toDateString();
+            $dateTo = now()->toDateString();
+        }
 
         $tourIds = $this->getPartnerTourIds($partnerId, $filters['tour_id'] ?? null);
 
+        // Apply each date bound only when provided (a null bound means "open" on that side).
+        $applyRange = function ($query) use ($dateFrom, $dateTo) {
+            if ($dateFrom !== null) {
+                $query->where('tour_date', '>=', $dateFrom);
+            }
+            if ($dateTo !== null) {
+                $query->where('tour_date', '<=', $dateTo);
+            }
+            return $query;
+        };
+
         // Total bookings
-        $totalBookings = Booking::whereIn('tour_id', $tourIds)
-            ->whereBetween('tour_date', [$dateFrom, $dateTo])
-            ->count();
+        $totalBookings = $applyRange(Booking::whereIn('tour_id', $tourIds))->count();
 
         // Total revenue (only completed or confirmed bookings)
-        $totalRevenue = (int) Booking::whereIn('tour_id', $tourIds)
-            ->whereIn('status', [Booking::STATUS_CONFIRMED, Booking::STATUS_COMPLETED])
-            ->whereBetween('tour_date', [$dateFrom, $dateTo])
-            ->sum('total_price');
+        $totalRevenue = (int) $applyRange(
+            Booking::whereIn('tour_id', $tourIds)
+                ->whereIn('status', [Booking::STATUS_CONFIRMED, Booking::STATUS_COMPLETED])
+        )->sum('total_price');
 
         // Average rating across partner's tours
         $averageRating = (float) Review::whereIn('tour_id', $tourIds)
@@ -59,14 +78,18 @@ class AnalyticsService
     /**
      * Get bookings-over-time chart data grouped by day or week.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{date_from?: string, date_to?: string, tour_id?: int, granularity?: string} $filters
+     * The date range uses the `from` and `to` keys (matching the controller
+     * validation). The chart requires concrete bounds for gap-filling, so a
+     * missing `from` defaults to 30 days ago and a missing `to` to today.
+     *
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{from?: string, to?: string, tour_id?: int, granularity?: string}  $filters
      * @return array<int, array{date: string, bookings: int, revenue: int}>
      */
     public function getBookingsOverTime(int $partnerId, array $filters = []): array
     {
-        $dateFrom = $filters['date_from'] ?? now()->subDays(30)->toDateString();
-        $dateTo = $filters['date_to'] ?? now()->toDateString();
+        $dateFrom = $filters['from'] ?? now()->subDays(30)->toDateString();
+        $dateTo = $filters['to'] ?? now()->toDateString();
         $granularity = $filters['granularity'] ?? 'day';
 
         $tourIds = $this->getPartnerTourIds($partnerId, $filters['tour_id'] ?? null);
@@ -102,14 +125,14 @@ class AnalyticsService
     /**
      * Get the full analytics payload including summary and chart data.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{date_from?: string, date_to?: string, tour_id?: int, granularity?: string} $filters
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{from?: string, to?: string, tour_id?: int, granularity?: string}  $filters
      * @return array<string, mixed>
      */
     public function getAnalytics(int $partnerId, array $filters = []): array
     {
-        $dateFrom = $filters['date_from'] ?? now()->subDays(30)->toDateString();
-        $dateTo = $filters['date_to'] ?? now()->toDateString();
+        $dateFrom = $filters['from'] ?? now()->subDays(30)->toDateString();
+        $dateTo = $filters['to'] ?? now()->toDateString();
 
         return [
             'summary' => $this->getSummary($partnerId, $filters),
@@ -124,9 +147,9 @@ class AnalyticsService
     /**
      * Get the tour IDs for a partner, optionally filtered by a specific tour.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param int|null $tourId Optional tour ID filter
-     * @return \Illuminate\Support\Collection<int, int>
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  int|null  $tourId  Optional tour ID filter
+     * @return Collection<int, int>
      */
     protected function getPartnerTourIds(int $partnerId, ?int $tourId = null)
     {
@@ -142,9 +165,9 @@ class AnalyticsService
     /**
      * Fill gaps in daily chart data to ensure every date in the range is present.
      *
-     * @param \Illuminate\Support\Collection $rows The aggregated rows
-     * @param string $dateFrom Start date (Y-m-d)
-     * @param string $dateTo End date (Y-m-d)
+     * @param  Collection  $rows  The aggregated rows
+     * @param  string  $dateFrom  Start date (Y-m-d)
+     * @param  string  $dateTo  End date (Y-m-d)
      * @return array<int, array{date: string, bookings: int, revenue: int}>
      */
     protected function fillDateGaps($rows, string $dateFrom, string $dateTo): array

@@ -12,6 +12,7 @@ import StripePaymentForm from './StripePaymentForm';
 import { createBooking } from '@/lib/api/bookings';
 import { cancelBooking } from '@/lib/api/my-bookings';
 import { getTourDetail } from '@/lib/api/tours';
+import { createBookingSchema } from '@/lib/validators/booking';
 import type { TourDetail } from '@/lib/api/types';
 
 interface BookingFormProps {
@@ -83,14 +84,25 @@ export default function BookingForm({ locale }: BookingFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tourSlug || !date) return;
+    const pageLoadPriceCents = tour?.pricing?.base_price?.amount;
+
+    // Validate the booking payload at the boundary before the network call.
+    const parsed = createBookingSchema.safeParse({
+      tour_slug: tourSlug,
+      tour_date: date,
+      participant_count: participants,
+      locale,
+      page_load_price: pageLoadPriceCents,
+    });
+    if (!parsed.success) {
+      setError('Please select a tour date and number of participants.');
+      return;
+    }
 
     setSubmitting(true);
     setError(null);
 
     try {
-      const pageLoadPriceCents = tour?.pricing?.base_price?.amount;
-
       const result = await createBooking({
         tour_slug: tourSlug,
         tour_date: date,

@@ -1,5 +1,5 @@
-﻿import { ReviewList } from '@/components/partner/reviews/ReviewList';
+﻿import PartnerReviewsDashboard from '@/components/partner/reviews/PartnerReviewsDashboard';
 
 export default function ReviewsPage() {
-  return <ReviewList />;
+  return <PartnerReviewsDashboard />;
 }

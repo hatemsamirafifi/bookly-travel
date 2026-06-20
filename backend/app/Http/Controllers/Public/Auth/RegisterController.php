@@ -15,13 +15,17 @@ class RegisterController extends Controller
      */
     public function __invoke(RegisterRequest $request, RegisterTravelerAction $action): JsonResponse
     {
-        $result = $action->execute($request->validated());
+        $data = $request->validated();
+        $data['ip_address'] = $request->ip();
+        $data['user_agent'] = $request->userAgent();
+
+        $result = $action->execute($data);
 
         return response()->json([
             'data' => [
                 'user' => new UserResource($result['user']),
                 'token' => $result['token'],
-            ]
+            ],
         ], 201);
     }
 }

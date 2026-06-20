@@ -18,7 +18,7 @@ class RateLimitBookingMiddleware
             $availableIn = RateLimiter::availableIn($key);
 
             return response()->json([
-                'message'     => 'Too many booking attempts. Please wait and try again.',
+                'message' => 'Too many booking attempts. Please wait and try again.',
                 'retry_after' => $availableIn,
             ], 429)->withHeaders([
                 'Retry-After' => $availableIn,

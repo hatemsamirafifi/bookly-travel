@@ -4,9 +4,10 @@ namespace App\Domains\Partner\Services;
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
-use App\Models\Tour;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BookingService
 {
@@ -17,9 +18,8 @@ class BookingService
     /**
      * List bookings for a partner's tours with optional filters.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{tour_id?: int, status?: string, date_from?: string, date_to?: string, search?: string, per_page?: int, page?: int} $filters
-     * @return LengthAwarePaginator
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{tour_id?: int, status?: string, date_from?: string, date_to?: string, search?: string, per_page?: int, page?: int}  $filters
      */
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
@@ -63,9 +63,8 @@ class BookingService
      *
      * Returns null if the booking does not belong to one of the partner's tours.
      *
-     * @param string $reference The booking reference
-     * @param int $partnerId The authenticated partner's ID
-     * @return Booking|null
+     * @param  string  $reference  The booking reference
+     * @param  int  $partnerId  The authenticated partner's ID
      */
     public function getForPartner(string $reference, int $partnerId): ?Booking
     {
@@ -83,24 +82,25 @@ class BookingService
      * Only allowed when the booking's tour_date is today or in the past,
      * and the booking is currently in 'confirmed' status.
      *
-     * @param string $reference The booking reference
-     * @param int $partnerId The authenticated partner's ID
+     * @param  string  $reference  The booking reference
+     * @param  int  $partnerId  The authenticated partner's ID
      * @return Booking The updated booking
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If booking not found or not owned by partner
-     * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException If tour_date is in the future or booking is not confirmed
+     *
+     * @throws NotFoundHttpException If booking not found or not owned by partner
+     * @throws ConflictHttpException If tour_date is in the future or booking is not confirmed
      */
     public function markAsCompleted(string $reference, int $partnerId): Booking
     {
         $booking = $this->getForPartnerOrFail($reference, $partnerId);
 
         if ($booking->tour_date->isFuture()) {
-            throw new \Symfony\Component\HttpKernel\Exception\ConflictHttpException(
+            throw new ConflictHttpException(
                 'Booking can only be marked as completed after the tour date has passed.'
             );
         }
 
         if ($booking->status !== Booking::STATUS_CONFIRMED) {
-            throw new \Symfony\Component\HttpKernel\Exception\ConflictHttpException(
+            throw new ConflictHttpException(
                 "Booking status is '{$booking->status}', can only transition from 'confirmed'."
             );
         }
@@ -130,20 +130,21 @@ class BookingService
      * Sets the booking status to 'cancellation_requested' and stores the reason
      * and optional evidence. Only allowed for confirmed bookings owned by the partner.
      *
-     * @param string $reference The booking reference
-     * @param int $partnerId The authenticated partner's ID
-     * @param string $reason The cancellation reason (required)
-     * @param array<string> $evidenceUrls Optional evidence URLs
+     * @param  string  $reference  The booking reference
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  string  $reason  The cancellation reason (required)
+     * @param  array<string>  $evidenceUrls  Optional evidence URLs
      * @return Booking The updated booking
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If booking not found or not owned by partner
-     * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException If booking is not in a cancellable state
+     *
+     * @throws NotFoundHttpException If booking not found or not owned by partner
+     * @throws ConflictHttpException If booking is not in a cancellable state
      */
     public function requestCancellation(string $reference, int $partnerId, string $reason, array $evidenceUrls = []): Booking
     {
         $booking = $this->getForPartnerOrFail($reference, $partnerId);
 
         if ($booking->status !== Booking::STATUS_CONFIRMED) {
-            throw new \Symfony\Component\HttpKernel\Exception\ConflictHttpException(
+            throw new ConflictHttpException(
                 "Booking status is '{$booking->status}', can only request cancellation for 'confirmed' bookings."
             );
         }
@@ -174,8 +175,8 @@ class BookingService
     /**
      * Get booking summary counts for a partner.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{date_from?: string, date_to?: string, tour_id?: int} $filters
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{date_from?: string, date_to?: string, tour_id?: int}  $filters
      * @return array<string, mixed>
      */
     public function getBookingSummary(int $partnerId, array $filters = []): array
@@ -214,17 +215,17 @@ class BookingService
     /**
      * Get a booking for the partner or fail with 404.
      *
-     * @param string $reference The booking reference
-     * @param int $partnerId The authenticated partner's ID
-     * @return Booking
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param  string  $reference  The booking reference
+     * @param  int  $partnerId  The authenticated partner's ID
+     *
+     * @throws NotFoundHttpException
      */
     protected function getForPartnerOrFail(string $reference, int $partnerId): Booking
     {
         $booking = $this->getForPartner($reference, $partnerId);
 
         if (! $booking) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
+            throw new NotFoundHttpException(
                 'Booking not found.'
             );
         }

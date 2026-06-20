@@ -1,13 +1,19 @@
 'use client';
 
 import { useCallback, useState, useRef } from 'react';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 import { getSignedUploadUrl } from '@/lib/api/partner';
 import type { TourMedia, ImageUploadState } from '@/types/tour';
 
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const MAX_IMAGES = 10;
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png'];
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+/** Comma-separated value for the native <input accept> attribute. */
+const ACCEPT_ATTR = ACCEPTED_TYPES.join(',');
+const ACCEPTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 
 interface ImageUploaderProps {
   /** Currently saved media items */
@@ -19,7 +25,9 @@ interface ImageUploaderProps {
 }
 
 export function ImageUploader({ media, onChange, disabled = false }: ImageUploaderProps) {
+  const t = useTranslations('partner.tours');
   const [uploads, setUploads] = useState<ImageUploadState[]>([]);
+  const [fileErrors, setFileErrors] = useState<{ name: string; reason: string }[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,34 +37,23 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
 
   const uploadFile = useCallback(
     async (file: File, isCover: boolean): Promise<TourMedia | null> => {
-      // Generate a temp upload state entry
       const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-      const preview = URL.createObjectURL(file);
 
       const uploadState: ImageUploadState = {
         file,
-        preview,
         progress: 0,
         status: 'uploading',
       };
 
-      setUploads((prev) => [...prev, { ...uploadState, id: tempId } as ImageUploadState & { id: string }]);
+      setUploads((prev) => [...prev, { ...uploadState, id: tempId }]);
 
       try {
         // 1. Get signed URL
-        const urlRes = await getSignedUploadUrl(file.name, file.type, {
-          maxSizeMB: MAX_FILE_SIZE_MB,
-        });
-        const { upload_url, public_url } = urlRes.data;
+        const urlRes = await getSignedUploadUrl(file.type, file.size);
+        const { upload_url, public_url } = urlRes;
 
         // 2. Upload to storage
-        setUploads((prev) =>
-          prev.map((u) =>
-            (u as ImageUploadState & { id: string }).id === tempId
-              ? { ...u, progress: 50 }
-              : u
-          )
-        );
+        setUploads((prev) => prev.map((u) => (u.id === tempId ? { ...u, progress: 50 } : u)));
 
         const uploadRes = await fetch(upload_url, {
           method: 'PUT',
@@ -70,9 +67,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
 
         setUploads((prev) =>
           prev.map((u) =>
-            (u as ImageUploadState & { id: string }).id === tempId
-              ? { ...u, progress: 100, status: 'done' as const, publicUrl: public_url }
-              : u
+            u.id === tempId ? { ...u, progress: 100, status: 'done' as const, publicUrl: public_url } : u
           )
         );
 
@@ -87,18 +82,14 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
 
         return newMedia;
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Upload failed';
+        const message = err instanceof Error ? err.message : t('wizard.uploadFailed');
         setUploads((prev) =>
-          prev.map((u) =>
-            (u as ImageUploadState & { id: string }).id === tempId
-              ? { ...u, status: 'error' as const, error: message }
-              : u
-          )
+          prev.map((u) => (u.id === tempId ? { ...u, status: 'error' as const, error: message } : u))
         );
         return null;
       }
     },
-    [media]
+    [media, t]
   );
 
   const handleFiles = useCallback(
@@ -106,26 +97,43 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
       if (disabled) return;
 
       const fileArray = Array.from(files);
+      const newErrors: { name: string; reason: string }[] = [];
+      let acceptedCount = 0;
 
       for (const file of fileArray) {
-        // Validate type
-        if (!ACCEPTED_TYPES.includes(file.type)) {
+        // Validate total count (against media already saved + accepted this batch)
+        if (totalImages + acceptedCount >= MAX_IMAGES) {
+          newErrors.push({ name: file.name, reason: t('errors.maxImagesReached', { max: MAX_IMAGES }) });
+          continue;
+        }
+        // Validate type — check MIME, fall back to extension for browsers that give an empty type
+        const lowerName = file.name.toLowerCase();
+        const typeOk =
+          ACCEPTED_TYPES.includes(file.type) ||
+          (file.type === '' && ACCEPTED_EXTENSIONS.some((ext) => lowerName.endsWith(ext)));
+        if (!typeOk) {
+          newErrors.push({ name: file.name, reason: t('errors.unsupportedType') });
           continue;
         }
         // Validate size
         if (file.size > MAX_FILE_SIZE_BYTES) {
+          newErrors.push({
+            name: file.name,
+            reason: t('errors.fileTooLarge', { mb: MAX_FILE_SIZE_MB }),
+          });
           continue;
         }
-        // Validate total count
-        if (totalImages >= MAX_IMAGES) {
-          break;
-        }
 
-        const isCover = !coverImage && media.length === 0;
+        const isCover = !coverImage && media.length === 0 && acceptedCount === 0;
         const result = await uploadFile(file, isCover);
         if (result) {
           onChange([...media, result]);
+          acceptedCount += 1;
         }
+      }
+
+      if (newErrors.length > 0) {
+        setFileErrors((prev) => [...prev, ...newErrors]);
       }
 
       // Clean up completed/error uploads after a delay
@@ -133,7 +141,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
         setUploads((prev) => prev.filter((u) => u.status === 'uploading'));
       }, 2000);
     },
-    [disabled, totalImages, coverImage, media, onChange, uploadFile]
+    [disabled, totalImages, coverImage, media, onChange, uploadFile, t]
   );
 
   const handleDrop = useCallback(
@@ -195,6 +203,25 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
     [media, onChange]
   );
 
+  /** Reorders a gallery image (non-cover) by swapping sort_order with its neighbor. */
+  const reorderImage = useCallback(
+    (mediaId: string | number, direction: -1 | 1) => {
+      const gallery = media.filter((m) => !m.is_cover);
+      const index = gallery.findIndex((m) => String(m.id) === String(mediaId));
+      const swapIndex = index + direction;
+      if (index === -1 || swapIndex < 0 || swapIndex >= gallery.length) return;
+      const target = gallery[swapIndex];
+      onChange(
+        media.map((m) => {
+          if (String(m.id) === String(mediaId)) return { ...m, sort_order: target.sort_order };
+          if (String(m.id) === String(target.id)) return { ...m, sort_order: gallery[index].sort_order };
+          return m;
+        })
+      );
+    },
+    [media, onChange]
+  );
+
   return (
     <div className="space-y-4">
       {/* Drop zone */}
@@ -214,7 +241,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/jpeg,image/png"
+          accept={ACCEPT_ATTR}
           multiple
           onChange={handleInputChange}
           disabled={disabled}
@@ -232,10 +259,10 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
             </svg>
           </div>
           <p className="text-sm text-gray-600 font-medium">
-            Drag and drop images here, or click to browse
+            {t('form.dragDrop')}
           </p>
           <p className="text-xs text-gray-400">
-            JPG/PNG, max {MAX_FILE_SIZE_MB}MB per image. Up to {MAX_IMAGES} images total.
+            {t('form.maxFileSize', { mb: MAX_FILE_SIZE_MB, count: MAX_IMAGES })}
           </p>
         </div>
       </div>
@@ -259,38 +286,57 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
         </div>
       )}
 
-      {/* Error indicators */}
       {uploads.filter((u) => u.status === 'error').length > 0 && (
         <div className="space-y-1">
           {uploads
             .filter((u) => u.status === 'error')
             .map((upload, idx) => (
-              <p key={idx} className="text-sm text-red-600">{upload.error ?? 'Upload failed'}</p>
+              <p key={idx} className="text-sm text-red-600">{upload.error ?? t('wizard.uploadFailed')}</p>
             ))}
+        </div>
+      )}
+
+      {/* File validation errors (wrong type / too large / max reached) */}
+      {fileErrors.length > 0 && (
+        <div className="space-y-1" role="alert" aria-live="polite">
+          {fileErrors.map((err, idx) => (
+            <p key={idx} className="text-sm text-red-600">
+              <span className="font-medium">{err.name}:</span> {err.reason}
+            </p>
+          ))}
+          <button
+            type="button"
+            onClick={() => setFileErrors([])}
+            className="text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            {t('form.dismissErrors')}
+          </button>
         </div>
       )}
 
       {/* Cover image */}
       {coverImage && (
         <div className="space-y-2">
-          <p className="text-sm font-medium text-[#0A2540]">Cover Image</p>
+          <p className="text-sm font-medium text-[#0A2540]">{t('form.coverImage')}</p>
           <div className="relative inline-block">
-            <img
+            <Image
               src={coverImage.thumbnail_url ?? coverImage.url}
-              alt="Cover"
-              className="w-48 h-32 object-cover rounded-lg border border-gray-200"
+              alt={t('form.coverImage')}
+              width={192}
+              height={128}
+              className="object-cover rounded-lg border border-gray-200"
             />
             <button
               type="button"
               onClick={() => removeImage(coverImage.id)}
               disabled={disabled}
               className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-              aria-label="Remove cover image"
+              aria-label={t('form.remove')}
             >
               x
             </button>
             <span className="absolute top-2 left-2 px-2 py-0.5 bg-[#FFB800] text-[#0A2540] text-xs font-medium rounded">
-              Cover
+              {t('form.coverBadge')}
             </span>
           </div>
         </div>
@@ -299,23 +345,43 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
       {/* Gallery thumbnails */}
       {galleryImages.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm font-medium text-[#0A2540]">Gallery Images</p>
+          <p className="text-sm font-medium text-[#0A2540]">{t('form.galleryImages')}</p>
           <div className="flex flex-wrap gap-3">
-            {galleryImages.map((img) => (
+            {galleryImages.map((img, idx) => (
               <div key={String(img.id)} className="relative group">
-                <img
+                <Image
                   src={img.thumbnail_url ?? img.url}
-                  alt={img.alt_text ?? 'Gallery image'}
-                  className="w-24 h-20 object-cover rounded-lg border border-gray-200"
+                  alt={img.alt_text ?? t('form.galleryImageAlt')}
+                  width={96}
+                  height={80}
+                  className="object-cover rounded-lg border border-gray-200"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => reorderImage(img.id, -1)}
+                    disabled={disabled || idx === 0}
+                    aria-label={t('form.moveUp')}
+                    className="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <ChevronUp className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => reorderImage(img.id, 1)}
+                    disabled={disabled || idx === galleryImages.length - 1}
+                    aria-label={t('form.moveDown')}
+                    className="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
                   <button
                     type="button"
                     onClick={() => setCover(img.id)}
                     disabled={disabled}
                     className="px-2 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100"
                   >
-                    Set Cover
+                    {t('form.setCover')}
                   </button>
                   <button
                     type="button"
@@ -323,7 +389,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
                     disabled={disabled}
                     className="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600"
                   >
-                    Remove
+                    {t('form.remove')}
                   </button>
                 </div>
               </div>
@@ -334,7 +400,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
 
       {/* Image count */}
       <p className="text-xs text-gray-400">
-        {media.length} / {MAX_IMAGES} images
+        {t('form.imagesCount', { current: media.length, max: MAX_IMAGES })}
       </p>
     </div>
   );

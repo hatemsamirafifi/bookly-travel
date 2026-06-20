@@ -4,6 +4,7 @@ namespace App\Domains\Reviews\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ReviewAuditTrail extends Model
 {
@@ -32,5 +33,10 @@ class ReviewAuditTrail extends Model
     public function review(): BelongsTo
     {
         return $this->belongsTo(Review::class);
+    }
+
+    public function actor(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

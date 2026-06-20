@@ -10,6 +10,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Install Playwright chromium browser + system dependencies for E2E tests
+RUN npx playwright install --with-deps chromium
+
 # Copy the rest of the code
 COPY . .
 

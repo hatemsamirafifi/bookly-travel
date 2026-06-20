@@ -7,7 +7,8 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use function Pest\Laravel\{getJson};
+
+use function Pest\Laravel\getJson;
 
 uses(RefreshDatabase::class);
 

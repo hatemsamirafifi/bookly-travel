@@ -1,14 +1,17 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-const SelectContext = React.createContext<{
+interface SelectContextValue {
   value: string;
   onChange: (value: string) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
-}> | null>(null);
+  disabled?: boolean;
+}
+
+const SelectContext = React.createContext<SelectContextValue | null>(null);
 
 function useSelect() {
   const ctx = React.useContext(SelectContext);
@@ -16,23 +19,35 @@ function useSelect() {
   return ctx;
 }
 
-function Select({ value, onValueChange, children }: { value: string; onValueChange: (v: string) => void; children: React.ReactNode }) {
+function Select({
+  value,
+  onValueChange,
+  children,
+  disabled,
+}: {
+  value: string;
+  onValueChange: (v: string) => void;
+  children: React.ReactNode;
+  disabled?: boolean;
+}) {
   const [open, setOpen] = React.useState(false);
   return (
-    <SelectContext.Provider value={{ value, onChange: onValueChange, open, setOpen }}>
+    <SelectContext.Provider value={{ value, onChange: onValueChange, open, setOpen, disabled }}>
       <div className="relative">{children}</div>
     </SelectContext.Provider>
   );
 }
 
 function SelectTrigger({ children, className }: { children: React.ReactNode; className?: string }) {
-  const { value, open, setOpen } = useSelect();
+  const { value, open, setOpen, disabled } = useSelect();
   return (
     <button
       type="button"
-      onClick={() => setOpen(!open)}
+      onClick={() => !disabled && setOpen(!open)}
+      disabled={disabled}
       className={cn(
         'flex h-10 w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:border-transparent',
+        disabled && 'opacity-50 cursor-not-allowed bg-gray-50',
         className
       )}
     >

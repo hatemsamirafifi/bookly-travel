@@ -3,6 +3,7 @@
 namespace App\Domains\Payment\Jobs;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Booking\Services\AuditService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -15,7 +16,7 @@ class ExpirePendingBookingsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function handle(\App\Domains\Booking\Services\AuditService $auditService): void
+    public function handle(AuditService $auditService): void
     {
         $expired = DB::transaction(function () use ($auditService) {
             $bookings = Booking::where('status', Booking::STATUS_PENDING_PAYMENT)
@@ -27,7 +28,7 @@ class ExpirePendingBookingsJob implements ShouldQueue
             foreach ($bookings as $booking) {
                 $beforeState = $booking->status;
                 $booking->update(['status' => Booking::STATUS_EXPIRED]);
-                
+
                 $auditService->log(
                     $booking,
                     'system',

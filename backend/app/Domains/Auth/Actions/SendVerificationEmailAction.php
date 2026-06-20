@@ -10,8 +10,7 @@ class SendVerificationEmailAction
     /**
      * Dispatch the verification email job to the queue.
      *
-     * @param User $user The user to send the verification email to
-     * @return void
+     * @param  User  $user  The user to send the verification email to
      */
     public function execute(User $user): void
     {

@@ -78,7 +78,7 @@ function ProfileIcon({ className }: { className?: string }) {
 
 export function PartnerSidebar({ onNavigate }: PartnerSidebarProps) {
   const pathname = usePathname();
-  const t = useTranslations('partner.navigation');
+  const t = useTranslations('partner.nav');
 
   const isActive = (href: string) => {
     if (href === '/partner') {

@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CancelBookingButton from '../CancelBookingButton';
 
 jest.mock('next-intl', () => ({
-  useTranslations: (namespace: string) => {
+  useTranslations: () => {
     const keys: Record<string, string> = {
       title: 'Cancel Booking',
       reference: 'Reference',

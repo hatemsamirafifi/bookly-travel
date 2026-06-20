@@ -4,6 +4,7 @@ use App\Jobs\SendVerificationEmail;
 use App\Models\GuestIdentity;
 use App\Models\User;
 use Illuminate\Support\Facades\Queue;
+
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\postJson;
 
@@ -140,8 +141,8 @@ it('is protected by rate limiting', function () {
     }
 
     $response = postJson('/api/public/auth/register', [
-        'name' => "User 10",
-        'email' => "user10@example.com",
+        'name' => 'User 10',
+        'email' => 'user10@example.com',
         'password' => 'Password123!',
     ], $headers);
 

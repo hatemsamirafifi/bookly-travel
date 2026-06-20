@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -38,7 +39,7 @@ it('expires pending payment bookings older than 15 minutes', function () {
         'total_price' => 10000,
         'currency' => 'EUR',
         'status' => Booking::STATUS_PENDING_PAYMENT,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
         'pending_expires_at' => now()->subMinutes(16),
     ]);
@@ -53,13 +54,13 @@ it('expires pending payment bookings older than 15 minutes', function () {
         'total_price' => 10000,
         'currency' => 'EUR',
         'status' => Booking::STATUS_PENDING_PAYMENT,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
         'pending_expires_at' => now()->subMinutes(16),
     ]);
 
     // Dispatch the job synchronously
-    (new ExpirePendingBookingsJob())->handle();
+    (new ExpirePendingBookingsJob)->handle();
 
     $freshBooking->refresh();
     $staleBooking->refresh();
@@ -97,12 +98,12 @@ it('does not expire bookings that are still within the 15-minute window', functi
         'total_price' => 10000,
         'currency' => 'EUR',
         'status' => Booking::STATUS_PENDING_PAYMENT,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
         'pending_expires_at' => now()->subMinutes(10),
     ]);
 
-    (new ExpirePendingBookingsJob())->handle();
+    (new ExpirePendingBookingsJob)->handle();
 
     $booking->refresh();
     expect($booking->status)->toBe(Booking::STATUS_PENDING_PAYMENT);

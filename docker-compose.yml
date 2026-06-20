@@ -6,12 +6,15 @@ services:
       dockerfile: Dockerfile
     container_name: bookly-frontend
     restart: unless-stopped
+    ports:
+      - "3001:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost
+      - NEXT_PUBLIC_API_URL=http://nginx
+      - DOCKER_ENV=true
     networks:
       - bookly-network
     depends_on:
@@ -35,6 +38,9 @@ services:
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
       - APP_URL=http://localhost
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
+      - SCOUT_DRIVER=meilisearch
     networks:
       - bookly-network
     depends_on:
@@ -62,6 +68,9 @@ services:
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
       - APP_URL=http://localhost
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
+      - SCOUT_DRIVER=meilisearch
     networks:
       - bookly-network
     depends_on:
@@ -87,6 +96,9 @@ services:
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
       - APP_URL=http://localhost
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
+      - SCOUT_DRIVER=meilisearch
     networks:
       - bookly-network
     depends_on:
@@ -98,7 +110,7 @@ services:
     container_name: bookly-nginx
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
     - ./backend:/var/www/html
     - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro

@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Laravel\Sanctum\PersonalAccessToken;
+
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\postJson;
 

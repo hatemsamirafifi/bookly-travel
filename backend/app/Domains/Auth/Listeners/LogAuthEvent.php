@@ -20,22 +20,22 @@ class LogAuthEvent
             'PasswordReset' => 'password_reset_completed',
             'PasswordChanged' => 'password_changed',
             'EmailVerified' => 'email_verified',
-            'GuestConvertedToAccount' => 'guest_conversion',
+            'GuestConvertedToAccount' => 'guest_converted',
         ];
 
         $classBasename = class_basename($event);
         $eventType = $eventTypeMap[$classBasename] ?? Str::snake($classBasename);
-        
+
         $userId = null;
-        if (isset($event->user) && $event->user) {
+        if (property_exists($event, 'user') && $event->user) {
             $userId = $event->user->id;
         }
 
         $metadata = [];
-        if (isset($event->email)) {
+        if (property_exists($event, 'email') && $event->email) {
             $metadata['email'] = hash_hmac('sha256', strtolower(trim($event->email)), config('app.key'));
         }
-        if (isset($event->rejectedDueToLockout) && $event->rejectedDueToLockout) {
+        if (property_exists($event, 'rejectedDueToLockout') && $event->rejectedDueToLockout) {
             $metadata['rejected_due_to_lockout'] = true;
         }
 

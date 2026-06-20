@@ -28,7 +28,7 @@ export interface BookingSummary {
 }
 
 export function getTravelerBookingsSummary() {
-  return apiClient<BookingSummary>('/api/public/my-bookings/summary', {
+  return apiClient<BookingSummary>('/api/public/traveler/bookings/summary', {
     headers: authHeaders(),
   });
 }
@@ -115,3 +115,25 @@ export function getTravelerReviews(page = 1) {
     headers: authHeaders(),
   });
 }
+
+export async function downloadTravelerBookingVoucher(reference: string): Promise<void> {
+  const token = getAuthToken();
+  const response = await fetch(`/api/public/traveler/bookings/${encodeURIComponent(reference)}/voucher`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to download voucher');
+  }
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `voucher-${reference}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+

@@ -6,13 +6,14 @@ use App\Domains\Partner\Requests\UpdateBookingStatusRequest;
 use App\Domains\Partner\Services\BookingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BookingController
 {
     public function __construct(
         private readonly BookingService $service,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -60,9 +61,9 @@ class BookingController
                     $data['evidence'] ?? [],
                 );
             }
-        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
+        } catch (NotFoundHttpException $e) {
             abort(404, 'Booking not found.');
-        } catch (\Symfony\Component\HttpKernel\Exception\ConflictHttpException $e) {
+        } catch (ConflictHttpException $e) {
             abort(409, $e->getMessage());
         }
 
@@ -86,9 +87,9 @@ class BookingController
                 $data['reason'],
                 $data['evidence'] ?? [],
             );
-        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
+        } catch (NotFoundHttpException $e) {
             abort(404, 'Booking not found.');
-        } catch (\Symfony\Component\HttpKernel\Exception\ConflictHttpException $e) {
+        } catch (ConflictHttpException $e) {
             abort(409, $e->getMessage());
         }
 

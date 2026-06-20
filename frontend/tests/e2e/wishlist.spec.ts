@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Wishlist', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/en/auth/login');
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'Password123!');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/en**');
-    await expect(page.locator('text=Sign Out')).toBeVisible();
-  });
+  // Auth is provided by the `-authed` Playwright projects via a shared
+  // storageState (tests/e2e/auth.setup.ts logs in once). No per-test login —
+  // that would re-hit the backend `auth` rate limiter (10/min/IP) and the old
+  // `text=Sign Out` check failed because that action is in a collapsed dropdown.
 
   test('wishlist page renders', async ({ page }) => {
     await page.goto('/en/wishlist');
@@ -19,9 +15,10 @@ test.describe('Wishlist', () => {
   test('wishlist shows empty state or grid', async ({ page }) => {
     await page.goto('/en/wishlist');
 
-    // Either empty state or wishlist grid should be visible
+    // Empty state ("Your wishlist is empty.") when the traveler has no saved
+    // tours, otherwise the populated grid ([data-testid="wishlist-grid"]).
     await expect(
-      page.locator('text=No saved tours').or(page.locator('[data-testid="wishlist-grid"]')).first()
+      page.getByText('Your wishlist is empty.').or(page.locator('[data-testid="wishlist-grid"]')).first()
     ).toBeVisible();
   });
 
@@ -51,7 +48,7 @@ test.describe('Wishlist', () => {
 
       // Item should disappear or empty state should show
       await expect(
-        page.locator('text=No saved tours').or(page.locator('[data-testid="wishlist-grid"]')).first()
+        page.getByText('Your wishlist is empty.').or(page.locator('[data-testid="wishlist-grid"]')).first()
       ).toBeVisible();
     }
   });

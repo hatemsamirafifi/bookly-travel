@@ -3,8 +3,8 @@
 namespace App\Domains\Search\Actions;
 
 use App\Domains\Search\Transformers\TourCardTransformer;
-use App\Models\Tour;
 use App\Models\Category;
+use App\Models\Tour;
 
 class GetHomepageDataAction
 {
@@ -12,7 +12,7 @@ class GetHomepageDataAction
 
     public function __construct()
     {
-        $this->transformer = new TourCardTransformer();
+        $this->transformer = new TourCardTransformer;
     }
 
     public function execute(string $locale): array
@@ -85,5 +85,4 @@ class GetHomepageDataAction
             ],
         ];
     }
-
 }

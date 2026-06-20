@@ -9,7 +9,8 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\actingAs;
+use Illuminate\Support\Str;
+
 use function Pest\Laravel\getJson;
 
 uses(RefreshDatabase::class);
@@ -62,7 +63,7 @@ it('returns reviews for partner tours', function () {
         'total_price' => 8900,
         'currency' => 'EUR',
         'status' => Booking::STATUS_COMPLETED,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
 
@@ -103,7 +104,7 @@ it('can filter by has_response', function () {
         'total_price' => 8900,
         'currency' => 'EUR',
         'status' => Booking::STATUS_COMPLETED,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
 
@@ -143,7 +144,7 @@ it('can filter by has_response', function () {
         'total_price' => 8900,
         'currency' => 'EUR',
         'status' => Booking::STATUS_COMPLETED,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
 

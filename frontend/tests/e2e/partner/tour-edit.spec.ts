@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Tour Edit Workflow', () => {
+  test.beforeEach(async ({ page }) => {
+    await partnerLogin(page);
+  });
+
   test('should load the edit page for an existing tour', async ({ page }) => {
     // Navigate to edit page for tour ID 1
     await page.goto('/en/partner/tours/1/edit');

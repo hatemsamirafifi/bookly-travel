@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Domains\Auth\Events\GuestConvertedToAccount;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Domains\Auth\Events\GuestConvertedToAccount;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GuestIdentity extends Model
@@ -52,7 +52,7 @@ class GuestIdentity extends Model
         // The business logic for identifying these is usually handled in the job,
         // but this scope acts as a base filter (not converted, not already anonymized).
         $query->whereNull('anonymized_at')
-              ->whereNull('converted_user_id');
+            ->whereNull('converted_user_id');
     }
 
     /**

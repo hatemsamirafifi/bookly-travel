@@ -5,6 +5,7 @@ namespace App\Domains\Payment\Controllers\Public;
 use App\Domains\Payment\Actions\ProcessStripeWebhookAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Stripe\Exception\SignatureVerificationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class StripeWebhookController
@@ -22,7 +23,7 @@ class StripeWebhookController
             $action->execute($payload, $signature);
         } catch (\UnexpectedValueException $e) {
             throw new BadRequestHttpException('Invalid webhook payload.');
-        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+        } catch (SignatureVerificationException $e) {
             throw new BadRequestHttpException('Invalid webhook signature.');
         }
 

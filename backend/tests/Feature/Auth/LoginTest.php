@@ -1,12 +1,18 @@
 <?php
 
-use App\Models\User;
+use App\Domains\Auth\Events\AccountLockedOut;
 use App\Mail\AccountLockedOutMail;
+use App\Models\AuthAuditLog;
+use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Testing\Fluent\AssertableJson;
-use function Pest\Laravel\postJson;
+
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\postJson;
 
 it('signs in a traveler with valid credentials', function () {
     $user = User::factory()->create([
@@ -108,7 +114,7 @@ it('returns structured error codes', function () {
         ->assertStatus(423)
         ->assertJsonPath('code', 'account_locked');
 
-    $auditLog = \App\Models\AuthAuditLog::where('user_id', $user->id)
+    $auditLog = AuthAuditLog::where('user_id', $user->id)
         ->where('event_type', 'login_failed')
         ->latest()
         ->first();
@@ -149,8 +155,8 @@ it('locks account after 5 failed attempts with 1 minute tier', function () {
 });
 
 it('dispatches AccountLockedOut event when lockout triggers', function () {
-    \Illuminate\Support\Facades\Event::fake([
-        \App\Domains\Auth\Events\AccountLockedOut::class,
+    Event::fake([
+        AccountLockedOut::class,
     ]);
 
     $user = User::factory()->create([
@@ -166,8 +172,8 @@ it('dispatches AccountLockedOut event when lockout triggers', function () {
     }
 
     // FR-010: AccountLockedOut event MUST be dispatched exactly once
-    \Illuminate\Support\Facades\Event::assertDispatched(
-        \App\Domains\Auth\Events\AccountLockedOut::class,
+    Event::assertDispatched(
+        AccountLockedOut::class,
         fn ($event) => $event->user->id === $user->id
     );
 });
@@ -261,7 +267,7 @@ it('resets failed count on successful login before reaching 5', function () {
 
     postJson('/api/public/auth/login', ['email' => 'reset_early@example.com', 'password' => 'Wrong!']);
     postJson('/api/public/auth/login', ['email' => 'reset_early@example.com', 'password' => 'Wrong!']);
-    
+
     postJson('/api/public/auth/login', [
         'email' => 'reset_early@example.com',
         'password' => 'Password123!',
@@ -279,7 +285,7 @@ it('handles concurrent failed login requests safely', function () {
 
     postJson('/api/public/auth/login', ['email' => 'concurrent@example.com', 'password' => 'Wrong!']);
     postJson('/api/public/auth/login', ['email' => 'concurrent@example.com', 'password' => 'Wrong!']);
-    
+
     $user->refresh();
     expect($user->failed_login_count)->toBe(2);
 });
@@ -292,13 +298,13 @@ it('survives redis cache flush during lockout', function () {
     ]);
 
     // Simulating cache flush: Laravel's cache clear doesn't affect DB
-    \Illuminate\Support\Facades\Cache::flush();
+    Cache::flush();
 
     postJson('/api/public/auth/login', [
         'email' => 'redis@example.com',
         'password' => 'Password123!',
     ])->assertStatus(423);
-    
+
     assertDatabaseHas('users', [
         'id' => $user->id,
     ]);
@@ -306,14 +312,13 @@ it('survives redis cache flush during lockout', function () {
     expect($user->locked_until)->not->toBeNull();
 });
 
-
 it('rate limits the login endpoint after 10 requests', function () {
     $user = User::factory()->create([
         'email' => 'ratelimit@example.com',
         'password' => Hash::make('Password123!'),
     ]);
 
-    \Illuminate\Support\Facades\RateLimiter::clear('auth');
+    RateLimiter::clear('auth');
 
     for ($i = 0; $i < 10; $i++) {
         postJson('/api/public/auth/login', [
@@ -368,7 +373,7 @@ it('does not send duplicate email for the same lockout event', function () {
     expect($user->last_lockout_email_sent_at)->not->toBeNull();
 
     // Manually dispatch a duplicate AccountLockedOut event with the same locked_until
-    event(new \App\Domains\Auth\Events\AccountLockedOut($user));
+    event(new AccountLockedOut($user));
 
     // No second email should be queued — listener detects same locked_until timestamp
     Mail::assertQueued(AccountLockedOutMail::class, 1);
@@ -394,4 +399,3 @@ it('queues an email notification when account is locked out', function () {
             && $mail->subject === __('emails.account_locked_out.subject', [], $user->locale ?? 'en');
     });
 });
-

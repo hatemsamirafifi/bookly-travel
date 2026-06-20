@@ -6,15 +6,16 @@ use App\Domains\Partner\Models\ReviewResponse;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReviewService
 {
     /**
      * List reviews for a partner's tours with optional filters.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{tour_id?: int, rating?: int, has_response?: bool, date_from?: string, date_to?: string, sort?: string, per_page?: int, page?: int} $filters
-     * @return LengthAwarePaginator
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{tour_id?: int, rating?: int, has_response?: bool, date_from?: string, date_to?: string, sort?: string, per_page?: int, page?: int}  $filters
      */
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
@@ -62,9 +63,8 @@ class ReviewService
      *
      * Returns null if the review does not belong to one of the partner's tours.
      *
-     * @param int $reviewId The review ID
-     * @param int $partnerId The authenticated partner's ID
-     * @return Review|null
+     * @param  int  $reviewId  The review ID
+     * @param  int  $partnerId  The authenticated partner's ID
      */
     public function getReviewForPartner(int $reviewId, int $partnerId): ?Review
     {
@@ -81,26 +81,27 @@ class ReviewService
      * Only one response is allowed per review. Throws a ConflictException if a
      * response already exists for the given review.
      *
-     * @param int $reviewId The review ID to respond to
-     * @param int $partnerId The authenticated partner's ID
-     * @param string $responseText The response text (max 1000 chars)
+     * @param  int  $reviewId  The review ID to respond to
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  string  $responseText  The response text (max 1000 chars)
      * @return ReviewResponse The created review response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If review not found or not owned by partner
-     * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException If a response already exists for this review
+     *
+     * @throws NotFoundHttpException If review not found or not owned by partner
+     * @throws ConflictHttpException If a response already exists for this review
      */
     public function createResponse(int $reviewId, int $partnerId, string $responseText): ReviewResponse
     {
         $review = $this->getReviewForPartner($reviewId, $partnerId);
 
         if (! $review) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
+            throw new NotFoundHttpException(
                 'Review not found.'
             );
         }
 
         $existingResponse = ReviewResponse::where('review_id', $reviewId)->first();
         if ($existingResponse) {
-            throw new \Symfony\Component\HttpKernel\Exception\ConflictHttpException(
+            throw new ConflictHttpException(
                 'A response already exists for this review. Use PUT to update it.'
             );
         }
@@ -115,18 +116,19 @@ class ReviewService
     /**
      * Update an existing review response.
      *
-     * @param int $reviewId The review ID whose response to update
-     * @param int $partnerId The authenticated partner's ID
-     * @param string $responseText The updated response text
+     * @param  int  $reviewId  The review ID whose response to update
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  string  $responseText  The updated response text
      * @return ReviewResponse The updated review response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If review not found, response not found, or not owned by partner
+     *
+     * @throws NotFoundHttpException If review not found, response not found, or not owned by partner
      */
     public function updateResponse(int $reviewId, int $partnerId, string $responseText): ReviewResponse
     {
         $review = $this->getReviewForPartner($reviewId, $partnerId);
 
         if (! $review) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
+            throw new NotFoundHttpException(
                 'Review not found.'
             );
         }
@@ -136,7 +138,7 @@ class ReviewService
             ->first();
 
         if (! $response) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
+            throw new NotFoundHttpException(
                 'Review response not found.'
             );
         }
@@ -152,8 +154,8 @@ class ReviewService
     /**
      * Get review summary statistics for a partner's tours.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array{tour_id?: int} $filters
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array{tour_id?: int}  $filters
      * @return array<int, mixed>
      */
     public function getTourReviewSummaries(int $partnerId, array $filters = []): array

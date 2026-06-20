@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Profile', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/en/auth/login');
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'Password123!');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/en**');
-    await expect(page.locator('text=Sign Out')).toBeVisible();
-  });
+  // Auth is provided by the `-authed` Playwright projects via a shared
+  // storageState (tests/e2e/auth.setup.ts logs in once). No per-test login —
+  // that would re-hit the backend `auth` rate limiter (10/min/IP) and the old
+  // `text=Sign Out` check failed because that action is in a collapsed dropdown.
 
   test('profile page renders settings form', async ({ page }) => {
     await page.goto('/en/profile');
@@ -51,8 +47,10 @@ test.describe('Profile', () => {
       const confirmPassword = page.locator('input[name="new_password_confirmation"]').or(page.getByLabel(/Confirm New Password/i));
       await confirmPassword.fill('DifferentPass!');
 
-      await page.getByRole('button', { name: /Change Password/i }).click();
+      await page.getByRole('button', { name: /Update password/i }).click();
 
+      // The backend validates new_password|confirmed, so a mismatch returns a
+      // 422 whose message includes "confirmation does not match".
       await expect(page.locator('text=match').or(page.locator('text=error')).first()).toBeVisible();
     }
   });
@@ -74,7 +72,10 @@ test.describe('Profile', () => {
   test('marketing emails toggle exists', async ({ page }) => {
     await page.goto('/en/profile');
 
-    const marketingToggle = page.locator('input[name="marketing_emails"]').or(page.getByLabel(/marketing/i));
+    // PreferencesForm renders the marketing toggle as a native checkbox inside
+    // a <label> reading "Send me travel offers and booking tips." — it has no
+    // name/id/aria-label, so it is targeted via its associated label text.
+    const marketingToggle = page.getByLabel(/Send me travel offers/i);
     await expect(marketingToggle).toBeVisible();
   });
 });

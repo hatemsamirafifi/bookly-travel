@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Testing\Fluent\AssertableJson;
+
 use function Pest\Laravel\getJson;
 
 it('returns 429 when search rate limit is exceeded', function () {
     // Clear any existing rate limiter state
-    \Illuminate\Support\Facades\RateLimiter::clear('search');
+    RateLimiter::clear('search');
 
     // Hit the endpoint up to the configured limit (60/min for search)
     $limit = 60;
@@ -18,7 +21,7 @@ it('returns 429 when search rate limit is exceeded', function () {
 });
 
 it('returns 429 with JSON error body when rate limited', function () {
-    \Illuminate\Support\Facades\RateLimiter::clear('search');
+    RateLimiter::clear('search');
 
     for ($i = 0; $i < 60; $i++) {
         getJson('/api/public/search/tours?locale=en');
@@ -26,14 +29,13 @@ it('returns 429 with JSON error body when rate limited', function () {
 
     getJson('/api/public/search/tours?locale=en')
         ->assertStatus(429)
-        ->assertJson(fn (\Illuminate\Testing\Fluent\AssertableJson $json) =>
-            $json->has('message')
-                 ->etc()
+        ->assertJson(fn (AssertableJson $json) => $json->has('message')
+            ->etc()
         );
 });
 
 it('includes Retry-After header in rate limit response', function () {
-    \Illuminate\Support\Facades\RateLimiter::clear('search');
+    RateLimiter::clear('search');
 
     for ($i = 0; $i < 60; $i++) {
         getJson('/api/public/search/tours?locale=en');
@@ -45,8 +47,8 @@ it('includes Retry-After header in rate limit response', function () {
 });
 
 it('different endpoints have separate rate limits', function () {
-    \Illuminate\Support\Facades\RateLimiter::clear('search');
-    \Illuminate\Support\Facades\RateLimiter::clear('detail');
+    RateLimiter::clear('search');
+    RateLimiter::clear('detail');
 
     // Exhaust search rate limit
     for ($i = 0; $i < 60; $i++) {

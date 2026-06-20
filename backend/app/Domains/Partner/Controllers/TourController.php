@@ -1,18 +1,40 @@
-﻿<?php
+<?php
 
 namespace App\Domains\Partner\Controllers;
 
 use App\Domains\Partner\Services\TourService;
-use App\Models\Tour;
+use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TourController
 {
     public function __construct(
         private readonly TourService $service,
-    ) {
+    ) {}
+
+    /**
+     * Resolve the category slug from the request payload to a category_id.
+     * Adds the resolved id to the data array under the 'category_id' key.
+     */
+    private function resolveCategoryId(array $data, bool $required): array
+    {
+        if (! array_key_exists('category', $data)) {
+            if ($required && empty($data['category_id'])) {
+                throw new UnprocessableEntityHttpException('The category field is required.');
+            }
+            return $data;
+        }
+
+        $category = Category::where('slug', $data['category'])->first();
+        if (! $category) {
+            throw new UnprocessableEntityHttpException('Unknown category: ' . $data['category']);
+        }
+
+        $data['category_id'] = $category->id;
+
+        return $data;
     }
 
     public function index(Request $request): JsonResponse
@@ -62,6 +84,8 @@ class TourController
             'availability_exceptions' => 'nullable|array',
         ]);
 
+        $data = $this->resolveCategoryId($data, required: true);
+
         $tour = $this->service->createTour($partnerId, $data);
 
         return response()->json($tour, 201);
@@ -94,6 +118,10 @@ class TourController
             'availability_rules' => 'nullable|array',
             'availability_exceptions' => 'nullable|array',
         ]);
+
+        if (array_key_exists('category', $data)) {
+            $data = $this->resolveCategoryId($data, required: false);
+        }
 
         $tour = $this->service->updateTour($tour, $data);
 
@@ -148,5 +176,58 @@ class TourController
         }
 
         return response()->json($draft);
+    }
+
+    public function submitForReview(Request $request, string $id): JsonResponse
+    {
+        $partnerId = $request->attributes->get('partner_id');
+        $tour = $this->service->getForPartner((int) $id, $partnerId);
+
+        if (! $tour) {
+            abort(404);
+        }
+
+        $enTranslation = $tour->translations()->where('locale', 'en')->first();
+        if (! $enTranslation || empty($enTranslation->title) || empty($enTranslation->description)) {
+            return response()->json([
+                'message' => 'Validation failed: Tour must have at least an English title and description.',
+            ], 422);
+        }
+
+        if ($tour->pricingTiers()->count() === 0) {
+            return response()->json([
+                'message' => 'Validation failed: Tour must have at least one pricing tier defined.',
+            ], 422);
+        }
+
+        if (empty($tour->cover_image_url)) {
+            return response()->json([
+                'message' => 'Validation failed: Tour must have a cover image URL.',
+            ], 422);
+        }
+
+        $tour = $this->service->submitForReview($tour);
+
+        return response()->json([
+            'data' => $tour,
+            'message' => 'Tour submitted for review successfully.',
+        ]);
+    }
+
+    public function archive(Request $request, string $id): JsonResponse
+    {
+        $partnerId = $request->attributes->get('partner_id');
+        $tour = $this->service->getForPartner((int) $id, $partnerId);
+
+        if (! $tour) {
+            abort(404);
+        }
+
+        $tour = $this->service->archiveTour($tour);
+
+        return response()->json([
+            'data' => $tour,
+            'message' => 'Tour archived successfully.',
+        ]);
     }
 }

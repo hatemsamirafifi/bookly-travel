@@ -13,8 +13,7 @@ class ProfileService
      *
      * Returns null if the profile has not been created yet.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @return PartnerProfile|null
+     * @param  int  $partnerId  The authenticated partner's ID
      */
     public function getProfile(int $partnerId): ?PartnerProfile
     {
@@ -26,8 +25,7 @@ class ProfileService
      *
      * Returns null if settings have not been initialized yet.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @return PartnerSettings|null
+     * @param  int  $partnerId  The authenticated partner's ID
      */
     public function getSettings(int $partnerId): ?PartnerSettings
     {
@@ -37,7 +35,7 @@ class ProfileService
     /**
      * Get the full profile payload including settings.
      *
-     * @param int $partnerId The authenticated partner's ID
+     * @param  int  $partnerId  The authenticated partner's ID
      * @return array{profile: PartnerProfile|null, settings: PartnerSettings|null}
      */
     public function getProfileWithSettings(int $partnerId): array
@@ -51,9 +49,8 @@ class ProfileService
     /**
      * Create or update the partner's profile.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array<string, mixed> $data The profile data to update
-     * @return PartnerProfile
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array<string, mixed>  $data  The profile data to update
      */
     public function updateProfile(int $partnerId, array $data): PartnerProfile
     {
@@ -66,9 +63,8 @@ class ProfileService
     /**
      * Create or update the partner's notification settings.
      *
-     * @param int $partnerId The authenticated partner's ID
-     * @param array<string, mixed> $data The settings data to update
-     * @return PartnerSettings
+     * @param  int  $partnerId  The authenticated partner's ID
+     * @param  array<string, mixed>  $data  The settings data to update
      */
     public function updateSettings(int $partnerId, array $data): PartnerSettings
     {
@@ -84,9 +80,10 @@ class ProfileService
      * Returns an array containing the signed upload URL, the public URL where the
      * uploaded image will be accessible, and the expiration timestamp.
      *
-     * @param string $fileType The MIME type of the file (image/jpeg or image/png)
-     * @param int $fileSize The file size in bytes (max 2MB for logos)
+     * @param  string  $fileType  The MIME type of the file (image/jpeg or image/png)
+     * @param  int  $fileSize  The file size in bytes (max 2MB for logos)
      * @return array{signed_url: string, public_url: string, expires_at: string}
+     *
      * @throws \InvalidArgumentException If the file type is not supported or file size exceeds limits
      */
     public function generateLogoUploadUrl(string $fileType, int $fileSize): array

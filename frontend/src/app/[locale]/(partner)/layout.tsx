@@ -18,7 +18,7 @@ export default function PartnerLayout({
       <div className="flex h-screen bg-gray-50">
         {/* Desktop sidebar */}
         <aside
-          className="hidden w-60 shrink-0 flex-col bg-[#0A2540] lg:flex"
+          className="hidden w-60 shrink-0 flex-col bg-[#0A2540] md:flex"
           aria-label="Partner dashboard sidebar"
         >
           <PartnerSidebar />
@@ -34,7 +34,7 @@ export default function PartnerLayout({
           />
           <main
             id="main-content"
-            className="flex-1 overflow-y-auto p-4 lg:p-6"
+            className="flex-1 overflow-y-auto p-4 md:p-6"
             role="main"
             aria-label="Partner dashboard content"
           >

@@ -10,22 +10,18 @@ if (!API_URL) {
 
 interface FetchOptions extends RequestInit {
   locale?: string;
+  // Kept for backward compatibility with call sites. The backend authenticates
+  // public/partner/admin API routes via Sanctum bearer tokens on the stateless
+  // `api` middleware group, which does not enforce CSRF (Sanctum's stateful
+  // CSRF check only applies to session-cookie SPA requests, which this app
+  // never makes). Fetching a CSRF cookie therefore served no purpose and broke
+  // in environments where the cookie endpoint was unreachable, so it is ignored.
   requireCsrf?: boolean;
-}
-
-export async function fetchCsrfCookie(): Promise<void> {
-  await fetch(`${API_URL}/sanctum/csrf-cookie`, {
-    method: 'GET',
-    credentials: 'include',
-  });
 }
 
 export async function apiClient<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { locale, requireCsrf, ...fetchOptions } = options;
-
-  if (requireCsrf && fetchOptions.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(fetchOptions.method)) {
-    await fetchCsrfCookie();
-  }
+  void requireCsrf; // stripped intentionally — CSRF is not required for bearer-token API (see note above)
 
   const headers: Record<string, string> = {
     'Accept': 'application/json',

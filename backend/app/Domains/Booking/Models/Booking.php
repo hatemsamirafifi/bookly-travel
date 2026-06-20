@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -16,21 +17,29 @@ class Booking extends Model
     {
         static::creating(function (Booking $booking) {
             if (empty($booking->idempotency_key)) {
-                $booking->idempotency_key = \Illuminate\Support\Str::uuid()->toString();
+                $booking->idempotency_key = Str::uuid()->toString();
             }
         });
     }
 
     public const STATUS_PENDING_PAYMENT = 'pending_payment';
+
     public const STATUS_CONFIRMED = 'confirmed';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_CANCELLED = 'cancelled';
+
     public const STATUS_NO_SHOW = 'no_show';
+
     public const STATUS_EXPIRED = 'expired';
+
     public const STATUS_CANCELLATION_REQUESTED = 'cancellation_requested';
 
     public const REFERENCE_PREFIX = 'BKO-';
+
     public const REFERENCE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
     public const REFERENCE_LENGTH = 6;
 
     protected $fillable = [
