@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    PHPUnit config for running the test suite against PostgreSQL (the prod
+    schema uses pgsql-specific CHECK constraints that sqlite cannot run).
+
+    Used in-container, e.g.:
+        docker exec bookly-backend php vendor/bin/pest with config phpunit.pgsql.xml
+
+    Targets the dedicated bookly_test database created by
+    docker/postgres/init-test-db.sh so the dev bookly database is never touched
+    by RefreshDatabase. Scout uses the in-memory collection driver and the sync
+    queue connection so tests stay isolated and deterministic (no Meilisearch or
+    Redis dependency).
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing" force="true"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="BROADCAST_CONNECTION" value="null"/>
+        <env name="CACHE_STORE" value="array" force="true"/>
+        <env name="DB_CONNECTION" value="pgsql" force="true"/>
+        <env name="DB_HOST" value="postgres" force="true"/>
+        <env name="DB_PORT" value="5432" force="true"/>
+        <env name="DB_DATABASE" value="bookly_test" force="true"/>
+        <env name="DB_USERNAME" value="bookly" force="true"/>
+        <env name="DB_PASSWORD" value="secret" force="true"/>
+        <env name="DB_URL" value="" force="true"/>
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync" force="true"/>
+        <env name="SESSION_DRIVER" value="array" force="true"/>
+        <env name="SCOUT_DRIVER" value="collection" force="true"/>
+        <env name="SCOUT_QUEUE_CONNECTION" value="sync" force="true"/>
+        <env name="SCOUT_QUEUE" value="default" force="true"/>
+        <env name="PULSE_ENABLED" value="false"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="NIGHTWATCH_ENABLED" value="false"/>
+
+        <!--
+            <server> writes $_SERVER, which is the source Laravel's env() reads
+            FIRST. Dotenv's default adapter order is [ServerConstAdapter, then
+            EnvConstAdapter] (see vlucas/phpdotenv RepositoryBuilder::DEFAULT_ADAPTERS),
+            so env() consults $_SERVER before $_ENV and never reads getenv().
+
+            docker-compose.yml injects several of these vars (notably
+            DB_DATABASE=bookly and SCOUT_DRIVER=meilisearch) into the backend
+            container's process environment, so PHP populates $_SERVER with the
+            DEV values at startup. The <env force="true"> entries above only call
+            putenv() and set $_ENV (PHPUnit's PhpHandler::handleEnvVariables) —
+            they do NOT touch $_SERVER, so env()/config() kept reading the dev
+            container values from $_SERVER (tests silently ran against the dev
+            `bookly` DB and the Meilisearch Scout driver).
+
+            <server> (PhpHandler::handleServerVariables) writes $_SERVER
+            unconditionally, which is exactly the source env()/config() read, so
+            it displaces the docker-compose values and isolates the test process
+            from the dev container environment — no .env.testing, no Docker
+            changes, no per-test runtime override needed. The <env> entries are
+            kept alongside for any consumer that reads getenv()/$_ENV directly.
+        -->
+        <server name="APP_ENV" value="testing"/>
+        <server name="DB_CONNECTION" value="pgsql"/>
+        <server name="DB_HOST" value="postgres"/>
+        <server name="DB_PORT" value="5432"/>
+        <server name="DB_DATABASE" value="bookly_test"/>
+        <server name="DB_USERNAME" value="bookly"/>
+        <server name="DB_PASSWORD" value="secret"/>
+        <server name="DB_URL" value=""/>
+        <server name="CACHE_STORE" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+        <server name="SCOUT_DRIVER" value="collection"/>
+        <server name="SCOUT_QUEUE_CONNECTION" value="sync"/>
+        <server name="SCOUT_QUEUE" value="default"/>
+    </php>
+</phpunit>

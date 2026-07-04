@@ -17,7 +17,7 @@ beforeEach(function () {
     $this->traveler = User::factory()->traveler()->create();
     $this->otherTraveler = User::factory()->traveler()->create();
     $this->tour = Tour::create([
-        'partner_id' => User::factory()->partner()->create()->id,
+        'partner_id' => makePartner()->id,
         'category_id' => $this->category->id,
         'slug' => 'wishlist-test-tour-' . uniqid(),
         'location' => 'Florence, Italy',

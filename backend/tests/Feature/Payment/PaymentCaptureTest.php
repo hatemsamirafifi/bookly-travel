@@ -19,7 +19,7 @@ beforeEach(function () {
 
 it('creates booking in pending_payment status with client_secret', function () {
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -66,7 +66,7 @@ it('creates booking in pending_payment status with client_secret', function () {
 
 it('returns 409 when tour is sold out', function () {
     $category = Category::firstOrCreate(['slug' => 'test2'], ['name' => 'Test 2']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler1 = User::factory()->traveler()->create();
     $traveler2 = User::factory()->traveler()->create();
 
@@ -113,7 +113,7 @@ it('returns 409 when tour is sold out', function () {
 
 it('returns existing booking for duplicate idempotency key', function () {
     $category = Category::firstOrCreate(['slug' => 'test3'], ['name' => 'Test 3']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -168,7 +168,7 @@ it('returns existing booking for duplicate idempotency key', function () {
 
 it('maintains price at booking time when partner changes tour price', function () {
     $category = Category::firstOrCreate(['slug' => 'test4'], ['name' => 'Test 4']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([

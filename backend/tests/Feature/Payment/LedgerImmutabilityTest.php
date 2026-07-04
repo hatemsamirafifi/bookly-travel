@@ -22,7 +22,7 @@ it('has UPDATED_AT set to null on FinancialLedgerEntry', function () {
 
 it('prevents updates on financial ledger entries', function () {
     $category = Category::firstOrCreate(['slug' => 'ledger'], ['name' => 'Ledger Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -86,7 +86,7 @@ it('prevents updates on financial ledger entries', function () {
 
 it('prevents deletion of financial ledger entries', function () {
     $category = Category::firstOrCreate(['slug' => 'del'], ['name' => 'Delete Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -145,7 +145,7 @@ it('prevents deletion of financial ledger entries', function () {
 
 it('can append new entries but not alter old ones', function () {
     $category = Category::firstOrCreate(['slug' => 'append'], ['name' => 'Append Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([

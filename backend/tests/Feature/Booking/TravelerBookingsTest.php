@@ -17,7 +17,7 @@ beforeEach(function () {
     $this->traveler = User::factory()->traveler()->create();
     $this->otherTraveler = User::factory()->traveler()->create();
     $this->tour = Tour::create([
-        'partner_id' => User::factory()->partner()->create()->id,
+        'partner_id' => makePartner()->id,
         'category_id' => $this->category->id,
         'slug' => 'traveler-test-tour-' . uniqid(),
         'location' => 'Florence, Italy',
@@ -48,7 +48,7 @@ it('lists own bookings ordered by tour_date desc', function () {
         'locale' => 'en',
     ]);
 
-    $response = getJson('/api/public/my-bookings', [
+    $response = getJson('/api/public/traveler/bookings', [
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
@@ -75,7 +75,7 @@ it('returns 403 when accessing another traveler booking', function () {
         'locale' => 'en',
     ]);
 
-    $response = getJson('/api/public/my-bookings/' . $booking->reference, [
+    $response = getJson('/api/public/traveler/bookings/' . $booking->reference, [
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
@@ -99,7 +99,7 @@ it('shows booking detail with can_cancel computed', function () {
         'locale' => 'en',
     ]);
 
-    $response = getJson('/api/public/my-bookings/' . $booking->reference, [
+    $response = getJson('/api/public/traveler/bookings/' . $booking->reference, [
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
@@ -124,7 +124,7 @@ it('cancels an eligible booking', function () {
         'locale' => 'en',
     ]);
 
-    $response = postJson('/api/public/my-bookings/' . $booking->reference . '/cancel', [], [
+    $response = postJson('/api/public/traveler/bookings/' . $booking->reference . '/cancel', [], [
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
@@ -152,7 +152,7 @@ it('returns summary counts grouped by status', function () {
         ]);
     }
 
-    $response = getJson('/api/public/my-bookings/summary', [
+    $response = getJson('/api/public/traveler/bookings/summary', [
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
@@ -179,7 +179,7 @@ it('returns 422 for already cancelled booking', function () {
         'locale' => 'en',
     ]);
 
-    $response = postJson('/api/public/my-bookings/' . $booking->reference . '/cancel', [], [
+    $response = postJson('/api/public/traveler/bookings/' . $booking->reference . '/cancel', [], [
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 

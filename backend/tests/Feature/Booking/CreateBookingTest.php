@@ -13,10 +13,11 @@ use function Pest\Laravel\postJson;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    \Illuminate\Support\Carbon::setTestNow('2026-06-01 00:00:00');
     $this->category = Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
     $this->traveler = User::factory()->traveler()->create();
     $this->tour = Tour::create([
-        'partner_id' => User::factory()->partner()->create()->id,
+        'partner_id' => makePartner()->id,
         'category_id' => $this->category->id,
         'slug' => 'create-test-tour-' . uniqid(),
         'location' => 'Florence, Italy',
@@ -28,6 +29,10 @@ beforeEach(function () {
         'status' => 'published',
         'cover_image_url' => 'https://cdn.bookly.com/tours/42/cover.jpg',
     ]);
+});
+
+afterEach(function () {
+    \Illuminate\Support\Carbon::setTestNow();
 });
 
 it('creates a booking successfully', function () {

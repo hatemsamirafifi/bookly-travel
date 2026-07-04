@@ -15,8 +15,8 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->traveler = User::factory()->traveler()->create();
-    $this->partner = User::factory()->partner()->create();
-    $this->otherPartner = User::factory()->partner()->create();
+    $this->partner = makePartner();
+    $this->otherPartner = makePartner();
     $this->category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 });
 
@@ -107,7 +107,7 @@ it('partner sees only their tours reviews', function () {
         'locale' => 'en',
     ]);
 
-    $response = actingAs($this->partner, 'sanctum')
+    $response = actingAs($this->partner->user, 'sanctum')
         ->getJson('/api/partner/reviews');
 
     $response->assertStatus(200)
@@ -166,7 +166,7 @@ it('returns aggregate values per tour', function () {
 
     $tour->update(['average_rating' => 4.5, 'review_count' => 2]);
 
-    $response = actingAs($this->partner, 'sanctum')
+    $response = actingAs($this->partner->user, 'sanctum')
         ->getJson('/api/partner/reviews');
 
     $response->assertStatus(200)
@@ -231,7 +231,7 @@ it('filters by tour_id', function () {
         ]);
     }
 
-    $response = actingAs($this->partner, 'sanctum')
+    $response = actingAs($this->partner->user, 'sanctum')
         ->getJson('/api/partner/reviews?tour_id=' . $tourA->id);
 
     $response->assertStatus(200)

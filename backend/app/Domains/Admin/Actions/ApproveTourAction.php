@@ -17,27 +17,27 @@ use Illuminate\Support\Facades\DB;
  */
 class ApproveTourAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     public function execute(User $actor, Tour $tour): Tour
     {
-        abort_unless(
-            $tour->canTransitionTo(TourStatus::Published),
-            422,
-            'Tour cannot be published from its current state, or the owning partner is not approved.',
-        );
+        return DB::transaction(function () use ($actor, $tour) {
+            $locked = Tour::lockForUpdate()->find($tour->id) ?? $tour;
 
-        $before = ['status' => $tour->status];
+            abort_unless(
+                $locked->canTransitionTo(TourStatus::Published),
+                422,
+                'Tour cannot be published from its current state, or the owning partner is not approved.',
+            );
 
-        return DB::transaction(function () use ($actor, $tour, $before) {
-            $tour->update(['status' => TourStatus::Published->value]);
-            $tour->refresh();
+            $before = ['status' => $locked->status];
 
-            $this->audit->log($actor, 'tour.publish', $tour, $before, ['status' => $tour->status]);
+            $locked->update(['status' => TourStatus::Published->value]);
+            $locked->refresh();
 
-            return $tour;
+            $this->audit->log($actor, 'tour.publish', $locked, $before, ['status' => $locked->status]);
+
+            return $locked;
         });
     }
 }

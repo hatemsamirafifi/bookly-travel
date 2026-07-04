@@ -15,7 +15,7 @@ uses(RefreshDatabase::class);
 
 it('returns financial summary for partner tours', function () {
     $category = Category::firstOrCreate(['slug' => 'fin-sum'], ['name' => 'Finance Summary']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
 
     $tour = Tour::create([
         'partner_id' => $partner->id,
@@ -96,7 +96,7 @@ it('returns financial summary for partner tours', function () {
         'status' => 'refunded',
     ]);
 
-    $response = actingAs($partner)
+    $response = actingAs($partner->user)
         ->getJson('/api/partner/financial-summary?tour_slug=' . $tour->slug);
 
     $response->assertStatus(200)
@@ -109,7 +109,7 @@ it('returns financial summary for partner tours', function () {
 
 it('does not expose raw stripe identifiers in partner response', function () {
     $category = Category::firstOrCreate(['slug' => 'no-pii'], ['name' => 'No PII']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -152,7 +152,7 @@ it('does not expose raw stripe identifiers in partner response', function () {
         'card_brand' => 'amex',
     ]);
 
-    $response = actingAs($partner)
+    $response = actingAs($partner->user)
         ->getJson('/api/partner/financial-summary');
 
     $response->assertStatus(200);
@@ -169,7 +169,7 @@ it('does not expose raw stripe identifiers in partner response', function () {
 
 it('filters by tour_slug and date range', function () {
     $category = Category::firstOrCreate(['slug' => 'filter'], ['name' => 'Filter Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour1 = Tour::create([
@@ -225,14 +225,14 @@ it('filters by tour_slug and date range', function () {
     ]);
 
     // Query for tour1 only
-    $response = actingAs($partner)
+    $response = actingAs($partner->user)
         ->getJson('/api/partner/financial-summary?tour_slug=' . $tour1->slug);
 
     $response->assertStatus(200);
     expect($response->json('data.total_revenue.amount'))->toBe(5000);
 
     // Query for tour2 (no bookings)
-    $response2 = actingAs($partner)
+    $response2 = actingAs($partner->user)
         ->getJson('/api/partner/financial-summary?tour_slug=' . $tour2->slug);
 
     $response2->assertStatus(200);

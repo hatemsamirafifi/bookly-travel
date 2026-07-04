@@ -39,6 +39,15 @@ class SearchToursAction
 
         $results = $search->paginate($perPage, 'page', $page);
 
+        // Eager-load every relation the transformer reads so we don't issue
+        // per-tour queries (N+1) while mapping the results page.
+        $results->getCollection()->load([
+            'translations',
+            'category',
+            'availabilityRules',
+            'availabilityExceptions',
+        ]);
+
         $data = $results->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))->values()->toArray();
 
         return [

@@ -17,31 +17,33 @@ use Illuminate\Support\Facades\DB;
  */
 class ReinstatePartnerAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     public function execute(User $actor, Partner $partner): Partner
     {
-        abort_unless(
-            $partner->canTransitionTo(PartnerStatus::Approved),
-            422,
-            'Partner cannot be reinstated from its current state.',
-        );
+        abort_unless($actor->can('unsuspend', $partner), 403, 'You are not authorized to reinstate partners.');
 
-        $before = ['onboarding_status' => $partner->onboarding_status, 'is_active' => $partner->is_active];
+        return DB::transaction(function () use ($actor, $partner) {
+            $locked = Partner::lockForUpdate()->find($partner->id) ?? $partner;
 
-        return DB::transaction(function () use ($actor, $partner, $before) {
-            $partner->update(['onboarding_status' => PartnerStatus::Approved->value, 'is_active' => true]);
-            $partner->refresh();
-            $partner->restoreToursToDiscovery();
+            abort_unless(
+                $locked->canTransitionTo(PartnerStatus::Approved),
+                422,
+                'Partner cannot be reinstated from its current state.',
+            );
 
-            $this->audit->log($actor, 'partner.reinstate', $partner, $before, [
-                'onboarding_status' => $partner->onboarding_status,
-                'is_active' => $partner->is_active,
+            $before = ['onboarding_status' => $locked->onboarding_status, 'is_active' => $locked->is_active];
+
+            $locked->update(['onboarding_status' => PartnerStatus::Approved->value, 'is_active' => true]);
+            $locked->refresh();
+            $locked->restoreToursToDiscovery();
+
+            $this->audit->log($actor, 'partner.reinstate', $locked, $before, [
+                'onboarding_status' => $locked->onboarding_status,
+                'is_active' => $locked->is_active,
             ]);
 
-            return $partner;
+            return $locked;
         });
     }
 }

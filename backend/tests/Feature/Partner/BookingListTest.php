@@ -117,7 +117,7 @@ it('returns 401 for unauthenticated request', function () {
     $response->assertStatus(401);
 });
 
-it('returns 403 for non-partner role', function () {
+it('returns 404 for non-partner role', function () {
     $traveler = User::factory()->traveler()->create();
     $travelerToken = $traveler->createToken('test')->plainTextToken;
 

@@ -3,12 +3,20 @@
 use App\Jobs\SendPasswordResetEmail;
 use App\Jobs\SendVerificationEmail;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('sends a reset email for a verified email', function () {
     Queue::fake();

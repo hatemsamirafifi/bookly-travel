@@ -50,10 +50,10 @@ class GovernanceAuditService
             'target_id' => $target?->id,
             'before_state' => $before,
             'after_state' => $after,
-            'metadata' => array_merge([
+            'metadata' => array_merge($metadata, [
                 'ip' => $this->request->ip(),
                 'user_agent' => $this->request->userAgent(),
-            ], $metadata),
+            ]),
         ]);
     }
 }

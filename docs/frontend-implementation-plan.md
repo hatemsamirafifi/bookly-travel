@@ -27,7 +27,7 @@ The plan uses logical spec IDs. This table maps each to the actual directory and
 | `010` | Public Frontend | `010-public-frontend` | Completed (frontend search, checkout & payment) |
 | `011` | Tour Management (Traveler Account) | `011-tour-management` | In progress (frontend traveler dashboard, profile & wishlists) |
 | `012` | Partner Dashboard | `012-partner-dashboard` | Already exists (spec, plan, tasks, data-model) |
-| `013` | Admin Moderation | Create `013-admin-moderation` | Create new directory |
+| `013` | Admin Moderation | `013-admin-moderation` | Completed — Filament panel, governance audit, permissions, 13 ST-013 resources |
 | `014` | Notifications and Vouchers | Create `014-notifications-vouchers` | Create new directory |
 | `015` | Partner Onboarding | Create `015-partner-onboarding` | Create new directory |
 | `016` | Blog and Travel Insights | Create `016-blog-travel-insights` | Create new directory |
@@ -72,7 +72,7 @@ T006-FE-014 Build tour detail gallery from ST-006-005 for /tours/[slug]
 | `010` | Public Frontend | Done |
 | `011` | Tour Management (Traveler Account) | Done (includes wishlist) |
 | `012` | Partner Dashboard | Spec done; frontend substantially implemented |
-| `013` | Admin Moderation | Not started |
+| `013` | Admin Moderation | Done |
 | `014` | Notifications and Vouchers | Not started |
 | `015` | Partner Onboarding | Not started |
 | `016` | Blog and Travel Insights | New spec needed |
@@ -387,6 +387,8 @@ For spec 012 (012-partner-dashboard — already exists):
 **Done When**: All `ST-010-*`, `ST-011-*`, `ST-012-*` screens match Stitch designs at all viewports, remaining validation gaps filled, E2E tests pass, and visual diff is clean.
 
 ### Phase 5: Admin Moderation - Spec `013`
+
+> **Status**: Done. All 13 ST-013 Filament counterparts exist, governance audit logging works, admin permissions enforced, approval/rejection workflows functional. All 65 tasks in `specs/013-admin-moderation/tasks.md` are complete.
 
 **Objective**: Customize Filament admin resources using Stitch admin screens as reference.
 

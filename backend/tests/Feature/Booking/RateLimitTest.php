@@ -5,6 +5,7 @@ use App\Models\User;
 use function Pest\Laravel\postJson;
 
 it('returns 429 after exceeding booking creation rate limit', function () {
+    \Illuminate\Support\Carbon::setTestNow('2026-06-01 00:00:00');
     $traveler = User::factory()->traveler()->create();
     $token = $traveler->createToken('test')->plainTextToken;
 
@@ -58,6 +59,7 @@ it('returns 429 after exceeding booking creation rate limit', function () {
         250,
         "Rate-limit response took {$elapsedMs}ms — expected < 250ms in test environment (SC-010 target: < 100ms in production)."
     );
+    \Illuminate\Support\Carbon::setTestNow();
 });
 
 it('rate limit window resets after the expiry period', function () {

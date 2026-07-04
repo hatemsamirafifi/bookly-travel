@@ -170,7 +170,7 @@ class ReviewResource extends Resource
                         }
                         Notification::make()
                             ->title($failed ? "{$failed} review(s) could not be hidden" : 'Selected reviews hidden')
-                            ->{$failed ? 'warning' : 'warning'}()
+                            ->{$failed ? 'warning' : 'success'}()
                             ->send();
                     }),
                 Tables\Actions\BulkAction::make('bulk_reinstate')

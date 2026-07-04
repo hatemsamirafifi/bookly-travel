@@ -18,34 +18,39 @@ use Illuminate\Support\Facades\Mail;
  */
 class ApprovePartnerAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     public function execute(User $actor, Partner $partner): Partner
     {
-        abort_unless(
-            $partner->canTransitionTo(PartnerStatus::Approved),
-            422,
-            'Partner cannot be approved from its current state.',
-        );
+        abort_unless($actor->can('approve', $partner), 403, 'You are not authorized to approve partners.');
 
-        $before = ['onboarding_status' => $partner->onboarding_status, 'is_active' => $partner->is_active];
+        $partner = DB::transaction(function () use ($actor, $partner) {
+            $locked = Partner::lockForUpdate()->find($partner->id) ?? $partner;
 
-        return DB::transaction(function () use ($actor, $partner, $before) {
-            $partner->update(['onboarding_status' => PartnerStatus::Approved->value, 'is_active' => true]);
-            $partner->refresh();
+            abort_unless(
+                $locked->canTransitionTo(PartnerStatus::Approved),
+                422,
+                'Partner cannot be approved from its current state.',
+            );
 
-            if ($partner->user?->email) {
-                Mail::to($partner->user->email)->send(new PartnerApprovedMail($partner));
-            }
+            $before = ['onboarding_status' => $locked->onboarding_status, 'is_active' => $locked->is_active];
 
-            $this->audit->log($actor, 'partner.approve', $partner, $before, [
-                'onboarding_status' => $partner->onboarding_status,
-                'is_active' => $partner->is_active,
+            $locked->update(['onboarding_status' => PartnerStatus::Approved->value, 'is_active' => true]);
+            $locked->refresh();
+
+            $this->audit->log($actor, 'partner.approve', $locked, $before, [
+                'onboarding_status' => $locked->onboarding_status,
+                'is_active' => $locked->is_active,
             ]);
 
-            return $partner;
+            return $locked;
         });
+
+        // Mail is sent after the transaction commits so a rollback never leaks it.
+        if ($partner->user?->email) {
+            Mail::to($partner->user->email)->send(new PartnerApprovedMail($partner));
+        }
+
+        return $partner;
     }
 }

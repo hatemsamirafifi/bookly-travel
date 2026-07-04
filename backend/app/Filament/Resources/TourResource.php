@@ -196,7 +196,7 @@ class TourResource extends Resource
                         }
                         Notification::make()
                             ->title($failed ? "{$failed} tour(s) could not be rejected" : 'Selected tours rejected')
-                            ->{$failed ? 'warning' : 'warning'}()
+                            ->{$failed ? 'warning' : 'success'}()
                             ->send();
                     }),
             ])

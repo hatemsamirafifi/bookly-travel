@@ -41,7 +41,7 @@ class ProcessRefundAction
 
             $refundPayment = Payment::create([
                 'booking_id' => $booking->id,
-                'stripe_payment_intent_id' => $payment->stripe_payment_intent_id,
+                'stripe_payment_intent_id' => $payment->stripe_payment_intent_id . '_refund',
                 'stripe_refund_id' => $refundId,
                 'type' => 'refund',
                 'amount' => $payment->amount,

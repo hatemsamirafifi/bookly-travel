@@ -91,9 +91,16 @@ class Partner extends Model
      */
     public function removeToursFromDiscovery(): void
     {
+        // Save each tour individually so the Tour::saved event fires and the
+        // Scout observer re-evaluates shouldBeSearchable() (draft tours are
+        // removed from the search index). A bulk ->update() bypasses model
+        // events and would leave suspended partners' tours stale in the index.
         $this->tours()
             ->where('status', 'published')
-            ->update(['status' => 'draft']);
+            ->each(function (Tour $tour) {
+                $tour->status = 'draft';
+                $tour->save();
+            });
 
         $this->forceFill(['is_active' => false])->save();
     }

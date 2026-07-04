@@ -16,27 +16,27 @@ use Illuminate\Support\Facades\DB;
  */
 class UnpublishTourAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     public function execute(User $actor, Tour $tour): Tour
     {
-        abort_unless(
-            $tour->canTransitionTo(TourStatus::Draft),
-            422,
-            'Tour cannot be unpublished from its current state.',
-        );
+        return DB::transaction(function () use ($actor, $tour) {
+            $locked = Tour::lockForUpdate()->find($tour->id) ?? $tour;
 
-        $before = ['status' => $tour->status];
+            abort_unless(
+                $locked->canTransitionTo(TourStatus::Draft),
+                422,
+                'Tour cannot be unpublished from its current state.',
+            );
 
-        return DB::transaction(function () use ($actor, $tour, $before) {
-            $tour->update(['status' => TourStatus::Draft->value]);
-            $tour->refresh();
+            $before = ['status' => $locked->status];
 
-            $this->audit->log($actor, 'tour.unpublish', $tour, $before, ['status' => $tour->status]);
+            $locked->update(['status' => TourStatus::Draft->value]);
+            $locked->refresh();
 
-            return $tour;
+            $this->audit->log($actor, 'tour.unpublish', $locked, $before, ['status' => $locked->status]);
+
+            return $locked;
         });
     }
 }

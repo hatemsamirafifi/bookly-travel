@@ -4,6 +4,7 @@ use App\Domains\Auth\Events\AccountLockedOut;
 use App\Mail\AccountLockedOutMail;
 use App\Models\AuthAuditLog;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,18 @@ use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+// All auth routes share the 10/min/IP `throttle:auth` limiter. Pest runs share a
+// single IP inside docker-exec, so without a reset the bucket saturates across
+// tests and later login attempts get 429 instead of the expected status.
+// RateLimiter::clear('auth') does NOT clear the per-IP bucket (the throttle
+// middleware keys hits as md5('auth'.$ip)); Cache::flush() reliably resets all
+// rate-limiter state. Production throttle behaviour is untouched.
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('signs in a traveler with valid credentials', function () {
     $user = User::factory()->create([
@@ -86,9 +99,12 @@ it('normalizes email with whitespace and uppercase', function () {
 });
 
 it('fails for account with no password', function () {
+    // users.password is NOT NULL, so an "no usable password" account is
+    // represented by an empty string (Hash::check returns false for a
+    // non-hash value) rather than null.
     $user = User::factory()->create([
         'email' => 'nopass@example.com',
-        'password' => null,
+        'password' => '',
     ]);
 
     postJson('/api/public/auth/login', [
@@ -228,6 +244,7 @@ it('escalates to 30 minute tier on third lockout', function () {
     ]);
 
     // 1st lockout
+    Cache::flush();
     for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', ['email' => 'escalate@example.com', 'password' => 'Wrong!']);
     }
@@ -239,6 +256,7 @@ it('escalates to 30 minute tier on third lockout', function () {
     $user->save();
 
     // 2nd lockout
+    Cache::flush();
     for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', ['email' => 'escalate@example.com', 'password' => 'Wrong!']);
     }
@@ -251,6 +269,7 @@ it('escalates to 30 minute tier on third lockout', function () {
     $user->save();
 
     // 3rd lockout
+    Cache::flush();
     for ($i = 0; $i < 5; $i++) {
         postJson('/api/public/auth/login', ['email' => 'escalate@example.com', 'password' => 'Wrong!']);
     }
@@ -395,7 +414,9 @@ it('queues an email notification when account is locked out', function () {
     }
 
     Mail::assertQueued(AccountLockedOutMail::class, function ($mail) use ($user) {
+        // The mailable sets its subject via envelope(); in Mail::fake() mode the
+        // ->subject property is not populated, so read it from the envelope.
         return $mail->hasTo($user->email)
-            && $mail->subject === __('emails.account_locked_out.subject', [], $user->locale ?? 'en');
+            && $mail->envelope()->subject === __('emails.account_locked_out.subject', [], $user->locale ?? 'en');
     });
 });

@@ -17,7 +17,7 @@ it('prevents overbooking when concurrent requests compete for last spot', functi
     $traveler2 = User::factory()->traveler()->create();
 
     $tour = Tour::create([
-        'partner_id' => User::factory()->partner()->create()->id,
+        'partner_id' => makePartner()->id,
         'category_id' => $category->id,
         'slug' => 'exclusive-tour-' . uniqid(),
         'location' => 'Venice, Italy',
@@ -73,7 +73,7 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
     $traveler2 = User::factory()->traveler()->create();
 
     $tour = Tour::create([
-        'partner_id' => User::factory()->partner()->create()->id,
+        'partner_id' => makePartner()->id,
         'category_id' => $category->id,
         'slug' => 'capacity-tour-' . uniqid(),
         'location' => 'Rome, Italy',
@@ -88,11 +88,15 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
 
     $tourDate = '2026-09-15';
 
-    // Pre-fill 1 spot → 4 remaining
-    Booking::factory()->create([
+    Booking::create([
+        'reference' => Booking::generateReference(),
+        'traveler_id' => $traveler1->id,
         'tour_id' => $tour->id,
         'tour_date' => $tourDate,
         'participant_count' => 1,
+        'price_per_person' => 8900,
+        'total_price' => 8900,
+        'currency' => 'EUR',
         'status' => Booking::STATUS_CONFIRMED,
     ]);
 

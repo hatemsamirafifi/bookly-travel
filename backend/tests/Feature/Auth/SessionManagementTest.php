@@ -1,9 +1,17 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\PersonalAccessToken;
 
 use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('lists active sessions for authenticated user', function () {
     $user = User::factory()->create();
@@ -54,7 +62,10 @@ it('token expires after 7 days of inactivity', function () {
 
     // Simulate token last used 8 days ago
     PersonalAccessToken::findToken($token)
-        ?->update(['last_used_at' => now()->subDays(8)]);
+        ?->update([
+            'created_at' => now()->subDays(8),
+            'last_used_at' => now()->subDays(8),
+        ]);
 
     getJson('/api/public/account/sessions', [
         'Authorization' => "Bearer {$token}",

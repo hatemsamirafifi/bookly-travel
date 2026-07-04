@@ -33,6 +33,7 @@ class UpdateStaticPageAction
             'status' => $page->status,
             'title' => $page->title,
             'body' => $page->body,
+            'meta_description' => $page->meta_description,
         ];
 
         return DB::transaction(function () use ($actor, $page, $data, $publish, $before) {
@@ -67,6 +68,7 @@ class UpdateStaticPageAction
                 'status' => $page->status,
                 'title' => $page->title,
                 'body' => $page->body,
+                'meta_description' => $page->meta_description,
             ];
 
             $this->audit->log($actor, $action, $page, $before, $after);

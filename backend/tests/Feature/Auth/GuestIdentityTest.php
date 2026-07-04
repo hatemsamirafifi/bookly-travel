@@ -2,9 +2,17 @@
 
 use App\Models\GuestIdentity;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('creates a guest identity when none exists', function () {
     $response = postJson('/api/public/auth/guest/identity', [

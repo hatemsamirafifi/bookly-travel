@@ -3,8 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Policies\AvailabilityPolicy;
-use App\Domains\Admin\Services\AvailabilitySlotService;
-use App\Domains\Partner\Models\Partner;
 use App\Filament\Resources\AvailabilityResource\Pages;
 use App\Models\Tour;
 use App\Models\User;
