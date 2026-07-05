@@ -64,6 +64,7 @@ beforeEach(function () {
         'currency' => 'EUR',
         'status' => 'succeeded',
         'type' => 'charge',
+        'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
     ]);
 
     $this->review = Review::create([
@@ -84,8 +85,8 @@ it('creates a response to a review', function () {
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
-    $response->assertStatus(200)
-        ->assertJsonPath('response_text', 'Thank you for your feedback!');
+    $response->assertStatus(201)
+        ->assertJsonPath('data.response_text', 'Thank you for your feedback!');
 
     $this->assertDatabaseHas('review_responses', [
         'review_id' => $this->review->id,
@@ -108,7 +109,7 @@ it('updates an existing response', function () {
     ]);
 
     $response->assertStatus(200)
-        ->assertJsonPath('response_text', 'Updated response text.');
+        ->assertJsonPath('data.response_text', 'Updated response text.');
 
     $this->assertDatabaseHas('review_responses', [
         'review_id' => $this->review->id,

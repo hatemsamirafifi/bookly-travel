@@ -47,7 +47,15 @@ class TourController
 
         $tours = $this->service->listForPartner($partnerId, $filters);
 
-        return response()->json($tours);
+        return response()->json([
+            'data' => $tours->items(),
+            'meta' => [
+                'current_page' => $tours->currentPage(),
+                'last_page' => $tours->lastPage(),
+                'per_page' => $tours->perPage(),
+                'total' => $tours->total(),
+            ],
+        ]);
     }
 
     public function show(Request $request, string $id): JsonResponse
@@ -59,7 +67,9 @@ class TourController
             abort(404);
         }
 
-        return response()->json($tour->load(['media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions']));
+        return response()->json([
+            'data' => $tour->load(['media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions'])
+        ]);
     }
 
     public function store(Request $request): JsonResponse
@@ -88,7 +98,7 @@ class TourController
 
         $tour = $this->service->createTour($partnerId, $data);
 
-        return response()->json($tour, 201);
+        return response()->json(['data' => $tour], 201);
     }
 
     public function update(Request $request, string $id): JsonResponse
@@ -125,7 +135,7 @@ class TourController
 
         $tour = $this->service->updateTour($tour, $data);
 
-        return response()->json($tour);
+        return response()->json(['data' => $tour]);
     }
 
     public function destroy(Request $request, string $id): JsonResponse

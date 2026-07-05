@@ -2,7 +2,7 @@
 
 > **Version**: 2.0.0
 > **Date**: 2026-04-13 (revised 2026-05-13)
-> **Constitution**: v1.0.1
+> **Constitution**: v1.1.0
 > **Specification Strategy**: v2.0.0
 > **Status**: In Progress
 
@@ -142,6 +142,7 @@ Domains:
 | Object storage | Cloudflare R2 | Image/file storage (S3-compatible) |
 | Payments | Stripe (Payment Intents API) | Payment processing |
 | Email | Laravel Mail (queued) | Notification delivery |
+| Platform settings | spatie/laravel-settings | Admin platform settings storage (Spec 013 US9/FR-015) — owns its `settings` table; no custom key/value table |
 
 ### Frontend
 
@@ -1211,6 +1212,7 @@ Push to feature branch
 ## 14. Pre-Implementation Checklist
 
 - [x] Constitution patched to v1.0.1 (add Filament, codify three-surface architecture)
+- [x] Constitution amended to v1.1.0 (ratify Internal Admin Exception under API-First; add Filament to Approved Core Stack)
 - [x] `specs/` directory created at project root
 - [x] Specification strategy document saved and committed
 - [x] Docker Compose configuration prepared (PostgreSQL, Redis, Nginx)
@@ -1247,4 +1249,4 @@ Push to feature branch
 
 ---
 
-*This plan is derived from the [Bookly Constitution v1.0.1](.specify/memory/constitution.md) and the [Specification Strategy v2.0.0](docs/specification-strategy.md). All implementation decisions are subject to constitution compliance review.*
+*This plan is derived from the [Bookly Constitution v1.1.0](.specify/memory/constitution.md) and the [Specification Strategy v2.0.0](docs/specification-strategy.md). All implementation decisions are subject to constitution compliance review.*

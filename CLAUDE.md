@@ -1,5 +1,15 @@
 ﻿# Ruflo — Claude Code Configuration
 
+<!-- SPECKIT START -->
+## Active Spec-Kit Feature
+
+- **Feature**: Admin Moderation (Spec 013)
+- **Branch**: `013-admin-moderation`
+- **Spec**: [specs/013-admin-moderation/spec.md](specs/013-admin-moderation/spec.md)
+- **Plan**: [specs/013-admin-moderation/plan.md](specs/013-admin-moderation/plan.md)
+- **Status**: Planning complete — ready for `/speckit-tasks`
+<!-- SPECKIT END -->
+
 ## Rules
 
 - Do what has been asked; nothing more, nothing less

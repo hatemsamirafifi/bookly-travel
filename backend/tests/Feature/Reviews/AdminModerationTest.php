@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Reviews\Models\Review;
 use App\Domains\Reviews\Models\ReviewAuditTrail;
@@ -16,7 +17,15 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->traveler = User::factory()->traveler()->create();
     $this->admin = User::factory()->admin()->create();
-    $this->partner = User::factory()->partner()->create();
+    $this->admin->adminPermission()->create(['flags' => ['moderate_reviews' => true]]);
+    $this->admin = $this->admin->fresh('adminPermission');
+    $partnerUser = User::factory()->partner()->create();
+    $this->partner = Partner::create([
+        'user_id' => $partnerUser->id,
+        'role' => 'partner',
+        'onboarding_status' => 'approved',
+        'is_active' => true,
+    ]);
     $this->category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $this->tour = Tour::create([
@@ -46,6 +55,7 @@ beforeEach(function () {
 
     Payment::create([
         'booking_id' => $booking->id,
+        'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
         'amount' => 5000,
         'currency' => 'EUR',
         'status' => 'succeeded',
@@ -86,6 +96,7 @@ it('filters reviews by status', function () {
 
     Payment::create([
         'booking_id' => $booking2->id,
+        'stripe_payment_intent_id' => 'pi_test_' . uniqid(),
         'amount' => 5000,
         'currency' => 'EUR',
         'status' => 'succeeded',
@@ -171,6 +182,15 @@ it('audit trail records moderation actions', function () {
     expect($trail)->not->toBeNull()
         ->and($trail->actor_type)->toBe('admin')
         ->and($trail->reason)->toBe('Contains spam');
+
+    // Unified governance audit (Spec 013, T039): actor morph map admin => User.
+    $log = \App\Domains\Admin\Models\GovernanceAuditLog::where('action', 'review.hide')
+        ->where('target_id', $this->review->id)
+        ->first();
+    expect($log)->not->toBeNull()
+        ->and($log->actor_type)->toBe('admin')
+        ->and($log->actor_id)->toBe($this->admin->id)
+        ->and($log->metadata['reason'])->toBe('Contains spam');
 });
 
 it('returns 403 for non-admin role', function () {

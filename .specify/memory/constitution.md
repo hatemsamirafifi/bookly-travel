@@ -2,35 +2,40 @@
   ============================================================
   SYNC IMPACT REPORT
   ============================================================
-  Version change : 0.0.0 (template) → 1.0.1
-  Bump rationale : MAJOR — first concrete ratification of all
-                   governing principles; no prior version existed.
+  Version change : 1.0.1 → 1.1.0
+  Bump rationale : MINOR — materially expanded guidance: added the
+                   "Internal Admin Exception" subsection under
+                   API-First, formally ratifying Laravel Filament
+                   as the sole server-rendered surface (internal
+                   admin tooling only). No principle removed or
+                   redefined; API-First remains the default
+                   architecture for public and partner surfaces.
   Ratified       : 2026-04-10
-  Last Amended   : 2026-04-25
+  Last Amended   : 2026-06-20
 
-  Modified principles:
-    - [PRINCIPLE_1_NAME] → I. Marketplace-First
-    - [PRINCIPLE_2_NAME] → II. Tours-Only Discipline
-    - [PRINCIPLE_3_NAME] → III. Direct Booking Only
-    - [PRINCIPLE_4_NAME] → IV. Admin-Governed Publishing
-    - [PRINCIPLE_5_NAME] → V. Platform-Controlled Commerce
+  Modified sections:
+    - Architecture & Approved Stack → API-First (added
+      "Internal Admin Exception" subsection)
+    - Architecture & Approved Stack → Approved Core Stack table
+      (added Filament as the admin surface row)
 
   Added sections:
-    - VI. Completed-Booking Review Integrity (new principle)
-    - Architecture & Stack (Section 2)
-    - Security Principles (Section 3)
-    - Public Experience & SEO Rules (Section 4)
-    - Code Structure & Engineering Boundaries (Section 5)
-    - Queueing & Async Work Policy (Section 6)
-    - Audit Logging & Operational Governance (Section 7)
-    - Testing & Quality Standards (Section 8)
-    - Governance (filled from template)
+    - API-First > Internal Admin Exception (new subsection)
 
   Removed sections: none
 
+  Propagation (completed):
+    ✅ docs/specification-strategy.md  — constitution ref bumped to v1.1.0;
+       amendment recorded in the Constitution Patch section.
+    ✅ docs/implementation-plan.md      — constitution ref bumped to v1.1.0;
+       amendment added to the Pre-Implementation Checklist.
+    ✅ specs/013-admin-moderation/      — spec.md, plan.md, research.md,
+       tasks.md (T062), quickstart.md: follow-up TODOs replaced with the
+       completed amendment reference.
+
   Templates requiring updates:
-    ✅ plan-template.md   — Constitution Check section is
-       generic; no update needed (gates derived at plan time).
+    ✅ plan-template.md   — Constitution Check section is generic;
+       gates derived at plan time. No template token change needed.
     ✅ spec-template.md   — No constitution-specific tokens;
        compatible as-is.
     ✅ tasks-template.md  — No constitution-specific tokens;
@@ -123,6 +128,32 @@ partner dashboard, admin dashboard) MUST consume the Laravel
 backend exclusively via APIs. No server-rendered HTML from the
 backend is permitted for application views.
 
+### Internal Admin Exception
+
+Laravel Filament is approved as the sole exception to the
+API-First rule for internal administrative tooling. This
+exception applies only to authenticated admin users and MUST
+NOT be extended to public or partner-facing application
+surfaces.
+
+- The **public traveler website** and the **partner dashboard**
+  MUST remain API-first, consuming the Laravel backend
+  exclusively via APIs and rendering via Next.js 16 (SSR/SSG).
+- The **admin dashboard** MAY be delivered as a Laravel Filament
+  server-rendered panel at `/admin`, serving authenticated
+  administrative users only.
+- This exception is narrow and non-precedential: it MUST NOT be
+  cited as justification for any other server-rendered
+  application surface. Any further deviation from API-First
+  requires a separate, explicit constitution amendment.
+- All other constitution principles (Thin Controllers / business
+  logic in services & actions, Strict Authorization, Mandatory
+  Audit Logs, Testing & Quality Standards) apply unchanged to
+  the Filament admin surface — Filament resources and actions
+  MUST delegate governance logic to Actions/Services, MUST NOT
+  mutate models directly, and MUST write governance audit
+  entries for every governed action.
+
 ### Approved Core Stack
 
 | Layer              | Technology                              |
@@ -136,6 +167,7 @@ backend is permitted for application views.
 | Object Storage     | Cloudflare R2                           |
 | CDN / Edge         | Cloudflare                              |
 | Web Server         | Nginx                                   |
+| Admin Surface      | Laravel Filament 3 (internal tooling only — see API-First §Internal Admin Exception) |
 | Payments           | Stripe (extensible for future gateways) |
 
 Any deviation from this stack MUST be justified in a Complexity
@@ -358,4 +390,4 @@ This constitution governs all surfaces of the Bookly platform:
 - Shared backend services (Laravel API)
 - Documentation and delivery workflows
 
-**Version**: 1.0.1 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-04-25
+**Version**: 1.1.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-06-20

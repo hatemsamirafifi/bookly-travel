@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Actions\ApprovePartnerAction;
+use App\Domains\Admin\Actions\RejectPartnerAction;
+use App\Domains\Admin\Actions\ReinstatePartnerAction;
+use App\Domains\Admin\Actions\SuspendPartnerAction;
 use App\Domains\Partner\Models\Partner;
 use App\Filament\Resources\PartnerResource\Pages;
-use App\Mail\PartnerApprovedMail;
-use App\Mail\PartnerRejectedMail;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
@@ -13,7 +15,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Mail;
 
 class PartnerResource extends Resource
 {
@@ -102,19 +103,10 @@ class PartnerResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Approve Partner')
                     ->modalDescription('This will activate the partner account and allow them to create tours.')
-                    ->visible(fn (Partner $record) => $record->onboarding_status === 'pending')
+                    ->visible(fn (Partner $record) => auth()->user()?->can('approve', $record) && $record->onboarding_status === 'pending')
                     ->action(function (Partner $record) {
-                        $record->update([
-                            'onboarding_status' => 'approved',
-                            'is_active' => true,
-                        ]);
-                        if ($record->user?->email) {
-                            Mail::to($record->user->email)->send(new PartnerApprovedMail($record));
-                        }
-                        Notification::make()
-                            ->title('Partner approved')
-                            ->success()
-                            ->send();
+                        app(ApprovePartnerAction::class)->execute(auth()->user(), $record);
+                        Notification::make()->title('Partner approved')->success()->send();
                     }),
                 Tables\Actions\Action::make('reject')
                     ->label('Reject')
@@ -129,21 +121,10 @@ class PartnerResource extends Resource
                             ->maxLength(500)
                             ->placeholder('Explain why this partner application is being rejected...'),
                     ])
-                    ->visible(fn (Partner $record) => $record->onboarding_status === 'pending')
+                    ->visible(fn (Partner $record) => auth()->user()?->can('reject', $record) && $record->onboarding_status === 'pending')
                     ->action(function (Partner $record, array $data) {
-                        $record->update([
-                            'onboarding_status' => 'rejected',
-                            'is_active' => false,
-                        ]);
-                        // Store rejection reason in profile if available
-                        $record->profile?->update(['rejection_reason' => $data['rejection_reason']]);
-                        if ($record->user?->email) {
-                            Mail::to($record->user->email)->send(new PartnerRejectedMail($record, $data['rejection_reason']));
-                        }
-                        Notification::make()
-                            ->title('Partner rejected')
-                            ->warning()
-                            ->send();
+                        app(RejectPartnerAction::class)->execute(auth()->user(), $record, $data);
+                        Notification::make()->title('Partner rejected')->warning()->send();
                     }),
                 Tables\Actions\Action::make('suspend')
                     ->label('Suspend')
@@ -152,44 +133,21 @@ class PartnerResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Suspend Partner')
                     ->modalDescription('This will deactivate the partner account. Their tours will be hidden from search.')
-                    ->visible(fn (Partner $record) => $record->onboarding_status === 'approved' && $record->is_active)
+                    ->visible(fn (Partner $record) => auth()->user()?->can('suspend', $record) && $record->onboarding_status === 'approved' && $record->is_active)
                     ->action(function (Partner $record) {
-                        $record->update([
-                            'onboarding_status' => 'suspended',
-                            'is_active' => false,
-                        ]);
-                        Notification::make()
-                            ->title('Partner suspended')
-                            ->warning()
-                            ->send();
+                        app(SuspendPartnerAction::class)->execute(auth()->user(), $record);
+                        Notification::make()->title('Partner suspended')->warning()->send();
                     }),
                 Tables\Actions\Action::make('unsuspend')
                     ->label('Reactivate')
                     ->icon('heroicon-o-play-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn (Partner $record) => $record->onboarding_status === 'suspended')
+                    ->visible(fn (Partner $record) => auth()->user()?->can('unsuspend', $record) && $record->onboarding_status === 'suspended')
                     ->action(function (Partner $record) {
-                        $record->update([
-                            'onboarding_status' => 'approved',
-                            'is_active' => true,
-                        ]);
-                        Notification::make()
-                            ->title('Partner reactivated')
-                            ->success()
-                            ->send();
+                        app(ReinstatePartnerAction::class)->execute(auth()->user(), $record);
+                        Notification::make()->title('Partner reactivated')->success()->send();
                     }),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkAction::make('bulk_approve')
-                    ->label('Approve Selected')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->action(fn ($records) => $records->each(fn ($r) => $r->update([
-                        'onboarding_status' => 'approved',
-                        'is_active' => true,
-                    ]))),
             ])
             ->defaultSort('created_at', 'desc');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Domains\Partner\Models;
 
+use App\Enums\PartnerStatus;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -53,5 +54,57 @@ class Partner extends Model
     public function unreadNotifications(): HasMany
     {
         return $this->hasMany(Notification::class)->whereNull('read_at');
+    }
+
+    /**
+     * Guard partner lifecycle transitions (FR-006, data-model.md §5).
+     *
+     * Allowed: pending → approved|rejected; approved → suspended;
+     * suspended → approved; rejected → pending. The legacy DB default
+     * `incomplete` is normalized to Pending so existing rows are governable
+     * without a schema migration.
+     */
+    public function canTransitionTo(PartnerStatus|string $to): bool
+    {
+        $to = $to instanceof PartnerStatus ? $to->value : $to;
+        $from = $this->onboarding_status;
+        if ($from === 'incomplete') {
+            $from = PartnerStatus::Pending->value;
+        }
+
+        $allowed = [
+            'pending' => ['approved', 'rejected'],
+            'approved' => ['suspended'],
+            'suspended' => ['approved'],
+            'rejected' => ['pending'],
+        ];
+
+        return in_array($to, $allowed[$from] ?? [], true);
+    }
+
+    /**
+     * FR-006: remove the partner's published tours from public discovery on
+     * suspension. Tours drop to draft so Tour::shouldBeSearchable() (which
+     * requires status === 'published') excludes them. `is_active` mirrors the
+     * lifecycle for fast filtering. The SuspendPartnerAction audits the
+     * partner.approve→suspend transition; this hook only mutates tour state.
+     */
+    public function removeToursFromDiscovery(): void
+    {
+        $this->tours()
+            ->where('status', 'published')
+            ->update(['status' => 'draft']);
+
+        $this->forceFill(['is_active' => false])->save();
+    }
+
+    /**
+     * Reinstate: flip `is_active` back on. Tours are NOT auto-republished —
+     * the partner must resubmit them for admin approval (pending_review),
+     * preserving the governed publishing flow (FR-005).
+     */
+    public function restoreToursToDiscovery(): void
+    {
+        $this->forceFill(['is_active' => true])->save();
     }
 }

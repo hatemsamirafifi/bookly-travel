@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\deleteJson;
+use function Pest\Laravel\getJson;
 
 uses(RefreshDatabase::class);
 
@@ -70,8 +71,9 @@ it('archived tours do not appear in default listing', function () {
         'status' => 'published',
     ]);
 
-    $response = actingAs($this->partnerUser, 'sanctum')
-        ->getJson('/api/partner/tours');
+    $response = getJson('/api/partner/tours', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200);
 

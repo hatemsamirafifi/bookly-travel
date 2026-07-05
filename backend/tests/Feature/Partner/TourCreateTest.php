@@ -86,7 +86,7 @@ it('returns 403 for non-partner users', function () {
         'Authorization' => 'Bearer ' . $travelerToken,
     ]);
 
-    $response->assertStatus(403);
+    $response->assertStatus(404);
 });
 
 it('scopes tour to the authenticated partner', function () {

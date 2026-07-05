@@ -4,6 +4,7 @@ namespace App\Domains\Reviews\Models;
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\ReviewResponse;
+use App\Enums\ReviewStatus;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -68,6 +69,26 @@ class Review extends Model
     public function isEdited(): bool
     {
         return $this->edited_at !== null;
+    }
+
+    /**
+     * Guard admin review-moderation transitions (data-model.md §5).
+     *
+     * Allowed: visible → hidden|flagged; hidden → visible; flagged → visible.
+     * Hide/reinstate recomputes the tour aggregate rating (handled by the
+     * moderation actions).
+     */
+    public function canTransitionTo(ReviewStatus|string $to): bool
+    {
+        $to = $to instanceof ReviewStatus ? $to->value : $to;
+
+        $allowed = [
+            'visible' => ['hidden', 'flagged'],
+            'hidden' => ['visible'],
+            'flagged' => ['visible'],
+        ];
+
+        return in_array($to, $allowed[$this->status] ?? [], true);
     }
 
     public function canEdit(): bool

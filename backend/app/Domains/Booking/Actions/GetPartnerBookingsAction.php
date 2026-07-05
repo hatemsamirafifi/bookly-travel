@@ -17,9 +17,12 @@ class GetPartnerBookingsAction
         ?string $dateTo = null,
         int $page = 1,
     ): array {
+        $partner->loadMissing('partner');
+        $partnerId = $partner->partner?->id ?? $partner->id;
+
         $query = Booking::with(['tour', 'traveler'])
-            ->whereHas('tour', function ($q) use ($partner) {
-                $q->where('partner_id', $partner->id);
+            ->whereHas('tour', function ($q) use ($partnerId) {
+                $q->where('partner_id', $partnerId);
             })
             ->orderBy('tour_date', 'desc');
 
@@ -67,8 +70,8 @@ class GetPartnerBookingsAction
         })->values()->all();
 
         // Compute aggregates
-        $baseQuery = Booking::whereHas('tour', function ($q) use ($partner) {
-            $q->where('partner_id', $partner->id);
+        $baseQuery = Booking::whereHas('tour', function ($q) use ($partnerId) {
+            $q->where('partner_id', $partnerId);
         })->where('tour_date', '>=', now()->toDateString());
 
         $aggregates = [
