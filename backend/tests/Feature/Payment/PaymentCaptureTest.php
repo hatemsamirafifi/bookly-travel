@@ -35,6 +35,7 @@ it('creates booking in pending_payment status with client_secret', function () {
         'status' => 'published',
         'cover_image_url' => null,
     ]);
+    addAvailabilityRule($tour);
 
     $mock = $this->mock(StripeService::class);
     $mock->shouldReceive('createPaymentIntent')
@@ -43,6 +44,7 @@ it('creates booking in pending_payment status with client_secret', function () {
         ->andReturn('pi_test_123_secret_abc');
 
     $response = actingAs($traveler)
+        ->withHeader('Idempotency-Key', Str::uuid()->toString())
         ->postJson('/api/public/bookings', [
             'tour_slug' => $tour->slug,
             'tour_date' => now()->addDays(14)->toDateString(),
@@ -54,7 +56,8 @@ it('creates booking in pending_payment status with client_secret', function () {
     $response->assertStatus(201)
         ->assertJsonPath('data.status', 'pending_payment')
         ->assertJsonPath('price_changed', false)
-        ->assertJsonPath('payment.client_secret', 'pi_test_123_secret_abc');
+        ->assertJsonPath('payment.client_secret', 'pi_test_123_secret_abc')
+        ->assertJsonPath('payment.stripe_publishable_key', 'pk_test_placeholder');
 
     $booking = Booking::where('reference', $response->json('data.reference'))->first();
     expect($booking)->not->toBeNull();
@@ -83,6 +86,7 @@ it('returns 409 when tour is sold out', function () {
         'status' => 'published',
         'cover_image_url' => null,
     ]);
+    addAvailabilityRule($tour);
 
     // Book all spots with confirmed booking
     Booking::create([
@@ -100,6 +104,7 @@ it('returns 409 when tour is sold out', function () {
     ]);
 
     $response = actingAs($traveler2)
+        ->withHeader('Idempotency-Key', Str::uuid()->toString())
         ->postJson('/api/public/bookings', [
             'tour_slug' => $tour->slug,
             'tour_date' => now()->addDays(7)->toDateString(),
@@ -129,6 +134,7 @@ it('returns existing booking for duplicate idempotency key', function () {
         'status' => 'published',
         'cover_image_url' => null,
     ]);
+    addAvailabilityRule($tour);
 
     $mock = $this->mock(StripeService::class);
     $mock->shouldReceive('createPaymentIntent')
@@ -159,7 +165,7 @@ it('returns existing booking for duplicate idempotency key', function () {
             'page_load_price' => 4000,
         ]);
 
-    $second->assertStatus(201);
+    $second->assertStatus(200);
     expect($second->json('data.reference'))->toBe($first->json('data.reference'));
 
     $count = Booking::where('idempotency_key', $idempotencyKey)->count();
@@ -184,6 +190,7 @@ it('maintains price at booking time when partner changes tour price', function (
         'status' => 'published',
         'cover_image_url' => null,
     ]);
+    addAvailabilityRule($tour);
 
     $mock = $this->mock(StripeService::class);
     $mock->shouldReceive('createPaymentIntent')
@@ -191,6 +198,7 @@ it('maintains price at booking time when partner changes tour price', function (
         ->andReturn('pi_price_123_secret_xyz');
 
     $response = actingAs($traveler)
+        ->withHeader('Idempotency-Key', Str::uuid()->toString())
         ->postJson('/api/public/bookings', [
             'tour_slug' => $tour->slug,
             'tour_date' => now()->addDays(21)->toDateString(),

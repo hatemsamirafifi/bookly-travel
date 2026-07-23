@@ -456,10 +456,13 @@ CANCELLED.
   timestamp. It MUST NEVER expose traveler name, email, phone, payment
   information, guest identity, internal database IDs, or partner internal notes.
 - **FR-023**: The verification status MUST reflect the booking lifecycle and
-  span at minimum: `VALID` (confirmed or completed), `CANCELLED`, `PENDING`
-  (awaiting payment), and `EXPIRED` (pending booking that expired unpaid). The
-  design MUST naturally support a future `USED` (redeemed) state without changing
-  the QR code format or the verification URL scheme.
+  span at minimum: `VALID`, `CANCELLED`, `PENDING`, and `EXPIRED`. The complete
+  booking-status → verification-status mapping is: `confirmed` → `VALID`,
+  `completed` → `VALID`, `cancellation_requested` → `VALID`, `cancelled` →
+  `CANCELLED`, `pending_payment` → `PENDING` (awaiting payment), `expired` →
+  `EXPIRED`, and `no_show` → `EXPIRED` (a pending booking that expired unpaid).
+  The design MUST naturally support a future `USED` (redeemed) state without
+  changing the QR code format or the verification URL scheme.
 - **FR-024**: The verification endpoint MUST use the opaque booking reference as
   the public lookup key; it MUST NOT accept or expose numeric database IDs.
   Unknown references MUST return 404, and the endpoint MUST NOT reveal whether

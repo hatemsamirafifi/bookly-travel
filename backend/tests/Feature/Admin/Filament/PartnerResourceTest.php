@@ -3,7 +3,6 @@
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Partner\Models\Partner;
 use App\Enums\PartnerStatus;
-use App\Filament\Resources\PartnerResource;
 use App\Filament\Resources\PartnerResource\Pages\ListPartners;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

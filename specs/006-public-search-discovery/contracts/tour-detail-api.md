@@ -89,7 +89,7 @@
 Returned when:
 - Slug does not match any tour
 - Tour exists but is in `draft`, `pending_review`, or `rejected` status
-- Tour is `archived`
+- Tour is `archived` AND `published_at` is null (never was publicly accessible)
 
 ### 410 Gone
 
@@ -100,11 +100,24 @@ Returned when:
 ```
 
 Returned when:
-- Tour was previously published but is now archived (bookmarked/stale links)
+- Tour is `archived` AND `published_at` is not null (was previously public — bookmarked/stale links)
+
+### Decision Table
+
+| Tour State | `published_at` | Response |
+|------------|----------------|----------|
+| Not found (no matching slug) | N/A | 404 |
+| `draft` | N/A | 404 |
+| `pending_review` | N/A | 404 |
+| `rejected` | N/A | 404 |
+| `archived` | `null` | 404 |
+| `archived` | non-null | 410 |
+| `published` (with availability) | non-null | 200 |
+| `published` (no availability) | non-null | 200 (with "Currently Unavailable" state) |
 
 ## Behavior Notes
 
 - Content fields (`title`, `description`, `highlights`, `inclusions`, `exclusions`, `meeting_point`, `cancellation_policy`) are returned in the language specified by `locale`
 - If the requested locale lacks translations, fall back to English content with `"translation_warning": "partial_translation"` flag
 - Availability is checked in real-time against the pricing/availability data (not just the search index)
-- `available_dates` shows next 30 days of availability; additional dates can be paginated via a separate endpoint
+- `available_dates` shows the next 30 days of availability

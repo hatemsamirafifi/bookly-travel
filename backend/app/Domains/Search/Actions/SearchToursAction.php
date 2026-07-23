@@ -2,6 +2,8 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Search\Support\DurationBucket;
+use App\Domains\Search\Support\SearchableAttributes;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Category;
 use App\Models\Tour;
@@ -36,6 +38,11 @@ class SearchToursAction
         if (! empty($sort)) {
             $search->options['sort'] = $sort;
         }
+
+        // Search only the locale's language fields + shared fields, not the
+        // whole document (search-api.md:145). Without this a Spanish "vino"
+        // query would also match English/Italian titles.
+        $search->options['attributesToSearchOn'] = SearchableAttributes::forLocale($locale);
 
         $results = $search->paginate($perPage, 'page', $page);
 
@@ -74,11 +81,14 @@ class SearchToursAction
             $filters[] = 'location_slug = "' . str_replace('"', '\\"', $params['location']) . '"';
         }
 
-        if (! empty($params['price_min'])) {
+        // Use isset()/!== '' rather than empty(): `empty('0') === true` in PHP,
+        // which would silently drop a legitimate `price_max=0` (free-tour
+        // filter) bound (F7).
+        if (isset($params['price_min']) && $params['price_min'] !== '') {
             $filters[] = 'price_amount >= ' . (int) $params['price_min'];
         }
 
-        if (! empty($params['price_max'])) {
+        if (isset($params['price_max']) && $params['price_max'] !== '') {
             $filters[] = 'price_amount <= ' . (int) $params['price_max'];
         }
 
@@ -95,12 +105,8 @@ class SearchToursAction
 
     protected function durationFilter(string $duration): string
     {
-        return match ($duration) {
-            'half-day' => 'duration_minutes <= 240',
-            'full-day' => 'duration_minutes >= 241 AND duration_minutes <= 480',
-            'multi-day' => 'duration_minutes > 480',
-            default => 'duration_minutes >= 0',
-        };
+        return DurationBucket::tryFrom($duration)?->filterExpression()
+            ?? 'duration_minutes >= 0';
     }
 
     protected function resolveSort(?string $sort): array
@@ -114,11 +120,21 @@ class SearchToursAction
         };
     }
 
+    /**
+     * Facet counts scoped to the same bookable invariant the search index uses
+     * (published + valid pricing + upcoming availability), so a non-zero facet
+     * always returns ≥1 Meilisearch hit (F5). The index remains the source of
+     * truth for real-time availability; the DB query approximates "has
+     * upcoming availability" with `whereHas('availabilityRules')`.
+     *
+     * Contract search-api.md:143 describes dynamic facets given the current
+     * result set — the bookable-scoped static count is the correct
+     * contract-compliant baseline; fully dynamic Meilisearch `facets` is a
+     * documented follow-up, not silently skipped.
+     */
     protected function facetAggregates(array $params, string $locale): array
     {
-        $categories = Category::where('is_active', true)
-            ->orderBy('display_order')
-            ->withCount(['tours' => fn ($q) => $q->where('status', 'published')])
+        $categories = Category::popularWithCounts()
             ->get()
             ->map(fn (Category $cat) => [
                 'slug' => $cat->slug,
@@ -129,7 +145,7 @@ class SearchToursAction
             ->values()
             ->toArray();
 
-        $locations = Tour::where('status', 'published')
+        $locations = Tour::bookable()
             ->select('location_slug as slug', 'location as name')
             ->selectRaw('COUNT(*) as count')
             ->groupBy('location_slug', 'location')
@@ -138,8 +154,8 @@ class SearchToursAction
             ->get()
             ->toArray();
 
-        // Calculate price range from published tours
-        $priceRange = Tour::where('status', 'published')
+        // Price range from the bookable set, not all published tours.
+        $priceRange = Tour::bookable()
             ->selectRaw('MIN(price_amount) as min_price, MAX(price_amount) as max_price')
             ->first();
         $priceMin = (int) ($priceRange->min_price ?? 0);
@@ -151,16 +167,8 @@ class SearchToursAction
             ['value' => 'multi-day', 'label' => __('search.durations.multi_day', [], $locale), 'count' => 0],
         ];
 
-        // Populate duration counts from the published query snapshot
-        $durationCounts = Tour::where('status', 'published')
-            ->selectRaw("
-                CASE
-                    WHEN duration_minutes <= 240 THEN 'half-day'
-                    WHEN duration_minutes <= 480 THEN 'full-day'
-                    ELSE 'multi-day'
-                END as bucket,
-                COUNT(*) as count
-            ")
+        $durationCounts = Tour::bookable()
+            ->selectRaw(DurationBucket::sqlCase() . ' as bucket, COUNT(*) as count')
             ->groupBy('bucket')
             ->pluck('count', 'bucket');
 

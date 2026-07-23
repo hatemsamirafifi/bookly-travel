@@ -82,6 +82,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       });
       if (!res.ok) throw new Error('Failed to load tour details');
       const json = await res.json();
+      if (!json?.data || typeof json.data !== 'object' || typeof json.data.id !== 'number') {
+        throw new Error('Tour details not found.');
+      }
       const t: Tour = json.data;
       setTour(t);
 

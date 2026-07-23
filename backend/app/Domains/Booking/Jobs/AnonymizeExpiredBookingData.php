@@ -53,9 +53,14 @@ class AnonymizeExpiredBookingData implements ShouldQueue
 
         DB::transaction(function () use ($booking, $token, $audit) {
             // Anonymize the booking's own traveler-identifying snapshot
-            // fields and mark the row as done.
+            // fields, sever the link to the PII-bearing users/guest_identities
+            // rows, and mark the row as done. `traveler_id` and
+            // `guest_identity_id` are nullable (ON DELETE SET NULL capable),
+            // so nulling them removes the join without deleting the booking.
             $booking->update([
                 'anonymized_at' => now(),
+                'traveler_id' => null,
+                'guest_identity_id' => null,
                 // Store the token so audit trail retains a stable pseudonym
                 'cancellation_reason' => $booking->cancellation_reason
                     ? $token . ' (reason redacted)'

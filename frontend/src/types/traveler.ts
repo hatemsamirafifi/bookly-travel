@@ -33,6 +33,11 @@ export interface TravelerBooking {
   price_per_person?: number | MoneyValue;
   total_amount?: number | MoneyValue;
   total_price?: MoneyValue;
+  /** Canonical price block (matches booking-api.md). Back-compat: total_amount/total_price. */
+  pricing?: {
+    price_per_person: MoneyValue;
+    total: MoneyValue;
+  };
   special_requests?: string | null;
   cancellation_policy?: string;
   cancellation_date?: string | null;

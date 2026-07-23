@@ -18,9 +18,15 @@ class GetTourDetailAction
             );
         }
 
-        if (in_array($tour->status, ['draft', 'pending_review', 'rejected', 'archived'])) {
-            $code = $tour->status === 'archived' ? 410 : 404;
-            $message = $tour->status === 'archived'
+        if ($tour->status !== 'published') {
+            // Allowlist on `published` rather than a blocklist of statuses so a
+            // future status (e.g. `paused`) can never be served publicly with
+            // full content. Archived tours that were once published return 410
+            // (see F10 / published_at refinement); everything else 404.
+            $code = $tour->status === 'archived' && $tour->published_at !== null
+                ? 410
+                : 404;
+            $message = $code === 410
                 ? 'This tour is no longer available.'
                 : 'Tour not found.';
 
@@ -28,6 +34,15 @@ class GetTourDetailAction
                 response()->json(['message' => $message], $code)
             );
         }
+
+        // The search index only holds tours that are published + valid pricing
+        // + upcoming availability (`Tour::isPubliclyBookable`). A published tour
+        // reached via direct URL may fail those (partner saved before setting
+        // pricing, or let availability expire). Serve it per the contract
+        // (tour-detail-api.md:115-116: 200 with "Currently Unavailable") but
+        // flag it so the frontend hides the Book Now CTA instead of offering a
+        // mispriced/unavailable booking.
+        $isUnavailable = ! $tour->isPubliclyBookable();
 
         // Reuse the eager-loaded `translations` collection (no extra query).
         $translation = $tour->translations->firstWhere('locale', $locale);
@@ -82,6 +97,7 @@ class GetTourDetailAction
             'availability' => [
                 'next_available_date' => $availableDates[0] ?? null,
                 'available_dates' => $availableDates,
+                'is_unavailable' => $isUnavailable,
             ],
             // `rating` mirrors the TourCard contract (TourDetail extends TourCard)
             // so the frontend can render the listing-style StarRating uniformly.
@@ -92,7 +108,7 @@ class GetTourDetailAction
             'reviews' => [
                 'average_rating' => $tour->averageRating(),
                 'count' => $tour->reviewCount(),
-                'distribution' => ['5' => 0, '4' => 0, '3' => 0, '2' => 0, '1' => 0],
+                'distribution' => $tour->reviewDistribution(),
             ],
             'seo' => $this->buildSeoMetadata($tour, $t, $locale),
         ];
@@ -112,7 +128,7 @@ class GetTourDetailAction
         $canonical = "{$baseUrl}/{$locale}/tours/{$tour->slug}";
 
         $hreflang = [];
-        foreach (['en', 'es', 'it'] as $lang) {
+        foreach (config('app.supported_locales', ['en', 'es', 'it']) as $lang) {
             $hreflang[$lang] = "{$baseUrl}/{$lang}/tours/{$tour->slug}";
         }
 

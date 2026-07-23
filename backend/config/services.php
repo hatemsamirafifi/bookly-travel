@@ -42,4 +42,12 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    // Spec 014: public base URL encoded in the voucher QR (FR-002, SC-009).
+    // The QR resolves to {public_base_url}/v/{booking_reference}. Default is
+    // the production origin; override locally (e.g. http://localhost:3000) so
+    // scanned vouchers resolve to the local frontend during E2E.
+    'voucher' => [
+        'public_base_url' => rtrim(env('SERVICES_VOUCHER_PUBLIC_BASE_URL', 'https://bookly.travel'), '/'),
+    ],
+
 ];

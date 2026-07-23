@@ -35,12 +35,9 @@ class CancelBookingAction
                 throw new AccessDeniedHttpException('You do not have access to this booking.');
             }
 
-            if ($booking->status === Booking::STATUS_CANCELLED) {
-                $booking->load('tour');
-
-                return BookingResponseDTO::fromBooking($booking);
-            }
-
+            // traveler-booking-api.md: 422 "Only confirmed bookings can be
+            // cancelled." for already-cancelled/completed — no idempotent
+            // 200 early-return.
             if ($booking->status !== Booking::STATUS_CONFIRMED) {
                 throw new UnprocessableEntityHttpException('Only confirmed bookings can be cancelled.');
             }
@@ -62,12 +59,16 @@ class CancelBookingAction
             $this->processRefund->execute($booking);
 
             try {
-                $booking->load(['traveler', 'tour.partner']);
+                $booking->load(['traveler', 'tour.partnerRecord.user']);
                 if ($booking->traveler?->email) {
                     Mail::to($booking->traveler->email)->send(new BookingCancelledMail($booking));
                 }
-                if ($booking->tour?->partner?->email) {
-                    Mail::to($booking->tour->partner->email)->send(new PartnerBookingCancelledMail($booking));
+                // `tours.partner_id` references `partners.id` (repinned by the
+                // fix_tours_partner_id_to_partners_table migration), so the
+                // partner user is reached via `partnerRecord`, NOT the legacy
+                // `partner` relation (which still points at users.id).
+                if ($booking->tour?->partnerRecord?->user?->email) {
+                    Mail::to($booking->tour->partnerRecord->user->email)->send(new PartnerBookingCancelledMail($booking));
                 }
             } catch (\Exception $e) {
                 // Prevent email failures from failing the cancellation transaction

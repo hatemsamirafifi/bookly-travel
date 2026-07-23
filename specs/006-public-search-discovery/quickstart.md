@@ -75,6 +75,9 @@ class Tour extends Model
             && $this->hasValidPricing()
             && $this->hasUpcomingAvailability();
     }
+
+    // Note: Tour model observer sets published_at = now() on first
+    // transition to 'published' status. See data-model.md for 404/410 logic.
 }
 ```
 
@@ -84,7 +87,7 @@ Create a console command or migration to set index configuration:
 
 ```php
 // In a setup command or service provider
-$client = new MeilisearchClient(
+$client = new \Meilisearch\Client(
     config('scout.meilisearch.host'),
     config('scout.meilisearch.key')
 );

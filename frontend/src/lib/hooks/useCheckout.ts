@@ -20,8 +20,8 @@ export function useCheckout() {
   );
 
   const submitBooking = useCallback(
-    async (params: Omit<CreateBookingRequest, 'locale'> & { locale: string }) => {
-      return createBooking(params);
+    async (params: Omit<CreateBookingRequest, 'locale'> & { locale: string }, idempotencyKey: string) => {
+      return createBooking(params, idempotencyKey);
     },
     []
   );

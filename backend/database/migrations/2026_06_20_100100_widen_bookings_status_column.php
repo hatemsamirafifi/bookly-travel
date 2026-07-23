@@ -13,7 +13,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement('ALTER TABLE bookings ALTER COLUMN status TYPE varchar(32)');
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE bookings ALTER COLUMN status TYPE varchar(32)');
+        }
     }
 
     public function down(): void
@@ -28,6 +30,8 @@ return new class extends Migration
             );
         }
 
-        DB::statement('ALTER TABLE bookings ALTER COLUMN status TYPE varchar(20)');
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE bookings ALTER COLUMN status TYPE varchar(20)');
+        }
     }
 };

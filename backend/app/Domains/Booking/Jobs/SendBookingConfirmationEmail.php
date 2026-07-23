@@ -56,7 +56,7 @@ class SendBookingConfirmationEmail implements ShouldQueue
 
         try {
             // Re-fresh in case the booking was modified between dispatch and execution
-            $booking = $this->booking->fresh(['tour', 'tour.translations', 'traveler']);
+            $booking = $this->booking->fresh(['tour', 'tour.translations', 'traveler', 'tour.partnerRecord.user']);
             if (! $booking || $booking->confirmation_email_sent_at !== null) {
                 return;
             }
@@ -65,8 +65,12 @@ class SendBookingConfirmationEmail implements ShouldQueue
             Mail::to($booking->traveler->email)
                 ->send(new BookingConfirmedMail($booking));
 
-            // 2. Notify the partner about the new booking
-            $partnerEmail = $booking->tour->partner?->email;
+            // 2. Notify the partner about the new booking. `tours.partner_id`
+            //    references `partners.id` (repinned by the
+            //    fix_tours_partner_id_to_partners_table migration), so the
+            //    partner user is reached via `partnerRecord`, NOT the legacy
+            //    `partner` relation (which still points at users.id).
+            $partnerEmail = $booking->tour->partnerRecord?->user?->email;
             if ($partnerEmail) {
                 Mail::to($partnerEmail)
                     ->send(new PartnerNewBookingMail($booking));

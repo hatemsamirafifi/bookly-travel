@@ -22,7 +22,11 @@ export interface TourCard {
   next_available_date: string | null;
 }
 
-export interface TourDetail extends TourCard {
+export interface TourDetail extends Omit<TourCard, 'category'> {
+  // The detail endpoint returns the category as an object
+  // (tour-detail-api.md:42), overriding the string name on TourCard
+  // which is what the list/search transformer returns (search-api.md:61).
+  category: { slug: string; name: string };
   description: string;
   highlights: string[];
   inclusions: string[];
@@ -60,6 +64,11 @@ export interface PricingInfo {
 export interface AvailabilityInfo {
   next_available_date: string | null;
   available_dates: string[];
+  // Backend flag (tour-detail-api.md:115-116): a published tour reached by
+  // direct URL that fails the bookable invariant (no valid pricing or no
+  // upcoming availability) is served with is_unavailable=true so the UI shows
+  // "Currently Unavailable" rather than a Book Now CTA.
+  is_unavailable?: boolean;
 }
 
 export interface ReviewsInfo {
@@ -122,9 +131,11 @@ export interface SearchResponse {
 }
 
 export interface HomepageData {
-  featured_tours: TourCard[];
-  popular_categories: Category[];
-  featured_destinations: Destination[];
+  data: {
+    featured_tours: TourCard[];
+    popular_categories: Category[];
+    featured_destinations: Destination[];
+  };
   meta: {
     seo: {
       meta_title: string;

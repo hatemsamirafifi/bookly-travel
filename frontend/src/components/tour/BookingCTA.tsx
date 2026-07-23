@@ -17,7 +17,10 @@ interface BookingCTAProps {
 export default function BookingCTA({ pricing, availability, groupSize, locale, slug, tourId }: BookingCTAProps) {
   const [participants, setParticipants] = useState(groupSize.min);
 
-  const isAvailable = availability.next_available_date !== null && availability.available_dates.length > 0;
+  const isAvailable =
+    !availability.is_unavailable &&
+    availability.next_available_date !== null &&
+    availability.available_dates.length > 0;
 
   return (
     <div className="sticky top-4 rounded-lg border border-gray-200 bg-white p-5 shadow-md">

@@ -16,19 +16,26 @@ class ExpireBookingOnPaymentFailure
     public function handle(PaymentFailed $event): void
     {
         $booking = $event->booking;
-        DB::transaction(function () use ($booking) {
-            $beforeState = $booking->status;
 
-            $user = auth()->user();
-            $actorType = $user ? 'user' : 'system';
-            $actorId = $user ? $user->id : null;
+        DB::transaction(function () use ($booking): void {
+            $locked = Booking::lockForUpdate()->find($booking->id);
 
-            $booking->update(['status' => Booking::STATUS_EXPIRED]);
+            // Guard: only a pending_payment booking expires on payment failure.
+            // A late `payment_failed` for a booking that has since been
+            // confirmed/cancelled/expired must NOT overwrite its status. This is
+            // a system-initiated transition (a listener, not an HTTP request),
+            // so the actor is `system`, never `auth()->user()`.
+            if (! $locked || $locked->status !== Booking::STATUS_PENDING_PAYMENT) {
+                return;
+            }
+
+            $beforeState = $locked->status;
+            $locked->update(['status' => Booking::STATUS_EXPIRED]);
 
             $this->auditService->log(
-                $booking,
-                $actorType,
-                $actorId,
+                $locked,
+                'system',
+                null,
                 'booking.status_changed',
                 $beforeState,
                 Booking::STATUS_EXPIRED,

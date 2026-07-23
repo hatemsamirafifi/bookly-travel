@@ -49,16 +49,16 @@ describe('usePartnerAnalytics', () => {
 
   it('maps bookings_over_time onto chart data with the bookings field', async () => {
     getAnalyticsMock.mockResolvedValue(response);
-    let latest: UsePartnerAnalyticsResult | null = null;
+    const state: { current: UsePartnerAnalyticsResult | null } = { current: null };
 
     renderWithClient((r) => {
-      latest = r;
+      state.current = r;
     });
 
-    await waitFor(() => expect(latest?.loading).toBe(false));
-    expect(latest?.error).toBeNull();
-    expect(latest?.summary).toEqual(response.summary);
-    expect(latest?.chartData).toEqual([
+    await waitFor(() => expect(state.current?.loading).toBe(false));
+    expect(state.current?.error).toBeNull();
+    expect(state.current?.summary).toEqual(response.summary);
+    expect(state.current?.chartData).toEqual([
       { date: '2026-06-01', bookings: 2, revenue: 400 },
       { date: '2026-06-02', bookings: 3, revenue: 600 },
     ]);
@@ -66,15 +66,15 @@ describe('usePartnerAnalytics', () => {
 
   it('handles an empty bookings_over_time array', async () => {
     getAnalyticsMock.mockResolvedValue({ ...response, bookings_over_time: [] });
-    let latest: UsePartnerAnalyticsResult | null = null;
+    const state: { current: UsePartnerAnalyticsResult | null } = { current: null };
 
     renderWithClient((r) => {
-      latest = r;
+      state.current = r;
     });
 
-    await waitFor(() => expect(latest?.loading).toBe(false));
-    expect(latest?.chartData).toEqual([]);
-    expect(latest?.summary).not.toBeNull();
+    await waitFor(() => expect(state.current?.loading).toBe(false));
+    expect(state.current?.chartData).toEqual([]);
+    expect(state.current?.summary).not.toBeNull();
   });
 
   it('defaults malformed point values to zero', async () => {
@@ -86,14 +86,14 @@ describe('usePartnerAnalytics', () => {
         { date: '2026-06-02', bookings: undefined, revenue: undefined } as any,
       ],
     });
-    let latest: UsePartnerAnalyticsResult | null = null;
+    const state: { current: UsePartnerAnalyticsResult | null } = { current: null };
 
     renderWithClient((r) => {
-      latest = r;
+      state.current = r;
     });
 
-    await waitFor(() => expect(latest?.loading).toBe(false));
-    expect(latest?.chartData).toEqual([
+    await waitFor(() => expect(state.current?.loading).toBe(false));
+    expect(state.current?.chartData).toEqual([
       { date: '2026-06-01', bookings: 5, revenue: 100 },
       { date: '2026-06-02', bookings: 0, revenue: 0 },
     ]);
@@ -101,17 +101,17 @@ describe('usePartnerAnalytics', () => {
 
   it('exposes an error message when the API call fails', async () => {
     getAnalyticsMock.mockRejectedValue(new Error('Network error'));
-    let latest: UsePartnerAnalyticsResult | null = null;
+    const state: { current: UsePartnerAnalyticsResult | null } = { current: null };
 
     renderWithClient((r) => {
-      latest = r;
+      state.current = r;
     });
 
     await waitFor(
-      () => expect(latest?.error).toBe('Network error'),
+      () => expect(state.current?.error).toBe('Network error'),
       { timeout: 8000 }
     );
-    expect(latest?.summary).toBeNull();
-    expect(latest?.chartData).toEqual([]);
+    expect(state.current?.summary).toBeNull();
+    expect(state.current?.chartData).toEqual([]);
   });
 });

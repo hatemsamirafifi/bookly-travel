@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Payment\Services\StripeService;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
@@ -10,6 +11,14 @@ use Illuminate\Support\Str;
 use function Pest\Laravel\postJson;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    // Booking creation calls Stripe; mock it so overbooking logic is what's
+    // under test, not the payment service.
+    $this->mock(StripeService::class)
+        ->shouldReceive('createPaymentIntent')
+        ->andReturn('pi_test_123_secret_abc');
+});
 
 it('prevents overbooking when concurrent requests compete for last spot', function () {
     $category = Category::firstOrCreate(['slug' => 'exclusive'], ['name' => 'Exclusive']);
@@ -29,6 +38,7 @@ it('prevents overbooking when concurrent requests compete for last spot', functi
         'status' => 'published',
         'cover_image_url' => null,
     ]);
+    addAvailabilityRule($tour); // F9
 
     $idempotencyKeys = [
         Str::uuid()->toString(),
@@ -85,6 +95,7 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
         'status' => 'published',
         'cover_image_url' => null,
     ]);
+    addAvailabilityRule($tour); // F9
 
     $tourDate = '2026-09-15';
 
@@ -98,6 +109,8 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
         'total_price' => 8900,
         'currency' => 'EUR',
         'status' => Booking::STATUS_CONFIRMED,
+        'idempotency_key' => Str::uuid()->toString(),
+        'locale' => 'en',
     ]);
 
     $idempotencyKeyA = Str::uuid()->toString();
@@ -140,4 +153,52 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
         $tour->group_size_max,
         'Availability must not go negative — zero overbooking invariant violated.'
     );
+});
+
+/**
+ * F3: a second request carrying the SAME Idempotency-Key returns the existing
+ * booking (200) instead of racing to a unique-constraint 500. Sequential here
+ * (Pest has no parallel harness), but the unique-index catch is the path that
+ * would also resolve a true concurrent same-key insert.
+ */
+it('returns the existing booking when the same idempotency key is reused', function () {
+    $category = Category::firstOrCreate(['slug' => 'exclusive'], ['name' => 'Exclusive']);
+    $traveler = User::factory()->traveler()->create();
+
+    $tour = Tour::create([
+        'partner_id' => makePartner()->id,
+        'category_id' => $category->id,
+        'slug' => 'same-key-tour-' . uniqid(),
+        'location' => 'Rome, Italy',
+        'duration_minutes' => 180,
+        'duration_label' => '3 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 5,
+        'price_amount' => 8900,
+        'status' => 'published',
+        'cover_image_url' => null,
+    ]);
+    addAvailabilityRule($tour);
+
+    $token = $traveler->createToken('test')->plainTextToken;
+    $key = Str::uuid()->toString();
+
+    $first = postJson('/api/public/bookings', [
+        'tour_slug' => $tour->slug,
+        'tour_date' => '2026-09-15',
+        'participant_count' => 1,
+        'locale' => 'en',
+    ], ['Authorization' => 'Bearer ' . $token, 'Idempotency-Key' => $key]);
+    $first->assertStatus(201);
+
+    $second = postJson('/api/public/bookings', [
+        'tour_slug' => $tour->slug,
+        'tour_date' => '2026-09-15',
+        'participant_count' => 1,
+        'locale' => 'en',
+    ], ['Authorization' => 'Bearer ' . $token, 'Idempotency-Key' => $key]);
+    $second->assertStatus(200)
+        ->assertJsonPath('data.reference', $first->json('data.reference'));
+
+    expect(Booking::count())->toBe(1);
 });

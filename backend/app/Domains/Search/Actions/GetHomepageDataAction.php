@@ -2,6 +2,7 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Search\Support\DestinationAggregator;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Category;
 use App\Models\Tour;
@@ -17,10 +18,10 @@ class GetHomepageDataAction
 
     public function execute(string $locale): array
     {
-        $featuredTours = Tour::where('status', 'published')
+        $featuredTours = Tour::bookable()
             ->where('is_featured', true)
             ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->orWhere('locale', 'en'))
-            ->with(['translations', 'category'])
+            ->with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
             ->latest()
             ->limit(8)
             ->get()
@@ -28,11 +29,11 @@ class GetHomepageDataAction
             ->values()
             ->toArray();
 
-        // Fallback to latest published if no featured tours
+        // Fallback to latest bookable tours if none are flagged featured.
         if (empty($featuredTours)) {
-            $featuredTours = Tour::where('status', 'published')
+            $featuredTours = Tour::bookable()
                 ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->orWhere('locale', 'en'))
-                ->with(['translations', 'category'])
+                ->with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
                 ->latest()
                 ->limit(8)
                 ->get()
@@ -41,9 +42,7 @@ class GetHomepageDataAction
                 ->toArray();
         }
 
-        $popularCategories = Category::where('is_active', true)
-            ->orderBy('display_order')
-            ->withCount(['tours' => fn ($q) => $q->where('status', 'published')])
+        $popularCategories = Category::popularWithCounts()
             ->get()
             ->map(fn (Category $cat) => [
                 'slug' => $cat->slug,
@@ -55,28 +54,14 @@ class GetHomepageDataAction
             ->values()
             ->toArray();
 
-        $featuredDestinations = Tour::where('status', 'published')
-            ->select('location_slug as slug', 'location as name')
-            ->selectRaw('COUNT(*) as tour_count')
-            ->groupBy('location_slug', 'location')
-            ->orderByDesc('tour_count')
-            ->limit(6)
-            ->get()
-            ->map(fn ($d) => [
-                'slug' => $d->slug,
-                'name' => $d->name,
-                'country' => trim((string) str($d->name)->afterLast(',')),
-                'image_url' => null,
-                'tour_count' => (int) $d->tour_count,
-                'is_featured' => true,
-            ])
-            ->values()
-            ->toArray();
+        $featuredDestinations = DestinationAggregator::popular(6);
 
         return [
-            'featured_tours' => $featuredTours,
-            'popular_categories' => $popularCategories,
-            'featured_destinations' => $featuredDestinations,
+            'data' => [
+                'featured_tours' => $featuredTours,
+                'popular_categories' => $popularCategories,
+                'featured_destinations' => $featuredDestinations,
+            ],
             'meta' => [
                 'seo' => [
                     'meta_title' => __('seo.homepage.title', [], $locale) ?: 'Bookly — Discover & Book Amazing Tours',

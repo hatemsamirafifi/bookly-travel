@@ -20,7 +20,7 @@ test.describe('Booking Flow', () => {
   const SOLD_OUT_DATE = '2026-12-01'; // seeded at full capacity (20/20) by DatabaseSeeder
 
   test('completes full booking flow from form to confirmation', async () => {
-    test.skip(
+    test.skip(true,
       'Requires Stripe credentials — CreatePaymentIntentAction calls the Stripe SDK with no test bypass and the Docker env has no STRIPE_SECRET, so the booking API returns 503 and the flow never reaches confirmation. Needs Stripe test-mode wiring.',
     );
   });
@@ -35,19 +35,19 @@ test.describe('Booking Flow', () => {
   });
 
   test('shows rate limit message', async () => {
-    test.skip(
+    test.skip(true,
       'Depends on repeated successful booking submissions hitting the throttle; without Stripe each submit 503s and hammering the shared booking.create limiter (10/min/user) flaps across the 3 authed projects. Needs Stripe test-mode wiring.',
     );
   });
 
   test('displays error for invalid participant count', async () => {
-    test.skip(
+    test.skip(true,
       'participants=0 is clamped client-side to the tour min (1) by ParticipantSelector, so the server 422 "Invalid booking details" path is unreachable from the UI — the form would instead submit a valid count and 503 on Stripe.',
     );
   });
 
   test('idempotent retry on browser refresh', async () => {
-    test.skip(
+    test.skip(true,
       'Requires a successful booking creation (Stripe) to reach the confirmation page before the goBack/resubmit idempotency check; not achievable without Stripe credentials in the Docker env.',
     );
   });

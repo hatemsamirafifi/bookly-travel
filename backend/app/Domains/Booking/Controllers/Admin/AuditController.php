@@ -4,6 +4,7 @@ namespace App\Domains\Booking\Controllers\Admin;
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Models\BookingAuditLog;
+use App\Domains\Payment\Models\Payment;
 use App\Http\Requests\Admin\AuditIndexRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -71,7 +72,7 @@ class AuditController
 
     public function show(string $reference): JsonResponse
     {
-        $booking = Booking::with('auditLogs')->where('reference', $reference)->first();
+        $booking = Booking::with(['auditLogs', 'payments'])->where('reference', $reference)->first();
 
         if (! $booking) {
             throw new NotFoundHttpException('Booking not found.');
@@ -90,28 +91,26 @@ class AuditController
             ];
         })->values()->all();
 
-        // Linked financial events — placeholder until spec 008 payments table exists
+        // L5: linked financial events come from the real Payment rows (a charge
+        // plus any refund) via the Booking::payments() HasMany, instead of the
+        // runtime \Schema::hasTable('payments') probe — the table always exists
+        // post-spec-008 and the relation is the authoritative source. Iterated
+        // with an asserted instance (rather than a typed closure) to avoid the
+        // closure-signature mismatch the auditLogs map above already incurs.
         $linkedFinancialEvents = [];
-        if (\Schema::hasTable('payments')) {
-            $linkedFinancialEvents = \DB::table('payments')
-                ->where('booking_id', $booking->id)
-                ->orderBy('created_at')
-                ->get()
-                ->map(function ($payment) {
-                    return [
-                        'payment_id' => $payment->id,
-                        'type' => $payment->type ?? 'charge',
-                        'amount' => [
-                            'amount' => $payment->amount ?? 0,
-                            'currency' => $payment->currency ?? 'EUR',
-                            'formatted' => Booking::formatPrice($payment->amount ?? 0, $payment->currency ?? 'EUR'),
-                        ],
-                        'status' => $payment->status ?? 'unknown',
-                        'created_at' => $payment->created_at ? (new \DateTime($payment->created_at))->format('c') : null,
-                    ];
-                })
-                ->values()
-                ->all();
+        foreach ($booking->payments as $payment) {
+            assert($payment instanceof Payment);
+            $linkedFinancialEvents[] = [
+                'payment_id' => $payment->id,
+                'type' => $payment->type ?? 'charge',
+                'amount' => [
+                    'amount' => $payment->amount ?? 0,
+                    'currency' => $payment->currency ?? 'EUR',
+                    'formatted' => Booking::formatPrice($payment->amount ?? 0, $payment->currency ?? 'EUR'),
+                ],
+                'status' => $payment->status ?? 'unknown',
+                'created_at' => $payment->created_at->toIso8601String(),
+            ];
         }
 
         return response()->json([

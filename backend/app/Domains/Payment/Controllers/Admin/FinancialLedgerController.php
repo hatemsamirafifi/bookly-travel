@@ -2,6 +2,7 @@
 
 namespace App\Domains\Payment\Controllers\Admin;
 
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Models\FinancialLedgerEntry;
 use App\Http\Requests\Admin\FinancialLedgerIndexRequest;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +43,7 @@ class FinancialLedgerController
             'amount' => [
                 'amount' => $entry->amount,
                 'currency' => $entry->currency,
-                'formatted' => number_format($entry->amount / 100, 2) . ' ' . strtoupper($entry->currency),
+                'formatted' => Booking::formatPrice($entry->amount, $entry->currency),
             ],
             'actor' => $entry->actor,
             'description' => $entry->description,

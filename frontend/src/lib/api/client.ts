@@ -17,10 +17,36 @@ interface FetchOptions extends RequestInit {
   // never makes). Fetching a CSRF cookie therefore served no purpose and broke
   // in environments where the cookie endpoint was unreachable, so it is ignored.
   requireCsrf?: boolean;
+  // Opt-in Next.js ISR revalidation (seconds) for read-heavy public reads.
+  // NOT a blanket default: `apiClient` is shared with authenticated endpoints
+  // (partner/admin/booking), which must never be cached. Pass `revalidate`
+  // only from public read functions whose data tolerates short staleness.
+  revalidate?: number;
+}
+
+/**
+ * Build a URLSearchParams from a params object, skipping empty/null/undefined
+ * values. Shared by the search/category/destination query builders so the
+ * field list can't drift between them (spec 006 reuse cleanup). Pass `omit`
+ * for scope routes that must exclude a param the slug supersedes (e.g.
+ * `category` on category tours, `location` on destination tours).
+ */
+export function buildSearchParams(
+  params: object,
+  omit: string[] = []
+): URLSearchParams {
+  const sp = new URLSearchParams();
+  const omitted = new Set(omit);
+  for (const [key, value] of Object.entries(params)) {
+    if (omitted.has(key)) continue;
+    if (value === undefined || value === null || value === '') continue;
+    sp.set(key, String(value));
+  }
+  return sp;
 }
 
 export async function apiClient<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-  const { locale, requireCsrf, ...fetchOptions } = options;
+  const { locale, requireCsrf, revalidate, ...fetchOptions } = options;
   void requireCsrf; // stripped intentionally — CSRF is not required for bearer-token API (see note above)
 
   const headers: Record<string, string> = {
@@ -34,8 +60,13 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
 
   const url = `${API_URL}${endpoint}`;
 
+  // Only set `next.revalidate` when explicitly requested, so authenticated
+  // requests are never cached by the Next.js data cache.
+  const next = revalidate !== undefined ? { revalidate } : (fetchOptions.next as Record<string, unknown> | undefined);
+
   const response = await fetch(url, {
     ...fetchOptions,
+    ...(next ? { next } : {}),
     credentials: 'include',
     headers,
   });

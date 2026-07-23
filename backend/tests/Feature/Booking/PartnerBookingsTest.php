@@ -157,3 +157,44 @@ it('creates audit entry on status transition', function () {
         'after_state' => 'completed',
     ]);
 });
+
+// F6: no_show cannot be recorded on the day-of (the tour date hasn't passed).
+it('returns 409 for no_show on the day of the tour', function () {
+    // beforeEach sets tour_date to today — the tour date has not fully passed.
+    $response = patchJson('/api/partner/bookings/' . $this->booking->reference . '/status', [
+        'status' => 'no_show',
+    ], [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(409);
+});
+
+// F6: no_show can be recorded only once the tour date has passed.
+it('transitions booking to no_show after the tour date has passed', function () {
+    $this->booking->update(['tour_date' => now()->subDay()->toDateString()]);
+
+    $response = patchJson('/api/partner/bookings/' . $this->booking->reference . '/status', [
+        'status' => 'no_show',
+    ], [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.status', 'no_show');
+});
+
+// F10: the partner booking list resolves the tour title by the booking locale.
+it('resolves the tour title in the partner booking list', function () {
+    addTranslation($this->tour, 'en', 'Tuscany Wine Tasting');
+    addTranslation($this->tour, 'it', 'Degustazione Vino Toscano');
+
+    $this->booking->update(['locale' => 'it']);
+
+    $response = getJson('/api/partner/bookings', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.0.tour.title', 'Degustazione Vino Toscano');
+});

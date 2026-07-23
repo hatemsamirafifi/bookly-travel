@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
 use App\Models\Category;
 use App\Models\Tour;
@@ -73,7 +74,7 @@ if (! function_exists('makePartner')) {
 }
 
 if (! function_exists('makeSearchableTour')) {
-    function makeSearchableTour(string $status = 'published', string $slug = null): Tour
+    function makeSearchableTour(string $status = 'published', ?string $slug = null): Tour
     {
         $partner = makePartner();
 
@@ -112,5 +113,26 @@ if (! function_exists('addTranslation')) {
             'meeting_point' => 'Central station',
             'cancellation_policy' => 'Free cancellation 24h before',
         ]);
+    }
+}
+
+if (! function_exists('addAvailabilityRule')) {
+    /**
+     * Attach an availability rule to a tour so it has an operating schedule
+     * (required by the F9 booking gate, which rejects dates the tour does not
+     * operate on). Defaults to a recurring rule covering every day with a
+     * 09:00 start — pass overrides for specific_date / day-of-week / start_time.
+     */
+    function addAvailabilityRule(Tour $tour, array $overrides = []): AvailabilityRule
+    {
+        return AvailabilityRule::create(array_merge([
+            'tour_id' => $tour->id,
+            'rule_type' => 'recurring',
+            'days_of_week' => [0, 1, 2, 3, 4, 5, 6],
+            'start_time' => '09:00:00',
+            'start_date' => null,
+            'end_date' => null,
+            'capacity' => $tour->group_size_max ?? 10,
+        ], $overrides));
     }
 }

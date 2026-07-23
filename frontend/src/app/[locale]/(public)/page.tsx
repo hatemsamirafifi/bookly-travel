@@ -51,13 +51,18 @@ export default async function HomePage({ params }: HomePageProps) {
     );
   }
 
+  // The homepage response is wrapped in a `data` envelope
+  // (category-destination-api.md:128-130); the featured tours, categories,
+  // and destinations live under data.data, SEO under data.meta.
+  const home = data.data;
+
   return (
     <>
       <OrganizationSchema locale={locale} />
       <HeroSection title={t('heroTitle')} subtitle={t('heroSubtitle')} />
-      <FeaturedTours tours={data.featured_tours} locale={locale} />
-      <CategoryGrid categories={data.popular_categories} locale={locale} />
-      <DestinationShowcase destinations={data.featured_destinations} locale={locale} />
+      <FeaturedTours tours={home.featured_tours} locale={locale} />
+      <CategoryGrid categories={home.popular_categories} locale={locale} />
+      <DestinationShowcase destinations={home.featured_destinations} locale={locale} />
     </>
   );
 }

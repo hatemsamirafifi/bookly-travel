@@ -112,6 +112,7 @@ export default function PartnerReviewsDashboard() {
     setSelectedTourId('');
     setSelectedRating('');
     setSelectedResponseStatus('all');
+    setPage(1);
   };
 
   const formatDate = (isoDate: string) =>
@@ -147,7 +148,7 @@ export default function PartnerReviewsDashboard() {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <section className="flex flex-wrap items-end gap-3" aria-label="Filters">
+      <section className="flex flex-wrap items-end gap-3" aria-label={t('reviews.filters')}>
         {/* Tour filter */}
         <div className="flex flex-col gap-1">
           <label htmlFor="filter-tour" className="text-xs font-medium text-gray-500">
@@ -177,7 +178,7 @@ export default function PartnerReviewsDashboard() {
             onChange={(e) => setSelectedRating(e.target.value)}
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:border-transparent"
           >
-            <option value="">{t('reviews.allTours').replace(t('reviews.allTours'), '★ All')}</option>
+            <option value="">{t('reviews.allRatings')}</option>
             {[5, 4, 3, 2, 1].map((r) => (
               <option key={r} value={r}>{'★'.repeat(r)} ({r})</option>
             ))}
@@ -195,7 +196,7 @@ export default function PartnerReviewsDashboard() {
             onChange={(e) => setSelectedResponseStatus(e.target.value as ResponseFilter)}
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:border-transparent"
           >
-            <option value="all">{t('reviews.allTours').replace(t('reviews.allTours'), 'All')}</option>
+            <option value="all">{t('reviews.allStatuses')}</option>
             <option value="with">{t('reviews.withResponse')}</option>
             <option value="without">{t('reviews.withoutResponse')}</option>
           </select>
@@ -208,7 +209,7 @@ export default function PartnerReviewsDashboard() {
             onClick={clearFilters}
             className="text-xs font-medium text-[#0A2540] hover:text-[#FFB800] transition-colors self-end pb-1.5"
           >
-            ✕ Clear
+            ✕ {t('reviews.clear')}
           </button>
         )}
       </section>
@@ -407,7 +408,7 @@ export default function PartnerReviewsDashboard() {
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous page"
+            aria-label={t('reviews.previousPage')}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -419,7 +420,7 @@ export default function PartnerReviewsDashboard() {
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next page"
+            aria-label={t('reviews.nextPage')}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -435,7 +436,7 @@ export default function PartnerReviewsDashboard() {
             onClick={clearFilters}
             className="mt-2 text-sm font-medium text-[#0A2540] hover:text-[#FFB800] transition-colors"
           >
-            Clear filters
+            {t('reviews.clearFilters')}
           </button>
         </div>
       )}

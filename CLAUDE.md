@@ -3,10 +3,14 @@
 <!-- SPECKIT START -->
 ## Active Spec-Kit Feature
 
-- **Feature**: Admin Moderation (Spec 013)
-- **Branch**: `013-admin-moderation`
-- **Spec**: [specs/013-admin-moderation/spec.md](specs/013-admin-moderation/spec.md)
-- **Plan**: [specs/013-admin-moderation/plan.md](specs/013-admin-moderation/plan.md)
+- **Feature**: Notifications and Vouchers (Spec 014)
+- **Branch**: `014-notifications-vouchers`
+- **Spec**: [specs/014-notifications-vouchers/spec.md](specs/014-notifications-vouchers/spec.md)
+- **Plan**: [specs/014-notifications-vouchers/plan.md](specs/014-notifications-vouchers/plan.md)
+- **Research**: [specs/014-notifications-vouchers/research.md](specs/014-notifications-vouchers/research.md)
+- **Data Model**: [specs/014-notifications-vouchers/data-model.md](specs/014-notifications-vouchers/data-model.md)
+- **Contracts**: [specs/014-notifications-vouchers/contracts/](specs/014-notifications-vouchers/contracts/)
+- **Quickstart**: [specs/014-notifications-vouchers/quickstart.md](specs/014-notifications-vouchers/quickstart.md)
 - **Status**: Planning complete — ready for `/speckit-tasks`
 <!-- SPECKIT END -->
 

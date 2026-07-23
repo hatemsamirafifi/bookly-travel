@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Elements } from '@stripe/react-stripe-js';
 import { getStripe } from '@/lib/stripe/stripe-client';
 import ParticipantSelector from './ParticipantSelector';
@@ -13,6 +14,7 @@ import { createBooking } from '@/lib/api/bookings';
 import { cancelBooking } from '@/lib/api/my-bookings';
 import { getTourDetail } from '@/lib/api/tours';
 import { createBookingSchema } from '@/lib/validators/booking';
+import { formatCurrency } from '@/lib/utils';
 import type { TourDetail } from '@/lib/api/types';
 
 interface BookingFormProps {
@@ -28,9 +30,16 @@ interface BookingFormProps {
  * The original booking IS already created server-side at this point (the booking
  * is confirmed), so re-confirmation here means the traveler accepts the price
  * and is redirected to the confirmation page.
+ *
+ * F2: the Idempotency-Key is stable across retries of the same selection
+ * (memoized on [tourSlug, date, participants]) so a double-submit or network
+ * retry returns the same booking instead of creating a duplicate. A synchronous
+ * `submittingRef` guard additionally prevents any double-click from issuing two
+ * in-flight requests before the reactive `submitting` state updates.
  */
 export default function BookingForm({ locale }: BookingFormProps) {
   const router = useRouter();
+  const t = useTranslations('booking');
   const searchParams = useSearchParams();
 
   const tourSlug = searchParams.get('tour') || '';
@@ -57,6 +66,22 @@ export default function BookingForm({ locale }: BookingFormProps) {
     newPriceFormatted: string;
   } | null>(null);
 
+  // F2: stable across retries for the same selection, new on selection change.
+  // Keep this key constant while the traveler confirms a specific tour/date/party
+  // so the backend idempotency contract collapses retries into one booking. The
+  // key itself is a fresh random UUID per selection; the deps drive regeneration
+  // on selection change but are intentionally not read inside the factory (the
+  // randomness is intrinsic), hence the exhaustive-deps suppression.
+  const idempotencyKey = useMemo(
+    () => generateIdempotencyKey(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tourSlug, date, participants],
+  );
+
+  // F2: synchronous guard against double-click / double-submit. Set before any
+  // await so a second click in the same tick cannot start a second request.
+  const submittingRef = useRef(false);
+
   useEffect(() => {
     if (!tourSlug) {
       setLoading(false);
@@ -73,17 +98,17 @@ export default function BookingForm({ locale }: BookingFormProps) {
           setParticipants(res.data.group_size.min);
         }
       })
-      .catch(() => setError('Failed to load tour details.'))
+      .catch(() => setError(t('errors.loadFailed')))
       .finally(() => setLoading(false));
-  }, [tourSlug, locale, searchParams]);
-
-  const formatPrice = (amountCents: number, currency: string): string => {
-    const symbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
-    return `${symbol}${(amountCents / 100).toFixed(2)}`;
-  };
+  }, [tourSlug, locale, searchParams, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // F2: synchronous double-submit guard — first line of defense, before await.
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+
     const pageLoadPriceCents = tour?.pricing?.base_price?.amount;
 
     // Validate the booking payload at the boundary before the network call.
@@ -95,7 +120,8 @@ export default function BookingForm({ locale }: BookingFormProps) {
       page_load_price: pageLoadPriceCents,
     });
     if (!parsed.success) {
-      setError('Please select a tour date and number of participants.');
+      setError(t('errors.invalidDetails'));
+      submittingRef.current = false;
       return;
     }
 
@@ -103,19 +129,22 @@ export default function BookingForm({ locale }: BookingFormProps) {
     setError(null);
 
     try {
-      const result = await createBooking({
-        tour_slug: tourSlug,
-        tour_date: date,
-        participant_count: participants,
-        locale,
-        page_load_price: pageLoadPriceCents,
-      });
+      const result = await createBooking(
+        {
+          tour_slug: tourSlug,
+          tour_date: date,
+          participant_count: participants,
+          locale,
+          page_load_price: pageLoadPriceCents,
+        },
+        idempotencyKey,
+      );
 
       // FR-027: price drifted — surface the modal before forwarding to payment
       if (result.price_changed && result.data.pricing) {
         const confirmedPrice = result.data.pricing.price_per_person;
         const oldFormatted = pageLoadPriceCents
-          ? formatPrice(pageLoadPriceCents, confirmedPrice.currency)
+          ? formatCurrency(pageLoadPriceCents, confirmedPrice.currency, locale)
           : confirmedPrice.formatted;
 
         setPriceChangeModal({
@@ -150,16 +179,17 @@ export default function BookingForm({ locale }: BookingFormProps) {
         ? (err as { status?: number }).status
         : undefined;
       if (status === 409) {
-        setError('This tour date is sold out. Please select a different date.');
+        setError(t('errors.soldOut'));
       } else if (status === 422) {
-        setError('Invalid booking details. Please check your selection.');
+        setError(t('errors.invalidDetails'));
       } else if (status === 429) {
-        setError('Too many booking attempts. Please wait a moment and try again.');
+        setError(t('errors.rateLimit'));
       } else {
-        setError('Something went wrong. Please try again.');
+        setError(t('errors.generic'));
       }
     } finally {
       setSubmitting(false);
+      submittingRef.current = false;
     }
   };
 
@@ -198,6 +228,10 @@ export default function BookingForm({ locale }: BookingFormProps) {
     setPaymentStep(null);
   };
 
+  const totalFormatted = tour
+    ? formatCurrency(tour.pricing.base_price.amount * participants, tour.pricing.base_price.currency, locale)
+    : '';
+
   if (loading) {
     return (
       <div className="animate-pulse space-y-6">
@@ -211,7 +245,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
   if (!tourSlug || !date) {
     return (
       <div className="text-center py-8">
-        <p className="text-[#5A6B7B]">Please select a tour and date to continue.</p>
+        <p className="text-[#5A6B7B]">{t('selectPrompt')}</p>
       </div>
     );
   }
@@ -219,10 +253,12 @@ export default function BookingForm({ locale }: BookingFormProps) {
   if (paymentStep && stripePromise) {
     return (
       <div className="space-y-6">
-        <h2 className="text-lg font-semibold text-[#0A2540]">Payment</h2>
+        <h2 className="text-lg font-semibold text-[#0A2540]">{t('paymentHeading')}</h2>
         <Elements stripe={stripePromise} options={{ clientSecret: paymentStep.clientSecret, appearance: { theme: 'stripe', variables: { colorPrimary: '#0A2540', colorBackground: '#F7F9FB', colorText: '#0A2540', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif', borderRadius: '8px', }, }, }}>
           <StripePaymentForm
             clientSecret={paymentStep.clientSecret}
+            bookingReference={paymentStep.bookingReference}
+            locale={locale}
             onSuccess={handlePaymentSuccess}
             onError={handlePaymentError}
           />
@@ -264,7 +300,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
             <PriceBreakdown
               pricePerPerson={tour.pricing.base_price.formatted}
               participantCount={participants}
-              total={formatPrice(tour.pricing.base_price.amount * participants, tour.pricing.base_price.currency)}
+              total={totalFormatted}
             />
           </>
         )}
@@ -280,9 +316,31 @@ export default function BookingForm({ locale }: BookingFormProps) {
           disabled={submitting || !tourSlug || !date}
           className="w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
         >
-          {submitting ? 'Reserving...' : 'Confirm & Pay'}
+          {submitting ? t('confirming') : t('confirmButton')}
         </button>
       </form>
     </>
   );
+}
+
+/**
+ * RFC 4122 v4 UUID for the Idempotency-Key header. `crypto.randomUUID()` is only
+ * exposed in secure contexts (HTTPS or localhost); over plain HTTP it is
+ * `undefined` and calling it throws. Fall back to `crypto.getRandomValues`,
+ * then to Math.random.
+ */
+function generateIdempotencyKey(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  const bytes = new Uint8Array(16);
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 }

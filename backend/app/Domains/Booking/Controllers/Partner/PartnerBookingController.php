@@ -6,10 +6,6 @@ use App\Domains\Booking\Actions\GetPartnerBookingsAction;
 use App\Domains\Booking\Actions\TransitionBookingStatusAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class PartnerBookingController
 {
@@ -41,22 +37,14 @@ class PartnerBookingController
             'status' => 'required|string|in:completed,no_show',
         ]);
 
-        try {
-            $result = $action->execute(
-                reference: $reference,
-                partner: $request->user(),
-                targetStatus: $validated['status'],
-            );
+        // L4: HttpExceptions thrown by the action are rendered as JSON by
+        // Laravel's handler for api-grouped requests.
+        $result = $action->execute(
+            reference: $reference,
+            partner: $request->user(),
+            targetStatus: $validated['status'],
+        );
 
-            return response()->json($result);
-        } catch (NotFoundHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
-        } catch (AccessDeniedHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        } catch (ConflictHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 409);
-        } catch (UnprocessableEntityHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
-        }
+        return response()->json($result);
     }
 }

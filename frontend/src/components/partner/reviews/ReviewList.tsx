@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { Star, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
@@ -27,6 +27,11 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
   const locale = useLocale();
   const [page, setPage] = useState(1);
   const [respondingId, setRespondingId] = useState<string | number | null>(null);
+
+  // Reset to the first page whenever an external filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [tourFilter, ratingFilter, responseFilter]);
 
   const {
     data,
@@ -77,7 +82,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
   }
 
   if (error) {
-    return <ErrorState message={t('loadError')} onRetry={() => refetch()} />;
+    return <ErrorState message={t('loadError')} retryLabel={t('retry')} onRetry={() => refetch()} />;
   }
 
   if (reviews.length === 0) {
@@ -173,7 +178,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous page"
+            aria-label={t('previousPage')}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -185,7 +190,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next page"
+            aria-label={t('nextPage')}
           >
             <ChevronRight className="w-4 h-4" />
           </button>

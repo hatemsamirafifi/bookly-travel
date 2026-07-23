@@ -2,6 +2,7 @@
 
 use App\Domains\Booking\Controllers\Public\BookingController;
 use App\Domains\Booking\Controllers\Public\TravelerBookingController;
+use App\Domains\Booking\Controllers\Public\VerificationController;
 use App\Domains\Booking\Controllers\Public\VoucherController;
 use App\Domains\Partner\Controllers\Public\PartnerRegistrationController;
 use App\Domains\Payment\Controllers\Public\StripeWebhookController;
@@ -83,29 +84,32 @@ Route::middleware(['auth:sanctum', 'throttle:traveler'])->prefix('account')->gro
 | Public Search & Discovery Routes
 |--------------------------------------------------------------------------
 | Routes for the public search, tour detail, category, and discovery APIs.
-| Rate limits are per-endpoint: 60/min search, 120/min detail/listings.
+| Rate limits are per-endpoint: 60/min search, 120/min detail/listings,
+| 10/min sitemap. The `rate.limit` middleware (RateLimitSearchMiddleware)
+| emits the contract 429 body + X-RateLimit-* headers + localized message
+| (search-api.md / category-destination-api.md) for this surface only.
 |
 | Feature: 006-public-search-discovery
 */
-Route::prefix('search')->middleware('throttle:search')->group(function () {
+Route::prefix('search')->middleware('rate.limit:search')->group(function () {
     Route::get('tours', [SearchController::class, 'search']);
 });
 
-Route::prefix('tours')->middleware('throttle:detail')->group(function () {
+Route::prefix('tours')->middleware('rate.limit:detail')->group(function () {
     Route::get('{slug}', [TourDetailController::class, 'show']);
 });
 
-Route::prefix('categories')->middleware('throttle:listing')->group(function () {
+Route::prefix('categories')->middleware('rate.limit:listing')->group(function () {
     Route::get('/', [CategoryController::class, 'index']);
     Route::get('{slug}/tours', [CategoryController::class, 'tours']);
 });
 
-Route::prefix('destinations')->middleware('throttle:listing')->group(function () {
+Route::prefix('destinations')->middleware('rate.limit:listing')->group(function () {
     Route::get('/', [DestinationController::class, 'index']);
     Route::get('{slug}/tours', [DestinationController::class, 'tours']);
 });
 
-Route::prefix('homepage')->middleware('throttle:homepage')->group(function () {
+Route::prefix('homepage')->middleware('rate.limit:homepage')->group(function () {
     Route::get('/', [HomepageController::class, 'index']);
 });
 
@@ -113,7 +117,7 @@ Route::prefix('homepage')->middleware('throttle:homepage')->group(function () {
 // single literal URI (not a `sitemap` prefix + `.xml`, which compiles to
 // `sitemap/.xml` and 404s the spec/public URI).
 Route::get('sitemap.xml', [SitemapController::class, 'index'])
-    ->middleware('throttle:sitemap');
+    ->middleware('rate.limit:sitemap');
 
 /*
 |--------------------------------------------------------------------------
@@ -133,6 +137,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
 | Unauthenticated — validated via Stripe webhook signature.
 */
 Route::post('webhooks/stripe', StripeWebhookController::class);
+
+/*
+|--------------------------------------------------------------------------
+| Public Voucher Verification (Feature: 014-notifications-vouchers)
+|--------------------------------------------------------------------------
+| Read-only, unauthenticated lookup of a booking by its opaque reference.
+| The voucher QR encodes https://bookly.travel/v/{reference} → the Next.js
+| page at /v/{reference} consumes this endpoint. throttle:verify (60/min/IP,
+| per-IP because the surface is unauthenticated) deters enumeration (SC-010);
+| `Cache-Control: no-store` prevents a stale status being served after a
+| state change. No auth, no side effects, no PII (FR-022..FR-028, SC-011).
+*/
+Route::get('v/{reference}', [VerificationController::class, 'show'])
+    ->middleware('throttle:verify');
 
 /*
 |--------------------------------------------------------------------------

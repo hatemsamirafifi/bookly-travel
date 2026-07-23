@@ -9,6 +9,7 @@ use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Partner\Models\TourDraft;
 use App\Domains\Partner\Models\TourMedia;
+use App\Domains\Reviews\Models\Review;
 use App\Enums\TourStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,6 +51,7 @@ class Tour extends Model
         'status',
         'cover_image_url',
         'is_featured',
+        'published_at',
         'created_at',
         'updated_at',
     ];
@@ -62,6 +64,7 @@ class Tour extends Model
             'duration_minutes' => 'integer',
             'price_amount' => 'integer',
             'is_featured' => 'boolean',
+            'published_at' => 'datetime',
         ];
     }
 
@@ -108,9 +111,47 @@ class Tour extends Model
 
     public function shouldBeSearchable(): bool
     {
+        return $this->isPubliclyBookable();
+    }
+
+    /**
+     * A tour is publicly bookable when it is published, has valid pricing
+     * (lowestPriceAmount > 0), and at least one upcoming available date.
+     *
+     * This is the single invariant shared by the search index
+     * (`shouldBeSearchable`), the facet aggregates, and the tour-detail
+     * availability gate — keeping them aligned so a tour that is excluded
+     * from search can never be served as bookable via a direct URL (FR-036).
+     */
+    public function isPubliclyBookable(): bool
+    {
         return $this->status === 'published'
             && $this->hasValidPricing()
             && $this->hasUpcomingAvailability();
+    }
+
+    /**
+     * Query scope for published tours. Use this instead of repeated
+     * `where('status', 'published')` so the read-side filter has one home.
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
+    }
+
+    /**
+     * Query scope narrowing to tours that satisfy the same bookable invariant
+     * the search index uses, expressed at the query level. The availability
+     * component is approximated with `whereHas('availabilityRules')` (a tour
+     * with no rules has no upcoming dates), which matches the search-index
+     * behavior closely enough for facet counts and homepage listings.
+     */
+    public function scopeBookable($query)
+    {
+        return $query
+            ->published()
+            ->where('price_amount', '>', 0)
+            ->whereHas('availabilityRules');
     }
 
     public function hasValidPricing(): bool
@@ -170,8 +211,8 @@ class Tour extends Model
         }
 
         $blocked = $this->availabilityExceptions
-            ->filter(fn ($e) => $e->exception_type === 'block')
-            ->mapWithKeys(fn ($e) => [$this->dateString($e->date) => true]);
+            ->filter(fn (AvailabilityException $e) => $e->exception_type === 'block')
+            ->mapWithKeys(fn (AvailabilityException $e) => [$this->dateString($e->date) => true]);
 
         $from = Carbon::today();
         $to = (clone $from)->addDays($horizonDays - 1);
@@ -179,32 +220,22 @@ class Tour extends Model
         $dates = [];
 
         foreach ($rules as $rule) {
+            assert($rule instanceof AvailabilityRule);
             if ($rule->rule_type === 'specific_date') {
-                $dateStr = $this->dateString($rule->start_date);
-                $carbon = Carbon::parse($dateStr);
-                if ($carbon >= $from && $carbon <= $to && ! isset($blocked[$dateStr])) {
-                    $dates[$dateStr] = true;
+                $carbon = Carbon::parse($this->dateString($rule->start_date));
+                if ($carbon >= $from && $carbon <= $to && ! isset($blocked[$carbon->toDateString()])) {
+                    $dates[$carbon->toDateString()] = true;
                 }
+
                 continue;
             }
 
-            // Recurring rule: day-of-week within [start_date, end_date] window.
-            $start = $rule->start_date ? Carbon::parse($this->dateString($rule->start_date))->startOfDay() : null;
-            $end = $rule->end_date ? Carbon::parse($this->dateString($rule->end_date))->endOfDay() : null;
-            $daysOfWeek = $rule->days_of_week ?? [];
-
+            // Recurring rule: walk the horizon window and keep each day the
+            // rule covers (day-of-week within [start_date, end_date]).
             $cursor = clone $from;
             while ($cursor <= $to) {
-                if ($start && $cursor < $start) {
-                    $cursor = $cursor->addDay();
-                    continue;
-                }
-                if ($end && $cursor > $end) {
-                    break;
-                }
-                $dateStr = $cursor->toDateString();
-                if (in_array($cursor->dayOfWeek, $daysOfWeek, true) && ! isset($blocked[$dateStr])) {
-                    $dates[$dateStr] = true;
+                if ($this->ruleCoversDate($rule, $cursor) && ! isset($blocked[$cursor->toDateString()])) {
+                    $dates[$cursor->toDateString()] = true;
                 }
                 $cursor = $cursor->addDay();
             }
@@ -214,6 +245,96 @@ class Tour extends Model
         sort($dates);
 
         return array_slice($dates, 0, $limit);
+    }
+
+    /**
+     * Does this tour operate on the given date, per its availability rules
+     * minus blocking exceptions? (F9 — gates booking creation against the
+     * operating schedule, not just "future date".)
+     *
+     * Unlike `upcomingAvailableDates()`, this is NOT bounded by the 90-day /
+     * 60-date search-index horizon — it answers for any concrete date. Shares
+     * `ruleCoversDate()` with `upcomingAvailableDates()` so the two never drift.
+     */
+    public function operatesOnDate(Carbon $date): bool
+    {
+        if ($this->availabilityRules->isEmpty()) {
+            return false;
+        }
+
+        $dateStr = $date->toDateString();
+        $blocked = $this->availabilityExceptions
+            ->contains(fn (AvailabilityException $e) => $e->exception_type === 'block' && $this->dateString($e->date) === $dateStr);
+
+        if ($blocked) {
+            return false;
+        }
+
+        foreach ($this->availabilityRules as $rule) {
+            assert($rule instanceof AvailabilityRule);
+            if ($this->ruleCoversDate($rule, $date)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Earliest start time of the availability rules covering the given date,
+     * or null when no covering rule declares one. Used to snapshot the tour
+     * start time onto the booking at creation (F5) so cancellation windows
+     * and no_show gates anchor to the actual start, not `tour_date` midnight.
+     */
+    public function startTimeForDate(Carbon $date): ?string
+    {
+        $times = [];
+        foreach ($this->availabilityRules as $rule) {
+            assert($rule instanceof AvailabilityRule);
+            if ($this->ruleCoversDate($rule, $date) && $rule->start_time) {
+                // The `datetime:H:i:s` cast returns a Carbon at runtime, but
+                // larastan types `start_time` as string because of the format
+                // suffix — widen the inferred type so the instanceof guard is
+                // not flagged as dead and the format/cast both stay valid.
+                /** @var Carbon|string $start */
+                $start = $rule->start_time;
+                $times[] = $start instanceof Carbon ? $start->format('H:i:s') : (string) $start;
+            }
+        }
+
+        if (empty($times)) {
+            return null;
+        }
+
+        sort($times);
+
+        return $times[0];
+    }
+
+    /**
+     * Single source of truth for "does this availability rule cover this date"
+     * (ignoring the search-horizon window and blocking exceptions, which are
+     * applied by the callers). specific_date matches the exact date; recurring
+     * matches when the date's day-of-week is selected and falls in
+     * [start_date, end_date].
+     */
+    protected function ruleCoversDate(AvailabilityRule $rule, Carbon $date): bool
+    {
+        if ($rule->rule_type === 'specific_date') {
+            return $this->dateString($rule->start_date) === $date->toDateString();
+        }
+
+        $start = $rule->start_date ? Carbon::parse($this->dateString($rule->start_date))->startOfDay() : null;
+        $end = $rule->end_date ? Carbon::parse($this->dateString($rule->end_date))->endOfDay() : null;
+
+        if ($start && $date < $start) {
+            return false;
+        }
+        if ($end && $date > $end) {
+            return false;
+        }
+
+        return in_array($date->dayOfWeek, $rule->days_of_week ?? [], true);
     }
 
     /**
@@ -289,6 +410,29 @@ class Tour extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Per-star review distribution for the tour-detail response
+     * (tour-detail-api.md:65), keyed "5".."1". Counts the same review set
+     * the aggregate rating uses (visible + flagged), so the distribution
+     * sums to `reviewCount()` and reflects the publicly-shown reviews.
+     */
+    public function reviewDistribution(): array
+    {
+        $counts = Review::where('tour_id', $this->id)
+            ->whereIn('status', ['visible', 'flagged'])
+            ->selectRaw('rating, COUNT(*) as count')
+            ->groupBy('rating')
+            ->pluck('count', 'rating');
+
+        return [
+            '5' => (int) ($counts[5] ?? 0),
+            '4' => (int) ($counts[4] ?? 0),
+            '3' => (int) ($counts[3] ?? 0),
+            '2' => (int) ($counts[2] ?? 0),
+            '1' => (int) ($counts[1] ?? 0),
+        ];
     }
 
     /**

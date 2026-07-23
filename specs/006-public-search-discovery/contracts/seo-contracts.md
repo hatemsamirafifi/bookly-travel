@@ -96,10 +96,19 @@ Sitemap: https://bookly.com/sitemap.xml
     "bestRating": "5",
     "worstRating": "1"
   },
-  "itinerary": {
+  "contentLocation": {
     "@type": "Place",
     "name": "Florence, Italy",
-    "address": "Piazza della Repubblica, Florence"
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Florence",
+      "addressCountry": "IT"
+    }
+  },
+  "subjectOf": {
+    "@type": "Place",
+    "name": "Piazza della Repubblica, Florence",
+    "description": "Meeting point"
   },
   "image": "https://cdn.bookly.com/tours/42/cover.jpg"
 }
