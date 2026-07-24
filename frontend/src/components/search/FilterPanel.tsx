@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFilters } from '@/lib/hooks/useFilters';
 import type { SearchResponse } from '@/lib/api/types';
 
@@ -45,6 +45,14 @@ function CollapsibleSection({ title, defaultOpen = true, children }: Collapsible
 
 export default function FilterPanel({ filterData }: FilterPanelProps) {
   const { filters, setFilter, activeFilterCount, clearAll } = useFilters();
+
+  // Compute the date `min` bound on the client only, so the server-rendered
+  // markup never embeds a `new Date()` value that would mismatch the client
+  // render (hydration warning) and go stale across days.
+  const [minDate, setMinDate] = useState<string>('');
+  useEffect(() => {
+    setMinDate(new Date().toISOString().split('T')[0]);
+  }, []);
 
   return (
     <aside className="w-full rounded-xl border border-gray-200 bg-white p-4 lg:w-64" aria-label="Search filters">
@@ -155,7 +163,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
           type="date"
           value={filters.date || ''}
           onChange={(e) => setFilter('date', e.target.value || null)}
-          min={new Date().toISOString().split('T')[0]}
+          min={minDate || undefined}
           className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-[#0A2540] focus:outline-none focus:ring-1 focus:ring-[#0A2540]/20"
           aria-label="Filter by available date"
         />

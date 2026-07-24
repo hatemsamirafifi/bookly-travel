@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\Category;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
 
 it('lists all active categories', function () {
     Category::create(['name' => 'Adventure', 'slug' => 'adventure', 'is_active' => true, 'display_order' => 1]);

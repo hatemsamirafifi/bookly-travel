@@ -83,6 +83,8 @@ class GovernanceAuditResource extends Resource
                         'review.reinstate' => 'Review Reinstate',
                         'booking.transition' => 'Booking Transition',
                         'settings.update' => 'Settings Update',
+                        'cms.update' => 'CMS Update',
+                        'cms.publish' => 'CMS Publish',
                     ]),
                 Tables\Filters\SelectFilter::make('actor_type')
                     ->options([

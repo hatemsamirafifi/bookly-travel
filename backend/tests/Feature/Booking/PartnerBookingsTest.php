@@ -14,8 +14,8 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->category = Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
-    $this->partner = User::factory()->partner()->create();
-    $this->otherPartner = User::factory()->partner()->create();
+    $this->partner = makePartner();
+    $this->otherPartner = makePartner();
     $this->traveler = User::factory()->traveler()->create();
 
     $this->tour = Tour::create([
@@ -32,7 +32,7 @@ beforeEach(function () {
         'cover_image_url' => 'https://cdn.bookly.com/tours/42/cover.jpg',
     ]);
 
-    $this->token = $this->partner->createToken('test')->plainTextToken;
+    $this->token = $this->partner->user->createToken('test')->plainTextToken;
 
     $this->booking = Booking::create([
         'reference' => Booking::generateReference(),

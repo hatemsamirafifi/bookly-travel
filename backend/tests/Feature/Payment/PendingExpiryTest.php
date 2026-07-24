@@ -12,7 +12,7 @@ uses(RefreshDatabase::class);
 
 it('expires pending payment bookings older than 15 minutes', function () {
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -71,7 +71,7 @@ it('expires pending payment bookings older than 15 minutes', function () {
 
 it('does not expire bookings that are still within the 15-minute window', function () {
     $category = Category::firstOrCreate(['slug' => 'test2'], ['name' => 'Test 2']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([

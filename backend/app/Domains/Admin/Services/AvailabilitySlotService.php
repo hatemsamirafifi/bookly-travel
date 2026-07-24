@@ -26,7 +26,7 @@ class AvailabilitySlotService
         $tour->load(['availabilityRules', 'availabilityExceptions']);
 
         $exceptions = $tour->availabilityExceptions->keyBy(fn ($e) => optional($e->date)->toDateString());
-        $bookingsByDate = $this->bookingsByDate($tour);
+        $bookingsByDate = $this->bookingsByDate($tour, $from, $days);
 
         $slots = [];
         for ($i = 0; $i < $days; $i++) {
@@ -35,6 +35,7 @@ class AvailabilitySlotService
 
             $blocked = false;
             $capacity = (int) $tour->group_size_max;
+            $capacityOverridden = false;
 
             if ($exceptions->has($key)) {
                 $exception = $exceptions->get($key);
@@ -42,10 +43,14 @@ class AvailabilitySlotService
                     $blocked = true;
                 } elseif ($exception->exception_type === 'capacity_override' && $exception->capacity !== null) {
                     $capacity = (int) $exception->capacity;
+                    $capacityOverridden = true;
                 }
             }
 
-            if (! $blocked) {
+            // A capacity_override exception wins over the recurring/specific-date
+            // rule capacity; only fall back to the rule when neither a block nor
+            // an override applies to this date.
+            if (! $blocked && ! $capacityOverridden) {
                 $ruleCapacity = $this->ruleCapacityForDate($tour, $date);
                 if ($ruleCapacity !== null) {
                     $capacity = $ruleCapacity;
@@ -100,12 +105,15 @@ class AvailabilitySlotService
     /**
      * @return array<string, int>
      */
-    private function bookingsByDate(Tour $tour): array
+    private function bookingsByDate(Tour $tour, Carbon $from, int $days): array
     {
+        $to = (clone $from)->addDays($days - 1)->toDateString();
+
         $rows = DB::table('bookings')
             ->select('tour_date', DB::raw('SUM(participant_count) as booked'))
             ->where('tour_id', $tour->id)
             ->whereIn('status', ['pending_payment', 'confirmed', 'completed'])
+            ->whereBetween('tour_date', [$from->toDateString(), $to])
             ->groupBy('tour_date')
             ->get();
 

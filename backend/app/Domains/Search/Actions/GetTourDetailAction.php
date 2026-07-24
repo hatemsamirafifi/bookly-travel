@@ -9,7 +9,8 @@ class GetTourDetailAction
 {
     public function execute(string $slug, string $locale): array
     {
-        $tour = Tour::where('slug', $slug)->first();
+        $tour = Tour::with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
+            ->where('slug', $slug)->first();
 
         if (! $tour) {
             throw new HttpResponseException(
@@ -28,8 +29,9 @@ class GetTourDetailAction
             );
         }
 
-        $translation = $tour->translations()->where('locale', $locale)->first();
-        $fallback = $translation ? null : $tour->translations()->where('locale', 'en')->first();
+        // Reuse the eager-loaded `translations` collection (no extra query).
+        $translation = $tour->translations->firstWhere('locale', $locale);
+        $fallback = $translation ? null : $tour->translations->firstWhere('locale', 'en');
         $t = $translation ?? $fallback;
 
         $images = $tour->allImageUrls();
@@ -80,6 +82,12 @@ class GetTourDetailAction
             'availability' => [
                 'next_available_date' => $availableDates[0] ?? null,
                 'available_dates' => $availableDates,
+            ],
+            // `rating` mirrors the TourCard contract (TourDetail extends TourCard)
+            // so the frontend can render the listing-style StarRating uniformly.
+            'rating' => [
+                'average' => $tour->averageRating(),
+                'count' => $tour->reviewCount(),
             ],
             'reviews' => [
                 'average_rating' => $tour->averageRating(),

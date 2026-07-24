@@ -16,7 +16,7 @@ beforeEach(function () {
     $this->category = Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
     $this->admin = User::factory()->admin()->create();
     $this->traveler = User::factory()->traveler()->create();
-    $this->partner = User::factory()->partner()->create();
+    $this->partner = makePartner();
 
     $this->tour = Tour::create([
         'partner_id' => $this->partner->id,

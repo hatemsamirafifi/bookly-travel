@@ -70,7 +70,7 @@ it('returns 401 for unauthenticated requests', function () {
     $response->assertStatus(401);
 });
 
-it('returns 403 for non-partner users', function () {
+it('returns 404 for non-partner users', function () {
     $traveler = User::factory()->traveler()->create();
     $travelerToken = $traveler->createToken('test')->plainTextToken;
 

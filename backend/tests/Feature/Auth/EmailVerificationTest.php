@@ -1,10 +1,18 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
 
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('verifies email with a valid signed url', function () {
     $user = User::factory()->create([

@@ -1,10 +1,18 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\PersonalAccessToken;
 
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('revokes the current token on logout', function () {
     $user = User::factory()->create();
@@ -29,6 +37,13 @@ it('returns 401 for revoked token', function () {
     postJson('/api/public/auth/logout', [], [
         'Authorization' => "Bearer {$token}",
     ])->assertStatus(204);
+
+    // Consecutive requests in a feature test share the same Application
+    // instance, so the AuthManager caches the guard's resolved user. Without
+    // resetting it, the second request would be authenticated by the cached
+    // user instead of re-resolving the (now-deleted) bearer token. Drop the
+    // cached guards so the revoked token is evaluated freshly.
+    app('auth')->forgetGuards();
 
     // Attempt to use the revoked token
     $response = postJson('/api/public/auth/logout', [], [

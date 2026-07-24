@@ -109,9 +109,11 @@ Route::prefix('homepage')->middleware('throttle:homepage')->group(function () {
     Route::get('/', [HomepageController::class, 'index']);
 });
 
-Route::prefix('sitemap')->middleware('throttle:sitemap')->group(function () {
-    Route::get('.xml', [SitemapController::class, 'index']);
-});
+// Spec 006 seo-contracts.md: GET /api/public/sitemap.xml. Registered as a
+// single literal URI (not a `sitemap` prefix + `.xml`, which compiles to
+// `sitemap/.xml` and 404s the spec/public URI).
+Route::get('sitemap.xml', [SitemapController::class, 'index'])
+    ->middleware('throttle:sitemap');
 
 /*
 |--------------------------------------------------------------------------

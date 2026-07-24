@@ -3,9 +3,12 @@
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
 
 it('returns homepage data with expected structure', function () {
     getJson('/api/public/homepage?locale=en')
@@ -25,6 +28,7 @@ it('returns featured tours when is_featured flag is set', function () {
 
     $tour = Tour::create([
         'category_id' => $category->id,
+        'partner_id' => makePartner()->id,
         'slug' => 'homepage-featured-tour',
         'location' => 'London',
         'location_slug' => 'london',
@@ -32,6 +36,7 @@ it('returns featured tours when is_featured flag is set', function () {
         'duration_label' => '5 hours',
         'group_size_min' => 1,
         'group_size_max' => 15,
+        'price_amount' => 5000,
         'status' => 'published',
         'is_featured' => true,
     ]);

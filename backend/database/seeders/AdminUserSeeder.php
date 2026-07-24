@@ -18,12 +18,16 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@bookly.test'],
             [
                 'name' => 'Bookly Admin',
-                'password' => Hash::make('password'),
-                'role' => 'admin',
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
                 'email_verified_at' => now(),
                 'locale' => 'en',
             ]
         );
+
+        // 'role' is not in User::$fillable; set it explicitly to avoid silent
+        // mass-assignment discard (User::canAccessPanel checks role === 'admin').
+        $admin->role = 'admin';
+        $admin->save();
 
         $flags = [
             'manage_tours' => true,

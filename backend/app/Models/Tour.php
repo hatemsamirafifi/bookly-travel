@@ -12,6 +12,7 @@ use App\Domains\Partner\Models\TourMedia;
 use App\Enums\TourStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 
 class Tour extends Model
@@ -148,18 +149,92 @@ class Tour extends Model
         return $this->cover_image_url ? [$this->cover_image_url] : [];
     }
 
-    public function upcomingAvailableDates(): array
+    /**
+     * Upcoming bookable dates derived from availability_rules +
+     * availability_exceptions (spec 004 / spec 006 FR-003, FR-036).
+     *
+     * This is the search-index-level approximation: it reflects rule-defined
+     * dates minus blocking exceptions, NOT real-time booking occupancy. The
+     * tour detail page performs the real-time availability check on load to
+     * cover any staleness within the async index update window (FR-036).
+     *
+     * Reads the eager-loadable `availabilityRules` / `availabilityExceptions`
+     * relation collections so it does not issue extra queries when preloaded.
+     * Horizon and limit keep the search-index payload small.
+     */
+    public function upcomingAvailableDates(int $horizonDays = 90, int $limit = 60): array
     {
-        // Delegate to Availability domain (spec 004) — placeholder returns empty array
-        return [];
+        $rules = $this->availabilityRules;
+        if ($rules->isEmpty()) {
+            return [];
+        }
+
+        $blocked = $this->availabilityExceptions
+            ->filter(fn ($e) => $e->exception_type === 'block')
+            ->mapWithKeys(fn ($e) => [$this->dateString($e->date) => true]);
+
+        $from = Carbon::today();
+        $to = (clone $from)->addDays($horizonDays - 1);
+
+        $dates = [];
+
+        foreach ($rules as $rule) {
+            if ($rule->rule_type === 'specific_date') {
+                $dateStr = $this->dateString($rule->start_date);
+                $carbon = Carbon::parse($dateStr);
+                if ($carbon >= $from && $carbon <= $to && ! isset($blocked[$dateStr])) {
+                    $dates[$dateStr] = true;
+                }
+                continue;
+            }
+
+            // Recurring rule: day-of-week within [start_date, end_date] window.
+            $start = $rule->start_date ? Carbon::parse($this->dateString($rule->start_date))->startOfDay() : null;
+            $end = $rule->end_date ? Carbon::parse($this->dateString($rule->end_date))->endOfDay() : null;
+            $daysOfWeek = $rule->days_of_week ?? [];
+
+            $cursor = clone $from;
+            while ($cursor <= $to) {
+                if ($start && $cursor < $start) {
+                    $cursor = $cursor->addDay();
+                    continue;
+                }
+                if ($end && $cursor > $end) {
+                    break;
+                }
+                $dateStr = $cursor->toDateString();
+                if (in_array($cursor->dayOfWeek, $daysOfWeek, true) && ! isset($blocked[$dateStr])) {
+                    $dates[$dateStr] = true;
+                }
+                $cursor = $cursor->addDay();
+            }
+        }
+
+        $dates = array_keys($dates);
+        sort($dates);
+
+        return array_slice($dates, 0, $limit);
+    }
+
+    /**
+     * Normalize a date attribute (Carbon|string|null) to a Y-m-d string.
+     */
+    protected function dateString($date): ?string
+    {
+        if ($date === null) {
+            return null;
+        }
+
+        return $date instanceof Carbon ? $date->toDateString() : (string) $date;
     }
 
     public function availableLanguages(): array
     {
-        return $this->translations()
-            ->whereNotNull('title')
+        // Reuse the loaded `translations` collection (no extra query).
+        return $this->translations
+            ->filter(fn ($t) => filled($t->title))
             ->pluck('locale')
-            ->toArray();
+            ->all();
     }
 
     public function translations()

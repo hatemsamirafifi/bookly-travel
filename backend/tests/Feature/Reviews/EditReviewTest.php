@@ -15,7 +15,7 @@ uses(RefreshDatabase::class);
 
 it('allows edit within 48 hours of creation', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -74,7 +74,7 @@ it('allows edit within 48 hours of creation', function () {
 
 it('shows edited flag after edit', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -133,7 +133,7 @@ it('shows edited flag after edit', function () {
 
 it('creates audit trail entry on edit', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -198,7 +198,7 @@ it('creates audit trail entry on edit', function () {
 
 it('returns 403 for edit after 48 hours', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -254,7 +254,7 @@ it('returns 403 for edit after 48 hours', function () {
 it('returns 403 when non-owner tries to edit', function () {
     $traveler = User::factory()->traveler()->create();
     $otherTraveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -309,7 +309,7 @@ it('returns 403 when non-owner tries to edit', function () {
 
 it('recalculates aggregate rating on edit', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([

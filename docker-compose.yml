@@ -131,6 +131,9 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # Provisions the `bookly_test` database for the Pest suite on a fresh
+      # volume. See docker/postgres/init-test-db.sh.
+      - ./docker/postgres/init-test-db.sh:/docker-entrypoint-initdb.d/init-test-db.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U bookly"]
       interval: 10s

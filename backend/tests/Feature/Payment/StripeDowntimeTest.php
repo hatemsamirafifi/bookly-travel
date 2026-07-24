@@ -13,7 +13,7 @@ uses(RefreshDatabase::class);
 
 it('returns 503 when Stripe API is unreachable during booking', function () {
     $category = Category::firstOrCreate(['slug' => 'downtime'], ['name' => 'Downtime']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -52,7 +52,7 @@ it('returns 503 when Stripe API is unreachable during booking', function () {
 
 it('idempotency retry returns existing booking without new payment intent on stripe failure', function () {
     $category = Category::firstOrCreate(['slug' => 'idem-down'], ['name' => 'Idempotent Downtime']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([

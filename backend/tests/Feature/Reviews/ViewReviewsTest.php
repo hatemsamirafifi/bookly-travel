@@ -15,7 +15,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->traveler = User::factory()->traveler()->create();
-    $this->partner = User::factory()->partner()->create();
+    $this->partner = makePartner();
     $this->category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $this->tour = Tour::create([

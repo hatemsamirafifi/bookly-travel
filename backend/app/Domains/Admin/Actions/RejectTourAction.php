@@ -17,38 +17,40 @@ use Illuminate\Support\Facades\DB;
  */
 class RejectTourAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     /**
      * @param  array{rejection_reason?: string}  $data
      */
     public function execute(User $actor, Tour $tour, array $data): Tour
     {
-        abort_unless(
-            $tour->canTransitionTo(TourStatus::Rejected),
-            422,
-            'Tour cannot be rejected from its current state.',
-        );
-
-        $before = ['status' => $tour->status];
         $reason = (string) ($data['rejection_reason'] ?? '');
+        abort_if(trim($reason) === '', 422, 'A rejection reason is required.');
 
-        return DB::transaction(function () use ($actor, $tour, $before, $reason) {
-            $tour->update(['status' => TourStatus::Rejected->value]);
-            $tour->refresh();
+        return DB::transaction(function () use ($actor, $tour, $reason) {
+            $locked = Tour::lockForUpdate()->find($tour->id) ?? $tour;
+
+            abort_unless(
+                $locked->canTransitionTo(TourStatus::Rejected),
+                422,
+                'Tour cannot be rejected from its current state.',
+            );
+
+            $before = ['status' => $locked->status];
+
+            $locked->update(['status' => TourStatus::Rejected->value]);
+            $locked->refresh();
 
             $this->audit->log(
                 $actor,
                 'tour.reject',
-                $tour,
+                $locked,
                 $before,
-                ['status' => $tour->status],
+                ['status' => $locked->status],
                 ['reason' => $reason],
             );
 
-            return $tour;
+            return $locked;
         });
     }
 }

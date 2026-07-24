@@ -8,8 +8,14 @@ class TourCardTransformer
 {
     public function transform(Tour $tour, string $locale): array
     {
-        $translation = $tour->translations()->where('locale', $locale)->first()
-            ?? $tour->translations()->where('locale', 'en')->first();
+        // Use the loaded `translations` collection (no extra query) when the
+        // caller eager-loaded it; falls back to a single query otherwise.
+        $translations = $tour->relationLoaded('translations')
+            ? $tour->translations
+            : $tour->translations()->get();
+
+        $translation = $translations->firstWhere('locale', $locale)
+            ?? $translations->firstWhere('locale', 'en');
 
         return [
             'id' => $tour->id,

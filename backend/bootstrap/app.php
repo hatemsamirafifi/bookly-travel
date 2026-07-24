@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
-        \App\Providers\Filament\AdminPanelProvider::class,
+        App\Providers\Filament\AdminPanelProvider::class,
     ])
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',

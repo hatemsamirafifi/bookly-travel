@@ -16,7 +16,8 @@ class IndexTourAction implements ShouldQueue
 
     public function handle(): void
     {
-        $tour = Tour::find($this->tourId);
+        $tour = Tour::with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
+            ->find($this->tourId);
 
         if (! $tour || ! $tour->shouldBeSearchable()) {
             return;

@@ -3,9 +3,21 @@
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    $this->category = Category::create([
+        'name' => 'Test Category',
+        'slug' => 'test-category',
+        'is_active' => true,
+        'display_order' => 1,
+    ]);
+});
 
 it('returns tour detail for a valid slug and locale', function () {
     $category = Category::create([
@@ -17,6 +29,8 @@ it('returns tour detail for a valid slug and locale', function () {
 
     $tour = Tour::create([
         'category_id' => $category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'test-adventure',
         'location' => 'Paris, France',
         'location_slug' => 'paris',
@@ -63,7 +77,9 @@ it('returns 404 for non-existent slug', function () {
 
 it('returns 404 for draft tour', function () {
     $tour = Tour::create([
-        'category_id' => null,
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'draft-tour',
         'location' => 'Rome',
         'location_slug' => 'rome',
@@ -80,7 +96,9 @@ it('returns 404 for draft tour', function () {
 
 it('returns 404 for rejected tour', function () {
     $tour = Tour::create([
-        'category_id' => null,
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'rejected-tour',
         'location' => 'Berlin',
         'location_slug' => 'berlin',
@@ -97,7 +115,9 @@ it('returns 404 for rejected tour', function () {
 
 it('returns 410 for archived tour', function () {
     $tour = Tour::create([
-        'category_id' => null,
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'archived-tour',
         'location' => 'Madrid',
         'location_slug' => 'madrid',
@@ -115,7 +135,9 @@ it('returns 410 for archived tour', function () {
 
 it('returns content in the requested locale', function () {
     $tour = Tour::create([
-        'category_id' => null,
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'localized-tour',
         'location' => 'Barcelona',
         'location_slug' => 'barcelona',
@@ -154,7 +176,9 @@ it('returns content in the requested locale', function () {
 
 it('falls back to English when requested locale is unavailable', function () {
     $tour = Tour::create([
-        'category_id' => null,
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'fallback-tour',
         'location' => 'Milan',
         'location_slug' => 'milan',
@@ -189,7 +213,9 @@ it('validates locale parameter is required', function () {
 
 it('includes SEO metadata in response', function () {
     $tour = Tour::create([
-        'category_id' => null,
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
         'slug' => 'seo-tour',
         'location' => 'Tokyo',
         'location_slug' => 'tokyo',

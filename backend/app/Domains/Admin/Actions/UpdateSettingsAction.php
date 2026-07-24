@@ -63,7 +63,7 @@ class UpdateSettingsAction
             // A no-op save (no property changed) is not a governance event —
             // persist the settings but skip the audit row so the trail records
             // only real settings changes (FR-011).
-            if (! empty($changed)) {
+            if (!empty($changed)) {
                 $this->audit->log(
                     $actor,
                     'settings.update',

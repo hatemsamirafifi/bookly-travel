@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 
 class BookingResource extends Resource
 {
@@ -152,8 +153,10 @@ class BookingResource extends Resource
                     ])
                     ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_CANCELLED))
                     ->action(function (Booking $record, array $data) {
-                        app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLED);
-                        $record->update(['cancellation_reason' => $data['cancellation_reason']]);
+                        DB::transaction(function () use ($record, $data) {
+                            app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLED);
+                            $record->update(['cancellation_reason' => $data['cancellation_reason']]);
+                        });
                         Notification::make()->title('Booking cancelled — refund routed to payments')->danger()->send();
                     }),
             ])

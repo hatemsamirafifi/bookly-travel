@@ -1,12 +1,20 @@
 <?php
 
-use App\Models\Booking;
+use App\Domains\Booking\Models\Booking;
 use App\Models\GuestIdentity;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('converts a guest to an account with valid data', function () {
     Queue::fake();
@@ -16,9 +24,18 @@ it('converts a guest to an account with valid data', function () {
         'name' => 'Convert User',
     ]);
 
-    $booking = Booking::factory()->create([
+    $tour = makeSearchableTour();
+    $booking = Booking::create([
+        'reference' => Booking::generateReference(),
         'traveler_id' => null,
         'guest_identity_id' => $guest->id,
+        'tour_id' => $tour->id,
+        'tour_date' => now()->addDays(5)->toDateString(),
+        'participant_count' => 2,
+        'price_per_person' => 5000,
+        'total_price' => 10000,
+        'currency' => 'EUR',
+        'status' => Booking::STATUS_CONFIRMED,
     ]);
 
     $response = postJson('/api/public/auth/guest/convert', [
@@ -61,14 +78,31 @@ it('links all guest bookings with the same email on conversion', function () {
         'name' => 'Multi Booking User',
     ]);
 
-    $booking1 = Booking::factory()->create([
+    $tour = makeSearchableTour();
+    $booking1 = Booking::create([
+        'reference' => Booking::generateReference(),
         'traveler_id' => null,
         'guest_identity_id' => $guest->id,
+        'tour_id' => $tour->id,
+        'tour_date' => now()->addDays(5)->toDateString(),
+        'participant_count' => 2,
+        'price_per_person' => 5000,
+        'total_price' => 10000,
+        'currency' => 'EUR',
+        'status' => Booking::STATUS_CONFIRMED,
     ]);
 
-    $booking2 = Booking::factory()->create([
+    $booking2 = Booking::create([
+        'reference' => Booking::generateReference(),
         'traveler_id' => null,
         'guest_identity_id' => $guest->id,
+        'tour_id' => $tour->id,
+        'tour_date' => now()->addDays(5)->toDateString(),
+        'participant_count' => 2,
+        'price_per_person' => 5000,
+        'total_price' => 10000,
+        'currency' => 'EUR',
+        'status' => Booking::STATUS_CONFIRMED,
     ]);
 
     postJson('/api/public/auth/guest/convert', [

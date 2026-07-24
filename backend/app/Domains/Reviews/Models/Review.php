@@ -74,7 +74,9 @@ class Review extends Model
     /**
      * Guard admin review-moderation transitions (data-model.md §5).
      *
-     * Allowed: visible → hidden|flagged; hidden → visible; flagged → visible.
+     * Allowed: visible → hidden; hidden → visible; flagged → visible.
+     * Reviews are flagged at submission time by the profanity filter
+     * (SubmitReviewAction), not via a lifecycle transition from visible.
      * Hide/reinstate recomputes the tour aggregate rating (handled by the
      * moderation actions).
      */
@@ -83,7 +85,7 @@ class Review extends Model
         $to = $to instanceof ReviewStatus ? $to->value : $to;
 
         $allowed = [
-            'visible' => ['hidden', 'flagged'],
+            'visible' => ['hidden'],
             'hidden' => ['visible'],
             'flagged' => ['visible'],
         ];

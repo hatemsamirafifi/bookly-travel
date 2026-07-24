@@ -1,9 +1,17 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Cache::flush();
+});
 
 it('changes password with correct current password', function () {
     $user = User::factory()->create([

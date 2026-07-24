@@ -43,15 +43,15 @@ class UpdateSettingsRequest extends FormRequest
                 'site_tagline' => ['nullable', 'string', 'max:160'],
                 'support_email' => ['sometimes', 'required', 'email'],
                 'default_currency' => ['sometimes', 'required', 'string', 'size:3'],
-                'timezone' => ['sometimes', 'required', 'string', 'max:64'],
+                'timezone' => ['sometimes', 'required', 'string', 'timezone', 'max:64'],
                 'maintenance_mode' => ['sometimes', 'boolean'],
             ],
             'seo' => [
                 'default_meta_title' => ['sometimes', 'required', 'string', 'max:120'],
                 'default_meta_description' => ['nullable', 'string', 'max:255'],
-                'default_og_image' => ['nullable', 'string', 'max:255'],
+                'default_og_image' => ['nullable', 'string', 'url', 'max:255'],
                 'twitter_handle' => ['nullable', 'string', 'max:64'],
-                'default_canonical_base' => ['nullable', 'string', 'max:255'],
+                'default_canonical_base' => ['nullable', 'string', 'url', 'max:255'],
                 'sitemap_enabled' => ['sometimes', 'boolean'],
             ],
             'contact' => [
@@ -60,6 +60,7 @@ class UpdateSettingsRequest extends FormRequest
                 'contact_address' => ['nullable', 'string', 'max:255'],
                 'business_hours' => ['nullable', 'string', 'max:255'],
                 'social_links' => ['nullable', 'array'],
+                'social_links.*' => ['nullable', 'string', 'url', 'max:255'],
             ],
             'booking' => [
                 'allow_guest_checkout' => ['sometimes', 'boolean'],

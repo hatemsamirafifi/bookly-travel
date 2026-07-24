@@ -64,7 +64,7 @@ function createPaidBooking(User $traveler, Tour $tour): Booking
 
 it('can cancel a booking within cancellation window and trigger refund', function () {
     $category = Category::firstOrCreate(['slug' => 'refund'], ['name' => 'Refund Test']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -90,7 +90,7 @@ it('can cancel a booking within cancellation window and trigger refund', functio
         ->andReturn('re_test_123');
 
     $response = actingAs($traveler)
-        ->postJson("/api/public/my-bookings/{$booking->reference}/cancel");
+        ->postJson("/api/public/traveler/bookings/{$booking->reference}/cancel");
 
     $response->assertStatus(200);
 
@@ -112,7 +112,7 @@ it('can cancel a booking within cancellation window and trigger refund', functio
 
 it('double cancellation is idempotent', function () {
     $category = Category::firstOrCreate(['slug' => 'dbl-cancel'], ['name' => 'Double Cancel']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -138,7 +138,7 @@ it('double cancellation is idempotent', function () {
 
     // First cancellation
     actingAs($traveler)
-        ->postJson("/api/public/my-bookings/{$booking->reference}/cancel")
+        ->postJson("/api/public/traveler/bookings/{$booking->reference}/cancel")
         ->assertStatus(200);
 
     $refundCountBefore = Payment::where('booking_id', $booking->id)->where('type', 'refund')->count();
@@ -146,7 +146,7 @@ it('double cancellation is idempotent', function () {
 
     // Second cancellation — should return existing result without calling Stripe again
     actingAs($traveler)
-        ->postJson("/api/public/my-bookings/{$booking->reference}/cancel")
+        ->postJson("/api/public/traveler/bookings/{$booking->reference}/cancel")
         ->assertStatus(200);
 
     expect($booking->fresh()->status)->toBe(Booking::STATUS_CANCELLED);
@@ -156,7 +156,7 @@ it('double cancellation is idempotent', function () {
 
 it('does not auto-refund when cancelling outside cancellation window', function () {
     $category = Category::firstOrCreate(['slug' => 'no-refund'], ['name' => 'No Refund']);
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
 
     $tour = Tour::create([
@@ -201,7 +201,7 @@ it('does not auto-refund when cancelling outside cancellation window', function 
 
     // StripeService mock should NEVER be called since cancellation should be blocked
     $response = actingAs($traveler)
-        ->postJson("/api/public/my-bookings/{$booking->reference}/cancel");
+        ->postJson("/api/public/traveler/bookings/{$booking->reference}/cancel");
 
     $response->assertStatus(409);
 

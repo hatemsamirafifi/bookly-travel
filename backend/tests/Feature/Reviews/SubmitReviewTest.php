@@ -14,7 +14,7 @@ uses(RefreshDatabase::class);
 
 it('returns 201 when traveler submits a valid review for a completed booking', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -66,7 +66,7 @@ it('returns 201 when traveler submits a valid review for a completed booking', f
 
 it('succeeds with rating-only review (no comment)', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -114,7 +114,7 @@ it('succeeds with rating-only review (no comment)', function () {
 
 it('returns 403 when booking is not completed', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -154,7 +154,7 @@ it('returns 403 when booking is not completed', function () {
 it('returns 403 when booking does not belong to traveler', function () {
     $traveler = User::factory()->traveler()->create();
     $otherTraveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -201,7 +201,7 @@ it('returns 403 when booking does not belong to traveler', function () {
 
 it('returns 403 for duplicate review', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -258,7 +258,7 @@ it('returns 403 for duplicate review', function () {
 
 it('returns 403 for booking outside 30-day window', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -305,7 +305,7 @@ it('returns 403 for booking outside 30-day window', function () {
 
 it('returns 403 when booking has no payment record', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -344,7 +344,7 @@ it('returns 403 when booking has no payment record', function () {
 
 it('returns 422 for rating outside 1-5', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([
@@ -391,7 +391,7 @@ it('returns 422 for rating outside 1-5', function () {
 
 it('returns 422 for comment exceeding 2000 chars', function () {
     $traveler = User::factory()->traveler()->create();
-    $partner = User::factory()->partner()->create();
+    $partner = makePartner();
     $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
 
     $tour = Tour::create([

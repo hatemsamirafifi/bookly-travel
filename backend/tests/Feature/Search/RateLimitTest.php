@@ -59,7 +59,7 @@ it('different endpoints have separate rate limits', function () {
     getJson('/api/public/search/tours?locale=en')->assertStatus(429);
 
     // But tour detail should still work (different bucket: 120/min)
-    getJson('/api/public/tours/any-tour?locale=en')
-        // May return 404 (not found) but NOT 429 (rate limited)
-        ->assertStatus(fn (int $status) => $status !== 429);
+    $response = getJson('/api/public/tours/any-tour?locale=en');
+    // May return 404 (not found) but NOT 429 (rate limited)
+    expect($response->status())->not->toBe(429);
 });

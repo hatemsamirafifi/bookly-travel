@@ -18,6 +18,16 @@ return new class extends Migration
 
     public function down(): void
     {
+        $affected = DB::table('bookings')
+            ->where('status', 'cancellation_requested')
+            ->count();
+
+        if ($affected > 0) {
+            throw new \RuntimeException(
+                "Cannot narrow bookings.status to varchar(20): {$affected} row(s) still use 'cancellation_requested'."
+            );
+        }
+
         DB::statement('ALTER TABLE bookings ALTER COLUMN status TYPE varchar(20)');
     }
 };

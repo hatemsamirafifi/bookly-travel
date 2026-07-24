@@ -5,19 +5,36 @@ namespace App\Domains\Search\Controllers\Public;
 use App\Models\Category;
 use App\Models\Tour;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class SitemapController
 {
+    /**
+     * Sitemap cache TTL in seconds (1 hour). Generation walks the full
+     * published-tour catalog, so the rendered XML is cached and reused
+     * rather than rebuilt on every request.
+     */
+    protected const CACHE_TTL = 3600;
+
+    protected const CACHE_KEY = 'bookly:sitemap:xml';
+
     public function index(): Response
     {
-        $baseUrl = config('app.url', 'https://bookly.com');
+        $xml = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, fn () => $this->renderXml());
 
-        $tours = Tour::where('status', 'published')->get();
-        $categories = Category::where('is_active', true)->get();
-        $destinations = Tour::where('status', 'published')
-            ->select('location_slug')
-            ->distinct()
-            ->get();
+        return response($xml, 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Cache-Control', 'public, max-age=3600');
+    }
+
+    /**
+     * Render the full sitemap XML. Tours are streamed via chunkById() so a
+     * catalog of 5,000–10,000 tours (spec SC-010) never materializes as a
+     * single Eloquent collection in memory; only `id` and `slug` are selected.
+     */
+    protected function renderXml(): string
+    {
+        $baseUrl = config('app.url', 'https://bookly.com');
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
@@ -29,21 +46,29 @@ class SitemapController
             'it' => "{$baseUrl}/it",
         ], 'daily', '1.0');
 
-        // Tour detail pages
-        foreach ($tours as $tour) {
-            $xml .= $this->renderUrl(
-                "{$baseUrl}/en/tours/{$tour->slug}",
-                [
-                    'en' => "{$baseUrl}/en/tours/{$tour->slug}",
-                    'es' => "{$baseUrl}/es/tours/{$tour->slug}",
-                    'it' => "{$baseUrl}/it/tours/{$tour->slug}",
-                ],
-                'weekly',
-                '0.9'
-            );
-        }
+        // Tour detail pages — stream in chunks to bound memory. chunkById()
+        // paginates on the `id` column, so `id` MUST be in the select list or
+        // it aborts (RuntimeException) the moment any row exists.
+        Tour::where('status', 'published')
+            ->select(['id', 'slug'])
+            ->orderBy('id')
+            ->chunkById(500, function ($tours) use (&$xml, $baseUrl) {
+                foreach ($tours as $tour) {
+                    $xml .= $this->renderUrl(
+                        "{$baseUrl}/en/tours/{$tour->slug}",
+                        [
+                            'en' => "{$baseUrl}/en/tours/{$tour->slug}",
+                            'es' => "{$baseUrl}/es/tours/{$tour->slug}",
+                            'it' => "{$baseUrl}/it/tours/{$tour->slug}",
+                        ],
+                        'weekly',
+                        '0.9'
+                    );
+                }
+            });
 
-        // Category pages
+        // Category pages — bounded taxonomy (30–50 per spec), select slug only.
+        $categories = Category::where('is_active', true)->select('slug')->get();
         foreach ($categories as $category) {
             $xml .= $this->renderUrl(
                 "{$baseUrl}/en/categories/{$category->slug}",
@@ -57,7 +82,11 @@ class SitemapController
             );
         }
 
-        // Destination pages
+        // Destination pages — distinct locations, select slug only.
+        $destinations = Tour::where('status', 'published')
+            ->select('location_slug')
+            ->distinct()
+            ->get();
         foreach ($destinations as $dest) {
             $xml .= $this->renderUrl(
                 "{$baseUrl}/en/destinations/{$dest->location_slug}",
@@ -73,9 +102,7 @@ class SitemapController
 
         $xml .= '</urlset>';
 
-        return response($xml, 200)
-            ->header('Content-Type', 'application/xml')
-            ->header('Cache-Control', 'public, max-age=3600');
+        return $xml;
     }
 
     protected function renderUrl(string $loc, array $alternates, string $changefreq, string $priority): string
