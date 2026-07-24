@@ -123,22 +123,31 @@ test.describe('Partner Reviews - API Integration', () => {
           data: [
             {
               id: 1,
-              tour: { id: 1, title: 'Rome Walking Tour', slug: 'rome-walking-tour' },
-              traveler_name: 'Alice M.',
+              tour_slug: 'rome-walking-tour',
+              tour_title: 'Rome Walking Tour',
+              reviewer_name: 'Alice',
               rating: 5,
-              text: 'Absolutely fantastic experience! Our guide was knowledgeable and friendly.',
-              submitted_at: '2026-05-20T10:00:00Z',
-              booking_reference: 'BK-123',
+              comment: 'Absolutely fantastic experience! Our guide was knowledgeable and friendly.',
+              status: 'visible',
+              created_at: '2026-05-20T10:00:00Z',
               response: null,
             },
           ],
-          meta: { current_page: 1, last_page: 1, per_page: 10, total: 1 },
+          meta: {
+            tour_summaries: [
+              { tour_slug: 'rome-walking-tour', tour_title: 'Rome Walking Tour', average_rating: 5, review_count: 1 },
+            ],
+            current_page: 1,
+            last_page: 1,
+            per_page: 10,
+            total: 1,
+          },
         }),
       })
     );
     await page.goto('/en/partner/reviews');
 
-    await expect(page.getByText('Alice M.')).toBeVisible();
+    await expect(page.getByText('Alice')).toBeVisible();
     await expect(page.getByText(/fantastic experience/i)).toBeVisible();
   });
 

@@ -19,10 +19,8 @@ import ErrorState from '@/components/ui/ErrorState';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { ReviewResponseForm } from '@/components/partner/reviews/ReviewResponseForm';
 
-const PER_PAGE = 20;
-
 interface TourSummary {
-  tourId: string | number;
+  tourSlug: string;
   tourTitle: string;
   average: number;
   count: number;
@@ -36,11 +34,11 @@ export default function PartnerReviewsDashboard() {
   const locale = useLocale();
 
   const [page, setPage] = useState(1);
-  const [expandedTourId, setExpandedTourId] = useState<string | number | null>(null);
+  const [expandedTourSlug, setExpandedTourSlug] = useState<string | null>(null);
   const [respondingReviewId, setRespondingReviewId] = useState<string | number | null>(null);
 
   // Filters
-  const [selectedTourId, setSelectedTourId] = useState<string>('');
+  const [selectedTourSlug, setSelectedTourSlug] = useState<string>('');
   const [selectedRating, setSelectedRating] = useState<string>('');
   const [selectedResponseStatus, setSelectedResponseStatus] = useState<ResponseFilter>('all');
 
@@ -59,18 +57,18 @@ export default function PartnerReviewsDashboard() {
   const allReviews = useMemo(() => data?.data ?? [], [data]);
   const totalPages = data?.meta?.last_page ?? 1;
 
-  // Extract unique tours for the tour filter dropdown
+  // Extract unique tours for the tour filter dropdown (from the current page)
   const tourOptions = useMemo(() => {
     const map = new Map<string, string>();
-    allReviews.forEach((r) => map.set(String(r.tour.id), r.tour.title));
-    return Array.from(map.entries()).map(([id, title]) => ({ id, title }));
+    allReviews.forEach((r) => map.set(r.tour_slug, r.tour_title));
+    return Array.from(map.entries()).map(([slug, title]) => ({ slug, title }));
   }, [allReviews]);
 
   // Apply client-side filters
   const filteredReviews = useMemo(() => {
     let items = allReviews;
-    if (selectedTourId) {
-      items = items.filter((r) => String(r.tour.id) === selectedTourId);
+    if (selectedTourSlug) {
+      items = items.filter((r) => r.tour_slug === selectedTourSlug);
     }
     if (selectedRating) {
       items = items.filter((r) => r.rating === Number(selectedRating));
@@ -81,22 +79,24 @@ export default function PartnerReviewsDashboard() {
       items = items.filter((r) => !r.response);
     }
     return items;
-  }, [allReviews, selectedTourId, selectedRating, selectedResponseStatus]);
+  }, [allReviews, selectedTourSlug, selectedRating, selectedResponseStatus]);
 
-  // Build tour summaries from filtered reviews
+  // Group the current page's filtered reviews by tour for the expandable lists.
+  // (Aggregates here reflect only the current page; the server's
+  // meta.tour_summaries covers all of the partner's reviews.)
   const tourSummaries: TourSummary[] = useMemo(() => {
-    const map = new Map<string | number, TourSummary>();
+    const map = new Map<string, TourSummary>();
     filteredReviews.forEach((r) => {
-      const existing = map.get(r.tour.id);
+      const existing = map.get(r.tour_slug);
       if (existing) {
         existing.reviews.push(r);
         existing.count = existing.reviews.length;
         existing.average =
           existing.reviews.reduce((sum, rv) => sum + rv.rating, 0) / existing.reviews.length;
       } else {
-        map.set(r.tour.id, {
-          tourId: r.tour.id,
-          tourTitle: r.tour.title,
+        map.set(r.tour_slug, {
+          tourSlug: r.tour_slug,
+          tourTitle: r.tour_title,
           average: r.rating,
           count: 1,
           reviews: [r],
@@ -106,10 +106,10 @@ export default function PartnerReviewsDashboard() {
     return Array.from(map.values()).sort((a, b) => b.count - a.count);
   }, [filteredReviews]);
 
-  const hasActiveFilters = !!selectedTourId || !!selectedRating || selectedResponseStatus !== 'all';
+  const hasActiveFilters = !!selectedTourSlug || !!selectedRating || selectedResponseStatus !== 'all';
 
   const clearFilters = () => {
-    setSelectedTourId('');
+    setSelectedTourSlug('');
     setSelectedRating('');
     setSelectedResponseStatus('all');
     setPage(1);
@@ -156,13 +156,13 @@ export default function PartnerReviewsDashboard() {
           </label>
           <select
             id="filter-tour"
-            value={selectedTourId}
-            onChange={(e) => setSelectedTourId(e.target.value)}
+            value={selectedTourSlug}
+            onChange={(e) => setSelectedTourSlug(e.target.value)}
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:border-transparent"
           >
             <option value="">{t('reviews.allTours')}</option>
             {tourOptions.map((opt) => (
-              <option key={opt.id} value={opt.id}>{opt.title}</option>
+              <option key={opt.slug} value={opt.slug}>{opt.title}</option>
             ))}
           </select>
         </div>
@@ -222,12 +222,12 @@ export default function PartnerReviewsDashboard() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {tourSummaries.map((summary) => (
             <button
-              key={summary.tourId}
+              key={summary.tourSlug}
               onClick={() =>
-                setExpandedTourId((prev) => (prev === summary.tourId ? null : summary.tourId))
+                setExpandedTourSlug((prev) => (prev === summary.tourSlug ? null : summary.tourSlug))
               }
               className={`rounded-lg border bg-white p-4 text-left transition-all hover:shadow-sm ${
-                expandedTourId === summary.tourId
+                expandedTourSlug === summary.tourSlug
                   ? 'border-[#FFB800] ring-1 ring-[#FFB800]'
                   : 'border-gray-200'
               }`}
@@ -256,14 +256,14 @@ export default function PartnerReviewsDashboard() {
         </h2>
         <div className="space-y-3">
           {tourSummaries.map((summary) => {
-            const isExpanded = expandedTourId === summary.tourId;
+            const isExpanded = expandedTourSlug === summary.tourSlug;
             return (
               <div
-                key={summary.tourId}
+                key={summary.tourSlug}
                 className="rounded-lg border border-gray-200 bg-white"
               >
                 <button
-                  onClick={() => setExpandedTourId(isExpanded ? null : summary.tourId)}
+                  onClick={() => setExpandedTourSlug(isExpanded ? null : summary.tourSlug)}
                   className="flex w-full items-center justify-between p-4 text-left"
                   aria-expanded={isExpanded}
                 >
@@ -303,7 +303,7 @@ export default function PartnerReviewsDashboard() {
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium text-gray-800">
-                                  {review.traveler_name}
+                                  {review.reviewer_name}
                                 </span>
                                 <span className="text-xs text-gray-400">
                                   • {t('reviews.verifiedTraveler')}
@@ -333,15 +333,15 @@ export default function PartnerReviewsDashboard() {
                                 </span>
                               )}
                               <span className="text-xs text-gray-400">
-                                {formatDate(review.submitted_at)}
+                                {formatDate(review.created_at)}
                               </span>
                             </div>
                           </div>
 
                           {/* Review text */}
-                          {review.text && (
+                          {review.comment && (
                             <p className="text-sm text-gray-600 leading-relaxed mt-1 mb-3">
-                              {review.text}
+                              {review.comment}
                             </p>
                           )}
 

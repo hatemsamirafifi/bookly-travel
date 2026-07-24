@@ -168,19 +168,33 @@ export interface PartnerBooking {
   updated_at: string;
 }
 
+/**
+ * A review returned by `GET /api/partner/reviews` (spec-009 contracts/api.md).
+ * Shape mirrors `PartnerReviewResource` on the backend: only these fields are
+ * exposed — `traveler_id`/`booking_id`/`tour_id`/`locale`/`edited_at` are never
+ * sent. `reviewer_name` is the traveler's first name only (FR-004).
+ */
 export interface PartnerReview {
   id: string | number;
-  tour: {
-    id: string | number;
-    title: string;
-    slug: string;
-  };
-  traveler_name: string;
+  tour_slug: string;
+  tour_title: string;
+  reviewer_name: string;
   rating: number;
-  text: string;
-  submitted_at: string;
-  booking_reference: string;
-  response?: ReviewResponse | null;
+  comment: string | null;
+  status: string;
+  created_at: string;
+  response?: {
+    response_text: string;
+    created_at: string;
+    updated_at: string;
+  } | null;
+}
+
+export interface TourSummary {
+  tour_slug: string;
+  tour_title: string;
+  average_rating: number;
+  review_count: number;
 }
 
 export interface ReviewResponse {
@@ -294,6 +308,11 @@ export interface PaginatedPartnerResponse<T> {
     last_page: number;
     per_page: number;
     total: number;
+    /**
+     * Per-tour rating aggregates. Only present on the reviews endpoint
+     * (`GET /api/partner/reviews`); other paginated partner endpoints omit it.
+     */
+    tour_summaries?: TourSummary[];
   };
 }
 

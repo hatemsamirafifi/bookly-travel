@@ -21,8 +21,9 @@ docker compose exec backend php artisan migrate
 docker compose exec backend php artisan tinker --execute="echo \App\Domains\Reviews\Models\Review::class;"
 ```
 
-3. Add profanity keyword list:
-   - Ensure `backend/storage/app/profanity_keywords.json` exists (sample provided in repo).
+3. Profanity keyword list (FR-014) — no setup required:
+   - A default list ships tracked at `backend/resources/profanity_keywords.json` and loads automatically (configured via `config/profanity.php`).
+   - To override the list per environment, create `backend/storage/app/profanity_keywords.json` (gitignored). When present, it **fully replaces** the default.
 
 ## Frontend Setup
 

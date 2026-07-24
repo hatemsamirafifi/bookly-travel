@@ -49,7 +49,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
     let items = data?.data ?? [];
     // Client-side filtering (API may not support all filter types)
     if (tourFilter) {
-      items = items.filter((r) => String(r.tour.id) === String(tourFilter));
+      items = items.filter((r) => r.tour_slug === String(tourFilter));
     }
     if (ratingFilter) {
       items = items.filter((r) => r.rating === ratingFilter);
@@ -102,10 +102,10 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
           <div className="flex items-start justify-between mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold text-[#0A2540]">{review.traveler_name}</span>
+                <span className="font-semibold text-[#0A2540]">{review.reviewer_name}</span>
                 <span className="text-xs text-gray-400">• {t('verifiedTraveler')}</span>
               </div>
-              <p className="text-xs text-gray-500 mb-1">{review.tour.title}</p>
+              <p className="text-xs text-gray-500 mb-1">{review.tour_title}</p>
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
@@ -120,12 +120,12 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
               </div>
             </div>
             <span className="text-xs text-gray-400">
-              {formatDate(review.submitted_at)}
+              {formatDate(review.created_at)}
             </span>
           </div>
 
           {/* Review text */}
-          <p className="text-sm text-gray-700 mb-4">{review.text}</p>
+          <p className="text-sm text-gray-700 mb-4">{review.comment}</p>
 
           {/* Response section — always use ReviewResponseForm */}
           {respondingId === review.id ? (

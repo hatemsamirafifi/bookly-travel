@@ -2,11 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Concerns\FormatsReviewerName;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReviewResource extends JsonResource
 {
+    use FormatsReviewerName;
+
     public function toArray(Request $request): array
     {
         return [
@@ -19,16 +22,5 @@ class ReviewResource extends JsonResource
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
-    }
-
-    private function reviewerName(): string
-    {
-        if (! $this->traveler) {
-            return 'Anonymous Traveler';
-        }
-
-        $name = $this->traveler->name ?? '';
-
-        return strtok($name, ' ') ?: $name ?: 'Anonymous Traveler';
     }
 }

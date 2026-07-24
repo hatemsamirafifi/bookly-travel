@@ -120,7 +120,9 @@ Edit an existing review (within 48-hour window).
 List reviews for the authenticated partner's tours.
 
 **Auth**: Sanctum (partner)
-**Query Params**: `tour_id` (optional, filter by tour)
+**Query Params**: `tour_id` (optional, filter by tour), `rating` (1-5), `has_response` (bool), `date_from`/`date_to` (`Y-m-d`), `sort` (`newest`|`rating_asc`|`rating_desc`), `per_page` (1-100, default 20), `page`
+
+Each item exposes only the fields below — `traveler_id`, `booking_id`, `tour_id`, `locale`, and `edited_at` are intentionally never returned (no PII / internal-id leak). `reviewer_name` is the traveler's first name only (FR-004), or `"Anonymous Traveler"` when the traveler is absent. `tour_title` and `response` are included so the dashboard can render without extra round-trips.
 
 **Response 200**:
 ```json
@@ -129,20 +131,32 @@ List reviews for the authenticated partner's tours.
     {
       "id": 42,
       "tour_slug": "amalfi-boat-tour",
+      "tour_title": "Amalfi Coast Boat Tour",
       "reviewer_name": "Marco",
       "rating": 4,
       "comment": "Amazing boat tour!",
       "status": "visible",
-      "created_at": "2026-05-12T14:30:00Z"
+      "created_at": "2026-05-12T14:30:00Z",
+      "response": {
+        "response_text": "Thanks for the kind words!",
+        "created_at": "2026-05-12T16:00:00Z",
+        "updated_at": "2026-05-12T16:00:00Z"
+      }
     }
   ],
   "meta": {
     "tour_summaries": [
-      { "tour_slug": "amalfi-boat-tour", "average_rating": 4.2, "review_count": 10 }
-    ]
+      { "tour_slug": "amalfi-boat-tour", "tour_title": "Amalfi Coast Boat Tour", "average_rating": 4.2, "review_count": 10 }
+    ],
+    "current_page": 1,
+    "last_page": 3,
+    "per_page": 20,
+    "total": 42
   }
 }
 ```
+
+`response` is `null` (or omitted) when the partner has not yet responded to the review.
 
 **Errors**:
 - 401 Unauthorized — not logged in

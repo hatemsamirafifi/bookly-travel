@@ -363,6 +363,31 @@ class Tour extends Model
         return $this->hasMany(TourTranslation::class);
     }
 
+    /**
+     * Resolve the tour's display title from its translations.
+     *
+     * Tours have no `title` column — titles live in `tour_translations`. This
+     * picks the requested locale, falling back to the app fallback locale
+     * (en), then the first available translation, then an empty string. Used by
+     * review-facing resources so a title is always shown regardless of which
+     * translations exist. Reuses the eager-loaded `translations` collection
+     * when available to avoid an extra query.
+     */
+    public function displayTitle(?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+        $fallback = config('app.fallback_locale', 'en');
+
+        $translations = $this->relationLoaded('translations')
+            ? $this->translations
+            : $this->translations()->get();
+
+        return $translations->firstWhere('locale', $locale)?->title
+            ?? $translations->firstWhere('locale', $fallback)?->title
+            ?? $translations->first()?->title
+            ?? '';
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

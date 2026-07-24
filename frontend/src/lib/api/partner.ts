@@ -5,6 +5,7 @@ import type {
   TourDraft,
   PartnerBooking,
   PartnerReview,
+  ReviewResponse,
   Notification,
   PartnerProfile,
   PartnerSettings,
@@ -152,7 +153,7 @@ export function getReviews(page = 1) {
 }
 
 export function respondToReview(reviewId: string | number, text: string) {
-  return apiClient<{ data: PartnerReview }>(`/api/partner/reviews/${encodeURIComponent(String(reviewId))}/responses`, {
+  return apiClient<{ data: ReviewResponse }>(`/api/partner/reviews/${encodeURIComponent(String(reviewId))}/responses`, {
     method: 'POST',
     requireCsrf: true,
     headers: authHeaders({ 'Content-Type': 'application/json' }),
@@ -161,7 +162,7 @@ export function respondToReview(reviewId: string | number, text: string) {
 }
 
 export function updateReviewResponse(reviewId: string | number, text: string) {
-  return apiClient<{ data: PartnerReview }>(`/api/partner/reviews/${encodeURIComponent(String(reviewId))}/responses`, {
+  return apiClient<{ data: ReviewResponse }>(`/api/partner/reviews/${encodeURIComponent(String(reviewId))}/responses`, {
     method: 'PUT',
     requireCsrf: true,
     headers: authHeaders({ 'Content-Type': 'application/json' }),

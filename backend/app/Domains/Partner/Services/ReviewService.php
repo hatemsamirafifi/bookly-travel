@@ -19,10 +19,25 @@ class ReviewService
      */
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
+        // Eager-load the relations PartnerReviewResource resolves (tour slug +
+        // translations for the title, traveler name, the optional response).
+        // Select only the columns the resource needs — never `['*']` — so no
+        // leaky Review columns (traveler_id, booking_id, locale, edited_at) are
+        // carried into the serialized payload. Tour titles live in
+        // tour_translations (there is no `title` column on tours), so the tour is
+        // loaded with its translations.
         $query = Review::whereHas('tour', function ($q) use ($partnerId) {
             $q->where('partner_id', $partnerId);
         })
-            ->with(['tour', 'traveler']);
+            ->with([
+                'tour' => function ($q) {
+                    $q->select(['id', 'slug'])->with(['translations' => function ($t) {
+                        $t->select(['tour_id', 'locale', 'title']);
+                    }]);
+                },
+                'traveler:id,name',
+                'reviewResponse',
+            ]);
 
         if (! empty($filters['tour_id'])) {
             $query->where('tour_id', $filters['tour_id']);
@@ -55,7 +70,12 @@ class ReviewService
             default => $query->orderBy('created_at', 'desc'),
         };
 
-        return $query->paginate($filters['per_page'] ?? 20, ['*'], 'page', $filters['page'] ?? 1);
+        return $query->paginate(
+            $filters['per_page'] ?? 20,
+            ['id', 'tour_id', 'traveler_id', 'rating', 'comment', 'status', 'created_at', 'updated_at'],
+            'page',
+            $filters['page'] ?? 1
+        );
     }
 
     /**
@@ -160,13 +180,19 @@ class ReviewService
      */
     public function getTourReviewSummaries(int $partnerId, array $filters = []): array
     {
-        $tourIds = Tour::where('partner_id', $partnerId);
+        $toursQuery = Tour::where('partner_id', $partnerId);
 
         if (! empty($filters['tour_id'])) {
-            $tourIds->where('id', $filters['tour_id']);
+            $toursQuery->where('id', $filters['tour_id']);
         }
 
-        $tourIdList = $tourIds->pluck('id');
+        // Fetch slug + translations once (keyed by id) so the summary rows can
+        // be joined to their tour identifiers without an N+1. Titles resolve via
+        // tour_translations (no `title` column on tours).
+        $tours = $toursQuery->with(['translations' => function ($t) {
+            $t->select(['tour_id', 'locale', 'title']);
+        }])->get(['id', 'slug'])->keyBy('id');
+        $tourIdList = $tours->keys();
 
         $summaries = Review::selectRaw('tour_id, AVG(rating) as average_rating, COUNT(*) as review_count')
             ->whereIn('tour_id', $tourIdList)
@@ -174,12 +200,12 @@ class ReviewService
             ->groupBy('tour_id')
             ->get();
 
-        $tourNames = Tour::whereIn('id', $tourIdList)->pluck('title', 'id');
+        return $summaries->map(function ($summary) use ($tours) {
+            $tour = $tours->get($summary->tour_id);
 
-        return $summaries->map(function ($summary) use ($tourNames) {
             return [
-                'tour_id' => $summary->tour_id,
-                'tour_name' => $tourNames[$summary->tour_id] ?? null,
+                'tour_slug' => $tour?->slug,
+                'tour_title' => $tour?->displayTitle(),
                 'average_rating' => round((float) $summary->average_rating, 2),
                 'review_count' => (int) $summary->review_count,
             ];
