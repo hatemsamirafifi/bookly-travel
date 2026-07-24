@@ -135,10 +135,10 @@
 
 **Index configuration**:
 - **Searchable attributes**: `title_en`, `title_es`, `title_it`, `description_en`, `description_es`, `description_it`, `location`, `category_name`, `highlights_en`, `highlights_es`, `highlights_it`
-- **Filterable attributes**: `status`, `category_slug`, `location_slug`, `price_amount`, `duration_minutes`, `available_dates`, `locale`
+- **Filterable attributes**: `status`, `category_slug`, `location_slug`, `price_amount`, `duration_minutes`, `available_dates`
 - **Sortable attributes**: `price_amount`, `average_rating`, `created_at`, `review_count`
 - **Ranking rules**: `words`, `typo`, `proximity`, `attribute`, `sort`, `exactness`
-- **Language-specific behavior**: Query-time filter on `locale` restricts matches to the current language's content
+- **Language-specific behavior**: At query time, `attributesToSearchOn` is set to the current locale's fields only (e.g., for `locale=es`: `['title_es', 'description_es', 'highlights_es', 'location', 'category_name']`). This uses Meilisearch v1.3+ `attributesToSearchOn` feature to restrict text matching to the requested language while keeping shared fields (`location`, `category_name`) always searched. The `locale` parameter is NOT a filterable index field — it controls search scope at query time.
 
 **Alternatives considered**:
 - **Separate index per language**: Three indexes to maintain; adds complexity without benefit

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 interface PaginationProps {
   currentPage: number;
@@ -9,16 +9,17 @@ interface PaginationProps {
 
 export default function Pagination({ currentPage, lastPage }: PaginationProps) {
   const router = useRouter();
-  const params = useParams();
   const searchParams = useSearchParams();
-  const locale = (params?.locale as string) || 'en';
+  const pathname = usePathname();
 
   if (lastPage <= 1) return null;
 
   const goToPage = (page: number) => {
     const sp = new URLSearchParams(searchParams.toString());
     sp.set('page', String(page));
-    router.push(`/${locale}/search?${sp.toString()}`);
+    // Stay on the current listing page (search, category, or destination)
+    // rather than always jumping to /search (F3).
+    router.push(`${pathname}?${sp.toString()}`);
   };
 
   const isFirst = currentPage <= 1;

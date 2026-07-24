@@ -40,7 +40,10 @@ Returns the authenticated traveler's bookings, ordered by tour date descending.
       },
       "tour_date": "2026-06-15",
       "participant_count": 2,
-      "total_price": {"amount": 17800, "currency": "EUR", "formatted": "€178.00"},
+      "pricing": {
+        "price_per_person": {"amount": 8900, "currency": "EUR", "formatted": "€89.00"},
+        "total": {"amount": 17800, "currency": "EUR", "formatted": "€178.00"}
+      },
       "status": "confirmed",
       "created_at": "2026-05-09T14:30:00Z"
     }
@@ -170,7 +173,8 @@ Cancels a confirmed booking, releases availability spots, and triggers refund (s
 
 ## Behavior Notes
 
-- `can_cancel` is true when status is `confirmed` AND the current time is before `tour_date - cancellation_window_hours`.
+- `can_cancel` is true when status is `confirmed` AND the current time is before the tour **start time** minus `cancellation_window_hours`. The tour start time is the `start_time` snapshot stored on the booking at creation time (resolved from the operating `AvailabilityRule.start_time` for the booked date, or the configured `bookings.default_start_time`, default `09:00`, when the rule has none). When `cancellation_window_hours` is `null`, `can_cancel` is always true for confirmed bookings.
 - Cancelled booking spots are immediately released (re-available for new bookings).
 - Refund processing is delegated to spec 008; booking status is set to `cancelled` regardless of refund outcome.
 - All booking detail endpoints include the cancellation policy snapshot from booking time.
+- `pricing.total` (with `pricing.price_per_person`) is the canonical price field, matching `booking-api.md`. A top-level `total_price` object with the same value is also emitted as a back-compat alias for older consumers; new consumers should read `pricing.total`.

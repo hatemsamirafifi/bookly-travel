@@ -9,7 +9,7 @@ Deliver the public search and discovery experience for Bookly travelers — keyw
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x (Next.js 16 frontend), PHP 8.x (Laravel backend)
+**Language/Version**: TypeScript 5.x (Next.js 16 frontend — verify version in `frontend/package.json`), PHP 8.x (Laravel backend)
 **Primary Dependencies**: Next.js 16 (App Router), Laravel (API-only), Laravel Scout (Meilisearch driver), Tailwind CSS, Redis
 **Storage**: PostgreSQL (primary), Redis (cache/queue/sessions), Cloudflare R2 (images), Meilisearch (search index)
 **Testing**: Pest/PHPUnit (backend), Jest + Playwright (frontend)

@@ -61,8 +61,8 @@
 ### Implementation for User Story 1
 
 - [x] T015 [P] [US1] Configure Meilisearch index settings for `tours` index in `backend/app/Domains/Search/Actions/ConfigureSearchIndexAction.php` — searchableAttributes, filterableAttributes (status, category_slug, location_slug, price_amount), sortableAttributes (price_amount, average_rating, created_at), rankingRules
-- [x] T016 [P] [US1] Create `backend/app/Domains/Search/Actions/SearchToursAction.php` accepting `SearchParams` DTO (query, locale, page, perPage) and calling `Tour::search()` with Meilisearch filters for `status=published`, locale language match, and pagination
-- [x] T017 [US1] Create `backend/app/Domains/Search/Controllers/Public/SearchController.php` with `search` method that validates `locale` (required), `q`, `page` params, invokes `SearchToursAction`, and returns JSON response matching search-api.md contract structure including `data[]` (TourCard shape) and `meta` (pagination)
+- [x] T016 [P] [US1] Create `backend/app/Domains/Search/Actions/SearchToursAction.php` accepting `SearchParams` DTO (query, locale, page, perPage) and calling `Tour::search()` with Meilisearch filters for `status=published` and pagination. Locale is applied via `attributesToSearchOn` mapping `locale` to language-specific fields (`title_{locale}`, `description_{locale}`, `highlights_{locale}`) plus shared fields (`location`, `category_name`)
+- [x] T017 [US1] Create `backend/app/Domains/Search/Controllers/Public/SearchController.php` with `search` method that validates all query params per search-api.md Input Validation rules (locale required from whitelist, q max 255 chars with filter-syntax stripping, slug-format validation for category/location, price range clamping, page max 1000), invokes `SearchToursAction`, and returns JSON response matching search-api.md contract structure including `data[]` (TourCard shape) and `meta` (pagination)
 - [x] T018 [US1] Add search route `GET /api/public/search/tours` to `backend/routes/api.php` pointing to `SearchController@search` with rate limit middleware (60 req/min)
 - [x] T019 [P] [US1] Create `frontend/src/lib/api/search.ts` with `searchTours(params: SearchParams)` function calling `/api/public/search/tours` via the shared API client
 - [x] T020 [P] [US1] Create `frontend/src/components/search/SearchBar.tsx` with text input, submit-on-enter, and client-side navigation to `/search?q=...`
@@ -108,8 +108,8 @@
 
 ### Implementation for User Story 3
 
-- [x] T037 [P] [US3] Create `backend/app/Domains/Search/Actions/GetTourDetailAction.php` accepting slug and locale, querying Tour with translations for locale (fallback to EN), pricing, availability (next 30 days), reviews aggregate, and returning full tour detail DTO including SEO metadata (canonical, hreflang)
-- [x] T038 [US3] Create `backend/app/Domains/Search/Controllers/Public/TourDetailController.php` with `show` method validating `slug` (path) and `locale` (query), invoking `GetTourDetailAction`, returning JSON matching tour-detail-api.md contract — 404 for missing/unpublished, 410 for archived
+- [x] T037 [P] [US3] Create `backend/app/Domains/Search/Actions/GetTourDetailAction.php` accepting slug and locale, querying Tour from **database** (not search index) with translations for locale (fallback to EN), pricing, availability (next 30 days), reviews aggregate. Must check `published_at` to determine 404 vs 410 for archived tours per tour-detail-api.md decision table. Returns full tour detail DTO including SEO metadata (canonical, hreflang)
+- [x] T038 [US3] Create `backend/app/Domains/Search/Controllers/Public/TourDetailController.php` with `show` method validating `slug` (path) and `locale` (query), invoking `GetTourDetailAction`, returning JSON matching tour-detail-api.md contract — 404 for missing/draft/pending/rejected/never-published-archived, 410 for previously-published-archived (per decision table)
 - [x] T039 [US3] Add tour detail route `GET /api/public/tours/{slug}` to `backend/routes/api.php` pointing to `TourDetailController@show` with rate limit middleware (120 req/min)
 - [x] T040 [P] [US3] Create `frontend/src/lib/api/tours.ts` with `getTourDetail(slug: string, locale: string)` function calling `/api/public/tours/{slug}`
 - [x] T041 [P] [US3] Create `frontend/src/components/tour/ImageGallery.tsx` with cover image first, thumbnail navigation, lightbox/fullscreen on click, keyboard arrow navigation, alt text on all images
@@ -118,7 +118,7 @@
 - [x] T044 [P] [US3] Create `frontend/src/components/tour/BookingCTA.tsx` showing price display, participant count selector (min/max group size constrained), date confirmation, and "Book Now" button linking to booking flow — or "Currently Unavailable" state when no availability
 - [x] T045 [US3] Create `frontend/src/components/tour/TourDetail.tsx` composing all sections: `<ImageGallery>`, title/rating/location header, description, highlights list, inclusions/exclusions lists, meeting point with map link, cancellation policy, `<AvailabilityCalendar>`, `<ReviewList>`, `<BookingCTA>`
 - [x] T046 [US3] Create tour detail page at `frontend/src/app/[locale]/tours/[slug]/page.tsx` as ISR page (`revalidate: 300`) with `generateStaticParams` returning top published tour slugs, calling `getTourDetail()`, rendering `<TourDetail>`, and `generateMetadata()` with tour-specific title/description/OG/canonical/hreflang
-- [x] T047 [P] [US3] Create backend feature test `backend/tests/Feature/Search/TourDetailTest.php` covering: valid slug returns full detail, 404 for draft/rejected tour, 404 for nonexistent slug, 410 for archived tour, content returned in correct locale, availability data is real-time, reviews included
+- [x] T047 [P] [US3] Create backend feature test `backend/tests/Feature/Search/TourDetailTest.php` covering: valid slug returns full detail, 404 for draft/rejected tour, 404 for nonexistent slug, 404 for archived-never-published tour, 410 for archived-previously-published tour (published_at non-null), content returned in correct locale, availability data is real-time, reviews included
 - [x] T048 [P] [US3] Create frontend E2E test `frontend/tests/e2e/tour-detail.spec.ts` covering: page loads with all sections, image gallery navigation, availability calendar interaction, "Currently Unavailable" state, 404 page for bad slug
 
 **Checkpoint**: Tour detail page fully functional — comprehensive tour information with booking path. US1 + US2 + US3 operational.
@@ -137,7 +137,7 @@
 - [x] T050 [P] [US4] Create `backend/app/Domains/Search/Actions/GetCategoryToursAction.php` accepting category slug + standard search/filter/sort params, returning paginated tours within that category
 - [x] T051 [P] [US4] Create `backend/app/Domains/Search/Actions/GetDestinationToursAction.php` accepting location slug + standard search/filter/sort params, returning paginated tours at that destination
 - [x] T052 [US4] Create `backend/app/Domains/Search/Controllers/Public/HomepageController.php` with `index` method — validates `locale`, invokes `GetHomepageDataAction`, returns homepage JSON with tours, categories, destinations, and SEO metadata
-- [x] T053 [US4] Create `backend/app/Domains/Search/Controllers/Public/CategoryController.php` with `index` (list all categories) and `tours` (paginated tours for a category slug) methods
+- [x] T053 [US4] Create `backend/app/Domains/Search/Controllers/Public/CategoryController.php` with `index` (list all categories with locale-aware names/descriptions using `name_{locale}` fields) and `tours` (paginated tours for a category slug) methods
 - [x] T054 [US4] Create `backend/app/Domains/Search/Controllers/Public/DestinationController.php` with `index` (list featured destinations) and `tours` (paginated tours for a location slug) methods
 - [x] T055 [US4] Add routes to `backend/routes/api.php`: `GET /api/public/homepage`, `GET /api/public/categories`, `GET /api/public/categories/{slug}/tours`, `GET /api/public/destinations`, `GET /api/public/destinations/{slug}/tours` — all with rate limit (120 req/min)
 - [x] T056 [P] [US4] Create `frontend/src/lib/api/categories.ts` with `getCategories()`, `getCategoryTours()` functions and `frontend/src/lib/api/destinations.ts` with `getDestinations()`, `getDestinationTours()` functions
@@ -183,7 +183,7 @@
 
 - [x] T075 [P] Create `backend/app/Domains/Search/Controllers/Public/SitemapController.php` with `index` method generating XML sitemap listing homepage, all published tour detail pages, category pages, and destination pages — each with `xhtml:link` hreflang alternates per seo-contracts.md
 - [x] T076 [P] Add sitemap route `GET /api/public/sitemap.xml` to `backend/routes/api.php` and `GET /robots.txt` returning text file referencing sitemap URL per seo-contracts.md
-- [x] T077 [P] Add JSON-LD structured data components: `frontend/src/components/seo/StructuredData.tsx` with TouristTripSchema, ItemListSchema, OrganizationSchema — each rendering `<script type="application/ld+json">` per seo-contracts.md
+- [x] T077 [P] Add JSON-LD structured data components: `frontend/src/components/seo/StructuredData.tsx` with TouristTripSchema (using `contentLocation` for place, `subjectOf` for meeting point), ItemListSchema, OrganizationSchema — each rendering `<script type="application/ld+json">` per seo-contracts.md
 - [x] T078 Integrate structured data components into their respective pages: OrganizationSchema on homepage, TouristTripSchema on tour detail
 - [x] T079 [P] Create `frontend/src/components/layout/Header.tsx` with Bookly logo, main navigation (Home, Categories, Destinations), `<LocaleSwitcher>`, and mobile hamburger menu
 - [x] T080 [P] Create `frontend/src/components/layout/Footer.tsx` with footer links, copyright, social placeholders, and locale-specific content
@@ -200,6 +200,8 @@
 - [ ] T091 [P] Create backend concurrency test `backend/tests/Feature/Search/ConcurrencyTest.php` simulating 500 concurrent search requests (distributed across search, detail, category, and destination endpoints) and verifying: all requests complete without errors, p95 latency targets met per SC-011, no rate-limit false positives, no connection pool exhaustion
 - [ ] T092 [P] Add responsive viewport tests to `frontend/tests/e2e/search.spec.ts` and `frontend/tests/e2e/tour-detail.spec.ts` covering mobile (375px), tablet (768px), and desktop (1280px) viewports per FR-032: verify layout adapts without horizontal scroll, tour cards reflow correctly, filter panel collapses on mobile, navigation switches to hamburger menu
 
+> ⚠️ T090, T091, T092 are pending implementation — scale/concurrency/responsive tests not yet written.
+
 ---
 
 ## Dependencies & Execution Order
@@ -210,7 +212,7 @@
 - **Foundational (Phase 2)**: Depends on Setup completion — BLOCKS all user stories
 - **User Stories (Phases 3–7)**: All depend on Foundational phase completion
   - US1 (P1): Can start immediately after Phase 2 — No dependencies on other stories
-  - US2 (P2): Can start after Phase 2 — Builds on US1 search components but independently testable
+  - US2 (P2): Depends on US1 backend (T016 SearchToursAction, T017 SearchController) — extends those files with filter/sort params. Frontend filter components are independently buildable, but backend tasks T027–T029 modify US1 files
   - US3 (P3): Can start after Phase 2 — Uses shared types/client but independently testable
   - US4 (P4): Can start after Phase 2 — Uses shared components but independently testable
   - US5 (P5): Builds on all prior stories for locale coverage, but i18n infrastructure is independent

@@ -129,7 +129,9 @@ it('cancels an eligible booking', function () {
     ]);
 
     $response->assertStatus(200)
-        ->assertJsonPath('data.status', 'cancelled');
+        ->assertJsonPath('data.status', 'cancelled')
+        // F13: the cancel response carries the cancellation timestamp.
+        ->assertJsonPath('data.cancelled_at', fn ($v) => $v !== null);
 
     expect(Booking::find($booking->id)->status)->toBe('cancelled');
 });

@@ -51,6 +51,7 @@ it('denies the settings page to an admin lacking manage_settings', function () {
     $adminNoFlag = User::factory()->admin()->create();
     $adminNoFlag->adminPermission()->create(['flags' => []]);
 
+    actingAs($adminNoFlag);
     expect(Settings::canAccess())->toBeFalse();
 
     actingAs(settingsAdmin());

@@ -48,7 +48,7 @@ class ApprovePartnerAction
 
         // Mail is sent after the transaction commits so a rollback never leaks it.
         if ($partner->user?->email) {
-            Mail::to($partner->user->email)->send(new PartnerApprovedMail($partner));
+            Mail::to($partner->user->email)->queue(new PartnerApprovedMail($partner));
         }
 
         return $partner;

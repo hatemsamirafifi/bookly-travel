@@ -59,7 +59,7 @@ class RejectPartnerAction
 
         // Mail is sent after the transaction commits so a rollback never leaks it.
         if ($partner->user?->email) {
-            Mail::to($partner->user->email)->send(new PartnerRejectedMail($partner, $reason));
+            Mail::to($partner->user->email)->queue(new PartnerRejectedMail($partner, $reason));
         }
 
         return $partner;

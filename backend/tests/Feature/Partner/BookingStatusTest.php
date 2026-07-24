@@ -111,7 +111,7 @@ it('cannot request cancellation for already cancelled booking', function () {
     $response->assertStatus(409);
 });
 
-it('returns 404 for booking belonging to another partner tour', function () {
+it('returns 403 for booking belonging to another partner tour', function () {
     $otherTour = Tour::create([
         'partner_id' => $this->otherPartner->id,
         'category_id' => $this->category->id,
@@ -145,7 +145,8 @@ it('returns 404 for booking belonging to another partner tour', function () {
         'Authorization' => 'Bearer ' . $this->token,
     ]);
 
-    $response->assertStatus(404);
+    // partner-booking-api.md: 403 "You do not own this tour."
+    $response->assertStatus(403);
 });
 
 it('returns 401 for unauthenticated request', function () {

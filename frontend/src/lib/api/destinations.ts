@@ -1,31 +1,29 @@
-import { apiClient } from './client';
+import { apiClient, buildSearchParams } from './client';
 import type { Destination, SearchParams, SearchResponse } from './types';
 
 export interface DestinationListResponse {
   data: Destination[];
 }
 
-export async function getDestinations(): Promise<DestinationListResponse> {
-  return apiClient<DestinationListResponse>('/api/public/destinations');
+export async function getDestinations(locale: string): Promise<DestinationListResponse> {
+  // `locale` is required by the backend LocaleRequest (validation) and used as
+  // Accept-Language by the rate-limit middleware for localized 429 messages.
+  return apiClient<DestinationListResponse>(
+    `/api/public/destinations?locale=${encodeURIComponent(locale)}`,
+    { locale, revalidate: 300 }
+  );
 }
 
 export async function getDestinationTours(
   slug: string,
   params: Partial<SearchParams>
 ): Promise<SearchResponse> {
-  const sp = new URLSearchParams();
-  if (params.locale) sp.set('locale', params.locale);
-  if (params.q) sp.set('q', params.q);
-  if (params.category) sp.set('category', params.category);
-  if (params.price_min) sp.set('price_min', String(params.price_min));
-  if (params.price_max) sp.set('price_max', String(params.price_max));
-  if (params.duration) sp.set('duration', params.duration);
-  if (params.date) sp.set('date', params.date);
-  if (params.sort) sp.set('sort', params.sort);
-  if (params.page) sp.set('page', String(params.page));
+  // `location` is omitted — the slug in the path is the scope (the backend
+  // DestinationToursRequest prohibits a `location` query param).
+  const sp = buildSearchParams(params, ['location']);
 
   return apiClient<SearchResponse>(
     `/api/public/destinations/${encodeURIComponent(slug)}/tours?${sp.toString()}`,
-    { locale: params.locale }
+    { locale: params.locale, revalidate: 300 }
   );
 }

@@ -33,16 +33,22 @@ class LedgerService
             ->exists();
     }
 
-    public function recordRefund(Payment $payment): void
+    public function recordRefund(Payment $payment): bool
     {
-        FinancialLedgerEntry::create([
-            'booking_id' => $payment->booking_id,
-            'payment_id' => $payment->id,
-            'entry_type' => 'credit',
-            'amount' => $payment->amount,
-            'currency' => $payment->currency,
-            'actor' => 'system',
-            'description' => 'Refund issued for booking ' . $payment->booking->reference,
-        ]);
+        $entry = FinancialLedgerEntry::firstOrCreate(
+            [
+                'payment_id' => $payment->id,
+                'entry_type' => 'credit',
+            ],
+            [
+                'booking_id' => $payment->booking_id,
+                'amount' => $payment->amount,
+                'currency' => $payment->currency,
+                'actor' => 'system',
+                'description' => 'Refund issued for booking ' . $payment->booking->reference,
+            ]
+        );
+
+        return $entry->wasRecentlyCreated;
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Domains\Search\Controllers\Public;
 
 use App\Domains\Search\Actions\GetHomepageDataAction;
+use App\Http\Requests\Public\Search\LocaleRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class HomepageController
 {
@@ -12,13 +12,9 @@ class HomepageController
         protected GetHomepageDataAction $getHomepageDataAction
     ) {}
 
-    public function index(Request $request): JsonResponse
+    public function index(LocaleRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'locale' => 'required|in:en,es,it',
-        ]);
-
-        $data = $this->getHomepageDataAction->execute($validated['locale']);
+        $data = $this->getHomepageDataAction->execute($request->validated()['locale']);
 
         return response()->json($data);
     }

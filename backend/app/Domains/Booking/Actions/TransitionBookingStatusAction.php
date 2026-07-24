@@ -5,7 +5,9 @@ namespace App\Domains\Booking\Actions;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 // kept for other uses
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,8 +29,8 @@ class TransitionBookingStatusAction
 
         $partner->loadMissing('partner');
         if ($partner->partner === null || $booking->tour->partner_id !== $partner->partner->id) {
-            // Return 404 instead of 403 to prevent information leakage about other partners' bookings
-            throw new NotFoundHttpException('Booking not found.');
+            // partner-booking-api.md: 403 "You do not own this tour."
+            throw new AccessDeniedHttpException('You do not own this tour.');
         }
 
         if (! in_array($targetStatus, [Booking::STATUS_COMPLETED, Booking::STATUS_NO_SHOW], true)) {
@@ -37,7 +39,10 @@ class TransitionBookingStatusAction
             );
         }
 
-        if ($booking->tour_date->isFuture()) {
+        // F6: transitions only after the tour date has fully passed. The prior
+        // `tour_date->isFuture()` guard was false on the day-of (midnight is
+        // past), letting partners mark no_show before the tour even started.
+        if (! ($booking->tour_date < Carbon::today())) {
             throw new ConflictHttpException(
                 'Status can only be updated after the tour date has passed.'
             );

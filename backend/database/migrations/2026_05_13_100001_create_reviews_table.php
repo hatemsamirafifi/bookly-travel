@@ -23,7 +23,10 @@ return new class extends Migration
             $table->index(['tour_id', 'status', 'created_at'], 'idx_tour_status_date');
         });
 
-        DB::statement('ALTER TABLE reviews ADD CONSTRAINT chk_rating_range CHECK (rating >= 1 AND rating <= 5)');
+        // SQLite does not support ALTER TABLE ADD CONSTRAINT CHECK.
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE reviews ADD CONSTRAINT chk_rating_range CHECK (rating >= 1 AND rating <= 5)');
+        }
     }
 
     public function down(): void

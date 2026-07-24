@@ -119,8 +119,26 @@ it('rejects invalid duration values', function () {
 });
 
 it('accepts date filter parameter', function () {
-    getJson('/api/public/search/tours?locale=en&date=2026-06-01')
+    $future = now()->addDays(10)->toDateString();
+
+    getJson("/api/public/search/tours?locale=en&date={$future}")
         ->assertOk();
+});
+
+it('rejects past dates (F4 boundary)', function () {
+    $past = now()->subDay()->toDateString();
+
+    getJson("/api/public/search/tours?locale=en&date={$past}")
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['date']);
+});
+
+it('rejects dates more than one year ahead (F4 boundary)', function () {
+    $far = now()->addYears(2)->toDateString();
+
+    getJson("/api/public/search/tours?locale=en&date={$far}")
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['date']);
 });
 
 it('rejects invalid date format', function () {
@@ -138,6 +156,38 @@ it('rejects invalid sort value', function () {
     getJson('/api/public/search/tours?locale=en&sort=invalid_sort')
         ->assertStatus(422)
         ->assertJsonValidationErrors(['sort']);
+});
+
+it('rejects page beyond the deep-offset cap (F4 boundary)', function () {
+    getJson('/api/public/search/tours?locale=en&page=999999')
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['page']);
+});
+
+it('rejects inverted price ranges where max < min (F4 boundary)', function () {
+    getJson('/api/public/search/tours?locale=en&price_min=5000&price_max=100')
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['price_max']);
+});
+
+it('rejects prices exceeding the maximum (F4 boundary)', function () {
+    getJson('/api/public/search/tours?locale=en&price_max=999999999')
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['price_max']);
+});
+
+it('rejects category slugs with invalid characters (F4 boundary)', function () {
+    getJson('/api/public/search/tours?locale=en&category=%3Cscript%3E')
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['category']);
+});
+
+it('accepts price_max=0 for free-tour filtering (F4/F7)', function () {
+    // `0` must survive validation (not be treated as empty) so free tours can
+    // be filtered. Asserts the boundary passes; the filter behavior is
+    // covered by SearchToursAction tests.
+    getJson('/api/public/search/tours?locale=en&price_max=0')
+        ->assertOk();
 });
 
 it('applies combined filters successfully', function () {

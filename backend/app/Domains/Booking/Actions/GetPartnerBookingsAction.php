@@ -6,6 +6,7 @@ use App\Domains\Booking\Models\Booking;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 
 class GetPartnerBookingsAction
 {
@@ -21,7 +22,7 @@ class GetPartnerBookingsAction
         abort_unless($partner->partner !== null, 403, 'You are not authorized to view partner bookings.');
         $partnerId = $partner->partner->id;
 
-        $query = Booking::with(['tour', 'traveler'])
+        $query = Booking::with(['tour.translations', 'traveler'])
             ->whereHas('tour', function ($q) use ($partnerId) {
                 $q->where('partner_id', $partnerId);
             })
@@ -51,14 +52,23 @@ class GetPartnerBookingsAction
         $paginator = $query->paginate(25, ['*'], 'page', $page);
 
         $data = $paginator->map(function (Booking $booking) {
+            // F10: resolve the tour title by the booking's locale, falling back to
+            // English, mirroring BookingResponseDTO. `value()` avoids the
+            // nullsafe/property false-positives larastan raises on the
+            // non-generic translations collection.
+            $translations = $booking->tour->translations;
+            $title = $translations->where('locale', $booking->locale)->value('title')
+                ?? $translations->where('locale', 'en')->value('title')
+                ?? '';
+
             return [
                 'reference' => $booking->reference,
                 'traveler_name' => $booking->traveler?->name ?? '',
                 'tour' => [
                     'slug' => $booking->tour->slug,
-                    'title' => '',
+                    'title' => $title,
                 ],
-                'tour_date' => $booking->tour_date->toDateString(),
+                'tour_date' => Carbon::parse($booking->tour_date)->toDateString(),
                 'participant_count' => $booking->participant_count,
                 'total_price' => [
                     'amount' => $booking->total_price,

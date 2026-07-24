@@ -202,6 +202,16 @@
     "cancelKeep": "Mantieni Prenotazione",
     "cancelSuccess": "Prenotazione cancellata. Il rimborso è in fase di elaborazione.",
     "emptyState": "Nessuna prenotazione — trova un tour per iniziare la tua avventura",
+    "selectPrompt": "Seleziona un tour e una data per continuare.",
+    "paymentHeading": "Pagamento",
+    "confirmationSubheading": "Il tuo riferimento di prenotazione è",
+    "pendingPaymentSubheading": "La tua prenotazione è in attesa di pagamento.",
+    "expiredTitle": "Prenotazione Scaduta",
+    "cancelledTitle": "Prenotazione Cancellata",
+    "tourLabel": "Tour",
+    "notFound": "Prenotazione non trovata.",
+    "keepReference": "Conserva questo riferimento per i tuoi archivi.",
+    "retry": "Riprova",
     "errors": {
       "loadFailed": "Impossibile caricare i dettagli del tour.",
       "soldOut": "Questa data è al completo. Seleziona un'altra data.",
@@ -323,6 +333,12 @@
         "pending_payment": "Pagamento in sospeso",
         "expired": "Scaduta",
         "no_show": "No-show"
+      },
+      "pagination": {
+        "previous": "Precedente",
+        "next": "Successivo",
+        "page": "Pagina {current} di {last}",
+        "loadMore": "Carica altri"
       }
     },
     "bookingDetail": {
@@ -758,7 +774,15 @@
       "editedOn": "Modificato il {date}",
       "failedToSubmit": "Impossibile inviare la risposta",
       "failedToUpdate": "Impossibile aggiornare la risposta",
-      "submitting": "Invio..."
+      "submitting": "Invio...",
+      "filters": "Filtri",
+      "allRatings": "★ Tutte le valutazioni",
+      "allStatuses": "Tutte",
+      "clear": "Cancella",
+      "clearFilters": "Cancella filtri",
+      "previousPage": "Pagina precedente",
+      "nextPage": "Pagina successiva",
+      "retry": "Riprova"
     },
     "analytics": {
       "metaTitle": "Analisi | Bookly",
@@ -889,5 +913,45 @@
       "previous": "Precedente",
       "next": "Successivo"
     }
+  },
+  "verification": {
+    "metaTitle": "Verifica voucher — {reference}",
+    "metaDescription": "Verifica l'autenticità di un voucher di un tour Bookly.",
+    "brand": "Bookly",
+    "heading": "Verifica voucher",
+    "subtitle": "Conferma pubblica e di sola lettura di una prenotazione Bookly.",
+    "notFound": {
+      "title": "Voucher non trovato",
+      "description": "Non abbiamo trovato una prenotazione per questo riferimento. Il riferimento potrebbe essere incompleto, errato o non esistere alcuna prenotazione. Non viene esposta alcuna informazione personale."
+    },
+    "rateLimited": {
+      "title": "Troppe verifiche",
+      "description": "Attendi un minuto e riprova."
+    },
+    "error": {
+      "title": "Impossibile verificare",
+      "description": "Non siamo riusciti a contattare il servizio di verifica. Riprova più tardi."
+    },
+    "fields": {
+      "reference": "Riferimento prenotazione",
+      "tourTitle": "Tour",
+      "tourDate": "Data del tour",
+      "participants": "Partecipanti",
+      "createdAt": "Prenotato il",
+      "voucherGeneratedAt": "Voucher emesso"
+    },
+    "statusLabels": {
+      "VALID": "Valido",
+      "CANCELLED": "Cancellato",
+      "PENDING": "Pagamento in attesa",
+      "EXPIRED": "Scaduto"
+    },
+    "statusDescriptions": {
+      "VALID": "Questa prenotazione è confermata e autentica.",
+      "CANCELLED": "Questa prenotazione è stata cancellata.",
+      "PENDING": "Questa prenotazione è in attesa di pagamento.",
+      "EXPIRED": "Questa prenotazione non è più valida."
+    },
+    "legalNote": "Questa pagina è di sola lettura e non espone informazioni personali."
   }
 }

@@ -2,6 +2,7 @@
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Models\BookingAuditLog;
+use App\Domains\Payment\Models\Payment;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
@@ -131,4 +132,56 @@ it('returns 404 for nonexistent booking reference', function () {
     ]);
 
     $response->assertStatus(404);
+});
+
+// L5: linked_financial_events are sourced from real Payment rows (charge +
+// refund) via the Booking::payments() HasMany — not a runtime schema probe.
+it('exposes charge and refund payments as linked financial events', function () {
+    Payment::create([
+        'booking_id' => $this->booking->id,
+        'stripe_payment_intent_id' => 'pi_test_charge_' . uniqid(),
+        'type' => 'charge',
+        'amount' => 17800,
+        'currency' => 'EUR',
+        'status' => 'succeeded',
+    ]);
+
+    Payment::create([
+        'booking_id' => $this->booking->id,
+        'stripe_payment_intent_id' => 'pi_test_charge_' . uniqid(),
+        'stripe_refund_id' => 're_test_refund_' . uniqid(),
+        'type' => 'refund',
+        'amount' => 17800,
+        'currency' => 'EUR',
+        'status' => 'succeeded',
+    ]);
+
+    $response = getJson('/api/admin/audit/bookings/' . $this->booking->reference, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonCount(2, 'data.linked_financial_events');
+
+    $events = $response->json('data.linked_financial_events');
+    $types = array_column($events, 'type');
+    sort($types);
+    expect($types)->toBe(['charge', 'refund']);
+
+    foreach ($events as $event) {
+        expect($event['payment_id'])->not->toBeNull();
+        expect($event['amount']['amount'])->toBe(17800);
+        expect($event['amount']['currency'])->toBe('EUR');
+        expect($event['amount']['formatted'])->toBeString();
+        expect($event['created_at'])->not->toBeNull();
+    }
+});
+
+it('returns an empty linked_financial_events list when no payments exist', function () {
+    $response = getJson('/api/admin/audit/bookings/' . $this->booking->reference, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonCount(0, 'data.linked_financial_events');
 });

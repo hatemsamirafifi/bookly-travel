@@ -2,16 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useTranslations } from 'next-intl';
 
 interface StripePaymentFormProps {
   clientSecret: string;
+  bookingReference: string;
+  locale: string;
   onSuccess: () => void;
   onError: (message: string) => void;
 }
 
-export default function StripePaymentForm({ clientSecret, onSuccess, onError }: StripePaymentFormProps) {
+export default function StripePaymentForm({
+  clientSecret,
+  bookingReference,
+  locale,
+  onSuccess,
+  onError,
+}: StripePaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
+  const t = useTranslations('booking');
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
@@ -40,14 +50,14 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
           // Let's rely on webhooks for async processing or just notify user
           break;
         case 'requires_payment_method':
-          onError('Your payment was not successful, please try again.');
+          onError(t('errors.paymentFailed'));
           break;
         default:
-          onError('Something went wrong. Please try again.');
+          onError(t('errors.generic'));
           break;
       }
     });
-  }, [stripe, onSuccess, onError]);
+  }, [stripe, onSuccess, onError, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,21 +65,30 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
 
     setProcessing(true);
 
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: window.location.href,
-      },
-      redirect: 'if_required',
-    });
+    try {
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          // 3DS / redirect completion lands on the confirmation page for this
+          // booking so the traveler sees the right state after the redirect.
+          return_url: `${window.location.origin}/${locale}/booking/confirmation?ref=${bookingReference}`,
+        },
+        redirect: 'if_required',
+      });
 
-    if (error) {
-      onError(error.message || 'Payment failed. Please try again.');
-    } else if (!paymentIntent || paymentIntent.status === 'succeeded' || paymentIntent.status === 'requires_capture') {
-      onSuccess();
+      if (error) {
+        onError(error.message || t('errors.paymentFailed'));
+      } else if (!paymentIntent || paymentIntent.status === 'succeeded' || paymentIntent.status === 'requires_capture') {
+        onSuccess();
+      }
+    } catch {
+      onError(t('errors.paymentFailed'));
+    } finally {
+      // finally guarantees the button un-sticks even when confirmPayment
+      // rejects or onSuccess/onError throw — otherwise the traveler could be
+      // left with a permanently disabled "Processing..." button.
+      setProcessing(false);
     }
-
-    setProcessing(false);
   };
 
   return (
@@ -80,7 +99,7 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }: 
         disabled={!stripe || processing}
         className="w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
       >
-        {processing ? 'Processing...' : 'Pay Now'}
+        {processing ? t('paying') : t('payButton')}
       </button>
     </form>
   );

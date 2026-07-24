@@ -202,6 +202,16 @@
     "cancelKeep": "Keep Booking",
     "cancelSuccess": "Booking cancelled. Refund is being processed.",
     "emptyState": "No bookings yet — find a tour to start your adventure",
+    "selectPrompt": "Please select a tour and date to continue.",
+    "paymentHeading": "Payment",
+    "confirmationSubheading": "Your booking reference is",
+    "pendingPaymentSubheading": "Your booking is awaiting payment.",
+    "expiredTitle": "Booking Expired",
+    "cancelledTitle": "Booking Cancelled",
+    "tourLabel": "Tour",
+    "notFound": "Booking not found.",
+    "keepReference": "Keep this reference for your records.",
+    "retry": "Retry",
     "errors": {
       "loadFailed": "Failed to load tour details.",
       "soldOut": "This tour date is sold out. Please select a different date.",
@@ -323,6 +333,12 @@
         "pending_payment": "Payment pending",
         "expired": "Expired",
         "no_show": "No-show"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page {current} of {last}",
+        "loadMore": "Load more"
       }
     },
     "bookingDetail": {
@@ -758,7 +774,15 @@
       "editedOn": "Edited on {date}",
       "failedToSubmit": "Failed to submit response",
       "failedToUpdate": "Failed to update response",
-      "submitting": "Submitting..."
+      "submitting": "Submitting...",
+      "filters": "Filters",
+      "allRatings": "★ All ratings",
+      "allStatuses": "All",
+      "clear": "Clear",
+      "clearFilters": "Clear filters",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "retry": "Try Again"
     },
     "analytics": {
       "metaTitle": "Analytics | Bookly",
@@ -889,5 +913,45 @@
       "previous": "Previous",
       "next": "Next"
     }
+  },
+  "verification": {
+    "metaTitle": "Voucher Verification — {reference}",
+    "metaDescription": "Verify the authenticity of a Bookly tour booking voucher.",
+    "brand": "Bookly",
+    "heading": "Voucher Verification",
+    "subtitle": "Public, read-only confirmation of a Bookly booking.",
+    "notFound": {
+      "title": "Voucher not found",
+      "description": "We couldn't find a booking for this reference. The reference may be incomplete, mistyped, or no booking exists. No personal information is exposed."
+    },
+    "rateLimited": {
+      "title": "Too many checks",
+      "description": "Please wait a minute and try again."
+    },
+    "error": {
+      "title": "Unable to verify",
+      "description": "We couldn't reach the verification service. Please try again later."
+    },
+    "fields": {
+      "reference": "Booking reference",
+      "tourTitle": "Tour",
+      "tourDate": "Tour date",
+      "participants": "Participants",
+      "createdAt": "Booked on",
+      "voucherGeneratedAt": "Voucher issued"
+    },
+    "statusLabels": {
+      "VALID": "Valid",
+      "CANCELLED": "Cancelled",
+      "PENDING": "Pending payment",
+      "EXPIRED": "Expired"
+    },
+    "statusDescriptions": {
+      "VALID": "This booking is confirmed and genuine.",
+      "CANCELLED": "This booking has been cancelled.",
+      "PENDING": "This booking is awaiting payment.",
+      "EXPIRED": "This booking is no longer valid."
+    },
+    "legalNote": "This page is read-only and exposes no personal information."
   }
 }

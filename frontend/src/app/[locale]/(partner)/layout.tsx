@@ -30,7 +30,6 @@ export default function PartnerLayout({
         <div className="flex min-w-0 flex-1 flex-col">
           <PartnerHeader
             onMenuClick={() => setMobileOpen(true)}
-            unreadCount={0}
           />
           <main
             id="main-content"

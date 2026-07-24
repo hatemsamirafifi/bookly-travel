@@ -30,6 +30,8 @@ Returns all active categories with tour counts.
 }
 ```
 
+**Behavior Note**: The `name` and `description` fields are returned in the language specified by the `locale` parameter. If a translation is missing for the requested locale, English is used as fallback.
+
 ---
 
 ## Category Tours
@@ -151,5 +153,35 @@ Aggregated data for homepage rendering.
       "meta_description": "Find and instantly book the best tours in Italy, Spain, and beyond. Wine tasting, adventure, culture, and more."
     }
   }
+}
+```
+
+### 400 Bad Request
+
+```json
+{
+  "message": "The given data was invalid.",
+  "errors": {
+    "locale": ["The locale field is required."]
+  }
+}
+```
+
+### 429 Too Many Requests
+
+```json
+{
+  "message": "Too many requests. Please wait and try again shortly.",
+  "retry_after": 45
+}
+```
+
+**Headers**: `X-RateLimit-Limit: 120`, `X-RateLimit-Remaining: 0`, `Retry-After: 45`
+
+### 503 Service Unavailable
+
+```json
+{
+  "message": "Homepage data is temporarily unavailable. Please try again shortly."
 }
 ```

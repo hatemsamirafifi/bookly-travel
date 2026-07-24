@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { Star, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
@@ -28,6 +28,11 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
   const [page, setPage] = useState(1);
   const [respondingId, setRespondingId] = useState<string | number | null>(null);
 
+  // Reset to the first page whenever an external filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [tourFilter, ratingFilter, responseFilter]);
+
   const {
     data,
     isLoading,
@@ -44,7 +49,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
     let items = data?.data ?? [];
     // Client-side filtering (API may not support all filter types)
     if (tourFilter) {
-      items = items.filter((r) => String(r.tour.id) === String(tourFilter));
+      items = items.filter((r) => r.tour_slug === String(tourFilter));
     }
     if (ratingFilter) {
       items = items.filter((r) => r.rating === ratingFilter);
@@ -77,7 +82,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
   }
 
   if (error) {
-    return <ErrorState message={t('loadError')} onRetry={() => refetch()} />;
+    return <ErrorState message={t('loadError')} retryLabel={t('retry')} onRetry={() => refetch()} />;
   }
 
   if (reviews.length === 0) {
@@ -97,10 +102,10 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
           <div className="flex items-start justify-between mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold text-[#0A2540]">{review.traveler_name}</span>
+                <span className="font-semibold text-[#0A2540]">{review.reviewer_name}</span>
                 <span className="text-xs text-gray-400">• {t('verifiedTraveler')}</span>
               </div>
-              <p className="text-xs text-gray-500 mb-1">{review.tour.title}</p>
+              <p className="text-xs text-gray-500 mb-1">{review.tour_title}</p>
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
@@ -115,12 +120,12 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
               </div>
             </div>
             <span className="text-xs text-gray-400">
-              {formatDate(review.submitted_at)}
+              {formatDate(review.created_at)}
             </span>
           </div>
 
           {/* Review text */}
-          <p className="text-sm text-gray-700 mb-4">{review.text}</p>
+          <p className="text-sm text-gray-700 mb-4">{review.comment}</p>
 
           {/* Response section — always use ReviewResponseForm */}
           {respondingId === review.id ? (
@@ -173,7 +178,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous page"
+            aria-label={t('previousPage')}
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -185,7 +190,7 @@ export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewL
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next page"
+            aria-label={t('nextPage')}
           >
             <ChevronRight className="w-4 h-4" />
           </button>

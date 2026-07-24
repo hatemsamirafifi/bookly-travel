@@ -86,6 +86,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | The locales the public API accepts and serves translations for. Every
+    | boundary validator, search index, sitemap, and hreflang block derives its
+    | locale list from here so they cannot drift out of sync.
+    |
+    */
+
+    'supported_locales' => ['en', 'es', 'it'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |

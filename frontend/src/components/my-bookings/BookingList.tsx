@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -21,12 +22,32 @@ interface Summary {
   cancelled: number;
 }
 
+interface PageMeta {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+}
+
 export default function BookingList({ locale }: BookingListProps) {
   const t = useTranslations('traveler.dashboard');
   const searchParams = useSearchParams();
   const activeFilter = searchParams.get('status') || '';
-  const { data, isLoading, error, refetch } = useBookings(activeFilter, locale);
+
+  // F14: page is tracked in state and reset to 1 whenever the filter changes so
+  // the traveler never lands on a stale page that the new filter doesn't have.
+  // Resetting during render (the documented React pattern) avoids the
+  // set-state-in-effect rule.
+  const [page, setPage] = useState(1);
+  const [prevFilter, setPrevFilter] = useState(activeFilter);
+  if (activeFilter !== prevFilter) {
+    setPrevFilter(activeFilter);
+    setPage(1);
+  }
+
+  const { data, isLoading, error, refetch, isFetching } = useBookings(activeFilter, locale, page);
   const bookings = data?.bookings ?? [];
+  const meta: PageMeta | undefined = data?.meta;
   const summary: Summary = data?.summary ?? { total: 0, confirmed: 0, completed: 0, cancelled: 0 };
 
   const recentActivity = [...bookings]
@@ -40,6 +61,10 @@ export default function BookingList({ locale }: BookingListProps) {
   if (isLoading) {
     return <LoadingSkeleton variant="card" count={3} />;
   }
+
+  const lastPage = meta?.last_page ?? 1;
+  const currentPage = meta?.current_page ?? 1;
+  const hasMultiplePages = lastPage > 1;
 
   return (
     <div>
@@ -103,6 +128,31 @@ export default function BookingList({ locale }: BookingListProps) {
             <BookingCard key={booking.reference} booking={booking} locale={locale} />
           ))}
         </div>
+      )}
+
+      {/* F14: pagination controls driven by meta.last_page. */}
+      {hasMultiplePages && (
+        <nav className="mt-6 flex items-center justify-center gap-3" aria-label={t('pagination.page', { current: currentPage, last: lastPage })}>
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage <= 1 || isFetching}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {t('pagination.previous')}
+          </button>
+          <span className="text-sm text-gray-600">
+            {t('pagination.page', { current: currentPage, last: lastPage })}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
+            disabled={currentPage >= lastPage || isFetching}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {t('pagination.next')}
+          </button>
+        </nav>
       )}
     </div>
   );

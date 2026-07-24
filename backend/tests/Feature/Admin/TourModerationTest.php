@@ -3,7 +3,6 @@
 use App\Domains\Admin\Actions\ApproveTourAction;
 use App\Domains\Admin\Actions\RejectTourAction;
 use App\Domains\Admin\Actions\UnpublishTourAction;
-use App\Domains\Admin\Models\AdminPermission;
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Partner\Models\Partner;
 use App\Enums\TourStatus;

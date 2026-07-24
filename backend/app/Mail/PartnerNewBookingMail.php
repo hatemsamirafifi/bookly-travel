@@ -9,6 +9,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Spec 014 (FR-006, FR-014, R4): localized to the owning partner user's locale
+ * (en/es/it) with EN fallback for both subject and body view. Locale is
+ * resolved via the booking's tour -> partnerRecord -> user (the authoritative
+ * Partner owner, see Tour::partnerRecord()).
+ */
 class PartnerNewBookingMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -20,14 +26,21 @@ class PartnerNewBookingMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "New Booking — {$this->booking->reference}",
+            subject: $this->getLocalizedSubject(),
         );
     }
 
     public function content(): Content
     {
+        $locale = $this->resolveLocale();
+        $view = "emails.partner.new-booking.{$locale}";
+
+        if (! view()->exists($view)) {
+            $view = 'emails.partner.new-booking.en';
+        }
+
         return new Content(
-            view: 'emails.partner.new-booking',
+            view: $view,
             with: [
                 'booking' => $this->booking,
                 'tour' => $this->booking->tour,
@@ -37,5 +50,22 @@ class PartnerNewBookingMail extends Mailable
                 'participantCount' => $this->booking->participant_count,
             ],
         );
+    }
+
+    private function resolveLocale(): string
+    {
+        $locale = $this->booking->tour?->partnerRecord?->user?->locale ?? 'en';
+        return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
+    }
+
+    private function getLocalizedSubject(): string
+    {
+        $reference = $this->booking->reference;
+
+        return match ($this->resolveLocale()) {
+            'es' => "Nueva reserva — {$reference}",
+            'it' => "Nuova prenotazione — {$reference}",
+            default => "New Booking — {$reference}",
+        };
     }
 }

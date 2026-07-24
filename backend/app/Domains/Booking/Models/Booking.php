@@ -2,6 +2,7 @@
 
 namespace App\Domains\Booking\Models;
 
+use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Payment\Models\Payment;
 use App\Models\Tour;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class Booking extends Model
@@ -45,8 +47,10 @@ class Booking extends Model
     protected $fillable = [
         'reference',
         'traveler_id',
+        'guest_identity_id',
         'tour_id',
         'tour_date',
+        'start_time',
         'participant_count',
         'price_per_person',
         'total_price',
@@ -63,12 +67,15 @@ class Booking extends Model
         'stripe_payment_intent_id',
         'payment_confirmed_at',
         'pending_expires_at',
+        'voucher_generated_at',
+        'voucher_content_hash',
     ];
 
     protected function casts(): array
     {
         return [
             'tour_date' => 'date',
+            'start_time' => 'datetime:H:i:s',
             'participant_count' => 'integer',
             'price_per_person' => 'integer',
             'total_price' => 'integer',
@@ -78,6 +85,7 @@ class Booking extends Model
             'anonymized_at' => 'datetime',
             'payment_confirmed_at' => 'datetime',
             'pending_expires_at' => 'datetime',
+            'voucher_generated_at' => 'datetime',
         ];
     }
 
@@ -102,13 +110,23 @@ class Booking extends Model
      */
     public function governanceAuditLogs(): HasMany
     {
-        return $this->hasMany(\App\Domains\Admin\Models\GovernanceAuditLog::class, 'target_id')
+        return $this->hasMany(GovernanceAuditLog::class, 'target_id')
             ->where('target_type', 'booking');
     }
 
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    /**
+     * All financial events for this booking — a charge plus any refund(s).
+     * The audit endpoint exposes these as `linked_financial_events` (a list,
+     * per audit-api.md), so this is a HasMany, not the single-row `payment()`.
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->orderBy('created_at');
     }
 
     public static function generateReference(): string
@@ -128,6 +146,27 @@ class Booking extends Model
         return $reference;
     }
 
+    /**
+     * The tour start as a concrete datetime for this booking — `tour_date`
+     * set to the snapshotted `start_time`, or the configured default start
+     * (bookings.default_start_time, '09:00') when no start time was captured.
+     * Anchors cancellation and no_show cutoffs to the actual start, not
+     * `tour_date` midnight (F5).
+     */
+    public function startDateTime(): Carbon
+    {
+        // `start_time` is cast `datetime:H:i:s` and `tour_date` is cast `date`;
+        // both return Carbon at runtime, but larastan types them as string
+        // because of the format suffixes — so parse them explicitly here.
+        $time = $this->start_time
+            ? Carbon::parse($this->start_time)->format('H:i:s')
+            : config('bookings.default_start_time', '09:00');
+
+        [$h, $m, $s] = array_pad(explode(':', $time), 3, '0');
+
+        return Carbon::parse($this->tour_date)->startOfDay()->setTime((int) $h, (int) $m, (int) $s);
+    }
+
     public function canCancel(): bool
     {
         if ($this->status !== self::STATUS_CONFIRMED) {
@@ -138,7 +177,7 @@ class Booking extends Model
             return true;
         }
 
-        $deadline = (clone $this->tour_date)->subHours($this->cancellation_window_hours);
+        $deadline = $this->startDateTime()->subHours($this->cancellation_window_hours);
 
         return now()->lt($deadline);
     }

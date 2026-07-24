@@ -14,7 +14,7 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
     inLanguage: locale,
     name: tour.title,
     description: tour.description?.substring(0, 300) || '',
-    touristType: tour.category || '',
+    touristType: tour.category?.name || '',
     duration: `PT${tour.duration.minutes}M`,
     offers: {
       '@type': 'Offer',

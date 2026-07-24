@@ -1,2 +1,10 @@
+# Spec 006 seo-contracts.md FR-031 — robots.txt.
+# The site root is normally served by Next.js (src/app/robots.ts); this is the
+# fallback for deployments where Laravel serves the root. Keep both in sync.
 User-agent: *
-Disallow:
+Allow: /en/
+Allow: /es/
+Allow: /it/
+Disallow: /api/
+
+Sitemap: https://bookly.com/sitemap.xml

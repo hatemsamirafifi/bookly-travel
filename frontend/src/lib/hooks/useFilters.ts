@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { useRouter, useSearchParams, useParams, usePathname } from 'next/navigation';
 
 export interface FilterState {
   q?: string;
@@ -19,7 +19,13 @@ export function useFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = useParams();
+  const pathname = usePathname();
   const locale = (params?.locale as string) || 'en';
+
+  // Derive the navigation path from the current pathname so the shared filter
+  // controls work on any listing page (search, categories/[slug],
+  // destinations/[slug]) instead of always jumping back to /search.
+  const basePath = pathname ?? `/${locale}/search`;
 
   const filters = useMemo<FilterState>(() => {
     const sp = new URLSearchParams(searchParams.toString());
@@ -59,9 +65,9 @@ export function useFilters() {
         sp.delete('page');
       }
       const qs = sp.toString();
-      router.push(`/${locale}/search${qs ? `?${qs}` : ''}`, { scroll: false });
+      router.push(`${basePath}${qs ? `?${qs}` : ''}`, { scroll: false });
     },
-    [searchParams, locale, router]
+    [searchParams, basePath, router]
   );
 
   const setMultipleFilters = useCallback(
@@ -76,14 +82,14 @@ export function useFilters() {
       }
       sp.delete('page');
       const qs = sp.toString();
-      router.push(`/${locale}/search${qs ? `?${qs}` : ''}`, { scroll: false });
+      router.push(`${basePath}${qs ? `?${qs}` : ''}`, { scroll: false });
     },
-    [searchParams, locale, router]
+    [searchParams, basePath, router]
   );
 
   const clearAll = useCallback(() => {
-    router.push(`/${locale}/search`, { scroll: false });
-  }, [locale, router]);
+    router.push(basePath, { scroll: false });
+  }, [basePath, router]);
 
   return { filters, activeFilterCount, setFilter, setMultipleFilters, clearAll };
 }

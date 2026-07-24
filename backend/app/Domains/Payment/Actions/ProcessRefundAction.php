@@ -41,7 +41,10 @@ class ProcessRefundAction
 
             $refundPayment = Payment::create([
                 'booking_id' => $booking->id,
-                'stripe_payment_intent_id' => $payment->stripe_payment_intent_id . '_refund',
+                // F2: store the REAL intent id (composite unique
+                // (stripe_payment_intent_id, type) allows one charge + one
+                // refund per intent; preserves webhook lookup-by-intent).
+                'stripe_payment_intent_id' => $payment->stripe_payment_intent_id,
                 'stripe_refund_id' => $refundId,
                 'type' => 'refund',
                 'amount' => $payment->amount,
@@ -63,7 +66,7 @@ class ProcessRefundAction
 
             $webhookUrl = config('services.slack.admin_webhook_url');
             if ($webhookUrl) {
-                Http::post($webhookUrl, [
+                Http::timeout(5)->post($webhookUrl, [
                     'text' => sprintf(
                         ':warning: *Bookly Alert* — Refund failed for booking `%s`.'
                         . ' Manual resolution required.'

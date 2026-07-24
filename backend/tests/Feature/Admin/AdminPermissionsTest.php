@@ -1,6 +1,5 @@
 <?php
 
-use App\Domains\Admin\Models\AdminPermission;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;

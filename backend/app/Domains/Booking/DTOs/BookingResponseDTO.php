@@ -3,6 +3,7 @@
 namespace App\Domains\Booking\DTOs;
 
 use App\Domains\Booking\Models\Booking;
+use Illuminate\Support\Carbon;
 
 class BookingResponseDTO
 {
@@ -40,6 +41,12 @@ class BookingResponseDTO
             'cancellation_policy' => $booking->cancellation_policy,
             'cancellation_window_hours' => $booking->cancellation_window_hours,
             'can_cancel' => $booking->canCancel(),
+            // `cancelled_at` is cast `datetime` (Carbon at runtime) but larastan
+            // types custom datetime casts as string, so parse it explicitly to
+            // keep the analyzer happy without changing the serialized shape.
+            'cancelled_at' => $booking->cancelled_at
+                ? Carbon::parse($booking->cancelled_at)->toIso8601String()
+                : null,
             'created_at' => $booking->created_at->toIso8601String(),
         ];
 

@@ -1,8 +1,11 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
 
 it('returns 429 after exceeding booking creation rate limit', function () {
     \Illuminate\Support\Carbon::setTestNow('2026-06-01 00:00:00');
@@ -63,9 +66,38 @@ it('returns 429 after exceeding booking creation rate limit', function () {
 });
 
 it('rate limit window resets after the expiry period', function () {
-    // This test verifies the conceptual behavior via Redis TTL logic.
-    // In practice, flushing the rate limiter cache between runs is handled
-    // by RefreshDatabase + cache driver isolation in the test environment.
-    // Full window-reset testing requires a real-time wait or time-travel mock.
-    $this->markTestSkipped('Window reset requires real-time wait or time-travel helper — validate manually or via load tests.');
+    \Illuminate\Support\Carbon::setTestNow('2026-06-01 00:00:00');
+    $traveler = User::factory()->traveler()->create();
+    $token = $traveler->createToken('test')->plainTextToken;
+
+    $uuid = fn (int $i) => '550e8400-e29b-41d4-a716-4466554400' . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
+
+    $payload = [
+        'tour_slug' => 'tuscany-wine-tasting',
+        'tour_date' => '2026-06-15',
+        'participant_count' => 2,
+    ];
+    $headers = fn (int $i) => [
+        'Authorization' => 'Bearer ' . $token,
+        'Idempotency-Key' => $uuid($i),
+    ];
+
+    // Exhaust the 10/min bucket.
+    for ($i = 1; $i <= 10; $i++) {
+        postJson('/api/public/bookings', $payload, $headers($i));
+    }
+
+    // 11th request is limited while inside the 60s window.
+    $limited = postJson('/api/public/bookings', $payload, $headers(11));
+    $limited->assertStatus(429);
+
+    // Advance past the per-minute decay window. The array cache store checks
+    // expiry against Carbon::now(), so mocked time expires the bucket and the
+    // limiter admits the next request again.
+    \Illuminate\Support\Carbon::setTestNow('2026-06-01 00:01:05');
+
+    $afterReset = postJson('/api/public/bookings', $payload, $headers(12));
+    expect($afterReset->status())->not->toBe(429, 'Rate limit window should reset after the decay period elapses.');
+
+    \Illuminate\Support\Carbon::setTestNow();
 });

@@ -32,7 +32,15 @@ class ApproveTourAction
 
             $before = ['status' => $locked->status];
 
-            $locked->update(['status' => TourStatus::Published->value]);
+            // Stamp the first-publication timestamp the first time a tour is
+            // published. The tour-detail endpoint uses a non-null `published_at`
+            // to decide 410 (was once public) vs 404 (never was) for archived
+            // tours (tour-detail-api.md:107-114). Preserve an existing stamp on
+            // re-publish after archive.
+            $locked->update([
+                'status' => TourStatus::Published->value,
+                'published_at' => $locked->published_at ?? now(),
+            ]);
             $locked->refresh();
 
             $this->audit->log($actor, 'tour.publish', $locked, $before, ['status' => $locked->status]);

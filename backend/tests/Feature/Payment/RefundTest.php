@@ -86,7 +86,7 @@ it('can cancel a booking within cancellation window and trigger refund', functio
     $mock = $this->mock(StripeService::class);
     $mock->shouldReceive('refund')
         ->once()
-        ->with($booking->payment->stripe_payment_intent_id)
+        ->with($booking->payment->stripe_payment_intent_id, Mockery::any())
         ->andReturn('re_test_123');
 
     $response = actingAs($traveler)
@@ -144,10 +144,14 @@ it('double cancellation is idempotent', function () {
     $refundCountBefore = Payment::where('booking_id', $booking->id)->where('type', 'refund')->count();
     $creditCountBefore = FinancialLedgerEntry::where('booking_id', $booking->id)->where('entry_type', 'credit')->count();
 
-    // Second cancellation — should return existing result without calling Stripe again
+    // Second cancellation — per traveler-booking-api.md the endpoint returns
+    // 422 "Only confirmed bookings can be cancelled." for an already-cancelled
+    // booking. The 422 is thrown BEFORE ProcessRefundAction runs, so no second
+    // Stripe call and no duplicate refund/ledger entry — the idempotency that
+    // matters (no double refund, no double credit) is preserved.
     actingAs($traveler)
         ->postJson("/api/public/traveler/bookings/{$booking->reference}/cancel")
-        ->assertStatus(200);
+        ->assertStatus(422);
 
     expect($booking->fresh()->status)->toBe(Booking::STATUS_CANCELLED);
     expect(Payment::where('booking_id', $booking->id)->where('type', 'refund')->count())->toBe($refundCountBefore);

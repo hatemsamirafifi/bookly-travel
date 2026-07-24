@@ -3,8 +3,8 @@
 namespace App\Domains\Search\Controllers\Public;
 
 use App\Domains\Search\Actions\SearchToursAction;
+use App\Http\Requests\Public\Search\SearchToursRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SearchController
 {
@@ -12,22 +12,9 @@ class SearchController
         protected SearchToursAction $searchToursAction
     ) {}
 
-    public function search(Request $request): JsonResponse
+    public function search(SearchToursRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'locale' => 'required|in:en,es,it',
-            'q' => 'nullable|string|max:255',
-            'category' => 'nullable|string',
-            'location' => 'nullable|string',
-            'price_min' => 'nullable|integer|min:0',
-            'price_max' => 'nullable|integer|min:0',
-            'duration' => 'nullable|in:half-day,full-day,multi-day',
-            'date' => 'nullable|date_format:Y-m-d',
-            'sort' => 'nullable|in:relevance,price_asc,price_desc,rating,newest',
-            'page' => 'nullable|integer|min:1',
-        ]);
-
-        $results = $this->searchToursAction->execute($validated);
+        $results = $this->searchToursAction->execute($request->validated());
 
         return response()->json($results);
     }

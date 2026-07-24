@@ -52,7 +52,7 @@ it('approves a pending partner, sends mail, and writes audit', function () {
     expect($partner->fresh()->onboarding_status)->toBe(PartnerStatus::Approved->value)
         ->and($partner->fresh()->is_active)->toBeTrue();
 
-    Mail::assertSent(PartnerApprovedMail::class, fn ($m) => $m->partner->is($partner));
+    Mail::assertQueued(PartnerApprovedMail::class, fn ($m) => $m->partner->is($partner));
 
     $log = GovernanceAuditLog::where('action', 'partner.approve')->where('target_id', $partner->id)->first();
     expect($log)->not->toBeNull()
@@ -69,7 +69,7 @@ it('rejects a pending partner with a reason, sends mail, and writes audit', func
     expect($partner->fresh()->onboarding_status)->toBe(PartnerStatus::Rejected->value)
         ->and($partner->fresh()->is_active)->toBeFalse();
 
-    Mail::assertSent(PartnerRejectedMail::class, fn ($m) => $m->reason === 'Incomplete profile');
+    Mail::assertQueued(PartnerRejectedMail::class, fn ($m) => $m->reason === 'Incomplete profile');
 
     $log = GovernanceAuditLog::where('action', 'partner.reject')->where('target_id', $partner->id)->first();
     expect($log)->not->toBeNull()->and($log->metadata['reason'])->toBe('Incomplete profile');

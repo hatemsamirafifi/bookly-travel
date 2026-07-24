@@ -95,10 +95,11 @@ class Review extends Model
 
     public function canEdit(): bool
     {
-        if ($this->edited_at === null) {
-            return now()->lessThan($this->created_at->addHours(48));
-        }
-
-        return now()->lessThan($this->edited_at->addHours(48));
+        // FR-011: editing is allowed only within 48 hours of the original
+        // submission. The window is anchored to `created_at` (never
+        // `edited_at`), so each edit does NOT reset or extend the deadline.
+        // `edited_at` is still written on edit to drive the "Edited" indicator
+        // and the audit trail, but it has no effect on immutability.
+        return now()->lessThan($this->created_at->addHours(48));
     }
 }

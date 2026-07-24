@@ -9,9 +9,7 @@ use App\Domains\Booking\Models\Booking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TravelerBookingController
 {
@@ -70,25 +68,17 @@ class TravelerBookingController
 
     public function cancel(Request $request, string $reference, CancelBookingAction $action): JsonResponse
     {
-        try {
-            $data = $action->execute(
-                reference: $reference,
-                travelerId: (int) $request->user()->id,
-                reason: $request->input('reason'),
-            );
+        // L4: HttpExceptions thrown by the action are rendered as JSON by
+        // Laravel's handler for api-grouped requests.
+        $data = $action->execute(
+            reference: $reference,
+            travelerId: (int) $request->user()->id,
+            reason: $request->input('reason'),
+        );
 
-            return response()->json([
-                'data' => $data,
-                'message' => 'Booking cancelled. Refund is being processed.',
-            ]);
-        } catch (NotFoundHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
-        } catch (AccessDeniedHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 403);
-        } catch (ConflictHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 409);
-        } catch (UnprocessableEntityHttpException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
-        }
+        return response()->json([
+            'data' => $data,
+            'message' => 'Booking cancelled. Refund is being processed.',
+        ]);
     }
 }

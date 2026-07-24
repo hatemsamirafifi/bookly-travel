@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import BookingList from '../BookingList';
 import { getMyBookings, getMyBookingsSummary } from '@/lib/api/my-bookings';
@@ -15,7 +15,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => {
+  useTranslations: () => (key: string, vars?: Record<string, unknown>) => {
     const translations: Record<string, string> = {
       summaryLabel: 'Booking summary',
       summaryTotal: 'Total bookings',
@@ -31,6 +31,10 @@ jest.mock('next-intl', () => ({
       empty: 'No bookings yet',
       loadError: 'Failed to load bookings',
       fallbackTour: 'Unknown Tour',
+      'pagination.previous': 'Previous',
+      'pagination.next': 'Next',
+      'pagination.page': `Page ${(vars?.current as number) ?? 1} of ${(vars?.last as number) ?? 1}`,
+      'pagination.loadMore': 'Load more',
     };
     // Handle nested keys like status.confirmed
     return translations[key] || key;
@@ -127,5 +131,37 @@ describe('BookingList', () => {
     expect(screen.getByText('Browse Tours')).toBeInTheDocument();
     expect(screen.getByText('View Wishlist')).toBeInTheDocument();
     expect(screen.getByText('Edit Profile')).toBeInTheDocument();
+  });
+
+  // F14: paginates the booking list from meta.last_page and refetches on next.
+  it('renders pagination controls and refetches page 2 on next click', async () => {
+    jest.mocked(getMyBookings).mockResolvedValue({
+      data: bookings,
+      meta: {
+        current_page: 1,
+        last_page: 3,
+        per_page: 2,
+        total: 6,
+      },
+    });
+
+    renderWithProviders(<BookingList locale="en" />);
+
+    await waitFor(() => expect(screen.getAllByText('Rome Food Walk').length).toBeGreaterThan(0));
+
+    // Pagination controls are present because last_page > 1.
+    expect(screen.getByText('Previous')).toBeInTheDocument();
+    expect(screen.getByText('Next')).toBeInTheDocument();
+    expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
+
+    // First fetch was for page 1.
+    await waitFor(() => expect(getMyBookings).toHaveBeenCalledWith(undefined, 1));
+
+    await fireEvent.click(screen.getByText('Next'));
+
+    // The next click triggers a refetch for page 2.
+    await waitFor(() => {
+      expect(getMyBookings).toHaveBeenCalledWith(undefined, 2);
+    });
   });
 });

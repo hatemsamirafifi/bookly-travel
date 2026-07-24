@@ -202,6 +202,16 @@
     "cancelKeep": "Mantener Reserva",
     "cancelSuccess": "Reserva cancelada. El reembolso está siendo procesado.",
     "emptyState": "No hay reservas todavía — encuentre un tour para comenzar su aventura",
+    "selectPrompt": "Por favor seleccione un tour y una fecha para continuar.",
+    "paymentHeading": "Pago",
+    "confirmationSubheading": "Su referencia de reserva es",
+    "pendingPaymentSubheading": "Su reserva está pendiente de pago.",
+    "expiredTitle": "Reserva Expirada",
+    "cancelledTitle": "Reserva Cancelada",
+    "tourLabel": "Tour",
+    "notFound": "Reserva no encontrada.",
+    "keepReference": "Conserve esta referencia para sus registros.",
+    "retry": "Reintentar",
     "errors": {
       "loadFailed": "Error al cargar los detalles del tour.",
       "soldOut": "Esta fecha está agotada. Por favor seleccione otra fecha.",
@@ -323,6 +333,12 @@
         "pending_payment": "Pago pendiente",
         "expired": "Expirada",
         "no_show": "No presentado"
+      },
+      "pagination": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "page": "Página {current} de {last}",
+        "loadMore": "Cargar más"
       }
     },
     "bookingDetail": {
@@ -758,7 +774,15 @@
       "editedOn": "Editado el {date}",
       "failedToSubmit": "Error al enviar la respuesta",
       "failedToUpdate": "Error al actualizar la respuesta",
-      "submitting": "Enviando..."
+      "submitting": "Enviando...",
+      "filters": "Filtros",
+      "allRatings": "★ Todas las valoraciones",
+      "allStatuses": "Todas",
+      "clear": "Limpiar",
+      "clearFilters": "Limpiar filtros",
+      "previousPage": "Página anterior",
+      "nextPage": "Página siguiente",
+      "retry": "Reintentar"
     },
     "analytics": {
       "metaTitle": "Analíticas | Bookly",
@@ -889,5 +913,45 @@
       "previous": "Anterior",
       "next": "Siguiente"
     }
+  },
+  "verification": {
+    "metaTitle": "Verificación de comprobante — {reference}",
+    "metaDescription": "Verifica la autenticidad de un comprobante de tour de Bookly.",
+    "brand": "Bookly",
+    "heading": "Verificación de comprobante",
+    "subtitle": "Confirmación pública y de solo lectura de una reserva en Bookly.",
+    "notFound": {
+      "title": "Comprobante no encontrado",
+      "description": "No hemos encontrado una reserva para esta referencia. La referencia puede estar incompleta, tener errores, o no existir ninguna reserva. No se expone información personal."
+    },
+    "rateLimited": {
+      "title": "Demasiadas comprobaciones",
+      "description": "Espera un minuto e inténtalo de nuevo."
+    },
+    "error": {
+      "title": "No se puede verificar",
+      "description": "No hemos podido contactar con el servicio de verificación. Inténtalo de nuevo más tarde."
+    },
+    "fields": {
+      "reference": "Referencia de reserva",
+      "tourTitle": "Tour",
+      "tourDate": "Fecha del tour",
+      "participants": "Participantes",
+      "createdAt": "Reservado el",
+      "voucherGeneratedAt": "Comprobante emitido"
+    },
+    "statusLabels": {
+      "VALID": "Válido",
+      "CANCELLED": "Cancelado",
+      "PENDING": "Pago pendiente",
+      "EXPIRED": "Expirado"
+    },
+    "statusDescriptions": {
+      "VALID": "Esta reserva está confirmada y es genuina.",
+      "CANCELLED": "Esta reserva ha sido cancelada.",
+      "PENDING": "Esta reserva está pendiente de pago.",
+      "EXPIRED": "Esta reserva ya no es válida."
+    },
+    "legalNote": "Esta página es de solo lectura y no expone información personal."
   }
 }

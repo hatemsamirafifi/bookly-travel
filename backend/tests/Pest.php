@@ -1,6 +1,10 @@
 <?php
 
+use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Payment\Models\Payment;
+use App\Domains\Reviews\Models\Review;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
@@ -72,8 +76,70 @@ if (! function_exists('makePartner')) {
     }
 }
 
+if (! function_exists('createReviewForEditTest')) {
+    /**
+     * Create a traveler + partner-owned tour + completed booking + payment +
+     * a review on it. Returns [$traveler, $review]. Used by EditReviewTest
+     * variants to avoid repeating the ~40-line setup per case. Pass
+     * $reviewOverrides to set status/comment/created_at (e.g. ['status' =>
+     * 'flagged'] or ['created_at' => now()->subHours(47)]).
+     */
+    function createReviewForEditTest(array $reviewOverrides = []): array
+    {
+        $traveler = User::factory()->traveler()->create();
+        $partner = makePartner();
+        $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
+
+        $tour = Tour::create([
+            'partner_id' => $partner->id,
+            'category_id' => $category->id,
+            'slug' => 'edit-test-' . uniqid(),
+            'location' => 'Rome, Italy',
+            'duration_minutes' => 120,
+            'duration_label' => '2 hours',
+            'group_size_min' => 1,
+            'group_size_max' => 10,
+            'price_amount' => 5000,
+            'status' => 'published',
+        ]);
+
+        $booking = Booking::create([
+            'reference' => Booking::generateReference(),
+            'traveler_id' => $traveler->id,
+            'tour_id' => $tour->id,
+            'tour_date' => now()->subDay(),
+            'participant_count' => 2,
+            'price_per_person' => 5000,
+            'total_price' => 10000,
+            'currency' => 'EUR',
+            'status' => Booking::STATUS_COMPLETED,
+        ]);
+
+        Payment::create([
+            'booking_id' => $booking->id,
+            'amount' => 10000,
+            'currency' => 'EUR',
+            'status' => 'succeeded',
+            'type' => 'charge',
+        ]);
+
+        $review = Review::create(array_merge([
+            'booking_id' => $booking->id,
+            'tour_id' => $tour->id,
+            'traveler_id' => $traveler->id,
+            'rating' => 3,
+            'comment' => 'Original review',
+            'status' => 'visible',
+            'locale' => 'en',
+            'created_at' => now()->subHours(1),
+        ], $reviewOverrides));
+
+        return [$traveler, $review];
+    }
+}
+
 if (! function_exists('makeSearchableTour')) {
-    function makeSearchableTour(string $status = 'published', string $slug = null): Tour
+    function makeSearchableTour(string $status = 'published', ?string $slug = null): Tour
     {
         $partner = makePartner();
 
@@ -112,5 +178,26 @@ if (! function_exists('addTranslation')) {
             'meeting_point' => 'Central station',
             'cancellation_policy' => 'Free cancellation 24h before',
         ]);
+    }
+}
+
+if (! function_exists('addAvailabilityRule')) {
+    /**
+     * Attach an availability rule to a tour so it has an operating schedule
+     * (required by the F9 booking gate, which rejects dates the tour does not
+     * operate on). Defaults to a recurring rule covering every day with a
+     * 09:00 start — pass overrides for specific_date / day-of-week / start_time.
+     */
+    function addAvailabilityRule(Tour $tour, array $overrides = []): AvailabilityRule
+    {
+        return AvailabilityRule::create(array_merge([
+            'tour_id' => $tour->id,
+            'rule_type' => 'recurring',
+            'days_of_week' => [0, 1, 2, 3, 4, 5, 6],
+            'start_time' => '09:00:00',
+            'start_date' => null,
+            'end_date' => null,
+            'capacity' => $tour->group_size_max ?? 10,
+        ], $overrides));
     }
 }

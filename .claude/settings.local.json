@@ -57,7 +57,14 @@
       "Bash(curl -s http://localhost:8080/en/auth/login)",
       "Bash(docker ps *)",
       "Bash(docker-compose ps *)",
-      "Bash(grep -iE '\\\\.env$')"
+      "Bash(grep -iE '\\\\.env$')",
+      "Bash(ls .specify/extensions.yml)",
+      "Bash(ls .specify/scripts/powershell/check-prerequisites.ps1)",
+      "Bash(echo \"---exit $?---\")"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Users\\HaTeM\\.claude\\.claude-manager\\statusline-tap.js\""
   }
 }

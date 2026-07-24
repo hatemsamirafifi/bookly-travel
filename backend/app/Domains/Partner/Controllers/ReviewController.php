@@ -4,6 +4,7 @@ namespace App\Domains\Partner\Controllers;
 
 use App\Domains\Partner\Requests\StoreReviewResponseRequest;
 use App\Domains\Partner\Services\ReviewService;
+use App\Http\Resources\PartnerReviewResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,10 +34,15 @@ class ReviewController
         }
 
         $result = $this->service->listForPartner($partnerId, $filters);
+        $summaries = $this->service->getTourReviewSummaries($partnerId, $filters);
 
+        // $result->items() (models) instead of the paginator keeps JsonResource
+        // from injecting its own pagination `meta` — we emit the contract meta
+        // shape (incl. tour_summaries) ourselves.
         return response()->json([
-            'data' => $result->items(),
+            'data' => PartnerReviewResource::collection($result->items()),
             'meta' => [
+                'tour_summaries' => $summaries,
                 'current_page' => $result->currentPage(),
                 'last_page' => $result->lastPage(),
                 'per_page' => $result->perPage(),

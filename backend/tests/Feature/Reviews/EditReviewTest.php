@@ -2,12 +2,15 @@
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Reviews\Events\ReviewFlagged;
 use App\Domains\Reviews\Models\Review;
 use App\Domains\Reviews\Models\ReviewAuditTrail;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Event;
 
 use function Pest\Laravel\actingAs;
 
@@ -363,4 +366,105 @@ it('recalculates aggregate rating on edit', function () {
 
     $tour->refresh();
     expect((float) $tour->average_rating)->toEqualWithDelta(4.0, 0.01);
+});
+
+it('does not reset the 48h edit window on edit (FR-011 regression)', function () {
+    // Anchor the clock so the "now()-based" window is deterministic.
+    Carbon::setTestNow(now());
+    [$traveler, $review] = createReviewForEditTest(['created_at' => now()->subHours(47)]);
+
+    // First edit 1h before the window closes — succeeds and stamps edited_at = now.
+    actingAs($traveler)
+        ->putJson("/api/public/reviews/{$review->id}", ['rating' => 4, 'comment' => 'First edit'])
+        ->assertStatus(200);
+    expect($review->fresh()->edited_at)->not->toBeNull();
+
+    // Advance the clock past created_at + 48h. edited_at is only ~0h old, so the
+    // OLD (buggy) logic anchored to edited_at would still allow the edit. The
+    // fixed logic anchors to created_at and must reject it.
+    Carbon::setTestNow(now()->addHours(3));
+    actingAs($traveler)
+        ->putJson("/api/public/reviews/{$review->id}", ['rating' => 5, 'comment' => 'Second edit'])
+        ->assertStatus(403);
+
+    Carbon::setTestNow();
+});
+
+it('flags an edited review whose new comment contains profanity', function () {
+    Event::fake([ReviewFlagged::class]);
+    [$traveler, $review] = createReviewForEditTest();
+
+    actingAs($traveler)
+        ->putJson("/api/public/reviews/{$review->id}", [
+            'rating' => 5,
+            'comment' => 'This tour was shit',
+        ])
+        ->assertStatus(200)
+        ->assertJsonPath('data.status', 'flagged');
+
+    expect($review->fresh()->status)->toBe('flagged');
+    Event::assertDispatched(ReviewFlagged::class);
+
+    $audit = ReviewAuditTrail::where('review_id', $review->id)->where('action', 'edit')->first();
+    expect($audit)->not->toBeNull()
+        ->and($audit->new_comment)->toBe('This tour was shit');
+});
+
+it('clears the flag when an edit removes the profanity', function () {
+    [$traveler, $review] = createReviewForEditTest([
+        'status' => 'flagged',
+        'comment' => 'shit tour',
+    ]);
+
+    actingAs($traveler)
+        ->putJson("/api/public/reviews/{$review->id}", [
+            'rating' => 5,
+            'comment' => 'Actually a lovely tour',
+        ])
+        ->assertStatus(200)
+        ->assertJsonPath('data.status', 'visible');
+
+    expect($review->fresh()->status)->toBe('visible');
+});
+
+it('does not un-hide an admin-suppressed review via edit', function () {
+    [$traveler, $review] = createReviewForEditTest(['status' => 'hidden', 'comment' => 'Bad']);
+
+    // A profane edit on a hidden review must NOT flip it to flagged (which would
+    // re-publish it in the public list); the hidden status is preserved.
+    actingAs($traveler)
+        ->putJson("/api/public/reviews/{$review->id}", [
+            'rating' => 4,
+            'comment' => 'This is shit',
+        ])
+        ->assertStatus(200)
+        ->assertJsonPath('data.status', 'hidden');
+
+    expect($review->fresh()->status)->toBe('hidden');
+});
+
+it('rolls back the review update if the audit-trail write fails', function () {
+    [$traveler, $review] = createReviewForEditTest();
+    $originalRating = $review->rating;
+    $originalComment = $review->comment;
+
+    $events = app('events');
+    $events->listen('eloquent.creating: ' . ReviewAuditTrail::class, function () {
+        throw new RuntimeException('audit insert failed');
+    });
+
+    try {
+        actingAs($traveler)
+            ->putJson("/api/public/reviews/{$review->id}", [
+                'rating' => 5,
+                'comment' => 'Should not persist',
+            ])
+            ->assertStatus(500);
+    } finally {
+        $events->forget('eloquent.creating: ' . ReviewAuditTrail::class);
+    }
+
+    // The update must have been rolled back with the failed audit insert.
+    expect($review->fresh()->rating)->toBe($originalRating)
+        ->and($review->fresh()->comment)->toBe($originalComment);
 });

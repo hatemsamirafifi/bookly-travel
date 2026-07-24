@@ -7,7 +7,7 @@
 
 ### Tour (Searchable)
 
-Represents a tour indexed for public search and discovery. This is a projection of the Tour entity from spec 003, enriched with pricing/availability data from spec 004 and review aggregates from spec 010.
+Represents a tour indexed for public search and discovery. This is a projection of the Tour entity from spec 003, enriched with pricing/availability data from spec 004 and review aggregates from spec 009.
 
 **Search index fields** (Meilisearch `tours` index):
 
@@ -43,6 +43,15 @@ Represents a tour indexed for public search and discovery. This is a projection 
 | `status` | string | — | yes | — | Always `published` in index |
 | `created_at` | datetime | — | — | yes | `tours.created_at` |
 | `updated_at` | datetime | — | — | — | `tours.updated_at` |
+| `published_at` | datetime | — | — | — | `tours.published_at` (null if never published) |
+
+**Locale-aware search behavior**:
+The `locale` query parameter is NOT a filterable index field. Instead, `SearchToursAction` uses Meilisearch's `attributesToSearchOn` (v1.3+) to restrict text matching to the current locale's fields at query time:
+- `locale=en` → searches `title_en`, `description_en`, `highlights_en`, `location`, `category_name`
+- `locale=es` → searches `title_es`, `description_es`, `highlights_es`, `location`, `category_name`
+- `locale=it` → searches `title_it`, `description_it`, `highlights_it`, `location`, `category_name`
+
+Shared fields (`location`, `category_name`) are always included since they are language-independent.
 
 **Validation rules** (applied before indexing):
 - `status` MUST equal `published`
@@ -50,6 +59,9 @@ Represents a tour indexed for public search and discovery. This is a projection 
 - `available_dates` MUST have at least one future date
 - All language fields MUST be non-empty for at least the default language (EN)
 - `cover_image_url` MUST be non-null
+
+**Database-only fields** (not in search index, used by `GetTourDetailAction`):
+- `published_at`: nullable timestamp, set when tour first transitions to `published` status, never cleared. Used to distinguish 404 (never published) from 410 (was published, now archived) on the tour detail endpoint.
 
 **Lifecycle**:
 ```
@@ -67,9 +79,13 @@ Represents a tour category used for filtering and discovery browsing.
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | integer | Primary key |
-| `name` | string | Display name |
+| `name_en` | string | Display name (English) |
+| `name_es` | string | Display name (Spanish) |
+| `name_it` | string | Display name (Italian) |
 | `slug` | string | URL-safe identifier |
-| `description` | string | Category description (may be translated) |
+| `description_en` | string | Category description (English) |
+| `description_es` | string | Category description (Spanish) |
+| `description_it` | string | Category description (Italian) |
 | `image_url` | string | Optional category image |
 | `tour_count` | integer | Denormalized count of published tours in category |
 | `display_order` | integer | Ordering for homepage display |
@@ -87,8 +103,12 @@ Represents a geographic area or city where tours operate.
 | Field | Type | Description |
 |-------|------|-------------|
 | `slug` | string | URL-safe normalized location name |
-| `name` | string | Display name |
-| `country` | string | Country name |
+| `name_en` | string | Display name (English) |
+| `name_es` | string | Display name (Spanish) |
+| `name_it` | string | Display name (Italian) |
+| `country_en` | string | Country name (English) |
+| `country_es` | string | Country name (Spanish) |
+| `country_it` | string | Country name (Italian) |
 | `image_url` | string | Destination hero image |
 | `tour_count` | integer | Denormalized count of published tours at destination |
 | `is_featured` | boolean | Whether highlighted on homepage |
@@ -115,7 +135,7 @@ Not persisted — represents the in-flight state of a traveler's search session,
 
 ### Rate Limit Entry
 
-Runtime state stored in Redis, notpersisted.
+Runtime state stored in Redis, not persisted.
 
 **Redis key pattern**: `rate_limit:{endpoint}:{user_identifier}:{window_timestamp}`
 
@@ -142,6 +162,7 @@ Runtime state stored in Redis, notpersisted.
                     ▼
                published ◄────────── admin unpublishes
                     │
+                    │  (sets published_at if null)
                     │  (has pricing + availability)
                     ▼
             ┌─ VISIBLE in search ─┐
