@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import type { SearchParams } from '@/lib/api/types';
 import { searchTours } from '@/lib/api/search';
 import { RateLimitError } from '@/lib/api/client';
+import { parseSort } from '@/lib/validators/search';
 import SearchBar from '@/components/search/SearchBar';
 import SearchResults from '@/components/search/SearchResults';
 import Pagination from '@/components/search/Pagination';
@@ -62,7 +62,7 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
       price_max: sp.price_max ? parseInt(sp.price_max, 10) : undefined,
       duration: sp.duration,
       date: sp.date,
-      sort: sp.sort as SearchParams['sort'] | undefined,
+      sort: parseSort(sp.sort),
     });
   } catch (err) {
     if (err instanceof RateLimitError) {

@@ -58,6 +58,7 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
           <AvailabilityCalendar
             availableDates={tour.availability.available_dates}
             nextAvailableDate={tour.availability.next_available_date}
+            locale={locale}
           />
         </div>
       </div>
