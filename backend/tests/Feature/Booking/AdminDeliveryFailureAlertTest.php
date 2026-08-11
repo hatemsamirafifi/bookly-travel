@@ -96,6 +96,24 @@ it('does not post to Slack when no webhook is configured', function () {
     Http::assertNothingSent();
 });
 
+/*
+ * FR-012: Slack is best-effort only and MUST NOT fail the original
+ * listener/job if Slack itself returns a 5xx or throws an exception.
+ */
+it('survives a Slack webhook failure without crashing the listener', function () {
+    Http::fake(function () {
+        throw new \Illuminate\Http\Client\ConnectionException('Connection refused');
+    });
+    config(['services.slack.admin_webhook_url' => 'https://hooks.slack.com/bad']);
+    Log::spy();
+
+    // Should not throw even though Slack throws a ConnectionException
+    event(new BookingEmailDeliveryFailed($this->booking, 'SMTP down'));
+
+    Log::shouldHaveReceived('error')->atLeast()->once();
+    Log::shouldHaveReceived('warning')->atLeast()->once();
+});
+
 it('does not alter the booking status on a delivery failure (FR-028)', function () {
     event(new BookingEmailDeliveryFailed($this->booking, 'SMTP down'));
 

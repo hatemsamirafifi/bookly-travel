@@ -13,7 +13,7 @@ export function usePartnerRealtime() {
     try {
       const res = await getNotifications(1, true);
       setNotifications(res.data);
-      setUnreadCount(res.data.filter((n) => !n.read_at).length);
+      setUnreadCount(res.meta?.unread_count ?? res.data.filter((n) => !n.read_at).length);
     } catch {
       // Silently fail on polling fallback
     }

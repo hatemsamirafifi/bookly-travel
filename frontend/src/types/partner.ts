@@ -191,6 +191,7 @@ export interface PartnerReview {
 }
 
 export interface TourSummary {
+  tour_id: string | number;
   tour_slug: string;
   tour_title: string;
   average_rating: number;
@@ -308,6 +309,11 @@ export interface PaginatedPartnerResponse<T> {
     last_page: number;
     per_page: number;
     total: number;
+    /**
+     * Server-side unread notification count. Only present on the notifications
+     * endpoint (`GET /api/partner/notifications`); other endpoints omit it.
+     */
+    unread_count?: number;
     /**
      * Per-tour rating aggregates. Only present on the reviews endpoint
      * (`GET /api/partner/reviews`); other paginated partner endpoints omit it.
