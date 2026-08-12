@@ -953,5 +953,15 @@
       "EXPIRED": "Questa prenotazione non è più valida."
     },
     "legalNote": "Questa pagina è di sola lettura e non espone informazioni personali."
+  },
+  "cookieConsent": {
+    "message": "Utilizziamo i cookie per migliorare la tua esperienza di navigazione e analizzare il nostro traffico. Facendo clic su \"Accetta\", acconsenti al nostro uso dei cookie.",
+    "accept": "Accetta",
+    "reject": "Rifiuta"
+  },
+  "errorBoundary": {
+    "title": "Qualcosa è andato storto",
+    "description": "Siamo stati avvisati e stiamo lavorando per risolvere il problema.",
+    "reload": "Ricarica pagina"
   }
 }

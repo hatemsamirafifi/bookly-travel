@@ -953,5 +953,15 @@
       "EXPIRED": "This booking is no longer valid."
     },
     "legalNote": "This page is read-only and exposes no personal information."
+  },
+  "cookieConsent": {
+    "message": "We use cookies to enhance your browsing experience and analyze our traffic. By clicking \"Accept\", you consent to our use of cookies.",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "We've been notified and are working to fix the issue.",
+    "reload": "Reload page"
   }
 }

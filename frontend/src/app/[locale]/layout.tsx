@@ -7,6 +7,7 @@ import { AuthProvider } from '@/lib/hooks/useAuth';
 import QueryProvider from '@/lib/query-provider';
 import { Inter } from "next/font/google";
 import ErrorBoundary from '@/components/shared/ErrorBoundary';
+import ErrorFallback from '@/components/shared/ErrorFallback';
 import CookieConsentBanner from '@/components/shared/CookieConsent';
 import '../globals.css';
 
@@ -40,7 +41,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
             <AuthProvider>
-              <ErrorBoundary>
+              <ErrorBoundary fallback={<ErrorFallback />}>
                 {children}
                 <CookieConsentBanner />
               </ErrorBoundary>

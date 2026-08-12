@@ -953,5 +953,15 @@
       "EXPIRED": "Esta reserva ya no es válida."
     },
     "legalNote": "Esta página es de solo lectura y no expone información personal."
+  },
+  "cookieConsent": {
+    "message": "Usamos cookies para mejorar tu experiencia de navegación y analizar nuestro tráfico. Al hacer clic en \"Aceptar\", aceptas nuestro uso de cookies.",
+    "accept": "Aceptar",
+    "reject": "Rechazar"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "description": "Hemos sido notificados y estamos trabajando para solucionar el problema.",
+    "reload": "Recargar página"
   }
 }
