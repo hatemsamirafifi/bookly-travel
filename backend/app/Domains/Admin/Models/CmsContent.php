@@ -16,8 +16,7 @@ final class CmsContent
         public readonly ?string $title,
         public readonly ?string $body,
         public readonly ?string $metaDescription = null,
-    ) {
-    }
+    ) {}
 
     public function hasBody(): bool
     {

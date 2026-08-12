@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 uses(RefreshDatabase::class);
@@ -54,7 +55,7 @@ function makeBookingWithStatus(string $status): Booking
         'total_price' => 10000,
         'currency' => 'EUR',
         'status' => $status,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
 }

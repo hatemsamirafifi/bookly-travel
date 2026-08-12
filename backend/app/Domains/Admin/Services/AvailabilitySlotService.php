@@ -81,6 +81,7 @@ class AvailabilitySlotService
                 if ($rule->start_date?->toDateString() === $date->toDateString()) {
                     return (int) $rule->capacity;
                 }
+
                 continue;
             }
 

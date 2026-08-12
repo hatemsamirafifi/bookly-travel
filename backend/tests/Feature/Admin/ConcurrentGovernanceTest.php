@@ -3,13 +3,17 @@
 use App\Domains\Admin\Actions\TransitionBookingStatusAction;
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\Partner;
+use App\Models\Category;
+use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 uses(RefreshDatabase::class);
 
-if (!function_exists('bookingsAdmin')) {
+if (! function_exists('bookingsAdmin')) {
     function bookingsAdmin(): User
     {
         $admin = User::factory()->admin()->create();
@@ -19,27 +23,27 @@ if (!function_exists('bookingsAdmin')) {
     }
 }
 
-if (!function_exists('concurrentBooking')) {
+if (! function_exists('concurrentBooking')) {
     function concurrentBooking(string $status = Booking::STATUS_CONFIRMED): Booking
     {
         return makeBookingWithStatus($status);
     }
 }
 
-if (!function_exists('makeBookingWithStatus')) {
+if (! function_exists('makeBookingWithStatus')) {
     // Reuse the canonical booking factory from the booking-transition suite.
     function makeBookingWithStatus(string $status): Booking
     {
         $traveler = User::factory()->traveler()->create();
         $partnerUser = User::factory()->partner()->create();
-        $partner = \App\Domains\Partner\Models\Partner::create([
+        $partner = Partner::create([
             'user_id' => $partnerUser->id,
             'role' => 'partner',
             'onboarding_status' => 'approved',
             'is_active' => true,
         ]);
-        $category = \App\Models\Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
-        $tour = \App\Models\Tour::create([
+        $category = Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test']);
+        $tour = Tour::create([
             'partner_id' => $partner->id,
             'category_id' => $category->id,
             'slug' => 'conc-tour-' . uniqid(),
@@ -62,7 +66,7 @@ if (!function_exists('makeBookingWithStatus')) {
             'total_price' => 10000,
             'currency' => 'EUR',
             'status' => $status,
-            'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+            'idempotency_key' => Str::uuid()->toString(),
             'locale' => 'en',
         ]);
     }

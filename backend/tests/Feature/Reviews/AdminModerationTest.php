@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Models\Payment;
@@ -184,7 +185,7 @@ it('audit trail records moderation actions', function () {
         ->and($trail->reason)->toBe('Contains spam');
 
     // Unified governance audit (Spec 013, T039): actor morph map admin => User.
-    $log = \App\Domains\Admin\Models\GovernanceAuditLog::where('action', 'review.hide')
+    $log = GovernanceAuditLog::where('action', 'review.hide')
         ->where('target_id', $this->review->id)
         ->first();
     expect($log)->not->toBeNull()

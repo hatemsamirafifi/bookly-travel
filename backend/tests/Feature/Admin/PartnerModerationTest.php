@@ -1,8 +1,8 @@
 <?php
 
 use App\Domains\Admin\Actions\ApprovePartnerAction;
-use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\ReinstatePartnerAction;
+use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\SuspendPartnerAction;
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Partner\Models\Partner;

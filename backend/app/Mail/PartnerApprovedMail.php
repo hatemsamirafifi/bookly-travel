@@ -53,6 +53,7 @@ class PartnerApprovedMail extends Mailable implements ShouldQueue
     private function resolveLocale(): string
     {
         $locale = $this->partner->user?->locale ?? 'en';
+
         return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
     }
 

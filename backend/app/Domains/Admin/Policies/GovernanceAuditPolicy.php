@@ -13,9 +13,7 @@ use App\Models\User;
  */
 class GovernanceAuditPolicy
 {
-    public function __construct(private readonly AdminAuthorizationService $authz)
-    {
-    }
+    public function __construct(private readonly AdminAuthorizationService $authz) {}
 
     public function viewAny(User $user): bool
     {

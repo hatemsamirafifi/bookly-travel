@@ -31,7 +31,7 @@ class PartnerReviewResource extends JsonResource
             'created_at' => $this->created_at?->toIso8601String(),
             'response' => $this->whenLoaded('reviewResponse', function () {
                 if (! $this->reviewResponse) {
-                    return null;
+                    return;
                 }
 
                 return [

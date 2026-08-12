@@ -44,6 +44,7 @@ class AnalyticsService
             if ($dateTo !== null) {
                 $query->where('tour_date', '<=', $dateTo);
             }
+
             return $query;
         };
 

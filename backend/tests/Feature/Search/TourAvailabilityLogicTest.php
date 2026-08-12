@@ -14,7 +14,6 @@ use Illuminate\Support\Carbon;
  * the date format, so those paths are covered by the DB-backed
  * TourSearchIndexTest instead.
  */
-
 it('derives upcoming available dates from a recurring daily rule', function () {
     $tour = new Tour(['status' => 'published', 'price_amount' => 5000]);
     $tour->setRelation('availabilityRules', collect([

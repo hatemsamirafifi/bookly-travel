@@ -5,14 +5,14 @@ use App\Domains\Admin\Actions\UpdateStaticPageAction;
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Admin\Models\StaticPage;
 use App\Domains\Admin\Settings\GeneralSettings;
-use App\Filament\Resources\StaticPageResource;
 use App\Filament\Resources\StaticPageResource\Pages\EditStaticPage;
 use App\Filament\Resources\StaticPageResource\Pages\ListStaticPages;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-use function Livewire\Livewire;
 use function Pest\Laravel\actingAs;
+
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 uses(RefreshDatabase::class);
 
@@ -180,7 +180,7 @@ it('blocks an unknown settings group', function () {
     actingAs($admin);
 
     expect(fn () => app(UpdateSettingsAction::class)->execute($admin, 'unknown', ['foo' => 'bar']))
-        ->toThrow(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        ->toThrow(HttpException::class);
 });
 
 it('registers the static_page morph map on the audit trail', function () {

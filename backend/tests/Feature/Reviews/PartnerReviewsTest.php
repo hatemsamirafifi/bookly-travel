@@ -1,12 +1,14 @@
 <?php
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\ReviewResponse;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\getJson;
@@ -309,7 +311,7 @@ it('exposes the contract shape and omits internal ids (no PII leak)', function (
         ])
         ->assertJsonPath('data.0.tour_slug', $tour->slug)
         ->assertJsonPath('data.0.tour_title', 'Amalfi Coast Boat Tour')
-        ->assertJsonPath('data.0.reviewer_name', \Illuminate\Support\Str::before($this->traveler->name, ' '))
+        ->assertJsonPath('data.0.reviewer_name', Str::before($this->traveler->name, ' '))
         // No internal IDs / PII columns must leak through the resource.
         ->assertJsonMissingPath('data.0.traveler_id')
         ->assertJsonMissingPath('data.0.booking_id')
@@ -418,7 +420,7 @@ it('includes the response when present and omits it when absent', function () {
         'locale' => 'en',
         'created_at' => now()->subHour(),
     ]);
-    \App\Domains\Partner\Models\ReviewResponse::create([
+    ReviewResponse::create([
         'review_id' => $reviewA->id,
         'partner_id' => $this->partner->id,
         'response_text' => 'Thanks!',

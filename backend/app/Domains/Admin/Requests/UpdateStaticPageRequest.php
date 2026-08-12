@@ -31,7 +31,7 @@ class UpdateStaticPageRequest extends FormRequest
 
         return [
             'slug' => ['sometimes', 'required', 'string', 'max:120',
-                'unique:static_pages,slug'.($pageId ? ",{$pageId}" : '')],
+                'unique:static_pages,slug' . ($pageId ? ",{$pageId}" : '')],
             'title' => ['required', 'array'],
             'title.en' => ['required', 'string', 'max:255'],
             'body' => ['required', 'array'],

@@ -55,6 +55,7 @@ it('excludes blocked exception dates from upcoming availability', function () {
 });
 
 it('indexes a published tour with pricing and availability in Scout', function () {
+    config(['scout.driver' => 'collection']);
     $tour = makeSearchableTour('published', 'unique-sunset-sail');
     addTranslation($tour, 'en', 'Unique Sunset Sail Journey');
     AvailabilityRule::create([
@@ -93,7 +94,7 @@ it('exposes the rating contract on the tour detail endpoint', function () {
     $tour = makeSearchableTour('published', 'contracted-tour');
     addTranslation($tour, 'en', 'Contracted Tour');
 
-    getJson("/api/public/tours/contracted-tour?locale=en")
+    getJson('/api/public/tours/contracted-tour?locale=en')
         ->assertOk()
         ->assertJsonPath('data.slug', 'contracted-tour')
         ->assertJsonStructure([

@@ -12,11 +12,9 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-use function Pest\Laravel\actingAs;
-
 uses(RefreshDatabase::class);
 
-if (!function_exists('adminWithFlag')) {
+if (! function_exists('adminWithFlag')) {
     function adminWithFlag(string $flag): User
     {
         $admin = User::factory()->admin()->create();
@@ -27,7 +25,7 @@ if (!function_exists('adminWithFlag')) {
     }
 }
 
-if (!function_exists('makePartner')) {
+if (! function_exists('makePartner')) {
     function makePartner(string $onboarding = 'approved'): Partner
     {
         $user = User::factory()->partner()->create();
@@ -41,7 +39,7 @@ if (!function_exists('makePartner')) {
     }
 }
 
-if (!function_exists('makeTour')) {
+if (! function_exists('makeTour')) {
     function makeTour(Partner $partner, string $status = 'pending_review'): Tour
     {
         return Tour::create([

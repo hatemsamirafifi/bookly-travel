@@ -99,7 +99,7 @@ it('keeps expiry durable when Stripe PaymentIntent cancel fails', function () {
     $stripe->shouldReceive('cancelPaymentIntent')
         ->once()
         ->with('pi_cancel_fail')
-        ->andThrow(new \Exception('stripe unreachable'));
+        ->andThrow(new Exception('stripe unreachable'));
 
     // Must not propagate — expiry stays durable even if Stripe is down.
     dispatchExpiryJob();

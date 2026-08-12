@@ -45,9 +45,9 @@ enum DurationBucket: string
      */
     public static function sqlCase(): string
     {
-        return "CASE "
-            . "WHEN duration_minutes <= " . self::halfDayMax() . " THEN '" . self::HalfDay->value . "' "
-            . "WHEN duration_minutes <= " . self::fullDayMax() . " THEN '" . self::FullDay->value . "' "
+        return 'CASE '
+            . 'WHEN duration_minutes <= ' . self::halfDayMax() . " THEN '" . self::HalfDay->value . "' "
+            . 'WHEN duration_minutes <= ' . self::fullDayMax() . " THEN '" . self::FullDay->value . "' "
             . "ELSE '" . self::MultiDay->value . "' "
             . 'END';
     }

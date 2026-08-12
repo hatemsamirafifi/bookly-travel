@@ -25,7 +25,7 @@ return new class extends Migration
             ->count();
 
         if ($affected > 0) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "Cannot narrow bookings.status to varchar(20): {$affected} row(s) still use 'cancellation_requested'."
             );
         }

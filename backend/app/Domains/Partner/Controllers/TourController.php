@@ -24,6 +24,7 @@ class TourController
             if ($required && empty($data['category_id'])) {
                 throw new UnprocessableEntityHttpException('The category field is required.');
             }
+
             return $data;
         }
 
@@ -68,7 +69,7 @@ class TourController
         }
 
         return response()->json([
-            'data' => $tour->load(['media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions'])
+            'data' => $tour->load(['media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions']),
         ]);
     }
 

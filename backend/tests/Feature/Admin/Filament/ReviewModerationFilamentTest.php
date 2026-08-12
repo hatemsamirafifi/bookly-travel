@@ -11,8 +11,8 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
-use function Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
@@ -59,7 +59,7 @@ function makeReview(string $status = 'visible'): Review
         'total_price' => 5000,
         'currency' => 'EUR',
         'status' => Booking::STATUS_COMPLETED,
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
 

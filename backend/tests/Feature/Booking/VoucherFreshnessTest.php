@@ -4,8 +4,10 @@ use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\VoucherService;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -20,7 +22,7 @@ use Tests\TestCase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 00:00:00');
+    Carbon::setTestNow('2026-07-04 00:00:00');
     $this->category = Category::firstOrCreate(['slug' => 'adventure'], ['name' => 'Adventure', 'is_active' => true, 'display_order' => 1]);
     $this->traveler = User::factory()->traveler()->create();
     $this->tour = Tour::create([
@@ -35,7 +37,7 @@ beforeEach(function () {
         'price_amount' => 5000,
         'status' => 'published',
     ]);
-    \App\Models\TourTranslation::create([
+    TourTranslation::create([
         'tour_id' => $this->tour->id,
         'locale' => 'en',
         'title' => 'Freshness Test Tour',
@@ -50,7 +52,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    \Illuminate\Support\Carbon::setTestNow();
+    Carbon::setTestNow();
 });
 
 function makeFreshnessBooking(TestCase $scope, array $overrides = []): Booking
@@ -100,7 +102,7 @@ it('reuses the cached PDF when the content hash is unchanged', function () {
     $hashAfterFirst = $booking->fresh()->voucher_content_hash;
 
     // Subsequent call with identical content MUST reuse the cached file.
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 01:00:00'); // advance clock
+    Carbon::setTestNow('2026-07-04 01:00:00'); // advance clock
     $second = $this->service->getOrGenerate($booking);
 
     expect($second)->toBe($first)
@@ -156,7 +158,7 @@ it('does NOT regenerate on a status-only change (confirmed → completed) (SC-00
     $booking->status = 'completed';
     $booking->save();
 
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 02:00:00');
+    Carbon::setTestNow('2026-07-04 02:00:00');
     $second = $this->service->getOrGenerate($booking);
 
     expect($second)->toBe($first)

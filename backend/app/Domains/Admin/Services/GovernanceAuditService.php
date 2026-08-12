@@ -16,18 +16,16 @@ use Illuminate\Http\Request;
  */
 class GovernanceAuditService
 {
-    public function __construct(private readonly Request $request)
-    {
-    }
+    public function __construct(private readonly Request $request) {}
 
     /**
      * Append one immutable governance audit entry.
      *
      * @param  Model|null  $target  The governed record (Tour/Partner/Booking/
-     *                               Review/StaticPage). Null for global actions
-     *                               like settings.update.
+     *                              Review/StaticPage). Null for global actions
+     *                              like settings.update.
      * @param  array|null  $before  Prior state snapshot.
-     * @param  array|null  $after   New state snapshot.
+     * @param  array|null  $after  New state snapshot.
      * @param  array  $metadata  Extra context: reason, bulk_batch_id, group, etc.
      * @param  string|null  $targetType  Override target_type for non-model
      *                                   targets (e.g. `setting`); ignored when a

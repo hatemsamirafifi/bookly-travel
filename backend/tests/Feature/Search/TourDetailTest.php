@@ -230,7 +230,7 @@ it('serves a fully bookable published tour as available (F2)', function () {
         'tour_id' => $tour->id, 'locale' => 'en', 'title' => 'Bookable',
         'description' => 'x', 'highlights' => [], 'inclusions' => [], 'exclusions' => [],
     ]);
-    \App\Domains\Partner\Models\AvailabilityRule::create([
+    AvailabilityRule::create([
         'tour_id' => $tour->id,
         'rule_type' => 'recurring',
         'days_of_week' => [0, 1, 2, 3, 4, 5, 6],

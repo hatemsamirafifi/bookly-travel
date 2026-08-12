@@ -11,8 +11,8 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Tests\TestCase;
 
 /*
  * Spec 014 (FR-006, FR-014, R4, T013/T022): the four partner lifecycle
@@ -29,12 +29,12 @@ use Tests\TestCase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 00:00:00');
+    Carbon::setTestNow('2026-07-04 00:00:00');
     $this->category = Category::firstOrCreate(['slug' => 'adventure'], ['name' => 'Adventure', 'is_active' => true, 'display_order' => 1]);
 });
 
 afterEach(function () {
-    \Illuminate\Support\Carbon::setTestNow();
+    Carbon::setTestNow();
 });
 
 function makeLocalizedPartner(string $locale): array

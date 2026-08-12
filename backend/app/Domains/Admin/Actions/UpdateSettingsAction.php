@@ -10,7 +10,6 @@ use App\Domains\Admin\Settings\SeoSettings;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelSettings\Settings;
-use UnexpectedValueException;
 
 /**
  * Persist a platform settings group and audit the change (Spec 013, US9, FR-015).
@@ -32,9 +31,7 @@ class UpdateSettingsAction
         'booking' => BookingSettings::class,
     ];
 
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     /**
      * @param  string  $group  general|seo|contact|booking.
@@ -63,7 +60,7 @@ class UpdateSettingsAction
             // A no-op save (no property changed) is not a governance event —
             // persist the settings but skip the audit row so the trail records
             // only real settings changes (FR-011).
-            if (!empty($changed)) {
+            if (! empty($changed)) {
                 $this->audit->log(
                     $actor,
                     'settings.update',

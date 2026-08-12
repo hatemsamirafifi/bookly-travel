@@ -8,12 +8,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 
-use function Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
 
-if (!function_exists('partnersAdmin')) {
+if (! function_exists('partnersAdmin')) {
     function partnersAdmin(): User
     {
         $admin = User::factory()->admin()->create();
@@ -23,7 +22,7 @@ if (!function_exists('partnersAdmin')) {
     }
 }
 
-if (!function_exists('makePartner')) {
+if (! function_exists('makePartner')) {
     function makePartner(string $onboarding = 'pending', bool $active = false): Partner
     {
         $user = User::factory()->partner()->create();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Admin\Services\AvailabilitySlotService;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityException;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Models\Payment;
@@ -10,8 +11,8 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
-use function Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
@@ -51,8 +52,8 @@ function availabilityTour(int $capacity = 5): Tour
 function bookOnDate(Tour $tour, Carbon $date, int $participants): void
 {
     $traveler = User::factory()->traveler()->create();
-    $booking = \App\Domains\Booking\Models\Booking::create([
-        'reference' => \App\Domains\Booking\Models\Booking::generateReference(),
+    $booking = Booking::create([
+        'reference' => Booking::generateReference(),
         'traveler_id' => $traveler->id,
         'tour_id' => $tour->id,
         'tour_date' => $date->toDateString(),
@@ -61,7 +62,7 @@ function bookOnDate(Tour $tour, Carbon $date, int $participants): void
         'total_price' => 5000 * $participants,
         'currency' => 'EUR',
         'status' => 'confirmed',
-        'idempotency_key' => \Illuminate\Support\Str::uuid()->toString(),
+        'idempotency_key' => Str::uuid()->toString(),
         'locale' => 'en',
     ]);
     Payment::create([

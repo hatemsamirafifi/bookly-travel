@@ -151,7 +151,7 @@ class ReviewResource extends Resource
                     ->icon('heroicon-o-eye-slash')
                     ->color('gray')
                     ->requiresConfirmation()
-                    ->visible(fn () => auth()->user()?->can('manage', new Review()))
+                    ->visible(fn () => auth()->user()?->can('manage', new Review))
                     ->form([
                         Forms\Components\Textarea::make('reason')
                             ->label('Reason')
@@ -178,7 +178,7 @@ class ReviewResource extends Resource
                     ->icon('heroicon-o-eye')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn () => auth()->user()?->can('manage', new Review()))
+                    ->visible(fn () => auth()->user()?->can('manage', new Review))
                     ->form([
                         Forms\Components\Textarea::make('reason')
                             ->label('Reason')

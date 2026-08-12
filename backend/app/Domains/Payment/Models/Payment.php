@@ -5,6 +5,7 @@ namespace App\Domains\Payment\Models;
 use App\Domains\Booking\Models\Booking;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Payment extends Model
 {
@@ -12,7 +13,7 @@ class Payment extends Model
     {
         static::creating(function (Payment $payment) {
             if (app()->environment('testing') && empty($payment->stripe_payment_intent_id)) {
-                $payment->stripe_payment_intent_id = 'pi_test_' . \Illuminate\Support\Str::random(16);
+                $payment->stripe_payment_intent_id = 'pi_test_' . Str::random(16);
             }
 
             if (empty($payment->stripe_payment_intent_id)) {

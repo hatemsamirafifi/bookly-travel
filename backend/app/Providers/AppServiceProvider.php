@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\Domains\Admin\Policies\BookingPolicy;
-use App\Domains\Admin\Models\StaticPage;
-use App\Domains\Admin\Policies\GovernanceAuditPolicy;
-use App\Domains\Admin\Policies\StaticPagePolicy;
-use App\Domains\Admin\Policies\PartnerPolicy;
-use App\Domains\Admin\Policies\TourPolicy;
 use App\Domains\Admin\Models\GovernanceAuditLog;
+use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Admin\Policies\BookingPolicy;
+use App\Domains\Admin\Policies\GovernanceAuditPolicy;
+use App\Domains\Admin\Policies\PartnerPolicy;
+use App\Domains\Admin\Policies\StaticPagePolicy;
+use App\Domains\Admin\Policies\TourPolicy;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Reviews\Models\Review;
@@ -16,8 +16,8 @@ use App\Models\Tour;
 use App\Models\User;
 use App\Policies\ReviewPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;

@@ -3,6 +3,7 @@
 use App\Domains\Partner\Middleware\PartnerRoleMiddleware;
 use App\Http\Middleware\RateLimitSearchMiddleware;
 use App\Http\Middleware\RoleMiddleware;
+use App\Providers\Filament\AdminPanelProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
-        App\Providers\Filament\AdminPanelProvider::class,
+        AdminPanelProvider::class,
     ])
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',

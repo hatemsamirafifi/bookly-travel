@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Actions\ApprovePartnerAction;
-use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\ReinstatePartnerAction;
+use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\SuspendPartnerAction;
 use App\Domains\Partner\Models\Partner;
 use App\Filament\Resources\PartnerResource\Pages;

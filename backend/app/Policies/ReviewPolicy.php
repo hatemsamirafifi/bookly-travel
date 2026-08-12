@@ -8,9 +8,7 @@ use App\Models\User;
 
 class ReviewPolicy
 {
-    public function __construct(private readonly AdminAuthorizationService $authz)
-    {
-    }
+    public function __construct(private readonly AdminAuthorizationService $authz) {}
 
     /**
      * Determine if the user can moderate (hide/reinstate) reviews.
