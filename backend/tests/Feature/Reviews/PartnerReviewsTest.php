@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
-use function Pest\Laravel\actingAs;
 use function Pest\Laravel\getJson;
 
 uses(RefreshDatabase::class);
@@ -113,8 +112,9 @@ it('partner sees only their tours reviews', function () {
         'locale' => 'en',
     ]);
 
-    $response = actingAs($this->partner->user, 'sanctum')
-        ->getJson('/api/partner/reviews');
+    $response = getJson('/api/partner/reviews', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
@@ -172,8 +172,9 @@ it('returns aggregate values per tour', function () {
 
     $tour->update(['average_rating' => 4.5, 'review_count' => 2]);
 
-    $response = actingAs($this->partner->user, 'sanctum')
-        ->getJson('/api/partner/reviews');
+    $response = getJson('/api/partner/reviews', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200)
         ->assertJsonPath('meta.tour_summaries.0.review_count', 2);
@@ -237,8 +238,9 @@ it('filters by tour_id', function () {
         ]);
     }
 
-    $response = actingAs($this->partner->user, 'sanctum')
-        ->getJson('/api/partner/reviews?tour_id=' . $tourA->id);
+    $response = getJson('/api/partner/reviews?tour_id=' . $tourA->id, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data');
@@ -249,10 +251,12 @@ it('returns 401 for unauthenticated', function () {
         ->assertStatus(401);
 });
 
-it('returns 403 for non-partner role', function () {
-    actingAs($this->traveler, 'sanctum')
-        ->getJson('/api/partner/reviews')
-        ->assertStatus(403);
+it('returns 404 for non-partner role', function () {
+    $travelerToken = $this->traveler->createToken('test')->plainTextToken;
+
+    getJson('/api/partner/reviews', [
+        'Authorization' => 'Bearer ' . $travelerToken,
+    ])->assertStatus(404);
 });
 
 it('exposes the contract shape and omits internal ids (no PII leak)', function () {
