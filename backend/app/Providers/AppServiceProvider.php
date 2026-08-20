@@ -11,6 +11,7 @@ use App\Domains\Admin\Policies\StaticPagePolicy;
 use App\Domains\Admin\Policies\TourPolicy;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Models\PartnerInvitation;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
 use App\Models\User;
@@ -56,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
             'booking' => Booking::class,
             'review' => Review::class,
             'static_page' => StaticPage::class,
+            'invitation' => PartnerInvitation::class,
         ]);
 
         // Register rate limiters so they are available during testing

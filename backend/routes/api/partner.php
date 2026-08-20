@@ -5,6 +5,7 @@ use App\Domains\Partner\Controllers\AnalyticsController;
 use App\Domains\Partner\Controllers\AvailabilityController;
 use App\Domains\Partner\Controllers\BookingController;
 use App\Domains\Partner\Controllers\NotificationController;
+use App\Domains\Partner\Controllers\OnboardingStatusController;
 use App\Domains\Partner\Controllers\PricingController;
 use App\Domains\Partner\Controllers\ProfileController;
 use App\Domains\Partner\Controllers\ReviewController;
@@ -90,6 +91,14 @@ Route::middleware(['auth:sanctum', 'partner'])->group(function () {
         Route::get('/', [ProfileController::class, 'settings']);
         Route::put('/', [ProfileController::class, 'updateSettings']);
     });
+
+    // Onboarding Status
+    Route::get('onboarding-status', [OnboardingStatusController::class, 'show'])
+        ->middleware('throttle:booking.get');
+    Route::get('onboarding/status', [OnboardingStatusController::class, 'show'])
+        ->middleware('throttle:booking.get');
+    Route::post('onboarding/resubmit', [OnboardingStatusController::class, 'resubmit'])
+        ->middleware('throttle:booking.create');
 
     // Notifications
     Route::prefix('notifications')->middleware('throttle:booking.get')->group(function () {

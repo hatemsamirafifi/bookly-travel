@@ -18,8 +18,8 @@ Informed decisions recorded as defaults (no [NEEDS CLARIFICATION] markers remain
 - **Q**: Which booking statuses may download a voucher? → **A**: Any **post-payment, non-cancelled** booking (`confirmed`, `completed`) may download its voucher. Cancelled bookings MUST NOT expose a downloadable voucher. The existing implementation guards on `confirmed`; this spec extends the allowed set to include `completed` so past bookings remain provable.
 - **Q**: Can an admin manually re-send a failed notification email? → **A**: Phase 1 provides **automatic retry + admin alerting only**. A manual "re-send" action in the admin panel is **deferred**; the failed-delivery alert lets an admin investigate and, if needed, re-trigger through back-office tooling in a future spec.
 - **Q**: Are partner payout notifications in scope? → **A**: **No.** Automated partner payouts are explicitly out of scope per the constitution (Out-of-Scope §1). Payout-related notifications are excluded; only booking/lifecycle/approval notifications are in scope.
-- **Q**: What does the voucher QR code encode — the bare booking reference or a scannable verification URL? → **A**: **Option B — a public verification URL.** The QR MUST encode the public web URL `https://bookly.travel/v/{booking_reference}` (the project's public base URL; exact host/route finalized in the plan), NOT the bare reference and NOT a JSON payload. A matching public, read-only, unauthenticated verification surface exposes only: booking reference, verification status, tour title, scheduled tour date, participant count, and optionally booking created date and voucher-generated timestamp. It MUST NEVER expose traveler name, email, phone, payment info, guest identity, internal database IDs, or partner internal notes. Verification states: `VALID`, `CANCELLED`, `PENDING`, `EXPIRED`, and the design MUST naturally support a future `USED` (redeemed) state without changing the QR format. The opaque booking reference is the public lookup key (no numeric IDs); unknown references return 404 and the surface never reveals whether any other booking exists (no enumeration). Per the constitution's API-First rule for public surfaces, the verification surface is split: a read-only Laravel API endpoint returns a `VerificationResult` JSON payload, and a minimal Next.js page at `/v/{booking_reference}` renders it with a large status indicator — no auth, no dashboard, no navigation to private surfaces. The QR encodes the public web URL, which the plan phase maps to the project's actual public base URL and route structure.
-- **Q**: How should admin alerts for exhausted delivery failures be surfaced — new in-app Filament surface vs. existing log/Slack channels? → **A**: **Option A — reuse the existing channels.** The system MUST alert admins via the already-implemented `NotifyAdminOnEmailDeliveryFailure` listener: an ERROR-level log entry (always) and a best-effort Slack webhook alert (when `services.slack.admin_webhook_url` is configured). The system MUST NOT introduce a new in-app admin notification surface — no `admin_notifications` table, no admin `Notification` model, no Filament Notification resource, no unread/read state, no admin inbox. Slack is best-effort only and MUST NOT fail the original listener/job if Slack itself fails. Logs and Slack alerts MUST include operational context (booking reference, mail class, exception message, queue/job information where available) and MUST NEVER include sensitive payment information or PII beyond what is needed to locate the booking. US5, FR-012, and FR-019 are worded to match this implementation.
+- **Q**: What does the voucher QR code encode — the bare booking reference or a scannable verification URL? → **A**: **Option B — a public verification URL.** The QR MUST encode the public web URL `https://bookly.travel/v/{reference}` (the project's public base URL; exact host/route finalized in the plan), NOT the bare reference and NOT a JSON payload. A matching public, read-only, unauthenticated verification surface exposes only: booking reference, verification status, tour title, scheduled tour date, participant count, and optionally booking created date and voucher-generated timestamp. It MUST NEVER expose traveler name, email, phone, payment info, guest identity, internal database IDs, or partner internal notes. Verification states: `VALID`, `CANCELLED`, `PENDING`, `EXPIRED`, and the design MUST naturally support a future `USED` (redeemed) state without changing the QR format. The opaque booking reference is the public lookup key (no numeric IDs); unknown references return 404 and the surface never reveals whether any other booking exists (no enumeration). Per the constitution's API-First rule for public surfaces, the verification surface is split: a read-only Laravel API endpoint returns a `VerificationResult` JSON payload, and a minimal Next.js page at `/v/{reference}` renders it with a large status indicator — no auth, no dashboard, no navigation to private surfaces. The QR encodes the public web URL, which the plan phase maps to the project's actual public base URL and route structure.
+- **Q**: How should admin alerts for exhausted delivery failures be surfaced — new in-app Filament surface vs. existing log/Slack channels? → **A**: **Option A — reuse the existing channels.** As specified in FR-012, the system alerts admins via the existing `NotifyAdminOnEmailDeliveryFailure` listener (ERROR log + best-effort Slack webhook). No new in-app admin notification surface is introduced. Logs and Slack alerts include operational context (booking reference, mail class, exception message, queue/job information) and never include payment details or unneeded PII.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -377,10 +377,11 @@ CANCELLED.
   traveler when a booking's payment is captured.
 - **FR-002**: The system MUST generate a voucher PDF for each confirmed booking
   containing the booking reference, a QR code encoding the public verification
-  URL `https://bookly.travel/v/{booking_reference}` (NOT the bare reference, NOT
-  a JSON payload), tour title, tour date, participant count, total paid, booking
-  status, and meeting point. The QR MUST resolve to the public verification
-  surface (FR-021, FR-027).
+  URL `https://bookly.travel/v/{reference}` (NOT the bare reference, NOT a JSON
+  payload), tour title, tour date, participant count, total paid, and meeting
+  point. The static PDF intentionally omits mutable booking status to prevent
+  staleness; authoritative, real-time verification status is provided exclusively
+  via the QR verification surface (FR-021, FR-027).
 - **FR-003**: The system MUST send a localized voucher email to the traveler with
   the voucher PDF attached, following the confirmation email.
 - **FR-004**: The system MUST notify the partner of a new booking on their tour
@@ -393,7 +394,10 @@ CANCELLED.
   the dependency declared in Spec `013` FR-007.
 - **FR-007**: The system MUST allow the booking owner to download their voucher
   PDF from their booking detail page at any time for any post-payment,
-  non-cancelled booking (`confirmed`, `completed`).
+  non-cancelled booking (`confirmed`, `completed`). Note: bookings in
+  `cancellation_requested` remain valid pending partner review and show `VALID`
+  on public verification (FR-023), but voucher PDF download from the traveler
+  dashboard is restricted to `{confirmed, completed}`.
 - **FR-008**: The system MUST refuse voucher download for any user who is not the
   booking owner, for unauthenticated visitors, and for cancelled bookings.
 - **FR-009**: The system MUST deliver vouchers to guest travelers (no account) by
@@ -435,13 +439,9 @@ CANCELLED.
   participant count changes after confirmation, so a downloaded voucher always
   matches the current booking; unchanged bookings reuse the existing voucher.
 - **FR-019**: The system MUST log notification delivery failures (transient and
-  exhausted) at ERROR level with enough operational context — booking
-  reference, mail class, exception message, and queue/job information where
-  available — for operational follow-up, reusing the existing
-  `NotifyAdminOnEmailDeliveryFailure` listener and Slack webhook integration.
-  Logs and Slack alerts MUST NEVER include sensitive payment information or PII
-  beyond what is needed to locate the booking. No new logging infrastructure is
-  introduced.
+  exhausted) at ERROR level with operational context per FR-012, reusing the
+  existing `NotifyAdminOnEmailDeliveryFailure` listener and Slack webhook integration.
+  Logs and alerts MUST NEVER include sensitive payment details or unneeded PII.
 - **FR-020**: The system MUST NOT introduce automated partner payout
   notifications; payouts are out of scope for Phase 1 (constitution Out-of-Scope
   §1) and any payout notification work requires a future constitution amendment.
@@ -451,22 +451,25 @@ CANCELLED.
   endpoint MUST require no authentication, MUST NEVER modify booking state, and
   MUST NOT produce any side effect observable by the caller.
 - **FR-022**: The verification response MUST expose only: booking reference,
-  verification status, tour title, scheduled tour date, and participant count;
+  verification status (derived lifecycle state; raw internal booking status is
+  never exposed), tour title, scheduled tour date, and participant count;
   it MAY additionally include the booking created date and the voucher-generated
   timestamp. It MUST NEVER expose traveler name, email, phone, payment
   information, guest identity, internal database IDs, or partner internal notes.
 - **FR-023**: The verification status MUST reflect the booking lifecycle and
   span at minimum: `VALID`, `CANCELLED`, `PENDING`, and `EXPIRED`. The complete
   booking-status → verification-status mapping is: `confirmed` → `VALID`,
-  `completed` → `VALID`, `cancellation_requested` → `VALID`, `cancelled` →
-  `CANCELLED`, `pending_payment` → `PENDING` (awaiting payment), `expired` →
-  `EXPIRED`, and `no_show` → `EXPIRED` (a pending booking that expired unpaid).
+  `completed` → `VALID`, `cancellation_requested` → `VALID` (booking remains valid
+  until partner cancellation approval), `cancelled` → `CANCELLED`, `pending_payment`
+  → `PENDING` (awaiting payment), `expired` → `EXPIRED`, and `no_show` → `EXPIRED`
+  (booking was never fulfilled and the travel date/slot elapsed).
   The design MUST naturally support a future `USED` (redeemed) state without
   changing the QR code format or the verification URL scheme.
-- **FR-024**: The verification endpoint MUST use the opaque booking reference as
-  the public lookup key; it MUST NOT accept or expose numeric database IDs.
-  Unknown references MUST return 404, and the endpoint MUST NOT reveal whether
-  any other booking exists (no enumeration, no listing, no listing side-channel).
+- **FR-024**: The verification endpoint MUST use the opaque booking reference
+  (conforming to `^BKO-[A-HJ-NP-TV-Z2-9]{6}$`) as the public lookup key; it MUST NOT
+  accept or expose numeric database IDs. Unknown references MUST return 404, and
+  the endpoint MUST NOT reveal whether any other booking exists (no enumeration,
+  no listing, no listing side-channel).
 - **FR-025**: The verification endpoint MUST be strictly read-only: it MUST
   NEVER increment counters, write audit entries keyed to the visitor, log
   visitor identity, or mutate any state. (Governance audit logging of admin
@@ -479,7 +482,7 @@ CANCELLED.
   domain-action architecture. If verification logic is needed in more than one
   place, it MUST be extracted into that one Action, never duplicated.
 - **FR-027**: A minimal public Next.js verification page MUST render at
-  `/v/{booking_reference}` (per the constitution's API-First rule for public
+  `/v/{reference}` (per the constitution's API-First rule for public
   surfaces) and consume the verification API. It MUST show a large, prominent
   status indicator (e.g. VALID / CANCELLED) alongside only the allowed fields,
   require no authentication, and NOT be part of any dashboard; it has no
@@ -508,9 +511,6 @@ CANCELLED.
   render a transactional email (booking confirmed, voucher, cancellation, partner
   approved/rejected/suspended, new booking); selected by booking/partner locale
   with EN fallback.
-- **DeliveryFailure / Admin Alert**: A record surfaced to admins when a
-  notification job exhausts its retries, capturing the booking reference, channel,
-  and failure reason for manual follow-up.
 - **AuditLog**: The append-only governance log (owned by Spec `013`) that
   captures admin governance actions; this spec does NOT write notification
   delivery failures into the governance audit trail. Delivery-failure alerting
@@ -541,9 +541,10 @@ CANCELLED.
 - **SC-002**: 100% of voucher downloads by non-owners, unauthenticated visitors,
   or for cancelled bookings are refused; zero unauthorized voucher downloads
   succeed.
-- **SC-003**: A traveler who completes booking in under 2 minutes receives their
-  confirmation email within 2 minutes and their voucher email within 5 minutes
-  under normal conditions.
+- **SC-003**: Under normal operating queue conditions, confirmation emails are
+  delivered within 2 minutes and voucher emails within 5 minutes of payment capture
+  (defined as an operational post-launch queue telemetry and monitoring SLA;
+  excluded from automated buildable test suite assertions).
 - **SC-004**: 100% of notification delivery failures (exhausted retries) raise an
   admin alert; zero delivery failures silently drop without an admin-visible
   record.
@@ -561,7 +562,7 @@ CANCELLED.
   next download, in 100% of cases; unchanged bookings reuse the existing voucher
   (no unnecessary regeneration).
 - **SC-009**: 100% of voucher QR codes encode the public verification URL
-  `https://bookly.travel/v/{booking_reference}` and resolve to the verification
+  `https://bookly.travel/v/{reference}` and resolve to the verification
   page; zero encode a bare reference or a JSON payload.
 - **SC-010**: 100% of verification responses for unknown references return 404;
   zero verification responses expose traveler name, email, phone, payment info,
@@ -621,11 +622,12 @@ CANCELLED.
   queueing/async-work requirements.
 - The existing voucher PDF view generates the QR from the booking reference;
   this spec changes the QR payload to the public verification URL
-  (`https://bookly.travel/v/{booking_reference}`). The plan phase migrates the
+  (`https://bookly.travel/v/{reference}`). The plan phase migrates the
   QR generation to encode the URL and adds the public verification API endpoint
   (`VerificationAction` + `VerificationTransformer` + controller), the minimal
-  Next.js `/v/{booking_reference}` page, and the `VALID` / `CANCELLED` / `PENDING`
-  / `EXPIRED` status mapping — reusing the existing Booking domain and opaque
+  Next.js `/v/{reference}` page, and the `VALID` / `CANCELLED` / `PENDING`
+  / `EXPIRED` status mapping (derived lifecycle state; raw internal booking status
+  is never exposed) — reusing the existing Booking domain and opaque
   booking references, with no duplication of booking-read logic.
 - The public verification surface (API endpoint + page) is a NEW surface owned
   by this spec. It is read-only, unauthenticated, and intentionally NOT a

@@ -27,12 +27,19 @@ if (! function_exists('makePartner')) {
     {
         $user = User::factory()->partner()->create();
 
-        return Partner::create([
+        $partner = Partner::create([
             'user_id' => $user->id,
             'role' => 'partner',
             'onboarding_status' => $onboarding,
             'is_active' => $active,
         ]);
+
+        $partner->profile()->create([
+            'company_name' => 'Acme Tours',
+            'contact_email' => $user->email,
+        ]);
+
+        return $partner->fresh(['user', 'profile']);
     }
 }
 
@@ -73,11 +80,12 @@ it('rejects a pending partner with a reason via the Filament table action', func
 });
 
 it('suspends an approved active partner via the Filament table action', function () {
+    Mail::fake();
     actingAs(partnersAdmin());
     $partner = makePartner('approved', true);
 
     Livewire::test(ListPartners::class)
-        ->callTableAction('suspend', $partner)
+        ->callTableAction('suspend', $partner, ['reason' => 'Policy violation.'])
         ->assertHasNoTableActionErrors();
 
     expect($partner->fresh()->onboarding_status)->toBe(PartnerStatus::Suspended->value)

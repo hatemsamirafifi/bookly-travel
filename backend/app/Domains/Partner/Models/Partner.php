@@ -17,12 +17,14 @@ class Partner extends Model
         'role',
         'onboarding_status',
         'is_active',
+        'invited_by_admin',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
+            'invited_by_admin' => 'boolean',
         ];
     }
 
@@ -66,8 +68,13 @@ class Partner extends Model
      */
     public function canTransitionTo(PartnerStatus|string $to): bool
     {
-        $to = $to instanceof PartnerStatus ? $to->value : $to;
-        $from = $this->onboarding_status;
+        return static::canTransition($this->onboarding_status, $to);
+    }
+
+    public static function canTransition(PartnerStatus|string|null $from, PartnerStatus|string $to): bool
+    {
+        $to = $to instanceof PartnerStatus ? $to->value : (string) $to;
+        $from = $from instanceof PartnerStatus ? $from->value : (string) $from;
         if ($from === 'incomplete') {
             $from = PartnerStatus::Pending->value;
         }

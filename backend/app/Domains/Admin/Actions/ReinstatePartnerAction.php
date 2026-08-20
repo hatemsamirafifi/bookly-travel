@@ -5,11 +5,13 @@ namespace App\Domains\Admin\Actions;
 use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Partner\Models\Partner;
 use App\Enums\PartnerStatus;
+use App\Mail\PartnerReinstatedMail;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 /**
- * Reinstate a suspended partner (Spec 013, FR-006).
+ * Reinstate a suspended partner (Spec 013/015, FR-006/FR-011).
  *
  * Reactivates the partner (tours are NOT auto-republished — the partner must
  * resubmit them for the governed publishing flow, FR-005) and writes an
@@ -23,7 +25,7 @@ class ReinstatePartnerAction
     {
         abort_unless($actor->can('unsuspend', $partner), 403, 'You are not authorized to reinstate partners.');
 
-        return DB::transaction(function () use ($actor, $partner) {
+        $partner = DB::transaction(function () use ($actor, $partner) {
             $locked = Partner::lockForUpdate()->find($partner->id) ?? $partner;
 
             abort_unless(
@@ -45,5 +47,11 @@ class ReinstatePartnerAction
 
             return $locked;
         });
+
+        if ($partner->user?->email) {
+            Mail::to($partner->user->email)->queue(new PartnerReinstatedMail($partner));
+        }
+
+        return $partner;
     }
 }

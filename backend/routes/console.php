@@ -33,3 +33,8 @@ Schedule::job(new AnonymizeStaleGuestIdentities)
     ->dailyAt('03:00')
     ->name('anonymize-stale-guest-identities')
     ->withoutOverlapping();
+
+Schedule::command('partner-invitations:expire')
+    ->daily()
+    ->name('expire-partner-invitations')
+    ->withoutOverlapping();

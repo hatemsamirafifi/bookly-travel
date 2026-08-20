@@ -328,3 +328,88 @@ export interface SignedUploadUrl {
   expires_at: string;
 }
 
+export type OnboardingStatus = 'pending' | 'approved' | 'rejected' | 'suspended';
+
+export interface BusinessAddress {
+  street: string;
+  city: string;
+  state?: string | null;
+  postal_code: string;
+  country: string;
+}
+
+export interface PartnerRegistrationPayload {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  company_name: string;
+  contact_email: string;
+  contact_phone: string;
+  business_description: string;
+  business_address: BusinessAddress;
+  website?: string | null;
+  tax_id?: string | null;
+  payout_country: string;
+  locale?: string;
+}
+
+export interface PartnerRegistrationResponse {
+  data: {
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      role: string;
+    };
+    partner: {
+      id: number;
+      onboarding_status: OnboardingStatus;
+      is_active: boolean;
+    };
+    token: string;
+  };
+  message: string;
+}
+
+export interface PartnerOnboardingStatus {
+  onboarding_status: OnboardingStatus;
+  can_create_tours: boolean;
+  rejection_reason?: string | null;
+  suspension_reason?: string | null;
+  submitted_at?: string | null;
+  approved_at?: string | null;
+  rejected_at?: string | null;
+  suspended_at?: string | null;
+  message?: string | null;
+}
+
+export interface ResubmitPayload {
+  company_name: string;
+  contact_email: string;
+  contact_phone: string;
+  business_description: string;
+  business_address: BusinessAddress;
+  website?: string | null;
+  tax_id?: string | null;
+  payout_country?: string | null;
+}
+
+export interface InviteValidationResponse {
+  email: string;
+  company_name: string;
+  contact_person?: string | null;
+  expires_at: string;
+}
+
+export interface InviteCompletionPayload {
+  name: string;
+  password: string;
+  password_confirmation: string;
+  contact_phone: string;
+  business_description: string;
+  business_address: BusinessAddress;
+  payout_country: string;
+}
+
+
