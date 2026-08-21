@@ -1051,5 +1051,15 @@
       "invalidCountry": "Deve essere un codice paese ISO di 2 lettere (es. IT, ES, FR)",
       "generic": "Si è verificato un errore. Verifica i dati inseriti e riprova."
     }
+  },
+  "cookieConsent": {
+    "message": "Utilizziamo i cookie per migliorare la tua esperienza di navigazione e analizzare il nostro traffico. Facendo clic su \"Accetta\", acconsenti al nostro uso dei cookie.",
+    "accept": "Accetta",
+    "reject": "Rifiuta"
+  },
+  "errorBoundary": {
+    "title": "Qualcosa è andato storto",
+    "description": "Siamo stati avvisati e stiamo lavorando per risolvere il problema.",
+    "reload": "Ricarica pagina"
   }
 }

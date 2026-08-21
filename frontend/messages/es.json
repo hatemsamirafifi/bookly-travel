@@ -1051,5 +1051,15 @@
       "invalidCountry": "Debe ser un código de país ISO de 2 letras (ej. ES, MX, IT)",
       "generic": "Ha ocurrido un error. Comprueba tus datos e inténtalo de nuevo."
     }
+  },
+  "cookieConsent": {
+    "message": "Usamos cookies para mejorar tu experiencia de navegación y analizar nuestro tráfico. Al hacer clic en \"Aceptar\", aceptas nuestro uso de cookies.",
+    "accept": "Aceptar",
+    "reject": "Rechazar"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "description": "Hemos sido notificados y estamos trabajando para solucionar el problema.",
+    "reload": "Recargar página"
   }
 }

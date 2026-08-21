@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getDestinationTours } from '@/lib/api/destinations';
 import { NotFoundError } from '@/lib/api/client';
-import type { SearchParams } from '@/lib/api/types';
+import { parseSort } from '@/lib/validators/search';
 import ListingPage from '@/components/search/ListingPage';
 
 interface DestinationPageProps {
@@ -32,7 +32,7 @@ export default async function DestinationPage({ params, searchParams }: Destinat
     data = await getDestinationTours(slug, {
       locale,
       page: currentPage,
-      sort: sp.sort as unknown as SearchParams['sort'],
+      sort: parseSort(sp.sort),
       category: sp.category,
       price_min: sp.price_min ? parseInt(sp.price_min, 10) : undefined,
       price_max: sp.price_max ? parseInt(sp.price_max, 10) : undefined,

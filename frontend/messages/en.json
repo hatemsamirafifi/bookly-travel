@@ -1051,5 +1051,15 @@
       "invalidCountry": "Must be a valid 2-letter ISO country code (e.g. US, ES, IT)",
       "generic": "An error occurred. Please check your inputs and try again."
     }
+  },
+  "cookieConsent": {
+    "message": "We use cookies to enhance your browsing experience and analyze our traffic. By clicking \"Accept\", you consent to our use of cookies.",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "We've been notified and are working to fix the issue.",
+    "reload": "Reload page"
   }
 }
