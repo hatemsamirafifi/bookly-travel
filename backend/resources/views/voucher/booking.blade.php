@@ -163,7 +163,7 @@ $host = parse_url($baseUrl, PHP_URL_HOST) ?: 'bookly.travel';
         </div>
 
         <div class="footer">
-            <p>{{ $L('generatedOn') }} {{ now()->format('F j, Y') }} • <strong>{{ $host }}</strong></p>
+            <p>{{ $L('generatedOn') }} {{ now()->locale($activeLocale)->isoFormat('LL') }} • <strong>{{ $host }}</strong></p>
             <p>{{ $L('footerValid') }}</p>
         </div>
     </div>

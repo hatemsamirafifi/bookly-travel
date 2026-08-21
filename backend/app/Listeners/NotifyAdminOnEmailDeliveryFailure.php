@@ -37,12 +37,21 @@ class NotifyAdminOnEmailDeliveryFailure
             return;
         }
 
-        Http::post($webhookUrl, [
-            'text' => sprintf(
-                ':warning: *Bookly Alert* — Booking confirmation email delivery failed (all retries exhausted).'
-                . "\n*Booking*: `%s`  |  Check application logs for details.",
-                $booking->reference,
-            ),
-        ]);
+        try {
+            Http::post($webhookUrl, [
+                'text' => sprintf(
+                    ':warning: *Bookly Alert* — Booking confirmation email delivery failed (all retries exhausted).'
+                    . "\n*Booking*: `%s`  |  Check application logs for details.",
+                    $booking->reference,
+                ),
+            ]);
+        } catch (\Throwable $e) {
+            // Slack is best-effort only (FR-012): a Slack failure MUST NOT
+            // fail the listener. The ERROR log entry above already persists.
+            Log::warning('Slack admin alert failed — delivery failure already logged', [
+                'booking_reference' => $booking->reference,
+                'slack_error' => $e->getMessage(),
+            ]);
+        }
     }
 }

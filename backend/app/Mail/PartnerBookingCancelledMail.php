@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Domains\Booking\Models\Booking;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,8 +15,11 @@ use Illuminate\Queue\SerializesModels;
  * (en/es/it) with EN fallback for both subject and body view. Locale is
  * resolved via the booking's tour -> partnerRecord -> user (the authoritative
  * Partner owner, see Tour::partnerRecord()).
+ *
+ * Spec 014 R5: implements ShouldQueue per FR-010 so cancellation emails are
+ * dispatched asynchronously even when sent outside a wrapping job.
  */
-class PartnerBookingCancelledMail extends Mailable
+class PartnerBookingCancelledMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
