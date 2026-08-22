@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Middleware\RateLimitSearchMiddleware;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
 
 // Spec 006 — the public search & discovery surface uses
 // RateLimitSearchMiddleware (alias `rate.limit`), which emits the contract

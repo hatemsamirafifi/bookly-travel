@@ -88,7 +88,7 @@ class StaticPage extends Model
      */
     private function localized(?array $values, string $locale): ?string
     {
-        if (!is_array($values)) {
+        if (! is_array($values)) {
             return null;
         }
         if (Arr::has($values, $locale) && filled($values[$locale])) {

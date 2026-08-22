@@ -1,14 +1,15 @@
 <?php
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\ReviewResponse;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
-use function Pest\Laravel\actingAs;
 use function Pest\Laravel\getJson;
 
 uses(RefreshDatabase::class);
@@ -111,8 +112,9 @@ it('partner sees only their tours reviews', function () {
         'locale' => 'en',
     ]);
 
-    $response = actingAs($this->partner->user, 'sanctum')
-        ->getJson('/api/partner/reviews');
+    $response = getJson('/api/partner/reviews', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
@@ -170,8 +172,9 @@ it('returns aggregate values per tour', function () {
 
     $tour->update(['average_rating' => 4.5, 'review_count' => 2]);
 
-    $response = actingAs($this->partner->user, 'sanctum')
-        ->getJson('/api/partner/reviews');
+    $response = getJson('/api/partner/reviews', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200)
         ->assertJsonPath('meta.tour_summaries.0.review_count', 2);
@@ -235,8 +238,9 @@ it('filters by tour_id', function () {
         ]);
     }
 
-    $response = actingAs($this->partner->user, 'sanctum')
-        ->getJson('/api/partner/reviews?tour_id=' . $tourA->id);
+    $response = getJson('/api/partner/reviews?tour_id=' . $tourA->id, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data');
@@ -247,10 +251,12 @@ it('returns 401 for unauthenticated', function () {
         ->assertStatus(401);
 });
 
-it('returns 403 for non-partner role', function () {
-    actingAs($this->traveler, 'sanctum')
-        ->getJson('/api/partner/reviews')
-        ->assertStatus(403);
+it('returns 404 for non-partner role', function () {
+    $travelerToken = $this->traveler->createToken('test')->plainTextToken;
+
+    getJson('/api/partner/reviews', [
+        'Authorization' => 'Bearer ' . $travelerToken,
+    ])->assertStatus(404);
 });
 
 it('exposes the contract shape and omits internal ids (no PII leak)', function () {
@@ -309,7 +315,7 @@ it('exposes the contract shape and omits internal ids (no PII leak)', function (
         ])
         ->assertJsonPath('data.0.tour_slug', $tour->slug)
         ->assertJsonPath('data.0.tour_title', 'Amalfi Coast Boat Tour')
-        ->assertJsonPath('data.0.reviewer_name', \Illuminate\Support\Str::before($this->traveler->name, ' '))
+        ->assertJsonPath('data.0.reviewer_name', Str::before($this->traveler->name, ' '))
         // No internal IDs / PII columns must leak through the resource.
         ->assertJsonMissingPath('data.0.traveler_id')
         ->assertJsonMissingPath('data.0.booking_id')
@@ -418,7 +424,7 @@ it('includes the response when present and omits it when absent', function () {
         'locale' => 'en',
         'created_at' => now()->subHour(),
     ]);
-    \App\Domains\Partner\Models\ReviewResponse::create([
+    ReviewResponse::create([
         'review_id' => $reviewA->id,
         'partner_id' => $this->partner->id,
         'response_text' => 'Thanks!',

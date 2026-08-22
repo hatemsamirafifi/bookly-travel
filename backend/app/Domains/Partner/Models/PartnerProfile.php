@@ -25,6 +25,7 @@ class PartnerProfile extends Model
         'payout_iban',
         'payout_swift_bic',
         'payout_country',
+        'rejection_reason',
     ];
 
     protected function casts(): array

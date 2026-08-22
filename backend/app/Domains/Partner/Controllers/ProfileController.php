@@ -4,10 +4,9 @@ namespace App\Domains\Partner\Controllers;
 
 use App\Domains\Partner\Models\PartnerProfile;
 use App\Domains\Partner\Models\PartnerSettings;
+use App\Domains\Partner\Requests\UpdateProfileRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
-use App\Domains\Partner\Requests\UpdateProfileRequest;
 
 class ProfileController
 {

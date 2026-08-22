@@ -4,7 +4,7 @@ namespace App\Mail;
 
 use App\Domains\Booking\Models\Booking;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,10 +16,13 @@ use Illuminate\Queue\SerializesModels;
  * resolved via the booking's tour -> partnerRecord -> user (the authoritative
  * Partner owner, see Tour::partnerRecord()).
  *
- * Spec 014 R5: implements ShouldQueue per FR-010 so cancellation emails are
- * dispatched asynchronously even when sent outside a wrapping job.
+ * Implements ShouldQueueAfterCommit (not plain ShouldQueue) because it is
+ * dispatched inside CancelBookingAction's DB transaction: the mail must be
+ * queued (FR-010) BUT only pushed to the broker after the transaction
+ * commits, so a rollback cannot send a cancellation email for a booking
+ * that remains active.
  */
-class PartnerBookingCancelledMail extends Mailable implements ShouldQueue
+class PartnerBookingCancelledMail extends Mailable implements ShouldQueueAfterCommit
 {
     use Queueable, SerializesModels;
 
@@ -56,6 +59,7 @@ class PartnerBookingCancelledMail extends Mailable implements ShouldQueue
     private function resolveLocale(): string
     {
         $locale = $this->booking->tour?->partnerRecord?->user?->locale ?? 'en';
+
         return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
     }
 

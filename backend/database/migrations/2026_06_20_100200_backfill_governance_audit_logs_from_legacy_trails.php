@@ -105,7 +105,7 @@ return new class extends Migration
     {
         return DB::table('governance_audit_logs')
             ->whereRaw("metadata->>'backfilled_from' = ?", [$sourceTable])
-            ->whereRaw("metadata->>'source_id' = ?", [(string) $sourceId])
+            ->whereRaw("CAST(metadata->>'source_id' AS TEXT) = ?", [(string) $sourceId])
             ->exists();
     }
 };

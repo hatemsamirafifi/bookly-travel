@@ -13,6 +13,12 @@ import type {
   DateRangeFilter,
   PaginatedPartnerResponse,
   SignedUploadUrl,
+  PartnerRegistrationPayload,
+  PartnerRegistrationResponse,
+  PartnerOnboardingStatus,
+  ResubmitPayload,
+  InviteValidationResponse,
+  InviteCompletionPayload,
 } from '@/types/partner';
 
 function authHeaders(extra?: Record<string, string>) {
@@ -258,3 +264,43 @@ export function getSignedUploadUrl(
     body: JSON.stringify({ file_type: fileType, file_size: fileSize }),
   });
 }
+
+/* ─── Onboarding & Registration (Spec 015) ────────────────────────────────── */
+
+export function registerPartner(payload: PartnerRegistrationPayload) {
+  return apiClient<PartnerRegistrationResponse>('/api/public/auth/partners/register', {
+    method: 'POST',
+    requireCsrf: true,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getOnboardingStatus() {
+  return apiClient<{ data: PartnerOnboardingStatus }>('/api/partner/onboarding/status', {
+    headers: authHeaders(),
+  });
+}
+
+export function resubmitApplication(payload: ResubmitPayload) {
+  return apiClient<{ data: PartnerProfile }>('/api/partner/onboarding/resubmit', {
+    method: 'POST',
+    requireCsrf: true,
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload),
+  });
+}
+
+export function validateInviteToken(token: string) {
+  return apiClient<{ data: InviteValidationResponse }>(`/api/public/auth/partners/invitation/${encodeURIComponent(token)}`);
+}
+
+export function completeInvite(token: string, payload: InviteCompletionPayload) {
+  return apiClient<PartnerRegistrationResponse>(`/api/public/auth/partners/invitation/${encodeURIComponent(token)}/complete`, {
+    method: 'POST',
+    requireCsrf: true,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+

@@ -73,7 +73,7 @@ it('returns 503 and marks the booking expired when PaymentIntent creation fails'
     $this->mock(StripeService::class)
         ->shouldReceive('createPaymentIntent')
         ->once()
-        ->andThrow(new \RuntimeException('stripe unavailable'));
+        ->andThrow(new RuntimeException('stripe unavailable'));
 
     Log::spy();
 
@@ -179,7 +179,7 @@ it('compensates an orphan PaymentIntent when the local Payment write fails', fun
     Log::spy();
 
     expect(fn () => app(CreatePaymentIntentAction::class)->execute($booking))
-        ->toThrow(\Exception::class);
+        ->toThrow(Exception::class);
 
     // The orphan intent was canceled and no Payment was persisted for this booking.
     expect(Payment::where('booking_id', $booking->id)->count())->toBe(0);

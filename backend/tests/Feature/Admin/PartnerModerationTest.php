@@ -1,8 +1,8 @@
 <?php
 
 use App\Domains\Admin\Actions\ApprovePartnerAction;
-use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\ReinstatePartnerAction;
+use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\SuspendPartnerAction;
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Partner\Models\Partner;
@@ -90,7 +90,7 @@ it('suspends an approved partner and removes its published tours from discovery 
         'status' => TourStatus::Published->value,
     ]);
 
-    $partner = app(SuspendPartnerAction::class)->execute($this->admin, $partner);
+    $partner = app(SuspendPartnerAction::class)->execute($this->admin, $partner, ['reason' => 'Policy violation']);
 
     expect($partner->fresh()->onboarding_status)->toBe(PartnerStatus::Suspended->value)
         ->and($partner->fresh()->is_active)->toBeFalse()

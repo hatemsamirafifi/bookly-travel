@@ -3,13 +3,16 @@
 use App\Domains\Booking\Models\Booking;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use Tests\TestCase;
 
 use function Pest\Laravel\getJson;
+
+use Tests\TestCase;
 
 /*
  * Spec 014 (FR-022..FR-028, SC-010/011): public, read-only voucher
@@ -26,7 +29,7 @@ use function Pest\Laravel\getJson;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 00:00:00');
+    Carbon::setTestNow('2026-07-04 00:00:00');
     // Isolate from cross-test cache pollution (throttle:verify bucket, etc.)
     // — same pattern as the Auth suite (per project memory).
     Cache::flush();
@@ -45,7 +48,7 @@ beforeEach(function () {
         'status' => 'published',
         'cover_image_url' => 'https://cdn.bookly.com/tours/42/cover.jpg',
     ]);
-    \App\Models\TourTranslation::create([
+    TourTranslation::create([
         'tour_id' => $this->tour->id,
         'locale' => 'en',
         'title' => 'Majestic Roman Colosseum Tour',
@@ -59,7 +62,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    \Illuminate\Support\Carbon::setTestNow();
+    Carbon::setTestNow();
 });
 
 function makeVerificationBooking(TestCase $scope, string $status = 'confirmed'): Booking

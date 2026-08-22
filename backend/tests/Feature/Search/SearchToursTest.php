@@ -1,8 +1,11 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
 
 it('returns validation error when locale is missing', function () {
     getJson('/api/public/search/tours')

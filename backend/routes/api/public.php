@@ -4,6 +4,7 @@ use App\Domains\Booking\Controllers\Public\BookingController;
 use App\Domains\Booking\Controllers\Public\TravelerBookingController;
 use App\Domains\Booking\Controllers\Public\VerificationController;
 use App\Domains\Booking\Controllers\Public\VoucherController;
+use App\Domains\Partner\Controllers\Public\PartnerInvitationController;
 use App\Domains\Partner\Controllers\Public\PartnerRegistrationController;
 use App\Domains\Payment\Controllers\Public\StripeWebhookController;
 use App\Domains\Reviews\Controllers\Public\ReviewController;
@@ -42,6 +43,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::post('register', RegisterController::class);
     Route::post('partners/register', PartnerRegistrationController::class);
+    Route::get('partners/invitation/{token}', [PartnerInvitationController::class, 'show']);
+    Route::post('partners/invitation/{token}/complete', [PartnerInvitationController::class, 'complete']);
     Route::post('login', LoginController::class);
 
     Route::post('guest/identity', GuestIdentityController::class);

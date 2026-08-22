@@ -16,7 +16,7 @@ class TourService
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
         return Tour::where('partner_id', $partnerId)
-            ->when($filters['status'] ?? null, 
+            ->when($filters['status'] ?? null,
                 fn ($q, $status) => $q->where('status', $status),
                 fn ($q) => $q->where('status', '!=', 'archived')
             )

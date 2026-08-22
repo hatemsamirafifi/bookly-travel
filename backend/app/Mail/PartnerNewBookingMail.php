@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Domains\Booking\Models\Booking;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,11 +15,11 @@ use Illuminate\Queue\SerializesModels;
  * resolved via the booking's tour -> partnerRecord -> user (the authoritative
  * Partner owner, see Tour::partnerRecord()).
  *
- * Spec 014 R5: implements ShouldQueue per FR-010 for defense-in-depth,
- * even though the wrapping SendBookingConfirmationEmail job currently
- * provides queueing.
+ * Sent synchronously inside the queued SendBookingConfirmationEmail job so a
+ * delivery failure retries the outer job before confirmation_email_sent_at is
+ * recorded.
  */
-class PartnerNewBookingMail extends Mailable implements ShouldQueue
+class PartnerNewBookingMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -60,6 +59,7 @@ class PartnerNewBookingMail extends Mailable implements ShouldQueue
     private function resolveLocale(): string
     {
         $locale = $this->booking->tour?->partnerRecord?->user?->locale ?? 'en';
+
         return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
     }
 

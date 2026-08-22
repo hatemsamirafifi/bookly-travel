@@ -3,12 +3,15 @@
 use App\Domains\Booking\Models\Booking;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Tests\TestCase;
 
 use function Pest\Laravel\getJson;
+
+use Tests\TestCase;
 
 /*
  * Spec 014 (FR-007, FR-008, R10): the voucher download endpoint serves any
@@ -22,7 +25,7 @@ use function Pest\Laravel\getJson;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 00:00:00');
+    Carbon::setTestNow('2026-07-04 00:00:00');
     $this->category = Category::firstOrCreate(['slug' => 'adventure'], ['name' => 'Adventure', 'is_active' => true, 'display_order' => 1]);
     $this->traveler = User::factory()->traveler()->create();
     $this->otherTraveler = User::factory()->traveler()->create();
@@ -38,7 +41,7 @@ beforeEach(function () {
         'price_amount' => 5000,
         'status' => 'published',
     ]);
-    \App\Models\TourTranslation::create([
+    TourTranslation::create([
         'tour_id' => $this->tour->id,
         'locale' => 'en',
         'title' => 'Download Test Tour',
@@ -52,7 +55,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    \Illuminate\Support\Carbon::setTestNow();
+    Carbon::setTestNow();
 });
 
 function makeDownloadBooking(TestCase $scope, string $status = 'confirmed'): Booking

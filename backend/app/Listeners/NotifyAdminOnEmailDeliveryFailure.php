@@ -44,7 +44,7 @@ class NotifyAdminOnEmailDeliveryFailure
                     . "\n*Booking*: `%s`  |  Check application logs for details.",
                     $booking->reference,
                 ),
-            ]);
+            ])->throw();
         } catch (\Throwable $e) {
             // Slack is best-effort only (FR-012): a Slack failure MUST NOT
             // fail the listener. The ERROR log entry above already persists.

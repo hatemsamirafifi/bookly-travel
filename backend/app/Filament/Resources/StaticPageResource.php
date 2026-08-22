@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Domains\Admin\Models\StaticPage;
 use App\Filament\Resources\StaticPageResource\Pages;
-use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -59,14 +58,14 @@ class StaticPageResource extends Resource
                     ->default('draft')
                     ->required(),
                 ...static::localizedSchema('title', fn (string $locale) => TextInput::make("title_{$locale}")
-                    ->label(ucfirst($locale).' Title')
+                    ->label(ucfirst($locale) . ' Title')
                     ->maxLength(255)),
                 ...static::localizedSchema('body', fn (string $locale) => Textarea::make("body_{$locale}")
-                    ->label(ucfirst($locale).' Body')
+                    ->label(ucfirst($locale) . ' Body')
                     ->rows(8)
                     ->columnSpanFull()),
                 ...static::localizedSchema('meta_description', fn (string $locale) => Textarea::make("meta_description_{$locale}")
-                    ->label(ucfirst($locale).' Meta Description')
+                    ->label(ucfirst($locale) . ' Meta Description')
                     ->rows(2)
                     ->maxLength(255)),
             ]);
@@ -77,7 +76,7 @@ class StaticPageResource extends Resource
      */
     public static function localizedSchema(string $field, \Closure $fieldFactory): array
     {
-        return array_map(fn (string $locale) => Section::make(ucfirst($field)." — {$locale}")
+        return array_map(fn (string $locale) => Section::make(ucfirst($field) . " — {$locale}")
             ->schema([$fieldFactory($locale)])
             ->columns(2), StaticPage::LOCALES);
     }

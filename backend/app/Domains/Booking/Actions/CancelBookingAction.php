@@ -61,7 +61,14 @@ class CancelBookingAction
             try {
                 $booking->load(['traveler', 'tour.partnerRecord.user']);
                 if ($booking->traveler?->email) {
-                    Mail::to($booking->traveler->email)->send(new BookingCancelledMail($booking));
+                    $travelerEmail = $booking->traveler->email;
+                    DB::afterCommit(function () use ($booking, $travelerEmail) {
+                        try {
+                            Mail::to($travelerEmail)->send(new BookingCancelledMail($booking));
+                        } catch (\Throwable $e) {
+                            logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
+                        }
+                    });
                 }
                 // `tours.partner_id` references `partners.id` (repinned by the
                 // fix_tours_partner_id_to_partners_table migration), so the

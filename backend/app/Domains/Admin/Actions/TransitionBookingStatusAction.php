@@ -18,9 +18,7 @@ use Illuminate\Support\Facades\DB;
  */
 class TransitionBookingStatusAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     public function execute(User $actor, Booking $booking, string $targetStatus): Booking
     {

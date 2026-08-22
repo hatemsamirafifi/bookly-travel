@@ -37,13 +37,18 @@ class AnalyticsService
         $tourIds = $this->getPartnerTourIds($partnerId, $filters['tour_id'] ?? null);
 
         // Apply each date bound only when provided (a null bound means "open" on that side).
+        // DATE() normalizes the column to a date-only value, which is necessary
+        // because SQLite stores DATE columns as TEXT that may include a time
+        // component (e.g. "2026-08-20 00:00:00"), causing string comparisons
+        // against a Y-m-d bound to fail on the upper edge.
         $applyRange = function ($query) use ($dateFrom, $dateTo) {
             if ($dateFrom !== null) {
-                $query->where('tour_date', '>=', $dateFrom);
+                $query->whereRaw('DATE(tour_date) >= ?', [$dateFrom]);
             }
             if ($dateTo !== null) {
-                $query->where('tour_date', '<=', $dateTo);
+                $query->whereRaw('DATE(tour_date) <= ?', [$dateTo]);
             }
+
             return $query;
         };
 
@@ -94,19 +99,30 @@ class AnalyticsService
 
         $tourIds = $this->getPartnerTourIds($partnerId, $filters['tour_id'] ?? null);
 
-        $dateFormat = $granularity === 'week'
-            ? 'IW' // ISO week
-            : 'YYYY-MM-DD';
+        $driver = Booking::query()->getConnection()->getDriverName();
+
+        if ($granularity === 'week') {
+            // ISO week grouping: PostgreSQL uses TO_CHAR('IW'), SQLite uses
+            // strftime('%Y-%W'). Both yield a sortable year-week string.
+            if ($driver === 'sqlite') {
+                $periodExpr = "strftime('%Y-%W', tour_date)";
+            } else {
+                $periodExpr = "TO_CHAR(tour_date, 'IW')";
+            }
+        } else {
+            // Daily grouping: DATE() works on both SQLite and PostgreSQL.
+            $periodExpr = 'DATE(tour_date)';
+        }
 
         $rows = Booking::whereIn('tour_id', $tourIds)
             ->whereIn('status', [Booking::STATUS_CONFIRMED, Booking::STATUS_COMPLETED])
             ->whereBetween('tour_date', [$dateFrom, $dateTo])
             ->selectRaw(
-                "TO_CHAR(tour_date, '{$dateFormat}') AS period, " .
+                "{$periodExpr} AS period, " .
                 'COUNT(*) AS bookings, ' .
                 'COALESCE(SUM(total_price), 0) AS revenue'
             )
-            ->groupByRaw("TO_CHAR(tour_date, '{$dateFormat}')")
+            ->groupByRaw($periodExpr)
             ->orderBy('period')
             ->get();
 

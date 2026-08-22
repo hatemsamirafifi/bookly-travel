@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 import { PartnerRegisterForm } from '@/components/auth/PartnerRegisterForm';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://bookly.travel';

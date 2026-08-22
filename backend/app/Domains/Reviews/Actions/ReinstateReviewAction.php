@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ReinstateReviewAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     public function execute(Review $review, int $adminId, string $reason): Review
     {

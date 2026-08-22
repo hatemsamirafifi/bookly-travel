@@ -2,13 +2,17 @@
 
 namespace App\Domains\Partner\Controllers\Public;
 
+use App\Domains\Partner\Models\Notification;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerProfile;
+use App\Domains\Partner\Models\PartnerSettings;
 use App\Domains\Partner\Requests\PartnerRegistrationRequest;
+use App\Mail\PartnerApplicationReceivedMail;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PartnerRegistrationController extends Controller
 {
@@ -48,7 +52,12 @@ class PartnerRegistrationController extends Controller
                 'payout_country' => $validated['payout_country'],
             ]);
 
-            // 4. Create Sanctum token
+            // 4. Create Partner Settings
+            PartnerSettings::create([
+                'partner_id' => $partner->id,
+            ]);
+
+            // 5. Create Sanctum token
             $tokenResult = $user->createToken('auth-token');
             $plainTextToken = $tokenResult->plainTextToken;
 
@@ -59,6 +68,32 @@ class PartnerRegistrationController extends Controller
                 'token' => $plainTextToken,
             ];
         });
+
+        // Queue transactional email to the partner's contact_email (FR-011)
+        Mail::to($result['profile']->contact_email)->queue(new PartnerApplicationReceivedMail($result['partner']));
+
+        // Create in-app operational notification for admins with manage_partners permission (FR-013)
+        $admins = User::where('role', 'admin')
+            ->with('adminPermission')
+            ->get()
+            ->filter(function (User $admin) {
+                return (bool) ($admin->adminPermission?->flags['manage_partners'] ?? false);
+            });
+
+        foreach ($admins as $admin) {
+            Notification::create([
+                'partner_id' => $result['partner']->id,
+                'type' => 'partner_application',
+                'title' => 'New Partner Application',
+                'body' => "New partner application received from {$result['profile']->company_name} ({$result['profile']->contact_email}).",
+                'data' => [
+                    'admin_id' => $admin->id,
+                    'partner_id' => $result['partner']->id,
+                    'company_name' => $result['profile']->company_name,
+                    'contact_email' => $result['profile']->contact_email,
+                ],
+            ]);
+        }
 
         return response()->json([
             'data' => [

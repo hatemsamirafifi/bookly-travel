@@ -17,9 +17,7 @@ use Illuminate\Support\Facades\DB;
  */
 class UpdateStaticPageAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit)
-    {
-    }
+    public function __construct(private readonly GovernanceAuditService $audit) {}
 
     /**
      * @param  array  $data  slug, title (locale=>string), body (locale=>string),

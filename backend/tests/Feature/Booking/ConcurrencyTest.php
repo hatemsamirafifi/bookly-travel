@@ -51,7 +51,7 @@ it('prevents overbooking when concurrent requests compete for last spot', functi
         try {
             $response = postJson('/api/public/bookings', [
                 'tour_slug' => $tour->slug,
-                'tour_date' => '2026-08-01',
+                'tour_date' => '2026-09-01',
                 'participant_count' => 2,
                 'locale' => 'en',
             ], [

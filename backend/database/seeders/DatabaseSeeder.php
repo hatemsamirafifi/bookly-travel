@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
                 'cancelled_at' => null,
                 'cancellation_reason' => null,
                 'locale' => 'en',
-                'stripe_payment_intent_id' => $paid ? 'pi_seed_'.$reference : null,
+                'stripe_payment_intent_id' => $paid ? 'pi_seed_' . $reference : null,
                 'payment_confirmed_at' => $paid ? now() : null,
             ]
         );
@@ -123,7 +123,7 @@ class DatabaseSeeder extends Seeder
         // renders and ReviewValidationService's payment check passes.
         if ($paid) {
             Payment::updateOrCreate(
-                ['stripe_payment_intent_id' => 'pi_seed_'.$reference],
+                ['stripe_payment_intent_id' => 'pi_seed_' . $reference],
                 [
                     'booking_id' => $booking->id,
                     'type' => 'charge',

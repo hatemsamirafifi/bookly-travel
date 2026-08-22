@@ -1,16 +1,19 @@
 <?php
 
+use App\Domains\Admin\Models\Notification;
 use App\Domains\Booking\Models\Booking;
 use App\Events\BookingEmailDeliveryFailed;
+use App\Filament\Resources\AdminNotificationResource;
+use App\Filament\Resources\NotificationResource;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Tests\TestCase;
 
 /*
  * Spec 014 (US5 FR-016/FR-017, FR-012): when a booking confirmation email
@@ -23,7 +26,7 @@ use Tests\TestCase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    \Illuminate\Support\Carbon::setTestNow('2026-07-04 00:00:00');
+    Carbon::setTestNow('2026-07-04 00:00:00');
     $this->category = Category::firstOrCreate(['slug' => 'adventure'], ['name' => 'Adventure', 'is_active' => true, 'display_order' => 1]);
     $this->traveler = User::factory()->traveler()->create();
     $this->tour = Tour::create([
@@ -56,7 +59,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    \Illuminate\Support\Carbon::setTestNow();
+    Carbon::setTestNow();
     config(['services.slack.admin_webhook_url' => null]);
 });
 
@@ -102,7 +105,7 @@ it('does not post to Slack when no webhook is configured', function () {
  */
 it('survives a Slack webhook failure without crashing the listener', function () {
     Http::fake(function () {
-        throw new \Illuminate\Http\Client\ConnectionException('Connection refused');
+        throw new ConnectionException('Connection refused');
     });
     config(['services.slack.admin_webhook_url' => 'https://hooks.slack.com/bad']);
     Log::spy();
@@ -110,8 +113,41 @@ it('survives a Slack webhook failure without crashing the listener', function ()
     // Should not throw even though Slack throws a ConnectionException
     event(new BookingEmailDeliveryFailed($this->booking, 'SMTP down'));
 
-    Log::shouldHaveReceived('error')->atLeast()->once();
-    Log::shouldHaveReceived('warning')->atLeast()->once();
+    Log::shouldHaveReceived('error')
+        ->withArgs(function (string $message, array $context) {
+            return str_contains($message, 'ADMIN ALERT')
+                && ($context['booking_reference'] ?? null) === $this->booking->reference
+                && ($context['error'] ?? null) === 'SMTP down';
+        })
+        ->atLeast()
+        ->once();
+    Log::shouldHaveReceived('warning')
+        ->withArgs(function (string $message, array $context) {
+            return str_contains($message, 'Slack admin alert failed')
+                && ($context['booking_reference'] ?? null) === $this->booking->reference
+                && ($context['slack_error'] ?? null) === 'Connection refused';
+        })
+        ->atLeast()
+        ->once();
+});
+
+it('logs a warning when the Slack webhook returns HTTP 500', function () {
+    Http::fake([
+        'https://hooks.slack.com/*' => Http::response('Server error', 500),
+    ]);
+    config(['services.slack.admin_webhook_url' => 'https://hooks.slack.com/bad']);
+    Log::spy();
+
+    event(new BookingEmailDeliveryFailed($this->booking, 'SMTP down'));
+
+    Log::shouldHaveReceived('warning')
+        ->withArgs(function (string $message, array $context) {
+            return str_contains($message, 'Slack admin alert failed')
+                && ($context['booking_reference'] ?? null) === $this->booking->reference
+                && str_contains($context['slack_error'] ?? '', '500');
+        })
+        ->atLeast()
+        ->once();
 });
 
 it('does not alter the booking status on a delivery failure (FR-028)', function () {
@@ -127,9 +163,9 @@ it('does not alter the booking status on a delivery failure (FR-028)', function 
  * change reintroduces any of those surfaces.
  */
 it('does not introduce a forbidden admin-notification surface (FR-012)', function () {
-    expect(class_exists(\App\Domains\Admin\Models\Notification::class))->toBeFalse()
-        ->and(class_exists(\App\Filament\Resources\NotificationResource::class))->toBeFalse()
-        ->and(class_exists(\App\Filament\Resources\AdminNotificationResource::class))->toBeFalse();
+    expect(class_exists(Notification::class))->toBeFalse()
+        ->and(class_exists(NotificationResource::class))->toBeFalse()
+        ->and(class_exists(AdminNotificationResource::class))->toBeFalse();
 
     // No migration creates an admin_notifications table.
     $migrations = glob(database_path('migrations/*.php')) ?: [];

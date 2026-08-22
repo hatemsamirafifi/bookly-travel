@@ -12,9 +12,7 @@ use App\Models\User;
  */
 class PartnerPolicy
 {
-    public function __construct(private readonly AdminAuthorizationService $authz)
-    {
-    }
+    public function __construct(private readonly AdminAuthorizationService $authz) {}
 
     private function can(User $user): bool
     {

@@ -3,8 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Actions\ApprovePartnerAction;
-use App\Domains\Admin\Actions\RejectPartnerAction;
+use App\Domains\Admin\Actions\InvitePartnerAction;
 use App\Domains\Admin\Actions\ReinstatePartnerAction;
+use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\SuspendPartnerAction;
 use App\Domains\Partner\Models\Partner;
 use App\Filament\Resources\PartnerResource\Pages;
@@ -132,10 +133,16 @@ class PartnerResource extends Resource
                     ->color('warning')
                     ->requiresConfirmation()
                     ->modalHeading('Suspend Partner')
-                    ->modalDescription('This will deactivate the partner account. Their tours will be hidden from search.')
+                    ->form([
+                        Forms\Components\Textarea::make('reason')
+                            ->label('Suspension Reason')
+                            ->required()
+                            ->maxLength(500)
+                            ->placeholder('Explain why this partner is being suspended...'),
+                    ])
                     ->visible(fn (Partner $record) => auth()->user()?->can('suspend', $record) && $record->onboarding_status === 'approved' && $record->is_active)
-                    ->action(function (Partner $record) {
-                        app(SuspendPartnerAction::class)->execute(auth()->user(), $record);
+                    ->action(function (Partner $record, array $data) {
+                        app(SuspendPartnerAction::class)->execute(auth()->user(), $record, $data);
                         Notification::make()->title('Partner suspended')->warning()->send();
                     }),
                 Tables\Actions\Action::make('unsuspend')
@@ -147,6 +154,38 @@ class PartnerResource extends Resource
                     ->action(function (Partner $record) {
                         app(ReinstatePartnerAction::class)->execute(auth()->user(), $record);
                         Notification::make()->title('Partner reactivated')->success()->send();
+                    }),
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('invite_partner')
+                    ->label('Invite Partner')
+                    ->icon('heroicon-o-envelope')
+                    ->color('primary')
+                    ->form([
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->required()
+                            ->label('Partner Email'),
+                        Forms\Components\TextInput::make('company_name')
+                            ->required()
+                            ->label('Company Name'),
+                        Forms\Components\Select::make('locale')
+                            ->options([
+                                'en' => 'English',
+                                'es' => 'Español',
+                                'it' => 'Italiano',
+                            ])
+                            ->default('en')
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        app(InvitePartnerAction::class)->execute(
+                            $data['email'],
+                            $data['company_name'],
+                            auth()->user(),
+                            $data['locale'] ?? 'en'
+                        );
+                        Notification::make()->title('Partner invitation sent successfully')->success()->send();
                     }),
             ])
             ->defaultSort('created_at', 'desc');
@@ -187,6 +226,12 @@ class PartnerResource extends Resource
                         Infolists\Components\IconEntry::make('is_active')
                             ->label('Active')
                             ->boolean(),
+                        Infolists\Components\IconEntry::make('invited_by_admin')
+                            ->label('Invited by Admin')
+                            ->boolean(),
+                        Infolists\Components\TextEntry::make('profile.rejection_reason')
+                            ->label('Rejection Reason')
+                            ->visible(fn (Partner $record) => $record->onboarding_status === 'rejected'),
                         Infolists\Components\TextEntry::make('created_at')
                             ->label('Registered')
                             ->dateTime(),
