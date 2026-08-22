@@ -203,3 +203,49 @@ if (! function_exists('addAvailabilityRule')) {
         ], $overrides));
     }
 }
+
+if (! function_exists('makeBlogCategory')) {
+    function makeBlogCategory(array $overrides = []): \App\Domains\Blog\Models\BlogCategory
+    {
+        return \App\Domains\Blog\Models\BlogCategory::create(array_merge([
+            'slug' => 'travel-tips-' . uniqid(),
+            'name' => 'Travel Tips',
+            'is_active' => true,
+            'display_order' => 0,
+        ], $overrides));
+    }
+}
+
+if (! function_exists('makeBlogPost')) {
+    function makeBlogPost(array $overrides = []): \App\Domains\Blog\Models\BlogPost
+    {
+        $admin = $overrides['author_id'] ?? null ? null : makeAdmin();
+        $category = $overrides['category_id'] ?? null ? null : makeBlogCategory();
+
+        return \App\Domains\Blog\Models\BlogPost::create(array_merge([
+            'category_id' => $category?->id ?? $overrides['category_id'],
+            'author_id' => $admin?->id ?? $overrides['author_id'],
+            'slug' => 'post-' . uniqid(),
+            'title' => [
+                'en' => 'Default English Title',
+                'es' => 'Título en Español por Defecto',
+                'it' => 'Titolo Italiano Predefinito',
+            ],
+            'body' => [
+                'en' => '<p>Default English blog post body text for reading time and content verification.</p>',
+                'es' => '<p>Cuerpo del blog en español por defecto.</p>',
+                'it' => '<p>Corpo del post del blog in italiano per impostazione predefinita.</p>',
+            ],
+            'excerpt' => [
+                'en' => 'Default English excerpt.',
+                'es' => 'Resumen en español por defecto.',
+                'it' => 'Estratto in italiano per impostazione predefinita.',
+            ],
+            'cover_image_url' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+            'status' => 'published',
+            'is_featured' => false,
+            'published_at' => now()->subDay(),
+            'scheduled_at' => null,
+        ], $overrides));
+    }
+}

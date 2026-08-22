@@ -207,3 +207,20 @@ Route::middleware(['auth:sanctum', 'throttle:traveler'])->prefix('traveler')->gr
 
     Route::get('reviews', [App\Domains\Traveler\Controllers\Public\ReviewController::class, 'index']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Blog API Routes (Feature: 016-blog-travel-insights)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('blog')->group(function () {
+    Route::get('/', [App\Domains\Blog\Controllers\Public\BlogPostController::class, 'index'])
+        ->middleware('throttle:blog');
+    Route::get('category/{slug}', [App\Domains\Blog\Controllers\Public\BlogCategoryController::class, 'show'])
+        ->middleware('throttle:blog');
+    Route::get('{slug}/preview', [App\Domains\Blog\Controllers\Public\BlogPreviewController::class, 'show'])
+        ->middleware('throttle:blog_detail');
+    Route::get('{slug}', [App\Domains\Blog\Controllers\Public\BlogPostController::class, 'show'])
+        ->middleware('throttle:blog_detail');
+});
+

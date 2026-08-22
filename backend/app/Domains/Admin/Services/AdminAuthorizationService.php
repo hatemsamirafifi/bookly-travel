@@ -28,6 +28,7 @@ class AdminAuthorizationService
         'manage_users',
         'manage_settings',
         'manage_cms',
+        'manage_blog',
         'view_audit_log',
     ];
 

@@ -143,3 +143,68 @@ export interface HomepageData {
     };
   };
 }
+
+export interface BlogCategorySummary {
+  slug: string;
+  name: string;
+  description?: string | null;
+}
+
+export interface BlogAuthorSummary {
+  display_name: string;
+  avatar_url?: string | null;
+  bio?: string | null;
+}
+
+export interface BlogPostCard {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  cover_image_url?: string | null;
+  cover_image_blur?: string | null;
+  published_at: string | null;
+  is_featured: boolean;
+  reading_time: number;
+  translation_warning: 'partial_translation' | null;
+  category: BlogCategorySummary | null;
+  author: BlogAuthorSummary;
+}
+
+export interface BlogPostDetail extends BlogPostCard {
+  body: string;
+  updated_at: string | null;
+  seo: SeoMetadata;
+  related_tours: TourCard[];
+  related_posts: BlogPostCard[];
+}
+
+export interface BlogListResponse {
+  data: BlogPostCard[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
+export interface BlogDetailResponse {
+  data: BlogPostDetail;
+}
+
+export interface BlogCategoryResponse {
+  data: {
+    category: BlogCategorySummary & {
+      posts_count: number;
+    };
+    posts: BlogPostCard[];
+    meta: {
+      current_page: number;
+      last_page: number;
+      per_page: number;
+      total: number;
+    };
+  };
+}
+

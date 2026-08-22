@@ -9,6 +9,10 @@ use App\Domains\Admin\Policies\GovernanceAuditPolicy;
 use App\Domains\Admin\Policies\PartnerPolicy;
 use App\Domains\Admin\Policies\StaticPagePolicy;
 use App\Domains\Admin\Policies\TourPolicy;
+use App\Domains\Blog\Models\BlogCategory;
+use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Policies\BlogCategoryPolicy;
+use App\Domains\Blog\Policies\BlogPostPolicy;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerInvitation;
@@ -45,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Booking::class, BookingPolicy::class);
         Gate::policy(GovernanceAuditLog::class, GovernanceAuditPolicy::class);
         Gate::policy(StaticPage::class, StaticPagePolicy::class);
+        Gate::policy(BlogPost::class, BlogPostPolicy::class);
+        Gate::policy(BlogCategory::class, BlogCategoryPolicy::class);
 
         // Spec 013 governance morph maps: GovernanceAuditLog stores actor/target
         // types as these aliases (data-model.md §1/§7). `setting` is a plain
@@ -58,6 +64,8 @@ class AppServiceProvider extends ServiceProvider
             'review' => Review::class,
             'static_page' => StaticPage::class,
             'invitation' => PartnerInvitation::class,
+            'blog_post' => BlogPost::class,
+            'blog_category' => BlogCategory::class,
         ]);
 
         // Register rate limiters so they are available during testing
@@ -124,6 +132,15 @@ class AppServiceProvider extends ServiceProvider
         // endpoint is unauthenticated.
         RateLimiter::for('verify', function (Request $request) {
             return Limit::perMinute(60)->by($request->ip());
+        });
+
+        // Spec 016: blog public rate limiters (120/min per IP)
+        RateLimiter::for('blog', function (Request $request) {
+            return Limit::perMinute(120)->by($request->ip());
+        });
+
+        RateLimiter::for('blog_detail', function (Request $request) {
+            return Limit::perMinute(120)->by($request->ip());
         });
     }
 }
