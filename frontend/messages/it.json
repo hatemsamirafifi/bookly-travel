@@ -1062,6 +1062,14 @@
     "description": "Siamo stati avvisati e stiamo lavorando per risolvere il problema.",
     "reload": "Ricarica pagina"
   },
+  "reviews": {
+    "title": "Recensioni",
+    "failed_to_load": "Impossibile caricare le recensioni",
+    "no_reviews_yet": "Nessuna recensione ancora",
+    "loading": "Caricamento...",
+    "load_more": "Carica altre recensioni",
+    "review_count": "{count, plural, =1 {1 recensione} other {# recensioni}}"
+  },
   "blog": {
     "title": "Storie e Ispirazioni di Viaggio",
     "subtitle": "Scopri ispirazioni, guide alle destinazioni e consigli di esperti per la tua prossima avventura.",
@@ -1074,10 +1082,12 @@
     "allCategories": "Tutte le Categorie",
     "readMore": "Leggi l'Articolo",
     "readTime": "{minutes} min di lettura",
+    "readingTime": "{minutes} min di lettura",
     "minRead": "min di lettura",
     "publishedOn": "Pubblicato il {date}",
     "byAuthor": "Di {name}",
     "tableOfContents": "Indice dei Contenuti",
+    "relatedPosts": "Storie Correlate",
     "relatedTours": "Esperienze Mensionate in questa Guida",
     "relatedToursSubtitle": "Prenota tour selezionati e attività descritte in questo articolo",
     "viewTour": "Visualizza Esperienza",

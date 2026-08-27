@@ -47,14 +47,14 @@ class EditBlogPost extends EditRecord
         $locales = ['en', 'es', 'it'];
 
         foreach ($locales as $loc) {
-            $data["title_{$loc}"] = $record->getTranslation('title', $loc) ?? '';
-            $data["excerpt_{$loc}"] = $record->getTranslation('excerpt', $loc) ?? '';
-            $data["body_{$loc}"] = $record->getTranslation('body', $loc) ?? '';
-            $data["meta_title_{$loc}"] = $record->getTranslation('meta_title', $loc) ?? '';
-            $data["meta_description_{$loc}"] = $record->getTranslation('meta_description', $loc) ?? '';
+            $data["title_{$loc}"] = $record->contentFor('title', $loc) ?? '';
+            $data["excerpt_{$loc}"] = $record->contentFor('excerpt', $loc) ?? '';
+            $data["body_{$loc}"] = $record->contentFor('body', $loc) ?? '';
+            $data["meta_title_{$loc}"] = $record->contentFor('meta_title', $loc) ?? '';
+            $data["meta_description_{$loc}"] = $record->contentFor('meta_description', $loc) ?? '';
         }
 
-        $data['related_tours'] = $record->tours()->orderBy('blog_post_tours.sort_order', 'asc')->get()->map(function ($tour) {
+        $data['related_tours'] = $record->relatedTours()->orderBy('blog_post_tours.sort_order', 'asc')->get()->map(function ($tour) {
             return [
                 'tour_id' => $tour->id,
                 'sort_order' => $tour->pivot->sort_order ?? 0,

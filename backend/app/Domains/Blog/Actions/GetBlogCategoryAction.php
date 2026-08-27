@@ -37,7 +37,7 @@ final class GetBlogCategoryAction
      */
     public function execute(string $slug, Request $request, string $locale = 'en'): array
     {
-        $category = BlogCategory::query()->where('slug', $slug)->first();
+        $category = BlogCategory::query()->where('slug', $slug)->where('is_active', true)->first();
 
         if ($category === null) {
             throw new NotFoundHttpException('Blog category not found.');
@@ -57,13 +57,8 @@ final class GetBlogCategoryAction
         return Cache::remember($cacheKey, 300, function () use ($category, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
-                ->with(['authorProfile.user', 'primaryCategory'])
-                ->where(function ($q) use ($category) {
-                    $q->where('blog_category_id', $category->id)
-                        ->orWhereHas('categories', function ($catQuery) use ($category) {
-                            $catQuery->where('blog_categories.id', $category->id);
-                        });
-                })
+                ->with(['authorProfile.user', 'category'])
+                ->where('blog_category_id', $category->id)
                 ->orderByDesc('published_at');
 
             /** @var LengthAwarePaginator<BlogPost> $paginator */

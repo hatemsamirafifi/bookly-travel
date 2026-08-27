@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Domains\Admin\Models\AdminPermission;
+use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Wishlist\Models\Wishlist;
 use Database\Factories\UserFactory;
@@ -11,6 +12,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -114,6 +116,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function adminPermission()
     {
         return $this->hasOne(AdminPermission::class);
+    }
+
+    /**
+     * Blog author profile (inverse of AuthorProfile::user()).
+     */
+    public function authorProfile(): HasOne
+    {
+        return $this->hasOne(AuthorProfile::class, 'user_id');
     }
 
     /**

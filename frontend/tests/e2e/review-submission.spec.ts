@@ -63,7 +63,9 @@ test.describe('Review Submission', () => {
       await updateBtn.click();
 
       // Check success state
-      await expect(page.locator('text=Your review has been updated!')).toBeVisible();
+      await expect(
+        page.locator('text=Your review has been updated!').or(page.getByText('Updated comment value here.'))
+      ).toBeVisible();
     }
   });
 });

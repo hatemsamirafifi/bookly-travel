@@ -44,7 +44,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const sessionExpired = normalizeSearchParam(params.sessionExpired);
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center p-6 bg-gradient-to-br from-background to-[color-mix(in_srgb,var(--color-primary)_6%,var(--background))]">
+    <main className="flex min-h-[100dvh] items-center justify-center p-6 bg-gradient-to-br from-background to-[color-mix(in_srgb,var(--color-primary)_6%,var(--background))]">
       <div className="w-full max-w-[26rem] bg-surface border border-border rounded-lg shadow-card px-8 py-10">
         {/* Header */}
         <header className="mb-8 text-center">
@@ -55,6 +55,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         <LoginForm returnUrl={returnUrl} sessionExpired={sessionExpired === '1'} />
       </div>
-    </div>
+    </main>
   );
 }

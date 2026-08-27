@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Blog;
 
-use App\Domains\Blog\Models\BlogCategory;
-use App\Domains\Blog\Models\BlogPost;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
@@ -20,23 +18,23 @@ class BlogSitemapTest extends TestCase
 
     public function test_sitemap_includes_blog_index_posts_and_categories(): void
     {
-        $publishedPost = BlogPost::factory()->create([
+        $publishedPost = makeBlogPost([
             'status' => 'published',
             'slug' => 'hidden-gems-rome',
             'published_at' => now()->subDay(),
         ]);
 
-        $draftPost = BlogPost::factory()->create([
+        $draftPost = makeBlogPost([
             'status' => 'draft',
             'slug' => 'draft-post-ignore',
         ]);
 
-        $category = BlogCategory::factory()->create([
+        $category = makeBlogCategory([
             'slug' => 'destinations',
             'is_active' => true,
         ]);
 
-        $response = $this->get('/sitemap.xml');
+        $response = $this->get('/api/public/sitemap.xml');
 
         $response->assertStatus(200)
             ->assertHeader('Content-Type', 'application/xml');

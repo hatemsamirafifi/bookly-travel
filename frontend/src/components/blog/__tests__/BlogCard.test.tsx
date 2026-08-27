@@ -10,24 +10,32 @@ jest.mock('next/image', () => ({
   ),
 }));
 
+jest.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: { minutes?: number }) => {
+    if (key === 'readingTime') return `${values?.minutes ?? 0} min read`;
+    if (key === 'translationWarning') return 'Content only available in English';
+    return key;
+  },
+}));
+
 const mockPost: BlogPostCard = {
   id: 1,
   slug: 'top-10-places-rome',
   title: 'Top 10 Places in Rome',
   excerpt: 'Discover the ultimate guide to visiting Rome with insider secrets.',
-  cover_image: 'https://cdn.test/rome.jpg',
-  reading_time_minutes: 6,
+  cover_image_url: 'https://cdn.test/rome.jpg',
+  cover_image_blur: null,
+  reading_time: 6,
   published_at: '2026-05-15T10:00:00Z',
-  primary_category: {
-    id: 10,
+  is_featured: false,
+  translation_warning: null,
+  category: {
     slug: 'city-guides',
     name: 'City Guides',
   },
   author: {
-    id: 5,
-    name: 'Marco Rossi',
+    display_name: 'Marco Rossi',
     avatar_url: 'https://cdn.test/marco.jpg',
-    role: 'Local Guide',
   },
 };
 

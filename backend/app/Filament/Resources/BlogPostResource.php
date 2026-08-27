@@ -3,11 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
-use App\Domains\Blog\Models\AuthorProfile;
-use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
-use App\Domains\Tour\Models\Tour;
 use App\Filament\Resources\BlogPostResource\Pages;
+use App\Models\Tour;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -66,18 +64,19 @@ class BlogPostResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                        Select::make('categories')
-                            ->label('Categories')
-                            ->relationship('categories', 'name')
-                            ->multiple()
-                            ->preload(),
+                        Select::make('blog_category_id')
+                            ->label('Category')
+                            ->relationship('category', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                         DateTimePicker::make('scheduled_at')
                             ->label('Scheduled Publication')
                             ->helperText('Optional future release date/time.'),
                         Toggle::make('is_featured')
                             ->label('Featured Story')
                             ->default(false),
-                        FileUpload::make('cover_image')
+                        FileUpload::make('cover_image_url')
                             ->label('Cover Image')
                             ->image()
                             ->directory('blog/covers')
@@ -178,12 +177,12 @@ class BlogPostResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('cover_image')
+                ImageColumn::make('cover_image_url')
                     ->label('Cover')
                     ->circular(),
                 TextColumn::make('title')
                     ->label('Title')
-                    ->state(fn (BlogPost $record) => $record->getTranslation('title', 'en'))
+                    ->state(fn (BlogPost $record) => $record->contentFor('title', 'en'))
                     ->searchable()
                     ->limit(40),
                 TextColumn::make('slug')

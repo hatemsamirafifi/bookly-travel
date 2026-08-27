@@ -29,4 +29,3 @@ final class BlogPostController extends Controller
         return response()->json($result);
     }
 }
-

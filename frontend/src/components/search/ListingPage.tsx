@@ -20,7 +20,7 @@ export default function ListingPage({ title, data, locale }: ListingPageProps) {
   const { total, current_page, last_page } = data.meta;
 
   return (
-    <main className="min-h-screen bg-[#F7F9FB]">
+    <div className="min-h-screen bg-[#F7F9FB]">
       <div className="bg-white border-b border-gray-200 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-[#0A2540]">{title}</h1>
@@ -37,6 +37,6 @@ export default function ListingPage({ title, data, locale }: ListingPageProps) {
         <SearchResults tours={data.data} locale={locale} />
         <Pagination currentPage={current_page} lastPage={last_page} />
       </div>
-    </main>
+    </div>
   );
 }

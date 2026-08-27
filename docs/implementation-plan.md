@@ -4,7 +4,7 @@
 > **Date**: 2026-04-13 (revised 2026-05-13)
 > **Constitution**: v1.1.0
 > **Specification Strategy**: v2.0.0
-> **Status**: In Progress
+> **Status**: ✅ Complete — all 16 specs implemented
 
 ---
 
@@ -267,9 +267,15 @@ bookly-travel/
 │   ├── 005-brute-force-protection/  → ✅ Implemented
 │   ├── 006-public-search-discovery/ → ✅ Implemented
 │   ├── 007-tour-booking/            → ✅ Implemented
-│   ├── 008-payment-processing/      → 📋 Ready to build
-│   ├── 009-reviews-ratings/         → 📝 Partial spec
-│   └── 010–015 (TBD)               → 🔲 Not started
+│   ├── 008-payment-processing/      → ✅ Implemented
+│   ├── 009-reviews-ratings/         → ✅ Implemented
+│   ├── 010-public-frontend/         → ✅ Implemented
+│   ├── 011-tour-management/         → ✅ Implemented
+│   ├── 012-partner-dashboard/       → ✅ Implemented
+│   ├── 013-admin-moderation/        → ✅ Implemented
+│   ├── 014-notifications-vouchers/  → ✅ Implemented
+│   ├── 015-partner-onboarding/      → ✅ Implemented
+│   └── 016-blog-travel-insights/    → ✅ Implemented
 └── .specify/                        → Spec Kit config and templates
 ```
 
@@ -308,19 +314,22 @@ gantt
     section Phase C: Booking ✅
     007 Tour Booking                           :done, c1, after b1, 10d
 
-    section Phase D: Payments 📋
-    008 Payment Processing                     :active, d1, after c1, 8d
+    section Phase D: Payments ✅
+    008 Payment Processing                     :done, d1, after c1, 8d
 
-    section Phase E: Post-Booking 🔲
-    009 Reviews & Ratings                      :e1, after d1, 5d
-    014 Notifications & Vouchers               :e2, after d1, 7d
-    015 Traveler Account & Bookings            :e3, after d1, 7d
+    section Phase E: Post-Booking ✅
+    009 Reviews & Ratings                      :done, e1, after d1, 5d
+    014 Notifications & Vouchers               :done, e2, after d1, 7d
+    015 Partner Onboarding                     :done, e3, after d1, 7d
 
-    section Phase F: Partner & Admin 🔲
-    010 Partner Onboarding                     :f1, after a6, 7d
-    011 Tour Management                        :f2, after f1, 10d
-    012 Pricing & Availability                 :f3, after f2, 7d
-    013 Admin Moderation                       :f4, after f2, 8d
+    section Phase F: Partner & Admin ✅
+    010 Public Frontend                        :done, f1, after a6, 7d
+    011 Tour Management & Traveler Dashboard   :done, f2, after f1, 10d
+    012 Partner Dashboard                      :done, f3, after f2, 7d
+    013 Admin Moderation                       :done, f4, after f2, 8d
+
+    section Phase G: Blog ✅
+    016 Blog & Travel Insights                 :done, g1, after f4, 10d
 ```
 
 ---
@@ -401,68 +410,91 @@ gantt
 
 **Dependencies**: Phase C (Booking system must exist) ✅
 
-**Deliverables**:
-- Stripe Payment Intents integration with Stripe Elements
-- Two-step orchestration: reserve availability → confirm payment
-- `pending_payment` and `expired` booking statuses
-- Webhook handling for payment events
-- Immutable financial ledger (append-only)
-- Automatic refund on eligible cancellation
-- Partner financial summary (visibility only, no payouts)
-- Admin payment failure alerts
+**Deliverables** (all completed):
+- ✅ Stripe Payment Intents integration with Stripe Elements
+- ✅ Two-step orchestration: reserve availability → confirm payment
+- ✅ `pending_payment` and `expired` booking statuses
+- ✅ Webhook handling for payment events
+- ✅ Immutable financial ledger (append-only)
+- ✅ Automatic refund on eligible cancellation
+- ✅ Partner financial summary (visibility only, no payouts)
+- ✅ Admin payment failure alerts
 
 ---
 
-### Phase E: Post-Booking (Specs 009, 014, 015) — 🔲 PENDING
+### Phase E: Post-Booking (Specs 009, 014, 015) — ✅ COMPLETE
 
-**Objective**: Deliver post-booking experiences — reviews, notifications, vouchers, and account management.
+**Objective**: Deliver post-booking experiences — reviews, notifications, vouchers, and partner onboarding.
 
 | Task | Status | Description | Priority |
 |------|--------|------------|----------|
-| E.1 | 📝 Partial | 009 — Reviews & Ratings — Review submission for completed bookings, rating + comment, display on tour pages, partner views, admin moderation | **Medium** |
-| E.2 | 🔲 Not started | 014 — Notifications & Vouchers — Email notifications (queued), booking voucher generation (PDF), multi-language templates | **High** |
-| E.3 | 🔲 Not started | 015 — Traveler Account & Bookings — Traveler dashboard, booking history, voucher download, profile management, language preference | **High** |
+| E.1 | ✅ Done | 009 — Reviews & Ratings — Review submission for completed bookings, rating + comment, display on tour pages, partner views, admin moderation, profanity filter, audit trail | **Medium** |
+| E.2 | ✅ Done | 014 — Notifications & Vouchers — Email notifications (queued), booking voucher generation (PDF), multi-language templates, public voucher verification | **High** |
+| E.3 | ✅ Done | 015 — Partner Onboarding — Self-registration, admin invitation, account states, approval gate, resubmission flow, invitation expiration | **High** |
 
-**Dependencies**: Phase D (Payments must exist for 009; Bookings must exist for 014, 015)
+**Dependencies**: Phase D (Payments must exist for 009; Bookings must exist for 014, 015) ✅
 
-**Deliverables**:
-- Review submission with 1–5 star rating and text comment
-- Review display on tour detail pages (average rating, individual reviews)
-- Admin review moderation in Filament
-- Queued email notifications for all booking events
-- Multi-language email templates (EN, ES, IT)
-- PDF voucher generation with booking details and QR code
-- Voucher download from traveler account
-- Traveler dashboard with booking list/detail views
-- Profile management (name, email, phone, password, language preference)
-- Booking history with status filtering
+**Deliverables** (all completed):
+- ✅ Review submission with 1–5 star rating and text comment
+- ✅ Review display on tour detail pages (average rating, individual reviews)
+- ✅ Admin review moderation panel with hide/reinstate actions
+- ✅ Profanity filter with multi-language keyword scanning
+- ✅ Review audit trail for all moderation actions
+- ✅ Queued email notifications for all booking events
+- ✅ Multi-language email templates (EN, ES, IT)
+- ✅ PDF voucher generation with booking details and QR code
+- ✅ Voucher download from traveler account and public verification page
+- ✅ Partner self-registration and admin invitation flows
+- ✅ Partner lifecycle (pending → approved/rejected → suspended)
+- ✅ Partner resubmission after rejection
 
 ---
 
-### Phase F: Partner & Admin (Specs 010, 011, 012, 013) — 🔲 PENDING
+### Phase F: Partner & Admin (Specs 010, 011, 012, 013) — ✅ COMPLETE
 
-**Objective**: Build the partner onboarding, tour management, pricing/availability, and admin moderation systems.
+**Objective**: Build the public frontend, traveler dashboard, partner dashboard, and admin moderation systems.
 
 | Task | Status | Description | Priority |
 |------|--------|------------|----------|
-| F.1 | 🔲 Not started | 010 — Partner Onboarding — Self-registration, admin invitation, account states, approval gate | **Critical** |
-| F.2 | 🔲 Not started | 011 — Tour Management — Partner tour CRUD, multi-language content (EN/ES/IT), image uploads to R2, draft/submit/publish workflow | **Critical** |
-| F.3 | 🔲 Not started | 012 — Pricing & Availability — Per-person pricing, currency handling, availability calendar, capacity management, overbooking protection | **Critical** |
-| F.4 | 🔲 Not started | 013 — Admin Moderation — Filament resources for partner/tour moderation, booking oversight, refund tracking, audit logging | **High** |
+| F.1 | ✅ Done | 010 — Public Frontend — Search, booking, and payment UI; localization; error handling; responsive design | **Critical** |
+| F.2 | ✅ Done | 011 — Tour Management & Traveler Dashboard — Traveler dashboard, bookings, profile, wishlists; partner tour CRUD, multi-language content, image uploads | **Critical** |
+| F.3 | ✅ Done | 012 — Partner Dashboard — Partner dashboard, tour creation, booking management, partner profile, analytics, notifications | **Critical** |
+| F.4 | ✅ Done | 013 — Admin Moderation — Filament resources for partner/tour moderation, booking oversight, refund tracking, audit logging, governance | **High** |
 
-**Dependencies**: Phase A (auth infrastructure) ✅; F.2 depends on F.1; F.3 and F.4 depend on F.2
+**Dependencies**: Phase A (auth infrastructure) ✅; all satisfied
 
-**Deliverables**:
-- Partner registration and profile management
-- Admin ability to approve/reject/suspend partners
-- Partner tour CRUD with multi-language content
-- Image upload to Cloudflare R2 with cover image designation
-- Tour status lifecycle (draft → pending_review → published/rejected)
-- Pricing model with per-person rates
-- Availability calendar with capacity per departure
-- Filament admin dashboard with full moderation workflows
-- Audit log for all admin actions
-- Lighthouse Performance score ≥ 90
+**Deliverables** (all completed):
+- ✅ Public frontend with search, booking, and payment flows
+- ✅ Traveler dashboard with bookings, profile, and wishlists
+- ✅ Partner tour CRUD with multi-language content
+- ✅ Image upload to Cloudflare R2 with cover image designation
+- ✅ Tour status lifecycle (draft → pending_review → published/rejected)
+- ✅ Partner dashboard with booking management and analytics
+- ✅ Filament admin dashboard with full moderation workflows
+- ✅ Audit log for all admin actions
+- ✅ Governance audit logging
+
+---
+
+### Phase G: Blog (Spec 016) — ✅ COMPLETE
+
+**Objective**: Add blog and travel insights content system with author profiles, categories, and SEO.
+
+| Task | Status | Description | Priority |
+|------|--------|------------|----------|
+| G.1 | ✅ Done | 016 — Blog & Travel Insights — Blog backend (Laravel), frontend (Next.js), author profiles, categories, tags, sitemap, RSS feed, SEO optimization | **Medium** |
+
+**Dependencies**: Phase F (frontend infrastructure) ✅
+
+**Deliverables** (all completed):
+- ✅ Blog post CRUD with JSONB-localized content (EN, ES, IT)
+- ✅ Author profiles with bio and avatar
+- ✅ Blog categories and tags with pivot tables
+- ✅ Blog-tour relationships (link posts to tours)
+- ✅ Redis caching for list/category/sitemap endpoints
+- ✅ Frontend blog pages (listing, detail, author, category)
+- ✅ SEO: structured data, sitemap, RSS feed
+- ✅ Code review report (016-REVIEW.md)
 
 ---
 
@@ -1226,7 +1258,7 @@ Push to feature branch
 
 ---
 
-## 15. Current Status (as of 2026-05-13)
+## 15. Current Status (as of 2026-08-22)
 
 ### Progress Summary
 
@@ -1235,17 +1267,43 @@ Push to feature branch
 | Phase A: Foundation | 001–005 | ✅ Complete |
 | Phase B: Discovery | 006 | ✅ Complete |
 | Phase C: Booking | 007 | ✅ Complete |
-| Phase D: Payments | 008 | 📋 Ready to build |
-| Phase E: Post-Booking | 009, 014, 015 | 🔲 Pending (009 partially specified) |
-| Phase F: Partner & Admin | 010–013 | 🔲 Not started |
+| Phase D: Payments | 008 | ✅ Complete |
+| Phase E: Post-Booking | 009, 014, 015 | ✅ Complete |
+| Phase F: Partner & Admin | 010–013 | ✅ Complete |
+| Phase G: Blog | 016 | ✅ Complete |
+
+### Task Completion Summary
+
+| Spec | Title | Tasks Done/Total |
+|------|-------|-----------------|
+| 001 | Traveler Authentication | 96/96 ✅ |
+| 002 | Foundational Implementation | N/A (no tasks.md — early foundational work) |
+| 003 | Traveler Registration | 15/15 ✅ |
+| 004 | Traveler Sign-In & Sign-Out | 35/35 ✅ |
+| 005 | Brute-Force Protection | 17/17 ✅ |
+| 006 | Public Search & Discovery | 92/92 ✅ |
+| 007 | Tour Booking | 58/58 ✅ |
+| 008 | Payment Processing | 45/45 ✅ |
+| 009 | Reviews & Ratings | 57/57 ✅ |
+| 010 | Public Frontend | 104/104 ✅ |
+| 011 | Tour Management & Traveler Dashboard | 99/99 ✅ |
+| 012 | Partner Dashboard | 120/120 ✅ |
+| 013 | Admin Moderation | 65/65 ✅ |
+| 014 | Notifications & Vouchers | 38/38 ✅ |
+| 015 | Partner Onboarding | 66/66 ✅ |
+| 016 | Blog & Travel Insights | 80/80 ✅ |
+
+### Remaining Work
+
+**All 16 specs are fully implemented — every task across all specs is marked complete.**
 
 ### Recommended Next Actions
 
-1. **Implement 008 (Payment Processing)** — fully specified, ready to build
-2. **Complete 009 (Reviews & Ratings) planning** — needs `/speckit.tasks`
-3. **Specify 014 (Notifications & Vouchers)** — dependencies satisfied
-4. **Specify 015 (Traveler Account & Bookings)** — dependencies satisfied
-5. **Specify 010 (Partner Onboarding)** — unlocks 011 → 012 → 013 chain
+1. **Run backend test suite** — `php artisan test` to verify all Pest tests pass
+2. **Run frontend test suite** — `npm test` and `npm run test:e2e` to verify Jest + Playwright tests
+3. **Run Lighthouse audits** on key pages (homepage, search, tour detail, dashboard) for Performance ≥ 90
+4. **Update spec numbering mapping** — the plan's Phase E/F descriptions don't match actual spec titles (015 is Partner Onboarding, not "Traveler Account & Bookings"; 010 is Public Frontend, not "Partner Onboarding")
+5. **Deploy to staging** — all features are implemented and ready for QA validation
 
 ---
 

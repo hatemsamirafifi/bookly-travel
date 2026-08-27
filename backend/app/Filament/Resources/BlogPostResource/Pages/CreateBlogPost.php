@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\BlogPostResource\Pages;
 
 use App\Domains\Blog\Actions\UpdateBlogPostAction;
-use App\Domains\Blog\Models\BlogPost;
 use App\Filament\Resources\BlogPostResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;

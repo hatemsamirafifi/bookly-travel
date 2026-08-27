@@ -3,15 +3,15 @@
 namespace App\Domains\Blog\Controllers\Public;
 
 use App\Domains\Blog\Actions\GetBlogPostPreviewAction;
+use App\Domains\Blog\Requests\Public\ShowBlogPreviewRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class BlogPreviewController extends Controller
 {
     public function show(
         string $slug,
-        Request $request,
+        ShowBlogPreviewRequest $request,
         GetBlogPostPreviewAction $action
     ): JsonResponse {
         $token = (string) $request->query('token', '');

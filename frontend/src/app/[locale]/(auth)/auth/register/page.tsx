@@ -36,7 +36,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const { returnUrl } = await searchParams;
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center p-6 bg-gradient-to-br from-background to-[color-mix(in_srgb,var(--color-primary)_6%,var(--background))]">
+    <main className="flex min-h-[100dvh] items-center justify-center p-6 bg-gradient-to-br from-background to-[color-mix(in_srgb,var(--color-primary)_6%,var(--background))]">
       <div className="w-full max-w-[26rem] bg-surface border border-border rounded-lg shadow-card px-8 py-10">
         {/* Header */}
         <header className="mb-8 text-center">
@@ -47,6 +47,6 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
 
         <RegisterForm returnUrl={returnUrl} />
       </div>
-    </div>
+    </main>
   );
 }

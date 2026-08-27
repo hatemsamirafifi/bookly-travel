@@ -43,7 +43,7 @@ test.describe('Blog Listing Accessibility (a11y)', () => {
     });
 
     await page.goto('/en/blog');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -99,7 +99,7 @@ test.describe('Blog Listing Accessibility (a11y)', () => {
     });
 
     await page.goto('/en/blog/category/city-guides');
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])

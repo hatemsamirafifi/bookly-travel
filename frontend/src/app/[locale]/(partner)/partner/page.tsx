@@ -60,19 +60,14 @@ export default function PartnerDashboardPage() {
     };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <PartnerStatusBanner profile={profile} />
-        <PartnerAnalyticsSkeleton />
-      </div>
-    );
-  }
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-[#0A2540]">{t('title')}</h1>
+      <PartnerStatusBanner profile={profile} />
 
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <PartnerStatusBanner profile={profile} />
+      {loading ? (
+        <PartnerAnalyticsSkeleton />
+      ) : error ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
           <p>{t('loadError')}</p>
           <button
@@ -83,26 +78,16 @@ export default function PartnerDashboardPage() {
             {t('retry')}
           </button>
         </div>
-      </div>
-    );
-  }
-
-  if (!summary) {
-    return (
-      <div className="space-y-6">
-        <PartnerStatusBanner profile={profile} />
+      ) : !summary ? (
         <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
           {t('noData')}
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <PartnerStatusBanner profile={profile} />
-      <AnalyticsSummary summary={summary} />
-      <BookingsChart data={chartData} />
+      ) : (
+        <>
+          <AnalyticsSummary summary={summary} />
+          <BookingsChart data={chartData} />
+        </>
+      )}
     </div>
   );
 }

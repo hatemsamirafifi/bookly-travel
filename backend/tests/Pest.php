@@ -1,5 +1,7 @@
 <?php
 
+use App\Domains\Blog\Models\BlogCategory;
+use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
@@ -9,6 +11,7 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /*
@@ -24,7 +27,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature', 'Unit');
 
 /*
@@ -204,10 +207,26 @@ if (! function_exists('addAvailabilityRule')) {
     }
 }
 
-if (! function_exists('makeBlogCategory')) {
-    function makeBlogCategory(array $overrides = []): \App\Domains\Blog\Models\BlogCategory
+if (! function_exists('makeAdmin')) {
+    function makeAdmin(): User
     {
-        return \App\Domains\Blog\Models\BlogCategory::create(array_merge([
+        $admin = User::factory()->admin()->create();
+        $admin->adminPermission()->create(['flags' => ['manage_blog' => true, 'manage_cms' => true]]);
+        $admin->authorProfile()->create([
+            'display_name' => ['en' => 'Admin Author', 'es' => 'Autor Admin', 'it' => 'Autore Admin'],
+            'bio' => ['en' => 'Admin Bio', 'es' => 'Bio Admin', 'it' => 'Bio Admin'],
+            'avatar_url' => 'https://r2.example.com/avatars/admin.jpg',
+            'is_active' => true,
+        ]);
+
+        return $admin->fresh(['adminPermission', 'authorProfile']);
+    }
+}
+
+if (! function_exists('makeBlogCategory')) {
+    function makeBlogCategory(array $overrides = []): BlogCategory
+    {
+        return BlogCategory::create(array_merge([
             'slug' => 'travel-tips-' . uniqid(),
             'name' => 'Travel Tips',
             'is_active' => true,
@@ -217,14 +236,19 @@ if (! function_exists('makeBlogCategory')) {
 }
 
 if (! function_exists('makeBlogPost')) {
-    function makeBlogPost(array $overrides = []): \App\Domains\Blog\Models\BlogPost
+    function makeBlogPost(array $overrides = []): BlogPost
     {
-        $admin = $overrides['author_id'] ?? null ? null : makeAdmin();
-        $category = $overrides['category_id'] ?? null ? null : makeBlogCategory();
+        $admin = isset($overrides['author_id']) ? null : makeAdmin();
+        $category = (isset($overrides['blog_category_id']) || isset($overrides['category_id'])) ? null : makeBlogCategory();
 
-        return \App\Domains\Blog\Models\BlogPost::create(array_merge([
-            'category_id' => $category?->id ?? $overrides['category_id'],
-            'author_id' => $admin?->id ?? $overrides['author_id'],
+        $categoryId = $overrides['blog_category_id'] ?? $overrides['category_id'] ?? $category?->id;
+        $authorId = $overrides['author_id'] ?? $admin?->id;
+
+        unset($overrides['category_id']);
+
+        return BlogPost::create(array_merge([
+            'blog_category_id' => $categoryId,
+            'author_id' => $authorId,
             'slug' => 'post-' . uniqid(),
             'title' => [
                 'en' => 'Default English Title',
@@ -240,6 +264,16 @@ if (! function_exists('makeBlogPost')) {
                 'en' => 'Default English excerpt.',
                 'es' => 'Resumen en español por defecto.',
                 'it' => 'Estratto in italiano per impostazione predefinita.',
+            ],
+            'meta_title' => [
+                'en' => 'Default English Meta Title',
+                'es' => 'Título Meta en Español',
+                'it' => 'Titolo Meta in Italiano',
+            ],
+            'meta_description' => [
+                'en' => 'Default English Meta Description',
+                'es' => 'Descripción Meta en Español',
+                'it' => 'Descrizione Meta in Italiano',
             ],
             'cover_image_url' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
             'status' => 'published',

@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: bookly-frontend
     restart: unless-stopped
+    command: npm start
     ports:
       - "3001:3000"
     volumes:

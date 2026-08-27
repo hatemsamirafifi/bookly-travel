@@ -1,9 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Dashboard Home', () => {
   test.beforeEach(async ({ page }) => {
-    await partnerLogin(page);
     await page.goto('/en/partner');
   });
 
@@ -11,13 +9,13 @@ test.describe('Partner Dashboard Home', () => {
     // The dashboard page shows 4 summary cards
     await expect(page.getByText('Total Bookings')).toBeVisible();
     await expect(page.getByText('Total Revenue')).toBeVisible();
-    await expect(page.getByText('Avg. Rating')).toBeVisible();
-    await expect(page.getByText('Conversion')).toBeVisible();
+    await expect(page.getByText('Average Rating')).toBeVisible();
+    await expect(page.getByText('Conversion Rate')).toBeVisible();
   });
 
   test('should display analytics values in summary cards', async ({ page }) => {
     // Each card should have a numeric value displayed
-    const cards = page.locator('.bg-white.rounded-xl.border');
+    const cards = page.locator('.grid div.bg-white.rounded-xl.border');
     await expect(cards).toHaveCount(4);
 
     // Values should be visible (could be placeholder data or real data)
@@ -36,7 +34,7 @@ test.describe('Partner Dashboard Home', () => {
 
   test('should show icon badges on each summary card', async ({ page }) => {
     // Each card has an icon with colored background
-    const iconBadges = page.locator('.rounded-lg.p-2');
+    const iconBadges = page.locator('.grid div.bg-white.rounded-xl.border .p-2.rounded-lg');
     // At least 4 icon badges (one per card)
     await expect(iconBadges).toHaveCount(4);
   });

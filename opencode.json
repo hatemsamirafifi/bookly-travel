@@ -1,5 +1,15 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "dahl/moonshotai/Kimi-K2.6",
-  "provider": {}
+  "provider": {},
+  "mcp": {
+    "TestSprite": {
+      "type": "local",
+      "command": ["npx", "@testsprite/testsprite-mcp@latest"],
+      "enabled": true,
+      "environment": {
+        "API_KEY": "sk-user-BAZ5i48f4I2-FL0Xyz2c0Ea_KbN-RcxCM-Un2xgdFV0L7SqwTN4ikgMN9ZQNOgH-pLWAC5MlYc8i2jREVSbr3uskT9yYA9NzBt-LKk9ysuQurahkVut_-w1KQRUNVNXPqkQ"
+      }
+    }
+  }
 }

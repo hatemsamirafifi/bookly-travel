@@ -100,21 +100,21 @@
 
 ### Tests for User Story 2
 
-- [ ] T037 [P] [US2] Write login feature test: valid login, invalid credentials (generic error), token issuance, last_login_at update in `backend/tests/Feature/Auth/LoginTest.php`
+- [X] T037 [P] [US2] Write login feature test: valid login, invalid credentials (generic error), token issuance, last_login_at update in `backend/tests/Feature/Auth/LoginTest.php`
 - [x] T038 [P] [US2] Write logout feature test: token revocation, other sessions preserved in `backend/tests/Feature/Auth/LogoutTest.php`
-- [ ] T039 [P] [US2] Write brute-force protection test: counter increment, lockout after 5 failures (1min/5min/30min escalation), reset on success in `backend/tests/Feature/Auth/BruteForceProtectionTest.php`
+- [X] T039 [P] [US2] Write brute-force protection test: counter increment, lockout after 5 failures (1min/5min/30min escalation), reset on success in `backend/tests/Feature/Auth/BruteForceProtectionTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T040 [P] [US2] Create LoginRequest form request (email required, password required) in `backend/app/Http/Requests/Auth/LoginRequest.php`
-- [ ] T041 [US2] Create AuthenticateTravelerAction with logic: check lockout, verify credentials, reset/increment failure counter, compute lockout duration (1min→5min→30min), issue Sanctum token, dispatch TravelerLoggedIn/LoginFailed/AccountLockedOut events in `backend/app/Domains/Auth/Actions/AuthenticateTravelerAction.php`. Brute-force protection is embedded in this action (not in a separate AuthService).
+- [X] T040 [P] [US2] Create LoginRequest form request (email required, password required) in `backend/app/Http/Requests/Auth/LoginRequest.php`
+- [X] T041 [US2] Create AuthenticateTravelerAction with logic: check lockout, verify credentials, reset/increment failure counter, compute lockout duration (1min→5min→30min), issue Sanctum token, dispatch TravelerLoggedIn/LoginFailed/AccountLockedOut events in `backend/app/Domains/Auth/Actions/AuthenticateTravelerAction.php`. Brute-force protection is embedded in this action (not in a separate AuthService).
 - [x] T042 [US2] Create LogoutTravelerAction to revoke current token in `backend/app/Domains/Auth/Actions/LogoutTravelerAction.php`
-- [ ] T044 [US2] Create LoginController (thin: validate via LoginRequest, delegate to AuthenticateTravelerAction, return UserResource + token or error with `code` field) in `backend/app/Http/Controllers/Public/Auth/LoginController.php`
+- [X] T044 [US2] Create LoginController (thin: validate via LoginRequest, delegate to AuthenticateTravelerAction, return UserResource + token or error with `code` field) in `backend/app/Http/Controllers/Public/Auth/LoginController.php`
 - [x] T045 [P] [US2] Create LogoutController (auth required, delegate to LogoutTravelerAction, return 204) in `backend/app/Http/Controllers/Public/Auth/LogoutController.php`
 - [/] T046 [US2] Register POST `/api/public/auth/login` and POST `/api/public/auth/logout` routes in `backend/routes/api/public.php` *(logout route exists; login route pending)*
-- [ ] T047 [P] [US2] Create LoginForm component with email/password fields, Zod validation, generic error display, lockout error display (static message, no countdown — countdown would leak timing info to attackers) in `frontend/src/components/auth/LoginForm.tsx`
-- [ ] T048 [US2] Create login page with LoginForm, "Forgot password?" link, return-to-URL handling in `frontend/src/app/[locale]/auth/login/page.tsx`
-- [ ] T049 [US2] Integrate login/logout with useAuth hook: store token in httpOnly cookie via Next.js API route, update auth context on sign-in/out in `frontend/src/lib/hooks/useAuth.ts`
+- [X] T047 [P] [US2] Create LoginForm component with email/password fields, Zod validation, generic error display, lockout error display (static message, no countdown — countdown would leak timing info to attackers) in `frontend/src/components/auth/LoginForm.tsx`
+- [X] T048 [US2] Create login page with LoginForm, "Forgot password?" link, return-to-URL handling in `frontend/src/app/[locale]/auth/login/page.tsx`
+- [X] T049 [US2] Integrate login/logout with useAuth hook: store token in httpOnly cookie via Next.js API route, update auth context on sign-in/out in `frontend/src/lib/hooks/useAuth.ts`
 
 **Checkpoint**: Sign-in/sign-out fully functional with brute-force protection, session management, and frontend forms.
 
@@ -130,12 +130,12 @@
 
 ### Tests for User Story 3
 
-- [ ] T050 [P] [US3] Write guest identity test: create guest identity, detect existing account by email, multiple bookings same email in `backend/tests/Feature/Auth/GuestIdentityTest.php`
+- [X] T050 [P] [US3] Write guest identity test: create guest identity, detect existing account by email, multiple bookings same email in `backend/tests/Feature/Auth/GuestIdentityTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T051 [US3] Create AuthService method `findOrCreateGuestIdentity(email, name, phone)` — checks for existing user, creates guest_identity record if no account found in `backend/app/Domains/Auth/Services/AuthService.php`
-- [ ] T052 [US3] Create AuthService method `checkExistingAccount(email)` — returns whether a registered account exists for a given email (used by checkout UI to prompt sign-in) in `backend/app/Domains/Auth/Services/AuthService.php`
+- [X] T051 [US3] Create AuthService method `findOrCreateGuestIdentity(email, name, phone)` — checks for existing user, creates guest_identity record if no account found in `backend/app/Domains/Auth/Services/AuthService.php`
+- [X] T052 [US3] Create AuthService method `checkExistingAccount(email)` — returns whether a registered account exists for a given email (used by checkout UI to prompt sign-in) in `backend/app/Domains/Auth/Services/AuthService.php`
 
 **Checkpoint**: Guest identity system ready — checkout flows (spec 007) can now call AuthService to capture guest identity.
 
@@ -149,15 +149,15 @@
 
 ### Tests for User Story 4
 
-- [ ] T053 [P] [US4] Write guest conversion test: successful conversion, bookings linked, duplicate email handling, verification email in `backend/tests/Feature/Auth/GuestConversionTest.php`
+- [X] T053 [P] [US4] Write guest conversion test: successful conversion, bookings linked, duplicate email handling, verification email in `backend/tests/Feature/Auth/GuestConversionTest.php`
 
 ### Implementation for User Story 4
 
-- [ ] T054 [P] [US4] Create ConvertGuestRequest form request (email, name, password, password_confirmation, booking_reference) in `backend/app/Http/Requests/Auth/ConvertGuestRequest.php`
-- [ ] T055 [US4] Create ConvertGuestToAccountAction with logic: create user from guest data, set password, link all guest bookings by email, mark guest_identity as converted, dispatch GuestConvertedToAccount event, queue verification email in `backend/app/Domains/Auth/Actions/ConvertGuestToAccountAction.php`
-- [ ] T056 [US4] Create guest conversion controller (validate via ConvertGuestRequest, delegate to ConvertGuestToAccountAction, return UserResource + token + linked_bookings_count) in `backend/app/Http/Controllers/Public/Auth/GuestConversionController.php`
-- [ ] T057 [US4] Register POST `/api/public/auth/guest/convert` route in `backend/routes/api/public.php`
-- [ ] T058 [P] [US4] Create GuestConversionPrompt component: pre-filled name/email, password field, "Create account" CTA, "Skip" option, existing-account detection in `frontend/src/components/auth/GuestConversionPrompt.tsx`
+- [X] T054 [P] [US4] Create ConvertGuestRequest form request (email, name, password, password_confirmation, booking_reference) in `backend/app/Http/Requests/Auth/ConvertGuestRequest.php`
+- [X] T055 [US4] Create ConvertGuestToAccountAction with logic: create user from guest data, set password, link all guest bookings by email, mark guest_identity as converted, dispatch GuestConvertedToAccount event, queue verification email in `backend/app/Domains/Auth/Actions/ConvertGuestToAccountAction.php`
+- [X] T056 [US4] Create guest conversion controller (validate via ConvertGuestRequest, delegate to ConvertGuestToAccountAction, return UserResource + token + linked_bookings_count) in `backend/app/Http/Controllers/Public/Auth/GuestConversionController.php`
+- [X] T057 [US4] Register POST `/api/public/auth/guest/convert` route in `backend/routes/api/public.php`
+- [X] T058 [P] [US4] Create GuestConversionPrompt component: pre-filled name/email, password field, "Create account" CTA, "Skip" option, existing-account detection in `frontend/src/components/auth/GuestConversionPrompt.tsx`
 
 **Checkpoint**: Guest-to-account conversion fully functional — guests can create accounts post-booking with automatic booking linkage.
 
@@ -171,20 +171,20 @@
 
 ### Tests for User Story 5
 
-- [ ] T059 [P] [US5] Write password reset test: request for verified email, request for unverified email (sends verification instead), token expiry, token invalidation on use, generic response for nonexistent email in `backend/tests/Feature/Auth/PasswordResetTest.php`
+- [X] T059 [P] [US5] Write password reset test: request for verified email, request for unverified email (sends verification instead), token expiry, token invalidation on use, generic response for nonexistent email in `backend/tests/Feature/Auth/PasswordResetTest.php`
 
 ### Implementation for User Story 5
 
-- [ ] T060 [P] [US5] Create ForgotPasswordRequest (email required) and ResetPasswordRequest (email, token, password, password_confirmation) in `backend/app/Http/Requests/Auth/ForgotPasswordRequest.php` and `backend/app/Http/Requests/Auth/ResetPasswordRequest.php`
-- [ ] T061 [P] [US5] Create PasswordResetMail mailable with multi-language support in `backend/app/Mail/PasswordResetMail.php`
-- [ ] T062 [P] [US5] Create SendPasswordResetEmail queued job (retry-safe) in `backend/app/Jobs/SendPasswordResetEmail.php`
-- [ ] T063 [US5] Create ResetPasswordAction: validate token, verify not expired (60 min), update password, invalidate all reset tokens for this email, dispatch PasswordReset event in `backend/app/Domains/Auth/Actions/ResetPasswordAction.php`
-- [ ] T064 [US5] Create ForgotPasswordController: always return same response (anti-enumeration), check verification status — if verified queue reset email, if unverified queue verification email instead in `backend/app/Http/Controllers/Public/Auth/ForgotPasswordController.php`
-- [ ] T065 [US5] Create ResetPasswordController (validate, delegate to ResetPasswordAction) in `backend/app/Http/Controllers/Public/Auth/ResetPasswordController.php`
-- [ ] T066 [US5] Register POST `/api/public/auth/forgot-password` and POST `/api/public/auth/reset-password` routes in `backend/routes/api/public.php`
-- [ ] T067 [P] [US5] Create ForgotPasswordForm component with email field, success message (same regardless of email existence) in `frontend/src/components/auth/ForgotPasswordForm.tsx`
-- [ ] T068 [P] [US5] Create ResetPasswordForm component with password/confirmation fields, token validation, expired-link handling in `frontend/src/components/auth/ResetPasswordForm.tsx`
-- [ ] T069 [US5] Create forgot-password and reset-password pages in `frontend/src/app/[locale]/auth/forgot-password/page.tsx` and `frontend/src/app/[locale]/auth/reset-password/page.tsx`
+- [X] T060 [P] [US5] Create ForgotPasswordRequest (email required) and ResetPasswordRequest (email, token, password, password_confirmation) in `backend/app/Http/Requests/Auth/ForgotPasswordRequest.php` and `backend/app/Http/Requests/Auth/ResetPasswordRequest.php`
+- [X] T061 [P] [US5] Create PasswordResetMail mailable with multi-language support in `backend/app/Mail/PasswordResetMail.php`
+- [X] T062 [P] [US5] Create SendPasswordResetEmail queued job (retry-safe) in `backend/app/Jobs/SendPasswordResetEmail.php`
+- [X] T063 [US5] Create ResetPasswordAction: validate token, verify not expired (60 min), update password, invalidate all reset tokens for this email, dispatch PasswordReset event in `backend/app/Domains/Auth/Actions/ResetPasswordAction.php`
+- [X] T064 [US5] Create ForgotPasswordController: always return same response (anti-enumeration), check verification status — if verified queue reset email, if unverified queue verification email instead in `backend/app/Http/Controllers/Public/Auth/ForgotPasswordController.php`
+- [X] T065 [US5] Create ResetPasswordController (validate, delegate to ResetPasswordAction) in `backend/app/Http/Controllers/Public/Auth/ResetPasswordController.php`
+- [X] T066 [US5] Register POST `/api/public/auth/forgot-password` and POST `/api/public/auth/reset-password` routes in `backend/routes/api/public.php`
+- [X] T067 [P] [US5] Create ForgotPasswordForm component with email field, success message (same regardless of email existence) in `frontend/src/components/auth/ForgotPasswordForm.tsx`
+- [X] T068 [P] [US5] Create ResetPasswordForm component with password/confirmation fields, token validation, expired-link handling in `frontend/src/components/auth/ResetPasswordForm.tsx`
+- [X] T069 [US5] Create forgot-password and reset-password pages in `frontend/src/app/[locale]/auth/forgot-password/page.tsx` and `frontend/src/app/[locale]/auth/reset-password/page.tsx`
 
 **Checkpoint**: Password reset fully functional — request, email delivery, token validation, password update, anti-enumeration protection.
 
@@ -198,20 +198,20 @@
 
 ### Tests for User Story 6
 
-- [ ] T070 [P] [US6] Write session management test: token expiry after inactivity, token extension on use, multiple concurrent sessions in `backend/tests/Feature/Auth/SessionManagementTest.php`
-- [ ] T071 [P] [US6] Write change password test: valid change with current password, incorrect current password, weak new password in `backend/tests/Feature/Auth/ChangePasswordTest.php`
+- [X] T070 [P] [US6] Write session management test: token expiry after inactivity, token extension on use, multiple concurrent sessions in `backend/tests/Feature/Auth/SessionManagementTest.php`
+- [X] T071 [P] [US6] Write change password test: valid change with current password, incorrect current password, weak new password in `backend/tests/Feature/Auth/ChangePasswordTest.php`
 
 ### Implementation for User Story 6
 
-- [ ] T072 [US6] Implement Sanctum token expiry middleware: check `expires_at`, reject expired tokens, extend `expires_at` on valid requests in `backend/app/Http/Middleware/RefreshTokenExpiry.php`
-- [ ] T073 [P] [US6] Create ChangePasswordRequest form request (current_password required, password min 8 with strength rules, password_confirmation) in `backend/app/Http/Requests/Auth/ChangePasswordRequest.php`
-- [ ] T074 [US6] Create ChangePasswordAction: verify current password, update password hash, invalidate reset tokens, dispatch PasswordChanged event in `backend/app/Domains/Auth/Actions/ChangePasswordAction.php`
-- [ ] T075 [US6] Create ChangePasswordController (auth required, validate, delegate to ChangePasswordAction) in `backend/app/Http/Controllers/Public/Account/ChangePasswordController.php`
-- [ ] T076 [P] [US6] Create ProfileController: GET returns UserResource, PUT updates name/phone/locale in `backend/app/Http/Controllers/Public/Account/ProfileController.php`
-- [ ] T077 [US6] Create SessionController: GET lists active sessions (token id, name, last_used_at, is_current flag — never exposes token values) in `backend/app/Http/Controllers/Public/Account/SessionController.php`
-- [ ] T078 [US6] Register account routes (GET/PUT `/api/public/account/profile`, PUT `/api/public/account/change-password`, GET `/api/public/account/sessions`) in `backend/routes/api/public.php`
-- [ ] T079 [P] [US6] Create ChangePasswordForm component with current password, new password, confirmation fields in `frontend/src/components/auth/ChangePasswordForm.tsx`
-- [ ] T080 [US6] Create account profile page with profile editing and password change sections in `frontend/src/app/[locale]/account/profile/page.tsx`
+- [X] T072 [US6] Implement Sanctum token expiry middleware: check `expires_at`, reject expired tokens, extend `expires_at` on valid requests in `backend/app/Http/Middleware/RefreshTokenExpiry.php`
+- [X] T073 [P] [US6] Create ChangePasswordRequest form request (current_password required, password min 8 with strength rules, password_confirmation) in `backend/app/Http/Requests/Auth/ChangePasswordRequest.php`
+- [X] T074 [US6] Create ChangePasswordAction: verify current password, update password hash, invalidate reset tokens, dispatch PasswordChanged event in `backend/app/Domains/Auth/Actions/ChangePasswordAction.php`
+- [X] T075 [US6] Create ChangePasswordController (auth required, validate, delegate to ChangePasswordAction) in `backend/app/Http/Controllers/Public/Account/ChangePasswordController.php`
+- [X] T076 [P] [US6] Create ProfileController: GET returns UserResource, PUT updates name/phone/locale in `backend/app/Http/Controllers/Public/Account/ProfileController.php`
+- [X] T077 [US6] Create SessionController: GET lists active sessions (token id, name, last_used_at, is_current flag — never exposes token values) in `backend/app/Http/Controllers/Public/Account/SessionController.php`
+- [X] T078 [US6] Register account routes (GET/PUT `/api/public/account/profile`, PUT `/api/public/account/change-password`, GET `/api/public/account/sessions`) in `backend/routes/api/public.php`
+- [X] T079 [P] [US6] Create ChangePasswordForm component with current password, new password, confirmation fields in `frontend/src/components/auth/ChangePasswordForm.tsx`
+- [X] T080 [US6] Create account profile page with profile editing and password change sections in `frontend/src/app/[locale]/account/profile/page.tsx`
 
 **Checkpoint**: Session management and account settings fully functional — token expiry, password change, profile updates, session listing.
 
@@ -221,12 +221,12 @@
 
 **Purpose**: Email verification endpoints and frontend pages that support multiple user stories (registration, guest conversion, password reset gating)
 
-- [ ] T081 Create VerifyEmailAction: validate signed URL, update email_verified_at, dispatch EmailVerified event in `backend/app/Domains/Auth/Actions/VerifyEmailAction.php`
-- [ ] T082 Create VerifyEmailController (validate signed URL, delegate to VerifyEmailAction) in `backend/app/Http/Controllers/Public/Auth/VerifyEmailController.php`
-- [ ] T083 [P] Create ResendVerificationController (auth required, check already verified, rate limit 3/hour, queue verification email) in `backend/app/Http/Controllers/Public/Auth/ResendVerificationController.php`
-- [ ] T084 Write email verification test: valid verification, expired link, already verified, resend rate limiting in `backend/tests/Feature/Auth/EmailVerificationTest.php`
-- [ ] T085 Register GET `/api/public/auth/verify-email/{id}/{hash}` and POST `/api/public/auth/resend-verification` routes in `backend/routes/api/public.php`
-- [ ] T086 Create verify-email page with success/error/expired states in `frontend/src/app/[locale]/auth/verify-email/page.tsx`
+- [X] T081 Create VerifyEmailAction: validate signed URL, update email_verified_at, dispatch EmailVerified event in `backend/app/Domains/Auth/Actions/VerifyEmailAction.php`
+- [X] T082 Create VerifyEmailController (validate signed URL, delegate to VerifyEmailAction) in `backend/app/Http/Controllers/Public/Auth/VerifyEmailController.php`
+- [X] T083 [P] Create ResendVerificationController (auth required, check already verified, rate limit 3/hour, queue verification email) in `backend/app/Http/Controllers/Public/Auth/ResendVerificationController.php`
+- [X] T084 Write email verification test: valid verification, expired link, already verified, resend rate limiting in `backend/tests/Feature/Auth/EmailVerificationTest.php`
+- [X] T085 Register GET `/api/public/auth/verify-email/{id}/{hash}` and POST `/api/public/auth/resend-verification` routes in `backend/routes/api/public.php`
+- [X] T086 Create verify-email page with success/error/expired states in `frontend/src/app/[locale]/auth/verify-email/page.tsx`
 
 ---
 
@@ -234,18 +234,18 @@
 
 **Purpose**: Guest data anonymization, security hardening, and final validation
 
-- [ ] T087 Create AnonymizeStaleGuestIdentities scheduled job: find guest_identities where last booking > 24 months and no future bookings, clear PII in `backend/app/Jobs/AnonymizeStaleGuestIdentities.php`
-- [ ] T088 Register AnonymizeStaleGuestIdentities in Laravel scheduler (daily) in `backend/app/Console/Kernel.php`
-- [ ] T089 [P] Create UserPolicy for ownership authorization (users can only access their profile) and extend with role/permission capabilities (`hasRole`, `hasPermission`) in `backend/app/Policies/UserPolicy.php`
-- [ ] T090 [P] Create RoleMiddleware and PermissionMiddleware (or equivalent Gate definitions) and apply them to all "auth required" routes to enforce role boundaries.
-- [ ] T091 [P] Write unit tests for AuthService (lockout logic, failure counter, guest identity resolution) in `backend/tests/Unit/Auth/AuthServiceTest.php`
-- [ ] T092 [P] Add feature tests in `tests/Feature` to completely assert the full authorization chain (authentication → role → permission → ownership) for protected endpoints.
-- [ ] T093 [P] Write unit tests for LinkGuestBookingsAction (email matching, multiple bookings, no bookings) in `backend/tests/Unit/Auth/LinkGuestBookingsActionTest.php`
-- [ ] T094 [P] Write frontend component tests for LoginForm and RegisterForm in `frontend/tests/components/auth/LoginForm.test.tsx` and `frontend/tests/components/auth/RegisterForm.test.tsx`
-- [ ] T095 Run all backend tests (`php artisan test --filter=Auth`) and verify all pass
-- [ ] T096 Validate translation key completeness: verify every error code from API contracts has a corresponding key in all 3 locale files (`frontend/src/i18n/{en,es,it}/auth.json`)
-- [ ] T097 Run quickstart.md verification checklist end-to-end
-- [ ] T098 Code cleanup: ensure no hardcoded secrets, all error messages use translation keys, all controllers are thin
+- [X] T087 Create AnonymizeStaleGuestIdentities scheduled job: find guest_identities where last booking > 24 months and no future bookings, clear PII in `backend/app/Jobs/AnonymizeStaleGuestIdentities.php`
+- [X] T088 Register AnonymizeStaleGuestIdentities in Laravel scheduler (daily) in `backend/app/Console/Kernel.php`
+- [X] T089 [P] Create UserPolicy for ownership authorization (users can only access their profile) and extend with role/permission capabilities (`hasRole`, `hasPermission`) in `backend/app/Policies/UserPolicy.php`
+- [X] T090 [P] Create RoleMiddleware and PermissionMiddleware (or equivalent Gate definitions) and apply them to all "auth required" routes to enforce role boundaries.
+- [X] T091 [P] Write unit tests for AuthService (lockout logic, failure counter, guest identity resolution) in `backend/tests/Unit/Auth/AuthServiceTest.php`
+- [X] T092 [P] Add feature tests in `tests/Feature` to completely assert the full authorization chain (authentication → role → permission → ownership) for protected endpoints.
+- [X] T093 [P] Write unit tests for LinkGuestBookingsAction (email matching, multiple bookings, no bookings) in `backend/tests/Unit/Auth/LinkGuestBookingsActionTest.php`
+- [X] T094 [P] Write frontend component tests for LoginForm and RegisterForm in `frontend/tests/components/auth/LoginForm.test.tsx` and `frontend/tests/components/auth/RegisterForm.test.tsx`
+- [X] T095 Run all backend tests (`php artisan test --filter=Auth`) and verify all pass
+- [X] T096 Validate translation key completeness: verify every error code from API contracts has a corresponding key in all 3 locale files (`frontend/src/i18n/{en,es,it}/auth.json`)
+- [X] T097 Run quickstart.md verification checklist end-to-end
+- [X] T098 Code cleanup: ensure no hardcoded secrets, all error messages use translation keys, all controllers are thin
 
 ---
 

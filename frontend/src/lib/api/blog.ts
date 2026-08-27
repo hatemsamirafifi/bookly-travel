@@ -7,13 +7,9 @@ import type {
 
 export async function getBlogPost(
   slug: string,
-  locale: string,
-  previewToken?: string
+  locale: string
 ): Promise<BlogDetailResponse> {
   const params = new URLSearchParams({ locale });
-  if (previewToken) {
-    params.set('preview_token', previewToken);
-  }
 
   return apiClient<BlogDetailResponse>(
     `/api/public/blog/${encodeURIComponent(slug)}?${params.toString()}`,
@@ -43,7 +39,7 @@ export async function getBlogPosts(
     `/api/public/blog?${searchParams.toString()}`,
     {
       locale,
-      next: { revalidate: 300 },
+      cache: 'no-store',
     }
   );
 }
@@ -65,7 +61,7 @@ export async function getBlogCategory(
     `/api/public/blog/category/${encodeURIComponent(slug)}?${searchParams.toString()}`,
     {
       locale,
-      next: { revalidate: 300 },
+      cache: 'no-store',
     }
   );
 }
@@ -77,13 +73,12 @@ export async function getBlogPostPreview(
   slug: string,
   token: string,
   locale: string = 'en'
-): Promise<BlogArticleDetailResponse> {
-  return apiClient<BlogArticleDetailResponse>(
-    `/api/public/blog/${encodeURIComponent(slug)}/preview?token=${encodeURIComponent(token)}`,
+): Promise<BlogDetailResponse> {
+  return apiClient<BlogDetailResponse>(
+    `/api/public/blog/${encodeURIComponent(slug)}/preview?token=${encodeURIComponent(token)}&locale=${encodeURIComponent(locale)}`,
     {
       locale,
       cache: 'no-store',
     }
   );
 }
-

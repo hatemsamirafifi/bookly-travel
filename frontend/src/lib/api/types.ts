@@ -177,6 +177,8 @@ export interface BlogPostDetail extends BlogPostCard {
   seo: SeoMetadata;
   related_tours: TourCard[];
   related_posts: BlogPostCard[];
+  is_preview?: boolean;
+  status?: string;
 }
 
 export interface BlogListResponse {
@@ -195,9 +197,10 @@ export interface BlogDetailResponse {
 
 export interface BlogCategoryResponse {
   data: {
-    category: BlogCategorySummary & {
-      posts_count: number;
-    };
+    id: number;
+    name: string;
+    slug: string;
+    description?: string | null;
     posts: BlogPostCard[];
     meta: {
       current_page: number;

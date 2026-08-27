@@ -3,20 +3,22 @@
 namespace App\Domains\Blog\Actions;
 
 use App\Domains\Blog\Models\BlogPost;
-use App\Domains\Blog\Transformers\BlogPostTransformer;
-use Illuminate\Support\Carbon;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use App\Domains\Blog\Services\PreviewTokenService;
+use App\Domains\Blog\Transformers\BlogPostDetailTransformer;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class GetBlogPostPreviewAction
 {
+    public function __construct(
+        private readonly PreviewTokenService $tokenService,
+        private readonly BlogPostDetailTransformer $detailTransformer
+    ) {}
+
     /**
      * Verify HMAC token and return article preview data.
      *
-     * @param string $slug
-     * @param string $token
-     * @param string $locale
      * @return array<string, mixed>
      */
     public function execute(string $slug, string $token, string $locale = 'en'): array
@@ -26,51 +28,63 @@ class GetBlogPostPreviewAction
             throw new UnprocessableEntityHttpException("Invalid locale '{$locale}'. Supported: en, es, it.");
         }
 
-        $decoded = base64_decode($token, true);
-        if ($decoded === false) {
-            throw new AccessDeniedHttpException('Invalid preview token signature.');
-        }
-
-        $parts = explode('|', $decoded);
-        if (count($parts) !== 3) {
-            throw new AccessDeniedHttpException('Invalid preview token structure.');
-        }
-
-        [$tokenSlug, $expiresAt, $signature] = $parts;
-
-        // Anti-slug-rebinding: token slug must match requested slug
-        if (! hash_equals($tokenSlug, $slug)) {
-            throw new AccessDeniedHttpException('Preview token does not match requested article.');
-        }
-
-        // Verify signature
-        $key = config('app.preview_key') ?: config('app.key');
-        $expectedSignature = hash_hmac('sha256', "{$tokenSlug}|{$expiresAt}", (string) $key);
-
-        if (! hash_equals($expectedSignature, $signature)) {
-            throw new AccessDeniedHttpException('Preview token signature tampering detected.');
-        }
-
-        // Verify expiration
-        if (Carbon::now()->timestamp > (int) $expiresAt) {
-            throw new AccessDeniedHttpException('Preview token has expired.');
-        }
+        // Verify the preview token (HMAC + slug binding + expiry)
+        $this->tokenService->verify($slug, $token);
 
         // Fetch post regardless of status
-        $post = BlogPost::with(['author', 'categories', 'tours' => function ($q) {
-            $q->where('tours.status', 'published')
-              ->with(['partner', 'location', 'pricingRules', 'reviews'])
-              ->orderBy('blog_post_tours.sort_order', 'asc');
-        }])->where('slug', $slug)->first();
+        $post = BlogPost::with([
+            'category',
+            'author.authorProfile',
+            'relatedTours.translations',
+            'relatedTours.category',
+        ])
+            ->where('slug', $slug)
+            ->first();
 
         if (! $post) {
             throw new NotFoundHttpException("Blog post '{$slug}' not found.");
         }
 
-        $data = BlogPostTransformer::transformDetail($post, $locale, true);
+        // Use the detail transformer (same as public detail endpoint)
+        $relatedPosts = $this->resolveRelatedPosts($post);
+
+        $data = $this->detailTransformer->transform($post, $locale, $relatedPosts);
         $data['is_preview'] = true;
-        unset($data['seo']);
+        $data['status'] = $post->status;
 
         return $data;
+    }
+
+    /**
+     * Resolve related posts for the preview (mirrors GetBlogPostAction logic).
+     */
+    protected function resolveRelatedPosts(BlogPost $post): Collection
+    {
+        $sameCategoryPosts = collect();
+        if ($post->blog_category_id) {
+            $sameCategoryPosts = BlogPost::published()
+                ->where('id', '!=', $post->id)
+                ->where('blog_category_id', $post->blog_category_id)
+                ->with(['category', 'author.authorProfile'])
+                ->orderByDesc('published_at')
+                ->take(3)
+                ->get();
+        }
+
+        $needed = 3 - $sameCategoryPosts->count();
+        if ($needed <= 0) {
+            return $sameCategoryPosts;
+        }
+
+        $excludedIds = $sameCategoryPosts->pluck('id')->push($post->id)->all();
+
+        $backfillPosts = BlogPost::published()
+            ->whereNotIn('id', $excludedIds)
+            ->with(['category', 'author.authorProfile'])
+            ->orderByDesc('published_at')
+            ->take($needed)
+            ->get();
+
+        return $sameCategoryPosts->concat($backfillPosts);
     }
 }

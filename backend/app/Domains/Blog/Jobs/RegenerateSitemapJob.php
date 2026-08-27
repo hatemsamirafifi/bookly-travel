@@ -24,6 +24,5 @@ class RegenerateSitemapJob implements ShouldQueue
     public function handle(): void
     {
         Cache::forget('bookly:sitemap:xml');
-        Cache::forget('sitemap.xml');
     }
 }

@@ -5,6 +5,7 @@ import { getBlogCategory } from '@/lib/api/blog';
 import BlogList from '@/components/blog/BlogList';
 import EmptyState from '@/components/ui/EmptyState';
 import { BreadcrumbListSchema } from '@/components/seo/StructuredData';
+import { BlogUnavailable } from '@/components/blog/BlogUnavailable';
 
 interface CategoryPageProps {
   params: Promise<{
@@ -31,7 +32,7 @@ export async function generateMetadata({
 
   try {
     const categoryData = await getBlogCategory(slug, activeLocale, { page: 1, per_page: 1 });
-    const category = categoryData.category;
+    const category = categoryData.data;
     const title = `${category.name} Articles | Bookly Travel Blog`;
     const description =
       category.description ||
@@ -85,24 +86,27 @@ export default async function BlogCategoryPage({
       page: pageNum,
       per_page: 12,
     });
-  } catch {
-    notFound();
+  } catch (err: any) {
+    if (err?.status === 404) {
+      notFound();
+    }
+    return <BlogUnavailable status={err?.status || 500} />;
   }
 
-  const { category, posts, meta } = categoryResponse;
+  const { name: categoryName, slug: categorySlug, description: categoryDescription, posts, meta } = categoryResponse.data;
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://booklytravel.com';
   const breadcrumbItems = [
-    { name: 'Home', item: `${baseUrl}/${locale}` },
-    { name: 'Blog', item: `${baseUrl}/${locale}/blog` },
-    { name: category.name, item: `${baseUrl}/${locale}/blog/category/${category.slug}` },
+    { name: 'Home', url: `${baseUrl}/${locale}` },
+    { name: 'Blog', url: `${baseUrl}/${locale}/blog` },
+    { name: categoryName, url: `${baseUrl}/${locale}/blog/category/${categorySlug}` },
   ];
 
   return (
-    <main className="min-h-screen bg-neutral-50 py-12">
+    <div className="min-h-screen bg-neutral-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Schema */}
-        <BreadcrumbListSchema itemListElement={breadcrumbItems} />
+        <BreadcrumbListSchema items={breadcrumbItems} />
 
         {/* Breadcrumbs Nav */}
         <nav aria-label="Breadcrumbs" className="mb-6">
@@ -124,27 +128,22 @@ export default async function BlogCategoryPage({
               <span className="text-neutral-400">/</span>
             </li>
             <li className="font-medium text-neutral-900" aria-current="page">
-              {category.name}
+              {categoryName}
             </li>
           </ol>
         </nav>
 
-        {/* Category Header */}
-        <header className="mb-10 pb-6 border-b border-neutral-200">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="inline-flex items-center rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-800">
-              Category
-            </span>
-            <span className="text-xs text-neutral-500">
-              {meta.total} {meta.total === 1 ? 'Article' : 'Articles'}
-            </span>
-          </div>
+        {/* Page Header */}
+        <header className="mb-10 text-center sm:text-left">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-2">
+            Category
+          </p>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
-            {category.name}
+            {categoryName}
           </h1>
-          {category.description && (
-            <p className="mt-3 max-w-3xl text-base text-neutral-600">
-              {category.description}
+          {categoryDescription && (
+            <p className="mt-3 max-w-2xl text-base text-neutral-600">
+              {categoryDescription}
             </p>
           )}
         </header>
@@ -158,7 +157,7 @@ export default async function BlogCategoryPage({
           />
         ) : (
           <EmptyState
-            title={`No articles in ${category.name} yet`}
+            title={`No articles in ${categoryName} yet`}
             description="We are constantly adding new guides and stories. Check back soon or explore other categories."
             cta={{
               label: 'View All Blog Posts',
@@ -167,6 +166,6 @@ export default async function BlogCategoryPage({
           />
         )}
       </div>
-    </main>
+    </div>
   );
 }

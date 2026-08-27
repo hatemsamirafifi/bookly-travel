@@ -74,7 +74,14 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('auth', function (Request $request) {
-            return Limit::perMinute(10)->by($request->ip());
+            // 10/min/IP is the production brute-force budget (FR-014). Local
+            // and testing environments raise it so the E2E suite's few
+            // intentional per-test logins (auth-guards, auth-navigation)
+            // cannot trip the shared-IP limiter mid-run; production and
+            // staging keep the strict limit unchanged.
+            $limit = app()->environment('local') ? 60 : 10;
+
+            return Limit::perMinute($limit)->by($request->ip());
         });
 
         RateLimiter::for('search', function (Request $request) {

@@ -81,10 +81,14 @@ export function PartnerSidebar({ onNavigate }: PartnerSidebarProps) {
   const t = useTranslations('partner.nav');
 
   const isActive = (href: string) => {
+    // Strip locale prefix — pathname includes /en/, /es/, /it/ but the nav
+    // items use bare /partner/* hrefs. Without this, the active state never
+    // matches and no sidebar item is highlighted.
+    const path = pathname.replace(/^\/(en|es|it)/, '');
     if (href === '/partner') {
-      return pathname === href || pathname === `${href}/`;
+      return path === href || path === `${href}/`;
     }
-    return pathname.startsWith(href);
+    return path.startsWith(href);
   };
 
   return (

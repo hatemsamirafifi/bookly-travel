@@ -101,17 +101,10 @@ export default async function BlogIndexPage({
   } catch (err: any) {
     if (err?.status === 429) {
       isRateLimited = true;
-      retryAfter = err?.retryAfter || 10;
+      retryAfter = err?.retryAfter ?? 10;
     } else {
-      blogData = {
-        data: [],
-        meta: {
-          current_page: 1,
-          last_page: 1,
-          per_page: 12,
-          total: 0,
-        },
-      };
+      // WR-010: Don't mask server errors as "no articles" — render unavailable state
+      return <BlogUnavailable status={err?.status || 500} />;
     }
   }
 
@@ -119,7 +112,7 @@ export default async function BlogIndexPage({
     return <BlogUnavailable status={429} retryAfterSeconds={retryAfter} />;
   }
 
-  const { data: posts, meta } = blogData;
+  const { data: posts, meta } = blogData!;
 
   // Identify featured post for the hero if on page 1 and no category filter
   const featuredPost =
@@ -140,12 +133,12 @@ export default async function BlogIndexPage({
   }));
 
   return (
-    <main className="min-h-screen bg-neutral-50 py-12">
+    <div className="min-h-screen bg-neutral-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Schema.org ItemList */}
         <ItemListSchema
           name="Bookly Travel Blog Articles"
-          itemListElement={itemListElements}
+          items={itemListElements.map(({ name, url }) => ({ name, url }))}
         />
 
         {/* Page Header */}
@@ -196,6 +189,6 @@ export default async function BlogIndexPage({
           />
         )}
       </div>
-    </main>
+    </div>
   );
 }

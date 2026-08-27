@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('Partner Dashboard Accessibility', () => {
   test('partner dashboard home should not have accessibility violations', async ({ page }) => {
     await page.goto('/en/partner');
+    await expect(page.locator('main#main-content')).toBeVisible();
     const results = await new AxeBuilder({ page })
       .exclude('.recharts-surface') // Recharts SVG may have aria issues we can't control
       .analyze();
@@ -12,24 +13,28 @@ test.describe('Partner Dashboard Accessibility', () => {
 
   test('partner tours page should not have accessibility violations', async ({ page }) => {
     await page.goto('/en/partner/tours');
+    await expect(page.locator('main#main-content')).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 
   test('partner bookings page should not have accessibility violations', async ({ page }) => {
     await page.goto('/en/partner/bookings');
+    await expect(page.locator('main#main-content')).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 
   test('partner reviews page should not have accessibility violations', async ({ page }) => {
     await page.goto('/en/partner/reviews');
+    await expect(page.locator('main#main-content')).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
 
   test('partner profile page should not have accessibility violations', async ({ page }) => {
     await page.goto('/en/partner/profile');
+    await expect(page.locator('main#main-content')).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
@@ -122,9 +127,11 @@ test.describe('Partner Layout Accessibility', () => {
 
   test('switch toggles should have accessible roles', async ({ page }) => {
     await page.goto('/en/partner/profile');
+    await expect(page.locator('main#main-content')).toBeVisible();
 
     // Scroll to notification settings
     const switches = page.locator('button[role="switch"]');
+    await switches.first().waitFor();
     const switchCount = await switches.count();
     expect(switchCount).toBeGreaterThanOrEqual(5);
 

@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
         type: 'article',
         publishedTime: data.published_at || undefined,
         modifiedTime: data.updated_at || undefined,
-        authors: [data.author.name],
-        images: data.cover_image ? [{ url: data.cover_image }] : [],
+        authors: [data.author.display_name],
+        images: data.cover_image_url ? [{ url: data.cover_image_url }] : [],
       },
       twitter: {
         card: 'summary_large_image',
         title: data.seo.meta_title,
         description: data.seo.meta_description,
-        images: data.cover_image ? [data.cover_image] : [],
+        images: data.cover_image_url ? [data.cover_image_url] : [],
       },
     };
   } catch (e) {
@@ -61,13 +61,13 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     const response = await getBlogPost(slug, locale);
     data = response.data;
   } catch (e: any) {
-    if (e instanceof GoneError || e?.status === 410) {
+    if (e instanceof GoneError) {
       return <BlogUnavailable status={410} isRemoved={true} />;
     }
-    if (e instanceof RateLimitError || e?.status === 429) {
-      return <BlogUnavailable status={429} retryAfterSeconds={e?.retryAfter || 10} />;
+    if (e instanceof RateLimitError) {
+      return <BlogUnavailable status={429} retryAfterSeconds={e?.retryAfter ?? 10} />;
     }
-    if (e instanceof NotFoundError || e?.status === 404) {
+    if (e instanceof NotFoundError) {
       notFound();
     }
     throw e;
@@ -78,10 +78,10 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     { name: 'Blog', url: `${baseUrl}/${locale}/blog` },
   ];
 
-  if (data.primary_category) {
+  if (data.category) {
     breadcrumbs.push({
-      name: data.primary_category.name,
-      url: `${baseUrl}/${locale}/blog/category/${data.primary_category.slug}`,
+      name: data.category.name,
+      url: `${baseUrl}/${locale}/blog/category/${data.category.slug}`,
     });
   }
 
@@ -97,9 +97,9 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         description={data.excerpt || data.seo.meta_description}
         datePublished={data.published_at}
         dateModified={data.updated_at}
-        authorName={data.author.name}
+        authorName={data.author.display_name}
         authorAvatarUrl={data.author.avatar_url}
-        image={data.cover_image}
+        image={data.cover_image_url}
         inLanguage={locale}
         url={data.seo.canonical_url}
       />

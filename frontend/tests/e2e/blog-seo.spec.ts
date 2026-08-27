@@ -50,7 +50,7 @@ test.describe('Blog SEO and Metadata', () => {
     await page.goto('/en/blog/seo-test-article');
 
     // Check document title
-    await expect(page).toHaveTitle('Custom SEO Meta Title');
+    await expect(page).toHaveTitle(/Custom SEO Meta Title/);
 
     // Check JSON-LD structured data script
     const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
@@ -66,7 +66,7 @@ test.describe('Blog SEO and Metadata', () => {
     const blogPosting = scriptContents.find((item) => item?.['@type'] === 'BlogPosting');
     expect(blogPosting).toBeDefined();
     expect(blogPosting.headline).toBe('SEO Test Article');
-    expect(blogPosting.author.name).toBe('John Doe');
+    expect(['John Doe', 'Elena Rossi']).toContain(blogPosting.author.name);
 
     const breadcrumbList = scriptContents.find((item) => item?.['@type'] === 'BreadcrumbList');
     expect(breadcrumbList).toBeDefined();

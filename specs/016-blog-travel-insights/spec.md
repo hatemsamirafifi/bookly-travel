@@ -264,8 +264,8 @@ publish and confirm the post appears on the public listing and in the sitemap.
 - **FR-026**: Public reads of published blog content MUST require no authentication.
   Preview MUST require a valid signed token (no auth header). Admin authoring MUST require
   an admin session gated by a `manage_blog` permission flag.
-- **FR-027**: Every admin governance action on a blog post (publish, update, archive) MUST
-  write an immutable audit-log entry with action keys `blog.publish`, `blog.update`, or
+- **FR-027**: Every admin governance action on a blog post (create, publish, update, archive) MUST
+  write an immutable audit-log entry with action keys `blog.create`, `blog.publish`, `blog.update`, or
   `blog.archive`, capturing actor, target, and before/after state.
 
 **Errors & States**

@@ -77,7 +77,7 @@ class SitemapController
 
         // Blog detail pages — stream published posts in chunks
         BlogPost::published()
-            ->select(['id', 'slug'])
+            ->select(['id', 'slug', 'published_at'])
             ->orderBy('id')
             ->chunkById(500, function ($posts) use (&$xml, $baseUrl, $locales) {
                 foreach ($posts as $post) {
@@ -85,7 +85,8 @@ class SitemapController
                         "{$baseUrl}/{$locales[0]}/blog/{$post->slug}",
                         $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog/{$post->slug}", $locales),
                         'weekly',
-                        '0.8'
+                        '0.8',
+                        $post->published_at?->toDateString()
                     );
                 }
             });
@@ -145,12 +146,15 @@ class SitemapController
         return $map;
     }
 
-    protected function renderUrl(string $loc, array $alternates, string $changefreq, string $priority): string
+    protected function renderUrl(string $loc, array $alternates, string $changefreq, string $priority, ?string $lastmod = null): string
     {
         $xml = "  <url>\n";
         $xml .= '    <loc>' . htmlspecialchars($loc, ENT_XML1, 'UTF-8') . "</loc>\n";
         foreach ($alternates as $lang => $href) {
             $xml .= '    <xhtml:link rel="alternate" hreflang="' . htmlspecialchars($lang, ENT_XML1, 'UTF-8') . '" href="' . htmlspecialchars($href, ENT_XML1, 'UTF-8') . "\"/>\n";
+        }
+        if ($lastmod) {
+            $xml .= '    <lastmod>' . htmlspecialchars($lastmod, ENT_XML1, 'UTF-8') . "</lastmod>\n";
         }
         $xml .= '    <changefreq>' . htmlspecialchars($changefreq, ENT_XML1, 'UTF-8') . "</changefreq>\n";
         $xml .= '    <priority>' . htmlspecialchars($priority, ENT_XML1, 'UTF-8') . "</priority>\n";

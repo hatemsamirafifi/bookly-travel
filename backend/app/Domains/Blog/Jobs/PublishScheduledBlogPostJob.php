@@ -32,7 +32,13 @@ class PublishScheduledBlogPostJob implements ShouldQueue
         }
 
         // Re-validate post scheduling state (still published + scheduled_at <= now)
-        if ($post->status === 'published' && $post->scheduled_at && $post->scheduled_at->isPast()) {
+        if ($post->status === BlogPost::STATUS_PUBLISHED && $post->scheduled_at && $post->scheduled_at->isPast()) {
+            // CR-004: Transition the post — set published_at if not already set
+            if (! $post->published_at) {
+                $post->published_at = $post->scheduled_at ?? now();
+                $post->save();
+            }
+
             InvalidateBlogCacheJob::dispatch();
             RegenerateSitemapJob::dispatch();
         }

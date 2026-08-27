@@ -62,7 +62,8 @@ export function PartnerBookingListSkeleton() {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               {Array.from({ length: 6 }).map((_, i) => (
-                <th key={i} className="px-4 py-3">
+                <th key={i} scope="col" className="px-4 py-3">
+                  <span className="sr-only">Column {i + 1}</span>
                   <div className="h-4 w-20 rounded bg-gray-100 animate-pulse" />
                 </th>
               ))}

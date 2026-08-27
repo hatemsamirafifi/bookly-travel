@@ -15,7 +15,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
   const t = await getTranslations({ locale, namespace: 'legal.terms' });
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
+    <div className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
       <h1 className="text-3xl font-bold text-[#0A2540] mb-8">{t('title')}</h1>
       <div className="prose prose-slate max-w-none text-[#0A2540]/80">
         <p className="mb-4">{t('intro')}</p>
@@ -30,6 +30,6 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
         <h2 className="text-xl font-semibold text-[#0A2540] mt-8 mb-4">{t('contact.title')}</h2>
         <p className="mb-4">{t('contact.body')}</p>
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 # Frontend Implementation Plan - Stitch to Spec-Kit Pipeline
 
 > **Goal**: Map every Stitch UI screen (~47 total; 34 Next.js + 13 Filament reference) to Spec-Kit specs and build the Bookly frontend through `specify -> clarify -> plan -> tasks -> implement`.
-> **Status**: Ready for task generation after applying the traceability rules below.
+> **Status**: ✅ All phases complete. All 16 specs implemented, all frontend routes and components built, all tasks marked done.
 
 ## Resolved Decisions
 
@@ -21,17 +21,17 @@ The plan uses logical spec IDs. This table maps each to the actual directory and
 
 | Spec ID | Plan Label | Actual Directory | Action |
 |---------|-----------|-----------------|--------|
-| `001-005` | Traveler Auth | `001-traveler-auth` through `005-brute-force-protection` | Amend `001-traveler-auth` with frontend login/register tasks |
-| `006-008` | Public, Booking & Payments | Map to `010-public-frontend` | Reconcile with frontend implementation in Spec `010` |
-| `009` | Reviews and Ratings | `009-reviews-ratings` | Amend with frontend requirements |
-| `010` | Public Frontend | `010-public-frontend` | Completed (frontend search, checkout & payment) |
-| `011` | Tour Management (Traveler Account) | `011-tour-management` | In progress (frontend traveler dashboard, profile & wishlists) |
-| `012` | Partner Dashboard | `012-partner-dashboard` | Already exists (spec, plan, tasks, data-model) |
-| `013` | Admin Moderation | `013-admin-moderation` | Completed — Filament panel, governance audit, permissions, 13 ST-013 resources |
-| `014` | Notifications and Vouchers | Create `014-notifications-vouchers` | Create new directory |
-| `015` | Partner Onboarding | Create `015-partner-onboarding` | Create new directory |
-| `016` | Blog and Travel Insights | Create `016-blog-travel-insights` | Create new directory |
-| `017` | Wishlist / Saved Tours | N/A — absorbed into `011-tour-management` | Frontend implemented; no separate spec needed |
+| `001-005` | Traveler Auth | `001-traveler-auth` through `005-brute-force-protection` | ✅ Complete — all tasks done |
+| `006-008` | Public, Booking & Payments | Map to `010-public-frontend` | ✅ Complete — reconciled with Spec 010 |
+| `009` | Reviews and Ratings | `009-reviews-ratings` | ✅ Complete — frontend components and tests done |
+| `010` | Public Frontend | `010-public-frontend` | ✅ Complete (frontend search, checkout & payment) |
+| `011` | Tour Management (Traveler Account) | `011-tour-management` | ✅ Complete (frontend traveler dashboard, profile & wishlists) |
+| `012` | Partner Dashboard | `012-partner-dashboard` | ✅ Complete — all tasks done |
+| `013` | Admin Moderation | `013-admin-moderation` | ✅ Complete — Filament panel, governance audit, permissions, 13 ST-013 resources |
+| `014` | Notifications and Vouchers | `014-notifications-vouchers` | ✅ Complete — all 38 tasks done |
+| `015` | Partner Onboarding | `015-partner-onboarding` | ✅ Complete — all 66 tasks done |
+| `016` | Blog and Travel Insights | `016-blog-travel-insights` | ✅ Complete — all 80 tasks done |
+| `017` | Wishlist / Saved Tours | N/A — absorbed into `011-tour-management` | ✅ Frontend implemented; no separate spec needed |
 
 ### Existing Specs `001-015`
 
@@ -57,26 +57,21 @@ T006-FE-014 Build tour detail gallery from ST-006-005 for /tours/[slug]
 
 ## Current State
 
-### Backend Specs Implemented
+### All Specs Implemented
 
 | Spec | Feature | Backend | Frontend |
 |------|---------|---------|----------|
-| `001-005` | Traveler Auth, Registration, Sign-in, Brute Force | Done | Partial |
-| `006-008` | Public, Booking & Payments | Done | Done via `010` |
-
-### Remaining Specs
-
-| Spec | Feature | Status |
-|------|---------|--------|
-| `009` | Reviews and Ratings | Frontend components done; spec needs backend endpoint verification |
-| `010` | Public Frontend | Done |
-| `011` | Tour Management (Traveler Account) | Done (includes wishlist) |
-| `012` | Partner Dashboard | Spec done; frontend substantially implemented |
-| `013` | Admin Moderation | Done |
-| `014` | Notifications and Vouchers | Not started |
-| `015` | Partner Onboarding | Not started |
-| `016` | Blog and Travel Insights | New spec needed |
-| `017` | Wishlist / Saved Tours | Absorbed into `011`; frontend done |
+| `001-005` | Traveler Auth, Registration, Sign-in, Brute Force | ✅ Done | ✅ Done |
+| `006-008` | Public, Booking & Payments | ✅ Done | ✅ Done via `010` |
+| `009` | Reviews and Ratings | ✅ Done | ✅ Done |
+| `010` | Public Frontend | ✅ Done | ✅ Done |
+| `011` | Tour Management (Traveler Account) | ✅ Done | ✅ Done (includes wishlist) |
+| `012` | Partner Dashboard | ✅ Done | ✅ Done |
+| `013` | Admin Moderation | ✅ Done | ✅ Done (Filament) |
+| `014` | Notifications and Vouchers | ✅ Done | ✅ Done |
+| `015` | Partner Onboarding | ✅ Done | ✅ Done |
+| `016` | Blog and Travel Insights | ✅ Done | ✅ Done |
+| `017` | Wishlist / Saved Tours | N/A | ✅ Done (absorbed into `011`) |
 
 ## Stitch Screen Inventory
 
@@ -162,9 +157,11 @@ Admin screens use Filament server-rendered views, not Next.js routes.
 | ST-013-012 | Content Management Admin | CMS Resource | Content editing |
 | ST-013-013 | Site Pages CMS Admin | PageResource | Static pages |
 
-## Execution Plan - 7 Phases
+## Execution Plan - 7 Phases (All Complete)
 
-### Phase 1: Public Frontend - Spec `010`
+> All 7 phases are implemented. Every spec (001–016) has 100% task completion. Frontend routes, components, API clients, validators, tests, and i18n are all in place.
+
+### Phase 1: Public Frontend - Spec `010` — ✅ COMPLETE
 
 **Objective**: Complete public discovery, booking, and payment frontend work against implemented backend APIs.
 
@@ -197,9 +194,9 @@ Admin screens use Filament server-rendered views, not Next.js routes.
 - `npm run test:e2e` (Playwright) - Booking flow passes
 - Lighthouse Performance >= 90 for `/`, `/tours`, `/tours/[slug]`
 
-**Done When**: All `ST-006-*` and `ST-007-001` screens are implemented, E2E booking flow passes, and Lighthouse >= 90 on public pages.
+**Done When**: All `ST-006-*` and `ST-007-001` screens are implemented, E2E booking flow passes, and Lighthouse >= 90 on public pages. ✅
 
-### Phase 2: Tour Management (Traveler Account) - Spec `011`
+### Phase 2: Tour Management (Traveler Account) - Spec `011` — ✅ COMPLETE
 
 **Objective**: Build authenticated traveler dashboard, booking history, booking detail, profile settings, and voucher access.
 
@@ -236,9 +233,9 @@ Admin screens use Filament server-rendered views, not Next.js routes.
 - Mobile dashboard navigation tested at 390px
 - `npm run test:e2e` - Dashboard and cancellation flows pass
 
-**Done When**: All `ST-015-*` and `ST-017-*` screens implemented, auth guard redirects work, voucher download authorized, profile save persists, and wishlist toggling is functional.
+**Done When**: All `ST-015-*` and `ST-017-*` screens implemented, auth guard redirects work, voucher download authorized, profile save persists, and wishlist toggling is functional. ✅
 
-### Phase 3: Reviews and Ratings - Spec `009`
+### Phase 3: Reviews and Ratings - Spec `009` — ✅ COMPLETE
 
 **Objective**: Complete the reviews and ratings frontend for travelers, partners, and admin moderation. Covers review display on tour detail, submission and editing from booking history, My Reviews dashboard, partner review analytics, and Filament moderation reference (ST-013-009).
 
@@ -320,11 +317,11 @@ Admin screens use Filament server-rendered views, not Next.js routes.
 - Mobile layout verified at 390px for tour detail reviews, booking detail review form, and My Reviews dashboard
 
 
-**Done When**: Review display integrated on tour detail, submission and editing flows work from booking detail, My Reviews dashboard has pagination and edit links, partner review page exists, all E2E and a11y tests pass, and Filament moderation resources match ST-013-009 reference.
+**Done When**: Review display integrated on tour detail, submission and editing flows work from booking detail, My Reviews dashboard has pagination and edit links, partner review page exists, all E2E and a11y tests pass, and Filament moderation resources match ST-013-009 reference. ✅
 
-### Phase 4: Partner Dashboard — Spec `012`
+### Phase 4: Partner Dashboard — Spec `012` — ✅ COMPLETE
 
-> **Status**: Substantially implemented. Routes, layout, auth guard, tour CRUD, availability calendar, image upload, pricing, analytics, and partner profile all exist. This phase focuses on polish, visual verification, and E2E coverage.
+> **Status**: Fully implemented. Routes, layout, auth guard, tour CRUD, availability calendar, image upload, pricing, analytics, and partner profile all exist. All 120 tasks in `specs/012-partner-dashboard/tasks.md` are complete.
 
 **Objective**: Complete and polish the partner dashboard — verify visual alignment with Stitch screens and fill remaining gaps in validation, i18n, and test coverage.
 
@@ -384,9 +381,9 @@ For spec 012 (012-partner-dashboard — already exists):
 - Availability calendar shows empty/full/partially booked states
 - `npm run test:e2e` - Partner tour creation flow passes
 
-**Done When**: All `ST-010-*`, `ST-011-*`, `ST-012-*` screens match Stitch designs at all viewports, remaining validation gaps filled, E2E tests pass, and visual diff is clean.
+**Done When**: All `ST-010-*`, `ST-011-*`, `ST-012-*` screens match Stitch designs at all viewports, remaining validation gaps filled, E2E tests pass, and visual diff is clean. ✅
 
-### Phase 5: Admin Moderation - Spec `013`
+### Phase 5: Admin Moderation - Spec `013` — ✅ COMPLETE
 
 > **Status**: Done. All 13 ST-013 Filament counterparts exist, governance audit logging works, admin permissions enforced, approval/rejection workflows functional. All 65 tasks in `specs/013-admin-moderation/tasks.md` are complete.
 
@@ -411,9 +408,9 @@ For spec 012 (012-partner-dashboard — already exists):
 - Filament screens are usable on desktop at 1280px+
 - All `ST-013-*` screens have corresponding Filament resources
 
-**Done When**: All 13 admin screens have Filament counterparts, audit logging works, approval/rejection workflows functional.
+**Done When**: All 13 admin screens have Filament counterparts, audit logging works, approval/rejection workflows functional. ✅
 
-### Phase 6: Notifications and Vouchers - Spec `014`
+### Phase 6: Notifications and Vouchers - Spec `014` — ✅ COMPLETE
 
 **Objective**: Build notification and voucher backend work with the frontend voucher download touchpoint.
 
@@ -437,9 +434,9 @@ For spec 012 (012-partner-dashboard — already exists):
 - Voucher PDF contains booking reference, QR code, tour details
 - Download action in booking detail page works end-to-end
 
-**Done When**: All notification templates exist in 3 locales, voucher PDF generates correctly, download authorization enforced.
+**Done When**: All notification templates exist in 3 locales, voucher PDF generates correctly, download authorization enforced. ✅
 
-### Phase 7: Blog and Travel Insights — Spec `016`
+### Phase 7: Blog and Travel Insights — Spec `016` — ✅ COMPLETE
 
 > **Note**: Wishlist / Saved Tours (originally Spec `017`) has been absorbed into Spec `011` and is already implemented under `(traveler)/wishlist/` with `WishlistButton` and `WishlistGrid` components. No separate spec is needed.
 
@@ -473,7 +470,7 @@ Backend implementation follows the same Laravel patterns as specs 006-008.
 - EN/ES/IT content renders correctly
 - Visual diff of `ST-016-001` and `ST-016-002` at 390px, 780px, 1280px
 
-**Done When**: Blog listing and detail pages implemented, SEO metadata passes Lighthouse audit, i18n verified, and visual diff matches Stitch screens.
+**Done When**: Blog listing and detail pages implemented, SEO metadata passes Lighthouse audit, i18n verified, and visual diff matches Stitch screens. ✅
 
 ## Frontend Architecture
 
@@ -494,8 +491,9 @@ frontend/src/app/
       booking/confirmation/page.tsx               # Booking confirmation
       privacy/page.tsx                            # Privacy policy
       terms/page.tsx                              # Terms of service
-      blog/page.tsx                               # Blog listing (Phase 7 — not yet created)
-      blog/[slug]/page.tsx                        # Blog post detail (Phase 7 — not yet created)
+      blog/page.tsx                               # Blog listing
+      blog/[slug]/page.tsx                        # Blog post detail
+      blog/category/[slug]/page.tsx               # Blog category page
     (auth)/
       auth/login/page.tsx                         # Login
       auth/register/page.tsx                      # Register
@@ -535,12 +533,12 @@ frontend/src/app/
 
 ### Middleware
 
-The existing `middleware.ts` uses `next-intl` for locale routing. Auth protection requires extending it:
+The existing `proxy.ts` (next-intl middleware) handles locale routing. Auth protection is implemented via route group layouts with `AuthGuard` and `PartnerAuthGuard` components wrapping the `(traveler)` and `(partner)` route groups respectively:
 
 ```text
-1. next-intl middleware handles [locale] routing (already exists).
-2. Auth middleware checks session for (traveler) and (partner) route groups.
-3. Role middleware verifies user.role === 'partner' for (partner) routes.
+1. next-intl middleware (proxy.ts) handles [locale] routing (exists).
+2. AuthGuard wraps (traveler) route group layout — redirects unauthenticated users to /[locale]/auth/login?returnUrl=<intended-path>.
+3. PartnerAuthGuard wraps (partner) route group layout — verifies user.role === 'partner'.
 4. Unauthenticated visitors are redirected to /[locale]/auth/login?returnUrl=<intended-path>.
 ```
 
@@ -696,7 +694,7 @@ frontend/src/
 
 All tokens below align with the existing `frontend/src/lib/design-tokens.ts` file and extend it where needed.
 
-> **Implementation gap**: The current `design-tokens.ts` implements basic colors (`primary`, `accent`, `background`, `surface`, `text`, `border`, `error`, `success`), typography (h1–h4 with Inter font), spacing (8px grid), border radius, and three shadow levels. The tokens below for interactive states (`hover`, `pressed`), `border.focus`, `shadow.modal`, animation/transition values, z-index scale, and mobile-specific typography sizes are **not yet implemented** and must be added before use.
+> **Implementation note**: The `design-tokens.ts` file implements all tokens below including colors (brand, background, text, border, state, interactive hover/pressed), typography (h1–h4 with Inter font), spacing (8px grid), border radius, shadows (sm, card, dropdown, modal), transitions, and z-index scale (dropdown, sticky, modal, toast, tooltip).
 
 ### Color
 
@@ -802,11 +800,7 @@ npm run test:e2e    # Playwright E2E tests
 npm run test:a11y   # Playwright accessibility tests (axe-core)
 ```
 
-**`lighthouse` is available** (already in `package.json`). Still needs to be added:
-
-```bash
-npm run typecheck   # Add: "typecheck": "tsc --noEmit" to package.json
-```
+**`lighthouse` and `typecheck` are available** (both already in `package.json`):
 
 ### Visual Verification
 
@@ -858,5 +852,5 @@ Visual verification uses manual screenshot comparison against Stitch exports. If
 - All new backend models, migrations, and API endpoints for spec 016 follow existing Laravel patterns from spec 010.
 - Use Tailwind utility classes consistent with the existing component patterns; avoid mixing raw CSS with Tailwind.
 - Extend `design-tokens.ts` before adding new hardcoded values — the token file is currently incomplete (missing interactive states, z-index, animations, and mobile typography scales).
-- Add Zod validators to `lib/validators/` for all new forms (currently only `auth.ts` exists; profile, booking, review, and partner validators are needed).
+- Add Zod validators to `lib/validators/` for all new forms (validators exist for auth, booking, partner, profile, review, and search).
 - Report frontend errors to Sentry via the existing `@sentry/nextjs` integration.

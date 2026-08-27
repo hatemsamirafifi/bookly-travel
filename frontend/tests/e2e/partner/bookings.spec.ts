@@ -1,15 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Bookings Page', () => {
-  test.beforeEach(async ({ page }) => {
-    await partnerLogin(page);
-    await page.goto('/en/partner/bookings');
-  });
-
   test('should display bookings page heading', async ({ page }) => {
-    // The bookings section should be visible
-    await expect(page.getByText(/bookings/i)).toBeVisible();
+    await page.goto('/en/partner/bookings');
+    // The bookings heading should be visible
+    await expect(page.getByRole('heading', { name: /bookings/i })).toBeVisible();
   });
 
   test('should show loading state while fetching bookings', async ({ page }) => {
@@ -31,8 +26,8 @@ test.describe('Partner Bookings Page', () => {
     );
     await page.goto('/en/partner/bookings');
 
-    // Should show "No bookings yet" empty state
-    await expect(page.getByText(/no bookings yet/i)).toBeVisible();
+    // Should show "No bookings yet" / "No bookings found" empty state
+    await expect(page.getByRole('heading', { name: /no bookings/i })).toBeVisible();
   });
 
   test('should display bookings table when data exists', async ({ page }) => {
@@ -62,12 +57,12 @@ test.describe('Partner Bookings Page', () => {
     await page.goto('/en/partner/bookings');
 
     // Table headers should be visible
-    await expect(page.getByText('Reference')).toBeVisible();
-    await expect(page.getByText('Tour')).toBeVisible();
-    await expect(page.getByText('Date')).toBeVisible();
-    await expect(page.getByText('Participants')).toBeVisible();
-    await expect(page.getByText('Total')).toBeVisible();
-    await expect(page.getByText('Status')).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Reference' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Tour' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Date' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Participants' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Total' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Status' })).toBeVisible();
 
     // Booking reference should appear
     await expect(page.getByText('BK-ABC123')).toBeVisible();
@@ -121,9 +116,9 @@ test.describe('Partner Bookings Page', () => {
     await page.goto('/en/partner/bookings');
 
     // Status badges should display status text
-    await expect(page.getByText('confirmed')).toBeVisible();
-    await expect(page.getByText('completed')).toBeVisible();
-    await expect(page.getByText('cancelled')).toBeVisible();
+    await expect(page.getByText(/confirmed/i)).toBeVisible();
+    await expect(page.getByText(/completed/i)).toBeVisible();
+    await expect(page.getByText(/cancelled/i)).toBeVisible();
   });
 
   test('should show error state when API fails', async ({ page }) => {
@@ -136,8 +131,8 @@ test.describe('Partner Bookings Page', () => {
     );
     await page.goto('/en/partner/bookings');
 
-    // Should show error message
-    await expect(page.getByText(/failed to load|error/i)).toBeVisible();
+    // Should show error alert
+    await expect(page.getByRole('alert')).toBeVisible();
   });
 });
 

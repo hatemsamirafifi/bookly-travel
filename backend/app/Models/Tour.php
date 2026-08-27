@@ -334,7 +334,11 @@ class Tour extends Model
             return false;
         }
 
-        return in_array($date->dayOfWeek, $rule->days_of_week ?? [], true);
+        $days = $rule->days_of_week ?? [];
+        $dayOfWeek = $date->dayOfWeek;
+        $dayName = strtolower($date->format('D')); // 'mon', 'tue', etc.
+
+        return in_array($dayOfWeek, $days, false) || in_array($dayName, $days, true);
     }
 
     /**

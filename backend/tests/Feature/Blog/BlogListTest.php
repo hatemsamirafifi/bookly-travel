@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -28,12 +27,14 @@ test('returns 200 with paginated blog posts and metadata', function () {
                     'slug',
                     'title',
                     'excerpt',
-                    'cover_image',
-                    'reading_time_minutes',
+                    'cover_image_url',
+                    'cover_image_blur',
                     'published_at',
                     'is_featured',
-                    'primary_category' => ['id', 'slug', 'name'],
-                    'author' => ['id', 'name', 'avatar_url', 'role'],
+                    'reading_time',
+                    'translation_warning',
+                    'category' => ['slug', 'name'],
+                    'author' => ['display_name', 'avatar_url'],
                 ],
             ],
             'meta' => [

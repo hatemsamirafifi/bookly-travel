@@ -117,7 +117,7 @@
 
 **Purpose**: Final validation, cleanup, and verification across all stories.
 
-- [ ] T015 Run the `quickstart.md` verification checklist end-to-end: navigate to `/en/auth/register`, `/es/auth/register`, and `/it/auth/register`; register a new user from each locale; confirm redirect to homepage (or returnUrl); verify verification email in Mailpit (http://localhost:8025); verify `auth_audit_logs` has `registration` event; verify Sanctum token in `personal_access_tokens`; verify rate limiter returns 429 after 10 rapid requests. Document pass/fail for each checklist item.
+- [X] T015 Run the `quickstart.md` verification checklist end-to-end: navigate to `/en/auth/register`, `/es/auth/register`, and `/it/auth/register`; register a new user from each locale; confirm redirect to homepage (or returnUrl); verify verification email in Mailpit (http://localhost:8025); verify `auth_audit_logs` has `registration` event; verify Sanctum token in `personal_access_tokens`; verify rate limiter returns 429 after 10 rapid requests. Document pass/fail for each checklist item.
 
 ---
 

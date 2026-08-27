@@ -1,6 +1,7 @@
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/routing';
 import { AuthProvider } from '@/lib/hooks/useAuth';
@@ -10,6 +11,14 @@ import ErrorBoundary from '@/components/shared/ErrorBoundary';
 import ErrorFallback from '@/components/shared/ErrorFallback';
 import CookieConsentBanner from '@/components/shared/CookieConsent';
 import '../globals.css';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Bookly',
+    default: 'Bookly - Discover & Book Tours Worldwide',
+  },
+  description: 'Book unforgettable tours and experiences worldwide with Bookly.',
+};
 
 const inter = Inter({
   variable: "--font-inter",

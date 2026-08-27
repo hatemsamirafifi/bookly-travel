@@ -47,18 +47,13 @@ final class ListBlogPostsAction
         return Cache::remember($cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
-                ->with(['authorProfile.user', 'primaryCategory'])
+                ->with(['authorProfile.user', 'category'])
                 ->orderByDesc('published_at');
 
             if ($categorySlug !== null && is_string($categorySlug) && $categorySlug !== '') {
-                $category = BlogCategory::query()->where('slug', $categorySlug)->first();
+                $category = BlogCategory::query()->where('slug', $categorySlug)->where('is_active', true)->first();
                 if ($category !== null) {
-                    $query->where(function ($q) use ($category) {
-                        $q->where('blog_category_id', $category->id)
-                            ->orWhereHas('categories', function ($catQuery) use ($category) {
-                                $catQuery->where('blog_categories.id', $category->id);
-                            });
-                    });
+                    $query->where('blog_category_id', $category->id);
                 } else {
                     // Non-existent category filter produces empty result
                     $query->whereRaw('1 = 0');

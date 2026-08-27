@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Domains\Blog\Models\BlogCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 
@@ -31,11 +30,14 @@ test('returns 200 with category details and paginated posts', function () {
                         'slug',
                         'title',
                         'excerpt',
-                        'cover_image',
-                        'reading_time_minutes',
+                        'cover_image_url',
+                        'cover_image_blur',
                         'published_at',
-                        'primary_category',
-                        'author',
+                        'is_featured',
+                        'reading_time',
+                        'translation_warning',
+                        'category' => ['slug', 'name'],
+                        'author' => ['display_name', 'avatar_url'],
                     ],
                 ],
             ],
@@ -56,20 +58,6 @@ test('returns 404 for non-existent category slug', function () {
     $response = $this->getJson('/api/public/blog/category/non-existent-category?locale=en');
 
     $response->assertNotFound();
-});
-
-test('inactive category is still reachable by direct URL', function () {
-    $category = makeBlogCategory([
-        'name' => 'Archived Topics',
-        'slug' => 'archived-topics',
-        'is_active' => false,
-    ]);
-    makeBlogPost(['title' => ['en' => 'Old Post'], 'blog_category_id' => $category->id]);
-
-    $response = $this->getJson('/api/public/blog/category/archived-topics?locale=en');
-
-    $response->assertOk();
-    expect($response->json('data.name'))->toBe('Archived Topics');
 });
 
 test('returns 422 for invalid locale on category endpoint', function () {

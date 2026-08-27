@@ -60,12 +60,14 @@ function mapUserApiToUser(apiUser: UserApiType): User {
 export class AuthApiError extends Error {
   errors?: Record<string, string[]>;
   code?: string;
+  status?: number;
 
-  constructor(message: string, errors?: Record<string, string[]>, code?: string) {
+  constructor(message: string, errors?: Record<string, string[]>, code?: string, status?: number) {
     super(message);
     this.name = 'AuthApiError';
     this.errors = errors;
     this.code = code;
+    this.status = status;
   }
 }
 
@@ -89,7 +91,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     const message = typeof payload?.message === 'string' ? payload.message : 'Authentication failed';
     const errors = payload?.errors as Record<string, string[]> | undefined;
     const code = typeof payload?.code === 'string' ? payload.code : undefined;
-    throw new AuthApiError(message, errors, code);
+    throw new AuthApiError(message, errors, code, response.status);
   }
 
   return data as T;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Partner;
 
+use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerProfile;
 use App\Enums\PartnerStatus;
@@ -37,7 +38,7 @@ class PartnerSuspendedAccessTest extends TestCase
         ]);
 
         $admin = User::factory()->admin()->create();
-        app(\App\Domains\Admin\Services\GovernanceAuditService::class)->log(
+        app(GovernanceAuditService::class)->log(
             $admin,
             'partner.suspend',
             $partner,

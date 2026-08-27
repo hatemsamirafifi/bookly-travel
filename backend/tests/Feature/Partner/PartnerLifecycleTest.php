@@ -17,6 +17,7 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 uses(RefreshDatabase::class);
 
@@ -146,5 +147,5 @@ it('rejects invalid state transitions with 422', function () {
     $action = app(ApprovePartnerAction::class);
 
     expect(fn () => $action->execute($admin, $partner))
-        ->toThrow(Symfony\Component\HttpKernel\Exception\HttpException::class);
+        ->toThrow(HttpException::class);
 });

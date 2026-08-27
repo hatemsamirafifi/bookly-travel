@@ -119,9 +119,9 @@
 
 - [X] T036 [US3] `backend/app/Domains/Reviews/Controllers/Partner/PartnerReviewController.php`: Create controller. `index()`: query reviews where `tour_id IN (SELECT id FROM tours WHERE partner_id = auth()->id())`. Support `tour_id` filter. Return paginated ReviewResource collection with `meta.tour_summaries` (per-tour averages). Sorted by `created_at DESC`.
 - [X] T037 [US3] `backend/routes/api/partner.php`: Add `GET /api/partner/reviews` → PartnerReviewController@index (partner auth middleware).
-- [ ] T037a [P] [US3] `frontend/src/components/partner/PartnerReviewsDashboard.tsx`: Create partner reviews dashboard component. Fetches from GET /api/partner/reviews. Displays tour summaries (average rating + count per tour). Expandable per-tour review list. Loading, empty, and error states.
-- [ ] T037b [P] [US3] `frontend/src/lib/reviews/review-api.ts`: Add `fetchPartnerReviews(tourId?)` function to API client.
-- [ ] T037c [P] [US3] `frontend/src/components/partner/__tests__/PartnerReviewsDashboard.test.tsx`: Jest test. Mock API, verify tour summaries render, verify per-tour expansion, verify empty state.
+- [X] T037a [P] [US3] `frontend/src/components/partner/PartnerReviewsDashboard.tsx`: Create partner reviews dashboard component. Fetches from GET /api/partner/reviews. Displays tour summaries (average rating + count per tour). Expandable per-tour review list. Loading, empty, and error states.
+- [X] T037b [P] [US3] `frontend/src/lib/reviews/review-api.ts`: Add `fetchPartnerReviews(tourId?)` function to API client.
+- [X] T037c [P] [US3] `frontend/src/components/partner/__tests__/PartnerReviewsDashboard.test.tsx`: Jest test. Mock API, verify tour summaries render, verify per-tour expansion, verify empty state.
 
 **Checkpoint**: User Story 3 complete — partners can monitor reviews for their tours
 
@@ -143,9 +143,9 @@
 - [X] T040 [US4] `backend/app/Domains/Reviews/Actions/ReinstateReviewAction.php`: Create action. Accept review ID, admin ID, reason. Update review status to 'visible'. Create ReviewAuditTrail (action='reinstate', actor_type='admin', reason). Dispatch event for aggregate recalculation. Return updated review.
 - [X] T041 [US4] `backend/app/Domains/Reviews/Controllers/Admin/AdminReviewController.php`: Create controller. `index()`: list all reviews with filters (status, tour_id, date_from, date_to, flagged, page). Include audit trail summary. `hide()` → HideReviewAction. `reinstate()` → ReinstateReviewAction. Return ReviewResource JSON.
 - [X] T042 [US4] `backend/routes/api/admin.php`: Add `GET /api/admin/reviews` → AdminReviewController@index, `POST /api/admin/reviews/{review}/hide` → AdminReviewController@hide, `POST /api/admin/reviews/{review}/reinstate` → AdminReviewController@reinstate (all behind admin auth middleware).
-- [ ] T042a [P] [US4] `frontend/src/components/admin/AdminReviewPanel.tsx`: Create admin review management panel. Fetches from GET /api/admin/reviews with filters (status, tour, date range). Table/list of reviews with hide/reinstate action buttons. Audit trail inline per review. Filter bar. Pagination. Loading, empty, and error states.
-- [ ] T042b [P] [US4] `frontend/src/lib/reviews/review-api.ts`: Add `fetchAdminReviews(filters)`, `hideReview(id, reason)`, `reinstateReview(id, reason)` functions.
-- [ ] T042c [P] [US4] `frontend/src/components/admin/__tests__/AdminReviewPanel.test.tsx`: Jest test. Verify filter controls, hide/reinstate actions, audit trail display, pagination.
+- [X] T042a [P] [US4] `frontend/src/components/admin/AdminReviewPanel.tsx`: Create admin review management panel. Fetches from GET /api/admin/reviews with filters (status, tour, date range). Table/list of reviews with hide/reinstate action buttons. Audit trail inline per review. Filter bar. Pagination. Loading, empty, and error states.
+- [X] T042b [P] [US4] `frontend/src/lib/reviews/review-api.ts`: Add `fetchAdminReviews(filters)`, `hideReview(id, reason)`, `reinstateReview(id, reason)` functions.
+- [X] T042c [P] [US4] `frontend/src/components/admin/__tests__/AdminReviewPanel.test.tsx`: Jest test. Verify filter controls, hide/reinstate actions, audit trail display, pagination.
 
 **Checkpoint**: Admin moderation complete — platform content quality is governable
 

@@ -20,6 +20,8 @@ class BlogPost extends Model
 
     public const STATUS_ARCHIVED = 'archived';
 
+    private const READING_WPM = 200;
+
     protected $table = 'blog_posts';
 
     protected $fillable = [
@@ -29,6 +31,7 @@ class BlogPost extends Model
         'body',
         'excerpt',
         'meta_description',
+        'meta_title',
         'cover_image_url',
         'is_featured',
         'scheduled_at',
@@ -42,6 +45,7 @@ class BlogPost extends Model
         'body' => 'array',
         'excerpt' => 'array',
         'meta_description' => 'array',
+        'meta_title' => 'array',
         'is_featured' => 'boolean',
         'scheduled_at' => 'datetime',
         'published_at' => 'datetime',
@@ -130,6 +134,6 @@ class BlogPost extends Model
         $body = $this->contentFor('body', $locale) ?? '';
         $words = str_word_count(strip_tags($body));
 
-        return max(1, (int) ceil($words / 200));
+        return max(1, (int) ceil($words / self::READING_WPM));
     }
 }

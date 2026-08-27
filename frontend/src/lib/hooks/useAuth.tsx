@@ -43,7 +43,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const user = await authApi.me(storedToken);
       setUser(user);
       setToken(storedToken);
-    } catch (error) {
+    } catch (error: unknown) {
+      // If the request was aborted, cancelled by page navigation, or transient network failure, do not wipe auth state
+      if (
+        error instanceof Error &&
+        (error.name === 'AbortError' ||
+          error.message.includes('aborted') ||
+          error.message.includes('Failed to fetch') ||
+          error.message.includes('NetworkError') ||
+          error.message.includes('Load failed'))
+      ) {
+        return;
+      }
       // Token missing, invalid, or expired — clear local auth state.
       setUser(null);
       setToken(null);

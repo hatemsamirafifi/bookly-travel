@@ -35,7 +35,7 @@ export default async function BookingPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'booking' });
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-8 sm:py-12">
+    <div className="mx-auto max-w-lg px-4 py-8 sm:py-12">
       <h1 className="text-2xl font-bold text-[#0A2540] mb-6">{t('title')}</h1>
       {/* F15: BookingForm calls useSearchParams() and must be wrapped in a
           Suspense boundary so the route renders during static generation. */}
@@ -46,6 +46,6 @@ export default async function BookingPage({ params }: Props) {
       </div>}>
         <BookingForm locale={locale} />
       </Suspense>
-    </main>
+    </div>
   );
 }

@@ -11,7 +11,7 @@ class ListBlogPostsRequest extends LocaleRequest
         return array_merge(parent::rules(), [
             'category' => ['nullable', 'string', 'max:120'],
             'page' => ['nullable', 'integer', 'min:1'],
-            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
         ]);
     }
 }

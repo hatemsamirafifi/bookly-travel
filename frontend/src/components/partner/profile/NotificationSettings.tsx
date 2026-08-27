@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
@@ -18,7 +18,7 @@ export function NotificationSettings() {
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-      <h3 className="text-lg font-semibold text-[#0A2540]">Notification Preferences</h3>
+      <h2 className="text-lg font-semibold text-[#0A2540]">Notification Preferences</h2>
       <div className="space-y-4">
         {Object.entries(settings).map(([key, value]) => (
           <div key={key} className="flex items-center justify-between">

@@ -5,15 +5,20 @@ import Pagination from '@/components/search/Pagination';
 interface BlogListProps {
   posts: BlogPostCard[];
   locale: string;
-  currentPage?: number;
-  lastPage?: number;
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+  category?: string;
 }
 
 export default function BlogList({
   posts,
   locale,
-  currentPage,
-  lastPage,
+  meta,
+  category,
 }: BlogListProps) {
   return (
     <div className="space-y-8">
@@ -23,10 +28,10 @@ export default function BlogList({
         ))}
       </div>
 
-      {currentPage !== undefined && lastPage !== undefined && lastPage > 1 && (
+      {meta && meta.last_page > 1 && (
         <Pagination
-          currentPage={currentPage}
-          lastPage={lastPage}
+          currentPage={meta.current_page}
+          lastPage={meta.last_page}
           ariaLabel="Blog articles pagination"
         />
       )}

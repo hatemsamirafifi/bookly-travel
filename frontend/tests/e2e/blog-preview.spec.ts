@@ -23,7 +23,7 @@ test.describe('Blog Authoring & Admin Previews (E2E / US3)', () => {
   });
 
   test('Missing token redirects or renders not found', async ({ page }) => {
-    const response = await page.goto('/en/blog/sample-draft-article/preview');
-    expect(response?.status() === 404 || (await page.locator('text=404').isVisible().catch(() => false))).toBeTruthy();
+    await page.goto('/en/blog/sample-draft-article/preview');
+    await expect(page.getByRole('heading', { name: '404' })).toBeVisible();
   });
 });
