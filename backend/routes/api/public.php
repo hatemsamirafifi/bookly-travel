@@ -128,18 +128,6 @@ Route::get('sitemap.xml', [SitemapController::class, 'index'])
 
 /*
 |--------------------------------------------------------------------------
-| Blog API Routes (Feature: 016-blog-travel-insights)
-|--------------------------------------------------------------------------
-*/
-Route::prefix('blog')->group(function () {
-    Route::get('/', [BlogPostController::class, 'index']);
-    Route::get('category/{slug}', [BlogCategoryController::class, 'show']);
-    Route::get('{slug}/preview', [BlogPreviewController::class, 'show']);
-    Route::get('{slug}', [BlogPostController::class, 'show']);
-});
-
-/*
-|--------------------------------------------------------------------------
 | Booking API Routes (Feature: 007-tour-booking)
 |--------------------------------------------------------------------------
 */

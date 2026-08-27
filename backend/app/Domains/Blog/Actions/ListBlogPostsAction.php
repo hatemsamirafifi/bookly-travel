@@ -44,7 +44,7 @@ final class ListBlogPostsAction
         ]));
         $cacheKey = "bookly:blog:list:{$locale}:{$cacheHash}";
 
-        return Cache::remember($cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
+        return Cache::tags(['blog', 'blog_list'])->remember($cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
                 ->with(['authorProfile.user', 'category'])
