@@ -19,13 +19,13 @@ test suites.
 **Primary Dependencies**:
 - Backend: Laravel 11, Filament 3 (RichEditor for HTML body), Redis (cache + queue), `Str::slug()`
 - Frontend: Next.js 16 (App Router), Tailwind CSS 4, next-intl 4, plaiceholder (blur placeholders), `@axe-core/playwright`, Playwright, Jest
-**Storage**: PostgreSQL (JSONB-localized columns on `blog_posts` + `author_profiles`; pivot tables `blog_post_tours` + `blog_category_post`; Redis for list/category/sitemap cache + queue)
+**Storage**: PostgreSQL (JSONB-localized columns on `blog_posts` + `author_profiles`; `blog_post_tours` pivot for related tours; single `blog_category_id` FK on `blog_posts` — one category per post, see `data-model.md`; Redis for list/category/sitemap cache + queue)
 **Testing**: Pest (backend, mirrors `tests/Feature/Search/` suite); Playwright E2E + Jest unit + axe-core a11y (frontend)
 **Target Platform**: Linux server (backend); Web — desktop 1280px+ and mobile 390px responsive (frontend)
 **Project Type**: web-application (Laravel API + Filament admin; Next.js SSR/SSG frontend consuming read-only API)
 **Performance Goals**: Lighthouse Performance ≥ 90, Accessibility ≥ 95 on public blog pages; published article readable < 2s first-byte to fully-rendered; listing supports 50+ posts with filtering/pagination < 2s
 **Constraints**: 3 locales (en/es/it) with EN-required-to-publish + partial-translation fallback; `robots: noindex` on preview; 410 Gone for archived-previously-published; signed HMAC preview tokens bound to slug + expires_at; immutable audit log
-**Scale/Scope**: 4 public API endpoints, 2 Filament resources, 3 frontend routes (listing, detail, category), 3 new DB tables + 2 pivots, ~15 backend test files, ~6 frontend test files
+**Scale/Scope**: 4 public API endpoints, 2 Filament resources, 3 frontend routes (listing, detail, category), 3 new DB tables + 1 pivot (`blog_post_tours`), ~15 backend test files, ~6 frontend test files
 
 ## Constitution Check
 

@@ -482,18 +482,18 @@ gantt
 
 | Task | Status | Description | Priority |
 |------|--------|------------|----------|
-| G.1 | ✅ Done | 016 — Blog & Travel Insights — Blog backend (Laravel), frontend (Next.js), author profiles, categories, tags, sitemap, RSS feed, SEO optimization | **Medium** |
+| G.1 | ✅ Done | 016 — Blog & Travel Insights — Blog backend (Laravel), frontend (Next.js), author profiles, categories, sitemap, SEO optimization | **Medium** |
 
 **Dependencies**: Phase F (frontend infrastructure) ✅
 
 **Deliverables** (all completed):
 - ✅ Blog post CRUD with JSONB-localized content (EN, ES, IT)
 - ✅ Author profiles with bio and avatar
-- ✅ Blog categories and tags with pivot tables
+- ✅ Blog categories (single category per post via `blog_category_id` FK; tags intentionally out of scope)
 - ✅ Blog-tour relationships (link posts to tours)
 - ✅ Redis caching for list/category/sitemap endpoints
-- ✅ Frontend blog pages (listing, detail, author, category)
-- ✅ SEO: structured data, sitemap, RSS feed
+- ✅ Frontend blog pages (listing, detail, category)
+- ✅ SEO: structured data, sitemap, canonical/hreflang, Open Graph/Twitter cards
 - ✅ Code review report (016-REVIEW.md)
 
 ---

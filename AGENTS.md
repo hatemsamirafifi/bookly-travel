@@ -4,7 +4,7 @@ Auto-generated from all feature plans. Last updated: 2026-08-22
 
 ## Active Technologies
 - PHP 8.3+ (Laravel 11) backend; TypeScript 5+ (Next.js 16) frontend (feature/016-blog-travel-insights)
-- PostgreSQL (JSONB-localized columns on `blog_posts` + `author_profiles`; pivot tables `blog_post_tours` + `blog_category_post`; Redis for list/category/sitemap cache + queue) (feature/016-blog-travel-insights)
+- PostgreSQL (JSONB-localized columns on `blog_posts` + `author_profiles`; `blog_post_tours` pivot for related tours; single `blog_category_id` FK on `blog_posts`; Redis for list/category/sitemap cache + queue) (feature/016-blog-travel-insights)
 
 - PHP 8.3+ (Laravel 11), TypeScript 5+ (Next.js 16) + Laravel 11, Sanctum, Filament 3, Next.js 16, Tailwind CSS, next-intl (fix/014-notifications-vouchers-remediation)
 
