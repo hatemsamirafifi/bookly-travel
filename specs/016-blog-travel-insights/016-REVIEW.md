@@ -1,11 +1,12 @@
 ---
-status: issues
+status: remediated
 phase: "016"
 phase_name: "Blog and Travel Insights"
 depth: standard
 files_reviewed: 56
 diff_base: "f711c9fa73236bc322761b43dac493d64592b31b"
 reviewed_at: "2026-08-22T00:00:00Z"
+remediated_at: "2026-08-28T00:00:00Z"
 critical: 9
 warning: 16
 info: 8
@@ -13,6 +14,24 @@ total: 33
 ---
 
 # Code Review: Phase 016 — Blog and Travel Insights
+
+## Remediation Status
+
+> Updated 2026-08-28. The findings below are the **point-in-time review record** (reviewed 2026-08-22 against `f711c9f`); they are preserved unchanged. This section records how each critical finding was resolved in the `016` blog remediation pass (commit `bdcd62d`, with further cache/route hardening in `fd1985e`).
+
+| ID | Status | Resolution |
+|----|--------|------------|
+| CR-001 | Resolved | The `blog_category_post` pivot / `categories()` relation was **not** added. Instead the broken multi-category references were removed — all actions and Filament pages now use the single `category` BelongsTo (`blog_category_id`). No `categories()` / `orWhereHas('categories')` references remain, so the crashes are gone. The "multiple categories per post" spec requirement was dropped in favor of single-category. |
+| CR-002 | Resolved | `meta_title` JSONB column added (`2026_08_22_100005_add_meta_title_to_blog_posts_table`), added to `$fillable` and `$casts` as `array`. Filament create/edit pages use `contentFor()` (not the non-existent `getTranslation()`). |
+| CR-003 | Resolved | `ctype_digit($expiresAt)` guard added before the expiry comparison, now in `PreviewTokenService::verify()`. |
+| CR-004 | Resolved | `PublishScheduledBlogPostJob` now sets `published_at` (to `scheduled_at ?? now()`) and saves when conditions match. `UpdateBlogPostAction` no longer sets `published_at = now()` when `scheduled_at` is future. |
+| CR-005 | Resolved | `BlogPostResource` import corrected to `App\Models\Tour`. |
+| CR-006 | Resolved | `BlogPostDetailTransformer` injected into `GetBlogPostPreviewAction`; eager-loads corrected to `category`, `author.authorProfile`, `relatedTours.translations`, `relatedTours.category`. |
+| CR-007 | Resolved | Frontend field reads aligned to the backend contract (`author.display_name`, `cover_image_url`, `category`, `reading_time`); `BlogArticleDetailResponse` removed in favor of `BlogDetailResponse`. No wrong-name references remain. |
+| CR-008 | Substantially resolved | Slug changes are captured in governance-audit before/after scalar state (under `blog.update`), and slug uniqueness means old preview tokens 404 (the invalidation invariant holds). The recommended **dedicated `blog.slug_change` audit event was not added**; a future slug-alias/redirect feature would need to re-enforce token invalidation explicitly. |
+| CR-009 | Resolved | `Cache::flush()` fallback removed; the non-tag driver path now forgets known `bookly:blog:*` keys per locale. Tag-store invalidation was further hardened in `fd1985e` so entries stored via `Cache::remember` are actually invalidated on Redis. |
+
+**Net:** CR-001 through CR-007 and CR-009 are fully resolved; CR-008 is substantially resolved with one lower-priority recommendation unimplemented. The "do not merge until CR-001 through CR-009 are resolved" recommendation below no longer blocks merge.
 
 ## Summary
 

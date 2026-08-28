@@ -2,8 +2,8 @@
 
 > **Version**: 1.0.0  
 > **Date**: 2026-08-22  
-> **Status**: Awaiting Approval  
-> **Prerequisite**: Fix all 9 critical findings in `016-REVIEW.md` before Phase 2 begins.
+> **Status**: Awaiting Approval
+> **Prerequisite**: 016 blog remediation **satisfied** — CR-001 through CR-009 resolved in the `016` remediation pass (see `specs/016-blog-travel-insights/016-REVIEW.md` → Remediation Status).
 
 ---
 
@@ -17,22 +17,8 @@ Phase 2 moves **beyond the MVP** to add monetization infrastructure, operational
 
 ## Prerequisite: 016 Blog Remediation (Before Phase 2 Starts)
 
-> [!CAUTION]
-> The `016-REVIEW.md` contains **9 critical bugs** that make the blog non-functional end-to-end. These MUST be fixed before any Phase 2 work begins.
-
-| ID | Files | Fix |
-|----|-------|-----|
-| CR-001 | `BlogPost`, `UpdateBlogPostAction`, pivot migration | Add `blog_category_post` pivot + `categories()` relation; fix `relatedTours()` callers |
-| CR-002 | Blog migrations, `$fillable`, Filament pages | Add `meta_title` JSONB column; replace `getTranslation()` with `contentFor()` |
-| CR-003 | `GetBlogPostPreviewAction:55` | Add `ctype_digit($expiresAt)` guard before expiry comparison |
-| CR-004 | `PublishScheduledBlogPostJob` | Set `published_at` in job; don't set it when `scheduled_at` is future |
-| CR-005 | `BlogPostResource.php:9` | Change `App\Domains\Tour\Models\Tour` → `App\Models\Tour` |
-| CR-006 | `GetBlogPostPreviewAction:70` | Inject `BlogPostDetailTransformer`; fix eager-loads to `relatedTours`, `category` |
-| CR-007 | `blog.ts`, `types.ts`, `BlogDetail.tsx`, `BlogFeaturedHero.tsx` | Align field names: `display_name`, `cover_image_url`, `category`, `reading_time`; define `BlogArticleDetailResponse` |
-| CR-008 | `UpdateBlogPostAction` | Add `blog.slug_change` audit event; document slug-uniqueness invariant |
-| CR-009 | `InvalidateBlogCacheJob:32-37` | Remove `Cache::flush()` fallback; use explicit key `forget()` |
-
-**Resolution**: `fix/016-blog-remediation` branch using the Spec-Kit `speckit-implement` workflow.
+> [!NOTE]
+> **Satisfied.** The 9 critical findings in `016-REVIEW.md` have been resolved in the `016` blog remediation pass (commit `bdcd62d`, with cache/route hardening in `fd1985e`). CR-001 through CR-007 and CR-009 are fully resolved; CR-008 is substantially resolved (one lower-priority audit-event recommendation unimplemented). Per-finding resolution detail lives in the authoritative owner — see [`specs/016-blog-travel-insights/016-REVIEW.md` → Remediation Status](../specs/016-blog-travel-insights/016-REVIEW.md). Phase 2 may begin.
 
 ---
 
