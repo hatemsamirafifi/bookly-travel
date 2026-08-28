@@ -14,7 +14,6 @@ import '../globals.css';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Bookly',
     default: 'Bookly - Discover & Book Tours Worldwide',
   },
   description: 'Book unforgettable tours and experiences worldwide with Bookly.',

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface BlogUnavailableProps {
   status?: number;
@@ -21,6 +21,7 @@ export function BlogUnavailable({
 }: BlogUnavailableProps) {
   const [countdown, setCountdown] = useState<number>(retryAfterSeconds);
   const isRateLimited = status === 429;
+  const locale = useLocale();
 
   useEffect(() => {
     if (!isRateLimited || countdown <= 0) {
@@ -61,13 +62,13 @@ export function BlogUnavailable({
         </p>
         <div className="mt-8 flex items-center justify-center gap-4">
           <Link
-            href="/blog"
+            href={`/${locale}/blog`}
             className="rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
           >
             Explore More Articles
           </Link>
           <Link
-            href="/tours"
+            href={`/${locale}/tours`}
             className="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
           >
             Browse Tours
@@ -118,7 +119,7 @@ export function BlogUnavailable({
           </button>
         ) : (
           <Link
-            href="/blog"
+            href={`/${locale}/blog`}
             className="rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
           >
             Explore Blog
@@ -126,7 +127,7 @@ export function BlogUnavailable({
         )}
 
         <Link
-          href="/tours"
+          href={`/${locale}/tours`}
           className="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
         >
           Browse Tours
