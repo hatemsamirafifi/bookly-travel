@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\Cache;
 final class BlogCache
 {
     /**
-     * Remember a value under the blog cache namespace, using tag-based
-     * caching when the configured store supports tags (Redis/memcached/array)
-     * and falling back to an untagged Cache::remember() on stores that do not
-     * (database/file). Cache::tags() throws BadMethodCallException on a
-     * non-TaggableStore, which would 500 the public blog read path on any
-     * deployment that has not selected a taggable cache store.
+     * Remember a value under the blog cache namespace. On stores that support
+     * tags (Redis/memcached/array) the entry is cached under the given tags so
+     * InvalidateBlogCacheJob can flush it. On a non-TaggableStore (database/file)
+     * the value is returned uncached, because tag-based invalidation cannot
+     * reach an untagged entry and Cache::tags() throws BadMethodCallException —
+     * so caching there would serve stale content (or 500) on the public read
+     * path of deployments that have not selected a taggable cache store.
      *
      * @param  list<string>  $tags
      * @param  Closure(): mixed  $callback
@@ -29,6 +30,6 @@ final class BlogCache
             return Cache::tags($tags)->remember($key, $ttl, $callback);
         }
 
-        return Cache::remember($key, $ttl, $callback);
+        return $callback();
     }
 }
