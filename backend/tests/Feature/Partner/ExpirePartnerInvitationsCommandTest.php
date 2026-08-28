@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Partner;
 
-use App\Models\User;
 use App\Domains\Partner\Models\PartnerInvitation;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;

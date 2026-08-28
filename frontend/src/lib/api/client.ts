@@ -1,11 +1,26 @@
 // Use internal Docker URL for SSR, public URL for browser
+// Server-side requests (SSR/ISR inside Docker) use the internal service
+// hostname; browser requests use NEXT_PUBLIC_API_URL when set (e.g. native
+// local dev against http://localhost:8080) or fall back to same-origin
+// relative URLs, which nginx proxies to the Laravel API. Never expose a
+// Docker-internal hostname to browser JavaScript.
 const API_URL =
   typeof window === 'undefined' && process.env.API_INTERNAL_URL
     ? process.env.API_INTERNAL_URL
-    : process.env.NEXT_PUBLIC_API_URL;
+    : process.env.NEXT_PUBLIC_API_URL || '';
 
-if (!API_URL) {
-  throw new Error('NEXT_PUBLIC_API_URL environment variable is required');
+if (typeof window === 'undefined' && !API_URL) {
+  throw new Error('API URL configuration is required: set API_INTERNAL_URL or NEXT_PUBLIC_API_URL');
+}
+
+/**
+ * Resolved API base URL for call sites that build their own fetch requests
+ * (e.g. partner pages attaching bearer tokens manually). Returns the same
+ * value apiClient uses: internal hostname for SSR, NEXT_PUBLIC_API_URL or
+ * same-origin relative ('') in the browser. Never hardcode an origin.
+ */
+export function getApiBaseUrl(): string {
+  return API_URL;
 }
 
 interface FetchOptions extends RequestInit {

@@ -21,21 +21,29 @@ const baseURL = isDockerContainer
     ? 'http://nextjs:3000'
     : 'http://localhost:8080';
 
-// Specs that require an authenticated traveler. They run only in the
+// All accessibility (a11y) spec files
+const ALL_A11Y = /[\/]e2e[\/]a11y[\/].*\.spec\.ts$/;
+
+// Specs that require an authenticated TRAVELER. They run only in the
 // `-authed` projects (which reuse the storageState saved by `setup`), and are
 // excluded from the base (logged-out) projects so they don't also run
-// unauthenticated and fail. The backend `auth` limiter is 10 logins/min/IP and
-// all E2E tests share one IP, so per-test browser logins are removed from these
-// specs — storageState authenticates them with a single login (see
-// tests/e2e/auth.setup.ts).
-// Matches only specs that sit directly under tests/e2e (the [\/]e2e[\/] before
-// the filename excludes same-named specs in subdirectories — notably
-// partner/profile.spec.ts, which needs partner auth, not the traveler
-// storageState used here). A plain basename glob would wrongly pull in
-// partner/profile.spec.ts; a `^filename$` regex matches nothing because
-// Playwright matches against the full path (tests/e2e/...), not the basename.
-const AUTHED_SPEC =
+// unauthenticated and fail.
+const TRAVELER_AUTHED =
   /[\/]e2e[\/](my-bookings|booking-detail|cancel-booking|review-submission|my-reviews|profile|wishlist|checkout|payment|booking)\.spec\.ts$/;
+
+// Traveler a11y specs
+const TRAVELER_A11Y =
+  /[\/]e2e[\/]a11y[\/](auth-nav|booking-detail|cancel-booking|my-bookings|my-reviews|profile|wishlist|checkout|payment)-a11y\.spec\.ts$/;
+
+// Specs that require an authenticated PARTNER. They run only in the
+// `-partner` projects, which reuse the storage state saved by
+// tests/e2e/partner.setup.ts (seeded partner@bookly.test).
+const PARTNER_AUTHED =
+  /[\/]e2e[\/]partner[\/][^\/]*\.spec\.ts$/;
+
+// Partner a11y specs
+const PARTNER_A11Y =
+  /[\/]e2e[\/]a11y[\/]partner-a11y\.spec\.ts$/;
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -53,17 +61,21 @@ export default defineConfig({
   // made correct pages time out before hydrating. 20s tolerates the cold visit
   // without masking genuinely-missing elements for long.
   expect: { timeout: isDockerContainer ? 20000 : 5000 },
+  // Dev-mode cold compiles can exceed the default 30s per-test timeout when a
+  // test's beforeEach navigates to one route and the test body to another.
+  // 60s tolerates the double-cold-compile without masking genuinely-hung tests.
+  timeout: isDockerContainer ? 60000 : 30000,
   reporter: 'html',
   use: {
     baseURL,
     trace: 'on-first-retry',
   },
   projects: [
-    // Authenticates once as the seeded traveler and saves the browser storage
-    // state (auth_token in localStorage) to tests/.auth/traveler.json. The
-    // `-authed` projects below depend on this and reuse the state, so each
-    // test starts authenticated without a per-test login (the backend `auth`
-    // limiter is 10 logins/min/IP and all tests share one IP).
+    // Authenticates ONCE as the seeded traveler AND as the seeded partner
+    // (runs both *.setup.ts files) and saves their browser storage states to
+    // tests/.auth/traveler.json and tests/.auth/partner.json. The authed
+    // projects below depend on this setup project and reuse those states, so
+    // no test performs its own login.
     {
       name: 'setup',
       testMatch: /.*\.setup\.ts/,
@@ -76,12 +88,11 @@ export default defineConfig({
     },
 
     // Base (logged-out) projects — run every spec EXCEPT the authenticated
-    // ones, which are handled by the `-authed` projects below. Excluding
-    // my-bookings here means it only runs authenticated (where it passes),
-    // not a second time logged-out (where it can't).
+    // traveler/partner ones, which are handled by the `-authed`/`-partner`
+    // projects below, and a11y specs which run in a11y project.
     {
       name: 'chromium',
-      testIgnore: [AUTHED_SPEC, /.*\.setup\.ts/],
+      testIgnore: [ALL_A11Y, TRAVELER_AUTHED, PARTNER_AUTHED, /.*\.setup\.ts/],
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
@@ -91,7 +102,7 @@ export default defineConfig({
     },
     {
       name: 'mobile',
-      testIgnore: [AUTHED_SPEC, /.*\.setup\.ts/],
+      testIgnore: [ALL_A11Y, TRAVELER_AUTHED, PARTNER_AUTHED, /.*\.setup\.ts/],
       use: {
         ...devices['Pixel 7'],
         launchOptions: {
@@ -101,7 +112,8 @@ export default defineConfig({
     },
     {
       name: 'a11y',
-      testIgnore: [AUTHED_SPEC, /.*\.setup\.ts/],
+      testMatch: ALL_A11Y,
+      testIgnore: [TRAVELER_A11Y, PARTNER_A11Y],
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
@@ -110,11 +122,11 @@ export default defineConfig({
       },
     },
 
-    // Authenticated projects — reuse the storage state saved by `setup` and
-    // run only the specs that require a logged-in traveler.
+    // Authenticated TRAVELER projects — reuse the storage state saved by
+    // auth.setup.ts and run only the specs that require a logged-in traveler.
     {
       name: 'chromium-authed',
-      testMatch: AUTHED_SPEC,
+      testMatch: TRAVELER_AUTHED,
       dependencies: ['setup'],
       use: {
         ...devices['Desktop Chrome'],
@@ -126,7 +138,7 @@ export default defineConfig({
     },
     {
       name: 'mobile-authed',
-      testMatch: AUTHED_SPEC,
+      testMatch: TRAVELER_AUTHED,
       dependencies: ['setup'],
       use: {
         ...devices['Pixel 7'],
@@ -138,11 +150,51 @@ export default defineConfig({
     },
     {
       name: 'a11y-authed',
-      testMatch: AUTHED_SPEC,
+      testMatch: TRAVELER_A11Y,
       dependencies: ['setup'],
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'tests/.auth/traveler.json',
+        launchOptions: {
+          args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
+    },
+
+    // Authenticated PARTNER projects — reuse the storage state saved by
+    // partner.setup.ts and run only the specs under tests/e2e/partner/ plus
+    // the partner a11y spec.
+    {
+      name: 'chromium-partner',
+      testMatch: PARTNER_AUTHED,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/.auth/partner.json',
+        launchOptions: {
+          args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
+    },
+    {
+      name: 'mobile-partner',
+      testMatch: PARTNER_AUTHED,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Pixel 7'],
+        storageState: 'tests/.auth/partner.json',
+        launchOptions: {
+          args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
+    },
+    {
+      name: 'a11y-partner',
+      testMatch: PARTNER_A11Y,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'tests/.auth/partner.json',
         launchOptions: {
           args: ['--disable-gpu', '--no-sandbox', '--disable-setuid-sandbox'],
         },

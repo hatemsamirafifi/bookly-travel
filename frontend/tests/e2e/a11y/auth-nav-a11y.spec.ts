@@ -2,18 +2,11 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Auth Navigation Accessibility', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/en/auth/login');
-    await page.fill('input[name="email"]', 'test@example.com');
-    await page.fill('input[name="password"]', 'Password123!');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/en**');
-    await expect(page.locator('text=Sign Out')).toBeVisible();
-  });
-
   test('user menu dropdown has no accessibility violations', async ({ page }) => {
     await page.goto('/en');
-    await page.click('button[aria-haspopup="menu"]');
+    const menuBtn = page.locator('button[aria-haspopup="menu"]');
+    await expect(menuBtn).toBeVisible();
+    await menuBtn.click();
     await expect(page.locator('role=menu')).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
@@ -23,8 +16,10 @@ test.describe('Auth Navigation Accessibility', () => {
   test('mobile navigation panel has no accessibility violations', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/en');
-    await page.click('button[aria-label="Open menu"]');
-    await expect(page.locator('text=Dashboard')).toBeVisible();
+    const openMenuBtn = page.locator('button[aria-label="Open menu"]');
+    await expect(openMenuBtn).toBeVisible();
+    await openMenuBtn.click();
+    await expect(page.locator('button[aria-label="Close menu"]')).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
     expect(accessibilityScanResults.violations).toEqual([]);

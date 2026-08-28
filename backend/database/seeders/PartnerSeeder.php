@@ -294,7 +294,7 @@ class PartnerSeeder extends Seeder
         AvailabilityRule::create([
             'tour_id' => $tour->id,
             'rule_type' => 'weekly',
-            'days_of_week' => ['mon', 'wed', 'fri', 'sat'],
+            'days_of_week' => [0, 1, 2, 3, 4, 5, 6],
             'start_time' => '09:00:00',
             'start_date' => now()->toDateString(),
             'end_date' => null,

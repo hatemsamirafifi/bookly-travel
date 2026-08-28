@@ -31,7 +31,7 @@ test.describe('Auth Guards', () => {
       await page.fill('input[name="password"]', 'Password123!');
       await page.click('button[type="submit"]');
       await page.waitForURL('**/en**');
-      await expect(page.locator('text=Sign Out')).toBeVisible();
+      await expect(page.locator('button[aria-haspopup="menu"]').first()).toBeVisible();
     });
 
     test('login page redirects authenticated user to home', async ({ page }) => {
@@ -48,7 +48,7 @@ test.describe('Auth Guards', () => {
 
     test('my-bookings loads for authenticated user', async ({ page }) => {
       await page.goto('/en/my-bookings');
-      await expect(page.locator('text=My Bookings')).toBeVisible();
+      await expect(page.getByRole('heading', { name: /My Bookings/i })).toBeVisible();
     });
 
     test('profile page loads for authenticated user', async ({ page }) => {

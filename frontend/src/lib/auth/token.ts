@@ -5,7 +5,15 @@ export function setTokenGetter(fn: () => string | null) {
 }
 
 export function getAuthToken(): string | null {
-  if (tokenGetter) return tokenGetter();
+  // Prefer the in-memory token registered by AuthProvider, but never let a
+  // not-yet-hydrated getter (null during the first render cycle) shadow the
+  // persisted token: child effects can fire requests before AuthProvider's
+  // own effect commits the restored token, and returning the stale null here
+  // produced spurious 401s on hard loads of authenticated pages.
+  if (tokenGetter) {
+    const token = tokenGetter();
+    if (token) return token;
+  }
   if (typeof window !== 'undefined') {
     return localStorage.getItem('auth_token');
   }

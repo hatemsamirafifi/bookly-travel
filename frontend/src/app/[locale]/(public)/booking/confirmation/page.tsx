@@ -26,8 +26,8 @@ export default async function BookingConfirmationPage({ params, searchParams }: 
   const reference = sp.ref || '';
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-8 sm:py-12">
+    <div className="mx-auto max-w-lg px-4 py-8 sm:py-12">
       <BookingConfirmation reference={reference} locale={locale} />
-    </main>
+    </div>
   );
 }

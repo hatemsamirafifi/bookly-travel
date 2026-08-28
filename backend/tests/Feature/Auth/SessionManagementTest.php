@@ -61,8 +61,10 @@ it('token expires after 7 days of inactivity', function () {
     $token = $user->createToken('auth-token')->plainTextToken;
 
     // Simulate token last used 8 days ago
-    PersonalAccessToken::findToken($token)
-        ?->update([
+    $pat = PersonalAccessToken::findToken($token);
+    DB::table('personal_access_tokens')
+        ->where('id', $pat->id)
+        ->update([
             'created_at' => now()->subDays(8),
             'last_used_at' => now()->subDays(8),
         ]);

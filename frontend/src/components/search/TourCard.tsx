@@ -52,9 +52,9 @@ export default function TourCard({ tour, locale }: TourCardProps) {
           <span>{tour.duration_label}</span>
         </div>
 
-        <h3 className="mb-2 text-lg font-semibold text-[#0A2540] group-hover:text-[#071b2e] line-clamp-2">
+        <h2 className="mb-2 text-lg font-semibold text-[#0A2540] group-hover:text-[#071b2e] line-clamp-2">
           {tour.title}
-        </h3>
+        </h2>
 
         <div className="mb-3">
           <div className="flex items-center gap-0.5">

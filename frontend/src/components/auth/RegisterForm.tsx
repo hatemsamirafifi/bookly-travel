@@ -38,6 +38,13 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
     defaultValues: { locale: locale as 'en' | 'es' | 'it' },
   });
 
+  // Zod messages in lib/validators/auth.ts are auth.* i18n keys; resolve them
+  // here so users never see a raw key (e.g. "auth.errors.invalidEmail").
+  const formatError = (message?: string) => {
+    if (!message) return '';
+    return message.startsWith('auth.') ? t(message.replace('auth.', '')) : message;
+  };
+
   const onSubmit = async (data: RegisterFormData) => {
     setServerError(null);
     try {
@@ -64,9 +71,12 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
             });
           }
         }
+      } else if (err instanceof AuthApiError && err.code === 'network_error') {
+        setServerError(t('errors.networkError'));
+      } else if (err instanceof AuthApiError) {
+        setServerError(err.message);
       } else {
-        const message = err instanceof Error ? err.message : t('errors.invalidCredentials');
-        setServerError(message);
+        setServerError(t('errors.genericError'));
       }
     }
   };
@@ -104,7 +114,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
         />
         {errors.name && (
           <p id="register-name-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.name.message}
+            {formatError(errors.name.message)}
           </p>
         )}
       </div>
@@ -126,7 +136,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
         />
         {errors.email && (
           <p id="register-email-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.email.message}
+            {formatError(errors.email.message)}
           </p>
         )}
       </div>
@@ -163,7 +173,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
         </div>
         {errors.password && (
           <p id="register-password-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.password.message}
+            {formatError(errors.password.message)}
           </p>
         )}
       </div>

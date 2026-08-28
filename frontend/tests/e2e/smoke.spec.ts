@@ -4,7 +4,7 @@ test.describe('Smoke Test', () => {
   test('homepage loads with hero and categories', async ({ page }) => {
     await page.goto('/en');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByText(/Categories/i)).toBeVisible();
+    await expect(page.getByText(/Categories/i).first()).toBeVisible();
   });
 
   test('search flow works end to end', async ({ page }) => {
@@ -13,7 +13,7 @@ test.describe('Smoke Test', () => {
   });
 
   test('tour detail page loads', async ({ page }) => {
-    await page.goto('/en/tours/test-adventure');
+    await page.goto('/en/tours/hidden-gems-rome-walking-tour');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
@@ -23,12 +23,12 @@ test.describe('Smoke Test', () => {
   });
 
   test('destination page loads', async ({ page }) => {
-    await page.goto('/en/destinations/rome');
+    await page.goto('/en/destinations/rome-italy');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
   test('booking page loads', async ({ page }) => {
-    await page.goto('/en/booking?tour=test-adventure&date=2026-06-01&participants=2');
+    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-06-01&participants=2');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 

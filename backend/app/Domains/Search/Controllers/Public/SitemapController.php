@@ -2,6 +2,8 @@
 
 namespace App\Domains\Search\Controllers\Public;
 
+use App\Domains\Blog\Models\BlogCategory;
+use App\Domains\Blog\Models\BlogPost;
 use App\Models\Category;
 use App\Models\Tour;
 use Illuminate\Http\Response;
@@ -48,6 +50,14 @@ class SitemapController
             '1.0'
         );
 
+        // Blog Index Page
+        $xml .= $this->renderUrl(
+            "{$baseUrl}/{$locales[0]}/blog",
+            $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog", $locales),
+            'daily',
+            '0.8'
+        );
+
         // Tour detail pages — stream in chunks to bound memory. chunkById()
         // paginates on the `id` column, so `id` MUST be in the select list or
         // it aborts (RuntimeException) the moment any row exists.
@@ -65,6 +75,22 @@ class SitemapController
                 }
             });
 
+        // Blog detail pages — stream published posts in chunks
+        BlogPost::published()
+            ->select(['id', 'slug', 'published_at'])
+            ->orderBy('id')
+            ->chunkById(500, function ($posts) use (&$xml, $baseUrl, $locales) {
+                foreach ($posts as $post) {
+                    $xml .= $this->renderUrl(
+                        "{$baseUrl}/{$locales[0]}/blog/{$post->slug}",
+                        $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog/{$post->slug}", $locales),
+                        'weekly',
+                        '0.8',
+                        $post->published_at?->toDateString()
+                    );
+                }
+            });
+
         // Category pages — bounded taxonomy (30–50 per spec), select slug only.
         $categories = Category::where('is_active', true)->select('slug')->get();
         foreach ($categories as $category) {
@@ -73,6 +99,17 @@ class SitemapController
                 $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/categories/{$category->slug}", $locales),
                 'daily',
                 '0.7'
+            );
+        }
+
+        // Blog Category pages
+        $blogCategories = BlogCategory::where('is_active', true)->select('slug')->get();
+        foreach ($blogCategories as $bCat) {
+            $xml .= $this->renderUrl(
+                "{$baseUrl}/{$locales[0]}/blog/category/{$bCat->slug}",
+                $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog/category/{$bCat->slug}", $locales),
+                'weekly',
+                '0.6'
             );
         }
 
@@ -109,12 +146,15 @@ class SitemapController
         return $map;
     }
 
-    protected function renderUrl(string $loc, array $alternates, string $changefreq, string $priority): string
+    protected function renderUrl(string $loc, array $alternates, string $changefreq, string $priority, ?string $lastmod = null): string
     {
         $xml = "  <url>\n";
         $xml .= '    <loc>' . htmlspecialchars($loc, ENT_XML1, 'UTF-8') . "</loc>\n";
         foreach ($alternates as $lang => $href) {
             $xml .= '    <xhtml:link rel="alternate" hreflang="' . htmlspecialchars($lang, ENT_XML1, 'UTF-8') . '" href="' . htmlspecialchars($href, ENT_XML1, 'UTF-8') . "\"/>\n";
+        }
+        if ($lastmod) {
+            $xml .= '    <lastmod>' . htmlspecialchars($lastmod, ENT_XML1, 'UTF-8') . "</lastmod>\n";
         }
         $xml .= '    <changefreq>' . htmlspecialchars($changefreq, ENT_XML1, 'UTF-8') . "</changefreq>\n";
         $xml .= '    <priority>' . htmlspecialchars($priority, ENT_XML1, 'UTF-8') . "</priority>\n";

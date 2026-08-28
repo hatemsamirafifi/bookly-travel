@@ -24,7 +24,7 @@
 - [x] T001 Verify `failed_login_count` and `locked_until` columns exist in `backend/database/migrations/0001_01_01_000000_create_users_table.php`
 - [x] T002 [P] Verify `auth_audit_logs` table exists with `event_type`, `user_id`, `metadata` columns in `backend/database/migrations/0001_01_01_000003_create_auth_audit_logs_table.php`
 - [x] T003 [P] Verify `AccountLockedOut` and `LoginFailed` events exist in `backend/app/Domains/Auth/Events/`
-- [ ] T004 Run existing auth test suite: `cd backend && php artisan test tests/Feature/Auth/LoginTest.php` — confirm all 15 tests pass
+- [X] T004 Run existing auth test suite: `cd backend && php artisan test tests/Feature/Auth/LoginTest.php` — confirm all 15 tests pass
 
 **Checkpoint**: All prerequisites confirmed. Proceed to user story tasks.
 
@@ -71,8 +71,8 @@
 - [x] T013 [P] Verify translation completeness: confirm `auth.errors.accountLocked` exists in `frontend/messages/en.json`, `frontend/messages/es.json`, and `frontend/messages/it.json`
 - [x] T014 [P] Verify `LoginForm.tsx` handles `code === 'account_locked'` in `frontend/src/components/auth/LoginForm.tsx` and `AuthApiError` code field in `frontend/src/lib/api/auth.ts`
 - [x] T014.1 [P] Verify cache-survivability test exists in `backend/tests/Feature/Auth/LoginTest.php` — confirmed: "survives redis cache flush during lockout" at line 287 validates lockout enforcement after `Cache::flush()` (SC-005 traceability)
-- [ ] T015 Run full backend auth test suite: `cd backend && php artisan test tests/Feature/Auth/` (user to execute locally)
-- [ ] T016 Run quickstart validation per `specs/005-brute-force-protection/quickstart.md` (user to execute locally)
+- [X] T015 Run full backend auth test suite: `cd backend && php artisan test tests/Feature/Auth/` (user to execute locally)
+- [X] T016 Run quickstart validation per `specs/005-brute-force-protection/quickstart.md` (user to execute locally)
 
 **Checkpoint**: All SC-001 through SC-007 verified. Feature is complete.
 

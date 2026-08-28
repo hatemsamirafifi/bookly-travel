@@ -4,37 +4,35 @@ test.describe('Multi-Language (i18n)', () => {
   test('English locale loads correctly', async ({ page }) => {
     await page.goto('/en/search');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByLabel('Switch language')).toHaveValue('en');
+    await expect(page.locator('select[aria-label="Switch language"]').first()).toHaveValue('en');
   });
 
   test('Spanish locale loads correctly', async ({ page }) => {
     await page.goto('/es/search');
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-    await expect(page.getByLabel('Switch language')).toHaveValue('es');
+    await expect(page.locator('select[aria-label="Switch language"]').first()).toHaveValue('es');
   });
 
   test('Italian locale loads correctly', async ({ page }) => {
     await page.goto('/it/search');
     await expect(page.locator('html')).toHaveAttribute('lang', 'it');
-    await expect(page.getByLabel('Switch language')).toHaveValue('it');
+    await expect(page.locator('select[aria-label="Switch language"]').first()).toHaveValue('it');
   });
 
   test('locale switcher navigates to same page in different language', async ({ page }) => {
     await page.goto('/en/search');
-
-    await page.getByLabel('Switch language').selectOption('es');
+    await page.locator('select[aria-label="Switch language"]').first().selectOption('es');
     await expect(page).toHaveURL(/\/es\/search/);
   });
 
   test('locale switcher preserves path and query params', async ({ page }) => {
     await page.goto('/en/search?q=beach');
-
-    await page.getByLabel('Switch language').selectOption('it');
+    await page.locator('select[aria-label="Switch language"]').first().selectOption('it');
     await expect(page).toHaveURL(/\/it\/search\?q=beach/);
   });
 
   test('hreflang tags are present on tour detail page', async ({ page }) => {
-    await page.goto('/en/tours/test-adventure');
+    await page.goto('/en/tours/hidden-gems-rome-walking-tour');
 
     const enAlternate = page.locator('link[rel="alternate"][hreflang="en"]');
     const esAlternate = page.locator('link[rel="alternate"][hreflang="es"]');

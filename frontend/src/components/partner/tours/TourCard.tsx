@@ -70,7 +70,7 @@ export function TourCard({ tour, onArchived }: TourCardProps) {
               sizes="(max-width: 768px) 100vw, 33vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+            <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">
               {t('noCoverImage')}
             </div>
           );
@@ -80,7 +80,7 @@ export function TourCard({ tour, onArchived }: TourCardProps) {
         </span>
       </div>
       <div className="p-4 space-y-2">
-        <h3 className="font-semibold text-[#0A2540] truncate">{tour.title ?? t('untitled')}</h3>
+        <h2 className="font-semibold text-[#0A2540] truncate">{tour.title ?? t('untitled')}</h2>
         {showHint && (
           <p className="text-xs text-gray-500">{t(`statusHint.${tour.status}`)}</p>
         )}

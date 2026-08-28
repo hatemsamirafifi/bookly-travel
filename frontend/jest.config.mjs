@@ -1,7 +1,5 @@
-import type { Config } from 'jest';
-
-const config: Config = {
-  testEnvironment: 'jsdom',
+const config = {
+  testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['./jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

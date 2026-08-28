@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: bookly-frontend
     restart: unless-stopped
+    command: sh -c "rm -rf /app/.next/* && npm run build && npm start"
     ports:
       - "3001:3000"
     volumes:
@@ -13,7 +14,13 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      - NEXT_PUBLIC_API_URL=http://nginx
+      # SSR/ISR requests inside the Docker network use the internal hostname.
+      - API_INTERNAL_URL=http://nginx
+      # Empty on purpose: NEXT_PUBLIC_* values are inlined into the browser
+      # bundle at build time, and browsers outside Docker cannot resolve
+      # "nginx". An empty value makes client-side API calls same-origin
+      # relative (/api/...), which this nginx proxy routes to Laravel.
+      - NEXT_PUBLIC_API_URL=
       - DOCKER_ENV=true
     networks:
       - bookly-network
@@ -56,7 +63,10 @@ services:
       dockerfile: Dockerfile
     container_name: bookly-queue
     restart: unless-stopped
-    command: php artisan queue:work
+    # Processes both the default queue and the `scout` queue (config/scout.php
+    # queues Meilisearch index syncs on `scout`); without `scout` here, newly
+    # created/updated tours never reach the search index.
+    command: php artisan queue:work --queue=default,scout
     volumes:
       - ./backend:/var/www/html
     environment:

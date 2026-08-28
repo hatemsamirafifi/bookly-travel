@@ -5,15 +5,16 @@ import type { Destination } from '@/lib/api/types';
 interface DestinationShowcaseProps {
   destinations: Destination[];
   locale: string;
+  title?: string;
 }
 
-export default function DestinationShowcase({ destinations, locale }: DestinationShowcaseProps) {
+export default function DestinationShowcase({ destinations, locale, title = 'Top Destinations' }: DestinationShowcaseProps) {
   if (destinations.length === 0) return null;
 
   return (
     <section className="py-12 bg-[#F7F9FB]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-8 text-2xl font-bold text-[#0A2540]">Top Destinations</h2>
+        <h2 className="mb-8 text-2xl font-bold text-[#0A2540]">{title}</h2>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {destinations.map((dest) => (

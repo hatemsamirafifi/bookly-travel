@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Trash2, Edit, Save, X } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
+import { getApiBaseUrl } from '@/lib/api/client';
 
 interface PricingTier {
   id: number;
@@ -37,7 +38,7 @@ export default function PricingPage({ params }: { params: Promise<{ id: string; 
     setError(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/pricing`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/pricing`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
           Accept: 'application/json',
@@ -64,8 +65,8 @@ export default function PricingPage({ params }: { params: Promise<{ id: string; 
       const token = getAuthToken();
       const isNew = isEditing === -1;
       const url = isNew
-        ? `http://localhost:8000/api/partner/tours/${tourId}/pricing`
-        : `http://localhost:8000/api/partner/tours/${tourId}/pricing/${isEditing}`;
+        ? `${getApiBaseUrl()}/api/partner/tours/${tourId}/pricing`
+        : `${getApiBaseUrl()}/api/partner/tours/${tourId}/pricing/${isEditing}`;
 
       const res = await fetch(url, {
         method: isNew ? 'POST' : 'PUT',
@@ -103,7 +104,7 @@ export default function PricingPage({ params }: { params: Promise<{ id: string; 
     setError(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/pricing/${id}`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/pricing/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',

@@ -49,7 +49,7 @@ export function BookingFilters({ filters, onFiltersChange, tours }: BookingFilte
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-[#0A2540]">Filters</h3>
+        <h2 className="text-sm font-semibold text-[#0A2540]">Filters</h2>
         {hasActiveFilters && (
           <button
             type="button"

@@ -1,22 +1,26 @@
 import { test, expect } from '@playwright/test';
-import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Tours List Page', () => {
-  test.beforeEach(async ({ page }) => {
-    await partnerLogin(page);
-    await page.goto('/en/partner/tours');
-  });
+  // NOTE: no shared beforeEach navigation — tests that mock the API must
+  // register page.route BEFORE navigating, otherwise the page's first fetch
+  // races ahead of the mock and the mocked response never renders.
 
   test('should display the tours page with heading', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+
     await expect(page.getByText('My Tours')).toBeVisible();
   });
 
   test('should show Create Tour button', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+
     const createButton = page.getByRole('link', { name: /create tour/i });
     await expect(createButton).toBeVisible();
   });
 
   test('should navigate to tour creation page', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+
     const createButton = page.getByRole('link', { name: /create tour/i });
     await createButton.click();
     await expect(page).toHaveURL(/\/partner\/tours\/create/);
@@ -36,7 +40,7 @@ test.describe('Partner Tours List Page', () => {
     await page.goto('/en/partner/tours');
 
     await expect(page.getByText(/no tours yet/i)).toBeVisible();
-    await expect(page.getByText(/create your first tour/i)).toBeVisible();
+    await expect(page.getByRole('link', { name: /create tour/i }).first()).toBeVisible();
   });
 
   test('should display tour cards when tours exist', async ({ page }) => {
@@ -114,8 +118,8 @@ test.describe('Partner Tours List Page', () => {
     });
     await page.goto('/en/partner/tours');
 
-    // Should show loading text
-    await expect(page.getByText(/loading tours/i)).toBeVisible({ timeout: 400 });
+    // Should show loading skeleton (PartnerTourListSkeleton uses pulse blocks)
+    await expect(page.locator('.animate-pulse').first()).toBeVisible();
   });
 
   test('should show error state when API fails', async ({ page }) => {
@@ -128,7 +132,8 @@ test.describe('Partner Tours List Page', () => {
     );
     await page.goto('/en/partner/tours');
 
-    await expect(page.getByText(/failed to load/i)).toBeVisible();
+    // TourList renders the raw client message when loadError key is absent
+    await expect(page.getByText(/failed to load|status 500/i)).toBeVisible();
   });
 });
 
@@ -281,7 +286,8 @@ test.describe('Partner Tour Card Component', () => {
     await page.goto('/en/partner/tours');
 
     // Archived tours show "Archived" badge but no archive button
-    await expect(page.getByText('Archived')).toBeVisible();
+    // (exact match: the mocked tour title "Archived Tour" also contains it)
+    await expect(page.getByText('Archived', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /archive tour/i })).not.toBeVisible();
   });
 

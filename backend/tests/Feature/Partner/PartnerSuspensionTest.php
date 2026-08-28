@@ -16,6 +16,7 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
 class PartnerSuspensionTest extends TestCase
@@ -102,7 +103,7 @@ class PartnerSuspensionTest extends TestCase
         $admin = $this->createAdmin();
         $partner = $this->createPartnerWithUser(PartnerStatus::Approved->value, true);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         $this->expectExceptionMessage('A suspension reason is required.');
 
         app(SuspendPartnerAction::class)->execute($admin, $partner, '');
@@ -113,7 +114,7 @@ class PartnerSuspensionTest extends TestCase
         $admin = $this->createAdmin();
         $partner = $this->createPartnerWithUser(PartnerStatus::Suspended->value, false);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         $this->expectExceptionMessage('Partner cannot be suspended from its current state.');
 
         app(SuspendPartnerAction::class)->execute($admin, $partner, 'Some reason');
@@ -124,7 +125,7 @@ class PartnerSuspensionTest extends TestCase
         $admin = $this->createAdmin();
         $partner = $this->createPartnerWithUser(PartnerStatus::Pending->value, false);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         $this->expectExceptionMessage('Partner cannot be suspended from its current state.');
 
         app(SuspendPartnerAction::class)->execute($admin, $partner, 'Some reason');
@@ -135,7 +136,7 @@ class PartnerSuspensionTest extends TestCase
         $nonAdmin = User::factory()->partner()->create();
         $partner = $this->createPartnerWithUser(PartnerStatus::Approved->value, true);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         $this->expectExceptionMessage('You are not authorized to suspend partners.');
 
         app(SuspendPartnerAction::class)->execute($nonAdmin, $partner, 'Some reason');

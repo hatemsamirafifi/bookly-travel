@@ -1,9 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Tour Edit Workflow', () => {
   test.beforeEach(async ({ page }) => {
-    await partnerLogin(page);
   });
 
   test('should load the edit page for an existing tour', async ({ page }) => {
@@ -86,8 +84,8 @@ test.describe('Partner Tour Edit Workflow', () => {
     await expect(page.getByText('Published Tour')).toBeVisible();
 
     // Status badges should show correct labels
-    await expect(page.getByText('Draft')).toBeVisible();
-    await expect(page.getByText('Published')).toBeVisible();
+    await expect(page.getByText('Draft', { exact: true })).toBeVisible();
+    await expect(page.getByText('Published', { exact: true })).toBeVisible();
   });
 
   test('should show tour destination in card', async ({ page }) => {

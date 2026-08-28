@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { locales } from '@/i18n/routing';
 
 const LOCALE_LABELS: Record<string, string> = {
@@ -12,17 +12,20 @@ const LOCALE_LABELS: Record<string, string> = {
 export default function LocaleSwitcher() {
   const params = useParams();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const currentLocale = (params?.locale as string) || 'en';
 
   const switchTo = (locale: string) => {
     if (locale === currentLocale) return;
     const newPath = pathname.replace(new RegExp(`^/${currentLocale}(?=/|$)`), `/${locale}`);
-    router.push(newPath);
+    const qs = searchParams?.toString();
+    const targetUrl = qs ? `${newPath}?${qs}` : newPath;
+    window.location.href = targetUrl;
   };
 
   return (
-    <div className="relative" aria-label="Switch language">
+    <div className="relative">
       <select
         value={currentLocale}
         onChange={(e) => switchTo(e.target.value)}

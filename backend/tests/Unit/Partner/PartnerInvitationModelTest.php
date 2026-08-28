@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Partner\Models\PartnerInvitation;
+use App\Models\User;
 
 test('isExpired returns true when expires_at is in the past and false when in the future', function () {
     $expired = new PartnerInvitation([
@@ -51,7 +52,7 @@ test('isValid returns true only when status is pending and not expired', functio
 });
 
 test('scopes filter invitations accurately', function () {
-    $admin = App\Models\User::factory()->create(['role' => 'admin']);
+    $admin = User::factory()->create(['role' => 'admin']);
 
     PartnerInvitation::create([
         'email' => 'valid@example.com',

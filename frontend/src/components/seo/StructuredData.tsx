@@ -88,7 +88,7 @@ export function ItemListSchema({ items, name }: ItemListSchemaProps) {
       '@type': 'ListItem',
       position: i + 1,
       item: {
-        '@type': 'TouristTrip',
+        '@type': 'Thing',
         name: item.name,
         url: item.url,
       },
@@ -102,3 +102,96 @@ export function ItemListSchema({ items, name }: ItemListSchemaProps) {
     />
   );
 }
+
+interface BlogPostingSchemaProps {
+  headline: string;
+  description: string;
+  datePublished?: string | null;
+  dateModified?: string | null;
+  authorName: string;
+  authorAvatarUrl?: string | null;
+  image?: string | null;
+  inLanguage: string;
+  url: string;
+}
+
+export function BlogPostingSchema({
+  headline,
+  description,
+  datePublished,
+  dateModified,
+  authorName,
+  authorAvatarUrl,
+  image,
+  inLanguage,
+  url,
+}: BlogPostingSchemaProps) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bookly.com';
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline,
+    description,
+    inLanguage,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+    url,
+    ...(image ? { image } : {}),
+    ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ? { dateModified } : {}),
+    author: {
+      '@type': 'Person',
+      name: authorName,
+      ...(authorAvatarUrl ? { image: authorAvatarUrl } : {}),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Bookly',
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/logo.png`,
+      },
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+    />
+  );
+}
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+interface BreadcrumbListSchemaProps {
+  items: BreadcrumbItem[];
+}
+
+export function BreadcrumbListSchema({ items }: BreadcrumbListSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+    />
+  );
+}
+

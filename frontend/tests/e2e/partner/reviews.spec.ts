@@ -1,26 +1,37 @@
 import { test, expect } from '@playwright/test';
-import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Reviews Page', () => {
   test.beforeEach(async ({ page }) => {
-    await partnerLogin(page);
     await page.goto('/en/partner/reviews');
   });
 
   test('should display review cards with star ratings', async ({ page }) => {
-    // The ReviewList component renders review cards with star icons
-    // Mock data includes reviews with ratings
+    // The dashboard groups reviews by tour (collapsed by default).
+    // Expand the first tour summary to reveal the review cards.
+    const firstSummary = page.locator('button').filter({ hasText: /Walking Tour/i }).first();
+    await firstSummary.click();
+
+    // Expanded review card shows the "Verified Traveler" badge
     await expect(page.getByText(/verified traveler/i)).toBeVisible();
   });
 
   test('should show review comment text', async ({ page }) => {
-    // Mock reviews have comment text
-    await expect(page.getByText(/fantastic experience|great tour/i)).toBeVisible();
+    // Expand the first tour summary
+    const firstSummary = page.locator('button').filter({ hasText: /Walking Tour/i }).first();
+    await firstSummary.click();
+
+    // Seeded review (DatabaseSeeder, BKO-TEST03): "A wonderful hidden-gems walk…" (or edited in test run)
+    await expect(page.getByText(/hidden-gems walk|highly recommended|Updated comment/i)).toBeVisible();
   });
 
   test('should display date on review cards', async ({ page }) => {
+    // Expand the first tour summary if present
+    const firstSummary = page.locator('button').filter({ hasText: /Walking Tour/i }).first();
+    if (await firstSummary.isVisible()) {
+      await firstSummary.click();
+    }
     // Reviews should show the submission date
-    const dateText = page.locator('.text-xs.text-gray-400');
+    const dateText = page.locator('main .text-xs.text-gray-400, main .text-xs.text-gray-500, main time');
     await expect(dateText.first()).toBeVisible();
   });
 
@@ -146,6 +157,9 @@ test.describe('Partner Reviews - API Integration', () => {
       })
     );
     await page.goto('/en/partner/reviews');
+
+    // Expand the first tour summary to reveal the review
+    await page.locator('button').filter({ hasText: /Rome Walking Tour/i }).first().click();
 
     await expect(page.getByText('Alice')).toBeVisible();
     await expect(page.getByText(/fantastic experience/i)).toBeVisible();

@@ -97,7 +97,9 @@
       "nameRequired": "El nombre completo es obligatorio.",
       "invalidLocale": "El idioma seleccionado no es compatible.",
       "invalidToken": "Este enlace de restablecimiento es inválido o ha expirado.",
-      "resetExpired": "Este enlace de restablecimiento de contraseña ha expirado."
+      "resetExpired": "Este enlace de restablecimiento de contraseña ha expirado.",
+      "networkError": "Problema de conexión. Comprueba tu conexión a internet e inténtalo de nuevo.",
+      "genericError": "Algo salió mal. Inténtalo de nuevo."
     }
   },
   "search": {
@@ -1061,5 +1063,56 @@
     "title": "Algo salió mal",
     "description": "Hemos sido notificados y estamos trabajando para solucionar el problema.",
     "reload": "Recargar página"
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "failed_to_load": "Error al cargar las reseñas",
+    "no_reviews_yet": "Aún no hay reseñas",
+    "loading": "Cargando...",
+    "load_more": "Cargar más reseñas",
+    "review_count": "{count, plural, =1 {1 reseña} other {# reseñas}}"
+  },
+  "blog": {
+    "title": "Inspiración y Guías de Viaje",
+    "subtitle": "Descubre inspiración, guías de destinos y consejos de expertos para tu próxima aventura.",
+    "metaTitle": "Blog de Viajes e Inspiración | Bookly Travel",
+    "metaDescription": "Explora relatos de viaje, guías detalladas y recomendaciones de expertos locales en Bookly.",
+    "featured": "Destacado",
+    "featuredStories": "Historias Destacadas",
+    "allPosts": "Todos los Artículos",
+    "categories": "Categorías",
+    "allCategories": "Todas las Categorías",
+    "readMore": "Leer Artículo",
+    "readTime": "{minutes} min de lectura",
+    "readingTime": "{minutes} min de lectura",
+    "minRead": "min de lectura",
+    "publishedOn": "Publicado el {date}",
+    "byAuthor": "Por {name}",
+    "tableOfContents": "Índice de Contenidos",
+    "relatedPosts": "Historias Relacionadas",
+    "relatedTours": "Experiencias Mencionadas en esta Guía",
+    "relatedToursSubtitle": "Reserva tours seleccionados y actividades destacadas en este artículo",
+    "viewTour": "Ver Experiencia",
+    "shareArticle": "Compartir este artículo",
+    "copiedLink": "¡Enlace copiado al portapapeles!",
+    "copyLink": "Copiar enlace",
+    "noPosts": "Aún no hay artículos publicados.",
+    "noPostsFound": "No se encontraron artículos con tus criterios.",
+    "noPostsInCategory": "No hay artículos disponibles en esta categoría.",
+    "backToBlog": "Volver a todos los artículos",
+    "authorBio": "Sobre el Autor",
+    "searchPlaceholder": "Buscar artículos de viaje...",
+    "filterByCategory": "Filtrar por tema",
+    "previewBanner": "Modo Vista Previa de Borrador",
+    "previewNotice": "Estás previsualizando contenido no publicado. Este enlace caducará pronto.",
+    "scheduledNotice": "Programado para publicarse el {date}",
+    "draftNotice": "Este artículo es actualmente un borrador.",
+    "previousPost": "Artículo Anterior",
+    "nextPost": "Siguiente Artículo",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "pageOf": "Página {current} de {total}"
+    }
   }
 }

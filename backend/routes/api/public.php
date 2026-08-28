@@ -1,5 +1,8 @@
 <?php
 
+use App\Domains\Blog\Controllers\Public\BlogCategoryController;
+use App\Domains\Blog\Controllers\Public\BlogPostController;
+use App\Domains\Blog\Controllers\Public\BlogPreviewController;
 use App\Domains\Booking\Controllers\Public\BookingController;
 use App\Domains\Booking\Controllers\Public\TravelerBookingController;
 use App\Domains\Booking\Controllers\Public\VerificationController;
@@ -117,6 +120,7 @@ Route::prefix('homepage')->middleware('rate.limit:homepage')->group(function () 
 });
 
 // Spec 006 seo-contracts.md: GET /api/public/sitemap.xml. Registered as a
+// Spec 006 seo-contracts.md: GET /api/public/sitemap.xml. Registered as a
 // single literal URI (not a `sitemap` prefix + `.xml`, which compiles to
 // `sitemap/.xml` and 404s the spec/public URI).
 Route::get('sitemap.xml', [SitemapController::class, 'index'])
@@ -206,4 +210,20 @@ Route::middleware(['auth:sanctum', 'throttle:traveler'])->prefix('traveler')->gr
     });
 
     Route::get('reviews', [App\Domains\Traveler\Controllers\Public\ReviewController::class, 'index']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Blog API Routes (Feature: 016-blog-travel-insights)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('blog')->group(function () {
+    Route::get('/', [BlogPostController::class, 'index'])
+        ->middleware('throttle:blog');
+    Route::get('category/{slug}', [BlogCategoryController::class, 'show'])
+        ->middleware('throttle:blog');
+    Route::get('{slug}/preview', [BlogPreviewController::class, 'show'])
+        ->middleware('throttle:blog_detail');
+    Route::get('{slug}', [BlogPostController::class, 'show'])
+        ->middleware('throttle:blog_detail');
 });

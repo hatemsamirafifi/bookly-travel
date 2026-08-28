@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -18,7 +18,7 @@ export function PayoutForm() {
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-      <h3 className="text-lg font-semibold text-[#0A2540]">Payout Information</h3>
+      <h2 className="text-lg font-semibold text-[#0A2540]">Payout Information</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1">
           <Label htmlFor="payout_holder_name">Account Holder Name</Label>

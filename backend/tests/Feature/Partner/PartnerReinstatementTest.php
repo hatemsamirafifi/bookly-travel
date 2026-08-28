@@ -16,6 +16,7 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
 class PartnerReinstatementTest extends TestCase
@@ -115,7 +116,7 @@ class PartnerReinstatementTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         app(ReinstatePartnerAction::class)->execute($admin, $partner);
     }
 

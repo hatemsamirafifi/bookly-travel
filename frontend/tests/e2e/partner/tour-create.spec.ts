@@ -1,9 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { partnerLogin } from '../helpers/auth';
 
 test.describe('Partner Tour Creation', () => {
-  test.beforeEach(async ({ page }) => {
-    await partnerLogin(page);
+  test.beforeEach(async ({ page, context }) => {
+    // Pre-set the cookie consent cookie so the fixed bottom-0 banner is not
+    // rendered and does not intercept clicks on the wizard navigation buttons.
+    await context.addCookies([
+      { name: 'bookly_cookie_consent', value: 'true', domain: 'localhost', path: '/' },
+      { name: 'bookly_cookie_consent', value: 'true', domain: 'nginx', path: '/' },
+      { name: 'bookly_cookie_consent', value: 'true', domain: '127.0.0.1', path: '/' },
+    ]);
 
     // Mock get signed upload url
     await page.route('**/api/partner/uploads/signed-url', (route) =>
@@ -17,7 +22,22 @@ test.describe('Partner Tour Creation', () => {
       })
     );
 
-    // Mock create tour
+    await page.goto('/en/partner/tours/create');
+
+    // Dismiss the cookie consent banner if still rendered
+    const acceptBtn = page.getByRole('button', { name: /accept/i });
+    if (await acceptBtn.isVisible().catch(() => false)) {
+      await acceptBtn.click().catch(() => {});
+    }
+  });
+
+  test('should display the tour creation page', async ({ page }) => {
+    await expect(page.getByLabel('Tour Title')).toBeVisible();
+  });
+
+  test('should navigate through the wizard and submit the tour', async ({ page }) => {
+    // Mock create tour (POST only) — scoped to this test so it doesn't
+    // interfere with other tests that navigate to the tours list.
     await page.route('**/api/partner/tours', (route) => {
       if (route.request().method() === 'POST') {
         return route.fulfill({
@@ -31,39 +51,38 @@ test.describe('Partner Tour Creation', () => {
       return route.continue();
     });
 
-    await page.goto('/en/partner/tours/create');
-  });
+    // Step 1: Details — fill all required fields per tourBasicDetailsSchema
+    await page.getByLabel('Tour Title').fill('Beautiful Walking Tour of Rome');
+    await page.getByLabel('Description').fill('Explore the ancient history of Rome with a local guide.');
 
-  test('should display the tour creation page', async ({ page }) => {
-    await expect(page.getByText(/Details/i)).toBeVisible();
-  });
+    // Category uses a custom Select (button trigger, button items — not Radix).
+    // The trigger shows the placeholder text "Select a category" when empty.
+    // Click the trigger button, then the "Walking" option button in the dropdown.
+    const categoryTrigger = page.locator('button:has-text("Select a category")');
+    await categoryTrigger.click();
+    await page.locator('button:has-text("Walking")').last().click();
 
-  test('should navigate through the wizard and submit the tour', async ({ page }) => {
-    // Step 1: Details
-    await page.fill('input[id="title"]', 'Beautiful Walking Tour of Rome');
-    await page.fill('textarea[id="description"]', 'Explore the ancient history of Rome with a local guide.');
-    await page.locator('select[id="category"]', { hasText: 'Select category' }).or(page.locator('button', { hasText: 'Select category' })).first().click().catch(() => {});
-    // Fallback if select UI uses radix
-    await page.getByLabel('Category').first().click().catch(() => {});
-    await page.getByRole('option', { name: /Walking/i }).first().click().catch(() => {});
+    await page.getByLabel('Destination').fill('Rome, Italy');
+    await page.getByLabel('Duration').fill('3');
+    await page.getByLabel('Meeting Point').fill('Colosseum Main Entrance');
 
-    await page.fill('input[id="destination"]', 'Rome, Italy');
-    await page.fill('input[id="duration_value"]', '3');
-    await page.fill('input[id="meeting_point"]', 'Colosseum Main Entrance');
-
-    // Click Next
-    await page.getByRole('button', { name: /Next/i }).click();
+    // Click Next — validates the details step via Zod before advancing
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
 
     // Step 2: Media step should be active
     await expect(page.getByText(/Drag and drop images here/i)).toBeVisible();
 
-    // Mock an uploaded cover image by directly setting media in the wizard store or simulate upload.
-    // Since we want to test step-by-step navigation, let's bypass media cover requirement by mocking store or selecting
-    // let's click Next to verify validation message
-    await page.getByRole('button', { name: /Next/i }).click();
-    // (If media validation blocks, it will show an error message)
+    // Click Next on media step — validation may block (no cover image),
+    // showing an error message. The test verifies step navigation works,
+    // not that the tour can be submitted without media.
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
   });
+});
 
+// Separate describe so this test does NOT inherit the /tours/create
+// beforeEach — navigating from the heavy /create wizard to /tours in dev
+// mode causes a cold-compile race that can make restoreSession fail.
+test.describe('Partner Tours List - Create Button', () => {
   test('should display Create Tour button on tours list page', async ({ page }) => {
     await page.goto('/en/partner/tours');
 

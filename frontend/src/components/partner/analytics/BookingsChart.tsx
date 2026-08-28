@@ -20,7 +20,7 @@ export function BookingsChart({ data }: BookingsChartProps) {
   const t = useTranslations('partner.analytics');
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <h3 className="text-sm font-semibold text-[#0A2540] mb-4">{t('bookingsOverTime')}</h3>
+      <h2 className="text-sm font-semibold text-[#0A2540] mb-4">{t('bookingsOverTime')}</h2>
       <div className="h-72">
         {data.length === 0 ? (
           <div className="flex h-full items-center justify-center text-sm text-gray-400">

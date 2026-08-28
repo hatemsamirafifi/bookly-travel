@@ -8,7 +8,11 @@ import {
   guestConvertSchema
 } from '../validators/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+// Same rule as client.ts: browsers use NEXT_PUBLIC_API_URL when set (native
+// local dev) or same-origin relative URLs through nginx. The auth endpoints
+// below append their own /api/public/auth prefix, so the base must not
+// contain a path segment.
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export interface User {
   id: number;
@@ -60,12 +64,14 @@ function mapUserApiToUser(apiUser: UserApiType): User {
 export class AuthApiError extends Error {
   errors?: Record<string, string[]>;
   code?: string;
+  status?: number;
 
-  constructor(message: string, errors?: Record<string, string[]>, code?: string) {
+  constructor(message: string, errors?: Record<string, string[]>, code?: string, status?: number) {
     super(message);
     this.name = 'AuthApiError';
     this.errors = errors;
     this.code = code;
+    this.status = status;
   }
 }
 
@@ -76,11 +82,23 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     ...options.headers,
   };
 
-  const response = await fetch(`${API_URL}/api/public/auth${endpoint}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}/api/public/auth${endpoint}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch (error) {
+    // Aborts (page navigation, cancelled requests) must keep their native
+    // shape so callers like useAuth.restoreSession() can detect them.
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw error;
+    }
+    // Browser-level network failure (offline, DNS, unreachable API). Surface
+    // a typed, translatable error instead of a raw "Failed to fetch".
+    throw new AuthApiError('Network request failed', undefined, 'network_error', 0);
+  }
 
   const data: unknown = await response.json().catch(() => null);
 
@@ -89,7 +107,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     const message = typeof payload?.message === 'string' ? payload.message : 'Authentication failed';
     const errors = payload?.errors as Record<string, string[]> | undefined;
     const code = typeof payload?.code === 'string' ? payload.code : undefined;
-    throw new AuthApiError(message, errors, code);
+    throw new AuthApiError(message, errors, code, response.status);
   }
 
   return data as T;

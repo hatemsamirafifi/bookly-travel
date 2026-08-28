@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Enums\PartnerStatus;
 use App\Domains\Partner\Models\Partner;
+use App\Enums\PartnerStatus;
 
 it('allows valid onboarding status transitions', function () {
     expect(Partner::canTransition('pending', 'approved'))->toBeTrue();
@@ -33,4 +33,3 @@ it('instance canTransitionTo delegates properly', function () {
     expect($partner->canTransitionTo(PartnerStatus::Rejected))->toBeTrue();
     expect($partner->canTransitionTo(PartnerStatus::Suspended))->toBeFalse();
 });
-

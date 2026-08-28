@@ -83,7 +83,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
                   className="h-4 w-4 border-gray-300 text-[#0A2540] focus:ring-[#0A2540]"
                 />
                 <span className="flex-1">{cat.name}</span>
-                <span className="text-xs text-gray-400">({cat.count})</span>
+                <span className="text-xs text-gray-600">({cat.count})</span>
               </label>
             ))}
           </div>
@@ -104,7 +104,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
                   className="h-4 w-4 border-gray-300 text-[#0A2540] focus:ring-[#0A2540]"
                 />
                 <span className="flex-1">{loc.name}</span>
-                <span className="text-xs text-gray-400">({loc.count})</span>
+                <span className="text-xs text-gray-600">({loc.count})</span>
               </label>
             ))}
           </div>
@@ -150,7 +150,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
                   className="h-4 w-4 border-gray-300 text-[#0A2540] focus:ring-[#0A2540]"
                 />
                 <span className="flex-1">{d.label}</span>
-                <span className="text-xs text-gray-400">({d.count})</span>
+                <span className="text-xs text-gray-600">({d.count})</span>
               </label>
             ))}
           </div>

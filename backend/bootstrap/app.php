@@ -2,6 +2,7 @@
 
 use App\Domains\Partner\Middleware\PartnerRoleMiddleware;
 use App\Http\Middleware\RateLimitSearchMiddleware;
+use App\Http\Middleware\RefreshTokenExpiry;
 use App\Http\Middleware\RoleMiddleware;
 use App\Providers\Filament\AdminPanelProvider;
 use Illuminate\Foundation\Application;
@@ -38,6 +39,8 @@ return Application::configure(basePath: dirname(__DIR__))
             // Spec 006 — emits the contract 429 body + X-RateLimit-* headers +
             // localized message for the public search & discovery surface only.
             'rate.limit' => RateLimitSearchMiddleware::class,
+            // Spec 001 FR-012 — sliding-window session expiry (extend on use).
+            'refresh.token' => RefreshTokenExpiry::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

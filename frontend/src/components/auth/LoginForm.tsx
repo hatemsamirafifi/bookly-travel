@@ -37,6 +37,13 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
     resolver: zodResolver(loginSchema),
   });
 
+  // Zod messages in lib/validators/auth.ts are auth.* i18n keys; resolve them
+  // here so users never see a raw key (e.g. "auth.errors.invalidEmail").
+  const formatError = (message?: string) => {
+    if (!message) return '';
+    return message.startsWith('auth.') ? t(message.replace('auth.', '')) : message;
+  };
+
   const onSubmit = async (data: LoginFormData) => {
     setServerError(null);
     setShowSessionExpired(false);
@@ -59,7 +66,9 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
           }
         }
       } else if (err instanceof AuthApiError) {
-        if (err.code === 'invalid_credentials') {
+        if (err.code === 'network_error') {
+          setServerError(t('errors.networkError'));
+        } else if (err.code === 'invalid_credentials') {
           setServerError(t('errors.invalidCredentials'));
         } else if (err.code === 'account_locked') {
           setServerError(t('errors.accountLocked'));
@@ -67,8 +76,7 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
           setServerError(err.message);
         }
       } else {
-        const message = err instanceof Error ? err.message : t('errors.invalidCredentials');
-        setServerError(message);
+        setServerError(t('errors.genericError'));
       }
     }
   };
@@ -104,7 +112,7 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
         />
         {errors.email && (
           <p id="login-email-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.email.message}
+            {formatError(errors.email.message)}
           </p>
         )}
       </div>
@@ -149,7 +157,7 @@ export function LoginForm({ returnUrl, sessionExpired }: LoginFormProps) {
         </div>
         {errors.password && (
           <p id="login-password-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.password.message}
+            {formatError(errors.password.message)}
           </p>
         )}
       </div>

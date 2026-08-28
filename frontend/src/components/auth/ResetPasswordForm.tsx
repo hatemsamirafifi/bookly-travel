@@ -37,6 +37,13 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
     defaultValues: { token, email, password: '', password_confirmation: '' },
   });
 
+  // Zod messages in lib/validators/auth.ts are auth.* i18n keys; resolve them
+  // here so users never see a raw key (e.g. "auth.errors.invalidEmail").
+  const formatError = (message?: string) => {
+    if (!message) return '';
+    return message.startsWith('auth.') ? t(message.replace('auth.', '')) : message;
+  };
+
   const onSubmit = async (data: ResetPasswordFormData) => {
     setServerError(null);
     try {
@@ -55,14 +62,15 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
           }
         }
       } else if (err instanceof AuthApiError) {
-        if (err.code === 'invalid_token' || err.code === 'token_expired') {
+        if (err.code === 'network_error') {
+          setServerError(t('errors.networkError'));
+        } else if (err.code === 'invalid_token' || err.code === 'token_expired') {
           setServerError(t('errors.invalidToken'));
         } else {
           setServerError(err.message);
         }
       } else {
-        const message = err instanceof Error ? err.message : t('errors.invalidCredentials');
-        setServerError(message);
+        setServerError(t('errors.genericError'));
       }
     }
   };
@@ -120,7 +128,7 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
         </div>
         {errors.password && (
           <p id="reset-password-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.password.message}
+            {formatError(errors.password.message)}
           </p>
         )}
       </div>
@@ -157,7 +165,7 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
         </div>
         {errors.password_confirmation && (
           <p id="reset-password-confirmation-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.password_confirmation.message}
+            {formatError(errors.password_confirmation.message)}
           </p>
         )}
       </div>

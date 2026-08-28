@@ -5,9 +5,10 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 interface PaginationProps {
   currentPage: number;
   lastPage: number;
+  ariaLabel?: string;
 }
 
-export default function Pagination({ currentPage, lastPage }: PaginationProps) {
+export default function Pagination({ currentPage, lastPage, ariaLabel = 'Search results pagination' }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -26,7 +27,7 @@ export default function Pagination({ currentPage, lastPage }: PaginationProps) {
   const isLast = currentPage >= lastPage;
 
   return (
-    <nav className="flex items-center justify-center gap-3 py-8" aria-label="Search results pagination">
+    <nav className="flex items-center justify-center gap-3 py-8" aria-label={ariaLabel}>
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={isFirst}
