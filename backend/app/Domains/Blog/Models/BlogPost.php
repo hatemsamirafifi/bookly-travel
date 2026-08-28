@@ -53,16 +53,25 @@ class BlogPost extends Model
         'blog_category_id' => 'integer',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /**
+     * @return BelongsTo<BlogCategory, $this>
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(BlogCategory::class, 'blog_category_id');
     }
 
+    /**
+     * @return BelongsToMany<Tour, $this>
+     */
     public function relatedTours(): BelongsToMany
     {
         return $this->belongsToMany(Tour::class, 'blog_post_tours')
@@ -70,6 +79,9 @@ class BlogPost extends Model
             ->orderByPivot('sort_order');
     }
 
+    /**
+     * @return HasOneThrough<AuthorProfile, User, $this>
+     */
     public function authorProfile(): HasOneThrough
     {
         return $this->hasOneThrough(

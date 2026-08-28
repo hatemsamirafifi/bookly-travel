@@ -20,11 +20,11 @@ class BlogPostTransformer
         }
 
         $authorProfile = $post->relationLoaded('author') && $post->author?->relationLoaded('authorProfile')
-            ? $post->author?->authorProfile
+            ? $post->author->authorProfile
             : $post->authorProfile;
 
         $authorDisplayName = $authorProfile?->contentFor('display_name', $locale)
-            ?? $post->author?->name
+            ?? $post->author->name
             ?? 'Bookly Editorial';
 
         $authorAvatarUrl = $authorProfile?->avatar_url;

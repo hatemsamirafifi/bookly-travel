@@ -89,7 +89,7 @@ class UpdateBlogPostAction
                     ]);
                 }
                 $actionType = 'blog.archive';
-            } elseif ($targetStatus === BlogPost::STATUS_PUBLISHED && ($isCreate || $post?->status !== BlogPost::STATUS_PUBLISHED)) {
+            } elseif ($targetStatus === BlogPost::STATUS_PUBLISHED && ($isCreate || $post->status !== BlogPost::STATUS_PUBLISHED)) {
                 $actionType = 'blog.publish';
             } elseif ($isCreate) {
                 $actionType = 'blog.create';

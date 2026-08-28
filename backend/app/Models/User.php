@@ -120,6 +120,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     /**
      * Blog author profile (inverse of AuthorProfile::user()).
+     *
+     * @return HasOne<AuthorProfile, $this>
      */
     public function authorProfile(): HasOne
     {
