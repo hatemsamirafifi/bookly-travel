@@ -57,7 +57,7 @@ final class GetBlogCategoryAction
         return Cache::tags(['blog', 'blog_categories'])->remember($cacheKey, 300, function () use ($category, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
-                ->with(['authorProfile.user', 'category'])
+                ->with(['author', 'authorProfile.user', 'category'])
                 ->where('blog_category_id', $category->id)
                 ->orderByDesc('published_at');
 

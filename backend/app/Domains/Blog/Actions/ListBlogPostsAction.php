@@ -47,7 +47,7 @@ final class ListBlogPostsAction
         return Cache::tags(['blog', 'blog_list'])->remember($cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
-                ->with(['authorProfile.user', 'category'])
+                ->with(['author', 'authorProfile.user', 'category'])
                 ->orderByDesc('published_at');
 
             if ($categorySlug !== null && is_string($categorySlug) && $categorySlug !== '') {

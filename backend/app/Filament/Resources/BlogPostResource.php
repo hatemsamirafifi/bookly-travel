@@ -159,7 +159,10 @@ class BlogPostResource extends Resource
                             ->schema([
                                 Select::make('tour_id')
                                     ->label('Tour')
-                                    ->options(Tour::where('status', 'published')->pluck('title', 'id'))
+                                    ->options(fn () => Tour::where('status', 'published')
+                                        ->with('translations')
+                                        ->get()
+                                        ->mapWithKeys(fn (Tour $tour) => [$tour->id => $tour->displayTitle('en')]))
                                     ->searchable()
                                     ->required(),
                                 TextInput::make('sort_order')
@@ -215,7 +218,8 @@ class BlogPostResource extends Resource
                     ->action(function (BlogPost $record) {
                         $generator = app(GeneratePreviewTokenAction::class);
                         $tokenData = $generator->execute($record->slug);
-                        $previewUrl = url("/en/blog/{$record->slug}/preview?token={$tokenData['token']}");
+                        $frontendUrl = config('app.frontend_url', 'http://localhost:3000');
+                        $previewUrl = "{$frontendUrl}/en/blog/{$record->slug}/preview?token={$tokenData['token']}";
 
                         Notification::make()
                             ->title('Preview Link Generated')
