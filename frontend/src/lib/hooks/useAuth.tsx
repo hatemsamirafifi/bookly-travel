@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { User, authApi } from '../api/auth';
+import { User, authApi, AuthApiError } from '../api/auth';
 import { setTokenGetter } from '../auth/token';
 import { z } from 'zod';
 import { loginSchema, registerSchema } from '../validators/auth';
@@ -46,12 +46,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error: unknown) {
       // If the request was aborted, cancelled by page navigation, or transient network failure, do not wipe auth state
       if (
-        error instanceof Error &&
-        (error.name === 'AbortError' ||
-          error.message.includes('aborted') ||
-          error.message.includes('Failed to fetch') ||
-          error.message.includes('NetworkError') ||
-          error.message.includes('Load failed'))
+        (error instanceof AuthApiError && error.code === 'network_error') ||
+        (error instanceof Error &&
+          (error.name === 'AbortError' ||
+            error.message.includes('aborted') ||
+            error.message.includes('Failed to fetch') ||
+            error.message.includes('NetworkError') ||
+            error.message.includes('Load failed')))
       ) {
         return;
       }

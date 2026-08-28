@@ -3,7 +3,8 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { apiClient } from '@/lib/api/client';
+import { addTravelerWishlistItem, removeTravelerWishlistItem } from '@/lib/api/traveler';
+import { getAuthToken } from '@/lib/auth/token';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface WishlistButtonProps {
@@ -31,7 +32,12 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
   }, []);
 
   const toggle = useCallback(() => {
-    if (!user) {
+    // Gate on a token (not just the hydrated user) so the button works
+    // immediately on page load, before AuthProvider's async /me restoration
+    // completes. A persisted token means the user is authenticated; the API
+    // call below attaches it via authHeaders(). Only show the login prompt
+    // when there is genuinely no token.
+    if (!user && !getAuthToken()) {
       setShowPrompt(true);
       return;
     }
@@ -50,17 +56,9 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
       setBusy(true);
       try {
         if (previous) {
-          await apiClient<void>(`/api/public/traveler/wishlist/${encodeURIComponent(String(tourId))}`, {
-            method: 'DELETE',
-            requireCsrf: true,
-          });
+          await removeTravelerWishlistItem(tourId);
         } else {
-          await apiClient('/api/public/traveler/wishlist', {
-            method: 'POST',
-            requireCsrf: true,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tour_id: tourId }),
-          });
+          await addTravelerWishlistItem(tourId);
         }
       } catch {
         setSaved(previous);

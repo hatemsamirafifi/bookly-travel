@@ -13,9 +13,7 @@ import CookieConsentBanner from '@/components/shared/CookieConsent';
 import '../globals.css';
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Bookly - Discover & Book Tours Worldwide',
-  },
+  title: 'Bookly - Discover & Book Tours Worldwide',
   description: 'Book unforgettable tours and experiences worldwide with Bookly.',
 };
 

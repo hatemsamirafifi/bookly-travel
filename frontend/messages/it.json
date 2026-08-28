@@ -97,7 +97,9 @@
       "nameRequired": "Il nome completo è obbligatorio.",
       "invalidLocale": "La lingua selezionata non è supportata.",
       "invalidToken": "Questo link di reimpostazione non è valido o è scaduto.",
-      "resetExpired": "Questo link di reimpostazione password è scaduto."
+      "resetExpired": "Questo link di reimpostazione password è scaduto.",
+      "networkError": "Problema di connessione. Controlla la tua connessione internet e riprova.",
+      "genericError": "Qualcosa è andato storto. Riprova."
     }
   },
   "search": {
@@ -1107,7 +1109,6 @@
     "draftNotice": "Questo articolo è attualmente una bozza.",
     "previousPost": "Articolo Precedente",
     "nextPost": "Articolo Successivo",
-    "partialTranslation": "Alcuni contenuti sono visualizzati in inglese",
     "pagination": {
       "previous": "Precedente",
       "next": "Successivo",

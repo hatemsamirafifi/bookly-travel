@@ -97,7 +97,9 @@
       "nameRequired": "El nombre completo es obligatorio.",
       "invalidLocale": "El idioma seleccionado no es compatible.",
       "invalidToken": "Este enlace de restablecimiento es inválido o ha expirado.",
-      "resetExpired": "Este enlace de restablecimiento de contraseña ha expirado."
+      "resetExpired": "Este enlace de restablecimiento de contraseña ha expirado.",
+      "networkError": "Problema de conexión. Comprueba tu conexión a internet e inténtalo de nuevo.",
+      "genericError": "Algo salió mal. Inténtalo de nuevo."
     }
   },
   "search": {
@@ -1107,7 +1109,6 @@
     "draftNotice": "Este artículo es actualmente un borrador.",
     "previousPost": "Artículo Anterior",
     "nextPost": "Siguiente Artículo",
-    "partialTranslation": "Parte del contenido se muestra en inglés",
     "pagination": {
       "previous": "Anterior",
       "next": "Siguiente",

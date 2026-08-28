@@ -8,7 +8,11 @@ import {
   guestConvertSchema
 } from '../validators/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+// Same rule as client.ts: browsers use NEXT_PUBLIC_API_URL when set (native
+// local dev) or same-origin relative URLs through nginx. The auth endpoints
+// below append their own /api/public/auth prefix, so the base must not
+// contain a path segment.
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export interface User {
   id: number;
@@ -78,11 +82,23 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     ...options.headers,
   };
 
-  const response = await fetch(`${API_URL}/api/public/auth${endpoint}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}/api/public/auth${endpoint}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch (error) {
+    // Aborts (page navigation, cancelled requests) must keep their native
+    // shape so callers like useAuth.restoreSession() can detect them.
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw error;
+    }
+    // Browser-level network failure (offline, DNS, unreachable API). Surface
+    // a typed, translatable error instead of a raw "Failed to fetch".
+    throw new AuthApiError('Network request failed', undefined, 'network_error', 0);
+  }
 
   const data: unknown = await response.json().catch(() => null);
 

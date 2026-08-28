@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Trash2, Calendar, Clock, Users, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
+import { getApiBaseUrl } from '@/lib/api/client';
 
 interface AvailabilityRule {
   id: number;
@@ -61,7 +62,7 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
     setError(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/availability`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/availability`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
           Accept: 'application/json',
@@ -87,7 +88,7 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
     setError(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/availability/rules`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/availability/rules`, {
         method: 'POST',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
@@ -124,7 +125,7 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
     setError(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/availability/exceptions`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/availability/exceptions`, {
         method: 'POST',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
@@ -161,7 +162,7 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
     if (!confirm('Delete this recurring rule?')) return;
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/availability/rules/${id}`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/availability/rules/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
@@ -179,7 +180,7 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
     if (!confirm('Delete this override exception?')) return;
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${tourId}/availability/exceptions/${id}`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${tourId}/availability/exceptions/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',

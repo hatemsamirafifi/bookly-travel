@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Calendar, Coins, Send, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
+import { getApiBaseUrl } from '@/lib/api/client';
 
 interface Translation {
   title: string;
@@ -74,7 +75,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     setError(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${id}`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
           Accept: 'application/json',
@@ -156,7 +157,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       if (translationData.es.title) translationsPayload.es = translationData.es;
       if (translationData.it.title) translationsPayload.it = translationData.it;
 
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${id}`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}`, {
         method: 'PUT',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
@@ -192,7 +193,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     setSuccessMsg(null);
     try {
       const token = getAuthToken();
-      const res = await fetch(`http://localhost:8000/api/partner/tours/${id}/submit`, {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}/submit`, {
         method: 'POST',
         headers: {
           Authorization: token ? `Bearer ${token}` : '',

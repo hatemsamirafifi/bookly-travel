@@ -97,7 +97,9 @@
       "nameRequired": "Full name is required.",
       "invalidLocale": "Selected language is not supported.",
       "invalidToken": "This reset link is invalid or has expired.",
-      "resetExpired": "This password reset link has expired."
+      "resetExpired": "This password reset link has expired.",
+      "networkError": "Connection problem. Please check your internet connection and try again.",
+      "genericError": "Something went wrong. Please try again."
     }
   },
   "search": {
@@ -1107,7 +1109,6 @@
     "draftNotice": "This article is currently a draft.",
     "previousPost": "Previous Article",
     "nextPost": "Next Article",
-    "partialTranslation": "Some content is displayed in English",
     "pagination": {
       "previous": "Previous",
       "next": "Next",

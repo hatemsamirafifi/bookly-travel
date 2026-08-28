@@ -26,17 +26,25 @@ export function ForgotPasswordForm() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
+  // Zod messages in lib/validators/auth.ts are auth.* i18n keys; resolve them
+  // here so users never see a raw key (e.g. "auth.errors.invalidEmail").
+  const formatError = (message?: string) => {
+    if (!message) return '';
+    return message.startsWith('auth.') ? t(message.replace('auth.', '')) : message;
+  };
+
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setServerError(null);
     try {
       await authApi.forgotPassword(data);
       setSuccess(true);
     } catch (err: unknown) {
-      if (err instanceof AuthApiError) {
+      if (err instanceof AuthApiError && err.code === 'network_error') {
+        setServerError(t('errors.networkError'));
+      } else if (err instanceof AuthApiError) {
         setServerError(err.message);
       } else {
-        const message = err instanceof Error ? err.message : t('errors.invalidCredentials');
-        setServerError(message);
+        setServerError(t('errors.genericError'));
       }
     }
   };
@@ -79,7 +87,7 @@ export function ForgotPasswordForm() {
         />
         {errors.email && (
           <p id="forgot-email-error" className="text-[0.8125rem] text-error m-0" role="alert">
-            {errors.email.message}
+            {formatError(errors.email.message)}
           </p>
         )}
       </div>
