@@ -6,10 +6,10 @@ namespace App\Domains\Blog\Actions;
 
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Services\BlogCache;
 use App\Domains\Blog\Transformers\BlogPostTransformer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 final class ListBlogPostsAction
 {
@@ -44,7 +44,7 @@ final class ListBlogPostsAction
         ]));
         $cacheKey = "bookly:blog:list:{$locale}:{$cacheHash}";
 
-        return Cache::tags(['blog', 'blog_list'])->remember($cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
+        return BlogCache::remember(['blog', 'blog_list'], $cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
                 ->with(['author', 'authorProfile.user', 'category'])

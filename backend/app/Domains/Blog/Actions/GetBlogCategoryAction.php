@@ -6,10 +6,10 @@ namespace App\Domains\Blog\Actions;
 
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Services\BlogCache;
 use App\Domains\Blog\Transformers\BlogPostTransformer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class GetBlogCategoryAction
@@ -54,7 +54,7 @@ final class GetBlogCategoryAction
         ]));
         $cacheKey = "bookly:blog:category:{$slug}:{$locale}:{$cacheHash}";
 
-        return Cache::tags(['blog', 'blog_categories'])->remember($cacheKey, 300, function () use ($category, $perPage, $page, $locale) {
+        return BlogCache::remember(['blog', 'blog_categories'], $cacheKey, 300, function () use ($category, $perPage, $page, $locale) {
             $query = BlogPost::query()
                 ->published()
                 ->with(['author', 'authorProfile.user', 'category'])
