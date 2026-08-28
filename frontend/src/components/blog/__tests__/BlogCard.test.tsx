@@ -13,7 +13,7 @@ jest.mock('next/image', () => ({
 jest.mock('next-intl', () => ({
   useTranslations: () => (key: string, values?: { minutes?: number }) => {
     if (key === 'readingTime') return `${values?.minutes ?? 0} min read`;
-    if (key === 'translationWarning') return 'Content only available in English';
+    if (key === 'partialTranslation') return 'Content only available in English';
     return key;
   },
 }));

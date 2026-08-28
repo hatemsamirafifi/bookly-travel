@@ -28,7 +28,7 @@ class EditBlogPost extends EditRecord
                     $generator = app(GeneratePreviewTokenAction::class);
                     $tokenData = $generator->execute($record->slug);
                     $frontendUrl = config('app.frontend_url', 'http://localhost:3000');
-                    $previewUrl = "{$frontendUrl}/en/blog/{$record->slug}/preview?token={$tokenData['token']}";
+                    $previewUrl = "{$frontendUrl}/en/blog/{$record->slug}/preview?token=" . rawurlencode($tokenData['token']);
 
                     Notification::make()
                         ->title('Preview Link Active (30 mins)')

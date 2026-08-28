@@ -96,7 +96,7 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
           {post.translation_warning && (
             <span
               className="inline-flex items-center rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-700"
-              title={t('translationWarning')}
+              title={t('partialTranslation')}
             >
               EN
             </span>

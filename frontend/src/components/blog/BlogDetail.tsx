@@ -28,7 +28,7 @@ export default function BlogDetail({ post, locale, isPreview }: BlogDetailProps)
 
       {post.translation_warning && (
         <div className="mb-6 rounded-lg bg-blue-50 border border-blue-200 p-4 text-sm text-blue-800">
-          {t('translationWarning')}
+          {t('partialTranslation')}
         </div>
       )}
 
