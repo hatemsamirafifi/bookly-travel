@@ -61,7 +61,7 @@ final class GetBlogCategoryAction
                 ->where('blog_category_id', $category->id)
                 ->orderByDesc('published_at');
 
-            /** @var LengthAwarePaginator<BlogPost> $paginator */
+            /** @var LengthAwarePaginator<int, BlogPost> $paginator */
             $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
             $transformedItems = [];

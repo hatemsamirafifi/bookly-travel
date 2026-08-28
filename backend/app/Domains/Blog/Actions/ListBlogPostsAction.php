@@ -60,7 +60,7 @@ final class ListBlogPostsAction
                 }
             }
 
-            /** @var LengthAwarePaginator<BlogPost> $paginator */
+            /** @var LengthAwarePaginator<int, BlogPost> $paginator */
             $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
             $transformedItems = [];

@@ -77,7 +77,7 @@ Paginated list of published blog posts, optionally filtered by category.
 
 ### Cache
 
-- Backend: `Cache::remember('bookly:blog:list:{locale}:{hash}', 300)` — 5 minutes, keyed by locale + query params hash.
+- Backend: `Cache::tags(['blog','blog_list'])->remember('bookly:blog:list:{locale}:{hash}', 300)` — 5 minutes, keyed by locale + query params hash. Stored under tags so `InvalidateBlogCacheJob` can flush it (see ADR 0014).
 - Frontend: `revalidate: 300` (Next.js data cache).
 
 ---
@@ -256,7 +256,7 @@ Category detail with paginated posts in that category.
 
 ### Cache
 
-- Backend: `Cache::remember('bookly:blog:category:{slug}:{locale}:{hash}', 300)` — 5 minutes.
+- Backend: `Cache::tags(['blog','blog_categories'])->remember('bookly:blog:category:{slug}:{locale}:{hash}', 300)` — 5 minutes. Stored under tags so `InvalidateBlogCacheJob` can flush it (see ADR 0014).
 - Frontend: `revalidate: 300`.
 
 ---
