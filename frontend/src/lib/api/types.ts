@@ -202,12 +202,12 @@ export interface BlogCategoryResponse {
     slug: string;
     description?: string | null;
     posts: BlogPostCard[];
-    meta: {
-      current_page: number;
-      last_page: number;
-      per_page: number;
-      total: number;
-    };
+  };
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
   };
 }
 

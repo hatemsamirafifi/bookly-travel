@@ -93,7 +93,8 @@ export default async function BlogCategoryPage({
     return <BlogUnavailable status={err?.status || 500} />;
   }
 
-  const { name: categoryName, slug: categorySlug, description: categoryDescription, posts, meta } = categoryResponse.data;
+  const { data: categoryData, meta } = categoryResponse;
+  const { name: categoryName, slug: categorySlug, description: categoryDescription, posts } = categoryData;
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://booklytravel.com';
   const breadcrumbItems = [
