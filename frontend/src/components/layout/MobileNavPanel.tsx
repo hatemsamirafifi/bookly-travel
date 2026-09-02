@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 interface MobileNavPanelProps {
   locale: string;
   userName?: string;
+  userRole?: 'traveler' | 'partner' | 'admin';
   isAuthenticated: boolean;
   isOpen: boolean;
   onClose: () => void;
@@ -15,6 +16,7 @@ interface MobileNavPanelProps {
 export default function MobileNavPanel({
   locale,
   userName,
+  userRole,
   isAuthenticated,
   isOpen,
   onClose,
@@ -22,14 +24,25 @@ export default function MobileNavPanel({
 }: MobileNavPanelProps) {
   const t = useTranslations('nav');
   const travelerT = useTranslations('traveler.nav');
+  const partnerT = useTranslations('partner.nav');
 
   if (!isOpen) return null;
+
+  const isPartner = userRole === 'partner';
 
   const mainLinks = [
     { href: `/${locale}`, label: t('home') },
     { href: `/${locale}/search`, label: t('search') },
     { href: `/${locale}/categories`, label: t('categories') },
     { href: `/${locale}/destinations`, label: t('destinations') },
+  ];
+
+  const partnerLinks = [
+    { href: `/${locale}/partner`, label: partnerT('dashboard') },
+    { href: `/${locale}/partner/tours`, label: partnerT('tours') },
+    { href: `/${locale}/partner/bookings`, label: partnerT('bookings') },
+    { href: `/${locale}/partner/reviews`, label: partnerT('reviews') },
+    { href: `/${locale}/partner/profile`, label: partnerT('profile') },
   ];
 
   const travelerLinks = [
@@ -39,6 +52,9 @@ export default function MobileNavPanel({
     { href: `/${locale}/my-reviews`, label: travelerT('myReviews') },
     { href: `/${locale}/profile`, label: travelerT('profile') },
   ];
+
+  const authLinks = isPartner ? partnerLinks : travelerLinks;
+  const signOutLabel = isPartner ? partnerT('signOut') : travelerT('signOut');
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/40 sm:hidden">
@@ -68,7 +84,7 @@ export default function MobileNavPanel({
               <div className="my-3 border-t border-gray-200" />
               <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wide text-gray-500">{userName}</p>
               <ul className="space-y-1">
-                {travelerLinks.map((link) => (
+                {authLinks.map((link) => (
                   <li key={`${link.href}-${link.label}`}>
                     <Link href={link.href} className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" onClick={onClose}>
                       {link.label}
@@ -83,7 +99,7 @@ export default function MobileNavPanel({
                     }}
                     className="w-full rounded-md px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50"
                   >
-                    {travelerT('signOut')}
+                    {signOutLabel}
                   </button>
                 </li>
               </ul>

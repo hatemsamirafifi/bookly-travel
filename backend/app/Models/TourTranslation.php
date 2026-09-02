@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourTranslation extends Model
 {
+    protected $touches = ['tour'];
+
     protected $fillable = [
         'tour_id',
         'locale',

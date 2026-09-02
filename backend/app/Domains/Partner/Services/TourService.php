@@ -141,6 +141,8 @@ class TourService
                 $this->syncAvailabilityExceptions($tour, $data['availability_exceptions']);
             }
 
+            $tour->touch();
+
             return $tour->fresh();
         });
     }
@@ -148,18 +150,35 @@ class TourService
     protected function syncTranslations(Tour $tour, array $translations): void
     {
         foreach ($translations as $locale => $content) {
-            $tour->translations()->updateOrCreate(
-                ['locale' => $locale],
-                [
-                    'title' => $content['title'] ?? '',
-                    'description' => $content['description'] ?? null,
-                    'highlights' => $content['highlights'] ?? null,
-                    'inclusions' => $content['inclusions'] ?? null,
-                    'exclusions' => $content['exclusions'] ?? null,
-                    'meeting_point' => $content['meeting_point'] ?? null,
-                    'cancellation_policy' => $content['cancellation_policy'] ?? null,
-                ]
-            );
+            $updateData = [];
+            if (isset($content['title'])) {
+                $updateData['title'] = $content['title'];
+            }
+            if (isset($content['description'])) {
+                $updateData['description'] = $content['description'];
+            }
+            if (isset($content['highlights'])) {
+                $updateData['highlights'] = $content['highlights'];
+            }
+            if (isset($content['inclusions'])) {
+                $updateData['inclusions'] = $content['inclusions'];
+            }
+            if (isset($content['exclusions'])) {
+                $updateData['exclusions'] = $content['exclusions'];
+            }
+            if (isset($content['meeting_point'])) {
+                $updateData['meeting_point'] = $content['meeting_point'];
+            }
+            if (isset($content['cancellation_policy'])) {
+                $updateData['cancellation_policy'] = $content['cancellation_policy'];
+            }
+
+            if (! empty($updateData)) {
+                $tour->translations()->updateOrCreate(
+                    ['locale' => $locale],
+                    $updateData
+                );
+            }
         }
     }
 

@@ -109,6 +109,12 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
 
   useEffect(() => {
     let cancelled = false;
+
+    if (!reference || !reference.trim()) {
+      setState({ kind: 'notFound' });
+      return;
+    }
+
     getBookingDetail(reference)
       .then((res) => {
         if (!cancelled) setState({ kind: 'loaded', booking: res.data });
@@ -121,7 +127,7 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
           : undefined;
         if (status === 401) {
           // Not authenticated — send the traveler to log in and back here.
-          router.push(`/${locale}/login?redirect=/${locale}/booking/confirmation?ref=${encodeURIComponent(reference)}`);
+          router.push(`/${locale}/auth/login?returnUrl=/${locale}/booking/confirmation?ref=${encodeURIComponent(reference)}`);
           return;
         }
         if (status === 404) {

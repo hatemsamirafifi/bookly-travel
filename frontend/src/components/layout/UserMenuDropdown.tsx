@@ -6,13 +6,32 @@ import { useTranslations } from 'next-intl';
 interface UserMenuDropdownProps {
   locale: string;
   userName: string;
+  userRole?: 'traveler' | 'partner' | 'admin';
   isOpen: boolean;
   onClose: () => void;
   onLogout: () => void;
 }
 
-export default function UserMenuDropdown({ locale, isOpen, onClose, onLogout }: UserMenuDropdownProps) {
+export default function UserMenuDropdown({
+  locale,
+  isOpen,
+  userRole,
+  onClose,
+  onLogout,
+}: UserMenuDropdownProps) {
   const travelerT = useTranslations('traveler.nav');
+  const partnerT = useTranslations('partner.nav');
+
+  if (!isOpen) return null;
+
+  const isPartner = userRole === 'partner';
+
+  const partnerLinks = [
+    { href: `/${locale}/partner/tours`, label: partnerT('tours') },
+    { href: `/${locale}/partner/bookings`, label: partnerT('bookings') },
+    { href: `/${locale}/partner/reviews`, label: partnerT('reviews') },
+    { href: `/${locale}/partner/profile`, label: partnerT('profile') },
+  ];
 
   const travelerLinks = [
     { href: `/${locale}/my-bookings`, label: travelerT('myBookings') },
@@ -21,7 +40,10 @@ export default function UserMenuDropdown({ locale, isOpen, onClose, onLogout }: 
     { href: `/${locale}/profile`, label: travelerT('profile') },
   ];
 
-  if (!isOpen) return null;
+  const dashboardHref = isPartner ? `/${locale}/partner` : `/${locale}/my-bookings`;
+  const dashboardLabel = isPartner ? partnerT('dashboard') : travelerT('dashboard');
+  const links = isPartner ? partnerLinks : travelerLinks;
+  const signOutLabel = isPartner ? partnerT('signOut') : travelerT('signOut');
 
   return (
     <div
@@ -29,14 +51,14 @@ export default function UserMenuDropdown({ locale, isOpen, onClose, onLogout }: 
       role="menu"
     >
       <Link
-        href={`/${locale}/my-bookings`}
+        href={dashboardHref}
         className="block rounded-md px-3 py-2 text-sm font-semibold text-[#0A2540] hover:bg-gray-50"
         role="menuitem"
         onClick={onClose}
       >
-        {travelerT('dashboard')}
+        {dashboardLabel}
       </Link>
-      {travelerLinks.map((link) => (
+      {links.map((link) => (
         <Link
           key={link.href}
           href={link.href}
@@ -55,7 +77,7 @@ export default function UserMenuDropdown({ locale, isOpen, onClose, onLogout }: 
         className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50"
         role="menuitem"
       >
-        {travelerT('signOut')}
+        {signOutLabel}
       </button>
     </div>
   );

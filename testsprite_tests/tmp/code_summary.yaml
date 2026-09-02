@@ -1,0 +1,476 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - Next.js 16 (App Router, React 19 Server/Client Components)
+  - Tailwind CSS 4
+  - next-intl (locales en/es/it via [locale] route segment)
+  - TanStack React Query
+  - Zustand
+  - React Hook Form + Zod
+  - Stripe.js (@stripe/react-stripe-js PaymentElement)
+  - Laravel 11 REST API backend (Sanctum bearer tokens) at NEXT_PUBLIC_API_URL
+routes:
+  - path: /en
+    file: frontend/src/app/[locale]/(public)/page.tsx
+    auth_required: false
+    description: Homepage with hero search, featured tours, destinations and categories
+  - path: /en/search
+    file: frontend/src/app/[locale]/(public)/search/page.tsx
+    auth_required: false
+    description: Tour search results with filters (query, date, participants, price, sort, pagination)
+  - path: /en/tours/[slug]
+    file: frontend/src/app/[locale]/(public)/tours/[slug]/page.tsx
+    auth_required: false
+    description: Tour detail page with gallery, description, price, reviews and book CTA
+  - path: /en/categories/[slug]
+    file: frontend/src/app/[locale]/(public)/categories/[slug]/page.tsx
+    auth_required: false
+    description: Tours filtered by category
+  - path: /en/destinations/[slug]
+    file: frontend/src/app/[locale]/(public)/destinations/[slug]/page.tsx
+    auth_required: false
+    description: Tours filtered by destination
+  - path: /en/booking
+    file: frontend/src/app/[locale]/(public)/booking/page.tsx
+    auth_required: false
+    description: Booking checkout - date, participants, contact details, Stripe payment
+  - path: /en/booking/confirmation
+    file: frontend/src/app/[locale]/(public)/booking/confirmation/page.tsx
+    auth_required: false
+    description: Booking confirmation with reference number and payment status
+  - path: /en/blog
+    file: frontend/src/app/[locale]/(public)/blog/page.tsx
+    auth_required: false
+    description: Blog listing with categories and pagination
+  - path: /en/blog/[slug]
+    file: frontend/src/app/[locale]/(public)/blog/[slug]/page.tsx
+    auth_required: false
+    description: Blog post detail
+  - path: /en/blog/category/[slug]
+    file: frontend/src/app/[locale]/(public)/blog/category/[slug]/page.tsx
+    auth_required: false
+    description: Blog posts filtered by category
+  - path: /en/blog/[slug]/preview
+    file: frontend/src/app/[locale]/(public)/blog/[slug]/preview/page.tsx
+    auth_required: false
+    description: Draft blog post preview via signed token
+  - path: /en/terms
+    file: frontend/src/app/[locale]/(public)/terms/page.tsx
+    auth_required: false
+    description: Terms of service static page
+  - path: /en/privacy
+    file: frontend/src/app/[locale]/(public)/privacy/page.tsx
+    auth_required: false
+    description: Privacy policy static page
+  - path: /v/[reference]
+    file: frontend/src/app/v/[reference]/page.tsx
+    auth_required: false
+    description: Public booking lookup by reference number
+  - path: /en/auth/login
+    file: frontend/src/app/[locale]/(auth)/auth/login/page.tsx
+    auth_required: false
+    description: Traveler/partner email+password login
+  - path: /en/auth/register
+    file: frontend/src/app/[locale]/(auth)/auth/register/page.tsx
+    auth_required: false
+    description: Traveler account registration
+  - path: /en/auth/forgot-password
+    file: frontend/src/app/[locale]/(auth)/auth/forgot-password/page.tsx
+    auth_required: false
+    description: Request password reset email
+  - path: /en/auth/reset-password
+    file: frontend/src/app/[locale]/(auth)/auth/reset-password/page.tsx
+    auth_required: false
+    description: Set new password with reset token
+  - path: /en/auth/verify-email
+    file: frontend/src/app/[locale]/(auth)/auth/verify-email/page.tsx
+    auth_required: false
+    description: Email verification landing page
+  - path: /en/auth/partner-register
+    file: frontend/src/app/[locale]/(auth)/auth/partner-register/page.tsx
+    auth_required: false
+    description: Partner company registration
+  - path: /en/partner-invite/[token]
+    file: frontend/src/app/[locale]/(auth)/partner-invite/[token]/page.tsx
+    auth_required: false
+    description: Partner invitation acceptance flow
+  - path: /en/profile
+    file: frontend/src/app/[locale]/(traveler)/profile/page.tsx
+    auth_required: true
+    description: Traveler profile view/edit and change password
+  - path: /en/wishlist
+    file: frontend/src/app/[locale]/(traveler)/wishlist/page.tsx
+    auth_required: true
+    description: Saved tours wishlist
+  - path: /en/my-bookings
+    file: frontend/src/app/[locale]/(traveler)/my-bookings/page.tsx
+    auth_required: true
+    description: Traveler bookings list with status badges
+  - path: /en/my-bookings/[reference]
+    file: frontend/src/app/[locale]/(traveler)/my-bookings/[reference]/page.tsx
+    auth_required: true
+    description: Booking detail with voucher download and cancellation
+  - path: /en/my-reviews
+    file: frontend/src/app/[locale]/(traveler)/my-reviews/page.tsx
+    auth_required: true
+    description: Traveler reviews list with edit capability
+  - path: /en/partner
+    file: frontend/src/app/[locale]/(partner)/partner/page.tsx
+    auth_required: true
+    description: Partner dashboard overview
+  - path: /en/partner/onboarding
+    file: frontend/src/app/[locale]/(partner)/partner/onboarding/page.tsx
+    auth_required: true
+    description: Partner onboarding/approval status
+  - path: /en/partner/tours
+    file: frontend/src/app/[locale]/(partner)/partner/tours/page.tsx
+    auth_required: true
+    description: Partner tours list management
+  - path: /en/partner/tours/create
+    file: frontend/src/app/[locale]/(partner)/partner/tours/create/page.tsx
+    auth_required: true
+    description: Create new tour
+  - path: /en/partner/tours/[id]/edit
+    file: frontend/src/app/[locale]/(partner)/partner/tours/[id]/edit/page.tsx
+    auth_required: true
+    description: Edit tour details
+  - path: /en/partner/tours/[id]/pricing
+    file: frontend/src/app/[locale]/(partner)/partner/tours/[id]/pricing/page.tsx
+    auth_required: true
+    description: Tour pricing configuration
+  - path: /en/partner/tours/[id]/availability
+    file: frontend/src/app/[locale]/(partner)/partner/tours/[id]/availability/page.tsx
+    auth_required: true
+    description: Tour availability calendar
+  - path: /en/partner/bookings
+    file: frontend/src/app/[locale]/(partner)/partner/bookings/page.tsx
+    auth_required: true
+    description: Partner bookings list with status updates
+  - path: /en/partner/reviews
+    file: frontend/src/app/[locale]/(partner)/partner/reviews/page.tsx
+    auth_required: true
+    description: Partner reviews inbox with response capability
+  - path: /en/partner/analytics
+    file: frontend/src/app/[locale]/(partner)/partner/analytics/page.tsx
+    auth_required: true
+    description: Partner analytics charts and metrics
+  - path: /en/partner/profile
+    file: frontend/src/app/[locale]/(partner)/partner/profile/page.tsx
+    auth_required: true
+    description: Partner company profile and settings
+features:
+  - name: Traveler Login
+    description: Email and password login returning Sanctum bearer token stored client-side
+    files:
+      - frontend/src/app/[locale]/(auth)/auth/login/page.tsx
+      - frontend/src/components/auth/LoginForm.tsx
+      - frontend/src/lib/api/auth.ts
+    entry_route: /en/auth/login
+    user_interactions:
+      - Fill email input field
+      - Fill password input field
+      - Click sign-in button to submit
+      - See error message on invalid credentials
+      - Get redirected on successful login
+    api_calls:
+      - method: POST
+        endpoint: /api/public/auth/login
+    auth_required: false
+  - name: Traveler Registration
+    description: Create traveler account with name, email, password and locale preference
+    files:
+      - frontend/src/app/[locale]/(auth)/auth/register/page.tsx
+      - frontend/src/lib/api/auth.ts
+    entry_route: /en/auth/register
+    user_interactions:
+      - Fill name, email and password fields
+      - Submit registration form
+      - See validation errors for invalid input
+    api_calls:
+      - method: POST
+        endpoint: /api/public/auth/register
+    auth_required: false
+  - name: Password Recovery
+    description: Forgot-password email request and reset-password form
+    files:
+      - frontend/src/app/[locale]/(auth)/auth/forgot-password/page.tsx
+      - frontend/src/app/[locale]/(auth)/auth/reset-password/page.tsx
+      - frontend/src/lib/api/auth.ts
+    entry_route: /en/auth/forgot-password
+    user_interactions:
+      - Fill email and submit forgot-password request
+      - See success message when reset link sent
+    api_calls:
+      - method: POST
+        endpoint: /api/public/auth/forgot-password
+      - method: POST
+        endpoint: /api/public/auth/reset-password
+    auth_required: false
+  - name: Homepage Browsing
+    description: Landing page with hero search bar, featured tours, destinations and category cards
+    files:
+      - frontend/src/app/[locale]/(public)/page.tsx
+      - frontend/src/components/home
+      - frontend/src/lib/api/homepage.ts
+    entry_route: /en
+    user_interactions:
+      - Type destination or keyword into hero search
+      - Click search to navigate to results
+      - Click featured tour cards to open tour detail
+      - Click destination and category cards to browse
+    api_calls:
+      - method: GET
+        endpoint: /api/public/homepage
+    auth_required: false
+  - name: Tour Search and Filters
+    description: Search results page with text query, date, participants, price range, sort and pagination
+    files:
+      - frontend/src/app/[locale]/(public)/search/page.tsx
+      - frontend/src/components/search
+      - frontend/src/lib/api/search.ts
+    entry_route: /en/search
+    user_interactions:
+      - Enter search query and apply filters
+      - Change sort order
+      - Paginate through results
+      - Click a tour card to open detail
+    api_calls:
+      - method: GET
+        endpoint: /api/public/search/tours
+    auth_required: false
+  - name: Tour Detail
+    description: Tour page with images, description, highlights, price, reviews and wishlist toggle
+    files:
+      - frontend/src/app/[locale]/(public)/tours/[slug]/page.tsx
+      - frontend/src/components/tour
+      - frontend/src/lib/api/tours.ts
+    entry_route: /en/tours/hidden-gems-rome-walking-tour
+    user_interactions:
+      - Browse tour gallery and description
+      - Read reviews
+      - Toggle wishlist heart (requires login)
+      - Select date and participants
+      - Click book button to go to checkout
+    api_calls:
+      - method: GET
+        endpoint: /api/public/tours/{slug}
+    auth_required: false
+  - name: Booking Checkout
+    description: Guest or logged-in checkout with contact details, then Stripe PaymentElement and confirmation
+    files:
+      - frontend/src/app/[locale]/(public)/booking/page.tsx
+      - frontend/src/components/booking/BookingForm.tsx
+      - frontend/src/components/booking/StripePaymentForm.tsx
+      - frontend/src/lib/api/bookings.ts
+    entry_route: /en/booking
+    user_interactions:
+      - Select tour date and participant count
+      - Fill name, email and phone contact details
+      - Submit booking
+      - Enter card details in Stripe PaymentElement
+      - Confirm payment and land on confirmation page with reference
+    api_calls:
+      - method: POST
+        endpoint: /api/public/bookings
+    auth_required: false
+  - name: My Bookings
+    description: Traveler bookings list and detail with voucher download and cancellation
+    files:
+      - frontend/src/app/[locale]/(traveler)/my-bookings/page.tsx
+      - frontend/src/app/[locale]/(traveler)/my-bookings/[reference]/page.tsx
+      - frontend/src/hooks/useBookings.ts
+      - frontend/src/hooks/useCancelBooking.ts
+      - frontend/src/lib/api/traveler.ts
+    entry_route: /en/my-bookings
+    user_interactions:
+      - View list of bookings with status
+      - Open booking detail by reference
+      - Download voucher
+      - Cancel eligible booking and confirm in dialog
+    api_calls:
+      - method: GET
+        endpoint: /api/public/traveler/bookings
+      - method: GET
+        endpoint: /api/public/traveler/bookings/{reference}
+      - method: POST
+        endpoint: /api/public/traveler/bookings/{reference}/cancel
+      - method: GET
+        endpoint: /api/public/traveler/bookings/{reference}/voucher
+    auth_required: true
+  - name: Wishlist
+    description: Save and remove tours from personal wishlist
+    files:
+      - frontend/src/app/[locale]/(traveler)/wishlist/page.tsx
+      - frontend/src/hooks/useWishlist.ts
+      - frontend/src/lib/api/traveler.ts
+    entry_route: /en/wishlist
+    user_interactions:
+      - View saved tours grid
+      - Remove tour from wishlist
+      - Click tour to open detail
+    api_calls:
+      - method: GET
+        endpoint: /api/public/traveler/wishlist
+      - method: POST
+        endpoint: /api/public/traveler/wishlist
+      - method: DELETE
+        endpoint: /api/public/traveler/wishlist/{tourId}
+    auth_required: true
+  - name: Traveler Profile
+    description: View and edit profile details and change password
+    files:
+      - frontend/src/app/[locale]/(traveler)/profile/page.tsx
+      - frontend/src/hooks/useProfile.ts
+      - frontend/src/hooks/useChangePassword.ts
+      - frontend/src/lib/api/traveler.ts
+    entry_route: /en/profile
+    user_interactions:
+      - Edit name and locale preference
+      - Save profile changes
+      - Fill current and new password fields
+      - Submit change password form
+    api_calls:
+      - method: GET
+        endpoint: /api/public/traveler/profile
+      - method: PUT
+        endpoint: /api/public/traveler/profile
+      - method: POST
+        endpoint: /api/public/traveler/profile/change-password
+    auth_required: true
+  - name: My Reviews
+    description: Traveler reviews list with submit and edit within 48h window
+    files:
+      - frontend/src/app/[locale]/(traveler)/my-reviews/page.tsx
+      - frontend/src/hooks/useMyReviews.ts
+      - frontend/src/lib/api/traveler.ts
+    entry_route: /en/my-reviews
+    user_interactions:
+      - View submitted reviews
+      - Edit review rating and comment
+      - Save edited review
+    api_calls:
+      - method: GET
+        endpoint: /api/public/traveler/reviews
+    auth_required: true
+  - name: Partner Tours Management
+    description: Partner CRUD for tours including create, edit, pricing, availability and archive
+    files:
+      - frontend/src/app/[locale]/(partner)/partner/tours/page.tsx
+      - frontend/src/app/[locale]/(partner)/partner/tours/create/page.tsx
+      - frontend/src/app/[locale]/(partner)/partner/tours/[id]/edit/page.tsx
+      - frontend/src/lib/api/partner.ts
+    entry_route: /en/partner/tours
+    user_interactions:
+      - View tours list with status
+      - Create new tour via multi-field form
+      - Edit tour details and save
+      - Archive tour
+    api_calls:
+      - method: GET
+        endpoint: /api/partner/tours
+      - method: POST
+        endpoint: /api/partner/tours
+      - method: PUT
+        endpoint: /api/partner/tours/{id}
+      - method: POST
+        endpoint: /api/partner/tours/{id}/archive
+    auth_required: true
+  - name: Partner Bookings
+    description: Partner view of incoming bookings with status updates and cancellation requests
+    files:
+      - frontend/src/app/[locale]/(partner)/partner/bookings/page.tsx
+      - frontend/src/lib/api/partner.ts
+    entry_route: /en/partner/bookings
+    user_interactions:
+      - View bookings list with filters
+      - Open booking detail
+      - Update booking status
+    api_calls:
+      - method: GET
+        endpoint: /api/partner/bookings
+      - method: GET
+        endpoint: /api/partner/bookings/{reference}
+      - method: PATCH
+        endpoint: /api/partner/bookings/{reference}/status
+    auth_required: true
+  - name: Partner Reviews and Responses
+    description: Partner reviews inbox with public response capability
+    files:
+      - frontend/src/app/[locale]/(partner)/partner/reviews/page.tsx
+      - frontend/src/lib/api/partner.ts
+    entry_route: /en/partner/reviews
+    user_interactions:
+      - View received reviews
+      - Write and submit public response
+    api_calls:
+      - method: GET
+        endpoint: /api/partner/reviews
+      - method: POST
+        endpoint: /api/partner/reviews/{reviewId}/responses
+    auth_required: true
+  - name: Partner Analytics
+    description: Partner analytics dashboard with revenue and booking charts
+    files:
+      - frontend/src/app/[locale]/(partner)/partner/analytics/page.tsx
+      - frontend/src/hooks/usePartnerAnalytics.ts
+      - frontend/src/lib/api/partner.ts
+    entry_route: /en/partner/analytics
+    user_interactions:
+      - Select date range
+      - View booking and revenue metrics and charts
+    api_calls:
+      - method: GET
+        endpoint: /api/partner/analytics
+    auth_required: true
+  - name: Partner Profile and Settings
+    description: Partner company profile, settings and notification preferences
+    files:
+      - frontend/src/app/[locale]/(partner)/partner/profile/page.tsx
+      - frontend/src/lib/api/partner.ts
+    entry_route: /en/partner/profile
+    user_interactions:
+      - View and edit company profile
+      - Save settings
+    api_calls:
+      - method: GET
+        endpoint: /api/partner/profile
+      - method: PUT
+        endpoint: /api/partner/profile
+      - method: GET
+        endpoint: /api/partner/settings
+      - method: PUT
+        endpoint: /api/partner/settings
+    auth_required: true
+  - name: Blog
+    description: Travel blog listing, post detail and category pages
+    files:
+      - frontend/src/app/[locale]/(public)/blog/page.tsx
+      - frontend/src/app/[locale]/(public)/blog/[slug]/page.tsx
+      - frontend/src/lib/api/blog.ts
+    entry_route: /en/blog
+    user_interactions:
+      - Browse blog listing and paginate
+      - Filter by category
+      - Open and read blog post
+    api_calls:
+      - method: GET
+        endpoint: /api/public/blog
+      - method: GET
+        endpoint: /api/public/blog/{slug}
+      - method: GET
+        endpoint: /api/public/blog/category/{slug}
+    auth_required: false
+known_limitations:
+  - issue: Stripe publishable key is a placeholder (pk_test_placeholder) in frontend .env.local
+    location: frontend/.env.local
+    impact: The Stripe PaymentElement step of checkout cannot load real card fields; booking creation up to the payment step works, full payment completion requires valid Stripe test keys
+  - issue: Seeded catalog is minimal (3 tours, 1 published - hidden-gems-rome-walking-tour)
+    location: backend/database/seeders/PartnerSeeder.php
+    impact: Search, homepage and category pages show limited data; use slug hidden-gems-rome-walking-tour for tour detail and booking tests
+  - issue: Email delivery is not configured in local Docker
+    location: backend/.env
+    impact: Forgot-password and email-verification flows cannot complete via real email link; only the request step is testable
+  - issue: Partner registration requires admin approval (onboarding status)
+    location: frontend/src/app/[locale]/(partner)/partner/onboarding/page.tsx
+    impact: Newly registered partners may be gated at onboarding; use seeded partner@bookly.test for partner-area tests

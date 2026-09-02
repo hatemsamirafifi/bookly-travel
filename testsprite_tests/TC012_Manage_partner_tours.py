@@ -1,0 +1,111 @@
+import asyncio
+import re
+from playwright import async_api
+from playwright.async_api import expect
+
+async def run_test():
+    pw = None
+    browser = None
+    context = None
+
+    try:
+        # Start a Playwright session in asynchronous mode
+        pw = await async_api.async_playwright().start()
+
+        # Launch a Chromium browser in headless mode with custom arguments
+        browser = await pw.chromium.launch(
+            headless=True,
+            args=[
+                "--window-size=1280,720",
+                "--disable-dev-shm-usage",
+                "--ipc=host",
+                "--single-process"
+            ],
+        )
+
+        # Create a new browser context (like an incognito window)
+        context = await browser.new_context()
+        # Wider default timeout to match the agent's DOM-stability budget;
+        # auto-waiting Playwright APIs (expect, locator.wait_for) inherit this.
+        context.set_default_timeout(15000)
+
+        # Open a new page in the browser context
+        page = await context.new_page()
+
+        # Interact with the page elements to simulate user flow
+        # -> navigate
+        await page.goto("http://localhost:3001")
+        try:
+            await page.wait_for_load_state("domcontentloaded", timeout=5000)
+        except Exception:
+            pass
+        
+        # -> Open the 'Sign in' page (navigate to /en/auth/login) so the partner can sign in.
+        await page.goto("http://localhost:3001/en/auth/login")
+        try:
+            await page.wait_for_load_state("domcontentloaded", timeout=5000)
+        except Exception:
+            pass
+        
+        # -> Fill 'Email Address' with partner@bookly.test and 'Password' with password, then click the 'Sign In' button.
+        # Accept button
+        elem = page.locator('[id="rcc-confirm-button"]')
+        await elem.click(timeout=10000)
+        
+        # -> Fill 'Email Address' with partner@bookly.test and 'Password' with password, then click the 'Sign In' button.
+        # you@example.com email field
+        elem = page.locator('[id="login-email"]')
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("partner@bookly.test")
+        
+        # -> Fill 'Email Address' with partner@bookly.test and 'Password' with password, then click the 'Sign In' button.
+        # password password field
+        elem = page.locator('[id="login-password"]')
+        await elem.wait_for(state="visible", timeout=10000)
+        await elem.fill("password")
+        
+        # -> Fill 'Email Address' with partner@bookly.test and 'Password' with password, then click the 'Sign In' button.
+        # Sign In button
+        elem = page.locator('[id="login-submit"]')
+        await elem.click(timeout=10000)
+        
+        # -> Open the 'Test Partner' account menu by clicking the 'Test Partner' button in the header.
+        # Test Partner T button
+        elem = page.get_by_role('button', name='Test Partner T', exact=True)
+        await elem.click(timeout=10000)
+        
+        # -> Click the 'Dashboard' item in the account menu to open the partner dashboard.
+        # Dashboard link
+        elem = page.get_by_role('menuitem', name='Dashboard', exact=True)
+        await elem.click(timeout=10000)
+        
+        # -> Navigate to the Partner Tours management page (open '/en/partner/tours') and verify partner tour listings are displayed.
+        await page.goto("http://localhost:3001/en/partner/tours")
+        try:
+            await page.wait_for_load_state("domcontentloaded", timeout=5000)
+        except Exception:
+            pass
+        
+        # --> Assertions to verify final state
+        
+        # --> Partner tours page shows a Create Tour button so new listings can be added.
+        await page.locator("xpath=/html/body/div[2]/div/main/div/div/div[1]/a").nth(0).scroll_into_view_if_needed()
+        # Assert-outcome: passed
+        # Assert: The Create Tour button is visible.
+        await expect(page.locator("xpath=/html/body/div[2]/div/main/div/div/div[1]/a").nth(0)).to_be_visible(timeout=15000), "The Create Tour button is visible."
+        
+        # --> At least one tour listing is visible (a card shows the status 'Draft').
+        # Assert: A tour card with a valid status badge is visible.
+        await expect(page.locator("span", has_text=re.compile(r"Draft|Pending Review|Published")).first).to_be_visible(timeout=15000), "A tour card with status badge is visible."
+        await asyncio.sleep(1)
+
+    finally:
+        if context:
+            await context.close()
+        if browser:
+            await browser.close()
+        if pw:
+            await pw.stop()
+
+asyncio.run(run_test())
+    
