@@ -33,6 +33,7 @@ class Partner extends Model
         return $this->belongsTo(User::class);
     }
 
+    /** @return HasMany<Tour, $this> */
     public function tours(): HasMany
     {
         return $this->hasMany(Tour::class, 'partner_id');
@@ -104,6 +105,7 @@ class Partner extends Model
         // events and would leave suspended partners' tours stale in the index.
         $this->tours()
             ->where('status', 'published')
+            ->get()
             ->each(function (Tour $tour) {
                 $tour->status = 'draft';
                 $tour->save();

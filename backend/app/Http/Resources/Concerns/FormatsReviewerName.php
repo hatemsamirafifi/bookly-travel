@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Concerns;
 
+use App\Domains\Reviews\Models\Review;
+
 /**
  * Shared first-name-only formatter for review author names (FR-004).
  *
@@ -13,11 +15,12 @@ trait FormatsReviewerName
 {
     protected function reviewerName(): string
     {
-        if (! $this->traveler) {
+        $review = $this->resource;
+        if (! $review instanceof Review || ! $review->traveler) {
             return 'Anonymous Traveler';
         }
 
-        $name = $this->traveler->name ?? '';
+        $name = $review->traveler->name ?? '';
 
         // First name only (FR-004). strtok returns the first token of the name
         // or false on an empty/whitespace string; fall back to the full name,

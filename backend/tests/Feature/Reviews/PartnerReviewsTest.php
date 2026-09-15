@@ -65,6 +65,7 @@ it('partner sees only their tours reviews', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -95,6 +96,7 @@ it('partner sees only their tours reviews', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $otherBooking->id,
         'amount' => 3000,
         'currency' => 'EUR',
@@ -152,6 +154,7 @@ it('returns aggregate values per tour', function () {
         ]);
 
         Payment::create([
+            'stripe_payment_intent_id' => testPaymentIntentId(),
             'booking_id' => $booking->id,
             'amount' => 8000,
             'currency' => 'EUR',
@@ -221,6 +224,7 @@ it('filters by tour_id', function () {
         ]);
 
         Payment::create([
+            'stripe_payment_intent_id' => testPaymentIntentId(),
             'booking_id' => $booking->id,
             'amount' => $tour->price_amount,
             'currency' => 'EUR',
@@ -287,6 +291,7 @@ it('exposes the contract shape and omits internal ids (no PII leak)', function (
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -353,6 +358,7 @@ it('includes tour_summaries with slug, title and aggregates', function () {
             'status' => Booking::STATUS_COMPLETED,
         ]);
         Payment::create([
+            'stripe_payment_intent_id' => testPaymentIntentId(),
             'booking_id' => $booking->id,
             'amount' => 4000,
             'currency' => 'EUR',
@@ -408,6 +414,7 @@ it('includes the response when present and omits it when absent', function () {
         'status' => Booking::STATUS_COMPLETED,
     ]);
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $bookingA->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -443,6 +450,7 @@ it('includes the response when present and omits it when absent', function () {
         'status' => Booking::STATUS_COMPLETED,
     ]);
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $bookingB->id,
         'amount' => 5000,
         'currency' => 'EUR',

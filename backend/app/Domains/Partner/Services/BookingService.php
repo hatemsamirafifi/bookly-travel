@@ -68,7 +68,7 @@ class BookingService
      */
     public function getForPartner(string $reference, int $partnerId): ?Booking
     {
-        return Booking::with(['tour', 'traveler', 'auditLogs'])
+        return Booking::with(['tour.translations', 'traveler', 'guestIdentity', 'payment'])
             ->where('reference', $reference)
             ->whereHas('tour', function ($q) use ($partnerId) {
                 $q->where('partner_id', $partnerId);

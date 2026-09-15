@@ -4,6 +4,7 @@ namespace App\Domains\Booking\Models;
 
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Payment\Models\Payment;
+use App\Models\GuestIdentity;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -92,6 +93,11 @@ class Booking extends Model
     public function traveler(): BelongsTo
     {
         return $this->belongsTo(User::class, 'traveler_id');
+    }
+
+    public function guestIdentity(): BelongsTo
+    {
+        return $this->belongsTo(GuestIdentity::class);
     }
 
     public function tour(): BelongsTo

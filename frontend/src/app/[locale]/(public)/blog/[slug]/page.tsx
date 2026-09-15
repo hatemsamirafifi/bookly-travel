@@ -60,12 +60,12 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   try {
     const response = await getBlogPost(slug, locale);
     data = response.data;
-  } catch (e: any) {
+  } catch (e: unknown) {
     if (e instanceof GoneError) {
       return <BlogUnavailable status={410} isRemoved={true} />;
     }
     if (e instanceof RateLimitError) {
-      return <BlogUnavailable status={429} retryAfterSeconds={e?.retryAfter ?? 10} />;
+      return <BlogUnavailable status={429} retryAfterSeconds={e.retryAfter ?? 10} />;
     }
     if (e instanceof NotFoundError) {
       notFound();

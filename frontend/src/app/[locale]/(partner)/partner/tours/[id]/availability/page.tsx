@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Plus, Trash2, Calendar, Clock, Users, ShieldAlert } from 'lucide-react';
+import { useState, useEffect, use, useCallback } from 'react';
+import { ArrowLeft, Plus, Trash2, Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
 import { getApiBaseUrl } from '@/lib/api/client';
@@ -57,7 +56,7 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
   const [priceMultiplier, setPriceMultiplier] = useState('1.00');
   const [note, setNote] = useState('');
 
-  const fetchAvailability = async () => {
+  const fetchAvailability = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -77,11 +76,11 @@ export default function AvailabilityPage({ params }: { params: Promise<{ id: str
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [tourId]);
 
   useEffect(() => {
     fetchAvailability();
-  }, [tourId]);
+  }, [fetchAvailability]);
 
   const handleCreateRule = async (e: React.FormEvent) => {
     e.preventDefault();

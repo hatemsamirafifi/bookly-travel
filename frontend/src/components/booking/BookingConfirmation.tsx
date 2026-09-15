@@ -102,7 +102,10 @@ function renderHeader(status: string, t: TranslationFn) {
 export default function BookingConfirmation({ reference, locale }: BookingConfirmationProps) {
   const router = useRouter();
   const t = useTranslations('booking');
-  const [state, setState] = useState<FetchState>({ kind: 'loading' });
+  const normalizedReference = reference.trim();
+  const [state, setState] = useState<FetchState>(() => normalizedReference
+    ? { kind: 'loading' }
+    : { kind: 'notFound' });
   // Bumping retryCount re-runs the effect so the "Retry" button can refetch
   // without storing a function in state (which would trip the lint rule).
   const [retryCount, setRetryCount] = useState(0);
@@ -110,12 +113,11 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
   useEffect(() => {
     let cancelled = false;
 
-    if (!reference || !reference.trim()) {
-      setState({ kind: 'notFound' });
+    if (!normalizedReference) {
       return;
     }
 
-    getBookingDetail(reference)
+    getBookingDetail(normalizedReference)
       .then((res) => {
         if (!cancelled) setState({ kind: 'loaded', booking: res.data });
       })
@@ -127,7 +129,7 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
           : undefined;
         if (status === 401) {
           // Not authenticated — send the traveler to log in and back here.
-          router.push(`/${locale}/auth/login?returnUrl=/${locale}/booking/confirmation?ref=${encodeURIComponent(reference)}`);
+          router.push(`/${locale}/auth/login?returnUrl=/${locale}/booking/confirmation?ref=${encodeURIComponent(normalizedReference)}`);
           return;
         }
         if (status === 404) {
@@ -139,7 +141,7 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
     return () => {
       cancelled = true;
     };
-  }, [reference, locale, router, t, retryCount]);
+  }, [normalizedReference, locale, router, t, retryCount]);
 
   const handleRetry = () => {
     setState({ kind: 'loading' });

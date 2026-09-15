@@ -99,7 +99,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 20,
             'price_amount' => 4500, // €45.00 in cents
             'status' => 'published',
-            'cover_image_url' => 'https://cdn.bookly.test/tours/rome-cover.jpg',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-cover.jpg',
             'is_featured' => true,
             'published_at' => now()->subDays(30),
             'price_from' => 45.00,
@@ -144,7 +144,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 12,
             'price_amount' => 8500, // €85.00 in cents
             'status' => 'pending_review',
-            'cover_image_url' => 'https://cdn.bookly.test/tours/trastevere-cover.jpg',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/trastevere-cover.jpg',
             'is_featured' => false,
             'submitted_at' => now()->subDays(2),
             'price_from' => 85.00,
@@ -171,7 +171,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 15,
             'price_amount' => 5500, // €55.00 in cents
             'status' => 'draft',
-            'cover_image_url' => 'https://cdn.bookly.test/tours/rome-night-cover.jpg',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-night-cover.jpg',
             'is_featured' => false,
             'price_from' => 55.00,
             'currency' => 'EUR',
@@ -200,17 +200,16 @@ class PartnerSeeder extends Seeder
         $this->createTourMedia($publishedTour);
 
         // Create draft for the pending tour
-        TourDraft::create([
-            'tour_id' => $pendingTour->id,
-            'partner_id' => $partner->id,
-            'payload' => [
+        TourDraft::updateOrCreate(
+            ['tour_id' => $pendingTour->id, 'partner_id' => $partner->id],
+            ['payload' => [
                 'title' => 'Trastevere Food & Wine Experience - Updated',
                 'description' => 'Updated description with more stops.',
                 'price_from' => 90.00,
             ],
-            'status' => 'pending_review',
-            'auto_saved_at' => now()->subHour(),
-        ]);
+                'status' => 'pending_review',
+                'auto_saved_at' => now()->subHour(),
+            ]);
 
         // Create sample notifications
         $this->createNotifications($partner);
@@ -238,7 +237,7 @@ class PartnerSeeder extends Seeder
 
     private function createTourWithTranslations(Partner $partner, ?Category $category, array $attributes, array $translations): Tour
     {
-        $tour = Tour::create(array_merge([
+        $tour = Tour::updateOrCreate(['slug' => $attributes['slug']], array_merge([
             'partner_id' => $partner->id,
             'category_id' => $category?->id,
             'itinerary' => null,
@@ -246,17 +245,16 @@ class PartnerSeeder extends Seeder
         ], $attributes));
 
         foreach ($translations as $locale => $data) {
-            TourTranslation::create([
-                'tour_id' => $tour->id,
-                'locale' => $locale,
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'highlights' => $data['highlights'] ?? [],
-                'inclusions' => $data['inclusions'] ?? [],
-                'exclusions' => $data['exclusions'] ?? [],
-                'meeting_point' => $data['meeting_point'] ?? null,
-                'cancellation_policy' => $data['cancellation_policy'] ?? null,
-            ]);
+            TourTranslation::updateOrCreate(
+                ['tour_id' => $tour->id, 'locale' => $locale],
+                ['title' => $data['title'],
+                    'description' => $data['description'],
+                    'highlights' => $data['highlights'] ?? [],
+                    'inclusions' => $data['inclusions'] ?? [],
+                    'exclusions' => $data['exclusions'] ?? [],
+                    'meeting_point' => $data['meeting_point'] ?? null,
+                    'cancellation_policy' => $data['cancellation_policy'] ?? null,
+                ]);
         }
 
         return $tour;
@@ -264,134 +262,113 @@ class PartnerSeeder extends Seeder
 
     private function createPricingTiers(Tour $tour): void
     {
-        PricingTier::create([
-            'tour_id' => $tour->id,
-            'name' => 'Adult',
-            'price' => 45.00,
-            'min_participants' => 1,
-            'max_participants' => null,
-        ]);
+        PricingTier::updateOrCreate(
+            ['tour_id' => $tour->id, 'name' => 'Adult'],
+            ['price' => 45.00,
+                'min_participants' => 1,
+                'max_participants' => null,
+            ]);
 
-        PricingTier::create([
-            'tour_id' => $tour->id,
-            'name' => 'Child',
-            'price' => 25.00,
-            'min_participants' => 1,
-            'max_participants' => null,
-        ]);
+        PricingTier::updateOrCreate(
+            ['tour_id' => $tour->id, 'name' => 'Child'],
+            ['price' => 25.00,
+                'min_participants' => 1,
+                'max_participants' => null,
+            ]);
 
-        PricingTier::create([
-            'tour_id' => $tour->id,
-            'name' => 'Senior',
-            'price' => 35.00,
-            'min_participants' => 1,
-            'max_participants' => null,
-        ]);
+        PricingTier::updateOrCreate(
+            ['tour_id' => $tour->id, 'name' => 'Senior'],
+            ['price' => 35.00,
+                'min_participants' => 1,
+                'max_participants' => null,
+            ]);
     }
 
     private function createAvailabilityRules(Tour $tour): void
     {
-        AvailabilityRule::create([
-            'tour_id' => $tour->id,
-            'rule_type' => 'weekly',
-            'days_of_week' => [0, 1, 2, 3, 4, 5, 6],
-            'start_time' => '09:00:00',
-            'start_date' => now()->toDateString(),
-            'end_date' => null,
-            'capacity' => 20,
-        ]);
+        AvailabilityRule::updateOrCreate(
+            ['tour_id' => $tour->id, 'rule_type' => 'weekly', 'start_time' => '09:00:00'],
+            ['days_of_week' => [0, 1, 2, 3, 4, 5, 6],
+                'start_time' => '09:00:00',
+                'start_date' => now()->toDateString(),
+                'end_date' => null,
+                'capacity' => 20,
+            ]);
 
-        AvailabilityRule::create([
-            'tour_id' => $tour->id,
-            'rule_type' => 'daily',
-            'days_of_week' => null,
-            'start_time' => '14:00:00',
-            'start_date' => now()->toDateString(),
-            'end_date' => null,
-            'capacity' => 15,
-        ]);
+        AvailabilityRule::updateOrCreate(
+            ['tour_id' => $tour->id, 'rule_type' => 'daily', 'start_time' => '14:00:00'],
+            ['days_of_week' => null,
+                'start_time' => '14:00:00',
+                'start_date' => now()->toDateString(),
+                'end_date' => null,
+                'capacity' => 15,
+            ]);
     }
 
     private function createAvailabilityExceptions(Tour $tour): void
     {
-        AvailabilityException::create([
-            'tour_id' => $tour->id,
-            'exception_type' => 'blackout',
-            'date' => now()->addMonths(2)->startOfMonth()->toDateString(),
-            'start_time' => null,
-            'capacity' => null,
-            'price_multiplier' => 1.00,
-            'note' => 'National holiday - no tours',
-        ]);
+        AvailabilityException::updateOrCreate(
+            ['tour_id' => $tour->id, 'exception_type' => 'blackout', 'date' => now()->addMonths(2)->startOfMonth()->toDateString()],
+            ['start_time' => null,
+                'capacity' => null,
+                'price_multiplier' => 1.00,
+                'note' => 'National holiday - no tours',
+            ]);
 
-        AvailabilityException::create([
-            'tour_id' => $tour->id,
-            'exception_type' => 'specific',
-            'date' => now()->addWeeks(2)->toDateString(),
-            'start_time' => '10:00:00',
-            'capacity' => 25,
-            'price_multiplier' => 1.20,
-            'note' => 'Holiday special - extended capacity',
-        ]);
+        AvailabilityException::updateOrCreate(
+            ['tour_id' => $tour->id, 'exception_type' => 'specific', 'date' => now()->addWeeks(2)->toDateString()],
+            ['start_time' => '10:00:00',
+                'capacity' => 25,
+                'price_multiplier' => 1.20,
+                'note' => 'Holiday special - extended capacity',
+            ]);
     }
 
     private function createTourMedia(Tour $tour): void
     {
-        TourMedia::create([
-            'tour_id' => $tour->id,
-            'type' => 'cover',
-            'url' => 'https://cdn.bookly.test/tours/rome-cover.jpg',
-            'thumbnail_url' => 'https://cdn.bookly.test/tours/rome-cover-thumb.jpg',
-            'sort_order' => 0,
-        ]);
+        TourMedia::updateOrCreate(
+            ['tour_id' => $tour->id, 'type' => 'cover', 'sort_order' => 0],
+            ['url' => 'http://cdn.bookly.test/tours/rome-cover.jpg',
+                'thumbnail_url' => 'http://cdn.bookly.test/tours/rome-cover-thumb.jpg',
+            ]);
 
         for ($i = 1; $i <= 4; $i++) {
-            TourMedia::create([
-                'tour_id' => $tour->id,
-                'type' => 'gallery',
-                'url' => "https://cdn.bookly.test/tours/rome-gallery-{$i}.jpg",
-                'thumbnail_url' => "https://cdn.bookly.test/tours/rome-gallery-{$i}-thumb.jpg",
-                'sort_order' => $i,
-            ]);
+            TourMedia::updateOrCreate(
+                ['tour_id' => $tour->id, 'type' => 'gallery', 'sort_order' => $i],
+                ['url' => "http://cdn.bookly.test/tours/rome-gallery-{$i}.jpg",
+                    'thumbnail_url' => "http://cdn.bookly.test/tours/rome-gallery-{$i}-thumb.jpg",
+                ]);
         }
     }
 
     private function createNotifications(Partner $partner): void
     {
-        Notification::create([
-            'partner_id' => $partner->id,
-            'type' => 'new_booking',
-            'title' => 'New Booking Received',
-            'body' => 'A traveler has booked your Hidden Gems of Rome Walking Tour.',
-            'data' => ['booking_id' => 1, 'tour_id' => 1],
-            'read_at' => null,
-        ]);
+        Notification::updateOrCreate(
+            ['partner_id' => $partner->id, 'type' => 'new_booking', 'title' => 'New Booking Received'],
+            ['body' => 'A traveler has booked your Hidden Gems of Rome Walking Tour.',
+                'data' => ['booking_id' => 1, 'tour_id' => 1],
+                'read_at' => null,
+            ]);
 
-        Notification::create([
-            'partner_id' => $partner->id,
-            'type' => 'review_received',
-            'title' => 'New Review',
-            'body' => 'A traveler left a 5-star review on your Hidden Gems of Rome tour.',
-            'data' => ['review_id' => 1, 'tour_id' => 1],
-            'read_at' => now(),
-        ]);
+        Notification::updateOrCreate(
+            ['partner_id' => $partner->id, 'type' => 'review_received', 'title' => 'New Review'],
+            ['body' => 'A traveler left a 5-star review on your Hidden Gems of Rome tour.',
+                'data' => ['review_id' => 1, 'tour_id' => 1],
+                'read_at' => now(),
+            ]);
 
-        Notification::create([
-            'partner_id' => $partner->id,
-            'type' => 'tour_approved',
-            'title' => 'Tour Approved',
-            'body' => 'Your "Hidden Gems of Rome Walking Tour" has been approved and is now live.',
-            'data' => ['tour_id' => 1],
-            'read_at' => now(),
-        ]);
+        Notification::updateOrCreate(
+            ['partner_id' => $partner->id, 'type' => 'tour_approved', 'title' => 'Tour Approved'],
+            ['body' => 'Your "Hidden Gems of Rome Walking Tour" has been approved and is now live.',
+                'data' => ['tour_id' => 1],
+                'read_at' => now(),
+            ]);
 
-        Notification::create([
-            'partner_id' => $partner->id,
-            'type' => 'payment_status',
-            'title' => 'Payment Received',
-            'body' => 'Payment of €45.00 has been confirmed for booking #BK-001.',
-            'data' => ['booking_id' => 1],
-            'read_at' => null,
-        ]);
+        Notification::updateOrCreate(
+            ['partner_id' => $partner->id, 'type' => 'payment_status', 'title' => 'Payment Received'],
+            ['body' => 'Payment of €45.00 has been confirmed for booking #BK-001.',
+                'data' => ['booking_id' => 1],
+                'read_at' => null,
+            ]);
     }
 }

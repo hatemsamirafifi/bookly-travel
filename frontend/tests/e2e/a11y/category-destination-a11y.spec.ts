@@ -8,7 +8,10 @@ test('category page should not have accessibility violations', async ({ page }) 
 });
 
 test('destination page should not have accessibility violations', async ({ page }) => {
-  await page.goto('/en/destinations/rome');
+  // Seeded destination fixture (derived from the Rome tours' location).
+  // A nonexistent slug renders the app's error page, which is a separate
+  // cosmetic issue — the accessibility contract applies to the real page.
+  await page.goto('/en/destinations/rome-italy');
   const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
   expect(accessibilityScanResults.violations).toEqual([]);
 });

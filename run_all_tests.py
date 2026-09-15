@@ -9,6 +9,9 @@ results = {}
 print(f"Found {len(test_files)} tests to run.", flush=True)
 os.makedirs("testsprite_tests/tmp", exist_ok=True)
 
+py_bin = r"C:\Users\HaTeM\AppData\Local\Programs\Python\Python311\python.exe"
+python_executable = py_bin if os.path.exists(py_bin) else sys.executable
+
 for test_path in test_files:
     test_name = os.path.splitext(os.path.basename(test_path))[0]
     print(f"Running {test_name}...", flush=True)
@@ -18,7 +21,7 @@ for test_path in test_files:
     
     try:
         proc = subprocess.run(
-            [sys.executable, test_path],
+            [python_executable, test_path],
             capture_output=True,
             text=True,
             timeout=120

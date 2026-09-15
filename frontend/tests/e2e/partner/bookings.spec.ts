@@ -137,45 +137,63 @@ test.describe('Partner Bookings Page', () => {
 });
 
 test.describe('Partner Booking Detail', () => {
-  test('should display booking details with all sections', async ({ page }) => {
-    // This tests the BookingDetail component when it renders
-    // The component shows: status badge, reference, tour info, dates, traveler info,
-    // participants, total, special requests, and action buttons
-    const mockBooking = {
-      id: 1,
-      reference: 'BK-DETAIL01',
-      status: 'confirmed',
-      tour: { id: 1, title: 'Rome Walking Tour', slug: 'rome-walking-tour', cover_image_url: null },
-      traveler: { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1234567890' },
-      booking_date: '2026-06-01T10:00:00Z',
-      tour_date: '2026-06-15',
-      tour_time: '09:00',
-      participants: [
-        { tier_id: 1, tier_name: 'Adult', count: 2, price_per_person: 50 },
-        { tier_id: 2, tier_name: 'Child', count: 1, price_per_person: 25 },
-      ],
-      total_participants: 3,
-      total_amount: 125,
-      currency: 'EUR',
-      payment_status: 'paid',
-      created_at: '2026-06-01T10:00:00Z',
-      updated_at: '2026-06-01T10:00:00Z',
-    };
-
-    // The BookingDetail component would be rendered on a detail page
-    // or in a modal — this test verifies the component renders correctly
-    await page.route('**/api/partner/bookings/BK-DETAIL01', (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ data: mockBooking }),
-      })
-    );
-
+  test('loads a seeded booking through the real scoped detail endpoint', async ({ page }) => {
     await page.goto('/en/partner/bookings');
 
-    // Verify key sections appear in the detail view if navigated to
-    // This depends on the routing implementation
+    const result = await page.evaluate(async () => {
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+      const listResponse = await fetch('/api/partner/bookings', { headers });
+      const list = await listResponse.json();
+      const reference = list.data?.[0]?.reference;
+      if (!reference) {
+        return { listStatus: listResponse.status, detailStatus: null, reference: null, detail: null };
+      }
+
+      const detailResponse = await fetch(`/api/partner/bookings/${encodeURIComponent(reference)}`, { headers });
+      const detail = await detailResponse.json();
+
+      return {
+        listStatus: listResponse.status,
+        detailStatus: detailResponse.status,
+        reference,
+        detail: detail.data,
+      };
+    });
+
+    expect(result.listStatus).toBe(200);
+    expect(result.detailStatus).toBe(200);
+    expect(result.reference).toBeTruthy();
+    expect(result.detail.reference).toBe(result.reference);
+    expect(result.detail.tour.id).toBeTruthy();
+    expect(result.detail.traveler.email).toBeTruthy();
+  });
+
+  test('partner booking detail page shows the seeded booking with status actions', async ({ page }) => {
+    // End-to-end for PartnerBookingController::show + the partner detail
+    // route: BKO-TEST01 is a confirmed booking owned by the seeded partner.
+    await page.goto('/en/partner/bookings/BKO-TEST01');
+
+    // Detail heading, reference, and status badge render from the real API.
+    await expect(page.getByRole('heading', { name: 'Booking details' })).toBeVisible();
+    await expect(page.getByText('BKO-TEST01').first()).toBeVisible();
+    await expect(page.getByText('Confirmed', { exact: true }).first()).toBeVisible();
+
+    // Tour and traveler sections come from the scoped detail payload.
+    await expect(page.getByText('Hidden Gems of Rome Walking Tour')).toBeVisible();
+    await expect(page.getByText('test@example.com')).toBeVisible();
+
+    // The tour date is still in the future, so "Mark as Completed" is
+    // correctly withheld while "Request Cancellation" is offered.
+    await expect(page.getByRole('button', { name: 'Request Cancellation' })).toBeVisible();
+  });
+
+  test('partner booking detail page shows not-found for unknown reference', async ({ page }) => {
+    await page.goto('/en/partner/bookings/BKO-DOES-NOT-EXIST');
+    await expect(page.getByText('Booking not found.')).toBeVisible();
   });
 });
 

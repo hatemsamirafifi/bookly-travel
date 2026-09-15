@@ -32,7 +32,7 @@ class RateLimitBookingMiddleware
 
     private function resolveKey(Request $request, string $tier): string
     {
-        $identifier = $request->user()?->id ?? $request->ip();
+        $identifier = $request->user()?->getAuthIdentifier() ?? $request->ip();
 
         return 'rate_limit:booking:' . $tier . ':' . $identifier;
     }

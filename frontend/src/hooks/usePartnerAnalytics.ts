@@ -44,7 +44,14 @@ export function usePartnerAnalytics(range?: DateRangeFilter, tourId?: string | n
     bookings: typeof point.bookings === 'number' ? point.bookings : 0,
     revenue: typeof point.revenue === 'number' ? point.revenue : 0,
   }));
-  const error = query.error instanceof Error ? query.error.message : query.error ? 'Failed to load analytics' : null;
+  const isBlocked = (query.error as unknown as { status?: number })?.status === 403;
+  const error = isBlocked
+    ? null
+    : query.error instanceof Error
+      ? query.error.message
+      : query.error
+        ? 'Failed to load analytics'
+        : null;
 
   return {
     summary,

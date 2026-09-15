@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
 import { getBookings } from '@/lib/api/partner';
 import type { PartnerBooking } from '@/types/partner';
 import { PartnerBookingListSkeleton } from '@/components/partner/layout/PartnerSkeleton';
@@ -9,31 +11,23 @@ import { BookingFilters, type BookingFilterValues } from './BookingFilters';
 
 export function BookingList() {
   const t = useTranslations('partner.bookings');
+  const locale = useLocale();
   const tDetail = useTranslations('partner.bookings.detail');
   const tStatus = useTranslations('partner.bookings.status');
-  const [bookings, setBookings] = useState<PartnerBooking[]>([]);
   const [filters, setFilters] = useState<BookingFilterValues>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchBookings = useCallback((currentFilters: BookingFilterValues) => {
-    setLoading(true);
-    setError(null);
-    getBookings({
-      status: currentFilters.status,
-      date_from: currentFilters.date_from,
-      date_to: currentFilters.date_to,
-      tour_id: currentFilters.tour_id,
-      search: currentFilters.search,
-    })
-      .then((res) => setBookings(res.data))
-      .catch((err) => setError(err.message ?? t('loadError')))
-      .finally(() => setLoading(false));
-  }, [t]);
-
-  useEffect(() => {
-    fetchBookings(filters);
-  }, [fetchBookings, filters]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['partner-bookings', filters],
+    queryFn: () => getBookings({
+      status: filters.status,
+      date_from: filters.date_from,
+      date_to: filters.date_to,
+      tour_id: filters.tour_id,
+      search: filters.search,
+    }),
+    staleTime: 30_000,
+  });
+  const bookings: PartnerBooking[] = data?.data ?? [];
+  const errorMessage = error instanceof Error ? error.message : t('loadError');
 
   return (
     <div className="space-y-6">
@@ -43,11 +37,11 @@ export function BookingList() {
 
       <BookingFilters filters={filters} onFiltersChange={setFilters} />
 
-      {loading ? (
+      {isLoading ? (
         <PartnerBookingListSkeleton />
       ) : error ? (
         <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm" role="alert">
-          {error}
+          {errorMessage}
         </div>
       ) : bookings.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
@@ -71,7 +65,14 @@ export function BookingList() {
               <tbody className="divide-y divide-gray-100">
                 {bookings.map((booking) => (
                   <tr key={booking.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-mono text-gray-600">{booking.reference}</td>
+                    <td className="px-4 py-3 font-mono text-gray-600">
+                      <Link
+                        href={`/${locale}/partner/bookings/${encodeURIComponent(booking.reference)}`}
+                        className="text-[#0A2540] underline decoration-gray-300 underline-offset-2 hover:decoration-[#0A2540]"
+                      >
+                        {booking.reference}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3">{booking.tour?.title ?? (booking.tour?.id ? `Tour #${booking.tour.id}` : '-')}</td>
                     <td className="px-4 py-3 text-gray-600">{booking.tour_date}</td>
                     <td className="px-4 py-3">{booking.total_participants ?? '-'}</td>

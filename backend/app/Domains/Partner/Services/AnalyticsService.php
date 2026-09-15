@@ -62,11 +62,11 @@ class AnalyticsService
         )->sum('total_price');
 
         // Average rating across partner's tours
-        $averageRating = (float) Review::whereIn('tour_id', $tourIds)
+        $averageRating = (float) (Review::whereIn('tour_id', $tourIds)
             ->whereIn('status', ['visible', 'flagged'])
             ->when($dateFrom, fn ($q) => $q->where('created_at', '>=', $dateFrom))
             ->when($dateTo, fn ($q) => $q->where('created_at', '<=', $dateTo . ' 23:59:59'))
-            ->avg('rating') ?? 0.0;
+            ->avg('rating') ?? 0.0);
 
         // Conversion rate: bookings / tour views (placeholder until view tracking is implemented)
         // Currently returns 0.0 since tour_views tracking is not yet in the database
@@ -99,7 +99,8 @@ class AnalyticsService
 
         $tourIds = $this->getPartnerTourIds($partnerId, $filters['tour_id'] ?? null);
 
-        $driver = Booking::query()->getConnection()->getDriverName();
+        $connection = (string) config('database.default');
+        $driver = config("database.connections.{$connection}.driver");
 
         if ($granularity === 'week') {
             // ISO week grouping: PostgreSQL uses TO_CHAR('IW'), SQLite uses
@@ -131,10 +132,10 @@ class AnalyticsService
             return $this->fillDateGaps($rows, $dateFrom, $dateTo);
         }
 
-        return $rows->map(fn ($row) => [
-            'date' => $row->period,
-            'bookings' => (int) $row->bookings,
-            'revenue' => (int) $row->revenue,
+        return $rows->map(fn (Booking $row) => [
+            'date' => (string) $row->getAttribute('period'),
+            'bookings' => (int) $row->getAttribute('bookings'),
+            'revenue' => (int) $row->getAttribute('revenue'),
         ])->values()->all();
     }
 
@@ -203,8 +204,8 @@ class AnalyticsService
 
             $result[] = [
                 'date' => $key,
-                'bookings' => $row ? (int) $row->bookings : 0,
-                'revenue' => $row ? (int) $row->revenue : 0,
+                'bookings' => $row ? (int) $row->getAttribute('bookings') : 0,
+                'revenue' => $row ? (int) $row->getAttribute('revenue') : 0,
             ];
         }
 

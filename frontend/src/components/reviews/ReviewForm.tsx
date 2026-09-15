@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, Controller, Resolver } from 'react-hook-form';
+import { useForm, Controller, Resolver, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import StarRating from './StarRating';
@@ -43,7 +43,6 @@ export default function ReviewForm({
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<ReviewFormData>({
     resolver: zodResolver(resolverSchema) as unknown as Resolver<ReviewFormData>,
@@ -54,8 +53,8 @@ export default function ReviewForm({
     },
   });
 
-  const ratingValue = watch('rating') || 0;
-  const commentValue = watch('comment') || '';
+  const ratingValue = useWatch({ control, name: 'rating' }) || 0;
+  const commentValue = useWatch({ control, name: 'comment' }) || '';
   const charCount = commentValue.length;
 
   const formatError = (message?: string) => {

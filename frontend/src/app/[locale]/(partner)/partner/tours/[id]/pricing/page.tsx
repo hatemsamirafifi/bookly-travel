@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, use, useCallback } from 'react';
 import { ArrowLeft, Plus, Trash2, Edit, Save, X } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
@@ -20,7 +19,6 @@ export default function PricingPage({ params }: { params: Promise<{ id: string; 
   const resolvedParams = use(params);
   const tourId = resolvedParams.id;
   const locale = resolvedParams.locale;
-  const router = useRouter();
 
   const [tiers, setTiers] = useState<PricingTier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +31,7 @@ export default function PricingPage({ params }: { params: Promise<{ id: string; 
   const [minParticipants, setMinParticipants] = useState(1);
   const [maxParticipants, setMaxParticipants] = useState<number | ''>('');
 
-  const fetchTiers = async () => {
+  const fetchTiers = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -52,11 +50,11 @@ export default function PricingPage({ params }: { params: Promise<{ id: string; 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [tourId]);
 
   useEffect(() => {
     fetchTiers();
-  }, [tourId]);
+  }, [fetchTiers]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getBlogPosts } from '@/lib/api/blog';
+import { ApiError, RateLimitError } from '@/lib/api/client';
 import BlogFeaturedHero from '@/components/blog/BlogFeaturedHero';
 import BlogList from '@/components/blog/BlogList';
 import { BlogUnavailable } from '@/components/blog/BlogUnavailable';
@@ -98,13 +99,13 @@ export default async function BlogIndexPage({
       page: pageNum,
       per_page: 12,
     });
-  } catch (err: any) {
-    if (err?.status === 429) {
+  } catch (error: unknown) {
+    if (error instanceof RateLimitError) {
       isRateLimited = true;
-      retryAfter = err?.retryAfter ?? 10;
+      retryAfter = error.retryAfter;
     } else {
       // WR-010: Don't mask server errors as "no articles" — render unavailable state
-      return <BlogUnavailable status={err?.status || 500} />;
+      return <BlogUnavailable status={error instanceof ApiError ? error.status : 500} />;
     }
   }
 
@@ -184,7 +185,7 @@ export default async function BlogIndexPage({
             description="We couldn't find any articles matching your criteria. Explore our tours or check back soon."
             cta={{
               label: 'Browse Tours',
-              href: `/${locale}/tours`,
+              href: `/${locale}/search`,
             }}
           />
         )}

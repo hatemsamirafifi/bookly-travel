@@ -1,17 +1,14 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { Star, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { getReviews } from '@/lib/api/partner';
-import type { PartnerReview } from '@/types/partner';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import ErrorState from '@/components/ui/ErrorState';
 import EmptyState from '@/components/ui/EmptyState';
 import { ReviewResponseForm } from './ReviewResponseForm';
-
-const PER_PAGE = 10;
 
 interface ReviewListProps {
   /** Optional tour filter passed from parent */
@@ -25,13 +22,13 @@ interface ReviewListProps {
 export function ReviewList({ tourFilter, ratingFilter, responseFilter }: ReviewListProps) {
   const t = useTranslations('partner.reviews');
   const locale = useLocale();
-  const [page, setPage] = useState(1);
+  const filterKey = `${tourFilter ?? ''}:${ratingFilter ?? ''}:${responseFilter ?? ''}`;
+  const [pagination, setPagination] = useState({ filterKey, page: 1 });
+  const page = pagination.filterKey === filterKey ? pagination.page : 1;
   const [respondingId, setRespondingId] = useState<string | number | null>(null);
-
-  // Reset to the first page whenever an external filter changes
-  useEffect(() => {
-    setPage(1);
-  }, [tourFilter, ratingFilter, responseFilter]);
+  const setPage = (update: (current: number) => number) => {
+    setPagination({ filterKey, page: update(page) });
+  };
 
   const {
     data,

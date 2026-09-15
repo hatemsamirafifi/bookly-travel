@@ -9,6 +9,7 @@ use App\Domains\Booking\Controllers\Public\VerificationController;
 use App\Domains\Booking\Controllers\Public\VoucherController;
 use App\Domains\Partner\Controllers\Public\PartnerInvitationController;
 use App\Domains\Partner\Controllers\Public\PartnerRegistrationController;
+use App\Domains\Payment\Controllers\Public\DeterministicPaymentController;
 use App\Domains\Payment\Controllers\Public\StripeWebhookController;
 use App\Domains\Reviews\Controllers\Public\ReviewController;
 use App\Domains\Search\Controllers\Public\CategoryController;
@@ -144,6 +145,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 | Unauthenticated — validated via Stripe webhook signature.
 */
 Route::post('webhooks/stripe', StripeWebhookController::class);
+
+// Local/test payment completion for browser verification when external Stripe
+// test credentials are unavailable. This route is absent in staging/production,
+// and the controller also requires the explicit deterministic adapter setting.
+if (app()->environment(['local', 'testing'])) {
+    Route::post('bookings/{reference}/deterministic-payment/confirm', DeterministicPaymentController::class)
+        ->middleware(['auth:sanctum', 'throttle:booking.create']);
+}
 
 /*
 |--------------------------------------------------------------------------

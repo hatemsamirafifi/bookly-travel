@@ -47,6 +47,7 @@ it('allows edit within 48 hours of creation', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 10000,
         'currency' => 'EUR',
@@ -106,6 +107,7 @@ it('shows edited flag after edit', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 3000,
         'currency' => 'EUR',
@@ -165,6 +167,7 @@ it('creates audit trail entry on edit', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 8000,
         'currency' => 'EUR',
@@ -230,6 +233,7 @@ it('returns 403 for edit after 48 hours', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 6000,
         'currency' => 'EUR',
@@ -286,6 +290,7 @@ it('returns 403 when non-owner tries to edit', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 10000,
         'currency' => 'EUR',
@@ -341,6 +346,7 @@ it('recalculates aggregate rating on edit', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 2000,
         'currency' => 'EUR',

@@ -189,9 +189,7 @@ class ReviewService
         // Fetch slug + translations once (keyed by id) so the summary rows can
         // be joined to their tour identifiers without an N+1. Titles resolve via
         // tour_translations (no `title` column on tours).
-        $tours = $toursQuery->with(['translations' => function ($t) {
-            $t->select(['tour_id', 'locale', 'title']);
-        }])->get(['id', 'slug'])->keyBy('id');
+        $tours = $toursQuery->with('translations')->get(['id', 'slug'])->keyBy('id');
         $tourIdList = $tours->keys();
 
         $summaries = Review::selectRaw('tour_id, AVG(rating) as average_rating, COUNT(*) as review_count')
@@ -206,8 +204,8 @@ class ReviewService
             return [
                 'tour_slug' => $tour?->slug,
                 'tour_title' => $tour?->displayTitle(),
-                'average_rating' => round((float) $summary->average_rating, 2),
-                'review_count' => (int) $summary->review_count,
+                'average_rating' => round((float) $summary->getAttribute('average_rating'), 2),
+                'review_count' => (int) $summary->getAttribute('review_count'),
             ];
         })->values()->all();
     }

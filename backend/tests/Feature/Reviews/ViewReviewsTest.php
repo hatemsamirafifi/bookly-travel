@@ -46,6 +46,7 @@ it('returns paginated visible reviews for a tour', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 10000,
         'currency' => 'EUR',
@@ -85,6 +86,7 @@ it('does not include hidden reviews in listing', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -120,6 +122,7 @@ it('includes flagged reviews in public listing', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -166,6 +169,7 @@ it('shows aggregate rating correctly', function () {
         ]);
 
         Payment::create([
+            'stripe_payment_intent_id' => testPaymentIntentId(),
             'booking_id' => $booking->id,
             'amount' => 5000,
             'currency' => 'EUR',
@@ -207,6 +211,7 @@ it('shows first name only as reviewer name', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -244,6 +249,7 @@ it('shows "Anonymous Traveler" when traveler deleted', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 5000,
         'currency' => 'EUR',
@@ -285,6 +291,7 @@ it('respects per_page parameter for pagination', function () {
         ]);
 
         Payment::create([
+            'stripe_payment_intent_id' => testPaymentIntentId(),
             'booking_id' => $booking->id,
             'amount' => 5000,
             'currency' => 'EUR',

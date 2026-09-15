@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { partnerRegisterSchema } from '@/lib/validators/auth';
@@ -19,12 +19,10 @@ interface PartnerRegisterFormProps {
 }
 
 export function PartnerRegisterForm({ returnUrl }: PartnerRegisterFormProps) {
-  const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
   const { setAuth } = useAuth();
 
-  const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -66,8 +64,12 @@ export function PartnerRegisterForm({ returnUrl }: PartnerRegisterFormProps) {
       setAuth(response.data, response.token);
       setSuccess(true);
 
+      const validatedReturnUrl = returnUrl?.startsWith(`/${locale}/`)
+        ? returnUrl
+        : `/${locale}/partner`;
+
       setTimeout(() => {
-        router.push(`/${locale}/partner`);
+        router.push(validatedReturnUrl);
       }, 2000);
     } catch (err: unknown) {
       if (err instanceof AuthApiError && err.errors) {

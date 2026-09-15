@@ -47,7 +47,7 @@ class PartnerRejectedMail extends Mailable implements ShouldQueue
             view: $view,
             with: [
                 'partner' => $this->partner,
-                'businessName' => $this->partner->profile?->company_name ?? 'Partner',
+                'businessName' => optional($this->partner->profile)->company_name ?? 'Partner',
                 'reason' => $this->reason,
                 'supportEmail' => config('mail.from.address', 'support@bookly.com'),
             ],
@@ -56,7 +56,7 @@ class PartnerRejectedMail extends Mailable implements ShouldQueue
 
     private function resolveLocale(): string
     {
-        $locale = $this->partner->user?->locale ?? 'en';
+        $locale = optional($this->partner->user)->locale ?? 'en';
 
         return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
     }

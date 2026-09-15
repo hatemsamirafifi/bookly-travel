@@ -63,8 +63,8 @@ async def run_test():
         await elem.click(timeout=10000)
         
         # -> Click the 'Sep 2' date button, then click the 'Book Now' button to open the booking form.
-        # Sep 2 button
-        elem = page.get_by_role('button', name='Wed, Sep 2', exact=True)
+        # Select first available date button
+        elem = page.locator('button', has_text=re.compile(r'Sep \d+')).first
         await elem.click(timeout=10000)
         
         # -> Click the 'Sep 2' date button, then click the 'Book Now' button to open the booking form.
@@ -113,8 +113,8 @@ async def run_test():
         await elem.click(timeout=10000)
         
         # -> Click the 'Sep 2' date then click the 'Book Now' button to open the booking form.
-        # Sep 2 button
-        elem = page.get_by_role('button', name='Wed, Sep 2', exact=True)
+        # Select first available date button
+        elem = page.locator('button', has_text=re.compile(r'Sep \d+')).first
         await elem.click(timeout=10000)
         
         # -> Click the 'Sep 2' date then click the 'Book Now' button to open the booking form.
@@ -133,8 +133,8 @@ async def run_test():
         await elem.click(timeout=10000)
         
         # -> Click the 'Sep 2' date, then click the 'Book Now' button to open the booking form and reveal the traveler input fields (Name, Email, Phone).
-        # Sep 2 button
-        elem = page.get_by_role('button', name='Wed, Sep 2', exact=True)
+        # Select first available date button
+        elem = page.locator('button', has_text=re.compile(r'Sep \d+')).first
         await elem.click(timeout=10000)
         
         # -> Click the 'Sep 2' date, then click the 'Book Now' button to open the booking form and reveal the traveler input fields (Name, Email, Phone).

@@ -7,11 +7,11 @@
     "projectName": "bookly travel",
     "projectPath": "F:\\Travel Website\\bookly travel",
     "testIds": [],
-    "additionalInstruction": "Base URL is http://localhost:3001 and all pages are locale-prefixed (use /en/...). Resolve test plan placeholders as follows: {{LOGIN_USER}} = test@example.com and {{LOGIN_PASSWORD}} = Password123! (seeded traveler account). For partner tests, log in with partner@bookly.test and password \"password\" instead of the traveler credentials. The seeded published tour slug is hidden-gems-rome-walking-tour (EUR 45 per person). Seeded traveler bookings: BKO-TEST01 (confirmed, cancellable), BKO-TEST02 (completed, reviewable), BKO-TEST03 (completed with existing review), BKO-PAST01 (cancel disabled - inside 24h window). Stripe is configured with a placeholder publishable key, so the Stripe PaymentElement may fail to load real card fields: for checkout tests, completing booking creation up to the payment step is a pass; do not fail a test solely because Stripe card fields cannot be entered. Email is not delivered locally, so for forgot-password and email-verification tests only the request submission step is verifiable. When registering new accounts use unique emails like testsprite+<random>@example.com with password Password123!.",
-    "serverMode": "production",
+    "additionalInstruction": "Base URL is http://localhost:3001 and all pages are locale-prefixed (use /en/...). Resolve test plan placeholders as follows: {{LOGIN_USER}} = test@example.com and {{LOGIN_PASSWORD}} = Password123! (seeded traveler account). For partner tests, log in with partner@bookly.test and password \"password\". The seeded published tour slug is hidden-gems-rome-walking-tour (EUR 45 per person). Seeded traveler bookings: BKO-TEST01 (confirmed, cancellable), BKO-TEST02 (completed, reviewable), BKO-TEST03 (completed with existing review), BKO-PAST01 (cancel disabled - inside 24h window). Stripe is configured with a placeholder publishable key only; the Stripe PaymentElement may fail to load real card fields: for checkout tests, completing booking creation up to the payment step is a pass; do not fail a test solely because Stripe card fields cannot be entered. Email is not delivered locally, so for forgot-password and email-verification tests only the request submission step is verifiable. When registering new accounts use unique emails like testsprite+<random>@example.com with password Password123!. IMPORTANT: the database was freshly re-seeded minutes ago; tour IDs changed (tour id 1 now), so never rely on hardcoded tour/booking numeric IDs. Use slugs and references instead.",
+    "serverMode": "development",
     "envs": {},
     "envsFile": "C:\\Users\\HaTeM\\.testsprite\\mcp\\session-c4c839ce060e346f.json"
   },
-  "serverPort": 59638,
+  "serverPort": 63503,
   "projectKey": "53b039b6-3c54-4840-bb38-f78f4f6d4436"
 }

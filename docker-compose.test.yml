@@ -1,0 +1,24 @@
+# Disposable PostgreSQL used exclusively by Pest. No host port or persistent volume.
+services:
+  test-postgres:
+    image: postgres:15-alpine
+    container_name: bookly-test-postgres
+    environment:
+      POSTGRES_DB: bookly_test
+      POSTGRES_USER: bookly_test
+      POSTGRES_HOST_AUTH_METHOD: trust
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - bookly-network
+
+  test-meilisearch:
+    image: getmeili/meilisearch:v1.10
+    container_name: bookly-test-meilisearch
+    environment:
+      MEILI_MASTER_KEY: test-key
+      MEILI_ENV: development
+    tmpfs:
+      - /meili_data
+    networks:
+      - bookly-network

@@ -49,7 +49,7 @@ class GetHomepageDataAction
                 'name' => $cat->name,
                 'description' => $cat->description,
                 'image_url' => $cat->image_url,
-                'tour_count' => (int) $cat->tours_count,
+                'tour_count' => (int) $cat->getAttribute('tours_count'),
             ])
             ->values()
             ->toArray();

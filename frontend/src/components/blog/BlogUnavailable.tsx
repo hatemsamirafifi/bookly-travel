@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 interface BlogUnavailableProps {
   status?: number;
@@ -68,7 +68,7 @@ export function BlogUnavailable({
             Explore More Articles
           </Link>
           <Link
-            href={`/${locale}/tours`}
+            href={`/${locale}/search`}
             className="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
           >
             Browse Tours
@@ -127,7 +127,7 @@ export function BlogUnavailable({
         )}
 
         <Link
-          href={`/${locale}/tours`}
+          href={`/${locale}/search`}
           className="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
         >
           Browse Tours

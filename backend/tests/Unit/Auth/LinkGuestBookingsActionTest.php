@@ -46,12 +46,21 @@ it('links bookings to user when bookings table exists', function () {
         'email' => 'carol@example.com',
         'name' => 'Carol',
     ]);
+    $tour = makeSearchableTour();
 
     $bookingId = DB::table('bookings')->insertGetId([
         'reference' => 'BKO-CAROL1',
         'guest_identity_id' => $guestIdentity->id,
         'traveler_id' => null,
+        'tour_id' => $tour->id,
+        'tour_date' => now()->addDay()->toDateString(),
+        'participant_count' => 1,
+        'price_per_person' => 5000,
+        'total_price' => 5000,
+        'currency' => 'EUR',
         'status' => 'confirmed',
+        'idempotency_key' => '550e8400-e29b-41d4-a716-446655440000',
+        'locale' => 'en',
         'created_at' => now(),
         'updated_at' => now(),
     ]);

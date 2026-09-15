@@ -17,7 +17,16 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
+      // Local fixture CDN (http only inside Docker; see docker/nginx/nginx.conf).
+      { protocol: 'http', hostname: 'cdn.bookly.test' },
     ],
+    // The fixture CDN resolves to a private Docker-network IP. The optimizer
+    // refuses private upstream IPs by default, so local Docker stacks opt in
+    // via ALLOW_PRIVATE_IMAGE_UPSTREAM=true (see docker-compose.yml). The
+    // flag is a no-op for public-IP upstreams and defaults to false, so
+    // production (real CDN on a public IP) keeps the strict default.
+    // remotePatterns still bound WHICH hosts may be fetched.
+    dangerouslyAllowLocalIP: process.env.ALLOW_PRIVATE_IMAGE_UPSTREAM === 'true',
   },
   async rewrites() {
     return [

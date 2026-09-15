@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getBlogPostPreview } from '@/lib/api/blog';
+import { ApiError } from '@/lib/api/client';
 import BlogDetail from '@/components/blog/BlogDetail';
 import { BlogUnavailable } from '@/components/blog/BlogUnavailable';
 
@@ -39,11 +40,12 @@ export default async function BlogPreviewPage({
   let articleResponse;
   try {
     articleResponse = await getBlogPostPreview(slug, token, locale);
-  } catch (error: any) {
-    if (error?.status === 403 || error?.status === 404) {
+  } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 500;
+    if (status === 403 || status === 404) {
       notFound();
     }
-    return <BlogUnavailable status={error?.status || 500} />;
+    return <BlogUnavailable status={status} />;
   }
 
   const post = articleResponse.data;

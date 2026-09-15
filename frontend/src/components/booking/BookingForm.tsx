@@ -10,6 +10,7 @@ import DateConfirmation from './DateConfirmation';
 import PriceBreakdown from './PriceBreakdown';
 import PriceChangeModal from './PriceChangeModal';
 import StripePaymentForm from './StripePaymentForm';
+import DeterministicPaymentForm from './DeterministicPaymentForm';
 import { createBooking } from '@/lib/api/bookings';
 import { cancelBooking } from '@/lib/api/my-bookings';
 import { getTourDetail } from '@/lib/api/tours';
@@ -55,7 +56,8 @@ export default function BookingForm({ locale }: BookingFormProps) {
   const [paymentStep, setPaymentStep] = useState<{
     clientSecret: string;
     bookingReference: string;
-    stripe_publishable_key: string;
+    stripe_publishable_key: string | null;
+    gateway: 'stripe' | 'deterministic';
   } | null>(null);
 
   // FR-027: price-change modal state
@@ -159,6 +161,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
             clientSecret: result.payment.client_secret,
             bookingReference: result.data.reference,
             stripe_publishable_key: result.payment.stripe_publishable_key,
+            gateway: result.payment.gateway,
           });
         }
         return;
@@ -170,6 +173,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
           clientSecret: result.payment.client_secret,
           bookingReference: result.data.reference,
           stripe_publishable_key: result.payment.stripe_publishable_key,
+          gateway: result.payment.gateway,
         });
       } else {
         router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
@@ -203,7 +207,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
     setError(message);
   };
 
-  const stripePromise = paymentStep
+  const stripePromise = paymentStep?.gateway === 'stripe' && paymentStep.stripe_publishable_key
     ? getStripe(paymentStep.stripe_publishable_key)
     : null;
 
@@ -246,6 +250,25 @@ export default function BookingForm({ locale }: BookingFormProps) {
     return (
       <div className="text-center py-8">
         <p className="text-[#5A6B7B]">{t('selectPrompt')}</p>
+      </div>
+    );
+  }
+
+  if (paymentStep?.gateway === 'deterministic') {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-lg font-semibold text-[#0A2540]">{t('paymentHeading')}</h2>
+        <DeterministicPaymentForm
+          bookingReference={paymentStep.bookingReference}
+          clientSecret={paymentStep.clientSecret}
+          onSuccess={handlePaymentSuccess}
+          onError={handlePaymentError}
+        />
+        {error && (
+          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+            {error}
+          </div>
+        )}
       </div>
     );
   }

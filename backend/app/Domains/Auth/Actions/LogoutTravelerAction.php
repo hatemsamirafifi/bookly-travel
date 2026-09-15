@@ -3,7 +3,6 @@
 namespace App\Domains\Auth\Actions;
 
 use App\Models\User;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class LogoutTravelerAction
 {
@@ -18,8 +17,6 @@ class LogoutTravelerAction
     {
         $token = $user->currentAccessToken();
 
-        if ($token instanceof PersonalAccessToken) {
-            $token->delete();
-        }
+        $token->delete();
     }
 }

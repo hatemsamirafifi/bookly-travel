@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getOnboardingStatus } from '@/lib/api/partner';
 import type { PartnerOnboardingStatus } from '@/types/partner';

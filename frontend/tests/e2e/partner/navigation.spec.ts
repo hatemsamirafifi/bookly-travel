@@ -1,4 +1,17 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function visiblePartnerNavigation(page: Page, isMobile: boolean) {
+  if (isMobile) {
+    await page.getByRole('button', { name: /open navigation|menu/i }).click();
+    const dialog = page.locator('[role="dialog"][aria-modal="true"]');
+    await expect(dialog).toBeVisible();
+    return dialog.locator('nav');
+  }
+
+  const sidebar = page.locator('nav[aria-label]');
+  await expect(sidebar).toBeVisible();
+  return sidebar;
+}
 
 test.describe('Partner Dashboard Navigation', () => {
   test.beforeEach(async ({ page }) => {
@@ -6,18 +19,14 @@ test.describe('Partner Dashboard Navigation', () => {
   });
 
   test('should render the partner layout with sidebar and header', async ({ page, isMobile }) => {
-    test.skip(Boolean(isMobile), 'Desktop sidebar is hidden on mobile viewports');
-    // The sidebar should be visible on desktop
-    const sidebar = page.locator('nav[aria-label]');
-    await expect(sidebar).toBeVisible();
+    await visiblePartnerNavigation(page, Boolean(isMobile));
 
     // The header should be visible
     await expect(page.getByText('Partner Dashboard')).toBeVisible();
   });
 
   test('should render all sidebar navigation items', async ({ page, isMobile }) => {
-    test.skip(Boolean(isMobile), 'Desktop sidebar is hidden on mobile viewports');
-    const sidebar = page.locator('nav[aria-label]');
+    const sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
 
     // Check all nav items exist in sidebar
     await expect(sidebar.getByRole('menuitem', { name: /dashboard/i })).toBeVisible();
@@ -28,22 +37,22 @@ test.describe('Partner Dashboard Navigation', () => {
   });
 
   test('should highlight active sidebar item based on current page', async ({ page, isMobile }) => {
-    test.skip(Boolean(isMobile), 'Desktop sidebar is hidden on mobile viewports');
+    let sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
     // On the dashboard page, the dashboard nav item should be highlighted
-    const dashboardLink = page.locator('nav[aria-label] a[href="/partner"], nav[aria-label] a[href$="/partner/"]').first();
+    const dashboardLink = sidebar.locator('a[href="/partner"], a[href$="/partner/"]').first();
     await expect(dashboardLink).toHaveAttribute('aria-current', 'page');
 
     // Navigate to tours
-    await page.locator('nav[aria-label] a').filter({ hasText: /tours/i }).first().click();
+    await sidebar.locator('a').filter({ hasText: /tours/i }).first().click();
     await expect(page).toHaveURL(/\/partner\/tours/);
 
     // Tours link should now be highlighted
-    const toursLink = page.locator('nav[aria-label] a').filter({ hasText: /tours/i }).first();
+    sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
+    const toursLink = sidebar.locator('a').filter({ hasText: /tours/i }).first();
     await expect(toursLink).toHaveAttribute('aria-current', 'page');
   });
 
   test('should navigate between all dashboard pages via sidebar', async ({ page, isMobile }) => {
-    test.skip(Boolean(isMobile), 'Desktop sidebar is hidden on mobile viewports');
     const navItems = [
       { label: /dashboard/i, url: /\/partner$/ },
       { label: /tours/i, url: /\/partner\/tours/ },
@@ -53,14 +62,15 @@ test.describe('Partner Dashboard Navigation', () => {
     ];
 
     for (const item of navItems) {
-      await page.locator('nav[aria-label] a').filter({ hasText: item.label }).first().click();
+      const sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
+      await sidebar.locator('a').filter({ hasText: item.label }).first().click();
       await expect(page).toHaveURL(item.url);
     }
   });
 
   test('should display app name "Bookly" in sidebar', async ({ page, isMobile }) => {
-    test.skip(Boolean(isMobile), 'Desktop sidebar is hidden on mobile viewports');
-    await expect(page.locator('nav[aria-label]').getByText('Bookly', { exact: true })).toBeVisible();
+    const sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
+    await expect(sidebar.getByText('Bookly', { exact: true })).toBeVisible();
   });
 
   test('should show mobile hamburger menu on small screens', async ({ page }) => {
@@ -172,9 +182,14 @@ test.describe('Partner Navigation - Auth Guard', () => {
     expect(url.searchParams.get('returnUrl')).toContain('/partner');
   });
 
-  test('should redirect non-partner users to home', async () => {
-    // This test requires a traveler-authenticated session
-    // The PartnerAuthGuard checks user.role !== 'partner' and redirects to /
-    // This would need a fixture for a non-partner authenticated user
+  test('should redirect non-partner users to home', async ({ page }) => {
+    await page.goto('/en/auth/login');
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="password"]', 'Password123!');
+    await page.click('button[type="submit"]');
+    await expect(page).not.toHaveURL(/\/auth\/login/);
+
+    await page.goto('/en/partner');
+    await expect(page).toHaveURL(/\/en\/?$/);
   });
 });

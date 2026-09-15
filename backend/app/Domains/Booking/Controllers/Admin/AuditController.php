@@ -99,7 +99,6 @@ class AuditController
         // closure-signature mismatch the auditLogs map above already incurs.
         $linkedFinancialEvents = [];
         foreach ($booking->payments as $payment) {
-            assert($payment instanceof Payment);
             $linkedFinancialEvents[] = [
                 'payment_id' => $payment->id,
                 'type' => $payment->type ?? 'charge',

@@ -396,6 +396,7 @@
       "passwordUpdated": "Password updated.",
       "passwordError": "Password could not be updated.",
       "personalInfo": "Personal information",
+      "preferences": "Preferences",
       "firstName": "First name",
       "lastName": "Last name",
       "email": "Email",
@@ -739,6 +740,12 @@
         "pending_payment": "Pending Payment",
         "expired": "Expired",
         "no_show": "No Show"
+      },
+      "detailPage": {
+        "backToBookings": "Back to bookings",
+        "notFound": "Booking not found.",
+        "loadError": "Could not load this booking.",
+        "retry": "Try again"
       }
     },
     "reviews": {

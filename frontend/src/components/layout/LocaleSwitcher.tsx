@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { locales } from '@/i18n/routing';
 
 const LOCALE_LABELS: Record<string, string> = {
@@ -13,7 +13,6 @@ export default function LocaleSwitcher() {
   const params = useParams();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const currentLocale = (params?.locale as string) || 'en';
 
   const switchTo = (locale: string) => {

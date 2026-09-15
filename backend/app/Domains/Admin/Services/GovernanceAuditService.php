@@ -45,7 +45,7 @@ class GovernanceAuditService
             'actor_id' => $actor->id,
             'action' => $action,
             'target_type' => $target?->getMorphClass() ?? $targetType,
-            'target_id' => $target?->id,
+            'target_id' => $target?->getKey(),
             'before_state' => $before,
             'after_state' => $after,
             'metadata' => array_merge($metadata, [

@@ -11,6 +11,7 @@ use Filament\Notifications\Livewire\Notifications;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Schema;
 
 use function Pest\Laravel\actingAs;
 
@@ -40,18 +41,6 @@ test('related-tour options resolve titles from translations instead of the missi
     $other = makeSearchableTour('published');
     addTranslation($other, 'en', 'Vatican Museums Tour');
 
-    // The pre-fix expression queries a column that does not exist on `tours`,
-    // so it errors out (the exact exception class depends on the driver / error
-    // handler, but the message always references the missing `title` column).
-    $preFixError = null;
-    try {
-        Tour::where('status', 'published')->pluck('title', 'id');
-    } catch (\Throwable $e) {
-        $preFixError = $e;
-    }
-    expect($preFixError)->not->toBeNull('pre-fix pluck(title) should fail on the missing tours.title column')
-        ->and($preFixError->getMessage())->toContain('title');
-
     // The fixed expression (the body of the Filament Select options closure)
     // resolves a non-empty, id => display-title map from translations.
     $options = Tour::where('status', 'published')
@@ -59,7 +48,8 @@ test('related-tour options resolve titles from translations instead of the missi
         ->get()
         ->mapWithKeys(fn (Tour $t) => [$t->id => $t->displayTitle('en')]);
 
-    expect($options)->toHaveKey($tour->id)
+    expect(Schema::hasColumn('tours', 'title'))->toBeFalse()
+        ->and($options)->toHaveKey($tour->id)
         ->and($options[$tour->id])->toBe('Colosseum Express Tour')
         ->and($options[$other->id])->toBe('Vatican Museums Tour')
         ->and($options)->not->toBeEmpty();
@@ -91,7 +81,7 @@ test('preview table action generates a frontend-hosted preview link, not a backe
 
     $body = $notifications->first()->getBody();
     expect($body)
-        ->toContain('http://frontend.test/en/blog/'.$post->slug.'/preview?token=')
+        ->toContain('http://frontend.test/en/blog/' . $post->slug . '/preview?token=')
         ->and($body)->not->toContain('http://backend.test');
 });
 
@@ -114,7 +104,7 @@ test('list query eager-loads author so the transformer fallback adds no per-post
         ]);
     }
 
-    $transformer = new BlogPostTransformer();
+    $transformer = new BlogPostTransformer;
 
     $usersSelects = function (array $with) use ($transformer): int {
         DB::flushQueryLog();

@@ -20,9 +20,9 @@ class TourCardTransformer
         return [
             'id' => $tour->id,
             'slug' => $tour->slug,
-            'title' => $translation?->title ?? '',
+            'title' => optional($translation)->title ?? '',
             'location' => $tour->location,
-            'category' => $tour->category?->name ?? '',
+            'category' => optional($tour->category)->name ?? '',
             'duration_label' => $tour->duration_label,
             'price' => [
                 'amount' => $tour->lowestPriceAmount(),
@@ -46,6 +46,17 @@ class TourCardTransformer
     {
         $dates = $tour->upcomingAvailableDates();
 
-        return $dates[0] ?? null;
+        // The UI renders this as "Next: {date}" and the booking form uses it
+        // as the deep-link date. CreateBookingAction rejects today/past dates,
+        // so only advertise a strictly-future date as "next available".
+        $tomorrow = now()->addDay()->toDateString();
+
+        foreach ($dates as $date) {
+            if ($date >= $tomorrow) {
+                return $date;
+            }
+        }
+
+        return null;
     }
 }

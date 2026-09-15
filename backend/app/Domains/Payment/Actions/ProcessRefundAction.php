@@ -3,17 +3,17 @@
 namespace App\Domains\Payment\Actions;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Events\RefundCompleted;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Services\LedgerService;
-use App\Domains\Payment\Services\StripeService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ProcessRefundAction
 {
     public function __construct(
-        private readonly StripeService $stripe,
+        private readonly PaymentGateway $stripe,
         private readonly LedgerService $ledger,
     ) {}
 

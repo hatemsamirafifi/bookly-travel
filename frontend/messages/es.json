@@ -396,6 +396,7 @@
       "passwordUpdated": "Contrasena actualizada.",
       "passwordError": "No se pudo actualizar la contrasena.",
       "personalInfo": "Informacion personal",
+      "preferences": "Preferencias",
       "firstName": "Nombre",
       "lastName": "Apellido",
       "email": "Correo electronico",
@@ -739,6 +740,12 @@
         "pending_payment": "Pago Pendiente",
         "expired": "Expirada",
         "no_show": "No Asistió"
+      },
+      "detailPage": {
+        "backToBookings": "Volver a las reservas",
+        "notFound": "Reserva no encontrada.",
+        "loadError": "No se pudo cargar esta reserva.",
+        "retry": "Reintentar"
       }
     },
     "reviews": {

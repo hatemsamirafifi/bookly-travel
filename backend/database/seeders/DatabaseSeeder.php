@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Booking\Models\BookingAuditLog;
+use App\Domains\Payment\Models\FinancialLedgerEntry;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
@@ -32,9 +34,15 @@ class DatabaseSeeder extends Seeder
 
             $this->call([
                 PartnerSeeder::class,
+                BlogBrowserTestSeeder::class,
             ]);
 
             $this->seedTravelerBookings($traveler);
+
+            // Valid-shape fixtures for the public voucher verification
+            // surface (Spec 014). BKO-TESTxx references violate the
+            // reference alphabet, so /v/ needs dedicated fixtures.
+            $this->call(VoucherVerificationSeeder::class);
         }
     }
 
@@ -122,7 +130,7 @@ class DatabaseSeeder extends Seeder
         // Confirmed/completed bookings need a succeeded payment so the receipt
         // renders and ReviewValidationService's payment check passes.
         if ($paid) {
-            Payment::updateOrCreate(
+            $payment = Payment::updateOrCreate(
                 ['stripe_payment_intent_id' => 'pi_seed_' . $reference],
                 [
                     'booking_id' => $booking->id,
@@ -130,6 +138,39 @@ class DatabaseSeeder extends Seeder
                     'amount' => $total,
                     'currency' => 'EUR',
                     'status' => 'succeeded',
+                ]
+            );
+
+            // Mirror the real payment flow (ConfirmBookingOnPayment): every
+            // paid fixture carries its charge ledger debit and the
+            // payment_confirmed audit event, so seeded data satisfies the
+            // same financial/audit invariants as live bookings
+            // (constitution: Idempotent Financial Flows, Mandatory Audit Logs).
+            FinancialLedgerEntry::firstOrCreate(
+                [
+                    'payment_id' => $payment->id,
+                    'entry_type' => 'debit',
+                ],
+                [
+                    'booking_id' => $booking->id,
+                    'amount' => $total,
+                    'currency' => 'EUR',
+                    'actor' => 'system',
+                    'description' => 'Payment captured for booking ' . $reference,
+                ]
+            );
+
+            BookingAuditLog::firstOrCreate(
+                [
+                    'booking_id' => $booking->id,
+                    'action' => 'payment_confirmed',
+                ],
+                [
+                    'actor_type' => 'system',
+                    'actor_id' => null,
+                    'before_state' => Booking::STATUS_PENDING_PAYMENT,
+                    'after_state' => $status,
+                    'metadata' => ['payment_id' => $payment->id],
                 ]
             );
         }

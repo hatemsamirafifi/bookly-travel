@@ -51,8 +51,8 @@ async def run_test():
         await elem.click(timeout=10000)
         
         # -> Accept cookies, select the date 'Wed, Sep 2', set Participants to 2, then click the 'Book Now' button to start checkout.
-        # Sep 2 button
-        elem = page.get_by_role('button', name='Wed, Sep 2', exact=True)
+        # Select first available date button
+        elem = page.locator('button', has_text=re.compile(r'Sep \d+')).first
         await elem.click(timeout=10000)
         
         # -> Accept cookies, select the date 'Wed, Sep 2', set Participants to 2, then click the 'Book Now' button to start checkout.
@@ -107,8 +107,8 @@ async def run_test():
         await elem.click(timeout=10000)
         
         # -> Select the 'Sep 2' date, increase Participants to 2 using the '+' button, then click the 'Book Now' button to start checkout.
-        # Sep 2 button
-        elem = page.get_by_role('button', name='Wed, Sep 2', exact=True)
+        # Select first available date button
+        elem = page.locator('button', has_text=re.compile(r'Sep \d+')).first
         await elem.click(timeout=10000)
         
         # -> Select the 'Sep 2' date, increase Participants to 2 using the '+' button, then click the 'Book Now' button to start checkout.
@@ -142,8 +142,8 @@ async def run_test():
         await elem.click(timeout=10000)
         
         # -> Select the 'Sep 3' date on the tour page and click the 'Book Now' button to start checkout for that date.
-        # Sep 3 button
-        elem = page.get_by_role('button', name='Thu, Sep 3', exact=True)
+        # Select second available date button
+        elem = page.locator('button', has_text=re.compile(r'Sep \d+')).nth(1)
         await elem.click(timeout=10000)
         
         # -> Select the 'Sep 3' date on the tour page and click the 'Book Now' button to start checkout for that date.

@@ -11,6 +11,7 @@ jest.mock('@/hooks/usePartnerAnalytics', () => ({
 
 jest.mock('@/lib/api/partner', () => ({
   getProfile: jest.fn().mockResolvedValue({ data: null }),
+  getOnboardingStatus: jest.fn().mockResolvedValue({ data: null }),
 }));
 
 jest.mock('@/components/partner/analytics/BookingsChart', () => ({

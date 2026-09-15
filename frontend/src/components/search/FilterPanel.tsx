@@ -1,12 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useFilters } from '@/lib/hooks/useFilters';
 import type { SearchResponse } from '@/lib/api/types';
 
 interface FilterPanelProps {
   filterData: SearchResponse['filters'] | null;
 }
+
+const subscribeToDate = () => () => undefined;
+const getClientDate = () => new Date().toISOString().split('T')[0];
+const getServerDate = () => '';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -49,10 +53,7 @@ export default function FilterPanel({ filterData }: FilterPanelProps) {
   // Compute the date `min` bound on the client only, so the server-rendered
   // markup never embeds a `new Date()` value that would mismatch the client
   // render (hydration warning) and go stale across days.
-  const [minDate, setMinDate] = useState<string>('');
-  useEffect(() => {
-    setMinDate(new Date().toISOString().split('T')[0]);
-  }, []);
+  const minDate = useSyncExternalStore(subscribeToDate, getClientDate, getServerDate);
 
   return (
     <aside className="w-full rounded-xl border border-gray-200 bg-white p-4 lg:w-64" aria-label="Search filters">

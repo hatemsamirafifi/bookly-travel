@@ -1,84 +1,15 @@
 import { test, expect } from '@playwright/test';
 
+// These tests exercise the REAL backend seeded by BlogBrowserTestSeeder
+// (florence-walk featured post, hidden-gems-florence and top-10-gelato-spots
+// articles, city-guides category). Browser page.route() mocks were removed
+// because Next.js Server Components fetch blog data server-side, outside
+// browser interception.
+
 test.describe('Blog Index and Listing Page', () => {
-  const mockBlogListResponse = {
-    data: [
-      {
-        id: 1,
-        slug: 'hidden-gems-florence',
-        title: 'Hidden Gems in Florence',
-        excerpt: 'Beyond the Uffizi: secret spots in Florence.',
-        cover_image: 'https://images.unsplash.com/photo-1543429776-2782fc8e1acd',
-        reading_time_minutes: 5,
-        published_at: '2026-05-10T10:00:00Z',
-        is_featured: true,
-        primary_category: {
-          id: 1,
-          slug: 'city-guides',
-          name: 'City Guides',
-        },
-        author: {
-          id: 1,
-          name: 'Elena Rossi',
-          avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
-        },
-      },
-      {
-        id: 2,
-        slug: 'top-10-gelato-spots',
-        title: 'Top 10 Gelato Spots in Rome',
-        excerpt: 'The creamiest gelato in Italy tested by foodies.',
-        cover_image: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a',
-        reading_time_minutes: 3,
-        published_at: '2026-05-08T10:00:00Z',
-        is_featured: false,
-        primary_category: {
-          id: 2,
-          slug: 'food-and-wine',
-          name: 'Food & Wine',
-        },
-        author: {
-          id: 2,
-          name: 'Marco Bianchi',
-          avatar_url: null,
-        },
-      },
-    ],
-    meta: {
-      current_page: 1,
-      last_page: 2,
-      per_page: 12,
-      total: 14,
-    },
-  };
-
-  const mockCategoryResponse = {
-    category: {
-      id: 1,
-      slug: 'city-guides',
-      name: 'City Guides',
-      description: 'Comprehensive destination breakdowns and insider walks.',
-    },
-    posts: [mockBlogListResponse.data[0]],
-    meta: {
-      current_page: 1,
-      last_page: 1,
-      per_page: 12,
-      total: 1,
-    },
-  };
-
   test('renders blog index with featured hero, article grid, and pagination', async ({
     page,
   }) => {
-    await page.route('**/api/public/blog?locale=en&page=1&per_page=12', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(mockBlogListResponse),
-      });
-    });
-
     await page.goto('/en/blog');
 
     // Page title and header
@@ -102,14 +33,6 @@ test.describe('Blog Index and Listing Page', () => {
   test('renders category filtered page with breadcrumbs and posts', async ({
     page,
   }) => {
-    await page.route('**/api/public/blog/category/city-guides?locale=en&page=1&per_page=12', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(mockCategoryResponse),
-      });
-    });
-
     await page.goto('/en/blog/category/city-guides');
 
     // Category heading and description

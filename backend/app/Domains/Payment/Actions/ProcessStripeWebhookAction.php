@@ -66,13 +66,13 @@ class ProcessStripeWebhookAction
             'charge.refunded' => $this->handleRefunded($event, $eventId),
             'charge.dispute.created' => $this->handleDisputeCreated($event, $eventId),
             'charge.dispute.closed' => $this->handleDisputeClosed($event, $eventId),
-            default => Log::info('Unhandled webhook event type', ['type' => $event->type]) ?? [],
+            default => $this->handleUnsupportedEvent($event),
         };
     }
 
     private function handlePaymentSucceeded(Event $event, string $eventId): array
     {
-        $intent = $event->data->object;
+        $intent = data_get($event, 'data.object');
         $intentId = $intent->id;
 
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
@@ -110,7 +110,7 @@ class ProcessStripeWebhookAction
 
     private function handlePaymentFailed(Event $event, string $eventId): array
     {
-        $intent = $event->data->object;
+        $intent = data_get($event, 'data.object');
         $intentId = $intent->id;
 
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
@@ -142,7 +142,7 @@ class ProcessStripeWebhookAction
 
     private function handleRefunded(Event $event, string $eventId): array
     {
-        $charge = $event->data->object;
+        $charge = data_get($event, 'data.object');
         $intentId = $charge->payment_intent;
 
         // Look for the local refund Payment row first (action-led refund). If a
@@ -223,7 +223,7 @@ class ProcessStripeWebhookAction
 
     private function handleDisputeCreated(Event $event, string $eventId): array
     {
-        $dispute = $event->data->object;
+        $dispute = data_get($event, 'data.object');
         $intentId = $dispute->payment_intent;
 
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
@@ -304,7 +304,7 @@ class ProcessStripeWebhookAction
 
     private function handleDisputeClosed(Event $event, string $eventId): array
     {
-        $dispute = $event->data->object;
+        $dispute = data_get($event, 'data.object');
         $intentId = $dispute->payment_intent;
 
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
@@ -350,5 +350,13 @@ class ProcessStripeWebhookAction
     {
         StripeWebhookEvent::where('stripe_event_id', $eventId)
             ->update(['processing_status' => 'processed', 'processed_at' => now()]);
+    }
+
+    /** @return array{} */
+    private function handleUnsupportedEvent(Event $event): array
+    {
+        Log::info('Unhandled webhook event type', ['type' => $event->type]);
+
+        return [];
     }
 }

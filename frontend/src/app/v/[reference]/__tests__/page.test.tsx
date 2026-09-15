@@ -1,4 +1,10 @@
 import { render, screen } from '@testing-library/react';
+import { headers } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
+import { apiClient, NotFoundError } from '@/lib/api/client';
+import enMessages from '../../../../../messages/en.json';
+import esMessages from '../../../../../messages/es.json';
+import itMessages from '../../../../../messages/it.json';
 import VerificationPage, { generateMetadata } from '../page';
 
 /*
@@ -47,15 +53,15 @@ jest.mock('@/lib/api/client', () => ({
   },
 }));
 
-const { headers } = require('next/headers') as { headers: jest.Mock };
-const { getTranslations } = require('next-intl/server') as { getTranslations: jest.Mock };
-const { apiClient } = require('@/lib/api/client') as { apiClient: jest.Mock };
+const mockedHeaders = headers as jest.Mock;
+const mockedGetTranslations = getTranslations as jest.Mock;
+const mockedApiClient = apiClient as jest.Mock;
 
 // Real messages, indexed by locale — the test exercises actual i18n parity.
 const messages: Record<string, Record<string, unknown>> = {
-  en: require('../../../../../messages/en.json'),
-  es: require('../../../../../messages/es.json'),
-  it: require('../../../../../messages/it.json'),
+  en: enMessages,
+  es: esMessages,
+  it: itMessages,
 };
 
 function makeT(locale: string, namespace: string) {
@@ -88,8 +94,8 @@ function makeT(locale: string, namespace: string) {
 }
 
 function setupMocks(locale: string, acceptLanguage: string) {
-  headers.mockResolvedValue(new Headers({ 'accept-language': acceptLanguage }));
-  getTranslations.mockImplementation(async (opts: { locale?: string; namespace?: string }) => {
+  mockedHeaders.mockResolvedValue(new Headers({ 'accept-language': acceptLanguage }));
+  mockedGetTranslations.mockImplementation(async (opts: { locale?: string; namespace?: string }) => {
     const loc = opts.locale ?? locale;
     return makeT(loc, opts.namespace ?? 'verification');
   });
@@ -123,7 +129,7 @@ beforeEach(() => {
 
 it('renders the VALID status + allowed fields for a confirmed booking', async () => {
   setupMocks('en', 'en-US,en;q=0.9');
-  apiClient.mockResolvedValue(confirmedPayload);
+  mockedApiClient.mockResolvedValue(confirmedPayload);
 
   const element = await VerificationPage({ params: Promise.resolve({ reference: 'BKO-AB23XY' }) });
   render(element);
@@ -136,7 +142,7 @@ it('renders the VALID status + allowed fields for a confirmed booking', async ()
 
 it('renders the CANCELLED status for a cancelled booking', async () => {
   setupMocks('en', 'en');
-  apiClient.mockResolvedValue(cancelledPayload);
+  mockedApiClient.mockResolvedValue(cancelledPayload);
 
   const element = await VerificationPage({ params: Promise.resolve({ reference: 'BKO-CD45GH' }) });
   render(element);
@@ -147,8 +153,7 @@ it('renders the CANCELLED status for a cancelled booking', async () => {
 
 it('renders the not-found state for an unknown reference (no enumeration signal)', async () => {
   setupMocks('en', 'en');
-  const { NotFoundError } = require('@/lib/api/client');
-  apiClient.mockRejectedValue(new NotFoundError('Not found'));
+  mockedApiClient.mockRejectedValue(new NotFoundError('Not found'));
 
   const element = await VerificationPage({ params: Promise.resolve({ reference: 'BKO-ZZ99ZZ' }) });
   render(element);
@@ -160,7 +165,7 @@ it('renders the not-found state for an unknown reference (no enumeration signal)
 
 it('renders localized status labels when Accept-Language negotiates es', async () => {
   setupMocks('es', 'es-ES,es;q=0.9,en;q=0.8');
-  apiClient.mockResolvedValue(confirmedPayload);
+  mockedApiClient.mockResolvedValue(confirmedPayload);
 
   const element = await VerificationPage({ params: Promise.resolve({ reference: 'BKO-AB23XY' }) });
   render(element);
@@ -181,7 +186,7 @@ it('never renders traveler PII in the page HTML (SC-010)', async () => {
   setupMocks('en', 'en');
   // Even if the API somehow leaked PII, the page only renders known fields —
   // but assert the rendered HTML never contains forbidden PII markers.
-  apiClient.mockResolvedValue({
+  mockedApiClient.mockResolvedValue({
     data: {
       reference: 'BKO-AB23XY',
       status: 'VALID',

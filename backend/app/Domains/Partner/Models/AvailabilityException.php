@@ -10,8 +10,6 @@ class AvailabilityException extends Model
 {
     protected $table = 'availability_exceptions';
 
-    public $timestamps = ['created_at'];
-
     const UPDATED_AT = null;
 
     protected $fillable = [
