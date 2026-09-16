@@ -22,3 +22,7 @@ services:
       - /meili_data
     networks:
       - bookly-network
+
+networks:
+  bookly-network:
+    driver: bridge

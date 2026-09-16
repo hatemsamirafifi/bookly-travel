@@ -1,9 +1,22 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 
-export default async function NotFound({ params }: { params?: Promise<{ locale: string }> }) {
-  const locale = params ? (await params).locale : routing.defaultLocale;
+// Localized 404 for every unmatched route under `/[locale]/*`. The locale is
+// resolved via `getLocale()` (never from `params`, which is undefined when a
+// `notFound()` boundary renders) with a default-locale fallback, so this
+// component can never crash on a missing or unsupported locale.
+export default async function NotFound() {
+  let locale: string = routing.defaultLocale;
+  try {
+    const negotiated = await getLocale();
+    if ((routing.locales as readonly string[]).includes(negotiated)) {
+      locale = negotiated;
+    }
+  } catch {
+    // Keep the default locale — a 404 page must render, not throw.
+  }
+
   const t = await getTranslations({ locale, namespace: 'notFound' });
 
   return (

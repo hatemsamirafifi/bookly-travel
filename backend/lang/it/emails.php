@@ -11,6 +11,16 @@ return [
         'expiration' => 'Questo link scadrà tra :minutes minuti.',
         'rights' => 'Tutti i diritti riservati.',
     ],
+    'password_reset' => [
+        'subject' => 'Reimposta la tua password di Bookly',
+        'title' => 'Reimposta la tua password',
+        'greeting' => 'Ciao :name,',
+        'body' => 'Abbiamo ricevuto una richiesta di reimpostazione della password per il tuo account :platform. Fai clic sul pulsante qui sotto per scegliere una nuova password.',
+        'button' => 'Reimposta password',
+        'ignore' => 'Se non hai richiesto la reimpostazione della password, puoi ignorare questa email in tutta sicurezza.',
+        'expiration' => 'Questo link scadrà tra :minutes minuti.',
+        'rights' => 'Tutti i diritti riservati.',
+    ],
     'account_locked_out' => [
         'subject' => 'Avviso di sicurezza: Account bloccato temporaneamente',
         'title' => 'Account bloccato temporaneamente',

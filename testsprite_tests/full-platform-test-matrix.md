@@ -19,11 +19,11 @@ This matrix supersedes earlier TestSprite gate documents when their claims confl
 
 | Result | Scenarios |
 |---|---|
-| PASS | 100 |
+| PASS | 139 |
 | FAIL | 0 |
 | BLOCKED-ENV | 0 |
 | BLOCKED-DATA | 0 |
-| Total | 100 |
+| Total | 139 |
 
 All four original critical blockers are closed with evidence (see the final audit report):
 QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disclosure, PRT-015 (PartnerBookingController::show + routed frontend detail page).
@@ -45,6 +45,15 @@ QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disc
 | PUB-011 | Privacy and terms pages load | PASS | `/en/privacy` and `/en/terms` 200 and browser-health green. |
 | PUB-012 | Seeded tour images render without optimizer errors | PASS | FIXED: local fixture CDN (`http://cdn.bookly.test` → nginx alias → `docker/cdn/tours/*.jpg`, 12 deterministic files) + `remotePatterns` http entry + env-gated `dangerouslyAllowLocalIP`. `/_next/image?url=http://cdn.bookly.test/tours/rome-cover.jpg` returns 200. The console-health `cdn.bookly.test` failure exception was removed so the suite now genuinely guards fixture images. |
 
+## Invalid Routes And Error Pages
+
+| ID | Scenario | Result | Evidence |
+|---|---|---|---|
+| NAV-001 | Unknown tour slug renders the localized 404 | PASS | `/en/tours/non-existent-tour-xyz` → HTTP 404 + `[locale]/not-found.tsx` UI (heading, copy, Go Home/Browse Tours links); no blank screen, error digest, or stack trace (`invalid-slugs.spec.ts`, chromium + mobile). |
+| NAV-002 | Unknown article slug renders the localized 404 | PASS | FIXED (product defect): `/en/blog/non-existent-article` returned HTTP 200 with an empty shell — the `blog/[slug]/loading.tsx` Suspense shell swallowed the `notFound()` propagation (all sibling detail routes without a loading shell 404 correctly). Loading shell removed; route now 404s with the localized UI (`invalid-slugs.spec.ts`). |
+| NAV-003 | Unknown category slug renders the localized 404 | PASS | `/en/categories/non-existent-category` → API 404 → `NotFoundError` → localized 404 UI (`invalid-slugs.spec.ts`). |
+| NAV-004 | Unmatched locale subroute renders the localized 404 | PASS | NEW catch-all `frontend/src/app/[locale]/[...notFound]/page.tsx` delegates to `notFound()`; `/en/completely-invalid-page` → HTTP 404 + localized UI. Root `frontend/src/app/not-found.tsx` covers non-locale paths; `[locale]/not-found.tsx` resolves locale via `getLocale()` with default-locale fallback so it never crashes on empty params. |
+
 ## Authentication And Account Lifecycle
 
 | ID | Scenario | Result | Evidence |
@@ -60,7 +69,8 @@ QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disc
 | AUTH-009 | Forgot-password response does not enumerate accounts | PASS | Privacy-preserving behavior for existing/unknown addresses. |
 | AUTH-010 | Logout clears the authenticated state | PASS | Session ended; protected API access 401. |
 | AUTH-011 | Protected pages do not expose protected data to guests | PASS | Client guards + protected APIs prevent guest data access. |
-| AUTH-012 | Password-reset email delivery | PASS | Local log mailer configured (`MAIL_MAILER=log` on laravel/queue/scheduler); 23 bookings show `confirmation_email_sent_at` set and the queue worker drains all jobs (0 pending, 0 failed). No SMTP sink exists locally, so real inbox delivery remains environment-dependent by design. |
+| AUTH-012 | Password-reset email delivery | PASS | Local log mailer configured (`MAIL_MAILER=log` on laravel/queue/scheduler); 23 bookings show `confirmation_email_sent_at` set and the queue worker drains all jobs (0 pending, 0 failed). AUTH-013 proves the reset mail itself renders with a live token. No SMTP sink exists locally, so real inbox delivery remains environment-dependent by design. |
+| AUTH-013 | Password-reset email carries a live reset URL and token | PASS | FIXED (product defect): the `emails.auth.password-reset` view and `emails.password_reset.*` i18n keys (en/es/it) were missing, so `SendPasswordResetEmail` could never render. View created mirroring the verify-mail layout; keys added. New Pest test (`Mail::fake()`, job run inline) proves `PasswordResetMail` is queued to the user, the subject resolves localized, the rendered body contains the URL-encoded email, and the embedded token verifies via `Password::getRepository()->exists()`. |
 
 ## Traveler Surfaces
 
@@ -95,6 +105,7 @@ QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disc
 | PRT-013 | Partner A cannot mutate Partner B tour data | PASS | Cross-partner pricing/availability probes return intentional 404. |
 | PRT-014 | Partner A cannot access Partner B bookings/reviews | PASS | Cross-partner probes return intentional 404. |
 | PRT-015 | Partner booking detail endpoint + page | PASS | FIXED: `PartnerBookingController::show` (auth:sanctum + PartnerRoleMiddleware + throttled; partner-scoped service; 404 for foreign/missing) + NEW routed frontend detail page `/en/partner/bookings/[reference]` (was dead unrouted component + zero-assertion test). Pest 12/12 partner suite, Playwright partner bookings 13/13, TC014 green. |
+| PRT-016 | Partner booking detail authorization matrix | PASS | NEW dedicated Pest suite `PartnerBookingShowTest` (5 tests): own booking 200 with `PartnerBookingResource` shape (`reference`, `tour.title`, `traveler.email`, totals); foreign-partner 404; unauthenticated 401; traveler role intentional 404 (non-disclosure contract); unknown reference 404. |
 
 ## Filament Admin
 
@@ -146,6 +157,17 @@ QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disc
 | SEC-012 | Debug details are not disclosed | PASS | No `dd`/`dump`/`var_dump`/`ray`/trace calls in app code; no `console.*` in frontend src; `APP_DEBUG` gated to local-AND-truthy; live 404/422 responses carry no trace/file/line/SQL; Pest `SanitizedApiErrorsTest` (500 sanitization + non-local debug-off) green. |
 | SEC-013 | No secrets committed; no new suppressions | PASS | Secrets scan of added lines: 0 hits. `git diff -U0` proves 0 added `eslint-disable`/`phpstan-ignore`/skips (13 pre-existing lint-disables untouched). `git diff --check` clean. |
 
+## Upload Security
+
+| ID | Scenario | Result | Evidence |
+|---|---|---|---|
+| UPL-001 | Partner signed-URL issuance returns UUID-scoped URLs | PASS | NEW Pest `UploadTest`: `POST /api/partner/uploads/signed-url` (image/jpeg, 100 KiB) → 200 with `signed_url`/`public_url`/`expires_at`; `public_url` matches `https://cdn.bookly.test/uploads/<uuid>.jpg`; image/png maps to `.png`. |
+| UPL-002 | Upload endpoint rejects unauthenticated callers | PASS | No bearer → 401. |
+| UPL-003 | Upload endpoint hidden from non-partner roles | PASS | Traveler bearer → intentional 404 (PartnerRoleMiddleware non-disclosure contract, same as all partner routes). |
+| UPL-004 | Oversized uploads rejected | PASS | 5,242,881 bytes → 422 `file_size` (limit 5,242,880 enforced by validation). |
+| UPL-005 | Executable and disallowed MIME types rejected | PASS | `text/php`, `application/x-php`, `image/svg+xml`, `text/html`, `application/octet-stream` → 422 `file_type` (allowlist is `image/jpeg` + `image/png` only). |
+| UPL-006 | Client-supplied paths ignored; traversal impossible | PASS | `path`/`filename`/`key` traversal payloads (`../../etc/passwd`) ignored — path and filename are generated server-side (UUID + matched extension); returned URLs contain no `..` and still match the UUID pattern. |
+
 ## Search, Queue, And Localization
 
 | ID | Scenario | Result | Evidence |
@@ -162,6 +184,31 @@ QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disc
 | SI-010 | Queue drains booking confirmation mail | PASS | `jobs` 0, `failed_jobs` 0; 23 bookings with `confirmation_email_sent_at` set. |
 | SI-011 | Stale failed jobs dispositioned | PASS | 4 pre-existing Sept-12 failures (3× VerificationMail, 1× PartnerApplicationReceivedMail — pre-log-mailer SMTP era) inspected and flushed locally via `queue:flush`; documented as historical, not from the new flow. |
 
+## Data Integrity (Direct PostgreSQL)
+
+Each check is an explicit `SELECT COUNT(*)` query asserting zero violations, executed both as NEW Pest suite `DatabaseIntegrityTest` (19 tests: 1 fixture-graph guard + 18 checks, run against seeded rows so no check passes vacuously) and, with identical SQL, against the seeded development database (see final audit §23 for the dev-DB run). Exact SQL is quoted in the final audit report.
+
+| ID | Scenario | Result | Evidence |
+|---|---|---|---|
+| DBI-001 | 0 bookings without traveler or guest identity | PASS | `SELECT COUNT(*) FROM bookings WHERE traveler_id IS NULL AND guest_identity_id IS NULL` → 0. |
+| DBI-002 | 0 bookings without a valid tour | PASS | `... FROM bookings b LEFT JOIN tours t ON t.id = b.tour_id WHERE t.id IS NULL` → 0. |
+| DBI-003 | 0 duplicate payment intents | PASS | Group `payments` by `stripe_payment_intent_id` HAVING COUNT > 1 → 0. |
+| DBI-004 | 0 duplicate charge rows per booking | PASS | Group `payments WHERE type='charge'` by `booking_id` HAVING COUNT > 1 → 0 (refunds legitimately add rows, so the invariant is scoped to charges). |
+| DBI-005 | 0 duplicate idempotency keys | PASS | Group `bookings` by non-null `idempotency_key` HAVING COUNT > 1 → 0. |
+| DBI-006 | 0 duplicate ledger entries per booking and entry type | PASS | Group `financial_ledger_entries` by (`booking_id`, `entry_type`) HAVING COUNT > 1 → 0. |
+| DBI-007 | 0 bookings with an invalid status | PASS | `status NOT IN ('pending_payment','confirmed','completed','cancelled','no_show','expired','cancellation_requested')` → 0. |
+| DBI-008 | 0 payments with an invalid status | PASS | `status NOT IN ('pending','succeeded','refunded','failed','disputed')` → 0. |
+| DBI-009 | 0 reviews on non-completed bookings | PASS | `reviews JOIN bookings ... WHERE b.status <> 'completed'` → 0. |
+| DBI-010 | 0 duplicate reviews per traveler and tour | PASS | Group `reviews` by (`traveler_id`, `tour_id`) HAVING COUNT > 1 → 0. |
+| DBI-011 | 0 review responses from the wrong partner | PASS | `review_responses → reviews → tours WHERE rr.partner_id <> t.partner_id` → 0. |
+| DBI-012 | 0 tours without an owning partner | PASS | `tours LEFT JOIN partners ... WHERE p.id IS NULL` → 0. |
+| DBI-013 | 0 confirmed bookings missing the `payment_confirmed` audit log | PASS | `bookings WHERE status='confirmed' AND NOT EXISTS (booking_audit_logs action='payment_confirmed')` → 0. |
+| DBI-014 | 0 paid bookings missing a ledger debit | PASS | Bookings with a `succeeded` payment and no `financial_ledger_entries` debit → 0. |
+| DBI-015 | 0 published tours without availability rules | PASS | `tours WHERE status='published' AND NOT EXISTS (availability_rules)` → 0. |
+| DBI-016 | 0 duplicate blog slugs | PASS | Group `blog_posts` by `slug` HAVING COUNT > 1 → 0. |
+| DBI-017 | 0 orphan tour translations | PASS | `tour_translations LEFT JOIN tours ... WHERE t.id IS NULL` → 0. |
+| DBI-018 | 0 published tours without a category | PASS | `tours WHERE status='published' AND category_id IS NULL` → 0. |
+
 ## Automated Quality And Infrastructure
 
 | ID | Scenario | Result | Evidence |
@@ -171,15 +218,16 @@ QA-011 (Pest isolation), PAY-008/009/010 (deterministic gateway), SEC debug disc
 | QA-003 | TypeScript strict check | PASS | `npm run typecheck` zero errors. |
 | QA-004 | Full ESLint gate | PASS | `npm run lint` clean, exit 0. |
 | QA-005 | PHPStan gate | PASS | `[OK] No errors` at 512 MB. |
-| QA-006 | Pint formatting gate | PASS | 538 files, 0 style issues. |
+| QA-006 | Pint formatting gate | PASS | 541 files, 0 style issues. |
 | QA-007 | Broad Playwright matrix | PASS | 558/558 passed, 0 failed, 0 skipped (~18 min wall, 1 worker, `DOCKER_ENV=true`). `.last-run.json`: `{"status":"passed","failedTests":[]}`. A prior 558-run found 4 failures (raw i18n key, blog-preview dead assertion, i18n hydration race ×2); all root-caused, fixed, and green on rerun. |
-| QA-008 | Full Pest suite | PASS | 609 passed, 2209 assertions, 0 failed, 0 skipped, 489.76s (`php -d memory_limit=512M artisan test --compact`). Development DB counts identical before/after (fail-closed test-DB isolation proven). |
+| QA-008 | Full Pest suite | PASS | 645 passed, 2305 assertions, 0 failed, 0 skipped (`php -d memory_limit=512M vendor/bin/pest`). Development DB counts identical before/after (fail-closed test-DB isolation proven). |
 | QA-009 | Next.js production build | PASS | Compiled 19.5s, TypeScript 26.5s, 89/89 static pages, serving 200. |
 | QA-010 | Browser console/network guard | PASS | 12/12 representative pages; now genuinely guards seeded images too. |
-| QA-011 | Pest database isolation protects development data | PASS | Disposable `docker-compose.test.yml` services + `tests/bootstrap.php` + fail-closed checks in `TestCase.php` + `TestDatabaseIsolationTest`; 609-test run left dev counts byte-identical. |
+| QA-011 | Pest database isolation protects development data | PASS | Disposable `docker-compose.test.yml` services + `tests/bootstrap.php` + fail-closed checks in `TestCase.php` + `TestDatabaseIsolationTest`; 645-test run left dev counts byte-identical. |
 | QA-012 | Seeder idempotency | PASS | `php artisan db:seed --force` twice consecutively, exit 0 both; fixture audit/ledger rows use firstOrCreate. |
 | QA-013 | Client bundle has no internal-URL leaks | PASS | 0 occurrences of `http://nginx`, `localhost:8080`, `localhost:8000` in `.next/static/chunks/`. |
 | QA-014 | Fixture financial/audit completeness | PASS | Seeder-created paid fixtures now carry charge debits + `payment_confirmed` audit rows (firstOrCreate); integrity audit 18/18 green. |
+| QA-015 | Gate runners fail closed; regression guards deterministic | PASS | `run_all_tests.py` now `sys.exit(1)` when any test fails or zero tests run (previously always exit 0); TC012 asserts the Total Bookings metric card semantically (visible label + numeric metric, no hard-coded count); `ConcurrencyTest` uses dynamic `now()->addDays(7)` dates instead of hard-coded `2026-09-15` (no calendar rot); `docker-compose.test.yml` declares the `bookly-network` bridge network (`config` passes clean). |
 
 ## Blocking Coverage Gaps
 

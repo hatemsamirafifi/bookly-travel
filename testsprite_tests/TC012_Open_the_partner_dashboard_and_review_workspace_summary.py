@@ -94,10 +94,17 @@ async def run_test():
         # --> Assertions to verify final state
         
         # --> Partner dashboard metric cards are visible, including the Total Bookings card.
-        await page.get_by_text("3", exact=True).nth(0).scroll_into_view_if_needed()
+        # Semantic check (no hard-coded counts): the "Total Bookings" label is
+        # visible and its metric card displays a numeric metric.
+        total_bookings_label = page.locator("text=Total Bookings").first
+        await total_bookings_label.scroll_into_view_if_needed()
         # Assert-outcome: passed
-        # Assert: Total Bookings metric card is visible.
-        await expect(page.get_by_text("3", exact=True).nth(0)).to_be_visible(timeout=15000), "Total Bookings metric card is visible."
+        # Assert: Total Bookings metric label is visible.
+        await expect(total_bookings_label).to_be_visible(timeout=15000), "Total Bookings metric label is visible."
+        total_bookings_card = page.locator("div.bg-white", has_text="Total Bookings").first
+        await expect(total_bookings_card).to_be_visible(timeout=15000), "Total Bookings metric card is visible."
+        card_text = await total_bookings_card.inner_text()
+        assert re.search(r"\d", card_text or ""), "Total Bookings metric card displays a numeric metric."
         
         # --> Workspace status summary is shown as the 'Bookings Over Time' chart.
         await page.locator(".recharts-wrapper").nth(0).scroll_into_view_if_needed()

@@ -53,3 +53,7 @@ print("\n--- Summary ---", flush=True)
 passed = sum(1 for s, _ in results.values() if s == "PASS")
 failed = sum(1 for s, _ in results.values() if s != "PASS")
 print(f"Total: {len(results)}, Passed: {passed}, Failed: {failed}", flush=True)
+
+# Fail-closed runner: non-zero exit when any test fails or when no tests ran,
+# so CI/gates cannot mistake a broken or empty run for a pass.
+sys.exit(0 if failed == 0 and len(results) > 0 else 1)

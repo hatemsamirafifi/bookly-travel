@@ -11,6 +11,16 @@ return [
         'expiration' => 'This link will expire in :minutes minutes.',
         'rights' => 'All rights reserved.',
     ],
+    'password_reset' => [
+        'subject' => 'Reset your Bookly password',
+        'title' => 'Reset Your Password',
+        'greeting' => 'Hello :name,',
+        'body' => 'We received a request to reset the password for your :platform account. Click the button below to choose a new password.',
+        'button' => 'Reset Password',
+        'ignore' => "If you didn't request a password reset, you can safely ignore this email.",
+        'expiration' => 'This link will expire in :minutes minutes.',
+        'rights' => 'All rights reserved.',
+    ],
     'account_locked_out' => [
         'subject' => 'Security Alert: Account Temporarily Locked',
         'title' => 'Account Temporarily Locked',

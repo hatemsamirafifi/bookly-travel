@@ -145,3 +145,10 @@ logs/
 
 testsprite_tests/tmp/
 testsprite_tests/tmp/config.json
+
+# Generated voucher PDFs must never be committed (PII + binary churn).
+/downloads/
+
+# Local IDE metadata
+.cursor/
+.gemini/
