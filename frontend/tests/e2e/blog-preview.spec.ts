@@ -9,15 +9,24 @@ test.describe('Blog Authoring & Admin Previews (E2E / US3)', () => {
     // localized 404, or an unavailable state — but never the draft content
     // itself. BlogUnavailable renders "Article Removed" (410), "Too Many
     // Requests" (429), or "Content Temporarily Unavailable" (other errors).
-    const isBannerVisible = await page.locator('text=Draft Preview Mode').isVisible().catch(() => false);
-    const isNotFound = await page.locator('text=404').isVisible().catch(() => false);
-    const isUnavailable = await page
-      .locator('text=/Article Removed|Too Many Requests|Content Temporarily Unavailable/')
-      .first()
+    //
+    // The preview route is force-dynamic and renders via notFound() after a
+    // backend round-trip, so the terminal state streams in after navigation
+    // resolves. Poll for one of the terminal states instead of asserting on
+    // the first paint (non-retrying isVisible() races the stream and flakes).
+    await expect(async () => {
+      const bodyText = await page.locator('body').innerText();
+      expect(
+        /Draft Preview Mode|404|Article Removed|Too Many Requests|Content Temporarily Unavailable/.test(
+          bodyText
+        )
+      ).toBeTruthy();
+    }).toPass({ timeout: 15000 });
+
+    const isBannerVisible = await page
+      .locator('text=Draft Preview Mode')
       .isVisible()
       .catch(() => false);
-
-    expect(isBannerVisible || isNotFound || isUnavailable).toBeTruthy();
 
     if (isBannerVisible) {
       await expect(page.locator('text=Draft Preview Mode')).toBeVisible();
