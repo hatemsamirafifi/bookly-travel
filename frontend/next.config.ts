@@ -31,6 +31,14 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        // F-SEO-01: serve the backend-generated sitemap on the frontend origin
+        // (/sitemap.xml) via the internal API host. Must stay BEFORE the generic
+        // '/api/:path*' rule. The proxy matcher excludes sitemap.xml from the
+        // next-intl middleware (see src/proxy.ts) so no locale redirect fires.
+        source: '/sitemap.xml',
+        destination: `${process.env.API_INTERNAL_URL || 'http://nginx'}/api/public/sitemap.xml`,
+      },
+      {
         source: '/api/:path*',
         destination: `${process.env.API_INTERNAL_URL || 'http://nginx'}/api/:path*`,
       },

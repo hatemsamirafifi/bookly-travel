@@ -41,7 +41,7 @@ Out of scope (no route, no nav link — verified in `Header.tsx`, `MobileNavPane
 |---|-------|--------|-------|
 | 16 | `/v/[reference]` | `src/app/v/[reference]/page.tsx` | Public voucher verification → `GET /api/public/v/{reference}` (throttle:verify, `no-store`) |
 | 17 | `/api/auth/session` | `src/app/api/auth/session/route.ts` | Next.js session helper |
-| 18 | `/robots.txt` | `src/app/robots.ts` | Allows `/en/ /es/ /it/`, disallows `/api/`, advertises `${SITE_URL}/sitemap.xml` — **see audit finding F-SEO-01** |
+| 18 | `/robots.txt` | `src/app/robots.ts` | Allows `/en/ /es/ /it/`, disallows `/api/`, advertises `${SITE_URL}/sitemap.xml` (resolved: Next.js rewrite proxies `/sitemap.xml` → backend `/api/public/sitemap.xml`, returns 200 XML) |
 | 19 | `/_not-found`, `[...notFound]` | `src/app/[locale]/[...notFound]/page.tsx`, `not-found.tsx` | Localized 404 boundary; `ErrorBoundary` + `ErrorFallback` wrap all locale routes |
 
 ## 3. Auth pages — `frontend/src/app/[locale]/(auth)/` (8 files)

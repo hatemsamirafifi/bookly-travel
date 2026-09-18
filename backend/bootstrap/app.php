@@ -47,6 +47,12 @@ return Application::configure(basePath: dirname(__DIR__))
             // Spec 001 FR-012 — sliding-window session expiry (extend on use).
             'refresh.token' => RefreshTokenExpiry::class,
         ]);
+
+        // H-01 — guests hitting api/* must never be redirected to /login:
+        // returning null hands the request to Sanctum's AuthenticationException
+        // path, which withExceptions() below renders as a JSON 401. Web guests
+        // keep the /login redirect.
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('api/*') ? null : '/login');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn (Request $request) => $request->is('api/*') || $request->expectsJson());
@@ -55,9 +61,15 @@ return Application::configure(basePath: dirname(__DIR__))
                 return;
             }
 
-            // Validation and authentication retain Laravel's structured contracts.
+            // H-01 — unauthenticated API requests consistently receive a JSON
+            // 401 (regardless of the Accept header), never Laravel's default
+            // redirect-to-login which yields a 301 text/html response.
+            if ($exception instanceof AuthenticationException) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+
+            // Validation and HttpResponseException retain Laravel's structured contracts.
             if ($exception instanceof ValidationException
-                || $exception instanceof AuthenticationException
                 || $exception instanceof HttpResponseException) {
                 return;
             }

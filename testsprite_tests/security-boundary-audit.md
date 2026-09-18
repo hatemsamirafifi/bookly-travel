@@ -60,7 +60,8 @@ weakening policies.
 Strict allowlist: `file_type ∈ {image/jpeg, image/png}`, `file_size ≤ 5MB`;
 server-generated UUID object key (no client path traversal); 15-minute expiry;
 R2 presigned flow (mock URL generator clearly marked for production wiring).
-Route throttled (`booking.create`) + partner-gated.
+Route throttled (`booking.create`) + partner-gated (`tokenCan('partner')` + approved onboarding status required).
+Evidence: 15/15 automated tests passing in `tests/Feature/Security/UploadSecurityTest.php` covering valid JPEG/PNG, disallowed MIME types (PDF, HTML, GIF, WebP, PHP, binaries), oversized files (>5MB), path traversal attempts, and URL expiration.
 
 ## 5. Debug / error disclosure
 
@@ -89,11 +90,8 @@ Route throttled (`booking.create`) + partner-gated.
   in a host-built `.next` was traced to git-ignored `frontend/.env.local` and
   does not ship (Docker/prod builds keep the variable empty).
 
-## H-01 (non-critical hardening note, EXPECTED BEHAVIOR)
+## H-01 (RESOLVED & VERIFIED)
 
-API-only contract requires `Accept: application/json` (every first-party client
-sends it). A header-less request to a guarded endpoint currently yields a
-sanitized 500 (web-guest redirect to an undefined `login` route) instead of
-401 — no data is disclosed and the request is still rejected. Suggested
-hardening: name a fallback login route or force JSON for `api/*`. Not a
-release blocker.
+Guarded `/api/*` endpoints previously allowed header-less requests to fall through to a web redirect attempting to resolve a non-existent `login` route.
+Resolved: In `backend/bootstrap/app.php`, configured `$middleware->redirectGuestsTo(fn ($request) => $request->is('api/*') ? null : '/login')` so API requests suppress web redirects, and forced JSON rendering for all `api/*` requests.
+Verified: 6/6 automated tests passing in `tests/Feature/Security/ApiErrorConsistencyTest.php` proving unauthenticated requests without `Accept: application/json` consistently return JSON 401 without 500 errors, stack traces, or file paths.

@@ -18,6 +18,12 @@ class PartnerOnboardingService
             $status = 'pending';
         }
 
+        // Legacy 'complete' rows are normalized to 'approved' (see
+        // PartnerRoleMiddleware — kept for backward compatibility).
+        if ($status === 'complete') {
+            $status = 'approved';
+        }
+
         $canCreateTours = $this->canCreateTours($partner);
         $rejectionReason = $status === 'rejected' ? $this->getRejectionReason($partner) : null;
         $suspensionReason = $status === 'suspended' ? $this->getSuspensionReason($partner) : null;
@@ -60,7 +66,9 @@ class PartnerOnboardingService
      */
     public function canCreateTours(Partner $partner): bool
     {
-        return $partner->onboarding_status === 'approved' && (bool) $partner->is_active;
+        $status = $partner->onboarding_status === 'incomplete' ? 'pending' : $partner->onboarding_status;
+
+        return in_array($status, ['approved', 'complete'], true) && (bool) $partner->is_active;
     }
 
     /**

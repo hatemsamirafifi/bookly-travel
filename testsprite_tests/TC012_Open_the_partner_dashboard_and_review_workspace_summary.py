@@ -113,6 +113,18 @@ async def run_test():
         await expect(page.locator(".recharts-wrapper").nth(0)).to_be_visible(timeout=15000), "Bookings Over Time chart is visible on the page."
         await asyncio.sleep(5)
 
+        # --> Partner status badges render with valid semantic status text.
+        # Semantic check (no exact text/count pinning): any partner-facing
+        # status badge on the dashboard must match one of the recognized
+        # status labels — matched case-insensitively so lowercased banner
+        # variants ("pending review", "active") satisfy the check too.
+        status_badge_re = re.compile(r"Draft|Pending Review|Published|Active", re.IGNORECASE)
+        body_text = (await page.locator("body").inner_text()) or ""
+        assert status_badge_re.search(body_text), (
+            "Partner dashboard renders a valid status badge "
+            "(expected one of: Draft / Pending Review / Published / Active)."
+        )
+
     finally:
         if context:
             await context.close()

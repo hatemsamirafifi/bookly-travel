@@ -1,7 +1,6 @@
 # Bookly Travel — Role Workflow Audit (Guest · Traveler · Partner · Admin)
 
-Date: 2026-09-17 · Evidence: Pest 645/645 · Jest 179/179 · Playwright 566/566
-(post-fix) · `run_all_tests.py` 15/15 · live probes via nginx (`http://nginx`).
+Date: 2026-09-18 · Evidence: Pest 666/666 (2377 assertions) · Jest 179/179 · Playwright 566/566 (post-fix) · `run_all_tests.py` 15/15 · live probes via nginx (`http://nginx`).
 
 ## GUEST (unauthenticated)
 
@@ -55,4 +54,4 @@ Date: 2026-09-17 · Evidence: Pest 645/645 · Jest 179/179 · Playwright 566/566
 
 Traveler↔Traveler 403/404 · Partner↔Partner 404-hiding · Traveler→Partner 404 ·
 Partner→Admin 403 · Unauthenticated→Protected 401/redirect · No leakage in any
-direction (645 Pest incl. `Security/*`, 566 Playwright incl. guards, TC suite).
+direction (666 Pest incl. `Security/*`, 566 Playwright incl. guards, TC suite).

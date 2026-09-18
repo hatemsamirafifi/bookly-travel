@@ -1,11 +1,11 @@
 # Bookly Travel — Full Platform Acceptance Matrix
 
-Reconciliation: **TOTAL 217 = PASS 210 + FAIL 1 + BLOCKED 2 + SKIPPED 4**.
-Suite executions behind this matrix: Pest 645/645 · Jest 179/179 ·
+Reconciliation: **TOTAL 217 = PASS 211 + FAIL 0 + BLOCKED 2 + SKIPPED 4**.
+Suite executions behind this matrix: Pest 666/666 · Jest 179/179 ·
 Playwright 566/566 (post TEST-BUG fix, was 564/566) · `run_all_tests.py` 15/15 ·
-a11y project 10/10 · ~40 live probes. Zero production-code failures.
+a11y project 10/10 · Database Integrity 20/20 · ~40 live probes. Zero production-code failures.
 
-Status key: PASS · FAIL (non-critical: F-SEO-01) · BLOCKED (environment) ·
+Status key: PASS · FAIL (0) · BLOCKED (environment) ·
 SKIPPED (out of scope, no route/link exists).
 Evidence key: P=Pest · J=Jest · E=Playwright e2e · A=a11y · T=TC API suite · L=live probe · S=source read.
 
@@ -262,7 +262,7 @@ Evidence key: P=Pest · J=Jest · E=Playwright e2e · A=a11y · T=TC API suite �
 | FPA-Q04 | Scout sync via `scout` queue (compose comment + config) | S,L |
 | FPA-Q05 | Duplicate-job safety (idempotent handlers) | P |
 
-## O — SEO / metadata (8 PASS + 1 FAIL)
+## O — SEO / metadata (9, all PASS)
 
 | ID | Check | Status | Ev |
 |----|-------|--------|----|
@@ -274,7 +274,7 @@ Evidence key: P=Pest · J=Jest · E=Playwright e2e · A=a11y · T=TC API suite �
 | FPA-O06 | Invalid pages return 404 status (page + API) | PASS | L,E |
 | FPA-O07 | No localhost/internal hostnames in tracked source config for prod paths | PASS | S |
 | FPA-O08 | hreflang alternates in sitemap XML | PASS | L |
-| FPA-O09 | Advertised sitemap URL resolves | **FAIL** (non-critical F-SEO-01): `robots.ts` advertises `${SITE_URL}/sitemap.xml` → **404** (no Next route, no nginx mapping); working sitemap `/api/public/sitemap.xml` is robots-disallowed | L |
+| FPA-O09 | Advertised sitemap URL resolves | PASS: `robots.ts` advertises `${SITE_URL}/sitemap.xml`; Next.js rewrite in `next.config.ts` proxies to `/api/public/sitemap.xml` (HTTP 200 OK, application/xml) | L,P |
 
 ## W — Accessibility (6, all PASS)
 
@@ -309,6 +309,6 @@ Evidence key: P=Pest · J=Jest · E=Playwright e2e · A=a11y · T=TC API suite �
 ## Reconciliation
 
 - Rows: G26 + T38 + P40 + A16 + L9 + R9 + E12 + S12 + C10 + Y8 + H8 + Q5 + O9 + W6 + F5 + X4 = **217**
-- PASS 210 · FAIL 1 (F-SEO-01, non-critical) · BLOCKED 2 (Stripe live, no creds) · SKIPPED 4 (out of scope)
-- 210 + 1 + 2 + 4 = **217 = TOTAL** ✓
+- PASS 211 · FAIL 0 (F-SEO-01 resolved) · BLOCKED 2 (Stripe live, no creds) · SKIPPED 4 (out of scope)
+- 211 + 0 + 2 + 4 = **217 = TOTAL** ✓
 - Incidental: 2 Playwright failures during the run root-caused to a **TEST BUG** (non-retrying assertions racing streamed `notFound()`); fixed in `frontend/tests/e2e/blog-preview.spec.ts`, re-verified 2/2 chromium + 2/2 mobile. No production-code change required.

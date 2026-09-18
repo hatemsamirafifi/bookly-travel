@@ -9,6 +9,7 @@ const INVALID_ROUTES = [
   '/en/tours/non-existent-tour-xyz',
   '/en/blog/non-existent-article',
   '/en/categories/non-existent-category',
+  '/en/destinations/non-existent-destination',
   '/en/completely-invalid-page',
 ] as const;
 
