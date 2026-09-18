@@ -3,15 +3,15 @@
 namespace App\Domains\Payment\Actions;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Models\Payment;
-use App\Domains\Payment\Services\StripeService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CreatePaymentIntentAction
 {
     public function __construct(
-        private readonly StripeService $stripe,
+        private readonly PaymentGateway $stripe,
     ) {}
 
     /**
@@ -62,7 +62,7 @@ class CreatePaymentIntentAction
             idempotencyKey: $booking->idempotency_key,
         );
 
-        $intentId = StripeService::parseIntentId($clientSecret);
+        $intentId = explode('_secret_', $clientSecret)[0];
 
         try {
             DB::transaction(function () use ($existing, $booking, $intentId, $clientSecret): void {

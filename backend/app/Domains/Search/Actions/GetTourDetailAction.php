@@ -3,6 +3,7 @@
 namespace App\Domains\Search\Actions;
 
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GetTourDetailAction
@@ -55,7 +56,7 @@ class GetTourDetailAction
             $imageObjects[] = [
                 'url' => $url,
                 'is_cover' => $i === 0,
-                'alt' => $t?->title ?? '',
+                'alt' => optional($t)->title ?? '',
             ];
         }
 
@@ -64,16 +65,16 @@ class GetTourDetailAction
         $data = [
             'id' => $tour->id,
             'slug' => $tour->slug,
-            'title' => $t?->title ?? '',
-            'description' => $t?->description ?? '',
-            'highlights' => $t?->highlights ?? [],
-            'inclusions' => $t?->inclusions ?? [],
-            'exclusions' => $t?->exclusions ?? [],
+            'title' => optional($t)->title ?? '',
+            'description' => optional($t)->description ?? '',
+            'highlights' => optional($t)->highlights ?? [],
+            'inclusions' => optional($t)->inclusions ?? [],
+            'exclusions' => optional($t)->exclusions ?? [],
             'location' => $tour->location,
-            'meeting_point' => $t?->meeting_point ?? '',
+            'meeting_point' => optional($t)->meeting_point ?? '',
             'category' => [
-                'slug' => $tour->category?->slug ?? '',
-                'name' => $tour->category?->name ?? '',
+                'slug' => optional($tour->category)->slug ?? '',
+                'name' => optional($tour->category)->name ?? '',
             ],
             'duration' => [
                 'minutes' => $tour->duration_minutes,
@@ -84,7 +85,7 @@ class GetTourDetailAction
                 'min' => $tour->group_size_min,
                 'max' => $tour->group_size_max,
             ],
-            'cancellation_policy' => $t?->cancellation_policy ?? '',
+            'cancellation_policy' => optional($t)->cancellation_policy ?? '',
             'images' => $imageObjects,
             'pricing' => [
                 'base_price' => [
@@ -95,7 +96,12 @@ class GetTourDetailAction
                 'tiered_pricing' => null,
             ],
             'availability' => [
-                'next_available_date' => $availableDates[0] ?? null,
+                // Bookings require a strictly-future tour_date (CreateBookingAction
+                // rejects today and past dates), so the date the UI uses to deep-link
+                // into the booking form must also be strictly future. The index-level
+                // approximation in upcomingAvailableDates() can still include today
+                // for search visibility; filter it out of the bookable hint only.
+                'next_available_date' => $this->firstFutureDate($availableDates),
                 'available_dates' => $availableDates,
                 'is_unavailable' => $isUnavailable,
             ],
@@ -120,10 +126,30 @@ class GetTourDetailAction
         return ['data' => $data];
     }
 
-    protected function buildSeoMetadata(Tour $tour, $translation, string $locale): array
+    /**
+     * First available date strictly after today, or null. The booking form
+     * deep-link date must satisfy CreateBookingAction's "future date" rule,
+     * which rejects today's date.
+     *
+     * @param  array<int, string>  $dates
+     */
+    protected function firstFutureDate(array $dates): ?string
     {
-        $title = $translation?->title ?? '';
-        $desc = $translation?->description ?? '';
+        $tomorrow = now()->addDay()->toDateString();
+
+        foreach ($dates as $date) {
+            if ($date >= $tomorrow) {
+                return $date;
+            }
+        }
+
+        return null;
+    }
+
+    protected function buildSeoMetadata(Tour $tour, ?TourTranslation $translation, string $locale): array
+    {
+        $title = optional($translation)->title ?? '';
+        $desc = optional($translation)->description ?? '';
         $baseUrl = config('app.url', 'https://bookly.com');
         $canonical = "{$baseUrl}/{$locale}/tours/{$tour->slug}";
 

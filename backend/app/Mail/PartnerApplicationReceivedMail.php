@@ -43,8 +43,8 @@ class PartnerApplicationReceivedMail extends Mailable implements ShouldQueue
             view: $view,
             with: [
                 'partner' => $this->partner,
-                'businessName' => $this->partner->profile?->company_name ?? 'Partner',
-                'contactPerson' => $this->partner->user?->name ?? 'Partner',
+                'businessName' => optional($this->partner->profile)->company_name ?? 'Partner',
+                'contactPerson' => optional($this->partner->user)->name ?? 'Partner',
                 'onboardingUrl' => config('app.url') . '/partner/onboarding',
             ],
         );
@@ -52,7 +52,7 @@ class PartnerApplicationReceivedMail extends Mailable implements ShouldQueue
 
     private function resolveLocale(): string
     {
-        $locale = $this->partner->user?->locale ?? 'en';
+        $locale = optional($this->partner->user)->locale ?? 'en';
 
         return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
     }

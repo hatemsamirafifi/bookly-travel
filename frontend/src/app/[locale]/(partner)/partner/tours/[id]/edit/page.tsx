@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, use, useCallback } from 'react';
 import { ArrowLeft, Save, Calendar, Coins, Send, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
@@ -46,7 +45,6 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const resolvedParams = use(params);
   const id = resolvedParams.id;
   const locale = resolvedParams.locale;
-  const router = useRouter();
 
   const [tour, setTour] = useState<Tour | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +68,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     it: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
   });
 
-  const fetchTour = async () => {
+  const fetchTour = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -128,11 +126,11 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchTour();
-  }, [id]);
+  }, [fetchTour]);
 
   const updateTranslationField = (lang: 'en' | 'es' | 'it', field: keyof Translation, value: any) => {
     setTranslationData((prev) => ({

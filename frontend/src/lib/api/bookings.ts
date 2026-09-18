@@ -46,7 +46,24 @@ export interface BookingResponse {
 
 export interface PaymentInfo {
   client_secret: string;
-  stripe_publishable_key: string;
+  stripe_publishable_key: string | null;
+  gateway: 'stripe' | 'deterministic';
+}
+
+export async function confirmDeterministicPayment(
+  bookingReference: string,
+  clientSecret: string,
+): Promise<{ data: { reference: string; status: string } }> {
+  const token = getAuthToken();
+
+  return apiClient(`/api/public/bookings/${encodeURIComponent(bookingReference)}/deterministic-payment/confirm`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ client_secret: clientSecret }),
+  });
 }
 
 export interface CreateBookingResult {

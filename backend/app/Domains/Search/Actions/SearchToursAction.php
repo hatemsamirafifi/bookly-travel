@@ -7,6 +7,8 @@ use App\Domains\Search\Support\SearchableAttributes;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Category;
 use App\Models\Tour;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SearchToursAction
 {
@@ -44,11 +46,14 @@ class SearchToursAction
         // query would also match English/Italian titles.
         $search->options['attributesToSearchOn'] = SearchableAttributes::forLocale($locale);
 
+        /** @var LengthAwarePaginator<int, Tour> $results */
         $results = $search->paginate($perPage, 'page', $page);
 
         // Eager-load every relation the transformer reads so we don't issue
         // per-tour queries (N+1) while mapping the results page.
-        $results->getCollection()->load([
+        /** @var EloquentCollection<int, Tour> $models */
+        $models = $results->getCollection();
+        $models->load([
             'translations',
             'category',
             'availabilityRules',
@@ -139,7 +144,7 @@ class SearchToursAction
             ->map(fn (Category $cat) => [
                 'slug' => $cat->slug,
                 'name' => $cat->name,
-                'count' => (int) $cat->tours_count,
+                'count' => (int) $cat->getAttribute('tours_count'),
             ])
             ->filter(fn (array $c) => $c['count'] > 0)
             ->values()
@@ -158,8 +163,8 @@ class SearchToursAction
         $priceRange = Tour::bookable()
             ->selectRaw('MIN(price_amount) as min_price, MAX(price_amount) as max_price')
             ->first();
-        $priceMin = (int) ($priceRange->min_price ?? 0);
-        $priceMax = (int) ($priceRange->max_price ?? 0);
+        $priceMin = (int) ($priceRange?->getAttribute('min_price') ?? 0);
+        $priceMax = (int) ($priceRange?->getAttribute('max_price') ?? 0);
 
         $durations = [
             ['value' => 'half-day', 'label' => __('search.durations.half_day', [], $locale), 'count' => 0],

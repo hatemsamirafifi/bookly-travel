@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getBlogCategory } from '@/lib/api/blog';
+import { ApiError } from '@/lib/api/client';
 import BlogList from '@/components/blog/BlogList';
 import EmptyState from '@/components/ui/EmptyState';
 import { BreadcrumbListSchema } from '@/components/seo/StructuredData';
@@ -86,11 +87,12 @@ export default async function BlogCategoryPage({
       page: pageNum,
       per_page: 12,
     });
-  } catch (err: any) {
-    if (err?.status === 404) {
+  } catch (err: unknown) {
+    const status = err instanceof ApiError ? err.status : 500;
+    if (status === 404) {
       notFound();
     }
-    return <BlogUnavailable status={err?.status || 500} />;
+    return <BlogUnavailable status={status} />;
   }
 
   const { data: categoryData, meta } = categoryResponse;

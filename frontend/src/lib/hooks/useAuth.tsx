@@ -101,30 +101,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('auth_token', newToken);
   };
 
+  // NOTE: login/register/logout intentionally do NOT toggle the global
+  // `isLoading` flag. That flag represents session RESTORATION (initial page
+  // load) and AuthGuard unmounts its children while it is true. Toggling it
+  // around a form submission unmounted the submitting form mid-request, so
+  // any server-side error state set after the response (invalid credentials,
+  // duplicate email, lockout) was discarded with the unmounted instance and
+  // users saw no feedback at all. Forms already disable their own submit
+  // buttons via react-hook-form's `isSubmitting`.
   const login = async (credentials: z.infer<typeof loginSchema>) => {
-    setIsLoading(true);
-    try {
-      const response = await authApi.login(credentials);
-      setAuth(response.data, response.token);
-      // Here you would also set the httpOnly cookie via a Next.js server route
-    } finally {
-      setIsLoading(false);
-    }
+    const response = await authApi.login(credentials);
+    setAuth(response.data, response.token);
+    // Here you would also set the httpOnly cookie via a Next.js server route
   };
 
   const register = async (data: z.infer<typeof registerSchema>) => {
-    setIsLoading(true);
-    try {
-      const response = await authApi.register(data);
-      setAuth(response.data, response.token);
-    } finally {
-      setIsLoading(false);
-    }
+    const response = await authApi.register(data);
+    setAuth(response.data, response.token);
   };
 
   const logout = async () => {
     if (token) {
-      setIsLoading(true);
       try {
         await authApi.logout();
       } catch (e) {
@@ -133,7 +130,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         setToken(null);
         localStorage.removeItem('auth_token');
-        setIsLoading(false);
         // Clear httpOnly cookie here
         router.push(`/${locale}/`);
       }

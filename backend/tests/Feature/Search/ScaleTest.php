@@ -15,30 +15,63 @@
  * It uses a separate database transaction that rolls back after the run.
  */
 
+use App\Models\Tour;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Laravel\Scout\EngineManager;
+use Meilisearch\Client as MeilisearchClient;
 
 use function Pest\Laravel\getJson;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    config(['scout.driver' => 'meilisearch']);
+    app(EngineManager::class)->forgetEngines();
+
+    $client = app(MeilisearchClient::class);
+    $indexName = (new Tour)->searchableAs();
+
+    try {
+        $task = $client->deleteIndex($indexName);
+        $client->waitForTask($task['taskUid'], 30_000);
+    } catch (Throwable) {
+        // The first test run has no index to delete.
+    }
+
+    $index = $client->index($indexName);
+    $tasks = [
+        $index->updateSearchableAttributes([
+            'title_en', 'title_es', 'title_it',
+            'description_en', 'description_es', 'description_it',
+            'highlights_en', 'highlights_es', 'highlights_it',
+            'location', 'category_name',
+        ]),
+        $index->updateFilterableAttributes(['status', 'category_slug', 'location_slug', 'price_amount', 'duration_minutes', 'available_dates']),
+        $index->updateSortableAttributes(['price_amount', 'average_rating', 'created_at']),
+    ];
+    $client->waitForTasks(array_column($tasks, 'taskUid'), 30_000);
+});
+
+afterEach(function () {
+    $client = app(MeilisearchClient::class);
+    $task = $client->deleteIndex((new Tour)->searchableAs());
+    $client->waitForTask($task['taskUid'], 30_000);
+});
 
 /**
  * Seed 10,000 published tours across 50 categories.
  */
 function seedScaleDataset(): void
 {
+    $partner = makePartner();
+
     // Create 50 categories
     $categoryIds = [];
     for ($i = 1; $i <= 50; $i++) {
         $categoryIds[] = DB::table('categories')->insertGetId([
-            'slug' => "category-{$i}",
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        DB::table('category_translations')->insert([
-            'category_id' => end($categoryIds),
-            'locale' => 'en',
             'name' => "Category {$i}",
+            'slug' => "category-{$i}",
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -50,13 +83,16 @@ function seedScaleDataset(): void
     for ($i = 1; $i <= 10_000; $i++) {
         $categoryId = $categoryIds[($i - 1) % 50];
         $batch[] = [
-            'slug' => "tour-{$i}",
+            'partner_id' => $partner->id,
+            'slug' => "scale-tour-{$i}",
             'category_id' => $categoryId,
             'status' => 'published',
             'duration_minutes' => 60 + ($i % 240),
+            'duration_label' => '1-5 hours',
             'location' => 'City ' . ($i % 100),
-            'min_group_size' => 1,
-            'max_group_size' => 10,
+            'group_size_min' => 1,
+            'group_size_max' => 10,
+            'price_amount' => 5000 + $i,
             'created_at' => $now,
             'updated_at' => $now,
         ];
@@ -70,11 +106,15 @@ function seedScaleDataset(): void
         DB::table('tours')->insert($batch);
     }
 
+    $tourIds = DB::table('tours')
+        ->where('slug', 'like', 'scale-tour-%')
+        ->pluck('id', 'slug');
+
     // Seed tour translations (title only for search)
     $batch = [];
     for ($i = 1; $i <= 10_000; $i++) {
         $batch[] = [
-            'tour_id' => $i,
+            'tour_id' => $tourIds["scale-tour-{$i}"],
             'locale' => 'en',
             'title' => "Tour {$i} - Amazing Experience",
             'description' => str_repeat('Lorem ipsum ', 20),
@@ -93,6 +133,47 @@ function seedScaleDataset(): void
     if (! empty($batch)) {
         DB::table('tour_translations')->insert($batch);
     }
+
+    $documents = DB::table('tours')
+        ->join('tour_translations', 'tour_translations.tour_id', '=', 'tours.id')
+        ->join('categories', 'categories.id', '=', 'tours.category_id')
+        ->where('tours.slug', 'like', 'scale-tour-%')
+        ->where('tour_translations.locale', 'en')
+        ->select([
+            'tours.id',
+            'tours.slug',
+            'tours.status',
+            'tours.location',
+            'tours.location_slug',
+            'tours.price_amount',
+            'tours.duration_minutes',
+            'tours.created_at',
+            'tour_translations.title as title_en',
+            'tour_translations.description as description_en',
+            'categories.slug as category_slug',
+            'categories.name as category_name',
+        ])
+        ->get()
+        ->map(fn ($tour) => array_merge((array) $tour, [
+            'average_rating' => 0,
+            'available_dates' => [],
+            'title_es' => '',
+            'title_it' => '',
+            'description_es' => '',
+            'description_it' => '',
+            'highlights_en' => '[]',
+            'highlights_es' => '[]',
+            'highlights_it' => '[]',
+        ]));
+
+    $client = app(MeilisearchClient::class);
+    $index = $client->index((new Tour)->searchableAs());
+    $taskIds = [];
+    foreach ($documents->chunk(1000) as $chunk) {
+        $task = $index->addDocuments($chunk->values()->all());
+        $taskIds[] = $task['taskUid'];
+    }
+    $client->waitForTasks($taskIds, 60_000);
 }
 
 it('searches 10,000 tours with p95 latency under 2 seconds', function () {

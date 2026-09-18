@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Domains\Reviews\Models\Review;
 use App\Http\Resources\Concerns\FormatsReviewerName;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -13,6 +14,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * needs (`tour_title`, `response`). Critically, it does NOT expose the raw
  * `Review` columns (`traveler_id`, `booking_id`, `tour_id`, `locale`,
  * `edited_at`) — closing the PII leak from returning raw models.
+ *
+ * @mixin Review
  */
 class PartnerReviewResource extends JsonResource
 {

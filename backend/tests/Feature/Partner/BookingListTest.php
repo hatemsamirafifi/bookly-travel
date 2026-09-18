@@ -38,6 +38,7 @@ beforeEach(function () {
         'status' => 'published',
         'cover_image_url' => 'https://cdn.bookly.com/tours/42/cover.jpg',
     ]);
+    addTranslation($this->tour, 'en', 'Florence Booking Tour');
 
     $this->token = $this->partnerUser->createToken('test', ['partner'])->plainTextToken;
 
@@ -126,4 +127,41 @@ it('returns 404 for non-partner role', function () {
     ]);
 
     $response->assertStatus(404);
+});
+
+it('returns a partner-scoped booking detail', function () {
+    getJson('/api/partner/bookings/' . $this->booking->reference, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertOk()
+        ->assertJsonPath('data.reference', $this->booking->reference)
+        ->assertJsonPath('data.tour.title', 'Florence Booking Tour')
+        ->assertJsonPath('data.traveler.email', $this->traveler->email)
+        ->assertJsonPath('data.total_participants', 2)
+        ->assertJsonPath('data.total_amount', 178)
+        ->assertJsonPath('data.participants.0.count', 2);
+});
+
+it('does not disclose another partners booking detail', function () {
+    $otherPartnerUser = User::factory()->partner()->create();
+    Partner::create([
+        'user_id' => $otherPartnerUser->id,
+        'role' => 'partner',
+        'onboarding_status' => 'complete',
+        'is_active' => true,
+    ]);
+
+    getJson('/api/partner/bookings/' . $this->booking->reference, [
+        'Authorization' => 'Bearer ' . $otherPartnerUser->createToken('test', ['partner'])->plainTextToken,
+    ])->assertNotFound();
+});
+
+it('returns 404 for an unknown partner booking reference', function () {
+    getJson('/api/partner/bookings/BKO-ZZZZZZ', [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertNotFound();
+});
+
+it('requires authentication for partner booking detail', function () {
+    getJson('/api/partner/bookings/' . $this->booking->reference)
+        ->assertUnauthorized();
 });

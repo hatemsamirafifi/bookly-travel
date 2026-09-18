@@ -2,11 +2,12 @@
 
 namespace App\Domains\Payment\Services;
 
+use App\Domains\Payment\Contracts\PaymentGateway;
 use Illuminate\Support\Facades\Log;
 use Stripe\Exception\InvalidRequestException;
 use Stripe\StripeClient;
 
-class StripeService
+class StripeService implements PaymentGateway
 {
     private ?StripeClient $client = null;
 

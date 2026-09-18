@@ -58,7 +58,7 @@ class PartnerNewBookingMail extends Mailable
 
     private function resolveLocale(): string
     {
-        $locale = $this->booking->tour?->partnerRecord?->user?->locale ?? 'en';
+        $locale = data_get($this->booking, 'tour.partnerRecord.user.locale', 'en');
 
         return in_array($locale, ['en', 'es', 'it'], true) ? $locale : 'en';
     }

@@ -38,7 +38,7 @@ class AdminAuthorizationService
             return false;
         }
 
-        $flags = $user->adminPermission?->flags ?? [];
+        $flags = $user->adminPermission()->value('flags') ?? [];
 
         return (bool) ($flags[$permission] ?? false);
     }

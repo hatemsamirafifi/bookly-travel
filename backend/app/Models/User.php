@@ -25,7 +25,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -113,7 +113,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      * Per-action admin permission flags (Spec 013, data-model.md §2).
      * One row per admin user; null for non-admins.
      */
-    public function adminPermission()
+    public function adminPermission(): HasOne
     {
         return $this->hasOne(AdminPermission::class);
     }

@@ -23,38 +23,36 @@ uses(RefreshDatabase::class);
 function seedConcurrencyDataset(): void
 {
     $now = now();
+    $partner = makePartner();
 
     // Seed 100 tours, 5 categories, 5 destinations
     $categoryIds = [];
     for ($i = 1; $i <= 5; $i++) {
         $categoryIds[] = DB::table('categories')->insertGetId([
-            'slug' => "cat-{$i}",
-            'created_at' => $now,
-            'updated_at' => $now,
-        ]);
-        DB::table('category_translations')->insert([
-            'category_id' => end($categoryIds),
-            'locale' => 'en',
             'name' => "Category {$i}",
+            'slug' => "cat-{$i}",
             'created_at' => $now,
             'updated_at' => $now,
         ]);
     }
 
     for ($i = 1; $i <= 100; $i++) {
-        DB::table('tours')->insert([
+        $tourId = DB::table('tours')->insertGetId([
+            'partner_id' => $partner->id,
             'slug' => "tour-{$i}",
             'category_id' => $categoryIds[$i % 5],
             'status' => 'published',
             'duration_minutes' => 120,
+            'duration_label' => '2 hours',
             'location' => 'City ' . ($i % 10),
-            'min_group_size' => 1,
-            'max_group_size' => 10,
+            'group_size_min' => 1,
+            'group_size_max' => 10,
+            'price_amount' => 5000,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
         DB::table('tour_translations')->insert([
-            'tour_id' => $i,
+            'tour_id' => $tourId,
             'locale' => 'en',
             'title' => "Tour {$i}",
             'description' => 'Test description',

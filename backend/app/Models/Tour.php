@@ -12,6 +12,7 @@ use App\Domains\Partner\Models\TourMedia;
 use App\Domains\Reviews\Models\Review;
 use App\Enums\TourStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
@@ -77,20 +78,20 @@ class Tour extends Model
 
         return [
             'id' => $this->id,
-            'title_en' => $en?->title ?? '',
-            'title_es' => $es?->title ?? '',
-            'title_it' => $it?->title ?? '',
-            'description_en' => $en?->description ?? '',
-            'description_es' => $es?->description ?? '',
-            'description_it' => $it?->description ?? '',
+            'title_en' => optional($en)->title ?? '',
+            'title_es' => optional($es)->title ?? '',
+            'title_it' => optional($it)->title ?? '',
+            'description_en' => optional($en)->description ?? '',
+            'description_es' => optional($es)->description ?? '',
+            'description_it' => optional($it)->description ?? '',
             'highlights_en' => $en ? json_encode($en->highlights ?? []) : '[]',
             'highlights_es' => $es ? json_encode($es->highlights ?? []) : '[]',
             'highlights_it' => $it ? json_encode($it->highlights ?? []) : '[]',
             'slug' => $this->slug,
             'location' => $this->location,
             'location_slug' => $this->location_slug,
-            'category_name' => $this->category?->name ?? '',
-            'category_slug' => $this->category?->slug ?? '',
+            'category_name' => optional($this->category)->name ?? '',
+            'category_slug' => optional($this->category)->slug ?? '',
             'price_amount' => $this->lowestPriceAmount(),
             'price_currency' => $this->currency(),
             'duration_minutes' => $this->duration_minutes,
@@ -220,7 +221,6 @@ class Tour extends Model
         $dates = [];
 
         foreach ($rules as $rule) {
-            assert($rule instanceof AvailabilityRule);
             if ($rule->rule_type === 'specific_date') {
                 $carbon = Carbon::parse($this->dateString($rule->start_date));
                 if ($carbon >= $from && $carbon <= $to && ! isset($blocked[$carbon->toDateString()])) {
@@ -271,7 +271,6 @@ class Tour extends Model
         }
 
         foreach ($this->availabilityRules as $rule) {
-            assert($rule instanceof AvailabilityRule);
             if ($this->ruleCoversDate($rule, $date)) {
                 return true;
             }
@@ -290,7 +289,6 @@ class Tour extends Model
     {
         $times = [];
         foreach ($this->availabilityRules as $rule) {
-            assert($rule instanceof AvailabilityRule);
             if ($this->ruleCoversDate($rule, $date) && $rule->start_time) {
                 // The `datetime:H:i:s` cast returns a Carbon at runtime, but
                 // larastan types `start_time` as string because of the format
@@ -362,7 +360,7 @@ class Tour extends Model
             ->all();
     }
 
-    public function translations()
+    public function translations(): HasMany
     {
         return $this->hasMany(TourTranslation::class);
     }
@@ -386,20 +384,20 @@ class Tour extends Model
             ? $this->translations
             : $this->translations()->get();
 
-        return $translations->firstWhere('locale', $locale)?->title
-            ?? $translations->firstWhere('locale', $fallback)?->title
-            ?? $translations->first()?->title
+        return optional($translations->firstWhere('locale', $locale))->title
+            ?? optional($translations->firstWhere('locale', $fallback))->title
+            ?? optional($translations->first())->title
             ?? '';
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function partner()
+    public function partner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'partner_id');
+        return $this->belongsTo(Partner::class, 'partner_id');
     }
 
     public static function formatPrice(int $amount, string $currency): string
@@ -506,7 +504,7 @@ class Tour extends Model
         }
 
         if ($to === TourStatus::Published->value) {
-            return ($this->partnerRecord?->onboarding_status ?? null) === 'approved';
+            return optional($this->partnerRecord)->onboarding_status === 'approved';
         }
 
         return true;

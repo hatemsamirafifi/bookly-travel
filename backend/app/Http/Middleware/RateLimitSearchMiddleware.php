@@ -67,7 +67,7 @@ class RateLimitSearchMiddleware
             $response->headers->set('X-RateLimit-Limit', $maxAttempts);
             $response->headers->set(
                 'X-RateLimit-Remaining',
-                max(0, $maxAttempts - $this->limiter->attempts($key))
+                (string) max(0, $maxAttempts - $this->limiter->attempts($key))
             );
         }
 

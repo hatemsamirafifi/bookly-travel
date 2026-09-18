@@ -87,7 +87,7 @@ export default function ReviewList({ tourSlug, locale = 'en' }: ReviewListProps)
       )}
 
       {!loading && !error && reviews.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-4">{t('no_reviews_yet')}</p>
+        <p className="text-sm text-gray-500 text-center py-4">{t('no_reviews_yet')}</p>
       )}
 
       {!loading && !error && reviews.length > 0 && (

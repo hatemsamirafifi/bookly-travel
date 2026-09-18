@@ -18,7 +18,6 @@ export default function BlogList({
   posts,
   locale,
   meta,
-  category,
 }: BlogListProps) {
   return (
     <div className="space-y-8">

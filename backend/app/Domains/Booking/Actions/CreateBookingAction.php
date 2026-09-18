@@ -209,6 +209,7 @@ class CreateBookingAction
             'payment' => [
                 'client_secret' => $clientSecret,
                 'stripe_publishable_key' => config('services.stripe.key'),
+                'gateway' => config('services.payment.gateway', 'stripe'),
             ],
         ];
     }

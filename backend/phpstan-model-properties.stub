@@ -1,0 +1,614 @@
+<?php
+
+// Generated from the PostgreSQL schema with `artisan model:show --json`.
+// This stub documents database-backed Eloquent attributes for PHPStan; runtime
+// code and relation inference remain unchanged.
+
+namespace App\Domains\Admin\Models;
+
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property array<array-key, mixed> $flags
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ */
+class AdminPermission extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Admin\Models;
+
+/**
+ * @property int $id
+ * @property string $actor_type
+ * @property int|null $actor_id
+ * @property string $action
+ * @property string|null $target_type
+ * @property int|null $target_id
+ * @property array<array-key, mixed>|null $before_state
+ * @property array<array-key, mixed>|null $after_state
+ * @property array<array-key, mixed>|null $metadata
+ * @property \Carbon\Carbon|null $created_at
+ * @property-read \App\Domains\Admin\Models\GovernanceAuditLog|null $actor
+ * @property-read \App\Domains\Admin\Models\GovernanceAuditLog|null $target
+ */
+class GovernanceAuditLog extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Admin\Models;
+
+/**
+ * @property int $id
+ * @property string $slug
+ * @property string $status
+ * @property array<array-key, mixed> $title
+ * @property array<array-key, mixed> $body
+ * @property array<array-key, mixed>|null $meta_description
+ * @property int|null $updated_by
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $published_at
+ * @property-read \App\Models\User|null $updatedBy
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Admin\Models\GovernanceAuditLog> $governanceAuditLogs
+ */
+class StaticPage extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Blog\Models;
+
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property array<array-key, mixed>|null $display_name
+ * @property array<array-key, mixed>|null $bio
+ * @property string|null $avatar_url
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ */
+class AuthorProfile extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Blog\Models;
+
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property bool $is_active
+ * @property int $display_order
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPost> $posts
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPost> $publishedPosts
+ */
+class BlogCategory extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Blog\Models;
+
+/**
+ * @property int $id
+ * @property string $slug
+ * @property string $status
+ * @property array<array-key, mixed> $title
+ * @property array<array-key, mixed> $body
+ * @property array<array-key, mixed>|null $excerpt
+ * @property array<array-key, mixed>|null $meta_description
+ * @property string|null $cover_image_url
+ * @property bool $is_featured
+ * @property \Carbon\Carbon|null $scheduled_at
+ * @property \Carbon\Carbon|null $published_at
+ * @property int $author_id
+ * @property int $blog_category_id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property array<array-key, mixed>|null $meta_title
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Domains\Blog\Models\BlogCategory|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tour> $relatedTours
+ * @property-read \App\Domains\Blog\Models\AuthorProfile|null $authorProfile
+ */
+class BlogPost extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Booking\Models;
+
+/**
+ * @property int $id
+ * @property string $reference
+ * @property int|null $traveler_id
+ * @property int $tour_id
+ * @property \Carbon\Carbon $tour_date
+ * @property int $participant_count
+ * @property int $price_per_person
+ * @property int $total_price
+ * @property string $currency
+ * @property string $status
+ * @property string $idempotency_key
+ * @property string|null $cancellation_policy
+ * @property int|null $cancellation_window_hours
+ * @property \Carbon\Carbon|null $cancelled_at
+ * @property string|null $cancellation_reason
+ * @property \Carbon\Carbon|null $confirmation_email_sent_at
+ * @property string $locale
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $anonymized_at
+ * @property string|null $stripe_payment_intent_id
+ * @property \Carbon\Carbon|null $payment_confirmed_at
+ * @property \Carbon\Carbon|null $pending_expires_at
+ * @property int|null $guest_identity_id
+ * @property \Carbon\Carbon|null $voucher_generated_at
+ * @property string|null $voucher_content_hash
+ * @property \Carbon\Carbon|null $start_time
+ * @property-read \App\Models\User|null $traveler
+ * @property-read \App\Models\GuestIdentity|null $guestIdentity
+ * @property-read \App\Models\Tour|null $tour
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Booking\Models\BookingAuditLog> $auditLogs
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Admin\Models\GovernanceAuditLog> $governanceAuditLogs
+ * @property-read \App\Domains\Payment\Models\Payment|null $payment
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Payment\Models\Payment> $payments
+ */
+class Booking extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Booking\Models;
+
+/**
+ * @property int $id
+ * @property int $booking_id
+ * @property string $actor_type
+ * @property int|null $actor_id
+ * @property string $action
+ * @property string|null $before_state
+ * @property string $after_state
+ * @property array<array-key, mixed>|null $metadata
+ * @property \Carbon\Carbon $created_at
+ * @property-read \App\Domains\Booking\Models\Booking|null $booking
+ */
+class BookingAuditLog extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $tour_id
+ * @property string $exception_type
+ * @property \Carbon\Carbon $date
+ * @property \Carbon\Carbon|null $start_time
+ * @property int|null $capacity
+ * @property string $price_multiplier
+ * @property string|null $note
+ * @property \Carbon\Carbon $created_at
+ * @property-read \App\Models\Tour|null $tour
+ */
+class AvailabilityException extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $tour_id
+ * @property string $rule_type
+ * @property array<array-key, mixed>|null $days_of_week
+ * @property \Carbon\Carbon|null $start_time
+ * @property \Carbon\Carbon|null $start_date
+ * @property \Carbon\Carbon|null $end_date
+ * @property int $capacity
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Tour|null $tour
+ */
+class AvailabilityRule extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $partner_id
+ * @property string $type
+ * @property string $title
+ * @property string $body
+ * @property array<array-key, mixed>|null $data
+ * @property \Carbon\Carbon|null $read_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ */
+class Notification extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $role
+ * @property string $onboarding_status
+ * @property bool $is_active
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property bool $invited_by_admin
+ * @property-read \App\Models\User|null $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tour> $tours
+ * @property-read \App\Domains\Partner\Models\PartnerProfile|null $profile
+ * @property-read \App\Domains\Partner\Models\PartnerSettings|null $settings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\Notification> $unreadNotifications
+ */
+class Partner extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property string $email
+ * @property string $company_name
+ * @property string|null $contact_person
+ * @property int $invited_by_admin_id
+ * @property string $token
+ * @property string $status
+ * @property \Carbon\Carbon $expires_at
+ * @property \Carbon\Carbon|null $consumed_at
+ * @property int|null $partner_id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $invitedByAdmin
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ */
+class PartnerInvitation extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $partner_id
+ * @property string $company_name
+ * @property string|null $business_description
+ * @property string|null $logo_url
+ * @property string $contact_email
+ * @property string|null $contact_phone
+ * @property string|null $website
+ * @property array<array-key, mixed>|null $business_address
+ * @property string|null $tax_id
+ * @property string|null $payout_holder_name
+ * @property string|null $payout_bank_name
+ * @property string|null $payout_account_number
+ * @property string|null $payout_iban
+ * @property string|null $payout_swift_bic
+ * @property string|null $payout_country
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property string|null $rejection_reason
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ */
+class PartnerProfile extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $partner_id
+ * @property bool $notify_new_booking
+ * @property bool $notify_cancellation
+ * @property bool $notify_daily_summary
+ * @property bool $notify_review_received
+ * @property bool $notify_tour_status_change
+ * @property string $locale
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ */
+class PartnerSettings extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $tour_id
+ * @property string $name
+ * @property string $price
+ * @property int $min_participants
+ * @property int|null $max_participants
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Tour|null $tour
+ */
+class PricingTier extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $review_id
+ * @property int $partner_id
+ * @property string $response_text
+ * @property \Carbon\Carbon|null $edited_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ */
+class ReviewResponse extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int|null $tour_id
+ * @property int $partner_id
+ * @property array<array-key, mixed> $payload
+ * @property string $status
+ * @property string|null $rejection_reason
+ * @property \Carbon\Carbon|null $auto_saved_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Tour|null $tour
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ */
+class TourDraft extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Partner\Models;
+
+/**
+ * @property int $id
+ * @property int $tour_id
+ * @property string $type
+ * @property string $url
+ * @property string|null $thumbnail_url
+ * @property int $sort_order
+ * @property \Carbon\Carbon $created_at
+ * @property-read \App\Models\Tour|null $tour
+ */
+class TourMedia extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Payment\Models;
+
+/**
+ * @property int $id
+ * @property int $booking_id
+ * @property int $payment_id
+ * @property string $entry_type
+ * @property int $amount
+ * @property string $currency
+ * @property string $actor
+ * @property string $description
+ * @property \Carbon\Carbon $created_at
+ * @property-read \App\Domains\Booking\Models\Booking|null $booking
+ * @property-read \App\Domains\Payment\Models\Payment|null $payment
+ */
+class FinancialLedgerEntry extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Payment\Models;
+
+/**
+ * @property int $id
+ * @property int $booking_id
+ * @property string $stripe_payment_intent_id
+ * @property string|null $stripe_refund_id
+ * @property string $type
+ * @property int $amount
+ * @property string $currency
+ * @property string $status
+ * @property string|null $card_last_four
+ * @property string|null $card_brand
+ * @property array<array-key, mixed>|null $metadata
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Domains\Booking\Models\Booking|null $booking
+ */
+class Payment extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Payment\Models;
+
+/**
+ * @property int $id
+ * @property string $stripe_event_id
+ * @property string $event_type
+ * @property string $processing_status
+ * @property string $payload_hash
+ * @property string|null $raw_payload
+ * @property \Carbon\Carbon|null $processed_at
+ * @property \Carbon\Carbon $created_at
+ */
+class StripeWebhookEvent extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Reviews\Models;
+
+/**
+ * @property int $id
+ * @property int $booking_id
+ * @property int $tour_id
+ * @property int|null $traveler_id
+ * @property int $rating
+ * @property string|null $comment
+ * @property string $status
+ * @property string $locale
+ * @property \Carbon\Carbon|null $edited_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Domains\Booking\Models\Booking|null $booking
+ * @property-read \App\Models\Tour|null $tour
+ * @property-read \App\Models\User|null $traveler
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Reviews\Models\ReviewAuditTrail> $auditTrails
+ * @property-read \App\Domains\Partner\Models\ReviewResponse|null $reviewResponse
+ */
+class Review extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Reviews\Models;
+
+/**
+ * @property int $id
+ * @property int $review_id
+ * @property string $actor_type
+ * @property int $actor_id
+ * @property string $action
+ * @property int|null $old_rating
+ * @property int|null $new_rating
+ * @property string|null $old_comment
+ * @property string|null $new_comment
+ * @property string|null $reason
+ * @property \Carbon\Carbon|null $created_at
+ * @property-read \App\Domains\Reviews\Models\Review|null $review
+ * @property-read \App\Domains\Reviews\Models\ReviewAuditTrail|null $actor
+ */
+class ReviewAuditTrail extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Wishlist\Models;
+
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $tour_id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\Tour|null $tour
+ */
+class Wishlist extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Models;
+
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property string $event_type
+ * @property string|null $ip_address
+ * @property string|null $user_agent
+ * @property array<array-key, mixed>|null $metadata
+ * @property \Carbon\Carbon $created_at
+ * @property-read \App\Models\User|null $user
+ */
+class AuthAuditLog extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Models;
+
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $image_url
+ * @property int $display_order
+ * @property bool $is_active
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tour> $tours
+ */
+class Category extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Models;
+
+/**
+ * @property int $id
+ * @property string $email
+ * @property string $name
+ * @property string|null $phone
+ * @property int|null $converted_user_id
+ * @property \Carbon\Carbon|null $anonymized_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $convertedUser
+ */
+class GuestIdentity extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Models;
+
+/**
+ * @property int $id
+ * @property int $partner_id
+ * @property int $category_id
+ * @property string $slug
+ * @property string $location
+ * @property string|null $location_slug
+ * @property int $duration_minutes
+ * @property string $duration_label
+ * @property int $group_size_min
+ * @property int $group_size_max
+ * @property int $price_amount
+ * @property string $status
+ * @property string|null $cover_image_url
+ * @property bool $is_featured
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property float|null $average_rating
+ * @property int $review_count
+ * @property string|null $difficulty_level
+ * @property array<array-key, mixed>|null $itinerary
+ * @property array<array-key, mixed>|null $inclusions
+ * @property string|null $meeting_point
+ * @property int|null $active_draft_id
+ * @property float|null $price_from
+ * @property string $currency
+ * @property \Carbon\Carbon|null $submitted_at
+ * @property \Carbon\Carbon|null $published_at
+ * @property \Carbon\Carbon|null $archived_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TourTranslation> $translations
+ * @property-read \App\Models\Category|null $category
+ * @property-read \App\Models\User|null $partner
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\TourMedia> $media
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\PricingTier> $pricingTiers
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\AvailabilityRule> $availabilityRules
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\AvailabilityException> $availabilityExceptions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\TourDraft> $drafts
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Booking\Models\Booking> $bookings
+ * @property-read \App\Domains\Partner\Models\Partner|null $partnerRecord
+ */
+class Tour extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Models;
+
+/**
+ * @property int $id
+ * @property int $tour_id
+ * @property string $locale
+ * @property string $title
+ * @property string|null $description
+ * @property array<array-key, mixed>|null $highlights
+ * @property array<array-key, mixed>|null $inclusions
+ * @property array<array-key, mixed>|null $exclusions
+ * @property string|null $meeting_point
+ * @property string|null $cancellation_policy
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Tour|null $tour
+ */
+class TourTranslation extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Models;
+
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property \Carbon\Carbon|null $email_verified_at
+ * @property string $password
+ * @property string $role
+ * @property string $locale
+ * @property int $failed_login_count
+ * @property \Carbon\Carbon|null $locked_until
+ * @property \Carbon\Carbon|null $last_login_at
+ * @property string|null $remember_token
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $verification_email_sent_at
+ * @property \Carbon\Carbon|null $last_lockout_email_sent_at
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $phone
+ * @property string $preferred_currency
+ * @property bool $marketing_emails
+ * @property string|null $avatar_url
+ * @property string $full_name
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GuestIdentity> $guestIdentities
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Wishlist\Models\Wishlist> $wishlists
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AuthAuditLog> $auditLogs
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
+ * @property-read \App\Domains\Admin\Models\AdminPermission|null $adminPermission
+ * @property-read \App\Domains\Blog\Models\AuthorProfile|null $authorProfile
+ */
+class User extends \Illuminate\Database\Eloquent\Model {}
+
+namespace Carbon;
+
+class Carbon extends \DateTime {}
+
+namespace Illuminate\Support;
+
+class Carbon extends \Carbon\Carbon {}
+
+
+

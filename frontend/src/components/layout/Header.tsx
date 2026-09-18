@@ -66,6 +66,7 @@ export default function Header({ locale }: HeaderProps) {
                 <UserMenuDropdown
                   locale={locale}
                   userName={user.name}
+                  userRole={user.role}
                   isOpen={menuOpen}
                   onClose={() => setMenuOpen(false)}
                   onLogout={logout}
@@ -104,6 +105,7 @@ export default function Header({ locale }: HeaderProps) {
       <MobileNavPanel
         locale={locale}
         userName={user?.name}
+        userRole={user?.role}
         isAuthenticated={Boolean(user)}
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}

@@ -4,8 +4,8 @@ namespace App\Domains\Payment\Jobs;
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
+use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Models\Payment;
-use App\Domains\Payment\Services\StripeService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,7 +18,7 @@ class ExpirePendingBookingsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function handle(AuditService $auditService, StripeService $stripe): void
+    public function handle(AuditService $auditService, PaymentGateway $stripe): void
     {
         // Phase 1 — expire pending bookings inside a DB transaction. Collect
         // their PaymentIntent ids so we can cancel them AFTER the commit (no

@@ -3,12 +3,19 @@ import { test, expect } from '@playwright/test';
 test.describe('Blog Authoring & Admin Previews (E2E / US3)', () => {
   test('Draft article preview loads with valid token and sets noindex robots', async ({ page }) => {
     // Navigate to preview page with simulated valid token
-    const response = await page.goto('/en/blog/sample-draft-article/preview?token=sample-draft-article|9999999999|test-sig');
+    await page.goto('/en/blog/sample-draft-article/preview?token=sample-draft-article|9999999999|test-sig');
 
-    // If backend isn't mock-seeded, it should either show 404/unavailable or the preview banner
+    // If backend isn't mock-seeded, it should either show the preview, the
+    // localized 404, or an unavailable state — but never the draft content
+    // itself. BlogUnavailable renders "Article Removed" (410), "Too Many
+    // Requests" (429), or "Content Temporarily Unavailable" (other errors).
     const isBannerVisible = await page.locator('text=Draft Preview Mode').isVisible().catch(() => false);
     const isNotFound = await page.locator('text=404').isVisible().catch(() => false);
-    const isUnavailable = await page.locator('text=Article Unavailable').isVisible().catch(() => false);
+    const isUnavailable = await page
+      .locator('text=/Article Removed|Too Many Requests|Content Temporarily Unavailable/')
+      .first()
+      .isVisible()
+      .catch(() => false);
 
     expect(isBannerVisible || isNotFound || isUnavailable).toBeTruthy();
 

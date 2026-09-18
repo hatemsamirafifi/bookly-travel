@@ -58,7 +58,7 @@ export default function BookingCTA({ pricing, availability, groupSize, locale, s
               >
                 +
               </button>
-              <span className="ml-2 text-xs text-gray-400">
+              <span className="ml-2 text-xs text-gray-500">
                 {groupSize.min}–{groupSize.max} allowed
               </span>
             </div>
@@ -71,14 +71,14 @@ export default function BookingCTA({ pricing, availability, groupSize, locale, s
             Book Now
           </Link>
 
-          <p className="mt-2 text-center text-xs text-green-600">
+          <p className="mt-2 text-center text-xs text-green-800">
             Next available: {availability.next_available_date}
           </p>
         </>
       ) : (
         <div className="rounded-md bg-gray-100 py-3 text-center" role="status">
           <p className="text-sm font-medium text-gray-500">Currently Unavailable</p>
-          <p className="mt-1 text-xs text-gray-400">Check back soon for new dates</p>
+          <p className="mt-1 text-xs text-gray-500">Check back soon for new dates</p>
           <button
             type="button"
             disabled

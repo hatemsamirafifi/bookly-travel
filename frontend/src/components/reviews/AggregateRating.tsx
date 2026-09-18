@@ -27,7 +27,7 @@ export default function AggregateRating({ averageRating, reviewCount }: Aggregat
       ) : (
         <div>
           <StarRating value={0} readOnly size="sm" />
-          <p className="text-xs text-gray-400 mt-0.5">{t('no_reviews_yet')}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t('no_reviews_yet')}</p>
         </div>
       )}
     </div>

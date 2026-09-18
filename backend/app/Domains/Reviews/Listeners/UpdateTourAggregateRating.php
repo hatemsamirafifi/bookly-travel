@@ -18,9 +18,12 @@ class UpdateTourAggregateRating
             ->selectRaw('COALESCE(AVG(rating), 0) as avg_rating, COUNT(*) as count')
             ->first();
 
+        $count = (int) $stats->getAttribute('count');
+        $average = (float) $stats->getAttribute('avg_rating');
+
         Tour::where('id', $tourId)->update([
-            'average_rating' => $stats->count > 0 ? round($stats->avg_rating, 2) : null,
-            'review_count' => $stats->count,
+            'average_rating' => $count > 0 ? round($average, 2) : null,
+            'review_count' => $count,
         ]);
     }
 }

@@ -43,6 +43,7 @@ it('returns 201 when traveler submits a valid review for a completed booking', f
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 10000,
         'currency' => 'EUR',
@@ -95,6 +96,7 @@ it('succeeds with rating-only review (no comment)', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 3000,
         'currency' => 'EUR',
@@ -183,6 +185,7 @@ it('returns 403 when booking does not belong to traveler', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 6000,
         'currency' => 'EUR',
@@ -230,6 +233,7 @@ it('returns 403 for duplicate review', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 10000,
         'currency' => 'EUR',
@@ -287,6 +291,7 @@ it('returns 403 for booking outside 30-day window', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 2000,
         'currency' => 'EUR',
@@ -373,6 +378,7 @@ it('returns 422 for rating outside 1-5', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 2000,
         'currency' => 'EUR',
@@ -420,6 +426,7 @@ it('returns 422 for comment exceeding 2000 chars', function () {
     ]);
 
     Payment::create([
+        'stripe_payment_intent_id' => testPaymentIntentId(),
         'booking_id' => $booking->id,
         'amount' => 2000,
         'currency' => 'EUR',
@@ -447,12 +454,10 @@ it('returns 429 when rate limit exceeded', function () {
             'locale' => 'en',
         ]);
 
-        if ($response->status() === 429) {
-            expect($response->status())->toBe(429);
-
-            return;
+        if ($i < 10) {
+            $response->assertUnprocessable();
         }
     }
 
-    $this->fail('Rate limit was not triggered after 11 requests');
-})->skip('Rate limiter not easily testable without hitting other validation first');
+    $response->assertTooManyRequests();
+});

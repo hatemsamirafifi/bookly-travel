@@ -8,12 +8,12 @@ class GetWishlistStatusAction
 {
     /**
      * @param  array<int|string>  $tourIds
-     * @return array<string, bool>
+     * @return array{data: array<int, bool>}
      */
     public function execute(int $userId, array $tourIds): array
     {
         if (empty($tourIds)) {
-            return [];
+            return ['data' => []];
         }
 
         $tourIds = array_map('intval', $tourIds);

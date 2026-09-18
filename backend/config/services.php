@@ -42,6 +42,10 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'payment' => [
+        'gateway' => env('PAYMENT_GATEWAY', 'stripe'),
+    ],
+
     // Spec 014: public base URL encoded in the voucher QR (FR-002, SC-009).
     // The QR resolves to {public_base_url}/v/{booking_reference}. Default is
     // the production origin; override locally (e.g. http://localhost:3000) so

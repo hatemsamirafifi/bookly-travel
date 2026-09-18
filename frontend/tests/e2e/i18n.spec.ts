@@ -21,14 +21,39 @@ test.describe('Multi-Language (i18n)', () => {
 
   test('locale switcher navigates to same page in different language', async ({ page }) => {
     await page.goto('/en/search');
-    await page.locator('select[aria-label="Switch language"]').first().selectOption('es');
-    await expect(page).toHaveURL(/\/es\/search/);
+    const switcher = page.locator('select[aria-label="Switch language"]').first();
+    // The switcher is a client component: a change fired before hydration
+    // completes is lost (React resets the controlled value), so the
+    // navigation never happens. Settle first, then retry the selection
+    // until the navigation commits.
+    await page.waitForLoadState('networkidle').catch(() => undefined);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await switcher.selectOption('es');
+      try {
+        await expect(page).toHaveURL(/\/es\/search/, { timeout: 8000 });
+        return;
+      } catch {
+        // Not navigated yet (likely pre-hydration) -- retry the selection.
+      }
+    }
+    await expect(page).toHaveURL(/\/es\/search/, { timeout: 8000 });
   });
 
   test('locale switcher preserves path and query params', async ({ page }) => {
     await page.goto('/en/search?q=beach');
-    await page.locator('select[aria-label="Switch language"]').first().selectOption('it');
-    await expect(page).toHaveURL(/\/it\/search\?q=beach/);
+    const switcher = page.locator('select[aria-label="Switch language"]').first();
+    // Same hydration race as above -- settle, then retry until commit.
+    await page.waitForLoadState('networkidle').catch(() => undefined);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await switcher.selectOption('it');
+      try {
+        await expect(page).toHaveURL(/\/it\/search\?q=beach/, { timeout: 8000 });
+        return;
+      } catch {
+        // Not navigated yet (likely pre-hydration) -- retry the selection.
+      }
+    }
+    await expect(page).toHaveURL(/\/it\/search\?q=beach/, { timeout: 8000 });
   });
 
   test('hreflang tags are present on tour detail page', async ({ page }) => {

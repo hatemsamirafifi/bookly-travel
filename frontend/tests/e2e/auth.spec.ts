@@ -40,4 +40,22 @@ test.describe('Auth', () => {
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute('href', '/en/auth/register');
   });
+
+  test('invalid credentials keep the form mounted and show server feedback', async ({ page }) => {
+    // Regression: submitting with wrong credentials used to unmount the form
+    // (global isLoading toggled by useAuth().login() trips AuthGuard's
+    // spinner gate), discarding the server error state so users saw nothing.
+    await page.goto('/en/auth/login');
+    await page.getByLabel(/Email Address/i).fill('wronguser@example.com');
+    await page.getByLabel('Password', { exact: true }).fill('WrongPassword1!');
+    await page.getByRole('button', { name: /Sign In/i }).click();
+
+    // The form must stay mounted and surface the server-side rejection.
+    await expect(page).toHaveURL(/\/en\/auth\/login/);
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'Invalid email or password.' })
+    ).toBeVisible();
+    // Form fields remain usable for a retry.
+    await expect(page.getByLabel(/Email Address/i)).toBeVisible();
+  });
 });

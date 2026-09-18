@@ -4,11 +4,21 @@ namespace App\Domains\Booking\Controllers\Partner;
 
 use App\Domains\Booking\Actions\GetPartnerBookingsAction;
 use App\Domains\Booking\Actions\TransitionBookingStatusAction;
+use App\Domains\Booking\Resources\PartnerBookingResource;
+use App\Domains\Partner\Services\BookingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PartnerBookingController
 {
+    public function show(Request $request, string $reference, BookingService $service): PartnerBookingResource
+    {
+        $booking = $service->getForPartner($reference, $request->attributes->get('partner_id'));
+        abort_if($booking === null, 404);
+
+        return new PartnerBookingResource($booking);
+    }
+
     public function index(Request $request, GetPartnerBookingsAction $action): JsonResponse
     {
         $validated = $request->validate([

@@ -106,7 +106,11 @@ export interface SearchParams {
   locale: string;
   category?: string;
   location?: string;
+  /** Major currency units as typed by the user (e.g. euros). searchTours()
+   * converts these to the API contract's minor units (cents) before sending. */
   price_min?: number;
+  /** Major currency units as typed by the user (e.g. euros). searchTours()
+   * converts these to the API contract's minor units (cents) before sending. */
   price_max?: number;
   duration?: string;
   date?: string;

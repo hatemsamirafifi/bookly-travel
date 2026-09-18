@@ -52,6 +52,7 @@ $RECYCLE.BIN/
 /backend/storage/framework/cache/data/*
 /backend/storage/framework/sessions/*
 /backend/storage/framework/views/*
+/backend/storage/framework/testing-database.lock
 /backend/storage/logs/*
 /backend/bootstrap/cache/*
 /backend/composer.phar
@@ -146,4 +147,3 @@ logs/
 # TestSprite artifacts (generated, not source)
 # -----------------------------------------------
 testsprite_tests/
-

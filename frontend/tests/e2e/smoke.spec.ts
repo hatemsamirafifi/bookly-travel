@@ -4,7 +4,9 @@ test.describe('Smoke Test', () => {
   test('homepage loads with hero and categories', async ({ page }) => {
     await page.goto('/en');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByText(/Categories/i).first()).toBeVisible();
+    // Scope to <main>: the footer also links "Categories" and is hidden on
+    // small viewports, so an unscoped first() match is invisibly hidden.
+    await expect(page.locator('main').getByText(/Categories/i).first()).toBeVisible();
   });
 
   test('search flow works end to end', async ({ page }) => {

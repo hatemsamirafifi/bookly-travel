@@ -121,8 +121,8 @@ class VoucherService
 
         $locale = $booking->locale ?? 'en';
 
-        return $tour->translations->firstWhere('locale', $locale)?->title
-            ?? $tour->translations->firstWhere('locale', 'en')?->title
+        return optional($tour->translations->firstWhere('locale', $locale))->title
+            ?? optional($tour->translations->firstWhere('locale', 'en'))->title
             ?? $tour->slug;
     }
 
@@ -139,11 +139,11 @@ class VoucherService
         return hash('sha256', json_encode([
             'reference' => $booking->reference,
             'tour_title' => $tourTitle,
-            'tour_date' => $booking->tour_date?->toDateString(),
+            'tour_date' => $booking->tour_date->toDateString(),
             'participant_count' => (int) $booking->participant_count,
             'total_price' => (int) $booking->total_price,
             'currency' => $booking->currency ?? 'EUR',
-            'meeting_point' => $tour?->meeting_point ?? '',
+            'meeting_point' => optional($tour)->meeting_point ?? '',
             'locale' => $locale,
         ]));
     }

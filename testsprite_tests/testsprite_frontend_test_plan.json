@@ -1,0 +1,1740 @@
+[
+  {
+    "id": "TC001",
+    "title": "Sign in with valid traveler credentials",
+    "description": "A visitor can sign in with valid credentials and reach the signed-in destination.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected after login"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "View booking confirmation after successful checkout",
+    "description": "A traveler can complete checkout and see a booking confirmation with a reference and payment status.",
+    "category": "Booking Checkout and Confirmation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/booking"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid tour date"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid participant count"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the contact details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the booking form"
+      },
+      {
+        "type": "action",
+        "description": "Enter valid payment details in the payment element"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking confirmation page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a booking reference and payment status are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Register a traveler account",
+    "description": "A visitor can create a traveler account and receive successful account creation feedback.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with a new traveler name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a new traveler email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a strong password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify account creation feedback is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Search tours from the homepage",
+    "description": "A visitor can search for a tour from the homepage and see matching search results.",
+    "category": "Homepage Browsing and Discovery",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a destination or keyword in the search field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching tour results are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "View tour details and start booking",
+    "description": "A visitor can open a published tour, review its details, and begin checkout from the tour page.",
+    "category": "Tour Detail",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/tours/hidden-gems-rome-walking-tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tour description and review information are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the booking CTA"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking checkout page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Review booking summary before paying",
+    "description": "A traveler can review the booking summary in checkout and proceed to payment with the chosen tour details intact.",
+    "category": "Booking Checkout and Confirmation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/booking"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid tour date"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid participant count"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the contact details"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking summary is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Submit the booking form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the payment step is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Open a featured tour from the homepage",
+    "description": "A visitor can open a featured tour from the homepage and reach the tour detail page.",
+    "category": "Homepage Browsing and Discovery",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tour information is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "See invalid sign-in feedback",
+    "description": "A visitor entering invalid credentials sees an authentication error and remains blocked from sign-in.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with an invalid email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with an invalid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an invalid-credentials message is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Create a new partner account and see onboarding status",
+    "description": "This verifies that a new partner can submit registration details and reach the onboarding status view showing the account is pending review or active.",
+    "category": "Partner Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/partner-register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the company name field with a unique company name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the account name field with a unique partner name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a valid partner email address"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the onboarding status is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Search tours with filters and sorting",
+    "description": "A visitor can refine tour search results with filters and sorting and see the results update.",
+    "category": "Tour Search and Filtering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/search"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a search query"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid date"
+      },
+      {
+        "type": "action",
+        "description": "Select a participant count"
+      },
+      {
+        "type": "action",
+        "description": "Select a price filter"
+      },
+      {
+        "type": "action",
+        "description": "Change the sort order"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated tour results are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Reach checkout from tour detail with selected trip options",
+    "description": "A visitor can choose trip options on the tour page and start the booking flow with those selections carried forward.",
+    "category": "Tour Detail",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/tours/hidden-gems-rome-walking-tour"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid date"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid participant count"
+      },
+      {
+        "type": "action",
+        "description": "Click the booking CTA"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking checkout page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected trip options are reflected in the booking summary"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Open the partner dashboard and review workspace summary",
+    "description": "This verifies that an approved partner can access the dashboard and see the workspace metrics and business summary.",
+    "category": "Partner Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify partner dashboard metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the workspace status summary is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "View booking history and voucher access",
+    "description": "An authenticated traveler can open My Bookings, inspect a booking, and access the voucher from the booking detail page.",
+    "category": "Traveler Bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/my-bookings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the bookings list is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking details and voucher access are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Update a booking status as a partner",
+    "description": "A partner can change a booking status and see the updated status reflected in the booking record.",
+    "category": "Partner Bookings and Status Updates",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open partner bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail"
+      },
+      {
+        "type": "action",
+        "description": "Update the booking status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new booking status is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Save a tour to wishlist from tour detail",
+    "description": "A signed-in traveler can save a tour from its detail page and see it reflected as saved.",
+    "category": "Wishlist",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/tours/hidden-gems-rome-walking-tour"
+      },
+      {
+        "type": "action",
+        "description": "Save the tour to the wishlist"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour is marked as saved"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Review a partner invitation and finish account setup",
+    "description": "This verifies that an invitee can open a partner invitation, complete the setup form, and reach the partner account onboarding outcome.",
+    "category": "Partner Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner-invite/INVITE_TOKEN"
+      },
+      {
+        "type": "action",
+        "description": "Review the invitation details"
+      },
+      {
+        "type": "action",
+        "description": "Complete the partner registration form with valid account details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the invitation acceptance form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the partner account setup completion is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Create a partner tour from the listing workspace",
+    "description": "This verifies that a partner can create a new tour through the full form and see it appear in the tour list.",
+    "category": "Partner Tour Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/tours/create"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the required tour details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Submit the tour creation form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new tour is displayed in the tour list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "View partner onboarding status and workspace access",
+    "description": "This verifies that a signed-in partner can open onboarding status and see whether access to the partner workspace is available or gated.",
+    "category": "Partner Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/onboarding"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the onboarding approval status is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the partner workspace access state is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "View traveler and booking details from the partner bookings list",
+    "description": "A partner can open a booking from the bookings list and inspect the traveler and booking information.",
+    "category": "Partner Bookings and Status Updates",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open partner bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify traveler and booking information are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "Edit an existing partner tour and save changes",
+    "description": "This verifies that a partner can open an existing tour, update its details, and see the saved changes reflected in the tour list.",
+    "category": "Partner Tour Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/tours"
+      },
+      {
+        "type": "action",
+        "description": "Open a tour for editing"
+      },
+      {
+        "type": "action",
+        "description": "Update the tour details with valid changes"
+      },
+      {
+        "type": "action",
+        "description": "Save the tour changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated tour details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Browse tours by destination from the homepage",
+    "description": "A visitor can open a destination from the homepage and see tours filtered by that destination.",
+    "category": "Homepage Browsing and Discovery",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "action",
+        "description": "Click a destination card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify destination-filtered tours are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC022",
+    "title": "View and open saved tours",
+    "description": "A signed-in traveler can view saved tours in the wishlist and open a saved tour from the list.",
+    "category": "Wishlist",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/wishlist"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify saved tours are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open a saved tour from the wishlist"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC023",
+    "title": "Read tour reviews and rating summary",
+    "description": "A visitor can open a published tour and see traveler reviews with an overall rating summary.",
+    "category": "Tour Detail",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/tours/hidden-gems-rome-walking-tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour rating summary is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify traveler review content is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC024",
+    "title": "Remove a tour from wishlist",
+    "description": "A signed-in traveler can remove a saved tour from the wishlist and see it disappear from the list.",
+    "category": "Wishlist",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/wishlist"
+      },
+      {
+        "type": "action",
+        "description": "Remove a tour from the wishlist"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour is no longer displayed in saved tours"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC025",
+    "title": "Set tour pricing and save the new rate",
+    "description": "This verifies that a partner can update pricing for a tour and see the pricing configuration saved.",
+    "category": "Partner Tour Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/tours"
+      },
+      {
+        "type": "action",
+        "description": "Open a tour's pricing settings"
+      },
+      {
+        "type": "action",
+        "description": "Update a pricing tier with a valid value"
+      },
+      {
+        "type": "action",
+        "description": "Save the pricing changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated pricing is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC026",
+    "title": "Browse tours by category from the homepage",
+    "description": "A visitor can open a category from the homepage and see tours filtered by that category.",
+    "category": "Homepage Browsing and Discovery",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "action",
+        "description": "Click a category card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify category-filtered tours are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC027",
+    "title": "Cancel an eligible booking",
+    "description": "An authenticated traveler can cancel an eligible booking and see the updated status on the booking detail page.",
+    "category": "Traveler Bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/my-bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open an eligible booking detail"
+      },
+      {
+        "type": "action",
+        "description": "Cancel the booking"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the cancellation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status is updated"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cancellation details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC028",
+    "title": "Update partner company profile",
+    "description": "Verifies a partner can edit company profile details and see the updated information saved on the profile page.",
+    "category": "Partner Profile and Settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/profile"
+      },
+      {
+        "type": "action",
+        "description": "Edit the company profile information"
+      },
+      {
+        "type": "action",
+        "description": "Save the profile changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated company profile details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC029",
+    "title": "Request a password reset",
+    "description": "A visitor can request a password reset and see confirmation that a reset link was sent.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/forgot-password"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with an account email"
+      },
+      {
+        "type": "action",
+        "description": "Submit the password reset request"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a reset request success message is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC030",
+    "title": "Adjust tour availability and save the calendar changes",
+    "description": "This verifies that a partner can add or update availability for a tour and see the availability state reflected in the calendar view.",
+    "category": "Partner Tour Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/tours"
+      },
+      {
+        "type": "action",
+        "description": "Open a tour's availability settings"
+      },
+      {
+        "type": "action",
+        "description": "Add or update availability with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Save the availability changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the availability calendar reflects the changes"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC031",
+    "title": "Read visible reviews on tour detail",
+    "description": "A visitor can open a published tour detail page and see traveler reviews alongside tour information.",
+    "category": "Traveler Reviews",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/tours/hidden-gems-rome-walking-tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tour details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify traveler reviews are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC032",
+    "title": "View received partner reviews",
+    "description": "A partner can open the reviews inbox and see a list of received reviews to respond to.",
+    "category": "Partner Reviews and Responses",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the partner reviews area"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify received reviews are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC033",
+    "title": "Paginate search results",
+    "description": "A visitor can move to the next page of search results and see a different set of matching tours.",
+    "category": "Tour Search and Filtering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/search"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the search results pagination"
+      },
+      {
+        "type": "action",
+        "description": "Go to the next page of results"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a new set of matching tours is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC034",
+    "title": "View and update profile details",
+    "description": "A signed-in traveler can edit profile information and see the updated profile details saved.",
+    "category": "Traveler Profile and Password Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/profile"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with a new display name"
+      },
+      {
+        "type": "action",
+        "description": "Select a different locale preference"
+      },
+      {
+        "type": "action",
+        "description": "Save the profile changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated profile information is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC035",
+    "title": "Resubmit updated partner profile information",
+    "description": "This verifies that a partner can update onboarding profile information and see the updated submission reflected in the onboarding view.",
+    "category": "Partner Onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/onboarding"
+      },
+      {
+        "type": "action",
+        "description": "Update the partner profile information with valid changes"
+      },
+      {
+        "type": "action",
+        "description": "Submit the updated onboarding form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated onboarding submission is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC036",
+    "title": "Review partner analytics for a selected date range",
+    "description": "A partner can choose a date range in analytics and see updated booking and revenue metrics with charts.",
+    "category": "Partner Analytics",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open partner analytics"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid date range"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking and revenue metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify analytics charts are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC037",
+    "title": "Update a password with a reset token",
+    "description": "A visitor can submit a reset token with a new password and see the password update complete.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/reset-password"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the reset token field with a valid token"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the new password field with a strong password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the reset form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify password update completion feedback is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC038",
+    "title": "Publish a public response to a review",
+    "description": "A partner can write and submit a public response to an existing review and see it saved in the thread.",
+    "category": "Partner Reviews and Responses",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the partner reviews area"
+      },
+      {
+        "type": "action",
+        "description": "Open a review thread"
+      },
+      {
+        "type": "action",
+        "description": "Fill a response into the public reply field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the response"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the published response is displayed in the review thread"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC039",
+    "title": "Archive a partner tour from the listing",
+    "description": "This verifies that a partner can archive a tour and see its status change in the tour list.",
+    "category": "Partner Tour Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/tours"
+      },
+      {
+        "type": "action",
+        "description": "Select a tour to archive"
+      },
+      {
+        "type": "action",
+        "description": "Archive the selected tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour status is updated to archived"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC040",
+    "title": "Update partner operational settings",
+    "description": "Verifies a partner can change operational preferences in settings and see the updated configuration reflected.",
+    "category": "Partner Profile and Settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/partner/profile"
+      },
+      {
+        "type": "action",
+        "description": "Open the settings section"
+      },
+      {
+        "type": "action",
+        "description": "Update the operational preferences"
+      },
+      {
+        "type": "action",
+        "description": "Save the settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated configuration is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC041",
+    "title": "Edit an eligible review",
+    "description": "A signed-in traveler can open an eligible review, change its rating and comment, and see the updated review saved.",
+    "category": "Traveler Reviews",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/my-reviews"
+      },
+      {
+        "type": "action",
+        "description": "Open an eligible review for editing"
+      },
+      {
+        "type": "action",
+        "description": "Change the rating"
+      },
+      {
+        "type": "action",
+        "description": "Update the comment"
+      },
+      {
+        "type": "action",
+        "description": "Save the review changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated review is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC042",
+    "title": "Look up a booking by reference",
+    "description": "A visitor can open the public booking lookup page and see booking validity information for a reference number.",
+    "category": "Booking Checkout and Confirmation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /v/BK-EXAMPLE"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking lookup information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking validity information is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC043",
+    "title": "Change password from profile",
+    "description": "A signed-in traveler can change their password from the profile page and see a successful update outcome.",
+    "category": "Traveler Profile and Password Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/profile"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the current password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the new password field with a strong new password"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password confirmation field with the same strong new password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the password change form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a password update confirmation is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC044",
+    "title": "Update an existing review response",
+    "description": "A partner can edit an already published public response and see the revised reply saved.",
+    "category": "Partner Reviews and Responses",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the partner reviews area"
+      },
+      {
+        "type": "action",
+        "description": "Open a review thread that already has a response"
+      },
+      {
+        "type": "action",
+        "description": "Edit the existing public reply"
+      },
+      {
+        "type": "action",
+        "description": "Submit the response update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the revised public reply is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC045",
+    "title": "Browse blog posts",
+    "description": "Verifies a visitor can browse the blog listing, move through pagination, and open an article to read its detail page.",
+    "category": "Blog and Travel Insights",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/blog"
+      },
+      {
+        "type": "action",
+        "description": "Browse the article listing"
+      },
+      {
+        "type": "action",
+        "description": "Move to the next page of articles"
+      },
+      {
+        "type": "action",
+        "description": "Open a blog post"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article detail page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC046",
+    "title": "Read a category blog listing and article",
+    "description": "Verifies a visitor can open a blog category page, choose a post, and read the full article detail page.",
+    "category": "Blog and Travel Insights",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/blog/category/[slug]"
+      },
+      {
+        "type": "action",
+        "description": "View the posts in the selected category"
+      },
+      {
+        "type": "action",
+        "description": "Open a blog post from the category listing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article detail page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC047",
+    "title": "Filter blog posts by category",
+    "description": "Verifies a visitor can select a blog category and see the listing update to matching articles.",
+    "category": "Blog and Travel Insights",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/blog"
+      },
+      {
+        "type": "action",
+        "description": "Select a blog category"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify only matching articles are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC048",
+    "title": "View submitted reviews",
+    "description": "A signed-in traveler can open the reviews page and see their submitted reviews listed.",
+    "category": "Traveler Reviews",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/auth/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /en/my-reviews"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify submitted reviews are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC049",
+    "title": "See an empty state for search with no matches",
+    "description": "A visitor who applies restrictive search criteria sees an empty state when no tours match.",
+    "category": "Tour Search and Filtering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/search"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a search query with no expected matches"
+      },
+      {
+        "type": "action",
+        "description": "Apply a restrictive filter combination"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty state message is displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC050",
+    "title": "Use wishlist from tour detail while signed out",
+    "description": "A signed-out visitor who tries to save a tour is prompted to sign in before adding it to a wishlist.",
+    "category": "Tour Detail",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/tours/hidden-gems-rome-walking-tour"
+      },
+      {
+        "type": "action",
+        "description": "Click the wishlist control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a login requirement prompt is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour is not saved to a wishlist"
+      }
+    ],
+    "priority": "Low"
+  }
+]

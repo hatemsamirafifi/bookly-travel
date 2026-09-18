@@ -4,7 +4,6 @@ import AdminReviewPanel from '../AdminReviewPanel';
 import {
   fetchAdminReviews,
   hideReview,
-  reinstateReview,
 } from '@/lib/reviews/review-api';
 import type { AdminReview, AdminReviewsResponse } from '@/lib/reviews/review-api';
 

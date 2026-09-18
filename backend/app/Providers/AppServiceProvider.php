@@ -16,6 +16,9 @@ use App\Domains\Blog\Policies\BlogPostPolicy;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerInvitation;
+use App\Domains\Payment\Contracts\PaymentGateway;
+use App\Domains\Payment\Services\DeterministicPaymentGateway;
+use App\Domains\Payment\Services\StripeService;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
 use App\Models\User;
@@ -34,7 +37,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(PaymentGateway::class, function ($app): PaymentGateway {
+            $gateway = config('services.payment.gateway', 'stripe');
+
+            if ($gateway === 'deterministic') {
+                if (! $app->environment(['local', 'testing'])) {
+                    throw new \LogicException('The deterministic payment gateway cannot run outside local/testing.');
+                }
+
+                return $app->make(DeterministicPaymentGateway::class);
+            }
+
+            if ($gateway !== 'stripe') {
+                throw new \LogicException("Unsupported payment gateway [{$gateway}].");
+            }
+
+            return $app->make(StripeService::class);
+        });
     }
 
     /**

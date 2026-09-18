@@ -20,7 +20,7 @@ class WishlistItemDTO
             'id' => $wishlist->id,
             'tour' => [
                 'id' => $tour->id,
-                'name' => $translation?->title ?? $tour->slug,
+                'name' => optional($translation)->title ?? $tour->slug,
                 'cover_image' => $tour->cover_image_url,
                 'slug' => $tour->slug,
                 'price' => $tour->lowestPriceAmount(),

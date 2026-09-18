@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public\Account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class SessionController extends Controller
 {
@@ -20,14 +21,16 @@ class SessionController extends Controller
             ->select(['id', 'name', 'created_at', 'last_used_at'])
             ->orderByDesc('last_used_at')
             ->get()
-            ->map(function ($token) use ($request) {
+            ->map(function (PersonalAccessToken $token) use ($request) {
+                $name = $token->getAttribute('name');
+
                 return [
-                    'id' => $token->id,
-                    'name' => $token->name,
-                    'device' => $this->parseDeviceName($token->name),
-                    'created_at' => $token->created_at,
-                    'last_used_at' => $token->last_used_at,
-                    'is_current' => $this->isCurrentToken($request, $token->id),
+                    'id' => $token->getKey(),
+                    'name' => $name,
+                    'device' => $this->parseDeviceName($name),
+                    'created_at' => $token->getAttribute('created_at'),
+                    'last_used_at' => $token->getAttribute('last_used_at'),
+                    'is_current' => $this->isCurrentToken($request, (int) $token->getKey()),
                 ];
             });
 
@@ -72,7 +75,7 @@ class SessionController extends Controller
         }
 
         $parts = explode(' - ', $name);
-        $browser = $parts[0] ?? 'Unknown';
+        $browser = $parts[0];
         $os = $parts[1] ?? 'Unknown';
 
         return [
@@ -107,6 +110,6 @@ class SessionController extends Controller
     {
         $currentToken = $request->user()->currentAccessToken();
 
-        return $currentToken && $currentToken->id === $tokenId;
+        return optional($currentToken)->getKey() === $tokenId;
     }
 }

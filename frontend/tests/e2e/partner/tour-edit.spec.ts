@@ -1,9 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Partner Tour Edit Workflow', () => {
-  test.beforeEach(async ({ page }) => {
-  });
-
   test('should load the edit page for an existing tour', async ({ page }) => {
     // Navigate to edit page for tour ID 1
     await page.goto('/en/partner/tours/1/edit');

@@ -10,8 +10,6 @@ class TourMedia extends Model
 {
     protected $table = 'tour_media';
 
-    public $timestamps = ['created_at'];
-
     const UPDATED_AT = null;
 
     protected $fillable = [

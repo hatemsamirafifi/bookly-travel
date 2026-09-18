@@ -63,7 +63,7 @@ class GetPartnerBookingsAction
 
             return [
                 'reference' => $booking->reference,
-                'traveler_name' => $booking->traveler?->name ?? '',
+                'traveler_name' => optional($booking->traveler)->name ?? '',
                 'tour' => [
                     'slug' => $booking->tour->slug,
                     'title' => $title,
@@ -106,7 +106,7 @@ class GetPartnerBookingsAction
             $slug = $tours[$tourId] ?? null;
             if ($slug) {
                 $aggregates['by_tour'][$slug] = [
-                    'confirmed' => (int) $rows->firstWhere('status', 'confirmed')?->count,
+                    'confirmed' => (int) ($rows->firstWhere('status', 'confirmed')?->getAttribute('count') ?? 0),
                     'total' => $rows->sum('count'),
                 ];
             }

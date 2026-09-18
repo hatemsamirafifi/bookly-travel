@@ -20,7 +20,7 @@ class TravelerReviewDTO
             'id' => $review->id,
             'tour' => [
                 'id' => $tour->id,
-                'name' => $translation?->title ?? $tour->slug,
+                'name' => optional($translation)->title ?? $tour->slug,
                 'slug' => $tour->slug,
             ],
             'rating' => $review->rating,

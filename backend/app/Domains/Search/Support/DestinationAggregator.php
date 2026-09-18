@@ -28,12 +28,12 @@ class DestinationAggregator
             ->orderByDesc('tour_count')
             ->limit($limit)
             ->get()
-            ->map(fn ($d) => [
-                'slug' => $d->slug,
-                'name' => $d->name,
-                'country' => self::extractCountry($d->name),
+            ->map(fn (Tour $destination) => [
+                'slug' => $destination->getAttribute('slug'),
+                'name' => $destination->getAttribute('name'),
+                'country' => self::extractCountry($destination->getAttribute('name')),
                 'image_url' => null,
-                'tour_count' => (int) $d->tour_count,
+                'tour_count' => (int) $destination->getAttribute('tour_count'),
                 'is_featured' => true,
             ])
             ->values()

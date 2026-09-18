@@ -5,6 +5,7 @@ namespace App\Domains\Partner\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class UploadController
 {
@@ -19,6 +20,9 @@ class UploadController
         $extension = match ($fileType) {
             'image/jpeg' => 'jpg',
             'image/png' => 'png',
+            default => throw ValidationException::withMessages([
+                'file_type' => ['The selected file type is invalid.'],
+            ]),
         };
 
         $uuid = Str::uuid()->toString();

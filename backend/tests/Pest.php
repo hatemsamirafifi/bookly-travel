@@ -58,6 +58,16 @@ pest()->extend(TestCase::class)
 
 // Shared search-domain test factory helpers. Declared guarded so any single
 // test file can run standalone and the full suite never redeclares them.
+if (! function_exists('testPaymentIntentId')) {
+    function testPaymentIntentId(): string
+    {
+        static $sequence = 0;
+        $worker = $_SERVER['TEST_TOKEN'] ?? 'main';
+
+        return sprintf('pi_test_fixture_%s_%d', $worker, ++$sequence);
+    }
+}
+
 if (! function_exists('makePartner')) {
     /**
      * Create a Partner domain record backed by a partner-role User.
@@ -121,6 +131,7 @@ if (! function_exists('createReviewForEditTest')) {
         ]);
 
         Payment::create([
+            'stripe_payment_intent_id' => testPaymentIntentId(),
             'booking_id' => $booking->id,
             'amount' => 10000,
             'currency' => 'EUR',

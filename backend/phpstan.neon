@@ -5,6 +5,8 @@ parameters:
     paths:
         - app/
     level: 5
+    stubFiles:
+        - phpstan-model-properties.stub
     ignoreErrors: []
     excludePaths:
         - app/Filament/
