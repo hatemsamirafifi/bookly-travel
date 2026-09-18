@@ -97,7 +97,9 @@ it('prevents overbooking when both concurrent requests exceed remaining capacity
     ]);
     addAvailabilityRule($tour); // F9
 
-    $tourDate = '2026-09-15';
+    // Dynamic future date: keeps the test deterministic (single shared date
+    // for the seeded booking + both racing requests) without calendar rot.
+    $tourDate = now()->addDays(7)->toDateString();
 
     Booking::create([
         'reference' => Booking::generateReference(),
@@ -183,9 +185,13 @@ it('returns the existing booking when the same idempotency key is reused', funct
     $token = $traveler->createToken('test')->plainTextToken;
     $key = Str::uuid()->toString();
 
+    // Dynamic future date (see above): deterministic within the run,
+    // future-proof against calendar rot.
+    $tourDate = now()->addDays(7)->toDateString();
+
     $first = postJson('/api/public/bookings', [
         'tour_slug' => $tour->slug,
-        'tour_date' => '2026-09-15',
+        'tour_date' => $tourDate,
         'participant_count' => 1,
         'locale' => 'en',
     ], ['Authorization' => 'Bearer ' . $token, 'Idempotency-Key' => $key]);
@@ -193,7 +199,7 @@ it('returns the existing booking when the same idempotency key is reused', funct
 
     $second = postJson('/api/public/bookings', [
         'tour_slug' => $tour->slug,
-        'tour_date' => '2026-09-15',
+        'tour_date' => $tourDate,
         'participant_count' => 1,
         'locale' => 'en',
     ], ['Authorization' => 'Bearer ' . $token, 'Idempotency-Key' => $key]);

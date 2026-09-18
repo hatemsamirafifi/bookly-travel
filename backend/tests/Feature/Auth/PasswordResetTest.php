@@ -2,11 +2,13 @@
 
 use App\Jobs\SendPasswordResetEmail;
 use App\Jobs\SendVerificationEmail;
+use App\Mail\PasswordResetMail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Queue;
 
@@ -120,4 +122,43 @@ it('validates reset password request fields', function () {
     postJson('/api/public/auth/reset-password', [])
         ->assertStatus(422)
         ->assertJsonValidationErrors(['email', 'token', 'password']);
+});
+
+it('dispatches a password reset email containing a valid reset URL and token', function () {
+    Mail::fake();
+
+    $user = User::factory()->create([
+        'email' => 'reset-content@example.com',
+        'email_verified_at' => now(),
+    ]);
+
+    // Execute the queued job inline so the mailable is built and sent.
+    // (PasswordResetMail implements ShouldQueue, so Mail::fake() records it
+    // as queued rather than sent.)
+    (new SendPasswordResetEmail($user))->handle();
+
+    Mail::assertQueued(PasswordResetMail::class, function (PasswordResetMail $mail) use ($user) {
+        // Addressed to the target user.
+        if (! $mail->hasTo($user->email)) {
+            return false;
+        }
+
+        // Localized subject resolves (no raw translation key leaks).
+        if ($mail->envelope()->subject !== 'Reset your Bookly password') {
+            return false;
+        }
+
+        // Rendered body carries the reset URL for this email address.
+        $html = $mail->render();
+        if (! str_contains($html, 'email=' . urlencode($user->email))) {
+            return false;
+        }
+
+        // The embedded token must be a live token for this user.
+        if (! preg_match('/token=([A-Za-z0-9]+)/', html_entity_decode($html), $matches)) {
+            return false;
+        }
+
+        return Password::getRepository()->exists($user, $matches[1]);
+    });
 });

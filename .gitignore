@@ -147,3 +147,10 @@ logs/
 # TestSprite artifacts (generated, not source)
 # -----------------------------------------------
 testsprite_tests/
+
+# Generated voucher PDFs must never be committed (PII + binary churn).
+/downloads/
+
+# Local IDE metadata
+.cursor/
+.gemini/

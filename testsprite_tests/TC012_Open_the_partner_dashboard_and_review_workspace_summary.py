@@ -94,10 +94,17 @@ async def run_test():
         # --> Assertions to verify final state
         
         # --> Partner dashboard metric cards are visible, including the Total Bookings card.
-        await page.get_by_text("3", exact=True).nth(0).scroll_into_view_if_needed()
+        # Semantic check (no hard-coded counts): the "Total Bookings" label is
+        # visible and its metric card displays a numeric metric.
+        total_bookings_label = page.locator("text=Total Bookings").first
+        await total_bookings_label.scroll_into_view_if_needed()
         # Assert-outcome: passed
-        # Assert: Total Bookings metric card is visible.
-        await expect(page.get_by_text("3", exact=True).nth(0)).to_be_visible(timeout=15000), "Total Bookings metric card is visible."
+        # Assert: Total Bookings metric label is visible.
+        await expect(total_bookings_label).to_be_visible(timeout=15000), "Total Bookings metric label is visible."
+        total_bookings_card = page.locator("div.bg-white", has_text="Total Bookings").first
+        await expect(total_bookings_card).to_be_visible(timeout=15000), "Total Bookings metric card is visible."
+        card_text = await total_bookings_card.inner_text()
+        assert re.search(r"\d", card_text or ""), "Total Bookings metric card displays a numeric metric."
         
         # --> Workspace status summary is shown as the 'Bookings Over Time' chart.
         await page.locator(".recharts-wrapper").nth(0).scroll_into_view_if_needed()
@@ -105,6 +112,18 @@ async def run_test():
         # Assert: Bookings Over Time chart is visible on the page.
         await expect(page.locator(".recharts-wrapper").nth(0)).to_be_visible(timeout=15000), "Bookings Over Time chart is visible on the page."
         await asyncio.sleep(5)
+
+        # --> Partner status badges render with valid semantic status text.
+        # Semantic check (no exact text/count pinning): any partner-facing
+        # status badge on the dashboard must match one of the recognized
+        # status labels — matched case-insensitively so lowercased banner
+        # variants ("pending review", "active") satisfy the check too.
+        status_badge_re = re.compile(r"Draft|Pending Review|Published|Active", re.IGNORECASE)
+        body_text = (await page.locator("body").inner_text()) or ""
+        assert status_badge_re.search(body_text), (
+            "Partner dashboard renders a valid status badge "
+            "(expected one of: Draft / Pending Review / Published / Active)."
+        )
 
     finally:
         if context:

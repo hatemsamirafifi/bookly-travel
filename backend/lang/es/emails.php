@@ -11,6 +11,16 @@ return [
         'expiration' => 'Este enlace expirará en :minutes minutos.',
         'rights' => 'Todos los derechos reservados.',
     ],
+    'password_reset' => [
+        'subject' => 'Restablece tu contraseña de Bookly',
+        'title' => 'Restablece tu contraseña',
+        'greeting' => 'Hola :name,',
+        'body' => 'Hemos recibido una solicitud para restablecer la contraseña de tu cuenta de :platform. Haz clic en el botón siguiente para elegir una nueva contraseña.',
+        'button' => 'Restablecer contraseña',
+        'ignore' => 'Si no solicitaste restablecer tu contraseña, puedes ignorar este correo de forma segura.',
+        'expiration' => 'Este enlace expirará en :minutes minutos.',
+        'rights' => 'Todos los derechos reservados.',
+    ],
     'account_locked_out' => [
         'subject' => 'Alerta de seguridad: Cuenta bloqueada temporalmente',
         'title' => 'Cuenta bloqueada temporalmente',
