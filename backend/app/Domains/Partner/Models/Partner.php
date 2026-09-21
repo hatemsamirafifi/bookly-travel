@@ -14,6 +14,11 @@ class Partner extends Model
 {
     protected $fillable = [
         'user_id',
+        'stripe_account_id',
+        'stripe_charges_enabled',
+        'stripe_payouts_enabled',
+        'stripe_onboarding_completed',
+        'stripe_details_submitted',
         'role',
         'onboarding_status',
         'is_active',
@@ -25,7 +30,16 @@ class Partner extends Model
         return [
             'is_active' => 'boolean',
             'invited_by_admin' => 'boolean',
+            'stripe_charges_enabled' => 'boolean',
+            'stripe_payouts_enabled' => 'boolean',
+            'stripe_onboarding_completed' => 'boolean',
+            'stripe_details_submitted' => 'boolean',
         ];
+    }
+
+    public function isPayoutReady(): bool
+    {
+        return ! empty($this->stripe_account_id) && $this->stripe_charges_enabled && $this->stripe_payouts_enabled;
     }
 
     public function user(): BelongsTo

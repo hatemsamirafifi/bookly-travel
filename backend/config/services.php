@@ -40,6 +40,7 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'platform_commission_percent' => (float) env('STRIPE_COMMISSION_PERCENT', 15.0),
     ],
 
     'payment' => [
