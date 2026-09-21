@@ -93,7 +93,7 @@ export default function StripePaymentForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" data-client-secret-present={Boolean(clientSecret)}>
-      <PaymentElement />
+      <PaymentElement options={{ layout: 'tabs' }} />
       <button
         type="submit"
         disabled={!stripe || processing}

@@ -6,6 +6,7 @@ use App\Domains\Partner\Controllers\AvailabilityController;
 use App\Domains\Partner\Controllers\BookingController;
 use App\Domains\Partner\Controllers\NotificationController;
 use App\Domains\Partner\Controllers\OnboardingStatusController;
+use App\Domains\Partner\Controllers\PartnerStripeConnectController;
 use App\Domains\Partner\Controllers\PricingController;
 use App\Domains\Partner\Controllers\ProfileController;
 use App\Domains\Partner\Controllers\ReviewController;
@@ -110,4 +111,14 @@ Route::middleware(['auth:sanctum', 'partner'])->group(function () {
     // Financial summary (existing route preserved)
     Route::get('financial-summary', [FinancialSummaryController::class, 'index'])
         ->middleware('throttle:booking.get');
+
+    // Stripe Connect Payouts & Onboarding
+    Route::prefix('stripe')->group(function () {
+        Route::get('status', [PartnerStripeConnectController::class, 'status'])
+            ->middleware('throttle:booking.get');
+        Route::post('onboard', [PartnerStripeConnectController::class, 'onboard'])
+            ->middleware('throttle:booking.create');
+        Route::get('dashboard', [PartnerStripeConnectController::class, 'dashboard'])
+            ->middleware('throttle:booking.get');
+    });
 });

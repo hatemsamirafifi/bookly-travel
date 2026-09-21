@@ -36,15 +36,17 @@ class PartnerRoleMiddleware
             return $next($request);
         }
 
-        // Gating for non-approved or inactive partners: only allow profile, settings, onboarding, notifications, and read-only tours
+        // Gating for non-approved or inactive partners: only allow profile, settings, onboarding, notifications, stripe, and read-only tours
         $isAllowedEndpoint = $request->is(
             'api/partner/profile*',
             'api/partner/settings*',
+            'api/partner/stripe*',
             'api/partner/onboarding*',
             'api/partner/onboarding-status*',
             'api/partner/notifications*',
             'partner/profile*',
             'partner/settings*',
+            'partner/stripe*',
             'partner/onboarding*',
             'partner/onboarding-status*',
             'partner/notifications*'

@@ -55,22 +55,56 @@ class CreatePaymentIntentAction
 
     private function createFresh(Booking $booking, ?Payment $existing): string
     {
+        $booking->loadMissing('tour.partner');
+        $partner = $booking->tour?->partner;
+
+        $destinationAccountId = null;
+        $applicationFeeAmount = null;
+
+        if ($partner && ! empty($partner->stripe_account_id) && $partner->stripe_charges_enabled) {
+            $destinationAccountId = $partner->stripe_account_id;
+            $commissionPercent = (float) config('services.stripe.platform_commission_percent', 15.0);
+            $applicationFeeAmount = (int) round($booking->total_price * ($commissionPercent / 100));
+        }
+
         // Stripe I/O outside the DB transaction.
-        $clientSecret = $this->stripe->createPaymentIntent(
-            amount: $booking->total_price,
-            currency: $booking->currency,
-            idempotencyKey: $booking->idempotency_key,
-        );
+        if ($destinationAccountId) {
+            $clientSecret = $this->stripe->createPaymentIntent(
+                amount: $booking->total_price,
+                currency: $booking->currency,
+                idempotencyKey: $booking->idempotency_key,
+                destinationAccountId: $destinationAccountId,
+                applicationFeeAmount: $applicationFeeAmount,
+                metadata: array_filter([
+                    'booking_reference' => $booking->reference,
+                    'tour_id' => (string) $booking->tour_id,
+                    'partner_id' => $partner ? (string) $partner->id : null,
+                ]),
+            );
+        } else {
+            $clientSecret = $this->stripe->createPaymentIntent(
+                amount: $booking->total_price,
+                currency: $booking->currency,
+                idempotencyKey: $booking->idempotency_key,
+            );
+        }
 
         $intentId = explode('_secret_', $clientSecret)[0];
 
+        $paymentMetadata = array_filter([
+            'client_secret' => $clientSecret,
+            'destination_account_id' => $destinationAccountId,
+            'application_fee_amount' => $applicationFeeAmount,
+            'partner_id' => $partner?->id,
+        ]);
+
         try {
-            DB::transaction(function () use ($existing, $booking, $intentId, $clientSecret): void {
+            DB::transaction(function () use ($existing, $booking, $intentId, $paymentMetadata): void {
                 if ($existing) {
                     $existing->update([
                         'stripe_payment_intent_id' => $intentId,
                         'status' => 'pending',
-                        'metadata' => ['client_secret' => $clientSecret],
+                        'metadata' => $paymentMetadata,
                     ]);
                 } else {
                     Payment::create([
@@ -80,7 +114,7 @@ class CreatePaymentIntentAction
                         'amount' => $booking->total_price,
                         'currency' => $booking->currency,
                         'status' => 'pending',
-                        'metadata' => ['client_secret' => $clientSecret],
+                        'metadata' => $paymentMetadata,
                     ]);
                 }
 

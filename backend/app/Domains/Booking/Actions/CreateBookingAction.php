@@ -208,7 +208,7 @@ class CreateBookingAction
             'price_changed' => $priceChanged,
             'payment' => [
                 'client_secret' => $clientSecret,
-                'stripe_publishable_key' => config('services.stripe.key'),
+                'stripe_publishable_key' => config('services.payment.gateway', 'stripe') === 'stripe' ? config('services.stripe.key') : null,
                 'gateway' => config('services.payment.gateway', 'stripe'),
             ],
         ];

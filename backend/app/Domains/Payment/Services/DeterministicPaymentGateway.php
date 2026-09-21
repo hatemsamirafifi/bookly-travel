@@ -18,7 +18,14 @@ class DeterministicPaymentGateway implements PaymentGateway
         }
     }
 
-    public function createPaymentIntent(int $amount, string $currency, string $idempotencyKey): string
+    public function createPaymentIntent(
+        int $amount,
+        string $currency,
+        string $idempotencyKey,
+        ?string $destinationAccountId = null,
+        ?int $applicationFeeAmount = null,
+        array $metadata = []
+    ): string
     {
         $digest = hash_hmac(
             'sha256',

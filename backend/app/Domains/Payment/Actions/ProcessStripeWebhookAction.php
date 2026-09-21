@@ -3,6 +3,7 @@
 namespace App\Domains\Payment\Actions;
 
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Events\PaymentFailed;
 use App\Domains\Payment\Events\PaymentRefunded;
 use App\Domains\Payment\Events\PaymentSucceeded;
@@ -66,6 +67,10 @@ class ProcessStripeWebhookAction
             'charge.refunded' => $this->handleRefunded($event, $eventId),
             'charge.dispute.created' => $this->handleDisputeCreated($event, $eventId),
             'charge.dispute.closed' => $this->handleDisputeClosed($event, $eventId),
+            'account.updated' => $this->handleAccountUpdated($event, $eventId),
+            'invoice.paid' => $this->handleInvoicePaid($event, $eventId),
+            'invoice.payment_failed' => $this->handleInvoicePaymentFailed($event, $eventId),
+            'invoice.finalized' => $this->handleInvoiceFinalized($event, $eventId),
             default => $this->handleUnsupportedEvent($event),
         };
     }
@@ -339,6 +344,130 @@ class ProcessStripeWebhookAction
             $payment->booking->update(['status' => Booking::STATUS_CONFIRMED]);
         } else {
             $payment->booking->update(['status' => Booking::STATUS_CANCELLED]);
+        }
+
+        $this->markProcessed($eventId);
+
+        return [];
+    }
+
+    private function handleAccountUpdated(Event $event, string $eventId): array
+    {
+        $account = data_get($event, 'data.object');
+        $accountId = $account->id;
+
+        $partner = Partner::where('stripe_account_id', $accountId)->first();
+        if (! $partner) {
+            Log::info('Partner not found for connected account update', ['stripe_account_id' => $accountId]);
+            $this->markProcessed($eventId);
+
+            return [];
+        }
+
+        $onboardingCompleted = (bool) ($account->details_submitted && $account->payouts_enabled);
+
+        $partner->update([
+            'stripe_charges_enabled' => (bool) $account->charges_enabled,
+            'stripe_payouts_enabled' => (bool) $account->payouts_enabled,
+            'stripe_details_submitted' => (bool) $account->details_submitted,
+            'stripe_onboarding_completed' => $onboardingCompleted,
+        ]);
+
+        Log::info('Updated partner Stripe account status via webhook', [
+            'partner_id' => $partner->id,
+            'stripe_account_id' => $accountId,
+            'charges_enabled' => (bool) $account->charges_enabled,
+            'payouts_enabled' => (bool) $account->payouts_enabled,
+        ]);
+
+        $this->markProcessed($eventId);
+
+        return [];
+    }
+
+    private function handleInvoicePaid(Event $event, string $eventId): array
+    {
+        $invoice = data_get($event, 'data.object');
+        $bookingReference = data_get($invoice, 'metadata.booking_reference');
+
+        if (! $bookingReference) {
+            $this->markProcessed($eventId);
+
+            return [];
+        }
+
+        $booking = Booking::where('reference', $bookingReference)->first();
+        if (! $booking) {
+            Log::warning('Booking not found for invoice.paid webhook', ['reference' => $bookingReference]);
+            $this->markProcessed($eventId);
+
+            return [];
+        }
+
+        $paymentIntentId = data_get($invoice, 'payment_intent');
+
+        $payment = Payment::firstOrCreate(
+            ['stripe_payment_intent_id' => $paymentIntentId ?? ('in_' . $invoice->id)],
+            [
+                'booking_id' => $booking->id,
+                'type' => 'charge',
+                'amount' => (int) $invoice->amount_paid,
+                'currency' => strtoupper($invoice->currency),
+                'status' => 'succeeded',
+                'metadata' => [
+                    'invoice_id' => $invoice->id,
+                    'hosted_invoice_url' => $invoice->hosted_invoice_url,
+                    'invoice_pdf' => $invoice->invoice_pdf,
+                ],
+            ]
+        );
+
+        if ($payment->status !== 'succeeded') {
+            $payment->update(['status' => 'succeeded']);
+        }
+
+        $booking->update([
+            'status' => Booking::STATUS_CONFIRMED,
+            'stripe_payment_intent_id' => $paymentIntentId ?? ('in_' . $invoice->id),
+        ]);
+
+        $this->ledger->recordCharge($payment);
+        $this->markProcessed($eventId);
+
+        return [new PaymentSucceeded($payment, $booking)];
+    }
+
+    private function handleInvoicePaymentFailed(Event $event, string $eventId): array
+    {
+        $invoice = data_get($event, 'data.object');
+        $bookingReference = data_get($invoice, 'metadata.booking_reference');
+
+        if ($bookingReference) {
+            $booking = Booking::where('reference', $bookingReference)->first();
+            if ($booking) {
+                Log::warning('Invoice payment failed for booking', [
+                    'reference' => $bookingReference,
+                    'invoice_id' => $invoice->id,
+                ]);
+            }
+        }
+
+        $this->markProcessed($eventId);
+
+        return [];
+    }
+
+    private function handleInvoiceFinalized(Event $event, string $eventId): array
+    {
+        $invoice = data_get($event, 'data.object');
+        $bookingReference = data_get($invoice, 'metadata.booking_reference');
+
+        if ($bookingReference) {
+            Log::info('Invoice finalized for booking', [
+                'reference' => $bookingReference,
+                'invoice_id' => $invoice->id,
+                'hosted_invoice_url' => $invoice->hosted_invoice_url,
+            ]);
         }
 
         $this->markProcessed($eventId);

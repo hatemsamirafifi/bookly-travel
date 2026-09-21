@@ -26,16 +26,36 @@ class StripeService implements PaymentGateway
         return $this->client ??= new StripeClient(config('services.stripe.secret') ?? '');
     }
 
-    public function createPaymentIntent(int $amount, string $currency, string $idempotencyKey): string
-    {
-        $intent = $this->client()->paymentIntents->create([
+    public function createPaymentIntent(
+        int $amount,
+        string $currency,
+        string $idempotencyKey,
+        ?string $destinationAccountId = null,
+        ?int $applicationFeeAmount = null,
+        array $metadata = []
+    ): string {
+        $params = [
             'amount' => $amount,
             'currency' => strtolower($currency),
             'idempotency_key' => $idempotencyKey,
-            'metadata' => [
-                'origin' => 'bookly-travel',
+            'automatic_payment_methods' => [
+                'enabled' => true,
             ],
-        ]);
+            'metadata' => array_merge([
+                'origin' => 'bookly-travel',
+            ], $metadata),
+        ];
+
+        if ($destinationAccountId) {
+            $params['transfer_data'] = [
+                'destination' => $destinationAccountId,
+            ];
+            if ($applicationFeeAmount !== null && $applicationFeeAmount > 0) {
+                $params['application_fee_amount'] = $applicationFeeAmount;
+            }
+        }
+
+        $intent = $this->client()->paymentIntents->create($params);
 
         return $intent->client_secret;
     }
