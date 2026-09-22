@@ -40,7 +40,9 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
-        'platform_commission_percent' => (float) env('STRIPE_COMMISSION_PERCENT', 15.0),
+        // Keep decimal percentages as strings; monetary calculations convert
+        // them to integer basis points and never use binary floating point.
+        'platform_commission_percent' => env('STRIPE_COMMISSION_PERCENT', '15.00'),
     ],
 
     'payment' => [

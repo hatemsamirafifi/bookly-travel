@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-traveler-auth`
 **Created**: 2026-04-13
-**Status**: Draft
+**Status**: Delivered (Historical)
 **Input**: User description: "Traveler account and authentication system for Bookly marketplace — registration, login, session management, guest checkout identity, password reset, and automatic account creation from guest bookings"
 
 ## Clarifications

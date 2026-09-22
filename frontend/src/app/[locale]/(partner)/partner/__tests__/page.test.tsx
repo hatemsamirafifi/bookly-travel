@@ -29,6 +29,7 @@ const summary: AnalyticsSummaryData = {
   total_revenue: 1800,
   average_rating: 4.1,
   conversion_rate: 2.5,
+  conversion_rate_available: true,
 };
 
 describe('PartnerDashboardPage', () => {

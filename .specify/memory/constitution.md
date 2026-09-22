@@ -2,44 +2,53 @@
   ============================================================
   SYNC IMPACT REPORT
   ============================================================
-  Version change : 1.0.1 → 1.1.0
-  Bump rationale : MINOR — materially expanded guidance: added the
-                   "Internal Admin Exception" subsection under
-                   API-First, formally ratifying Laravel Filament
-                   as the sole server-rendered surface (internal
-                   admin tooling only). No principle removed or
-                   redefined; API-First remains the default
-                   architecture for public and partner surfaces.
+  Version change : 1.1.0 -> 2.0.0
+  Bump rationale : MAJOR — the previous constitution explicitly
+                   prohibited automated partner payouts. Stripe
+                   Connect marketplace payments and payout readiness
+                   are now implemented on main, so that prohibition
+                   is removed. This amendment also makes design-system,
+                   accessibility, localization, compatibility, and
+                   evidence-based quality rules constitutional gates
+                   for the full-product UI redesign.
   Ratified       : 2026-04-10
-  Last Amended   : 2026-06-20
+  Last Amended   : 2026-09-21
 
   Modified sections:
-    - Architecture & Approved Stack → API-First (added
-      "Internal Admin Exception" subsection)
-    - Architecture & Approved Stack → Approved Core Stack table
-      (added Filament as the admin surface row)
+    - Core Principles (consolidated marketplace, booking, publishing,
+      commerce, architecture, experience, and verification rules)
+    - Architecture & Approved Stack (aligned with current manifests)
+    - Security & Data Protection (expanded marketplace isolation and
+      financial-flow requirements)
+    - Delivery Workflow & Quality Gates (added Spec Kit traceability,
+      UI acceptance, regression, and deployment gates)
+    - Governance (clarified exceptions and historical version pins)
 
   Added sections:
-    - API-First > Internal Admin Exception (new subsection)
+    - Bookly Design System & Originality
+    - Accessibility, Localization & Responsive Behavior
+    - UI Acceptance Contract
+    - Compatibility and incremental-delivery gates under Delivery Workflow
 
-  Removed sections: none
+  Removed or superseded:
+    - Phase 1 prohibition on automated partner payouts
+    - "multi-language support planned" wording; EN/ES/IT are active
+    - Unversioned or inaccurate stack descriptions
 
-  Propagation (completed):
-    ✅ docs/specification-strategy.md  — constitution ref bumped to v1.1.0;
-       amendment recorded in the Constitution Patch section.
-    ✅ docs/implementation-plan.md      — constitution ref bumped to v1.1.0;
-       amendment added to the Pre-Implementation Checklist.
-    ✅ specs/013-admin-moderation/      — spec.md, plan.md, research.md,
-       tasks.md (T062), quickstart.md: follow-up TODOs replaced with the
-       completed amendment reference.
-
-  Templates requiring updates:
-    ✅ plan-template.md   — Constitution Check section is generic;
-       gates derived at plan time. No template token change needed.
-    ✅ spec-template.md   — No constitution-specific tokens;
-       compatible as-is.
-    ✅ tasks-template.md  — No constitution-specific tokens;
-       compatible as-is.
+  Propagation:
+    - docs/PRD.md — updated to v2.1.0 and aligned to the current
+      Spec 017/018 status and Constitution v2.0.0.
+    - docs/Phase 2 Implementation Plan.md — updated to v2.0.0,
+      renumbered against the delivered repository baseline, and linked
+      to Constitution v2.0.0.
+    - docs/bookly-ui-redesign-spec-kit-master-plan.md — updated to cite
+      Constitution v2.0.0 and require a Constitution Check.
+    - .specify/templates/plan-template.md — compatible; it already
+      contains a Constitution Check gate.
+    - .specify/templates/spec-template.md — compatible; no version token.
+    - .specify/templates/tasks-template.md — compatible; no version token.
+    - Historical specs and Phase 1 planning documents remain pinned to
+      the constitution version that governed their delivery.
 
   Follow-up TODOs: none
   ============================================================
@@ -49,345 +58,352 @@
 
 ## Core Principles
 
-### I. Marketplace-First
-
-Bookly MUST be built as a real multi-vendor marketplace where
-**partners** control their listings but all sales are processed
-through the platform.
-
-- Every tour listing MUST be owned by a registered partner.
-- The platform MUST mediate all transactions between travelers
-  and partners.
-- Partners MUST NOT transact directly with travelers outside
-  the platform for any booking initiated on Bookly.
-
-### II. Tours-Only Discipline
-
-The product scope is **strictly limited** to tours and related
-activities. No hotels, flights, transfers, or unrelated verticals
-are permitted unless explicitly amended in a future constitution
-revision.
-
-- All features, data models, and UI surfaces MUST serve the
-  tours vertical exclusively.
-- Any scope-expansion request MUST go through a formal
-  constitution amendment before work begins.
-
-### III. Direct Booking Only
-
-All tours MUST support **instant booking** with **direct
-confirmation**. Inquiry-based, request-based, or manual-approval
-booking flows are prohibited in Phase 1.
-
-- The booking endpoint MUST return a confirmed booking
-  synchronously (or via a deterministic async confirmation
-  within seconds).
-- No "request to book" or "waitlist" patterns are allowed
-  without a constitution amendment.
-
-### IV. Admin-Governed Publishing
-
-Partners MAY create and manage tours, pricing, and availability,
-but **admin approval** is required before any tour is visible to
-the public.
-
-- Tour status MUST include at minimum: `draft`, `pending_review`,
-  `published`, `rejected`, `archived`.
-- Only tours in `published` status MUST appear in public search
-  and discovery.
-- Admins MUST have tooling to approve, reject (with reason),
-  and unpublish tours.
-
-### V. Platform-Controlled Commerce
-
-All payments MUST be processed through the platform. Revenue
-movement MUST be tracked with **financial auditability**.
-
-- Partners MUST NOT collect payments directly from travelers
-  for platform bookings.
-- Every financial transaction MUST produce an immutable ledger
-  entry.
-- Stripe is the initial payment gateway; the architecture MUST
-  allow future gateway extensibility.
-
-### VI. Completed-Booking Review Integrity
-
-Reviews MUST only be submitted for **completed bookings**.
-
-- The system MUST verify that the associated booking has a
-  `completed` status before accepting a review submission.
-- One review per booking per traveler is the maximum.
-- Partners MAY respond to reviews; admin MAY moderate.
-
-## Architecture & Approved Stack
-
-### API-First
-
-The platform MUST be API-first. All surfaces (public website,
-partner dashboard, admin dashboard) MUST consume the Laravel
-backend exclusively via APIs. No server-rendered HTML from the
-backend is permitted for application views.
-
-### Internal Admin Exception
-
-Laravel Filament is approved as the sole exception to the
-API-First rule for internal administrative tooling. This
-exception applies only to authenticated admin users and MUST
-NOT be extended to public or partner-facing application
-surfaces.
-
-- The **public traveler website** and the **partner dashboard**
-  MUST remain API-first, consuming the Laravel backend
-  exclusively via APIs and rendering via Next.js 16 (SSR/SSG).
-- The **admin dashboard** MAY be delivered as a Laravel Filament
-  server-rendered panel at `/admin`, serving authenticated
-  administrative users only.
-- This exception is narrow and non-precedential: it MUST NOT be
-  cited as justification for any other server-rendered
-  application surface. Any further deviation from API-First
-  requires a separate, explicit constitution amendment.
-- All other constitution principles (Thin Controllers / business
-  logic in services & actions, Strict Authorization, Mandatory
-  Audit Logs, Testing & Quality Standards) apply unchanged to
-  the Filament admin surface — Filament resources and actions
-  MUST delegate governance logic to Actions/Services, MUST NOT
-  mutate models directly, and MUST write governance audit
-  entries for every governed action.
-
-### Approved Core Stack
-
-| Layer              | Technology                              |
-|--------------------|-----------------------------------------|
-| Frontend           | Next.js 16, TypeScript, Tailwind CSS    |
-| Backend            | Laravel (API-only)                      |
-| Authentication     | Laravel Sanctum                         |
-| Database           | PostgreSQL                              |
-| Cache & Queue      | Redis                                   |
-| Search             | Laravel Scout (Meilisearch later)       |
-| Object Storage     | Cloudflare R2                           |
-| CDN / Edge         | Cloudflare                              |
-| Web Server         | Nginx                                   |
-| Admin Surface      | Laravel Filament 3 (internal tooling only — see API-First §Internal Admin Exception) |
-| Payments           | Stripe (extensible for future gateways) |
-
-Any deviation from this stack MUST be justified in a Complexity
-Tracking table and approved before implementation.
-
-### Shared Backend, Separated Access Domains
-
-Admin and Partner dashboards MUST consume the same backend but
-access is separated by:
-
-- Route groups (e.g., `/api/admin/*`, `/api/partner/*`)
-- Middleware
-- Role-based permissions
-- Ownership policies (partners see only their own resources)
-
-### Modular Service Boundaries
-
-The backend MUST be organized into explicit business domains:
-
-Auth · Partners · Tours · Pricing · Availability · Bookings ·
-Payments · Reviews · Finance · Notifications · Translation ·
-Admin Operations
-
-Each domain MUST have clear service boundaries; cross-domain
-calls MUST go through documented service interfaces, not direct
-model access.
-
-### Search & Performance Separation
-
-Public discovery MUST NOT rely on direct SQL filtering against
-the primary relational database for search-heavy queries. Search
-MUST be abstracted behind a search index layer (Laravel Scout).
-
-## Security Principles
-
-### Security-First Mandate
-
-All features, workflows, and infrastructure choices MUST be
-evaluated with a security-first mindset. Security is never
-deferred to "later."
-
-### Mandatory Input Validation
-
-All write operations MUST be validated server-side using Laravel
-Form Requests or equivalent. Client-side validation MAY assist
-the user experience but MUST NOT be relied upon for security.
-
-### Strict Authorization
-
-Every protected resource MUST enforce:
-
-1. Authentication (is the user logged in?)
-2. Role check (does the user hold the required role?)
-3. Permission check (does the role grant this action?)
-4. Ownership check (does the user own or have access to this
-   specific resource?)
-
-### Secrets Handling
-
-Secrets (API keys, database credentials, encryption keys) MUST
-NOT be hardcoded or committed to source control. All secrets
-MUST be loaded from environment variables or a secrets manager.
-
-### Idempotent Financial Flows
-
-All payment and booking workflows MUST be idempotent. Retries
-MUST NOT create duplicate charges, duplicate bookings, or
-inconsistent ledger entries. Idempotency keys MUST be used
-where applicable.
-
-### Secure File Handling
-
-File uploads MUST be validated for:
-
-- Allowed MIME types
-- Maximum file size
-- File integrity (no path traversal, no executable content)
-- Correct storage paths (Cloudflare R2 with scoped keys)
-
-## Public Experience & SEO Rules
-
-### SEO-First
-
-All public-facing pages MUST be designed with SEO best practices
-to ensure discoverability by search engines.
-
-### Public Rendering Expectations
-
-Public pages MUST support:
-
-- Indexable routes with proper metadata (title, description,
-  Open Graph tags)
-- Localized routes and content (multi-language support planned)
-- Canonical tags to avoid duplicate content
-- Sitemap generation (XML)
-- Fast performance (target Lighthouse score ≥ 90 on Performance)
-
-Next.js SSR/SSG MUST be used for public pages to guarantee
-server-rendered, crawlable HTML.
-
-## Code Structure & Engineering Boundaries
-
-### Thin Controllers
-
-Controllers MUST manage requests, authorization, and responses
-only. Controllers MUST NOT contain business logic, complex
-conditional flows, or direct data-transformation code.
-
-### No Direct DB Access from Controllers
-
-Controllers MUST NOT execute database queries directly. All
-data access MUST go through services, repositories, or action
-classes.
-
-### Business Logic in Services/Actions
-
-Business logic (pricing calculations, booking flow orchestration,
-payment reconciliation, availability checks) MUST be implemented
-in dedicated service or action classes, never in controllers,
-models, or middleware.
-
-## Queueing & Async Work Policy
-
-### Long-Running Jobs MUST Be Queued
-
-Non-blocking tasks MUST be dispatched to the queue (Redis).
-Examples include:
-
-- Search index updates
-- Notification delivery (email, SMS, push)
-- Report generation
-- Image processing / thumbnail generation
-
-### Retry-Safety
-
-All queued jobs MUST be retry-safe (idempotent). A job that
-fails and is retried MUST NOT produce duplicate side effects
-(e.g., duplicate emails, duplicate index entries).
-
-## Audit Logging & Operational Governance
-
-### Mandatory Audit Logs
-
-Audit logs are required for:
-
-- Admin actions (approve / reject tour, ban partner, etc.)
-- Financial transactions (charges, refunds, payouts)
-- Booking status changes (created → confirmed → completed →
-  cancelled)
-- Partner management actions (onboarding, suspension, tier
-  changes)
-
-Each audit log entry MUST capture: actor, action, target
-resource, timestamp, and before/after state where applicable.
-
-## Testing & Quality Standards
-
-### Minimum Testing Coverage
-
-Critical business flows MUST have automated tests before they
-are considered complete. At minimum:
-
-- Booking creation and confirmation flow
-- Payment charge and refund flow
-- Tour publishing approval workflow
-- Authentication and authorization gates
-
-Test types MUST include integration tests for end-to-end flows
-and unit tests for isolated service logic.
+### I. Marketplace Integrity and Tours-Only Scope
+
+Bookly MUST remain a multi-partner marketplace dedicated to tours and
+activities.
+
+- Every publicly bookable tour MUST belong to an authorized partner.
+- Partners control their own tour content, pricing, and availability, subject
+  to ownership policies and platform governance.
+- The platform MUST mediate bookings and payments initiated through Bookly;
+  partners MUST NOT bypass the platform for those bookings.
+- Hotels, flights, restaurants, forums, rewards programs, native applications,
+  and unrelated travel verticals require an explicit constitution amendment
+  before implementation.
+- A feature MUST have a clear tours-marketplace use case. Generic platform
+  work without a traced product requirement is out of scope.
+
+**Rationale:** A narrow marketplace boundary prevents feature drift and keeps
+data models, search, commerce, and user journeys coherent.
+
+### II. Booking, Publishing, and Review Integrity
+
+Bookly MUST preserve trustworthy and deterministic marketplace behavior.
+
+- Tours MUST require admin approval before public visibility. Supported tour
+  lifecycle states MUST include `draft`, `pending_review`, `published`,
+  `rejected`, and `archived`.
+- Only `published` tours MAY appear in public discovery or be newly booked.
+- Bookings MUST use direct confirmation. Inquiry-only, request-to-book, and
+  waitlist flows require a constitution amendment.
+- UI changes MUST NOT fabricate prices, fees, discounts, availability,
+  cancellation rights, ratings, or inventory that the backend does not
+  provide.
+- A traveler MAY review a tour only through a completed booking, with no more
+  than one traveler review per booking.
+- Partner responses and admin moderation MUST retain authorization and audit
+  controls.
+
+**Rationale:** Marketplace conversion is valuable only when the published
+inventory, price, booking result, and social proof are reliable.
+
+### III. Platform-Controlled and Auditable Commerce
+
+All Bookly commerce MUST be processed through platform-controlled payment
+flows and MUST be financially auditable.
+
+- Stripe is the approved gateway. Stripe Connect MAY route marketplace funds
+  to eligible connected partners while retaining the configured platform fee.
+- Every charge, refund, fee, transfer, payout-state change, and booking payment
+  transition MUST be traceable through persisted payment and/or ledger data.
+- Money MUST be calculated and persisted in integer minor units with an
+  explicit currency. Floating-point arithmetic is prohibited for financial
+  calculations.
+- Booking creation, payment intent creation, webhook processing, refunds, and
+  partner settlement operations MUST be idempotent.
+- A retry MUST NOT create a duplicate booking, charge, refund, transfer,
+  invoice, or ledger effect.
+- Payment provider status MUST be confirmed server-side; client success UI is
+  never authoritative.
+- Checkout redesigns MUST preserve Stripe Elements behavior, server-calculated
+  totals, price-drift handling, cancellation behavior, confirmation, and
+  recoverable error paths.
+
+**Rationale:** Financial correctness and replay safety are non-negotiable in a
+multi-party marketplace.
+
+### IV. API-First Boundaries and Strict Authorization
+
+The Laravel backend MUST remain the authoritative source for business rules,
+authorization, persistence, and public contracts.
+
+- Public, authentication, traveler, checkout, and partner surfaces MUST use
+  the Laravel API and render through Next.js.
+- Laravel Filament is the sole server-rendered exception and is restricted to
+  authenticated internal administration at `/admin`.
+- The Filament exception MUST NOT be extended to public or partner-facing
+  application surfaces without a constitution amendment.
+- Every protected operation MUST enforce authentication, role or permission,
+  and resource ownership as applicable.
+- Partner isolation MUST be enforced server-side. Client filtering is not an
+  authorization control.
+- Controllers and Filament actions MUST remain thin and delegate business
+  rules to domain Actions or Services.
+- Controllers MUST NOT perform direct database queries for business workflows.
+- Cross-domain behavior MUST use explicit service or action boundaries rather
+  than reaching into another domain's persistence internals.
+
+**Rationale:** Stable contracts and centralized authorization prevent UI work
+from duplicating or weakening business rules.
+
+### V. Bookly Design System and Originality
+
+Every web surface MUST present one coherent Bookly product identity.
+
+- Tripadvisor MAY be used as a reference for information hierarchy,
+  interaction density, discovery patterns, gallery behavior, and booking CTA
+  placement. Bookly MUST NOT copy Tripadvisor source code, trademarks, logo,
+  proprietary text, imagery, or advertising surfaces.
+- Bookly navy `#0A2540` and gold `#FFB800` are brand anchors. Components MUST
+  consume semantic design tokens instead of proliferating raw color values.
+- Green is reserved for trust, availability, and success semantics; it MUST
+  NOT replace Bookly's primary brand identity.
+- Typography, spacing, radii, shadows, borders, focus styles, and interactive
+  states MUST be defined through shared tokens and reusable primitives.
+- Shared shells and primitives MUST cover public, auth, traveler, checkout,
+  partner, and Filament admin surfaces. A one-off component MUST be justified
+  when an existing primitive cannot express the required behavior.
+- A visual redesign MUST preserve the meaning and outcome of existing booking,
+  payment, authentication, publishing, review, and partner workflows unless a
+  separate approved requirement changes that behavior.
+
+**Rationale:** Structural inspiration is useful; imitation and fragmented
+styling create legal, maintenance, accessibility, and brand risks.
+
+### VI. Accessibility, Localization, and Responsive Behavior
+
+Accessibility and localization are release requirements, not post-release
+polish.
+
+- New and redesigned UI MUST target WCAG 2.1 AA.
+- All actions MUST be keyboard operable with visible focus, correct semantics,
+  accessible names, sufficient contrast, and announced validation or error
+  feedback.
+- Motion MUST respect reduced-motion preferences. Information MUST NOT depend
+  on color, hover, or animation alone.
+- Supported customer-facing locales are English (`en`), Spanish (`es`), and
+  Italian (`it`). New user-visible copy MUST ship in all three locales.
+- User-visible copy MUST NOT be hardcoded when it belongs in the localization
+  catalog. Locale-prefixed routes, canonical URLs, and alternate-language
+  metadata MUST remain correct.
+- Primary journeys MUST be accepted at 390px, 768px, 1024px, and 1440px.
+- Each data-driven surface MUST define loading, empty, error, success, disabled,
+  and permission-denied behavior where applicable.
+- Desktop sticky booking behavior MUST have a usable mobile equivalent; no
+  critical action may exist only at one viewport.
+
+**Rationale:** A marketplace journey is incomplete when it works only for one
+device, language, or interaction method.
+
+### VII. Evidence-Based Quality and Regression Safety
+
+No feature is complete solely because its implementation compiles or matches a
+mockup.
+
+- Every requirement MUST be traceable from specification to implementation and
+  verification evidence.
+- Critical booking, payment, authentication, authorization, publishing,
+  review, and partner-isolation flows MUST have automated regression coverage.
+- API contract changes MUST have backend feature or contract tests and matching
+  frontend type updates.
+- Shared UI primitives MUST have focused component tests; primary user journeys
+  MUST have browser-level coverage.
+- Accessibility checks MUST include automated scanning and manual keyboard and
+  focus verification on critical journeys.
+- Primary public pages MUST target a Lighthouse Performance score of at least
+  90 from a production build under documented test conditions. A failed or
+  unreachable Lighthouse run is not evidence of compliance.
+- A quality claim MUST cite reproducible test output, a repository artifact, or
+  a documented manual acceptance result. Assumptions are not evidence.
+
+**Rationale:** Tests and measured acceptance criteria protect the marketplace
+from visually attractive regressions in high-risk workflows.
+
+## Architecture and Approved Stack
+
+The approved implementation families, verified from project manifests at
+Constitution v2.0.0, are:
+
+| Layer | Approved technology |
+|---|---|
+| Public, auth, traveler, checkout, partner UI | Next.js 16.2.x, React 19.2.x, TypeScript 5+, Tailwind CSS 4 |
+| Localization | next-intl 4; `en`, `es`, `it` |
+| Backend API | Laravel 11 on PHP `^8.2` |
+| Authentication | Laravel Sanctum 4 |
+| Internal admin | Laravel Filament 3.3; internal-only exception |
+| Database | PostgreSQL |
+| Cache and queues | Redis |
+| Search abstraction | Laravel Scout 11 with Meilisearch support |
+| Payments | Stripe PHP 13; Stripe.js and React Stripe.js |
+| Frontend verification | Jest, Playwright, axe integration, Lighthouse CI |
+| Backend verification | Pest, PHPUnit, Laravel Pint, Larastan/PHPStan |
+
+Patch and minor dependency upgrades within these families do not require a
+constitution amendment. Replacing a framework family, moving a public or
+partner surface away from the API-first boundary, or introducing another
+payment gateway requires an approved architecture decision and a constitution
+amendment when it changes a principle.
+
+### Backend Structure
+
+- Server-side writes MUST use Laravel Form Requests or an equivalent validated
+  input boundary.
+- Business logic belongs in domain Actions or Services, not controllers,
+  middleware, Eloquent model event side effects, or UI resources.
+- Search-heavy public discovery MUST use the Scout abstraction rather than
+  coupling controllers to database-specific full-text behavior.
+- Long-running or non-blocking notification, indexing, report, and image work
+  MUST use queued jobs. Jobs MUST be safe to retry.
+- Migrations MUST preserve existing production data, define rollback behavior,
+  and avoid destructive removal in the same release that introduces a
+  replacement.
+
+### Public Contracts and SEO
+
+- Existing public URLs, locale prefixes, canonical behavior, and API response
+  fields MUST remain backward-compatible during the UI redesign.
+- Additive API evolution is preferred. Removing or changing a field requires a
+  migration plan, updated consumers, contract tests, and explicit approval.
+- Indexable public pages MUST provide localized metadata, canonical URLs,
+  alternate-language links, and appropriate structured data where supported by
+  the page's actual content.
+- Structured data MUST describe visible, truthful content and MUST NOT invent
+  ratings, offers, prices, availability, or operator claims.
+
+## Security and Data Protection
+
+- Secrets MUST come from environment configuration or an approved secret store
+  and MUST NOT be committed, logged, embedded in client bundles, or copied into
+  documentation.
+- Public APIs MUST NOT expose partner contact details, tax data, payout data,
+  Stripe identifiers, internal user IDs, or private operational notes unless a
+  reviewed contract explicitly requires the field for the authenticated actor.
+- File uploads MUST validate MIME type, size, filename or key construction, and
+  authorization. Executable content and path traversal are prohibited.
+- Stripe webhooks MUST verify provider signatures before processing and MUST
+  deduplicate provider event IDs.
+- Audit records are mandatory for governed admin actions, tour publishing
+  decisions, booking status transitions, financial operations, and material
+  partner-account changes.
+- Audit records MUST identify the actor, action, target, timestamp, and relevant
+  before/after state without storing secrets.
+
+## UI Acceptance Contract
+
+Every redesigned route MUST be reviewed against all applicable items below:
+
+1. Content hierarchy matches the approved feature specification.
+2. Shared tokens and primitives are used; unexplained raw styles are rejected.
+3. Keyboard, focus, screen-reader naming, contrast, and reduced motion pass.
+4. EN/ES/IT render without missing keys, clipping, or hardcoded fallback copy.
+5. Loading, empty, error, success, and disabled states behave intentionally.
+6. Layout is accepted at 390px, 768px, 1024px, and 1440px.
+7. API errors and authorization failures do not leak private data.
+8. Booking and payment totals come from authoritative backend responses.
+9. SEO metadata and structured data match visible content on public pages.
+10. Before/after screenshots or equivalent visual evidence are retained for
+    the primary acceptance matrix.
+
+## Delivery Workflow and Quality Gates
+
+### Specification and Planning
+
+1. Work MUST start from an up-to-date `main` with repository prerequisites
+   verified.
+2. A Spec Kit feature MUST contain a complete `spec.md`, `plan.md`, and
+   `tasks.md`; research, data model, contracts, and quickstart artifacts are
+   required when the feature changes those concerns.
+3. Each plan MUST include a Constitution Check against the active version
+   before implementation and again before release.
+4. Requirements MUST be objective and testable. `TBD`, unresolved
+   `NEEDS CLARIFICATION`, and invented backend behavior block execution.
+5. Deviations from this constitution MUST be recorded in the plan's Complexity
+   Tracking section with rationale and a rejected simpler alternative.
+
+### Implementation
+
+1. Changes MUST be delivered in independently testable phases with focused
+   commits.
+2. Shared foundations and contracts MUST precede dependent page work.
+3. API and database additions MUST remain compatible with the currently
+   deployed frontend until dependent frontend changes are released.
+4. New behavior MUST include tests in the same phase. Regression tests MUST be
+   added before fixing a reproducible defect in a critical workflow.
+5. Generated or AI-assisted code receives the same review, test, security, and
+   accessibility requirements as manually written code.
+
+### Verification
+
+Run the gates applicable to the changed surface from the relevant project
+directory:
+
+```text
+frontend: npm run lint
+frontend: npm run typecheck
+frontend: npm test
+frontend: npm run test:e2e
+frontend: npm run test:a11y
+frontend: npm run build
+
+backend:  php artisan test
+backend:  vendor/bin/pint --test
+backend:  vendor/bin/phpstan analyse
+```
+
+- Critical cross-surface changes MUST run both frontend and backend gates.
+- A failing gate MUST be fixed or explicitly documented as a pre-existing,
+  independently reproduced issue. It MUST NOT be silently ignored.
+- Release evidence MUST include the commands executed, their result, and any
+  intentionally deferred non-blocking finding.
+
+### Deployment and Rollback
+
+- Database migrations MUST be applied before code that requires their schema.
+- Additive backend contracts MUST deploy before frontend consumers.
+- Frontend rollback MUST NOT require deleting newly written production data.
+- Destructive schema cleanup requires a separate follow-up after adoption and
+  rollback safety are verified.
+- Booking errors, payment errors, API latency, and client exceptions MUST be
+  monitored during rollout.
 
 ## Governance
 
-This constitution supersedes all other engineering practices,
-ad-hoc decisions, and tribal knowledge for the Bookly project.
+This constitution is the highest-priority engineering and product-delivery
+policy in the repository. Feature specifications and plans MAY impose stricter
+rules but MUST NOT weaken it.
 
 ### Amendment Procedure
 
-1. Propose the amendment in writing with rationale.
-2. Evaluate impact on existing specifications, plans, and tasks.
-3. Obtain explicit approval from the project owner.
-4. Update this constitution with a version bump following
-   semantic versioning (see below).
-5. Propagate changes to all dependent templates and active
-   specs.
+1. Write the proposed change and rationale.
+2. Identify affected principles, active specifications, templates, contracts,
+   migrations, and operational procedures.
+3. Obtain explicit project-owner approval.
+4. Apply a semantic version bump and update the Sync Impact Report.
+5. Propagate the amendment to active dependent documentation before work that
+   relies on it begins.
 
 ### Versioning Policy
 
-- **MAJOR**: Backward-incompatible principle removals or
-  redefinitions.
-- **MINOR**: New principle or section added, or materially
-  expanded guidance.
-- **PATCH**: Clarifications, wording fixes, non-semantic
-  refinements.
+- **MAJOR:** Removes or incompatibly redefines a principle, product boundary,
+  or mandatory governance rule.
+- **MINOR:** Adds a principle or materially expands mandatory guidance without
+  invalidating an existing rule.
+- **PATCH:** Clarifies wording, fixes an error, or makes a non-semantic
+  refinement.
+
+Historical specifications MAY retain the constitution version that governed
+their original delivery. Active specifications and new amendments MUST cite the
+current version.
 
 ### Compliance Review
 
-- All specifications MUST reference this constitution version.
-- All implementation plans MUST include a Constitution Check
-  gate verifying alignment with active principles.
-- All pull requests / code reviews MUST verify compliance with
-  applicable principles before merge.
+- Every active feature plan MUST record its Constitution Check result.
+- Code review MUST verify the principles affected by the change, not merely
+  assert generic compliance.
+- A release MUST NOT be declared complete while a non-negotiable constitutional
+  gate is knowingly failing.
+- Exceptions require written owner approval, bounded scope, an expiry or
+  remediation plan, and entry in the feature plan's Complexity Tracking table.
 
-### Out-of-Scope for Phase 1
-
-The following are explicitly out of scope and MUST NOT be
-implemented unless this constitution is amended:
-
-- Hotels, flights, and transfers integration
-- Third-party OAuth via Laravel Passport
-- Native mobile applications
-- Automated partner payouts
-
-### Application Surfaces
-
-This constitution governs all surfaces of the Bookly platform:
-
-- Public traveler-facing website
-- Partner dashboard
-- Admin dashboard
-- Shared backend services (Laravel API)
-- Documentation and delivery workflows
-
-**Version**: 1.1.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-06-20
+**Version**: 2.0.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-09-21

@@ -5,6 +5,7 @@ namespace App\Domains\Payment\Actions;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Payment\Services\ApplicationFeeCalculator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -12,6 +13,7 @@ class CreatePaymentIntentAction
 {
     public function __construct(
         private readonly PaymentGateway $stripe,
+        private readonly ApplicationFeeCalculator $feeCalculator,
     ) {}
 
     /**
@@ -63,8 +65,8 @@ class CreatePaymentIntentAction
 
         if ($partner && ! empty($partner->stripe_account_id) && $partner->stripe_charges_enabled) {
             $destinationAccountId = $partner->stripe_account_id;
-            $commissionPercent = (float) config('services.stripe.platform_commission_percent', 15.0);
-            $applicationFeeAmount = (int) round($booking->total_price * ($commissionPercent / 100));
+            $commissionPercent = (string) config('services.stripe.platform_commission_percent', '15.00');
+            $applicationFeeAmount = $this->feeCalculator->calculate($booking->total_price, $commissionPercent);
         }
 
         // Stripe I/O outside the DB transaction.

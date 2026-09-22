@@ -10,6 +10,8 @@ class StripeConnectService
 {
     private ?StripeClient $client = null;
 
+    public function __construct(private readonly StripeAccountAuditService $accountAudit) {}
+
     private function client(): StripeClient
     {
         return $this->client ??= new StripeClient(config('services.stripe.secret') ?? '');
@@ -25,6 +27,7 @@ class StripeConnectService
         }
 
         $email = $partner->user?->email;
+        $before = $this->accountAudit->snapshot($partner);
 
         $account = $this->client()->accounts->create([
             'type' => 'express',
@@ -47,6 +50,8 @@ class StripeConnectService
             'stripe_payouts_enabled' => $account->payouts_enabled,
             'stripe_details_submitted' => $account->details_submitted,
         ]);
+        $partner->refresh();
+        $this->accountAudit->recordPartnerChange($partner, 'partner.stripe_account.created', $before);
 
         Log::info('Created Stripe Express connected account for partner', [
             'partner_id' => $partner->id,
@@ -103,6 +108,7 @@ class StripeConnectService
         }
 
         $account = $this->client()->accounts->retrieve($partner->stripe_account_id);
+        $before = $this->accountAudit->snapshot($partner);
 
         $onboardingCompleted = $account->details_submitted && $account->payouts_enabled;
 
@@ -112,6 +118,8 @@ class StripeConnectService
             'stripe_details_submitted' => (bool) $account->details_submitted,
             'stripe_onboarding_completed' => $onboardingCompleted,
         ]);
+        $partner->refresh();
+        $this->accountAudit->recordPartnerChange($partner, 'partner.stripe_account.synced', $before);
 
         return [
             'connected' => true,

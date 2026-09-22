@@ -31,8 +31,11 @@ test suites.
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-No `.specify/memory/constitution.md` exists. Gates derived from the platform principles
-referenced in ADR-0001 and ADR-0023 (frontend-implementation-plan.md constitution summary):
+> **Historical planning note:** No `.specify/memory/constitution.md` existed in
+> the planning snapshot used for this feature. The repository is now governed
+> by Bookly Constitution v2.0.0. The table below records the delivery-time gate
+> derived from ADR-0001 and ADR-0023; any future change to this feature MUST be
+> re-evaluated against the current constitution.
 
 | Principle | Status | Evidence |
 |-----------|--------|----------|

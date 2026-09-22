@@ -2,7 +2,7 @@
 
 **Feature Branch**: `010-public-frontend`  
 **Created**: 2026-05-19  
-**Status**: Draft  
+**Status**: Delivered (Historical)
 **Constitution**: v1.0.1  
 **Input**: User description: "Complete the public-facing frontend for Bookly: homepage, tour search and discovery, tour detail pages, booking checkout flow, and Stripe payment integration. Scaffold from existing Stitch UI designs and rebuild as reusable Next.js components matching the design system."
 

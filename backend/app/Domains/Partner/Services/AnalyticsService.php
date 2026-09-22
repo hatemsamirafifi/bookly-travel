@@ -21,7 +21,7 @@ class AnalyticsService
      *
      * @param  int  $partnerId  The authenticated partner's ID
      * @param  array{from?: string, to?: string, tour_id?: int}  $filters
-     * @return array{total_bookings: int, total_revenue: int, average_rating: float, conversion_rate: float}
+     * @return array{total_bookings: int, total_revenue: int, average_rating: float, conversion_rate: float, conversion_rate_available: bool}
      */
     public function getSummary(int $partnerId, array $filters = []): array
     {
@@ -68,8 +68,9 @@ class AnalyticsService
             ->when($dateTo, fn ($q) => $q->where('created_at', '<=', $dateTo . ' 23:59:59'))
             ->avg('rating') ?? 0.0);
 
-        // Conversion rate: bookings / tour views (placeholder until view tracking is implemented)
-        // Currently returns 0.0 since tour_views tracking is not yet in the database
+        // Conversion cannot be measured until tour-view tracking exists. Keep
+        // the legacy numeric field for API compatibility, but explicitly mark
+        // it unavailable so clients never present 0.0 as a measured result.
         $conversionRate = 0.0;
 
         return [
@@ -77,6 +78,7 @@ class AnalyticsService
             'total_revenue' => $totalRevenue,
             'average_rating' => round($averageRating, 2),
             'conversion_rate' => $conversionRate,
+            'conversion_rate_available' => false,
         ];
     }
 

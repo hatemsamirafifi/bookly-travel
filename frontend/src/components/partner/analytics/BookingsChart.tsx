@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   LineChart,
   Line,
@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import type { AnalyticsBookingsPoint } from '@/types/partner';
+import { formatCurrency } from '@/lib/utils';
 
 interface BookingsChartProps {
   data: AnalyticsBookingsPoint[];
@@ -18,6 +19,7 @@ interface BookingsChartProps {
 
 export function BookingsChart({ data }: BookingsChartProps) {
   const t = useTranslations('partner.analytics');
+  const locale = useLocale();
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5">
       <h2 className="text-sm font-semibold text-[#0A2540] mb-4">{t('bookingsOverTime')}</h2>
@@ -39,13 +41,23 @@ export function BookingsChart({ data }: BookingsChartProps) {
                 fontSize={12}
               />
               <YAxis yAxisId={0} stroke="#9ca3af" fontSize={12} />
-              <YAxis yAxisId={1} orientation="right" stroke="#9ca3af" fontSize={12} />
+              <YAxis
+                yAxisId={1}
+                orientation="right"
+                stroke="#9ca3af"
+                fontSize={12}
+                tickFormatter={(amountMinor: number) => formatCurrency(amountMinor, 'EUR', locale)}
+              />
               <Tooltip
                 contentStyle={{
                   borderRadius: '0.75rem',
                   border: '1px solid #e5e7eb',
                   fontSize: '0.875rem',
                 }}
+                formatter={(value, name) => [
+                  name === 'revenue' ? formatCurrency(Number(value), 'EUR', locale) : value,
+                  name === 'revenue' ? t('revenueOverTime') : t('bookingsOverTime'),
+                ]}
               />
               <Line
                 type="monotone"

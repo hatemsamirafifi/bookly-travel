@@ -2,7 +2,7 @@
 
 **Feature Branch**: `004-traveler-signin`
 **Created**: 2026-04-25
-**Status**: Draft
+**Status**: Delivered (Historical)
 **Input**: User description: "Implement Phase 4 (User Story 2) from the Traveler Authentication feature — traveler sign-in with email/password, sign-out with token revocation, brute-force protection with escalating lockout, and multi-language support"
 **Parent Feature**: `001-traveler-auth` (Phase 4)
 

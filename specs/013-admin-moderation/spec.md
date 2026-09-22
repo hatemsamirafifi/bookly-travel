@@ -2,7 +2,7 @@
 
 **Feature Branch**: `013-admin-moderation`
 **Created**: 2026-06-20
-**Status**: Draft
+**Status**: Delivered (Historical)
 **Input**: User description: "phase 5 docs\frontend-implementation-plan.md"
 **Plan Reference**: Frontend Implementation Plan, Phase 5 — Admin Moderation (Spec `013`)
 **Constitution**: Bookly Constitution v1.1.0 (Principles IV, V, VI; Sections 3, 7; API-First §Internal Admin Exception)

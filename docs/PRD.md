@@ -1,9 +1,10 @@
 # Bookly Travel — Product Requirements Document (PRD)
 
-> **Version**: 2.0.0  
-> **Date**: 2026-08-28  
+> **Version**: 2.1.1
+> **Date**: 2026-09-22
 > **Author**: Product & Engineering  
-> **Status**: Living Document (Phase 1 Complete — Specs 001–016 Delivered; Phase 2 Planned)  
+> **Status**: Living Document (Phase 1 Complete; Phase 2 Active — Spec 017 Delivered, Spec 018 Next)
+> **Governing Constitution**: [Bookly Constitution v2.0.0](../.specify/memory/constitution.md)
 > **Repository**: [bookly-travel](https://github.com/hatemsamirafifi/bookly-travel)
 
 ---
@@ -319,6 +320,19 @@ Phase 1 delivers the complete marketplace MVP across **16 feature specifications
 | FR-012.7 | Scheduled post publishing via background worker job at `scheduled_at` timestamp | High |
 | FR-012.8 | Automated XML sitemap integration and `BlogPosting` + `BreadcrumbList` JSON-LD structured data | High |
 
+### FR-013: Full-Product UI Redesign
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| FR-013.1 | Redesign all public, auth, traveler, checkout, partner, Filament admin, legal, blog, error, and voucher-verification web surfaces using one semantic Bookly design system | Critical |
+| FR-013.2 | Use Tripadvisor only as an information-architecture and interaction reference; do not copy trademarks, source code, proprietary wording, imagery, or advertising surfaces | Critical |
+| FR-013.3 | Rebuild tour detail around a responsive gallery, trust summary, structured content sections, sticky section navigation, and desktop/mobile booking CTAs | Critical |
+| FR-013.4 | Add the structured itinerary, complete gallery, operator summary, difficulty, and related-tour API fields required by the redesigned tour experience | Critical |
+| FR-013.5 | Preserve existing authentication, authorization, booking, payment, review-integrity, publishing, URL, canonical, and locale-prefix behavior | Critical |
+| FR-013.6 | Deliver complete English, Spanish, and Italian UI copy with no new hardcoded customer-facing strings | High |
+| FR-013.7 | Meet WCAG 2.1 AA and verify primary journeys at 390px, 768px, 1024px, and 1440px | Critical |
+| FR-013.8 | Retain Bookly navy `#0A2540` and gold `#FFB800` as brand anchors through semantic tokens; reserve green for trust and success states | High |
+
 ---
 
 ## 6. Non-Functional Requirements
@@ -520,7 +534,7 @@ erDiagram
 | `pricing_tiers` | Pricing | Custom pricing options (`id`, `tour_id`, `name`, `price_cents`, `currency`, `min_participants`, `max_participants`, `created_at`) |
 | `availability_rules` | Availability | Recurring schedule configurations (`id`, `tour_id`, `frequency: daily\|weekly\|monthly\|once`, `days_of_week`, `start_time`, `end_time`, `capacity`, `start_date`, `end_date`, `created_at`) |
 | `availability_exceptions` | Availability | Blackouts and schedule overrides (`id`, `tour_id`, `date`, `is_blackout`, `override_capacity`, `override_price_cents`, `created_at`) |
-| `bookings` | Booking | Tour reservation records (`id`, `tour_id`, `traveler_id`, `guest_email`, `guest_name`, `guest_phone`, `participant_count`, `booking_date`, `start_time`, `status: created\|pending_payment\|confirmed\|completed\|cancelled\|expired\|refunded`, `total_amount_cents`, `currency`, `idempotency_key`, `booking_reference`, `stripe_payment_intent_id`, `confirmed_at`, `cancelled_at`, `completed_at`, `anonymized_at`, `created_at`) |
+| `bookings` | Booking | Tour reservation records (`id`, `tour_id`, `traveler_id`, `guest_email`, `guest_name`, `guest_phone`, `participant_count`, `booking_date`, `start_time`, `status: created\|pending_payment\|confirmed\|completed\|cancelled\|expired\|refunded`, `total_amount_cents`, `currency`, `idempotency_key`, `booking_reference`, `stripe_payment_intent_id`, `stripe_invoice_id`, `stripe_invoice_url`, `stripe_invoice_pdf`, `stripe_invoice_status`, `confirmed_at`, `cancelled_at`, `completed_at`, `anonymized_at`, `created_at`) |
 | `booking_audit_logs` | Booking | State transition audit logs (`id`, `booking_id`, `action`, `actor_type`, `actor_id`, `before_state`, `after_state`, `created_at`) |
 | `payments` | Payment | Gateway payment records (`id`, `booking_id`, `stripe_payment_intent_id`, `stripe_charge_id`, `amount_cents`, `currency`, `status`, `type`, `metadata`, `created_at`) |
 | `financial_ledger_entries` | Payment | Append-only immutable financial records (`id`, `booking_id`, `type: charge\|refund`, `amount_cents`, `currency`, `stripe_payment_intent_id`, `stripe_charge_id`, `status`, `metadata`, `created_at`) |
@@ -867,11 +881,11 @@ frontend/src/app/
 | **Background** | Page `#F7F9FB`, Surface `#FFFFFF` |
 | **Text** | Primary `#102033`, Secondary `#5D6B7A`, Inverse `#FFFFFF` |
 | **State** | Success `#11845B`, Warning `#B76E00`, Danger `#C62828` |
-| **Typography** | Inter (body), 400/500/600/700 weights |
+| **Typography** | Plus Jakarta Sans target for Spec 018; Inter remains legacy until the redesign migration is complete |
 | **Spacing** | 8px base grid: 4, 8, 12, 16, 24, 32, 48, 64px |
 | **Radius** | sm 8px, default 12px, lg 16px, full 9999px |
 | **Shadows** | sm, card, dropdown, modal elevation levels |
-| **Breakpoints** | Mobile 390px, Tablet 780px, Desktop 1280px |
+| **Acceptance Viewports** | 390px, 768px, 1024px, 1440px |
 | **Transitions** | Fast 150ms, Default 200ms, Slow 300ms |
 
 ### Component Library
@@ -940,6 +954,10 @@ Built in-house with Tailwind CSS:
 | **Webhooks** | Secure signature-verified handling: `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded` |
 | **Currency Support** | EUR (base operational currency), USD, GBP |
 | **Monetary Storage** | Integer cents in database columns (e.g. `price_cents`, `amount_cents`) preventing floating-point errors |
+| **Payment Methods** | Stripe automatic payment methods enabled; Stripe determines eligible methods for the active account, currency, and customer context |
+| **Marketplace Routing** | Eligible connected partners use destination charges with `transfer_data.destination` and `application_fee_amount` |
+| **Connect Onboarding** | Stripe Express account creation, hosted onboarding, account status sync, and Express Dashboard login links |
+| **Invoicing Foundation** | Hosted Stripe invoice creation plus `invoice.paid`, `invoice.payment_failed`, and `invoice.finalized` webhook handling |
 
 ### Immutable Financial Ledger
 
@@ -949,6 +967,11 @@ Built in-house with Tailwind CSS:
 | **Entry Types** | `charge`, `refund` |
 | **Audit Linking** | Every ledger row is strictly linked to a `booking_id`, `stripe_payment_intent_id`, and `stripe_charge_id` |
 | **Reconciliation** | Webhook deduplication in `stripe_webhook_events` ensures exactly-once ledger insertion |
+
+Spec 017 delivers the Stripe Connect and invoicing foundation. It does **not**
+yet provide Bookly-owned `partner_earnings`, settlement-history, payout-batch,
+hold/release, or payout-reconciliation records; that remaining operational
+scope is assigned to Spec 019.
 
 ---
 
@@ -1051,66 +1074,84 @@ Built in-house with Tailwind CSS:
 
 ---
 
-### Phase 2 Roadmap — Monetization, Scale & Platform Expansion
+### Phase 2 Roadmap — Active Delivery
 
-Phase 2 builds upon the completed Phase 1 foundation to introduce automated monetization infrastructure, operational scaling, and enhanced user engagement across 4 strategic execution waves:
+Phase 2 now reflects the repository rather than the original pre-implementation
+proposal. Stripe foundation work was delivered outside the numbered Spec Kit
+workflow and is normalized as Spec 017. The full-product redesign is Spec 018.
+Previously planned features are renumbered and reduced where Phase 1 already
+delivered equivalent functionality.
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           PHASE 2 EXECUTION WAVES                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ Wave 1: Financial & Growth Foundation                                       │
-│ ├── Spec 017: Partner Payouts & Commission Ledger (Stripe Connect Express)  │
-│ ├── Spec 018: Automated Refunds & Configurable Cancellation Policies        │
-│ └── Spec 019: Social Login (OAuth — Google & Facebook)                      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ Wave 2: Partner & Revenue Expansion                                         │
-│ ├── Spec 020: Multi-Staff Partner Accounts (Owner, Manager, Staff Roles)    │
-│ └── Spec 021: Tiered Pricing Engine (Adult, Child, Infant Tiers)            │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ Wave 3: Engagement & Retention                                              │
-│ ├── Spec 022: Partner Replies to Reviews & Feedback Management              │
-│ └── Spec 023: SMS & Push Notifications (Twilio / Web Push)                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ Wave 4: Business Intelligence                                               │
-│ └── Spec 024: Advanced Analytics Dashboard & Reporting Export               │
-└─────────────────────────────────────────────────────────────────────────────┘
+```text
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         PHASE 2 CURRENT EXECUTION MAP                        │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Delivered baseline                                                          │
+│ └── Spec 017: Stripe Payments, Connect & Invoicing Foundation               │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Wave 1 — Current priority                                                   │
+│ └── Spec 018: Bookly Full-Product UI Redesign                               │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Wave 2 — Financial completion & growth                                      │
+│ ├── Spec 019: Partner Earnings & Settlement Operations                      │
+│ ├── Spec 020: Cancellation Policies & Partial Refunds                       │
+│ └── Spec 021: Social Login (OAuth)                                          │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Wave 3 — Partner operations & pricing                                       │
+│ ├── Spec 022: Multi-Staff Partner Accounts                                  │
+│ └── Spec 023: Participant Category Pricing                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Wave 4 — Engagement & intelligence                                          │
+│ ├── Spec 024: SMS & Push Notifications                                      │
+│ └── Spec 025: Advanced Analytics & Reporting Exports                        │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 #### Phase 2 Specification Summary
 
-| Spec | Title | Wave | Business Value | Key Deliverables |
-|:----:|-------|:----:|----------------|------------------|
-| `017` | Partner Payouts & Commission Ledger | 1 | Automated revenue distribution & partner trust | Stripe Connect Express onboarding, commission rate calculation per partner, `partner_earnings` & `partner_payouts` ledger, batch transfers |
-| `018` | Automated Refunds & Cancellation Policies | 1 | Reduced support workload & traveler confidence | Tour-level cancellation policies, automated Stripe refund processing, partial refund calculation |
-| `019` | Social Login (OAuth) | 1 | Reduced registration friction & conversion lift | Google and Facebook OAuth integration via Laravel Socialite, automatic account linking |
-| `020` | Multi-Staff Partner Accounts | 2 | Enterprise & SME tour operator enablement | `partner_members` team invitations, role-based access control (Owner, Manager, Staff) |
-| `021` | Tiered Pricing Engine | 2 | Family & group segment booking unlock | Dynamic pricing per participant category (Adult, Child, Infant) with minimum constraints |
-| `022` | Partner Replies to Reviews | 3 | Community engagement & trust signal | Partner public replies to traveler reviews, moderation filters |
-| `023` | SMS & Push Notifications | 3 | Real-time booking reminders & no-show reduction | Twilio SMS integration, browser Web Push for booking updates and tour reminders |
-| `024` | Advanced Analytics Dashboard | 4 | Data-driven decision making | Cohort analytics, conversion funnels, CSV/PDF report exports for partners and admins |
+| Spec | Title | Status | Key Deliverables |
+|:----:|-------|:------:|------------------|
+| `017` | Stripe Payments, Connect & Invoicing Foundation | ✅ Delivered and hardened | Automatic payment methods, Stripe Express onboarding/status/dashboard, destination charges, integer-only platform fees, audited account changes, and idempotent hosted invoicing |
+| `018` | Bookly Full-Product UI Redesign | 🟡 Next; master plan ready | Semantic navy/gold design system, Tripadvisor-inspired information architecture, redesigned tour detail, all web surfaces, structured tour content, responsive/a11y/i18n acceptance |
+| `019` | Partner Earnings & Settlement Operations | Planned | Bookly-owned earnings and settlement records, partner history, admin controls, Stripe reconciliation, operational audit trail |
+| `020` | Cancellation Policies & Partial Refunds | Planned | Extend the existing idempotent full-refund flow with tour policies, refund previews, partial-refund calculations, and policy snapshots |
+| `021` | Social Login (OAuth) | Planned | Google and Facebook OAuth, secure account linking, Sanctum session issuance |
+| `022` | Multi-Staff Partner Accounts | Planned | Team invitations and owner/manager/staff authorization while preserving current single-owner partners |
+| `023` | Participant Category Pricing | Planned | Extend existing generic pricing tiers with adult/child/infant categories and booking price snapshots |
+| `024` | SMS & Push Notifications | Planned | Opt-in transactional SMS and browser push with delivery preferences and retry safety |
+| `025` | Advanced Analytics & Reporting Exports | Planned | Extend existing partner summary/charts with view tracking, funnels, cohorts, and governed CSV/PDF exports |
+
+Partner review responses are not a future Phase 2 specification: the
+`review_responses` table, partner response APIs, and partner review UI already
+exist. Generic `pricing_tiers`, idempotent full refunds, and basic partner
+analytics also exist; Specs 020, 023, and 025 extend those baselines rather than
+replacing them.
 
 ---
 
 ## 19. Out of Scope (Phase 1 vs Phase 2 vs Future)
 
-| Capability | Phase 1 (Delivered) | Phase 2 (Planned) | Phase 3+ (Future) |
-|------------|:-------------------:|:-----------------:|:-----------------:|
+| Capability | Delivered Baseline | Phase 2 Current Roadmap | Phase 3+ (Future) |
+|------------|:------------------:|:-----------------------:|:-----------------:|
 | Email / Password Auth | ✅ Included | — | — |
-| Social Login (OAuth) | ❌ Out of scope | ✅ Spec 019 | — |
+| Social Login (OAuth) | ❌ Not implemented | ✅ Spec 021 | Additional identity providers |
 | Stripe Payment Intents | ✅ Included | — | — |
-| Stripe Connect Payouts | ❌ Manual | ✅ Spec 017 | — |
-| Automated In-App Refunds | ❌ Manual | ✅ Spec 018 | — |
-| Single Per-Person Pricing | ✅ Included | — | — |
-| Tiered Pricing (Adult/Child) | ❌ Single rate | ✅ Spec 021 | — |
+| Stripe Connect & Invoicing Foundation | ✅ Spec 017, including retry/audit hardening | Settlement operations extend in Spec 019 | — |
+| Partner Earnings & Settlement Records | ❌ Not implemented | ✅ Spec 019 | Automated tax reporting |
+| Idempotent Full Refunds | ✅ Included | — | — |
+| Configurable / Partial Refund Policies | ❌ Not implemented | ✅ Spec 020 | Insurance products |
+| Existing Generic Pricing Tiers | ✅ Included | — | — |
+| Participant Category Pricing | ❌ Not implemented | ✅ Spec 023 | Dynamic yield pricing |
 | Single-User Partner Account | ✅ Included | — | — |
-| Multi-Staff Partner Accounts | ❌ 1:1 mapping | ✅ Spec 020 | — |
+| Multi-Staff Partner Accounts | ❌ Not implemented | ✅ Spec 022 | Enterprise SSO |
 | Transactional Emails | ✅ Included | — | — |
-| SMS / Push Notifications | ❌ Email only | ✅ Spec 023 | — |
-| Partner Review Responses | ✅ Basic (012) | ✅ Polish (022) | AI Sentiment Analysis |
+| SMS / Push Notifications | ❌ Email/in-app only | ✅ Spec 024 | Native-app notifications |
+| Partner Review Responses | ✅ Included | — | AI sentiment analysis |
+| Basic Partner Analytics | ✅ Included | ✅ Extended by Spec 025 | Dedicated data warehouse |
+| Full-Product UI Redesign | Existing UI baseline | ✅ Spec 018 | Continuous experimentation |
 | Editorial Blog & Insights | ✅ Spec 016 | — | User-generated travel stories |
-| Native Mobile Apps | ❌ Web-only | ❌ Web-only | iOS / Android Native Apps |
-| Multi-Currency Checkout | ❌ EUR/USD/GBP single | ❌ Fixed currency | Dynamic Multi-Currency Forex |
+| Native Mobile Apps | ❌ Web-only | ❌ Web-only | iOS / Android native apps |
+| Multi-Currency Checkout | Fixed booking currency | ❌ Not in current Phase 2 | Dynamic multi-currency forex |
 
 ---
 
@@ -1160,10 +1201,10 @@ Phase 2 builds upon the completed Phase 1 foundation to introduce automated mone
 | **Payment Intent** | Stripe entity representing the end-to-end lifecycle of a customer payment attempt. |
 | **Sanctum Token** | Cryptographically hashed bearer API token issued by Laravel Sanctum for authenticated sessions. |
 | **Scout** | Laravel Scout driver synchronizing Eloquent models with the Meilisearch full-text search index. |
-| **Stripe Connect** | Stripe infrastructure facilitating automated partner payout disbursements and KYC management. |
+| **Stripe Connect** | Stripe infrastructure used by Bookly for Express onboarding, connected-account status, destination charges, platform application fees, and payout-readiness signals. Bookly-owned settlement operations remain Spec 019. |
 | **Voucher QR Code** | High-density 2D barcode encoding a tamper-proof verification URL (`https://bookly.travel/v/{reference}`). |
 | **Preview Token** | Cryptographically signed token granting temporary read access to unpublished blog articles or tour drafts. |
 
 ---
 
-*This document is the authoritative Product Requirements Document for Bookly Travel, reflecting all completed Phase 1 specifications (`specs/001` through `specs/016`), the [Phase 1 Implementation Plan](implementation-plan.md), [Frontend Implementation Plan](frontend-implementation-plan.md), and the [Phase 2 Implementation Plan](Phase%202%20Implementation%20Plan.md).*
+*This document is the authoritative Product Requirements Document for Bookly Travel. It reflects completed Phase 1 specifications (`specs/001` through `specs/016`), delivered Phase 2 Stripe foundation work normalized as Spec 017, the next Spec 018 UI redesign defined in the [UI Redesign Master Plan](bookly-ui-redesign-spec-kit-master-plan.md), and the active [Phase 2 Implementation Plan](Phase%202%20Implementation%20Plan.md).*

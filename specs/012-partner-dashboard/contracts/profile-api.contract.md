@@ -185,30 +185,34 @@ Returns both the partner profile and settings in a single response.
 {
   "summary": {
     "total_bookings": 145,
-    "total_revenue": {
-      "amount": 1450000,
-      "currency": "EUR",
-      "formatted": "€14,500.00"
-    },
+    "total_revenue": 1450000,
     "average_rating": 4.8,
-    "review_count": 89,
-    "conversion_rate": 4.5,
-    "upcoming_bookings": 12
+    "conversion_rate": 0.0
   },
   "bookings_over_time": [
     {
       "date": "2026-06-01",
-      "count": 5,
+      "bookings": 5,
       "revenue": 45000
     },
     {
       "date": "2026-06-02",
-      "count": 8,
+      "bookings": 8,
       "revenue": 72000
     }
-  ]
+  ],
+  "period": {
+    "from": "2026-06-01",
+    "to": "2026-06-30"
+  }
 }
 ```
+
+`total_revenue` and each chart `revenue` value are raw integer minor-unit sums
+from `bookings.total_price`. The current backend does not emit `review_count` or
+`upcoming_bookings`. `conversion_rate` remains the explicit `0.0` compatibility
+placeholder until Spec `025` adds tour-view/funnel tracking; it is not a
+measured rate.
 
 **Error (404)**: `tour_id` does not belong to the authenticated partner.
 

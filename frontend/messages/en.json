@@ -541,6 +541,7 @@
       "totalRevenue": "Total Revenue",
       "averageRating": "Average Rating",
       "conversionRate": "Conversion Rate",
+      "conversionUnavailable": "Not available",
       "recentBookings": "Recent Bookings",
       "noData": "No data available for the selected period.",
       "loadError": "Failed to load analytics. Please try again.",

@@ -2,7 +2,7 @@
 
 **Feature Branch**: `006-public-search-discovery`  
 **Created**: 2026-05-06  
-**Status**: Draft  
+**Status**: Delivered (Historical)
 **Input**: User description: "Create the public search and discovery specification for Bookly, a tours-only marketplace."
 
 ## User Scenarios & Testing *(mandatory)*

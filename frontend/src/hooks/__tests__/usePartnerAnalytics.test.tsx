@@ -34,6 +34,7 @@ const response: AnalyticsResponse = {
     total_revenue: 2000,
     average_rating: 4.2,
     conversion_rate: 5.0,
+    conversion_rate_available: true,
   },
   bookings_over_time: [
     { date: '2026-06-01', bookings: 2, revenue: 400 },

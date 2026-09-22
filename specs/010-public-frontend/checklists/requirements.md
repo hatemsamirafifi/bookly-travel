@@ -33,5 +33,8 @@
 
 - Spec covers the **public-facing Next.js frontend** only (not partner dashboard, not admin Filament)
 - Stitch screen references are documented in assumptions — these serve as visual design source of truth
-- Blog and Wishlist features are excluded from this spec (covered in future specs 016/017)
+- Blog and Wishlist features are excluded from this spec. The blog was later
+  delivered by Spec `016`; wishlist behavior is owned by Spec `011`. Spec `017`
+  is the Stripe Connect and invoicing foundation and is unrelated to either
+  feature.
 - All items pass validation — spec is ready for `/speckit.clarify` or `/speckit.plan`

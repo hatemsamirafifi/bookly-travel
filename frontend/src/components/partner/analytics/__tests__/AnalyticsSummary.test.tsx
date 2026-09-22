@@ -7,6 +7,7 @@ const baseSummary: AnalyticsSummaryData = {
   total_revenue: 12345,
   average_rating: 4.5,
   conversion_rate: 12.3,
+  conversion_rate_available: true,
 };
 
 describe('AnalyticsSummary', () => {
@@ -17,20 +18,27 @@ describe('AnalyticsSummary', () => {
     expect(screen.getByText('42')).toBeInTheDocument();
     expect(screen.getByText('4.5')).toBeInTheDocument();
     expect(screen.getByText('12.3%')).toBeInTheDocument();
-    // Revenue is formatted as EUR currency.
-    expect(screen.getByText(/€/)).toBeInTheDocument();
+    expect(screen.getByText(/€123\.45/)).toBeInTheDocument();
+    expect(screen.queryByText(/12,345/)).not.toBeInTheDocument();
   });
 
   it('renders zero values without crashing', () => {
     render(
       <AnalyticsSummary
-        summary={{ total_bookings: 0, total_revenue: 0, average_rating: 0, conversion_rate: 0 }}
+        summary={{ total_bookings: 0, total_revenue: 0, average_rating: 0, conversion_rate: 0, conversion_rate_available: true }}
       />
     );
 
     expect(screen.getAllByText('0')).toHaveLength(1);
     expect(screen.getByText('0.0')).toBeInTheDocument();
     expect(screen.getByText('0.0%')).toBeInTheDocument();
+  });
+
+  it('labels conversion as unavailable instead of presenting a placeholder as measured data', () => {
+    render(<AnalyticsSummary summary={{ ...baseSummary, conversion_rate: 0, conversion_rate_available: false }} />);
+
+    expect(screen.getByText('conversionUnavailable')).toBeInTheDocument();
+    expect(screen.queryByText('0.0%')).not.toBeInTheDocument();
   });
 
   it('hides optional upcoming/review cards when those fields are missing', () => {
@@ -56,7 +64,7 @@ describe('AnalyticsSummary', () => {
   it('treats nullish revenue as zero', () => {
     render(
       <AnalyticsSummary
-        summary={{ total_bookings: 1, total_revenue: 0, average_rating: 0, conversion_rate: 0 }}
+        summary={{ total_bookings: 1, total_revenue: 0, average_rating: 0, conversion_rate: 0, conversion_rate_available: true }}
       />
     );
     expect(screen.getByText(/€0/)).toBeInTheDocument();

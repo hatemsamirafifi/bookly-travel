@@ -67,13 +67,14 @@ it('returns the nested analytics payload without date filters', function () {
 
     $response->assertStatus(200)
         ->assertJsonStructure([
-            'summary' => ['total_bookings', 'total_revenue', 'average_rating', 'conversion_rate'],
+            'summary' => ['total_bookings', 'total_revenue', 'average_rating', 'conversion_rate', 'conversion_rate_available'],
             'bookings_over_time',
             'period' => ['from', 'to'],
         ]);
 
     // The booking falls inside the default 30-day window, so it is counted.
     expect($response->json('summary.total_bookings'))->toBeGreaterThanOrEqual(1);
+    expect($response->json('summary.conversion_rate_available'))->toBeFalse();
 });
 
 it('filters from the `from` date onward when only `from` is provided', function () {
@@ -163,7 +164,7 @@ it('returns 401 for unauthenticated request', function () {
         ->assertStatus(401);
 });
 
-it('returns 403 for non-partner role', function () {
+it('conceals analytics with 404 for a non-partner role', function () {
     $traveler = User::factory()->traveler()->create();
     $travelerToken = $traveler->createToken('test')->plainTextToken;
 

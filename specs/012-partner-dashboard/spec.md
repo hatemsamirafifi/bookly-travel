@@ -2,9 +2,18 @@
 
 **Feature Branch**: `012-partner-dashboard`
 **Created**: 2026-05-28
-**Status**: Draft
+**Status**: Delivered (Historical; documented analytics deferral)
 **Constitution**: v1.0.1
 **Input**: User description: "Partner Dashboard — tour creation, booking management, and partner profile for marketplace partners"
+
+> **Delivery variance:** The delivered analytics API returns real booking,
+> revenue, rating, and bookings-over-time data. Because tour-view/funnel
+> tracking does not exist, the API marks `conversion_rate_available = false`
+> and the UI displays a localized “Not available” label instead of presenting
+> the compatibility `0.0` value as measured data. Real conversion tracking is
+> deferred to Spec `025`. The API returns `total_revenue` as integer minor
+> units, and the shared currency formatter converts it to major units for
+> display.
 
 ## User Scenarios & Testing _(mandatory)_
 
@@ -111,7 +120,9 @@ A partner manages their business profile (company name, description, contact inf
 
 ### User Story 6 - Partner Analytics (Priority: P2)
 
-A partner views detailed analytics for their business: total bookings, revenue, conversion rate, average rating, and a bookings-over-time chart. They can filter by date range and specific tour.
+A partner views detailed analytics for their business: total bookings, revenue,
+conversion rate, average rating, and a bookings-over-time chart. They can filter
+by date range and specific tour.
 
 **Why this priority**: Analytics help partners make data-driven decisions about pricing, availability, and tour improvements.
 
@@ -123,6 +134,13 @@ A partner views detailed analytics for their business: total bookings, revenue, 
 2. **Given** a partner selects a custom date range, **When** the filter is applied, **Then** all metrics recalculate for the selected period.
 3. **Given** a partner filters by a specific tour, **When** the filter is applied, **Then** analytics show data only for that tour.
 4. **Given** a partner has bookings data, **When** the chart renders, **Then** it shows bookings count and revenue over time as a line or bar chart.
+
+**Delivery status for Scenario 1**: Partially met. The current backend does not
+return `review_count` or `upcoming_bookings`, so the frontend omits those
+optional cards. Conversion is explicitly labeled unavailable rather than shown
+as `0.0%`; Spec `025` owns the missing tour-view/funnel tracking and completion
+of this metric. Revenue is formatted from the backend's minor-unit integer by
+the shared currency formatter.
 
 ---
 
@@ -186,7 +204,10 @@ The partner dashboard has a dedicated layout with a sidebar navigation and heade
 - **Notification**: System notification with type, priority, read/unread status.
 - **PartnerProfile**: Business profile with address, tax ID, preferred language/currency.
 - **PartnerSettings**: Notification preferences and payout information.
-- **AnalyticsSummary**: Aggregated metrics: total bookings, revenue, rating, conversion rate, bookings over time.
+- **AnalyticsSummary**: Aggregated metrics: total bookings, revenue, rating,
+  bookings over time, and a `conversion_rate` compatibility field that remains
+  `0.0` until Spec `025` adds tour-view/funnel tracking, paired with an explicit
+  `conversion_rate_available` flag.
 
 ## Success Criteria _(mandatory)_
 
@@ -212,4 +233,7 @@ The partner dashboard has a dedicated layout with a sidebar navigation and heade
 - File uploads use signed URLs to upload directly to cloud storage (S3/equivalent).
 - The backend provides paginated endpoints for tours, bookings, reviews, and notifications.
 - Analytics data is computed server-side and returned as aggregated summaries.
+  Conversion rate is the documented exception: the API currently returns the
+  `0.0` compatibility placeholder because no tour-view denominator exists;
+  measured conversion analytics are deferred to Spec `025`.
 - Real-time notifications use WebSockets or Server-Sent Events (SSE) via the `usePartnerRealtime` hook.

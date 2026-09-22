@@ -2,7 +2,7 @@
 
 **Feature Branch**: `016-blog-travel-insights`
 **Created**: 2026-08-21
-**Status**: Draft
+**Status**: Delivered (Historical)
 **Input**: User description: "Blog and Travel Insights — editorial blog with categories, authors, localized content, SEO, sitemap, related tours, preview, and Filament CMS authoring"
 
 ## Clarifications

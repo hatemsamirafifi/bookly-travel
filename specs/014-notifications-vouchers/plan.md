@@ -3,6 +3,11 @@
 **Branch**: `014-notifications-vouchers` | **Date**: 2026-07-04 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/014-notifications-vouchers/spec.md`
 
+> **Historical constitution pin:** This plan was evaluated against Constitution
+> v1.1.0. Constitution v2.0.0 later removed the blanket payout prohibition after
+> Spec `017`; the payout exclusion below remains part of Spec `014`'s historical
+> boundary, while new settlement notification work belongs to Spec `019`.
+
 ## Summary
 
 Formalize and complete the platform's transactional communication and proof-of-booking surface. The notification and voucher infrastructure already substantially exists (localized traveler confirmation/voucher/cancellation mailables, the queued idempotent `SendBookingConfirmationEmail` job, the `VoucherService` + auth-gated `VoucherController`, the partner in-app `Notification` model + controller, and the `BookingEmailDeliveryFailed` → `NotifyAdminOnEmailDeliveryFailure` log/Slack alerting) and is **reused, not redefined**. This plan closes the remaining gaps:

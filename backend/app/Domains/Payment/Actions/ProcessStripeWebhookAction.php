@@ -10,6 +10,7 @@ use App\Domains\Payment\Events\PaymentSucceeded;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Payment\Services\LedgerService;
+use App\Domains\Payment\Services\StripeAccountAuditService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +21,7 @@ class ProcessStripeWebhookAction
 {
     public function __construct(
         private readonly LedgerService $ledger,
+        private readonly StripeAccountAuditService $accountAudit,
     ) {}
 
     public function execute(string $payload, string $signature): void
@@ -365,6 +367,7 @@ class ProcessStripeWebhookAction
         }
 
         $onboardingCompleted = (bool) ($account->details_submitted && $account->payouts_enabled);
+        $before = $this->accountAudit->snapshot($partner);
 
         $partner->update([
             'stripe_charges_enabled' => (bool) $account->charges_enabled,
@@ -372,6 +375,8 @@ class ProcessStripeWebhookAction
             'stripe_details_submitted' => (bool) $account->details_submitted,
             'stripe_onboarding_completed' => $onboardingCompleted,
         ]);
+        $partner->refresh();
+        $this->accountAudit->recordWebhookChange($partner, $before, $eventId);
 
         Log::info('Updated partner Stripe account status via webhook', [
             'partner_id' => $partner->id,
@@ -429,6 +434,10 @@ class ProcessStripeWebhookAction
         $booking->update([
             'status' => Booking::STATUS_CONFIRMED,
             'stripe_payment_intent_id' => $paymentIntentId ?? ('in_' . $invoice->id),
+            'stripe_invoice_id' => $invoice->id,
+            'stripe_invoice_url' => $invoice->hosted_invoice_url,
+            'stripe_invoice_pdf' => $invoice->invoice_pdf,
+            'stripe_invoice_status' => $invoice->status ?? 'paid',
         ]);
 
         $this->ledger->recordCharge($payment);
@@ -445,6 +454,10 @@ class ProcessStripeWebhookAction
         if ($bookingReference) {
             $booking = Booking::where('reference', $bookingReference)->first();
             if ($booking) {
+                $booking->update([
+                    'stripe_invoice_id' => $invoice->id,
+                    'stripe_invoice_status' => $invoice->status ?? 'open',
+                ]);
                 Log::warning('Invoice payment failed for booking', [
                     'reference' => $bookingReference,
                     'invoice_id' => $invoice->id,
@@ -463,6 +476,12 @@ class ProcessStripeWebhookAction
         $bookingReference = data_get($invoice, 'metadata.booking_reference');
 
         if ($bookingReference) {
+            Booking::where('reference', $bookingReference)->update([
+                'stripe_invoice_id' => $invoice->id,
+                'stripe_invoice_url' => $invoice->hosted_invoice_url,
+                'stripe_invoice_pdf' => $invoice->invoice_pdf,
+                'stripe_invoice_status' => $invoice->status ?? 'open',
+            ]);
             Log::info('Invoice finalized for booking', [
                 'reference' => $bookingReference,
                 'invoice_id' => $invoice->id,

@@ -2,10 +2,16 @@
 
 **Feature Branch**: `015-partner-onboarding`  
 **Created**: 2026-08-18  
-**Status**: Draft  
+**Status**: Delivered (Historical)
 **Input**: User description: "Spec 015 — Partner Onboarding"  
 **Plan Reference**: Frontend Implementation Plan (Phase 6 / Remaining Specs), PRD §10.3, Specification Strategy §6.2  
 **Constitution**: Bookly Constitution v1.1.0 (Principles I, IV, V; API-First, Strict Authorization, Mandatory Input Validation, Operational Governance)
+
+> **Historical scope note:** This specification intentionally excluded live
+> Stripe Connect onboarding when it was delivered. Spec `017` subsequently
+> added the Stripe Express onboarding and status foundation. Multi-staff partner
+> access remains assigned to Spec `022`, and settlement operations to Spec
+> `019`; the original Spec `015` acceptance scope is preserved below.
 
 ## Clarifications
 
@@ -148,7 +154,11 @@ When a partner violates marketplace quality or safety guidelines, an administrat
 ## Assumptions
 
 - **Single-Staff Scope**: Phase 1 adheres strictly to one account per partner organization. Multi-user teams, granular partner roles, and staff permissions are deferred to future milestones.
-- **Automated Payouts Deferred**: Partner financial payout configuration and automated Stripe Connect onboarding are handled in dedicated finance milestones; onboarding collects standard business and tax identifiers without blocking on live banking verification in Phase 1.
+- **Automated Payouts Deferred from Spec `015`**: This onboarding feature
+  collected standard business and tax identifiers without blocking on live
+  banking verification. Spec `017` later delivered the Stripe Express
+  onboarding/status foundation; Bookly-owned settlement operations remain in
+  Spec `019`.
 - **Localized UI**: Partner registration and dashboard interfaces support platform locales (EN, ES, IT) with English as the fallback.
 - **Admin Tooling Surface**: In accordance with the Bookly Constitution Internal Admin Exception, admin partner moderation is managed via Laravel Filament, while traveler and partner surfaces are API-First Next.js applications.
 - **Website Only (No Social Links)**: Phase 1 captures a single website URL per partner profile. Social media links (Facebook, Instagram, X, etc.) are out of scope for Spec 015 and may be added in a future enhancement. No `social_links` column or related UI is introduced.

@@ -7,7 +7,10 @@ use App\Domains\Payment\Actions\ProcessStripeWebhookAction;
 use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Models\FinancialLedgerEntry;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Admin\Models\GovernanceAuditLog;
+use App\Domains\Payment\Services\ApplicationFeeCalculator;
 use App\Domains\Payment\Services\StripeConnectService;
+use App\Domains\Payment\Services\StripeInvoiceService;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
@@ -15,18 +18,39 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
+use Stripe\ApiRequestor;
 use Stripe\Event as StripeEvent;
+use Stripe\HttpClient\ClientInterface;
 use Stripe\Webhook;
 
 use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
 
+final class RecordingStripeHttpClient implements ClientInterface
+{
+    public array $requests = [];
+
+    public function __construct(private array $responses) {}
+
+    public function request($method, $absUrl, $headers, $params, $hasFile)
+    {
+        $this->requests[] = compact('method', 'absUrl', 'headers', 'params');
+        $response = array_shift($this->responses);
+
+        if ($response === null) {
+            throw new RuntimeException('Unexpected Stripe HTTP request.');
+        }
+
+        return [json_encode($response, JSON_THROW_ON_ERROR), 200, ['request-id' => 'req_test']];
+    }
+}
+
 beforeEach(function () {
     config(['services.stripe.secret' => 'sk_test_mock']);
     config(['services.stripe.key' => 'pk_test_mock']);
     config(['services.stripe.webhook_secret' => 'whsec_test']);
-    config(['services.stripe.platform_commission_percent' => 15.0]);
+    config(['services.stripe.platform_commission_percent' => '15.00']);
 });
 
 it('routes destination charge and retains platform commission when partner has active Stripe account', function () {
@@ -85,7 +109,7 @@ it('routes destination charge and retains platform commission when partner has a
         )
         ->andReturn('pi_destination_test_secret_xyz');
 
-    $action = new CreatePaymentIntentAction($gatewayMock);
+    $action = new CreatePaymentIntentAction($gatewayMock, new ApplicationFeeCalculator);
     $clientSecret = $action->execute($booking);
 
     expect($clientSecret)->toBe('pi_destination_test_secret_xyz');
@@ -97,7 +121,7 @@ it('routes destination charge and retains platform commission when partner has a
         ->and($payment->metadata['partner_id'])->toBe($partner->id);
 });
 
-it('updates partner status via account.updated webhook', function () {
+it('updates and governance-audits partner status via account.updated webhook', function () {
     $partnerUser = User::factory()->partner()->create();
     $partner = Partner::create([
         'user_id' => $partnerUser->id,
@@ -108,8 +132,9 @@ it('updates partner status via account.updated webhook', function () {
         'stripe_onboarding_completed' => false,
     ]);
 
+    $eventId = 'evt_acc_update_' . uniqid();
     $payload = json_encode([
-        'id' => 'evt_acc_update_' . uniqid(),
+        'id' => $eventId,
         'type' => 'account.updated',
         'data' => [
             'object' => [
@@ -136,7 +161,150 @@ it('updates partner status via account.updated webhook', function () {
         ->and($partner->stripe_payouts_enabled)->toBeTrue()
         ->and($partner->stripe_details_submitted)->toBeTrue()
         ->and($partner->stripe_onboarding_completed)->toBeTrue();
+
+    $audit = GovernanceAuditLog::where('action', 'partner.stripe_account.webhook_synced')->first();
+    expect($audit)->not->toBeNull()
+        ->and($audit->actor_type)->toBe('system')
+        ->and($audit->actor_id)->toBeNull()
+        ->and($audit->target_type)->toBe('partner')
+        ->and($audit->target_id)->toBe($partner->id)
+        ->and($audit->before_state['charges_enabled'])->toBeFalse()
+        ->and($audit->after_state['charges_enabled'])->toBeTrue()
+        ->and($audit->metadata['stripe_event_id'])->toBe($eventId);
 });
+
+it('governance-audits Stripe account creation by a partner', function () {
+    $partnerUser = User::factory()->partner()->create();
+    $partner = Partner::create(['user_id' => $partnerUser->id]);
+    $httpClient = new RecordingStripeHttpClient([[
+        'id' => 'acct_audited_create',
+        'object' => 'account',
+        'charges_enabled' => false,
+        'payouts_enabled' => false,
+        'details_submitted' => false,
+    ]]);
+    ApiRequestor::setHttpClient($httpClient);
+
+    try {
+        $accountId = app(StripeConnectService::class)->createExpressAccount($partner, 'EG');
+    } finally {
+        ApiRequestor::setHttpClient(null);
+    }
+
+    $audit = GovernanceAuditLog::where('action', 'partner.stripe_account.created')->first();
+    expect($accountId)->toBe('acct_audited_create')
+        ->and($partner->fresh()->stripe_account_id)->toBe('acct_audited_create')
+        ->and($audit)->not->toBeNull()
+        ->and($audit->actor_type)->toBe('partner')
+        ->and($audit->actor_id)->toBe($partner->id)
+        ->and($audit->target_id)->toBe($partner->id)
+        ->and($audit->before_state['account_id'])->toBeNull()
+        ->and($audit->after_state['account_id'])->toBe('acct_audited_create')
+        ->and($audit->metadata['source'])->toBe('partner_request')
+        ->and($audit->metadata['requesting_user_id'])->toBe($partnerUser->id);
+});
+
+it('reuses the same Stripe invoice when invoice creation is retried', function () {
+    $category = Category::firstOrCreate(['slug' => 'invoice-idempotency'], ['name' => 'Invoice Idempotency']);
+    $partner = Partner::create(['user_id' => User::factory()->partner()->create()->id]);
+    $traveler = User::factory()->traveler()->create();
+    $tour = Tour::create([
+        'partner_id' => $partner->id,
+        'category_id' => $category->id,
+        'slug' => 'invoice-idempotency-' . uniqid(),
+        'location' => 'Cairo, Egypt',
+        'duration_minutes' => 180,
+        'duration_label' => '3 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 8,
+        'price_amount' => 12345,
+        'status' => 'published',
+    ]);
+    $booking = Booking::create([
+        'reference' => 'BKO-' . strtoupper(Str::random(6)),
+        'traveler_id' => $traveler->id,
+        'tour_id' => $tour->id,
+        'tour_date' => now()->addWeek()->toDateString(),
+        'participant_count' => 1,
+        'price_per_person' => 12345,
+        'total_price' => 12345,
+        'currency' => 'EUR',
+        'status' => Booking::STATUS_PENDING_PAYMENT,
+    ]);
+
+    $responses = [
+        ['object' => 'list', 'data' => [], 'has_more' => false, 'url' => '/v1/customers'],
+        ['id' => 'cus_retry_test', 'object' => 'customer', 'email' => $traveler->email],
+        ['id' => 'ii_retry_test', 'object' => 'invoiceitem', 'amount' => 12345, 'currency' => 'eur'],
+        ['id' => 'in_retry_test', 'object' => 'invoice', 'status' => 'draft', 'amount_due' => 12345, 'currency' => 'eur'],
+        [
+            'id' => 'in_retry_test',
+            'object' => 'invoice',
+            'status' => 'open',
+            'amount_due' => 12345,
+            'currency' => 'eur',
+            'hosted_invoice_url' => 'https://invoice.stripe.test/in_retry_test',
+            'invoice_pdf' => 'https://invoice.stripe.test/in_retry_test.pdf',
+        ],
+        [
+            'id' => 'in_retry_test',
+            'object' => 'invoice',
+            'status' => 'open',
+            'amount_due' => 12345,
+            'currency' => 'eur',
+            'hosted_invoice_url' => 'https://invoice.stripe.test/in_retry_test',
+            'invoice_pdf' => 'https://invoice.stripe.test/in_retry_test.pdf',
+        ],
+    ];
+
+    $httpClient = new RecordingStripeHttpClient($responses);
+
+    ApiRequestor::setHttpClient($httpClient);
+
+    try {
+        $service = app(StripeInvoiceService::class);
+        $first = $service->createInvoiceForBooking($booking);
+        $second = $service->createInvoiceForBooking($booking->fresh());
+    } finally {
+        ApiRequestor::setHttpClient(null);
+    }
+
+    expect($first['invoice_id'])->toBe('in_retry_test')
+        ->and($second['invoice_id'])->toBe('in_retry_test')
+        ->and($booking->fresh()->stripe_invoice_id)->toBe('in_retry_test')
+        ->and($httpClient->requests)->toHaveCount(6);
+
+    $postRequests = array_values(array_filter(
+        $httpClient->requests,
+        fn (array $request): bool => $request['method'] === 'post',
+    ));
+
+    expect($postRequests)->toHaveCount(4);
+    foreach ($postRequests as $request) {
+        expect(array_filter(
+            $request['headers'],
+            fn (string $header): bool => str_starts_with(strtolower($header), 'idempotency-key:'),
+        ))->not->toBeEmpty();
+    }
+});
+
+it('rejects unauthenticated access to Stripe partner endpoints', function (string $method, string $uri) {
+    $this->json($method, $uri)->assertUnauthorized();
+})->with([
+    'status' => ['GET', '/api/partner/stripe/status'],
+    'onboard' => ['POST', '/api/partner/stripe/onboard'],
+    'dashboard' => ['GET', '/api/partner/stripe/dashboard'],
+]);
+
+it('conceals Stripe partner endpoints from authenticated travelers', function (string $method, string $uri) {
+    Sanctum::actingAs(User::factory()->traveler()->create(), ['traveler']);
+
+    $this->json($method, $uri)->assertNotFound();
+})->with([
+    'status' => ['GET', '/api/partner/stripe/status'],
+    'onboard' => ['POST', '/api/partner/stripe/onboard'],
+    'dashboard' => ['GET', '/api/partner/stripe/dashboard'],
+]);
 
 it('confirms booking and creates ledger charge on invoice.paid webhook', function () {
     $category = Category::firstOrCreate(['slug' => 'tours'], ['name' => 'Tours']);
@@ -295,4 +463,3 @@ it('generates a dashboard login link for a partner with connected account', func
         ->assertOk()
         ->assertJsonPath('url', 'https://connect.stripe.com/express/test_dash_link');
 });
-

@@ -2,8 +2,14 @@
 
 **Feature Branch**: `008-payment-processing`  
 **Created**: 2026-05-11  
-**Status**: Complete  
+**Status**: Delivered (Historical)
 **Input**: User description: "Phase 8 — Payment processing with Stripe integration, payment capture on booking confirmation, refund on cancellation, immutable financial ledger, and webhook-driven payment lifecycle"
+
+> **Historical scope note:** This specification records the Phase 1 payment
+> boundary governed by the constitution in force at delivery time. Stripe
+> Connect, destination charges, and hosted-invoice foundations were delivered
+> later in Spec `017`; Bookly-owned settlement operations remain assigned to
+> Spec `019`. The original acceptance scope below is intentionally preserved.
 
 ## Clarifications
 
@@ -90,7 +96,7 @@ Platform administrators view the complete financial history for any booking — 
 
 Partners can see the financial summary for their tours — total revenue, pending payouts, completed payouts, and refund deductions. Partners do not have access to raw payment details (card numbers, Stripe customer IDs) but can see aggregate financial performance per tour and per time period.
 
-**Why this priority**: Partners need visibility into their earnings to trust the platform and manage their business. However, actual automated payouts are out of scope for Phase 1 (per constitution), so this is limited to visibility only.
+**Why this priority**: Partners need visibility into their earnings to trust the platform and manage their business. At the time this Phase 1 spec was delivered, automated payouts were out of scope under the governing constitution, so this story was limited to visibility only.
 
 **Independent Test**: Can be fully tested by creating bookings for a partner's tours, verifying the partner API returns correct revenue totals, and confirming that sensitive payment details are not exposed.
 
@@ -163,7 +169,10 @@ Partners can see the financial summary for their tours — total revenue, pendin
 
 - The platform operates in EUR currency only for Phase 1. Multi-currency support is out of scope.
 - Stripe is the sole payment gateway for Phase 1. Gateway extensibility is designed for but not implemented.
-- Automated partner payouts (Stripe Connect transfers) are out of scope for Phase 1 per constitution. Partners see revenue visibility only.
+- Automated partner payouts and Stripe Connect transfers were out of scope for
+  this Phase 1 specification under its delivery-time constitution. Spec `017`
+  later delivered the Connect and invoicing foundation; partner settlement
+  history and operations remain in Spec `019`.
 - The Stripe customer object is created per-traveler on their first booking and reused for subsequent bookings.
 - Card-on-file and saved payment method management are out of scope for Phase 1 — travelers enter payment details per booking.
 - The booking domain (spec 007) is the sole producer of payment requests. No other domain initiates charges or refunds.

@@ -2,7 +2,7 @@
 
 **Feature Branch**: `009-reviews-ratings`  
 **Created**: 2026-05-13  
-**Status**: Draft  
+**Status**: Delivered (Historical)
 **Input**: User description: "phase 9"
 
 ## User Scenarios & Testing *(mandatory)*

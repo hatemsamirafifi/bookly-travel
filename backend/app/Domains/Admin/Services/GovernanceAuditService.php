@@ -40,9 +40,56 @@ class GovernanceAuditService
         array $metadata = [],
         ?string $targetType = null,
     ): GovernanceAuditLog {
+        return $this->logActor($actor, $action, $target, $before, $after, $metadata, $targetType);
+    }
+
+    /** Append an entry for any morph-mapped authenticated domain actor. */
+    public function logActor(
+        Model $actor,
+        string $action,
+        ?Model $target = null,
+        ?array $before = null,
+        ?array $after = null,
+        array $metadata = [],
+        ?string $targetType = null,
+    ): GovernanceAuditLog {
+        return $this->persist(
+            actorType: $actor->getMorphClass(),
+            actorId: (int) $actor->getKey(),
+            action: $action,
+            target: $target,
+            before: $before,
+            after: $after,
+            metadata: $metadata,
+            targetType: $targetType,
+        );
+    }
+
+    /** Append an audit entry for a trusted automated process such as a webhook. */
+    public function logSystem(
+        string $action,
+        ?Model $target = null,
+        ?array $before = null,
+        ?array $after = null,
+        array $metadata = [],
+        ?string $targetType = null,
+    ): GovernanceAuditLog {
+        return $this->persist('system', null, $action, $target, $before, $after, $metadata, $targetType);
+    }
+
+    private function persist(
+        string $actorType,
+        ?int $actorId,
+        string $action,
+        ?Model $target,
+        ?array $before,
+        ?array $after,
+        array $metadata,
+        ?string $targetType,
+    ): GovernanceAuditLog {
         return GovernanceAuditLog::create([
-            'actor_type' => $actor->getMorphClass(),
-            'actor_id' => $actor->id,
+            'actor_type' => $actorType,
+            'actor_id' => $actorId,
             'action' => $action,
             'target_type' => $target?->getMorphClass() ?? $targetType,
             'target_id' => $target?->getKey(),

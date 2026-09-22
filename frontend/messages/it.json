@@ -541,6 +541,7 @@
       "totalRevenue": "Ricavi Totali",
       "averageRating": "Valutazione Media",
       "conversionRate": "Tasso di Conversione",
+      "conversionUnavailable": "Non disponibile",
       "recentBookings": "Prenotazioni Recenti",
       "noData": "Nessun dato disponibile per il periodo selezionato.",
       "loadError": "Caricamento delle analisi non riuscito. Riprova.",

@@ -346,20 +346,27 @@ All notification preferences are flat boolean columns (not nested JSON), cast as
 ```typescript
 interface AnalyticsSummary {
   total_bookings: number;
-  total_revenue: {
-    amount: number;
-    currency: string;
-    formatted: string;
-  };
+  total_revenue: number; // raw integer minor-unit sum
   average_rating: number;
-  review_count: number;
-  conversion_rate: number; // percentage
-  upcoming_bookings: number;
-  bookings_over_time: {
-    date: string;
-    count: number;
-    revenue: number;
-  }[];
+  conversion_rate: number; // currently always 0.0; view tracking is deferred
+  conversion_rate_available: boolean; // false until the denominator is tracked
+  review_count?: number; // not emitted by the current backend
+  upcoming_bookings?: number; // not emitted by the current backend
+}
+
+interface AnalyticsBookingsPoint {
+  date: string;
+  bookings: number;
+  revenue: number; // raw integer minor-unit sum
+}
+
+interface AnalyticsResponse {
+  summary: AnalyticsSummary;
+  bookings_over_time: AnalyticsBookingsPoint[];
+  period: {
+    from: string;
+    to: string;
+  };
 }
 
 interface DateRangeFilter {

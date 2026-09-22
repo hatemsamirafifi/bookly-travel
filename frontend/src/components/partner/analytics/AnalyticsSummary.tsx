@@ -1,8 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { TrendingUp, Users, Star, DollarSign, CalendarClock, MessageSquare } from 'lucide-react';
 import type { AnalyticsSummary as AnalyticsSummaryData } from '@/types/partner';
+import { formatCurrency } from '@/lib/utils';
 
 interface SummaryProps {
   summary: AnalyticsSummaryData;
@@ -16,26 +17,23 @@ interface StatCard {
   bg: string;
 }
 
-/** Formats a raw revenue integer as currency, defaulting to EUR (the backend returns no currency). */
-function formatRevenue(revenue: number): string {
-  const amount = typeof revenue === 'number' ? revenue : 0;
-  try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(amount);
-  } catch {
-    return `€${amount.toFixed(2)}`;
-  }
-}
-
 export function AnalyticsSummary({ summary }: SummaryProps) {
   const t = useTranslations('partner.dashboard');
+  const locale = useLocale();
   // The API returns conversion_rate as a percentage (e.g. 3.4 for 3.4%).
   const conversionPct = typeof summary.conversion_rate === 'number' ? summary.conversion_rate : 0;
 
   const cards: StatCard[] = [
     { label: t('totalBookings'), value: String(summary.total_bookings ?? 0), icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: t('totalRevenue'), value: formatRevenue(summary.total_revenue), icon: DollarSign, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: t('totalRevenue'), value: formatCurrency(summary.total_revenue, 'EUR', locale), icon: DollarSign, color: 'text-emerald-600', bg: 'bg-emerald-50' },
     { label: t('averageRating'), value: (summary.average_rating ?? 0).toFixed(1), icon: Star, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: t('conversionRate'), value: `${conversionPct.toFixed(1)}%`, icon: TrendingUp, color: 'text-violet-600', bg: 'bg-violet-50' },
+    {
+      label: t('conversionRate'),
+      value: summary.conversion_rate_available ? `${conversionPct.toFixed(1)}%` : t('conversionUnavailable'),
+      icon: TrendingUp,
+      color: 'text-violet-600',
+      bg: 'bg-violet-50',
+    },
   ];
 
   // Optional metrics the backend does not currently return — render only when present.

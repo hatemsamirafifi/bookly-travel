@@ -2,7 +2,7 @@
 
 **Feature Branch**: `011-tour-management`
 **Created**: 2026-05-20
-**Status**: Draft
+**Status**: Delivered (Historical)
 **Constitution**: v1.0.1
 **Input**: User description: "Tour Management — traveler dashboard, bookings management, profile settings, wishlists, and authenticated user experience"
 

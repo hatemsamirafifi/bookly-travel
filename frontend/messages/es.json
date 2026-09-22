@@ -541,6 +541,7 @@
       "totalRevenue": "Ingresos Totales",
       "averageRating": "Calificación Promedio",
       "conversionRate": "Tasa de Conversión",
+      "conversionUnavailable": "No disponible",
       "recentBookings": "Reservas Recientes",
       "noData": "No hay datos disponibles para el período seleccionado.",
       "loadError": "No se pudieron cargar las analíticas. Inténtalo de nuevo.",

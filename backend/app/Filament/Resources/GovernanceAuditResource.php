@@ -85,10 +85,15 @@ class GovernanceAuditResource extends Resource
                         'settings.update' => 'Settings Update',
                         'cms.update' => 'CMS Update',
                         'cms.publish' => 'CMS Publish',
+                        'partner.stripe_account.created' => 'Stripe Account Created',
+                        'partner.stripe_account.synced' => 'Stripe Account Synced',
+                        'partner.stripe_account.webhook_synced' => 'Stripe Account Webhook Synced',
                     ]),
                 Tables\Filters\SelectFilter::make('actor_type')
                     ->options([
                         'admin' => 'Admin',
+                        'partner' => 'Partner',
+                        'system' => 'System',
                     ]),
                 Tables\Filters\SelectFilter::make('target_type')
                     ->options([

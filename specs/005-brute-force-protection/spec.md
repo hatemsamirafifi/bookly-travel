@@ -2,7 +2,7 @@
 
 **Feature Branch**: `005-brute-force-protection`
 **Created**: 2026-04-28
-**Status**: Implemented
+**Status**: Delivered (Historical)
 **Input**: User description: "phase 5 only specs\004-traveler-signin\tasks.md"
 **Parent Feature**: `004-traveler-signin` (Phase 5 — User Story 3)
 

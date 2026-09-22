@@ -1,7 +1,15 @@
 {
-  "integration": "opencode",
-  "version": "0.5.1.dev0",
-  "scripts": {
-    "update-context": ".specify/integrations/opencode/scripts/update-context.ps1"
-  }
+  "version": "1.0.9",
+  "integration_state_schema": 1,
+  "installed_integrations": [
+    "codex"
+  ],
+  "integration_settings": {
+    "codex": {
+      "script": "ps",
+      "invoke_separator": "-"
+    }
+  },
+  "integration": "codex",
+  "default_integration": "codex"
 }

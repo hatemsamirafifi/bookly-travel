@@ -263,9 +263,9 @@ export interface PartnerSettings {
 /**
  * Summary metrics returned by `GET /api/partner/analytics` under the `summary`
  * key. Mirrors `AnalyticsService::getSummary` exactly:
- * - `total_revenue` is a raw integer sum of `total_price` (major currency units).
- * - `conversion_rate` is a percentage (e.g. `3.4` means 3.4%); the backend
- *   currently returns `0.0` until tour-view tracking is implemented.
+ * - `total_revenue` is a raw integer sum of `total_price` in minor units.
+ * - `conversion_rate` is a percentage only when
+ *   `conversion_rate_available` is true.
  *
  * `upcoming_bookings` and `review_count` are optional: the backend does not
  * emit them today, so the dashboard hides those cards when absent rather than
@@ -276,6 +276,7 @@ export interface AnalyticsSummary {
   total_revenue: number;
   average_rating: number;
   conversion_rate: number; // percentage
+  conversion_rate_available: boolean;
   upcoming_bookings?: number;
   review_count?: number;
 }

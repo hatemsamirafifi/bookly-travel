@@ -69,7 +69,10 @@
 
 ## 7. Partner Response to Reviews (Constitution VI)
 
-**Decision**: Defer partner responses to a future iteration. The constitution permits partner responses, but the spec assumptions explicitly scope it out of v1. The data model supports it (a `review_responses` table can be added later without breaking changes).
+**Decision**: Defer partner responses from Spec `009`. The constitution permits
+partner responses, but this spec's assumptions explicitly scoped them out of
+v1. The capability was subsequently delivered by Spec `012`; this paragraph
+records the original Spec `009` decision rather than the current platform state.
 
 **Rationale**: Partner responses add complexity to both backend (new endpoints, notifications) and frontend (threaded UI). It's better to ship review submission and display first, then add responses based on real usage data.
 

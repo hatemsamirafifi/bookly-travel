@@ -2,10 +2,17 @@
 
 **Feature Branch**: `014-notifications-vouchers`
 **Created**: 2026-07-04
-**Status**: Draft
+**Status**: Delivered (Historical)
 **Input**: User description: "Phase 6 — Notifications and Vouchers (Spec 014)."
 **Plan Reference**: Frontend Implementation Plan, Phase 6 — Notifications and Vouchers (Spec `014`)
 **Constitution**: Bookly Constitution v1.1.0 (Principles V, VI; Sections: Queueing & Async Work Policy, Audit Logging & Operational Governance, Strict Authorization, Idempotent Financial Flows; Out-of-Scope §1 — automated partner payouts)
+
+> **Historical scope note:** Spec `014` remains pinned to Constitution v1.1.0,
+> which prohibited automated partner payouts when this feature was delivered.
+> Constitution v2.0.0 removed that blanket prohibition after the Spec `017`
+> Stripe foundation landed. Payout and settlement notifications are still out
+> of scope for this historical spec; any new work belongs to Spec `019` and must
+> satisfy the current constitution.
 
 ## Clarifications
 
@@ -17,7 +24,7 @@ Informed decisions recorded as defaults (no [NEEDS CLARIFICATION] markers remain
 - **Q**: Can guests (booked without an account) download their voucher from the site? → **A**: **Email-only delivery for guests.** The dashboard voucher download is auth-gated for the booking owner; guests receive their voucher PDF by email at confirmation time. A token-based guest download link is **out of scope** for Phase 1 (documented as a future enhancement, not a gap).
 - **Q**: Which booking statuses may download a voucher? → **A**: Any **post-payment, non-cancelled** booking (`confirmed`, `completed`) may download its voucher. Cancelled bookings MUST NOT expose a downloadable voucher. The existing implementation guards on `confirmed`; this spec extends the allowed set to include `completed` so past bookings remain provable.
 - **Q**: Can an admin manually re-send a failed notification email? → **A**: Phase 1 provides **automatic retry + admin alerting only**. A manual "re-send" action in the admin panel is **deferred**; the failed-delivery alert lets an admin investigate and, if needed, re-trigger through back-office tooling in a future spec.
-- **Q**: Are partner payout notifications in scope? → **A**: **No.** Automated partner payouts are explicitly out of scope per the constitution (Out-of-Scope §1). Payout-related notifications are excluded; only booking/lifecycle/approval notifications are in scope.
+- **Q**: Are partner payout notifications in scope? → **A**: **No for Spec `014`.** They were prohibited by Constitution v1.1.0 at delivery time, so this spec includes only booking/lifecycle/approval notifications. Constitution v2.0.0 now permits Stripe Connect flows, but new payout or settlement notifications belong to Spec `019` rather than retroactively expanding this spec.
 - **Q**: What does the voucher QR code encode — the bare booking reference or a scannable verification URL? → **A**: **Option B — a public verification URL.** The QR MUST encode the public web URL `https://bookly.travel/v/{reference}` (the project's public base URL; exact host/route finalized in the plan), NOT the bare reference and NOT a JSON payload. A matching public, read-only, unauthenticated verification surface exposes only: booking reference, verification status, tour title, scheduled tour date, participant count, and optionally booking created date and voucher-generated timestamp. It MUST NEVER expose traveler name, email, phone, payment info, guest identity, internal database IDs, or partner internal notes. Verification states: `VALID`, `CANCELLED`, `PENDING`, `EXPIRED`, and the design MUST naturally support a future `USED` (redeemed) state without changing the QR format. The opaque booking reference is the public lookup key (no numeric IDs); unknown references return 404 and the surface never reveals whether any other booking exists (no enumeration). Per the constitution's API-First rule for public surfaces, the verification surface is split: a read-only Laravel API endpoint returns a `VerificationResult` JSON payload, and a minimal Next.js page at `/v/{reference}` renders it with a large status indicator — no auth, no dashboard, no navigation to private surfaces. The QR encodes the public web URL, which the plan phase maps to the project's actual public base URL and route structure.
 - **Q**: How should admin alerts for exhausted delivery failures be surfaced — new in-app Filament surface vs. existing log/Slack channels? → **A**: **Option A — reuse the existing channels.** As specified in FR-012, the system alerts admins via the existing `NotifyAdminOnEmailDeliveryFailure` listener (ERROR log + best-effort Slack webhook). No new in-app admin notification surface is introduced. Logs and Slack alerts include operational context (booking reference, mail class, exception message, queue/job information) and never include payment details or unneeded PII.
 
@@ -443,8 +450,10 @@ CANCELLED.
   existing `NotifyAdminOnEmailDeliveryFailure` listener and Slack webhook integration.
   Logs and alerts MUST NEVER include sensitive payment details or unneeded PII.
 - **FR-020**: The system MUST NOT introduce automated partner payout
-  notifications; payouts are out of scope for Phase 1 (constitution Out-of-Scope
-  §1) and any payout notification work requires a future constitution amendment.
+  notifications in Spec `014`; payouts were out of scope for Phase 1 under
+  Constitution v1.1.0. Constitution v2.0.0 now permits Stripe Connect flows,
+  but any new payout or settlement notification work belongs to Spec `019` and
+  MUST satisfy the current constitution.
 - **FR-021**: The system MUST expose a public, unauthenticated, read-only
   verification API endpoint that resolves a booking reference and returns a
   `VerificationResult` JSON payload confirming the booking's authenticity. The
@@ -600,9 +609,10 @@ CANCELLED.
 - **Travelers are email-only in Phase 1** — no traveler in-app notification
   center is built in this spec. The partner in-app notification center already
   exists and is completed here (live unread indicator).
-- **Partner payout notifications are out of scope** per the constitution
-  (Out-of-Scope §1 — automated partner payouts); they require a future
-  amendment before being specified.
+- **Partner payout notifications are out of scope for Spec `014`.** This was
+  required by Constitution v1.1.0 at delivery time. The current Constitution
+  v2.0.0 permits Stripe Connect flows; new payout or settlement notifications
+  are assigned to Spec `019`, not to a retroactive expansion of this spec.
 - **Audit logging** of governance actions is owned by Spec `013`
   (`governance_audit_logs`); this spec does NOT write notification delivery
   failures into the governance audit trail. Delivery-failure alerting uses the
