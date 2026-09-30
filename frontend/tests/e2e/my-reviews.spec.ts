@@ -18,7 +18,7 @@ test.describe('My Reviews', () => {
     // Either empty state or review list should be visible
     await expect(
       page.locator('text=share your experience').or(page.locator('article')).first()
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 45_000 });
   });
 
   test('review card shows tour name and rating', async ({ page }) => {

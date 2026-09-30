@@ -9,13 +9,14 @@ import {
 
 const validDetails = {
   title: 'Tuscan Wine Tasting',
-  description: 'A full day touring vineyards with expert guides.',
+  description: 'A full day touring vineyards with expert guides, including traditional tastings and local stories in Tuscany.',
   category: 'food',
   destination: 'Tuscany',
   duration_value: '8',
   duration_unit: 'hour' as const,
   difficulty_level: 'easy' as const,
   meeting_point: 'Piazza del Campo',
+  itinerary: [],
 };
 
 describe('tourBasicDetailsSchema', () => {
@@ -33,9 +34,14 @@ describe('tourBasicDetailsSchema', () => {
     expect(r.success).toBe(false);
   });
 
-  it('rejects a description shorter than 10 characters', () => {
-    const r = tourBasicDetailsSchema.safeParse({ ...validDetails, description: 'short' });
+  it('rejects a description shorter than the backend 100-character minimum', () => {
+    const r = tourBasicDetailsSchema.safeParse({ ...validDetails, description: 'x'.repeat(99) });
     expect(r.success).toBe(false);
+  });
+
+  it('rejects an incomplete itinerary day before submission', () => {
+    const result = tourBasicDetailsSchema.safeParse({ ...validDetails, itinerary: [{ day: 1, title: '', stops: [] }] });
+    expect(result.success).toBe(false);
   });
 
   it('rejects an empty category and destination', () => {

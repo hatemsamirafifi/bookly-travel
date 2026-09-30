@@ -6,24 +6,34 @@ import type { TourCard as TourCardType } from '@/lib/api/types';
 import { getImagePlaceholderProps } from '@/lib/images';
 import WishlistButton from '@/components/wishlist/WishlistButton';
 import StarRating from '@/components/ui/StarRating';
+import { useTranslations } from 'next-intl';
 
 interface TourCardProps {
   tour: TourCardType;
   locale: string;
+  imagePriority?: boolean;
 }
 
-export default function TourCard({ tour, locale }: TourCardProps) {
+export default function TourCard({ tour, locale, imagePriority = false }: TourCardProps) {
+  const t = useTranslations('search');
+  const nextDate = tour.next_available_date
+    ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${tour.next_available_date}T00:00:00Z`))
+    : null;
+
   return (
-    <Link
-      href={`/${locale}/tours/${tour.slug}`}
-      className="group block overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
-    >
-      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
+    <div className="group relative overflow-hidden rounded-xl border border-border bg-surface shadow-card transition-shadow hover:shadow-lg">
+      <Link
+        href={`/${locale}/tours/${tour.slug}`}
+        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+      >
+        <div className="relative aspect-[16/10] overflow-hidden bg-surface-alt">
         {tour.cover_image_url ? (
           <Image
             src={tour.cover_image_url}
             alt={tour.title}
             fill
+            loading={imagePriority ? 'eager' : 'lazy'}
+            fetchPriority={imagePriority ? 'high' : undefined}
             sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             {...getImagePlaceholderProps()}
@@ -35,42 +45,45 @@ export default function TourCard({ tour, locale }: TourCardProps) {
             </svg>
           </div>
         )}
-        {tour.next_available_date && (
-          <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2 py-1 text-xs font-medium text-gray-800 shadow backdrop-blur-sm">
-            Next: {new Date(tour.next_available_date).toLocaleDateString()}
+        {nextDate && (
+          <span className="absolute left-3 top-3 rounded-md bg-surface/90 px-2 py-1 text-xs font-medium text-bookly-navy shadow backdrop-blur-sm">
+            {t('nextAvailable', { date: nextDate })}
           </span>
         )}
-        <div className="absolute right-3 top-3" onClick={(event) => event.preventDefault()}>
-          <WishlistButton tourId={tour.id} locale={locale} compact />
-        </div>
       </div>
 
       <div className="p-4">
-        <div className="mb-1 flex items-center gap-2 text-xs text-gray-500">
+        <div className="mb-1 flex items-center gap-2 text-xs text-text-muted">
           <span>{tour.location}</span>
           <span aria-hidden="true">·</span>
           <span>{tour.duration_label}</span>
         </div>
 
-        <h2 className="mb-2 text-lg font-semibold text-[#0A2540] group-hover:text-[#071b2e] line-clamp-2">
+        <h2 className="mb-2 text-lg font-semibold text-bookly-navy group-hover:text-primary-dark line-clamp-2">
           {tour.title}
         </h2>
 
-        <div className="mb-3">
-          <div className="flex items-center gap-0.5">
-            <StarRating value={tour.rating.average} />
-            <span className="ml-1 text-sm text-gray-600">({tour.rating.average})</span>
+        {tour.rating.count > 0 && (
+          <div className="mb-3">
+            <div className="flex items-center gap-0.5">
+              <StarRating value={tour.rating.average} />
+              <span className="ml-1 text-sm text-text-muted">({tour.rating.average})</span>
+            </div>
+            <span className="text-xs text-text-muted">({t(tour.rating.count === 1 ? 'reviewCount_one' : 'reviewCount', { count: tour.rating.count })})</span>
           </div>
-          <span className="text-xs text-gray-500">({tour.rating.count} reviews)</span>
-        </div>
+        )}
 
-        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-          <span className="text-xs rounded-full bg-[#F7F9FB] px-2.5 py-0.5 font-medium text-[#0A2540]">
+        <div className="flex items-center justify-between border-t border-border pt-3">
+          <span className="text-xs rounded-full bg-surface-alt px-2.5 py-0.5 font-medium text-bookly-navy">
             {tour.category}
           </span>
-          <span className="text-lg font-bold text-[#0A2540]">{tour.price.formatted}</span>
+          <span className="text-lg font-bold text-bookly-navy">{tour.price.formatted}</span>
         </div>
       </div>
-    </Link>
+      </Link>
+      <div className="absolute right-3 top-3 z-10">
+        <WishlistButton tourId={tour.id} locale={locale} compact />
+      </div>
+    </div>
   );
 }

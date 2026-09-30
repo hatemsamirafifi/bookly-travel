@@ -82,6 +82,39 @@ it('returns 403 when accessing another traveler booking', function () {
     $response->assertStatus(403);
 });
 
+it('lists translated tour titles using the booking locale with English fallback', function (string $locale, string $expectedTitle, bool $hasTranslation) {
+    $this->tour->translations()->create([
+        'locale' => 'en', 'title' => 'English tour title', 'description' => 'English source.',
+    ]);
+    if ($locale !== 'en' && $hasTranslation) {
+        $this->tour->translations()->create([
+            'locale' => $locale, 'title' => $expectedTitle, 'description' => 'Translated content.',
+        ]);
+    }
+    Booking::create([
+        'reference' => Booking::generateReference(),
+        'traveler_id' => $this->traveler->id,
+        'tour_id' => $this->tour->id,
+        'tour_date' => now()->addDays(30)->toDateString(),
+        'participant_count' => 1,
+        'price_per_person' => 8900,
+        'total_price' => 8900,
+        'currency' => 'EUR',
+        'status' => 'confirmed',
+        'idempotency_key' => Str::uuid()->toString(),
+        'locale' => $locale,
+    ]);
+
+    getJson('/api/public/traveler/bookings', ['Authorization' => 'Bearer ' . $this->token])
+        ->assertOk()
+        ->assertJsonPath('data.0.tour.title', $expectedTitle);
+})->with([
+    'English source' => ['en', 'English tour title', true],
+    'Spanish title' => ['es', 'Título del tour', true],
+    'Italian title' => ['it', 'Titolo del tour', true],
+    'missing Italian fallback' => ['it', 'English tour title', false],
+]);
+
 it('shows booking detail with can_cancel computed', function () {
     $booking = Booking::create([
         'reference' => Booking::generateReference(),

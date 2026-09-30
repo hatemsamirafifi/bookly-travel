@@ -109,6 +109,7 @@ export default function ProfileSettings() {
       setMessage(t('passwordUpdated'));
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('passwordError'));
+      throw err;
     }
   };
 

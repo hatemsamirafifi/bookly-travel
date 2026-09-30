@@ -20,23 +20,25 @@ export default async function NotFound() {
   const t = await getTranslations({ locale, namespace: 'notFound' });
 
   return (
-    <main className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-      <h1 className="text-6xl font-extrabold text-[#0A2540]">404</h1>
-      <p className="mt-4 text-xl font-semibold text-[#0A2540]">{t('title')}</p>
-      <p className="mt-2 text-[#5A6B7B]">{t('subtitle')}</p>
+    <main className="flex min-h-[60vh] flex-col items-center justify-center bg-surface-alt px-4 py-12 text-center">
+      <div className="w-full max-w-xl rounded-2xl border border-border bg-surface px-6 py-10 shadow-sm sm:px-10">
+      <h1 className="text-6xl font-extrabold text-bookly-navy">404</h1>
+      <p className="mt-4 text-xl font-semibold text-bookly-navy">{t('title')}</p>
+      <p className="mt-2 text-text-muted">{t('subtitle')}</p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Link
           href={`/${locale}`}
-          className="rounded-xl bg-[#FFB800] px-5 py-2.5 text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] transition-colors"
+          className="rounded-xl bg-bookly-gold px-5 py-2.5 text-sm font-semibold text-bookly-navy transition-colors hover:bg-accent-dark"
         >
           {t('goHome')}
         </Link>
         <Link
           href={`/${locale}/search`}
-          className="rounded-xl bg-[#F7F9FB] px-5 py-2.5 text-sm font-semibold text-[#0A2540] hover:bg-gray-200 transition-colors"
+          className="rounded-xl border border-border bg-surface-alt px-5 py-2.5 text-sm font-semibold text-bookly-navy transition-colors hover:bg-border"
         >
           {t('browseTours')}
         </Link>
+      </div>
       </div>
     </main>
   );

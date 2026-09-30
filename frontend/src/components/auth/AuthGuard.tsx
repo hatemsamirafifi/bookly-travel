@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { safeAuthReturnUrl } from '@/lib/auth/return-url';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -28,8 +29,10 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
         }
         router.push(`/${locale}/auth/login?${params.toString()}`);
       } else if (!requireAuth && user) {
-        // Redirect to account if user is already logged in but trying to access guest routes
-        router.push(`/${locale}/`);
+        const requested = typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('returnUrl')
+          : null;
+        router.push(safeAuthReturnUrl(locale, requested));
       }
     }
   }, [user, isLoading, requireAuth, router, pathname, locale]);

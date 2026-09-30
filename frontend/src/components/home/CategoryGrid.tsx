@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Category } from '@/lib/api/types';
+import { getTranslations } from 'next-intl/server';
 
 interface CategoryGridProps {
   categories: Category[];
@@ -8,13 +9,14 @@ interface CategoryGridProps {
   title?: string;
 }
 
-export default function CategoryGrid({ categories, locale, title = 'Popular Categories' }: CategoryGridProps) {
+export default async function CategoryGrid({ categories, locale, title }: CategoryGridProps) {
   if (categories.length === 0) return null;
+  const t = await getTranslations({ locale, namespace: 'home' });
 
   return (
     <section className="bg-white py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-8 text-2xl font-bold text-[#0A2540]">{title}</h2>
+        <h2 className="mb-8 text-2xl font-bold text-bookly-navy">{title ?? t('popularCategories')}</h2>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {categories.map((cat) => (
@@ -42,7 +44,7 @@ export default function CategoryGrid({ categories, locale, title = 'Popular Cate
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-3">
                   <h3 className="text-sm font-semibold text-white">{cat.name}</h3>
-                  <p className="text-xs text-gray-200">{cat.tour_count} tour{cat.tour_count !== 1 ? 's' : ''}</p>
+                  <p className="text-xs text-gray-200">{t(cat.tour_count === 1 ? 'tourCount' : 'tourCount_plural', { count: cat.tour_count })}</p>
                 </div>
               </div>
             </Link>

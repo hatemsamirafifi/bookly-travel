@@ -1,6 +1,109 @@
 import { test, expect } from '@playwright/test';
+import { createServer } from 'node:http';
+import { spawn } from 'node:child_process';
+import type { AddressInfo } from 'node:net';
+import type { TourDetail } from '@/lib/api/types';
+
+async function freePort(): Promise<number> {
+  const probe = createServer();
+  await new Promise<void>((resolve) => probe.listen(0, '127.0.0.1', resolve));
+  const port = (probe.address() as AddressInfo).port;
+  await new Promise<void>((resolve) => probe.close(() => resolve()));
+  return port;
+}
 
 test.describe('Tour Detail Page', () => {
+  test('ES/IT SSR pages replace disclosed English fallback with ready localized content', async ({ page, request }) => {
+    test.setTimeout(120000);
+    const slug = 'hidden-gems-rome-walking-tour';
+    const fixtureResponse = await request.get(`/api/public/tours/${slug}?locale=en`);
+    expect(fixtureResponse.ok()).toBeTruthy();
+    const fixture = (await fixtureResponse.json()).data as TourDetail;
+    let current = structuredClone(fixture);
+
+    // Page routes fetch from the server during SSR, so browser route mocking
+    // cannot intercept them. An isolated Next process and local API fixture
+    // exercise the real page/metadata path without modifying shared tour data.
+    const mock = createServer((req, res) => {
+      if (!req.url?.startsWith(`/api/public/tours/${slug}`)) {
+        res.writeHead(404).end();
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ data: current }));
+    });
+    await new Promise<void>((resolve) => mock.listen(0, '127.0.0.1', resolve));
+    const mockPort = (mock.address() as AddressInfo).port;
+    const nextPort = await freePort();
+    const next = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', String(nextPort), '-H', '127.0.0.1'], {
+      cwd: process.cwd(),
+      env: { ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${mockPort}`, NEXT_TELEMETRY_DISABLED: '1' },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let startupOutput = '';
+    next.stdout.on('data', (chunk: Buffer) => { startupOutput += chunk.toString(); });
+    next.stderr.on('data', (chunk: Buffer) => { startupOutput += chunk.toString(); });
+
+    try {
+      await expect.poll(async () => {
+        if (next.exitCode !== null) throw new Error(`Isolated Next server exited: ${startupOutput}`);
+        try { return (await fetch(`http://127.0.0.1:${nextPort}/favicon.ico`)).status; } catch { return 0; }
+      }, { timeout: 30000 }).not.toBe(0);
+
+      for (const scenario of [
+        { locale: 'es' as const, title: 'Título español listo', day: 'Llegada española', notice: 'Parte del contenido se muestra en inglés', guide: 'Guía en vivo' },
+        { locale: 'it' as const, title: 'Titolo italiano pronto', day: 'Arrivo italiano', notice: 'Alcuni contenuti sono visualizzati in inglese', guide: 'Guida dal vivo' },
+      ]) {
+        const source = structuredClone(fixture);
+        source.title = 'Canonical English source';
+        source.description = 'The current English source remains visible until translation is ready.';
+        source.content_locale = 'en';
+        source.itinerary_locale = 'en';
+        source.itinerary = [{ day: 1, title: 'English arrival', stops: [{ title: 'Meet the guide' }] }];
+        source.guide_languages = ['de', 'en', 'es'];
+        source.languages = source.guide_languages;
+        source.translation_status = 'pending';
+        source.translation_warning = 'partial_translation';
+        source.images = [];
+        source.operator = null;
+        source.related_tours = [];
+        source.reviews = { average_rating: 0, count: 0, distribution: {} };
+        source.rating = { average: 0, count: 0 };
+        source.availability = { ...source.availability, available_dates: [], next_available_date: null, is_unavailable: true };
+        source.seo = { ...source.seo, meta_title: `${source.title} | Bookly`, meta_description: source.description };
+        current = source;
+
+        const url = `http://127.0.0.1:${nextPort}/${scenario.locale}/tours/${slug}`;
+        await page.goto(url);
+        await expect(page.getByRole('heading', { level: 1 })).toHaveText(source.title);
+        await expect(page.getByText(scenario.notice)).toBeVisible();
+        await expect(page.locator('#itinerary')).toContainText('English arrival');
+        await expect(page.getByText(new RegExp(`${scenario.guide}:`))).toBeVisible();
+
+        current = { ...source,
+          title: scenario.title,
+          description: `Localized content for ${scenario.locale}`,
+          content_locale: scenario.locale,
+          itinerary_locale: scenario.locale,
+          itinerary: [{ day: 1, title: scenario.day, stops: [{ title: scenario.day }] }],
+          translation_status: 'ready',
+          translation_warning: undefined,
+          seo: { ...source.seo, meta_title: `${scenario.title} | Bookly`, meta_description: `Localized content for ${scenario.locale}` },
+        };
+        await page.reload();
+        await expect(page.getByRole('heading', { level: 1 })).toHaveText(scenario.title);
+        await expect(page.getByText(scenario.notice)).toHaveCount(0);
+        await expect(page.locator('#itinerary')).toContainText(scenario.day);
+        await expect(page.locator('#itinerary')).not.toContainText('English arrival');
+        await expect(page.getByText(new RegExp(`${scenario.guide}:`))).toBeVisible();
+        const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').first().textContent() ?? '{}');
+        expect(schema.inLanguage).toBe(scenario.locale);
+      }
+    } finally {
+      next.kill('SIGTERM');
+      await new Promise<void>((resolve) => mock.close(() => resolve()));
+    }
+  });
   test('tour detail page loads with all sections', async ({ page }) => {
     await page.goto('/en/tours/hidden-gems-rome-walking-tour');
 
@@ -34,17 +137,29 @@ test.describe('Tour Detail Page', () => {
     }
   });
 
-  test('lightbox opens on image click', async ({ page }) => {
+  test('lightbox opens from a keyboard-focusable trigger and restores focus on Escape', async ({ page }) => {
     await page.goto('/en/tours/hidden-gems-rome-walking-tour');
 
-    const mainImage = page.locator('.cursor-pointer').first();
-    if (await mainImage.isVisible()) {
-      await mainImage.click();
-      await expect(page.getByRole('dialog', { name: 'Image lightbox' })).toBeVisible();
+    const trigger = page.getByRole('button', { name: 'Open image gallery' });
+    await expect(trigger).toBeVisible();
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('dialog', { name: 'Image lightbox' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Close lightbox' })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog', { name: 'Image lightbox' })).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+  });
 
-      // Close lightbox with Escape
-      await page.keyboard.press('Escape');
-      await expect(page.getByRole('dialog', { name: 'Image lightbox' })).not.toBeVisible();
+  test('section navigation links only to rendered sections', async ({ page }) => {
+    await page.goto('/en/tours/hidden-gems-rome-walking-tour');
+    const nav = page.getByRole('navigation', { name: 'Tour sections' });
+    await expect(nav).toBeVisible();
+    const hrefs = await nav.getByRole('link').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      expect(href).toMatch(/^#[a-z-]+$/);
+      await expect(page.locator(href!)).toHaveCount(1);
     }
   });
 
@@ -92,17 +207,27 @@ test.describe('Tour Detail Page', () => {
     await expect(page.locator('main')).toBeVisible();
   });
 
-  test('reviews section is visible', async ({ page }) => {
+  test('shows the reviews section only when the API reports genuine reviews', async ({ page, request }) => {
+    const response = await request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
+    expect(response.ok()).toBeTruthy();
+    const { data } = await response.json();
     await page.goto('/en/tours/hidden-gems-rome-walking-tour');
 
     const reviewsHeading = page.getByRole('heading', { name: /Reviews/i });
-    await expect(reviewsHeading).toBeVisible({ timeout: 10000 });
+    const reviewsLink = page.getByRole('navigation', { name: 'Tour sections' }).getByRole('link', { name: 'Reviews' });
+    if (data.reviews.count > 0) {
+      await expect(reviewsHeading).toBeVisible();
+      await expect(reviewsLink).toBeVisible();
+    } else {
+      await expect(reviewsHeading).toHaveCount(0);
+      await expect(reviewsLink).toHaveCount(0);
+    }
   });
 
   test('about section displays description', async ({ page }) => {
     await page.goto('/en/tours/hidden-gems-rome-walking-tour');
 
-    const aboutHeading = page.getByText('About This Tour');
+    const aboutHeading = page.getByRole('heading', { name: 'About This Tour' });
     await expect(aboutHeading).toBeVisible({ timeout: 10000 });
   });
 
@@ -151,4 +276,57 @@ test.describe('Tour Detail Page', () => {
     const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
     expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
   });
+
+  test('structured data matches the visible tour and does not invent reviews', async ({ page, request }) => {
+    const slug = 'hidden-gems-rome-walking-tour';
+    const response = await request.get(`/api/public/tours/${slug}?locale=en`);
+    expect(response.ok()).toBeTruthy();
+    const { data } = await response.json();
+    await page.goto(`/en/tours/${slug}`);
+    const script = page.locator('script[type="application/ld+json"]').first();
+    const schema = JSON.parse(await script.textContent() ?? '{}');
+    expect(schema['@type']).toBe('TouristTrip');
+    expect(schema.name).toBe(await page.getByRole('heading', { level: 1 }).textContent());
+    expect(schema.inLanguage).toBe('en');
+    expect(schema.description).toContain('Colosseum main entrance');
+    expect(schema.image).toEqual(expect.arrayContaining([expect.stringMatching(/^https?:\/\//)]));
+    if (data.reviews.count > 0 && data.reviews.average_rating > 0) {
+      expect(schema.aggregateRating.reviewCount).toBe(data.reviews.count);
+      expect(schema.aggregateRating.ratingValue).toBe(data.reviews.average_rating.toFixed(1));
+    } else {
+      expect(schema.aggregateRating).toBeUndefined();
+    }
+  });
+
+  test('mobile booking action is keyboard reachable and uses a real offered date', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/en/tours/hidden-gems-rome-walking-tour');
+    const action = page.getByRole('link', { name: 'Continue to booking' });
+    await expect(action).toBeVisible();
+    const href = await action.getAttribute('href');
+    expect(href).toMatch(/^\/en\/booking\?tour=hidden-gems-rome-walking-tour&participants=1&date=\d{4}-\d{2}-\d{2}$/);
+    await action.focus();
+    await expect(action).toBeFocused();
+  });
+
+  for (const [locale, bookNow, selectDate] of [
+    ['en', 'Book Now', 'Select a Date'],
+    ['es', 'Reservar Ahora', 'Seleccionar Fecha'],
+    ['it', 'Prenota Ora', 'Seleziona Data'],
+  ]) {
+    test(`${locale} detail keeps localized booking controls and a real offered date`, async ({ page, request }) => {
+      const slug = 'hidden-gems-rome-walking-tour';
+      const response = await request.get(`/api/public/tours/${slug}?locale=${locale}`);
+      expect(response.ok()).toBeTruthy();
+      const { data } = await response.json();
+      await page.goto(`/${locale}/tours/${slug}`);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(data.title);
+      await expect(page.getByRole('heading', { name: selectDate })).toBeVisible();
+      const action = page.getByRole('link', { name: bookNow }).first();
+      await expect(action).toBeVisible();
+      const href = new URL((await action.getAttribute('href'))!, 'http://bookly.test');
+      expect(href.searchParams.get('date')).toBe(data.availability.next_available_date);
+      expect(data.availability.available_dates).toContain(href.searchParams.get('date'));
+    });
+  }
 });

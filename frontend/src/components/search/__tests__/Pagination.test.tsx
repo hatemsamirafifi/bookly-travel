@@ -14,6 +14,19 @@ jest.mock('next/navigation', () => ({
   usePathname: () => mockPathname,
 }));
 
+jest.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: { currentPage: number; lastPage: number }) => {
+    const labels: Record<string, string> = {
+      paginationLabel: 'Search results pagination',
+      previousPage: 'Previous page',
+      nextPage: 'Next page',
+      previous: 'Previous',
+      next: 'Next',
+    };
+    return key === 'pageOf' ? `Page ${values?.currentPage} of ${values?.lastPage}` : labels[key];
+  },
+}));
+
 describe('Pagination', () => {
   beforeEach(() => {
     mockPush.mockClear();
@@ -54,5 +67,10 @@ describe('Pagination', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Next page' }));
 
     expect(mockPush).toHaveBeenCalledWith('/en/destinations/rome?page=2');
+  });
+
+  it('shows the current and last page in the accessible pagination control', () => {
+    render(<Pagination currentPage={2} lastPage={5} />);
+    expect(screen.getByRole('navigation', { name: 'Search results pagination' })).toHaveTextContent('Page 2 of 5');
   });
 });

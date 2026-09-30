@@ -1,5 +1,5 @@
 /**
- * Centralized design tokens — aligned with docs/frontend-implementation-plan.md.
+ * Semantic CSS references — globals.css owns token values.
  * Extend these before introducing new hardcoded color/spacing/shadow values.
  */
 export const designTokens = {
@@ -9,32 +9,35 @@ export const designTokens = {
       gold: '#FFB800',
     },
     background: {
-      page: '#F7F9FB',
-      surface: '#FFFFFF',
-      elevated: '#FFFFFF',
+      page: 'var(--background)',
+      surface: 'var(--color-surface)',
+      elevated: 'var(--color-surface)',
     },
     text: {
-      primary: '#102033',
-      secondary: '#5D6B7A',
-      inverse: '#FFFFFF',
+      primary: 'var(--foreground)',
+      secondary: 'var(--color-text-muted)',
+      inverse: 'var(--color-text-inverse)',
     },
     border: {
-      default: '#DDE5EE',
-      focus: '#0A2540',
+      default: 'var(--color-border)',
+      focus: 'var(--color-focus)',
     },
     state: {
-      success: '#11845B',
-      warning: '#B76E00',
-      danger: '#C62828',
+      success: 'var(--color-success)',
+      trust: 'var(--color-trust)',
+      warning: 'var(--color-warning)',
+      danger: 'var(--color-error)',
     },
     interactive: {
-      hover: 'rgba(10, 37, 64, 0.08)',
-      pressed: 'rgba(10, 37, 64, 0.12)',
+      hover: 'var(--color-hover)',
+      pressed: 'var(--color-pressed)',
     },
   },
 
+  layout: { contentWidth: 'var(--content-width)', gutter: 'var(--page-gutter)', overlay: 'var(--color-overlay)' },
+
   typography: {
-    fontFamily: "'Inter', system-ui, sans-serif",
+    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
     weights: {
       regular: 400,
       medium: 500,
@@ -58,45 +61,46 @@ export const designTokens = {
     grid: 8,
     scale: [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 48, 64],
     // Semantic spacing aliases (mobile / desktop).
-    pagePadding: { mobile: '24px', desktop: '64px' },
-    sectionGap: { mobile: '48px', desktop: '64px' },
-    cardPadding: { mobile: '16px', desktop: '24px' },
-    formGap: '16px',
-    inlineGap: '8px',
+    pagePadding: { mobile: 'var(--page-gutter)', desktop: 'var(--page-gutter)' },
+    sectionGap: { mobile: 'var(--section-gap)', desktop: 'var(--section-gap)' },
+    cardPadding: { mobile: 'var(--card-padding)', desktop: 'var(--card-padding)' },
+    formGap: 'var(--form-gap)',
+    inlineGap: 'var(--inline-gap)',
   },
 
   borderRadius: {
-    sm: '8px',
-    default: '12px',
-    lg: '16px',
+    sm: 'var(--radius-sm)',
+    default: 'var(--radius-md)',
+    lg: 'var(--radius-lg)',
     full: '9999px',
   },
 
   shadows: {
-    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-    card: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-    dropdown: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-    modal: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+    sm: 'var(--shadow-sm)',
+    card: 'var(--shadow-card)',
+    dropdown: 'var(--shadow-dropdown)',
+    modal: 'var(--shadow-modal)',
   },
 
   transition: {
-    fast: '150ms ease-out',
-    default: '200ms ease-in-out',
-    slow: '300ms ease-in-out',
+    fast: 'var(--motion-fast) var(--motion-easing)',
+    default: 'var(--motion-default) var(--motion-easing)',
+    slow: 'var(--motion-slow) var(--motion-easing)',
   },
 
   z: {
-    dropdown: 10,
-    sticky: 20,
-    modal: 30,
-    toast: 40,
-    tooltip: 50,
+    dropdown: 'var(--z-dropdown)',
+    sticky: 'var(--z-sticky)',
+    modal: 'var(--z-modal)',
+    toast: 'var(--z-toast)',
+    tooltip: 'var(--z-tooltip)',
   },
 
   breakpoint: {
     mobile: '390px',
-    tablet: '780px',
-    desktop: '1280px',
+    tablet: '768px',
+    desktop: '1024px',
+    wide: '1440px',
   },
 } as const;
 

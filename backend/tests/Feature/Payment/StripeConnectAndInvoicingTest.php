@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Actions\CreatePaymentIntentAction;
@@ -7,7 +8,6 @@ use App\Domains\Payment\Actions\ProcessStripeWebhookAction;
 use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Models\FinancialLedgerEntry;
 use App\Domains\Payment\Models\Payment;
-use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Payment\Services\ApplicationFeeCalculator;
 use App\Domains\Payment\Services\StripeConnectService;
 use App\Domains\Payment\Services\StripeInvoiceService;
@@ -15,15 +15,12 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Stripe\ApiRequestor;
 use Stripe\Event as StripeEvent;
 use Stripe\HttpClient\ClientInterface;
 use Stripe\Webhook;
-
-use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
 

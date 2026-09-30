@@ -33,6 +33,24 @@ test.describe('Partner Tour Creation', () => {
 
   test('should display the tour creation page', async ({ page }) => {
     await expect(page.getByLabel('Tour Title')).toBeVisible();
+    await expect(page.getByText('Edit English source content. Spanish and Italian are generated automatically and never block publication.')).toBeVisible();
+  });
+
+  test('saves an ordered English day and stop in a draft payload', async ({ page }) => {
+    let savedPayload: { itinerary?: Array<{ day: number; title: string; stops: Array<{ title: string }> }> } | null = null;
+    await page.route('**/api/partner/tours', async (route) => {
+      if (route.request().method() !== 'POST') return route.continue();
+      savedPayload = route.request().postDataJSON();
+      await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: { id: 101, status: 'draft' } }) });
+    });
+
+    await page.getByRole('button', { name: 'Add day' }).click();
+    await page.getByRole('textbox', { name: 'Day title' }).fill('Arrival');
+    await page.getByRole('button', { name: 'Add stop' }).click();
+    await page.getByRole('textbox', { name: 'Stop title' }).fill('Meet the guide');
+    await page.getByRole('button', { name: 'Save Draft' }).click();
+    await expect.poll(() => savedPayload).not.toBeNull();
+    expect(savedPayload!.itinerary).toEqual([{ day: 1, title: 'Arrival', stops: [{ title: 'Meet the guide' }] }]);
   });
 
   test('should navigate through the wizard and submit the tour', async ({ page }) => {
@@ -53,7 +71,7 @@ test.describe('Partner Tour Creation', () => {
 
     // Step 1: Details — fill all required fields per tourBasicDetailsSchema
     await page.getByLabel('Tour Title').fill('Beautiful Walking Tour of Rome');
-    await page.getByLabel('Description').fill('Explore the ancient history of Rome with a local guide.');
+    await page.getByLabel('Description').fill('Explore the ancient history of Rome with a local guide, visiting celebrated landmarks and discovering stories behind the city.');
 
     // Category uses a custom Select (button trigger, button items — not Radix).
     // The trigger shows the placeholder text "Select a category" when empty.

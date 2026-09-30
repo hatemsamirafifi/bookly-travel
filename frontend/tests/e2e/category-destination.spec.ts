@@ -39,4 +39,20 @@ test.describe('Category & Destination Pages', () => {
     await page.goto('/en/categories/adventure');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
+
+  for (const [locale, categoryHeading, destinationHeading] of [
+    ['en', 'Adventure tours', 'Tours in Rome Italy'],
+    ['es', 'Tours de Adventure', 'Tours en Rome Italy'],
+    ['it', 'Tour di Adventure', 'Tour a Rome Italy'],
+  ]) {
+    test(`${locale} listing headings and metadata use the selected UI locale`, async ({ page }) => {
+      await page.goto(`/${locale}/categories/adventure`);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(categoryHeading);
+      await expect(page).toHaveTitle(new RegExp(`^${categoryHeading} \\| Bookly$`));
+
+      await page.goto(`/${locale}/destinations/rome-italy`);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(destinationHeading);
+      await expect(page).toHaveTitle(new RegExp(`^${destinationHeading} \\| Bookly$`));
+    });
+  }
 });

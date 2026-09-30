@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface SearchUnavailableProps {
   /** Optional retry callback to re-attempt the search */
@@ -12,6 +13,8 @@ interface SearchUnavailableProps {
 
 export default function SearchUnavailable({ onRetry, retryAfter }: SearchUnavailableProps) {
   const [countdown, setCountdown] = useState(retryAfter ?? 0);
+  const t = useTranslations('search');
+  const locale = useLocale();
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -54,18 +57,16 @@ export default function SearchUnavailable({ onRetry, retryAfter }: SearchUnavail
       </div>
 
       <h3 className="mb-2 text-xl font-semibold text-amber-800">
-        Search is temporarily unavailable
+        {t('unavailableTitle')}
       </h3>
 
       <p className="mb-6 max-w-md text-sm text-amber-700">
-        We&apos;re experiencing a brief issue with our search service. Please try again shortly.
+        {t('unavailableHint')}
       </p>
 
       {countdown > 0 && (
         <p className="mb-4 text-xs text-amber-600">
-          Automatically retrying in{' '}
-          <span className="font-semibold">{countdown}</span>{' '}
-          second{countdown !== 1 ? 's' : ''}…
+          {t('retryCountdown', { countdown })}
         </p>
       )}
 
@@ -75,18 +76,18 @@ export default function SearchUnavailable({ onRetry, retryAfter }: SearchUnavail
           onClick={onRetry}
           disabled={countdown > 0}
           className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label="Retry search"
+          aria-label={t('retrySearch')}
         >
-          Try Again
+          {t('tryAgain')}
         </button>
       )}
 
       {!onRetry && (
         <Link
-          href="/"
+          href={`/${locale}`}
           className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
         >
-          Return to Homepage
+          {t('returnHome')}
         </Link>
       )}
     </div>

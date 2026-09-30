@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTourDetail } from '@/lib/api/tours';
 import { NotFoundError } from '@/lib/api/client';
 import TourDetail from '@/components/tour/TourDetail';
-import { TouristTripSchema } from '@/components/seo/StructuredData';
+import { TouristTripSchema, getSafeAbsoluteImageUrls } from '@/components/seo/StructuredData';
 
 interface TourDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -14,6 +14,7 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
 
   try {
     const { data } = await getTourDetail(slug, locale);
+    const imageUrls = getSafeAbsoluteImageUrls(data.images, process.env.NEXT_PUBLIC_SITE_URL || 'https://bookly.com');
     return {
       title: data.seo.meta_title,
       description: data.seo.meta_description,
@@ -25,7 +26,8 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
         title: data.seo.meta_title,
         description: data.seo.meta_description,
         type: 'website',
-        images: data.images.length > 0 ? [{ url: data.images[0].url }] : [],
+        locale: data.content_locale,
+        images: imageUrls.map((url) => ({ url })),
       },
     };
   } catch {

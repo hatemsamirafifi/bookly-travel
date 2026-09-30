@@ -37,7 +37,7 @@ export default function ReviewCard({
 
       <div className="flex items-center gap-2 mb-1">
         <StarRating value={rating} readOnly size="sm" />
-        <span className="text-xs text-gray-400">{formattedDate}</span>
+        <span className="text-xs text-gray-600">{formattedDate}</span>
       </div>
 
       {comment && (

@@ -51,14 +51,10 @@ export default async function BlogPreviewPage({
   const post = articleResponse.data;
 
   return (
-    <article className="min-h-screen bg-white">
-      {/* Draft Preview Indicator Banner */}
-      <div className="sticky top-0 z-50 bg-amber-500 text-black px-4 py-2 text-center text-sm font-semibold shadow-md flex items-center justify-center gap-2">
-        <span className="inline-block w-2.5 h-2.5 rounded-full bg-black animate-pulse" />
-        Draft Preview Mode &mdash; Status: {post.status ? post.status.toUpperCase() : 'DRAFT'} &mdash; Private &amp; Not Indexed
-      </div>
-
+    <main className="min-h-screen bg-surface-alt py-6 sm:py-10">
+      <div className="mx-auto max-w-5xl rounded-2xl border border-border bg-surface shadow-sm">
       <BlogDetail post={post} locale={locale} isPreview={true} />
-    </article>
+      </div>
+    </main>
   );
 }

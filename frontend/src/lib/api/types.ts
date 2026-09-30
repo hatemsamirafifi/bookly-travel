@@ -22,34 +22,52 @@ export interface TourCard {
   next_available_date: string | null;
 }
 
-export interface TourDetail extends Omit<TourCard, 'category'> {
-  // The detail endpoint returns the category as an object
-  // (tour-detail-api.md:42), overriding the string name on TourCard
-  // which is what the list/search transformer returns (search-api.md:61).
+export interface TourDetail extends Pick<TourCard, 'id' | 'slug' | 'title' | 'location' | 'rating' | 'group_size'> {
+  // The detail response has a different shape from search cards.
   category: { slug: string; name: string };
   description: string;
+  content_locale: 'en' | 'es' | 'it';
   highlights: string[];
   inclusions: string[];
   exclusions: string[];
+  important_information?: string[];
   meeting_point: string;
   cancellation_policy: string;
   duration: {
     minutes: number;
     label: string;
   };
+  difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
   languages: string[];
+  guide_languages: string[];
+  itinerary: TourItineraryDay[];
+  itinerary_locale: 'en' | 'es' | 'it';
   images: TourImage[];
   pricing: PricingInfo;
   availability: AvailabilityInfo;
   reviews: ReviewsInfo;
+  operator?: PublicOperatorSummary | null;
+  related_tours?: TourCard[];
   seo: SeoMetadata;
   translation_warning?: 'partial_translation';
+  translation_status?: 'source' | 'ready' | 'pending' | 'stale' | 'failed';
 }
 
 export interface TourImage {
   url: string;
   is_cover: boolean;
   alt: string;
+}
+
+export interface TourItineraryDay {
+  day: number;
+  title: string;
+  description?: string | null;
+  stops?: Array<{
+    title: string;
+    description?: string | null;
+    duration_minutes?: number | null;
+  }>;
 }
 
 export interface PricingInfo {
@@ -68,13 +86,22 @@ export interface AvailabilityInfo {
   // direct URL that fails the bookable invariant (no valid pricing or no
   // upcoming availability) is served with is_unavailable=true so the UI shows
   // "Currently Unavailable" rather than a Book Now CTA.
-  is_unavailable?: boolean;
+  is_unavailable: boolean;
 }
 
 export interface ReviewsInfo {
   average_rating: number;
   count: number;
   distribution: Record<string, number>;
+}
+
+export interface PublicOperatorSummary {
+  name: string;
+  description: string | null;
+  logo_url: string | null;
+  tour_count: number;
+  review_count: number;
+  average_rating: number | null;
 }
 
 export interface SeoMetadata {

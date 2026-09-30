@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useTransition } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface SearchBarProps {
   initialQuery?: string;
@@ -10,27 +11,27 @@ interface SearchBarProps {
 
 export default function SearchBar({ initialQuery = '', compact = false }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
+  const t = useTranslations('search');
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       const trimmed = query.trim();
-      if (trimmed) {
-        router.push(`/${locale}/search?q=${encodeURIComponent(trimmed)}`);
-      } else {
-        router.push(`/${locale}/search`);
-      }
+      startTransition(() => {
+        router.push(trimmed ? `/${locale}/search?q=${encodeURIComponent(trimmed)}` : `/${locale}/search`);
+      });
     },
     [query, locale, router]
   );
 
   return (
-    <form onSubmit={handleSubmit} role="search" className={compact ? 'w-full max-w-sm' : 'w-full max-w-2xl'}>
+    <form onSubmit={handleSubmit} role="search" aria-busy={isPending} className={compact ? 'w-full max-w-sm' : 'w-full max-w-2xl'}>
       <label htmlFor="search-input" className="sr-only">
-        Search tours
+        {t('searchTours')}
       </label>
       <div className="relative">
         <input
@@ -38,8 +39,8 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search tours, destinations, categories..."
-          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pl-11 text-[#0A2540] shadow-sm focus:border-[#0A2540] focus:outline-none focus:ring-2 focus:ring-[#0A2540]/20"
+          placeholder={t('placeholder')}
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 pl-11 text-bookly-navy shadow-sm focus-visible:border-bookly-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           autoComplete="off"
         />
         <svg
@@ -58,11 +59,12 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
         </svg>
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#FFB800] px-4 py-1.5 text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-bookly-gold px-4 py-1.5 text-sm font-semibold text-bookly-navy hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2"
         >
-          Search
+          {t('searchButton')}
         </button>
       </div>
+      {isPending && <p role="status" className="mt-2 text-sm text-text-muted">{t('loading')}</p>}
     </form>
   );
 }

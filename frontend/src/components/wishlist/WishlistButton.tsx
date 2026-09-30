@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { addTravelerWishlistItem, removeTravelerWishlistItem } from '@/lib/api/traveler';
+import { addTravelerWishlistItem, getTravelerWishlistStatus, removeTravelerWishlistItem } from '@/lib/api/traveler';
 import { getAuthToken } from '@/lib/auth/token';
 import { useAuth } from '@/lib/hooks/useAuth';
 
@@ -30,6 +30,21 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!user && !getAuthToken()) return;
+    let active = true;
+    getTravelerWishlistStatus(tourId)
+      .then((response) => {
+        if (active && !pendingRef.current) {
+          setSaved(Boolean(response.data[String(tourId)]));
+        }
+      })
+      .catch(() => {
+        // Keep the supplied initial state if the status service is unavailable.
+      });
+    return () => { active = false; };
+  }, [tourId, user]);
 
   const toggle = useCallback(() => {
     // Gate on a token (not just the hydrated user) so the button works

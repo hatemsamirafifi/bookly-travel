@@ -1,20 +1,28 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Button } from './button';
+
 interface ErrorStateProps {
   message: string;
   onRetry?: () => void;
   retryLabel?: string;
 }
 
-export default function ErrorState({ message, onRetry, retryLabel = 'Try Again' }: ErrorStateProps) {
+export default function ErrorState({ message, onRetry, retryLabel }: ErrorStateProps) {
+  const t = useTranslations('common');
   return (
-    <div className="rounded-lg border border-red-200 bg-red-50 p-4" role="alert">
-      <p className="mb-3 text-sm text-red-700">{message}</p>
+    <div className="rounded-lg border border-error/30 bg-surface p-card" role="alert">
+      <p className="mb-3 text-sm text-error">{message}</p>
       {onRetry && (
-        <button
+        <Button
+          type="button"
+          variant="ghost"
           onClick={onRetry}
-          className="text-sm font-semibold text-red-800 underline"
+          className="text-sm font-semibold text-error underline"
         >
-          {retryLabel}
-        </button>
+          {retryLabel ?? t('retry')}
+        </Button>
       )}
     </div>
   );

@@ -6,6 +6,12 @@ import { ArrowLeft, Save, Calendar, Coins, Send, CheckCircle } from 'lucide-reac
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
 import { getApiBaseUrl } from '@/lib/api/client';
+import { useTranslations } from 'next-intl';
+import { ImageUploader } from '@/components/partner/tours/ImageUploader';
+import { ItineraryEditor } from '@/components/partner/tours/ItineraryEditor';
+import { TourContentPreview } from '@/components/partner/tours/TourContentPreview';
+import type { TourItineraryDay } from '@/lib/api/types';
+import type { TourMedia } from '@/types/tour';
 
 interface Translation {
   title: string;
@@ -15,7 +21,13 @@ interface Translation {
   exclusions: string[];
   meeting_point: string;
   cancellation_policy: string;
+  itinerary: TourItineraryDay[];
 }
+
+const emptyTranslation = (): Translation => ({
+  title: '', description: '', highlights: [], inclusions: [], exclusions: [],
+  meeting_point: '', cancellation_policy: '', itinerary: [],
+});
 
 interface Tour {
   id: number;
@@ -29,6 +41,9 @@ interface Tour {
   group_size_max: number;
   status: string;
   cover_image_url: string | null;
+  media?: Array<Pick<TourMedia, 'id' | 'url' | 'sort_order'> & Partial<Pick<TourMedia, 'thumbnail_url' | 'alt_text'>>>;
+  guide_languages?: string[];
+  translation_statuses?: { es: 'pending' | 'ready' | 'stale' | 'failed'; it: 'pending' | 'ready' | 'stale' | 'failed' };
   translations: Array<{
     locale: string;
     title: string;
@@ -38,6 +53,7 @@ interface Tour {
     exclusions: string[] | null;
     meeting_point: string | null;
     cancellation_policy: string | null;
+    itinerary?: TourItineraryDay[] | null;
   }>;
 }
 
@@ -45,6 +61,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const resolvedParams = use(params);
   const id = resolvedParams.id;
   const locale = resolvedParams.locale;
+  const formT = useTranslations('partner.tours.form');
 
   const [tour, setTour] = useState<Tour | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,17 +72,19 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [categoryId, setCategoryId] = useState(1);
   const [location, setLocation] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [media, setMedia] = useState<TourMedia[]>([]);
+  const [mediaDirty, setMediaDirty] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [guideLanguagesInput, setGuideLanguagesInput] = useState('');
   const [groupSizeMin, setGroupSizeMin] = useState(1);
   const [groupSizeMax, setGroupSizeMax] = useState(10);
   const [durationValue, setDurationValue] = useState(2);
   const [durationUnit, setDurationUnit] = useState('hour');
 
-  // Translations fields grouped by language
-  const [activeLangTab, setActiveLangTab] = useState<'en' | 'es' | 'it'>('en');
+  // Partners edit the English source only; ES/IT are generated server-side.
+  const activeLangTab = 'en' as const;
   const [translationData, setTranslationData] = useState<Record<'en' | 'es' | 'it', Translation>>({
-    en: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
-    es: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
-    it: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
+    en: emptyTranslation(), es: emptyTranslation(), it: emptyTranslation(),
   });
 
   const fetchTour = useCallback(async () => {
@@ -91,6 +110,11 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       setCategoryId(t.category_id);
       setLocation(t.location);
       setCoverImageUrl(t.cover_image_url || '');
+      setMedia((t.media ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((item) => ({
+        ...item, is_cover: item.url === t.cover_image_url,
+      })));
+      setMediaDirty(false);
+      setGuideLanguagesInput((t.guide_languages ?? []).join(', '));
       setGroupSizeMin(t.group_size_min);
       setGroupSizeMax(t.group_size_max);
       
@@ -101,9 +125,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
       // Populate translations
       const newTrans: Record<'en' | 'es' | 'it', Translation> = {
-        en: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
-        es: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
-        it: { title: '', description: '', highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '' },
+        en: emptyTranslation(), es: emptyTranslation(), it: emptyTranslation(),
       };
 
       t.translations.forEach((tr) => {
@@ -117,6 +139,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
             exclusions: tr.exclusions || [],
             meeting_point: tr.meeting_point || '',
             cancellation_policy: tr.cancellation_policy || '',
+            itinerary: tr.itinerary ?? [],
           };
         }
       });
@@ -148,12 +171,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     setSuccessMsg(null);
     try {
       const token = getAuthToken();
-      // Format payload translations: drop completely empty non-EN translations
-      const translationsPayload: Record<string, any> = {
-        en: translationData.en
-      };
-      if (translationData.es.title) translationsPayload.es = translationData.es;
-      if (translationData.it.title) translationsPayload.it = translationData.it;
+      const translationsPayload = { en: translationData.en };
 
       const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}`, {
         method: 'PUT',
@@ -166,11 +184,13 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           category_id: categoryId,
           location,
           cover_image_url: coverImageUrl || null,
+          guide_languages: guideLanguagesInput.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean),
           group_size_min: groupSizeMin,
           group_size_max: groupSizeMax,
           duration_value: durationValue,
           duration_unit: durationUnit,
           translations: translationsPayload,
+          ...(mediaDirty ? { media: media.map(({ url, is_cover }) => ({ url, is_cover })) } : {}),
         }),
       });
 
@@ -237,7 +257,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 {tour?.status}
               </span>
             </div>
-            <p className="text-sm text-gray-500">ID: {id} — configure multi-language content, pricing, and availability.</p>
+            <p className="text-sm text-gray-500">ID: {id} — {formT('sourceLanguageNotice')}</p>
           </div>
         </div>
 
@@ -286,28 +306,12 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         <div className="space-y-6 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <h2 className="font-bold text-lg text-[#0A2540] border-b border-gray-50 pb-2 mb-4">Tour Content Editing</h2>
 
-          {/* Languages tabs */}
-          <div className="flex border-b border-gray-100 gap-1 mb-4">
-            {(['en', 'es', 'it'] as const).map((lang) => {
-              const hasText = translationData[lang].title.length > 0;
-              return (
-                <button
-                  type="button"
-                  key={lang}
-                  onClick={() => setActiveLangTab(lang)}
-                  className={`px-4 py-2 text-sm font-bold border-b-2 transition-all ${
-                    activeLangTab === lang
-                      ? 'border-[#0A2540] text-[#0A2540]'
-                      : 'border-transparent text-gray-400 hover:text-gray-600'
-                  }`}
-                >
-                  <span className="uppercase">{lang}</span>
-                  {lang === 'en' && <span className="text-red-500 ml-0.5">*</span>}
-                  {hasText && lang !== 'en' && <span className="ml-1 text-[10px] bg-emerald-100 text-emerald-800 px-1 py-0.2 rounded">Filled</span>}
-                </button>
-              );
-            })}
-          </div>
+          <p className="text-sm text-gray-600">{formT('sourceLanguageNotice')}</p>
+          {tour?.translation_statuses && (
+            <p className="text-sm text-gray-600" aria-live="polite">
+              ES: {formT(`translationStatus.${tour.translation_statuses.es}`)} · IT: {formT(`translationStatus.${tour.translation_statuses.it}`)}
+            </p>
+          )}
 
           {/* Current language tab fields */}
           <div className="space-y-4">
@@ -393,6 +397,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 />
               </div>
             </div>
+            <ItineraryEditor value={translationData.en.itinerary} onChange={(days) => updateTranslationField('en', 'itinerary', days)} />
           </div>
         </div>
 
@@ -422,6 +427,20 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 placeholder="https://example.com/image.jpg"
                 className="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
               />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="edit-guide-languages" className="text-xs font-semibold text-gray-600">{formT('guideLanguageCodes')}</label>
+              <input
+                id="edit-guide-languages"
+                type="text"
+                value={guideLanguagesInput}
+                onChange={(e) => setGuideLanguagesInput(e.target.value)}
+                placeholder="de, en, es"
+                aria-describedby="edit-guide-languages-hint"
+                className="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+              />
+              <p id="edit-guide-languages-hint" className="text-xs text-gray-500">{formT('guideLanguageCodesHint')}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -482,8 +501,15 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               Save Tour Details
             </button>
           </div>
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <ImageUploader media={media} onChange={(next) => { setMedia(next); setMediaDirty(true); setCoverImageUrl(next.find((item) => item.is_cover)?.url ?? ''); }} />
+          </div>
         </aside>
       </form>
+      <button type="button" onClick={() => setPreviewOpen((open) => !open)} className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy">
+        {formT(previewOpen ? 'hidePreview' : 'previewTour')}
+      </button>
+      {previewOpen && <TourContentPreview title={translationData.en.title} description={translationData.en.description} itinerary={translationData.en.itinerary} media={media} />}
     </div>
   );
 }

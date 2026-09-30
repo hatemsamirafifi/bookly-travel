@@ -25,4 +25,14 @@ test.describe('Blog Detail Page', () => {
     await page.goto('/en/blog/archived-guide');
     await expect(page.getByRole('heading', { name: /Article Removed/i })).toBeVisible();
   });
+
+  test('localized article remains readable at mobile width without exposing draft controls', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/es/blog/florence-walk');
+    await expect(page.getByRole('heading', { level: 1, name: 'Guía a Pie de Florencia' })).toBeVisible();
+    await expect(page.getByText('Draft Preview Mode')).toHaveCount(0);
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+  });
 });

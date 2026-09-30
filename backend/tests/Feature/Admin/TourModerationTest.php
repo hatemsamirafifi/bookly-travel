@@ -42,7 +42,7 @@ if (! function_exists('makePartner')) {
 if (! function_exists('makeTour')) {
     function makeTour(Partner $partner, string $status = 'pending_review'): Tour
     {
-        return Tour::create([
+        $tour = Tour::create([
             'partner_id' => $partner->id,
             'category_id' => Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test'])->id,
             'slug' => 'mod-tour-' . uniqid(),
@@ -54,6 +54,13 @@ if (! function_exists('makeTour')) {
             'price_amount' => 5000,
             'status' => $status,
         ]);
+        $tour->translations()->create([
+            'locale' => 'en',
+            'title' => 'English source tour',
+            'description' => 'Authoritative English tour description.',
+        ]);
+
+        return $tour;
     }
 }
 
@@ -84,6 +91,19 @@ it('blocks publishing when the owning partner is not approved (FR-005)', functio
     expect($tour->canTransitionTo(TourStatus::Published))->toBeFalse()
         ->and(fn () => app(ApproveTourAction::class)->execute($this->admin, $tour))->toThrow(HttpException::class)
         ->and(GovernanceAuditLog::where('action', 'tour.publish')->exists())->toBeFalse();
+});
+
+it('requires English source at approval but not Spanish or Italian', function () {
+    $tour = makeTour(makePartner('approved'), 'pending_review');
+    expect($tour->translations()->pluck('locale')->all())->toBe(['en']);
+
+    app(ApproveTourAction::class)->execute($this->admin, $tour);
+    expect($tour->fresh()->status)->toBe('published');
+
+    $withoutEnglish = makeTour(makePartner('approved'), 'pending_review');
+    $withoutEnglish->translations()->delete();
+    expect(fn () => app(ApproveTourAction::class)->execute($this->admin, $withoutEnglish))
+        ->toThrow(HttpException::class);
 });
 
 it('rejects a pending tour with a reason and writes audit', function () {

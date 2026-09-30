@@ -1,4 +1,27 @@
 services:
+  # Initialize/update the shared Linux dependency volume once before PHP starts.
+  # A read-only seed avoids re-downloading the already-installed locked packages;
+  # Composer still checks composer.lock and refreshes the volume when it changes.
+  php-dependencies:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bookly-php-dependencies
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -eu
+        if [ ! -f vendor/autoload.php ] && [ -f /seed-vendor/autoload.php ]; then
+          cp -a /seed-vendor/. vendor/
+        fi
+        composer install --no-interaction --prefer-dist --no-progress --no-scripts
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/vendor:/seed-vendor:ro
+      - backend_vendor:/var/www/html/vendor
+    networks:
+      - bookly-network
+
   # Next.js Frontend
   nextjs:
     build:
@@ -40,6 +63,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend:/var/www/html
+      # Keep locked PHP dependencies on Linux; Windows bind-mount stat/read
+      # latency otherwise affects cold FPM requests and every scheduler boot.
+      - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=postgres
@@ -57,6 +83,8 @@ services:
     networks:
       - bookly-network
     depends_on:
+      php-dependencies:
+        condition: service_completed_successfully
       postgres:
         condition: service_healthy
       redis:
@@ -75,6 +103,7 @@ services:
     command: php artisan queue:work --queue=default,booking_emails,scout
     volumes:
       - ./backend:/var/www/html
+      - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=postgres
@@ -92,8 +121,12 @@ services:
     networks:
       - bookly-network
     depends_on:
-      - laravel
-      - redis
+      php-dependencies:
+        condition: service_completed_successfully
+      laravel:
+        condition: service_started
+      redis:
+        condition: service_started
 
   # Laravel Task Scheduler
   scheduler:
@@ -105,6 +138,7 @@ services:
     command: php artisan schedule:work
     volumes:
       - ./backend:/var/www/html
+      - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=postgres
@@ -121,7 +155,10 @@ services:
     networks:
       - bookly-network
     depends_on:
-      - laravel
+      php-dependencies:
+        condition: service_completed_successfully
+      laravel:
+        condition: service_started
 
   # Nginx Reverse Proxy
   nginx:
@@ -199,6 +236,7 @@ networks:
     driver: bridge
 
 volumes:
+  backend_vendor:
   postgres_data:
   redis_data:
   meilisearch_data:

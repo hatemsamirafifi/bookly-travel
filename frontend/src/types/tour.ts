@@ -14,6 +14,7 @@ import type {
   TourStatus as PartnerTourStatus,
   PaginatedPartnerResponse,
 } from '@/types/partner';
+import type { TourItineraryDay } from '@/lib/api/types';
 
 // Re-export the canonical types from partner.ts so consumers have a single import point
 export type Tour = PartnerTour;
@@ -54,9 +55,10 @@ export interface TourFormData {
   duration_value: string;
   duration_unit: DurationUnit;
   difficulty_level: DifficultyLevel;
-  itinerary: string;
+  itinerary: TourItineraryDay[];
   inclusions: string;
   meeting_point: string;
+  /** Spoken/live-guide language codes, independent of content locale. */
   languages: string[];
   cancellation_policy: string;
   media: TourMedia[];
@@ -131,7 +133,7 @@ export const INITIAL_TOUR_FORM_DATA: TourFormData = {
   duration_value: '',
   duration_unit: 'hour',
   difficulty_level: 'easy',
-  itinerary: '',
+  itinerary: [],
   inclusions: '',
   meeting_point: '',
   languages: [],

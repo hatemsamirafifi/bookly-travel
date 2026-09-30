@@ -48,7 +48,7 @@ function auditTour(): Tour
     // Approve the partner so the tour can be published (FR-005).
     $partner->update(['onboarding_status' => 'approved', 'is_active' => true]);
 
-    return Tour::create([
+    $tour = Tour::create([
         'partner_id' => $partner->id,
         'category_id' => Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test'])->id,
         'slug' => 'audit-tour-' . uniqid(),
@@ -60,6 +60,14 @@ function auditTour(): Tour
         'price_amount' => 5000,
         'status' => TourStatus::PendingReview->value,
     ]);
+
+    $tour->translations()->create([
+        'locale' => 'en',
+        'title' => 'Auditable English tour',
+        'description' => 'Required English source for the tour publication audit fixture.',
+    ]);
+
+    return $tour;
 }
 
 it('writes a governance audit entry when a tour is published', function () {
