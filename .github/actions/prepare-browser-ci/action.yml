@@ -3,12 +3,24 @@ description: Build and seed the disposable Bookly application before browser che
 runs:
   using: composite
   steps:
+    - name: Set up Docker builder
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build cached backend runtime
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ github.workspace }}/backend
+        load: true
+        tags: bookly-ci-backend:latest
+        cache-from: type=gha,scope=browser-ci-php
+        cache-to: type=gha,scope=browser-ci-php,mode=max
+
     - name: Start isolated application services
       shell: bash
       working-directory: ${{ github.workspace }}
       run: |
         cp backend/.env.example backend/.env
-        docker compose -f docker-compose.ci.yml up -d --build
+        docker compose -f docker-compose.ci.yml up -d --no-build
 
     - name: Install backend and seed browser fixtures
       shell: bash
@@ -36,7 +48,7 @@ runs:
       shell: bash
       working-directory: ${{ github.workspace }}
       run: |
-        for path in /en/auth/login /api/public/tours /admin/login; do
+        for path in /en/auth/login /api/public/tours/hidden-gems-rome-walking-tour /admin/login; do
           ready=false
           for attempt in $(seq 1 60); do
             if curl --fail --silent --max-time 5 "http://localhost:8080$path" > /dev/null; then

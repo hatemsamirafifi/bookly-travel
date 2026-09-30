@@ -29,6 +29,7 @@ services:
       MEILI_ENV: development
 
   laravel:
+    image: bookly-ci-backend:latest
     build: ./backend
     volumes:
       - ./backend:/var/www/html
