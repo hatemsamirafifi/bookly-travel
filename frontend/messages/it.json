@@ -2,6 +2,7 @@
   "common": {
     "appName": "Bookly",
     "loading": "Caricamento...",
+    "retry": "Riprova",
     "error": "Qualcosa è andato storto",
     "back": "Torna indietro",
     "marketplaceSubtitle": "Mercato dei Tour"
@@ -174,7 +175,21 @@
     "skipToContent": "Vai al contenuto principale",
     "mainNavigation": "Navigazione principale",
     "openMenu": "Apri menu",
-    "closeMenu": "Chiudi menu"
+    "closeMenu": "Chiudi menu",
+    "searchTours": "Cerca tour",
+    "searchPlaceholder": "Dove vorresti esplorare?",
+    "discoverTours": "Scopri tour",
+    "accountMenu": "Menu account",
+    "switchLanguage": "Cambia lingua"
+  },
+  "footer": {
+    "tagline": "Scopri e prenota subito tour in tutto il mondo.",
+    "explore": "Esplora",
+    "company": "Azienda",
+    "searchTours": "Cerca tour",
+    "privacy": "Informativa sulla privacy",
+    "terms": "Termini di servizio",
+    "rights": "Tutti i diritti riservati."
   },
   "booking": {
     "title": "Completa Prenotazione",

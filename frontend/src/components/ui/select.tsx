@@ -9,6 +9,9 @@ interface SelectContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
   disabled?: boolean;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  triggerId: string;
+  listboxId: string;
 }
 
 const SelectContext = React.createContext<SelectContextValue | null>(null);
@@ -31,28 +34,37 @@ function Select({
   disabled?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const id = React.useId();
   return (
-    <SelectContext.Provider value={{ value, onChange: onValueChange, open, setOpen, disabled }}>
-      <div className="relative">{children}</div>
+    <SelectContext.Provider value={{ value, onChange: onValueChange, open, setOpen, disabled, triggerRef, triggerId: `${id}-trigger`, listboxId: `${id}-listbox` }}>
+      <div className="relative" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setOpen(false); }}>{children}</div>
     </SelectContext.Provider>
   );
 }
 
-function SelectTrigger({ children, className }: { children: React.ReactNode; className?: string }) {
-  const { value, open, setOpen, disabled } = useSelect();
+function SelectTrigger({ children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { value, open, setOpen, disabled, triggerRef, triggerId, listboxId } = useSelect();
   return (
     <button
+      {...props}
+      ref={triggerRef}
+      id={triggerId}
       type="button"
+      aria-haspopup="listbox"
+      aria-expanded={open && !disabled}
+      aria-controls={listboxId}
       onClick={() => !disabled && setOpen(!open)}
       disabled={disabled}
       className={cn(
-        'flex h-10 w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:border-transparent',
-        disabled && 'opacity-50 cursor-not-allowed bg-gray-50',
+        'flex min-h-11 w-full items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-transparent',
+        disabled && 'opacity-50 cursor-not-allowed bg-surface-alt',
         className
       )}
+      onKeyDown={(event) => { if (!disabled && ['ArrowDown', 'ArrowUp'].includes(event.key)) { event.preventDefault(); setOpen(true); } }}
     >
-      <span>{children || value || 'Select...'}</span>
-      <svg className={`w-4 h-4 text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <span>{children || value}</span>
+      <svg aria-hidden="true" className={`w-4 h-4 text-text-muted transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
     </button>
@@ -60,24 +72,37 @@ function SelectTrigger({ children, className }: { children: React.ReactNode; cla
 }
 
 function SelectContent({ children, className }: { children: React.ReactNode; className?: string }) {
-  const { open } = useSelect();
-  if (!open) return null;
+  const { open, disabled, setOpen, triggerRef, triggerId, listboxId } = useSelect();
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (open && !disabled) (contentRef.current?.querySelector<HTMLElement>('[aria-selected="true"]') ?? contentRef.current?.querySelector<HTMLElement>('[role="option"]'))?.focus();
+  }, [open, disabled]);
+  if (!open || disabled) return null;
   return (
-    <div className={cn('absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg py-1', className)}>
+    <div ref={contentRef} id={listboxId} role="listbox" aria-labelledby={triggerId} className={cn('absolute z-dropdown mt-1 w-full rounded-lg border border-border bg-surface shadow-dropdown py-1', className)} onKeyDown={(event) => {
+      if (event.key === 'Escape') { event.preventDefault(); setOpen(false); triggerRef.current?.focus(); return; }
+      const options = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="option"]'));
+      const index = options.indexOf(document.activeElement as HTMLElement);
+      const next = event.key === 'ArrowDown' ? (index + 1) % options.length : event.key === 'ArrowUp' ? (index - 1 + options.length) % options.length : event.key === 'Home' ? 0 : event.key === 'End' ? options.length - 1 : undefined;
+      if (next !== undefined) { event.preventDefault(); options[next]?.focus(); }
+    }}>
       {children}
     </div>
   );
 }
 
 function SelectItem({ value, children }: { value: string; children: React.ReactNode }) {
-  const { value: selected, onChange, setOpen } = useSelect();
+  const { value: selected, onChange, setOpen, triggerRef } = useSelect();
   return (
     <button
       type="button"
-      onClick={() => { onChange(value); setOpen(false); }}
+      role="option"
+      aria-selected={selected === value}
+      tabIndex={-1}
+      onClick={() => { onChange(value); setOpen(false); triggerRef.current?.focus(); }}
       className={cn(
-        'w-full px-3 py-2 text-sm text-left hover:bg-gray-50',
-        selected === value ? 'bg-gray-50 font-medium text-[#0A2540]' : 'text-gray-700'
+        'min-h-11 w-full px-3 py-2 text-sm text-left hover:bg-surface-alt focus-visible:ring-2 focus-visible:ring-focus',
+        selected === value ? 'bg-surface-alt font-medium text-primary' : 'text-primary'
       )}
     >
       {children}

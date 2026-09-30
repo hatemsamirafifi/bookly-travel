@@ -2,6 +2,7 @@
   "common": {
     "appName": "Bookly",
     "loading": "Loading...",
+    "retry": "Try again",
     "error": "Something went wrong",
     "back": "Go back",
     "marketplaceSubtitle": "Tours Marketplace"
@@ -174,7 +175,21 @@
     "skipToContent": "Skip to main content",
     "mainNavigation": "Main navigation",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "searchTours": "Search tours",
+    "searchPlaceholder": "Where would you like to explore?",
+    "discoverTours": "Discover tours",
+    "accountMenu": "Account menu",
+    "switchLanguage": "Switch language"
+  },
+  "footer": {
+    "tagline": "Discover and instantly book tours worldwide.",
+    "explore": "Explore",
+    "company": "Company",
+    "searchTours": "Search tours",
+    "privacy": "Privacy policy",
+    "terms": "Terms of service",
+    "rights": "All rights reserved."
   },
   "booking": {
     "title": "Complete Your Booking",

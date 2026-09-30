@@ -6,7 +6,7 @@ import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/routing';
 import { AuthProvider } from '@/lib/hooks/useAuth';
 import QueryProvider from '@/lib/query-provider';
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import ErrorBoundary from '@/components/shared/ErrorBoundary';
 import ErrorFallback from '@/components/shared/ErrorFallback';
 import CookieConsentBanner from '@/components/shared/CookieConsent';
@@ -17,9 +17,10 @@ export const metadata: Metadata = {
   description: 'Book unforgettable tours and experiences worldwide with Bookly.',
 };
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: '--font-plus-jakarta-sans',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export function generateStaticParams() {
@@ -42,7 +43,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${inter.variable} h-full antialiased`}>
+    <html lang={locale} className={`${plusJakartaSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>

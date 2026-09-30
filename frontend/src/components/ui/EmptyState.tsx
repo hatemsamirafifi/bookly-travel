@@ -13,14 +13,14 @@ interface EmptyStateProps {
 
 export default function EmptyState({ title, description, icon, cta }: EmptyStateProps) {
   return (
-    <div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center">
-      {icon && <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500">{icon}</div>}
-      <p className="text-gray-600">{title}</p>
-      {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+    <div className="rounded-lg border border-dashed border-border bg-surface px-card py-section text-center">
+      {icon && <div aria-hidden="true" className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-alt text-text-muted">{icon}</div>}
+      <p className="font-semibold text-primary">{title}</p>
+      {description && <p className="mt-1 text-sm text-text-muted">{description}</p>}
       {cta && (
         <Link
           href={cta.href}
-          className="mt-4 inline-flex rounded-xl bg-[#FFB800] px-5 py-2.5 text-sm font-semibold text-[#0A2540]"
+          className="mt-4 inline-flex min-h-11 items-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-primary hover:bg-accent-dark"
         >
           {cta.label}
         </Link>

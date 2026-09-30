@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useEffect, useRef } from 'react';
 
 interface UserMenuDropdownProps {
   locale: string;
@@ -14,6 +15,7 @@ interface UserMenuDropdownProps {
 
 export default function UserMenuDropdown({
   locale,
+  userName,
   isOpen,
   userRole,
   onClose,
@@ -21,6 +23,10 @@ export default function UserMenuDropdown({
 }: UserMenuDropdownProps) {
   const travelerT = useTranslations('traveler.nav');
   const partnerT = useTranslations('partner.nav');
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (isOpen) menuRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -47,13 +53,23 @@ export default function UserMenuDropdown({
 
   return (
     <div
-      className="absolute right-0 mt-2 w-56 rounded-lg border border-gray-200 bg-white p-2 shadow-lg"
+      ref={menuRef}
+      className="absolute right-0 z-dropdown mt-2 w-56 rounded-lg border border-border bg-surface p-2 shadow-dropdown"
       role="menu"
+      aria-label={userName}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') { event.preventDefault(); onClose(); return; }
+        const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+        const index = items.indexOf(document.activeElement as HTMLElement);
+        const next = event.key === 'ArrowDown' ? (index + 1) % items.length : event.key === 'ArrowUp' ? (index - 1 + items.length) % items.length : event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 : undefined;
+        if (next !== undefined) { event.preventDefault(); items[next]?.focus(); }
+      }}
     >
       <Link
         href={dashboardHref}
-        className="block rounded-md px-3 py-2 text-sm font-semibold text-[#0A2540] hover:bg-gray-50"
+        className="flex min-h-11 items-center rounded-md px-3 py-2 text-sm font-semibold text-primary hover:bg-surface-alt"
         role="menuitem"
+        tabIndex={-1}
         onClick={onClose}
       >
         {dashboardLabel}
@@ -62,8 +78,9 @@ export default function UserMenuDropdown({
         <Link
           key={link.href}
           href={link.href}
-          className="block rounded-md px-3 py-2 text-sm text-[#5A6B7B] hover:bg-gray-50 hover:text-[#0A2540]"
+          className="flex min-h-11 items-center rounded-md px-3 py-2 text-sm text-text-muted hover:bg-surface-alt hover:text-primary"
           role="menuitem"
+          tabIndex={-1}
           onClick={onClose}
         >
           {link.label}
@@ -74,8 +91,9 @@ export default function UserMenuDropdown({
           onClose();
           void onLogout();
         }}
-        className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50"
+        className="mt-1 min-h-11 w-full rounded-md px-3 py-2 text-left text-sm text-error hover:bg-surface-alt"
         role="menuitem"
+        tabIndex={-1}
       >
         {signOutLabel}
       </button>

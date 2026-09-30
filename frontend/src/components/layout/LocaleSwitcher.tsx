@@ -2,6 +2,7 @@
 
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { locales } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 const LOCALE_LABELS: Record<string, string> = {
   en: 'English',
@@ -10,6 +11,7 @@ const LOCALE_LABELS: Record<string, string> = {
 };
 
 export default function LocaleSwitcher() {
+  const t = useTranslations('nav');
   const params = useParams();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -28,8 +30,8 @@ export default function LocaleSwitcher() {
       <select
         value={currentLocale}
         onChange={(e) => switchTo(e.target.value)}
-        className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/30"
-        aria-label="Switch language"
+        className="min-h-11 rounded-md border border-border bg-surface px-2 py-1 text-sm text-primary focus-visible:ring-2 focus-visible:ring-focus"
+        aria-label={t('switchLanguage')}
       >
         {locales.map((locale) => (
           <option key={locale} value={locale}>
