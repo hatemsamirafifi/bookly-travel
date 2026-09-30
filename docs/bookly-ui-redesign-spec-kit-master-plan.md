@@ -150,6 +150,8 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 ## Phase 1 - Design System and Shared Application Shells
 
+**Status: Implementation complete (2026-10-01).** Tasks 1.1-1.3 are complete. The isolated Phase 1 branch passed 206 tests, lint, typecheck and production build. [PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open; merge/CI acceptance and release-wide gates are still pending.
+
 ### Task 1.1: Establish semantic design tokens
 
 **Files:**
@@ -161,12 +163,12 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 **Produces:** Semantic color, spacing, typography, elevation, radius, focus, motion, and layout tokens consumed by all later phases.
 
-- [ ] Write tests asserting that primary interactive components consume semantic token classes and expose visible focus states.
-- [ ] Run the focused test and verify it fails against the current implementation.
-- [ ] Define tokens for brand, text, border, surface, overlay, trust, error, warning, focus, content widths, responsive gutters, spacing, radius, shadows, z-index, and motion.
-- [ ] Configure `Plus Jakarta Sans` in the locale root layout through `next/font`.
-- [ ] Add `prefers-reduced-motion` behavior.
-- [ ] Run the focused test, typecheck, and lint.
+- [x] Write tests asserting that primary interactive components consume semantic token classes and expose visible focus states.
+- [x] Run the focused test and verify it fails against the current implementation.
+- [x] Define tokens for brand, text, border, surface, overlay, trust, error, warning, focus, content widths, responsive gutters, spacing, radius, shadows, z-index, and motion.
+- [x] Configure `Plus Jakarta Sans` in the locale root layout through `next/font`.
+- [x] Add `prefers-reduced-motion` behavior.
+- [x] Run the focused test, typecheck, and lint.
 
 ### Task 1.2: Build reusable primitives
 
@@ -194,10 +196,10 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 **Produces:** The only approved primitives for later public and dashboard work.
 
-- [ ] Add failing keyboard, ARIA, loading, disabled, and focus-management tests.
-- [ ] Implement each primitive with the minimum client-side boundary required.
-- [ ] Verify keyboard navigation, focus restoration, accessible names, and reduced-motion behavior.
-- [ ] Run Jest, typecheck, and lint.
+- [x] Add failing keyboard, ARIA, loading, disabled, and focus-management tests.
+- [x] Implement each primitive with the minimum client-side boundary required.
+- [x] Verify keyboard navigation, focus restoration, accessible names, and reduced-motion behavior.
+- [x] Run Jest, typecheck, and lint.
 
 ### Task 1.3: Redesign shared layouts
 
@@ -217,10 +219,10 @@ Public header behavior:
 - Mobile: compact logo/search/account bar and navigation drawer.
 - Do not render hotels, restaurants, rewards, AI planning, or other unsupported links.
 
-- [ ] Add failing guest, traveler, partner, mobile-menu, and keyboard navigation tests.
-- [ ] Implement the public, auth, traveler, and partner shells with shared primitives.
-- [ ] Verify existing auth guards and redirect semantics remain unchanged.
-- [ ] Capture visual snapshots at 390px and 1440px.
+- [x] Add failing guest, traveler, partner, mobile-menu, and keyboard navigation tests.
+- [x] Implement the public, auth, traveler, and partner shells with shared primitives.
+- [x] Verify existing auth guards and redirect semantics remain unchanged.
+- [x] Capture visual snapshots at 390px and 1440px.
 
 **Phase commands:**
 
