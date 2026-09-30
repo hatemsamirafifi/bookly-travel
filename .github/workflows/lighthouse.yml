@@ -8,13 +8,17 @@ on:
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      COMPOSE_PROJECT_NAME: bookly-ci-lighthouse
+      LIGHTHOUSE_BASE_URL: http://localhost:8080
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
           
@@ -22,9 +26,8 @@ jobs:
         working-directory: ./frontend
         run: npm ci
         
-      - name: Build project
-        working-directory: ./frontend
-        run: npm run build
+      - name: Prepare application
+        uses: ./.github/actions/prepare-browser-ci
         
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
@@ -33,3 +36,13 @@ jobs:
           uploadArtifacts: true
           temporaryPublicStorage: true
           runs: 3
+
+      - name: Application diagnostics
+        if: failure()
+        run: |
+          docker compose -f docker-compose.ci.yml logs --tail=100
+          docker compose -f docker-compose.ci.yml exec -T nextjs cat .next/ci-server.log || true
+
+      - name: Stop application
+        if: always()
+        run: docker compose -f docker-compose.ci.yml down -v

@@ -1,0 +1,54 @@
+name: Prepare browser CI
+description: Build and seed the disposable Bookly application before browser checks.
+runs:
+  using: composite
+  steps:
+    - name: Start isolated application services
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        cp backend/.env.example backend/.env
+        docker compose -f docker-compose.ci.yml up -d --build
+
+    - name: Install backend and seed browser fixtures
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        docker compose -f docker-compose.ci.yml exec -T laravel composer install --prefer-dist --no-interaction --no-progress
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan key:generate
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan migrate --force
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan db:seed --force
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan db:seed --class=AdminUserSeeder --force
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan filament:assets
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan storage:link
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan scout:sync-index-settings
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan scout:import 'App\Models\Tour'
+
+    - name: Build and start production frontend
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        docker compose -f docker-compose.ci.yml exec -T nextjs npm ci
+        docker compose -f docker-compose.ci.yml exec -T nextjs npm run build
+        docker compose -f docker-compose.ci.yml exec -T -d nextjs sh -c 'exec npm start > /app/.next/ci-server.log 2>&1'
+
+    - name: Verify application readiness
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        for path in /en/auth/login /api/public/tours /admin/login; do
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --max-time 5 "http://localhost:8080$path" > /dev/null; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then
+            echo "::error::Application did not become ready at $path"
+            docker compose -f docker-compose.ci.yml logs --tail=100
+            docker compose -f docker-compose.ci.yml exec -T nextjs cat .next/ci-server.log || true
+            exit 1
+          fi
+        done

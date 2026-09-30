@@ -1,7 +1,7 @@
 module.exports = {
   ci: {
     collect: {
-      url: ['http://localhost:3000/en'],
+      url: [`${process.env.LIGHTHOUSE_BASE_URL || 'http://localhost:3000'}/en`],
       numberOfRuns: 3,
     },
     assert: {

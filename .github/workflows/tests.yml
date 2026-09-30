@@ -12,12 +12,38 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # -------------------------------------------------------------------
   # Backend Tests (PHP)
   # -------------------------------------------------------------------
   backend-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: bookly_test
+          POSTGRES_USER: bookly_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bookly_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+      meilisearch:
+        image: getmeili/meilisearch:v1.10
+        env:
+          MEILI_MASTER_KEY: test-key
+          MEILI_ENV: development
+        ports:
+          - 7700:7700
     defaults:
       run:
         working-directory: backend
@@ -37,7 +63,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql, bcmath, gd, intl
           coverage: none
 
       - name: Install Composer dependencies
@@ -49,11 +75,13 @@ jobs:
       - name: Generate app key
         run: php artisan key:generate
 
-      - name: Run migrations
-        run: php artisan migrate --env=testing --force
+      - name: Resolve disposable test services
+        run: |
+          echo '127.0.0.1 bookly-test-postgres bookly-test-meilisearch' | sudo tee -a /etc/hosts
+          curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://bookly-test-meilisearch:7700/health
 
       - name: Execute tests
-        run: php artisan test
+        run: php artisan test --configuration=phpunit.pgsql.xml
 
   # -------------------------------------------------------------------
   # Backend Static Analysis (PHPStan/Larastan)
@@ -168,6 +196,10 @@ jobs:
   # -------------------------------------------------------------------
   frontend-e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      COMPOSE_PROJECT_NAME: bookly-ci-e2e
+      PLAYWRIGHT_BASE_URL: http://localhost:8080
     defaults:
       run:
         working-directory: frontend
@@ -191,13 +223,31 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Prepare application
+        uses: ./.github/actions/prepare-browser-ci
+
       - name: Run Playwright tests
         run: npx playwright test
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
           name: playwright-report
-          path: frontend/playwright-report/
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
           retention-days: 7
+
+      - name: Application diagnostics
+        if: failure()
+        working-directory: .
+        run: |
+          docker compose -f docker-compose.ci.yml logs --tail=100
+          docker compose -f docker-compose.ci.yml exec -T nextjs cat .next/ci-server.log || true
+          tail -n 100 backend/storage/logs/laravel.log || true
+
+      - name: Stop application
+        if: always()
+        working-directory: .
+        run: docker compose -f docker-compose.ci.yml down -v
