@@ -33,7 +33,7 @@ runs:
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan db:seed --class=AdminUserSeeder --force
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan filament:assets
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan storage:link
-        docker compose -f docker-compose.ci.yml exec -T laravel php artisan scout:sync-index-settings
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan tinker --execute='app(\App\Domains\Search\Actions\ConfigureSearchIndexAction::class)->execute();'
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan scout:import 'App\Models\Tour'
 
     - name: Build and start production frontend
@@ -48,7 +48,7 @@ runs:
       shell: bash
       working-directory: ${{ github.workspace }}
       run: |
-        for path in /en/auth/login '/api/public/tours/hidden-gems-rome-walking-tour?locale=en' /admin/login; do
+        for path in /en/auth/login '/api/public/tours/hidden-gems-rome-walking-tour?locale=en' '/api/public/search/tours?locale=en' /admin/login; do
           ready=false
           for attempt in $(seq 1 60); do
             if curl --fail-with-body --silent --max-time 5 "http://localhost:8080$path" > /tmp/bookly-ci-health-response; then
