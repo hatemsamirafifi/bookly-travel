@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import BookingStatusBadge from './BookingStatusBadge';
 import type { TravelerBooking } from '@/types/traveler';
 
@@ -9,7 +12,9 @@ interface BookingCardProps {
 }
 
 export default function BookingCard({ booking, locale }: BookingCardProps) {
-  const tourName = booking.tour.name || booking.tour.title || 'Tour';
+  const t = useTranslations('traveler.dashboard');
+  const bookingText = useTranslations('booking');
+  const tourName = booking.tour.name || booking.tour.title || t('fallbackTour');
   const coverImage = booking.tour.cover_image || booking.tour.cover_image_url;
   const participants = booking.participants ?? booking.participant_count ?? 1;
   const total = typeof booking.total_amount === 'object'
@@ -35,12 +40,12 @@ export default function BookingCard({ booking, locale }: BookingCardProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <h3 className="truncate font-semibold text-gray-900">{tourName}</h3>
-            <BookingStatusBadge status={booking.status} />
+            <BookingStatusBadge status={booking.status} label={t(`status.${booking.status}`)} />
           </div>
           <p className="mt-1 text-sm text-gray-500">{booking.tour.location}</p>
           <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-gray-600">
-            <span>{new Date(`${booking.tour_date}T00:00:00`).toLocaleDateString()}</span>
-            <span>{participants} {participants === 1 ? 'participant' : 'participants'}</span>
+            <span>{new Date(`${booking.tour_date}T00:00:00`).toLocaleDateString(locale)}</span>
+            <span>{bookingText('participantCount', { count: participants })}</span>
           </div>
           <p className="mt-1 text-sm font-semibold text-gray-900">{total}</p>
         </div>

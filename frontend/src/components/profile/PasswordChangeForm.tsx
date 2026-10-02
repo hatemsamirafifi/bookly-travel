@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { Input } from '@/components/ui/input';
 
 interface PasswordChangeFormProps {
   onSubmit: (data: { current_password: string; new_password: string; new_password_confirmation: string }) => Promise<void>;
@@ -18,13 +19,17 @@ export default function PasswordChangeForm({ onSubmit, saving = false }: Passwor
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await onSubmit(password);
-    setPassword({ current_password: '', new_password: '', new_password_confirmation: '' });
+    try {
+      await onSubmit(password);
+      setPassword({ current_password: '', new_password: '', new_password_confirmation: '' });
+    } catch {
+      // The parent surfaces the failure; retain the fields so a retry is possible.
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-gray-200 bg-white p-5">
-      <h2 className="mb-4 text-lg font-semibold text-gray-900">{t('changePassword')}</h2>
+    <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-surface p-5 shadow-sm sm:p-6">
+      <h2 className="mb-4 text-lg font-semibold text-bookly-navy">{t('changePassword')}</h2>
       <div className="grid gap-4 sm:grid-cols-3">
         <PasswordInput
           label={t('currentPassword')}
@@ -42,7 +47,7 @@ export default function PasswordChangeForm({ onSubmit, saving = false }: Passwor
           onChange={(value) => setPassword({ ...password, new_password_confirmation: value })}
         />
       </div>
-      <button disabled={saving} className="mt-5 rounded-xl border border-[#0A2540] px-5 py-2.5 text-sm font-semibold text-[#0A2540] disabled:opacity-50">
+      <button disabled={saving} className="mt-5 rounded-xl border border-bookly-navy px-5 py-2.5 text-sm font-semibold text-bookly-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:opacity-50">
         {saving ? t('updating') : t('updatePassword')}
       </button>
     </form>
@@ -51,15 +56,14 @@ export default function PasswordChangeForm({ onSubmit, saving = false }: Passwor
 
 function PasswordInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
-    <label className="grid gap-1 text-sm font-medium text-gray-700">
+    <label className="grid gap-1 text-sm font-medium text-text-muted">
       {label}
-      <input
+      <Input
         type="password"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required
         minLength={8}
-        className="rounded-lg border border-gray-300 px-3 py-2"
       />
     </label>
   );

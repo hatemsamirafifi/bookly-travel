@@ -42,7 +42,7 @@ const STATUS_STYLES: Record<string, string> = {
   VALID: 'bg-green-50 text-green-700 border-green-200',
   CANCELLED: 'bg-red-50 text-red-700 border-red-200',
   PENDING: 'bg-amber-50 text-amber-700 border-amber-200',
-  EXPIRED: 'bg-gray-100 text-gray-700 border-gray-200',
+  EXPIRED: 'bg-surface-alt text-text-muted border-border',
 };
 
 // force-dynamic: the page reads the Accept-Language header and a booking's
@@ -136,14 +136,14 @@ export default async function VerificationPage({ params }: PageProps) {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gray-50 px-4 py-10">
-      <div className="w-full max-w-lg">
+    <main className="flex min-h-screen flex-col items-center bg-surface-alt px-4 py-10 sm:py-16">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-6">
         <header className="mb-6 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#FFB800]">
+          <p className="text-sm font-semibold uppercase tracking-widest text-bookly-navy">
             {t('brand')}
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-[#0A2540]">{t('heading')}</h1>
-          <p className="mt-2 text-sm text-gray-500">{t('subtitle')}</p>
+          <h1 className="mt-1 text-2xl font-bold text-bookly-navy">{t('heading')}</h1>
+          <p className="mt-2 text-sm text-text-muted">{t('subtitle')}</p>
         </header>
 
         {state === 'found' && verification !== null && (
@@ -180,7 +180,7 @@ export default async function VerificationPage({ params }: PageProps) {
           />
         )}
 
-        <footer className="mt-6 text-center text-xs text-gray-400">
+        <footer className="mt-6 text-center text-xs text-text-muted">
           <p>{t('legalNote')}</p>
         </footer>
       </div>
@@ -216,7 +216,7 @@ function FoundCard({ verification, t, locale }: CardProps) {
   const statusDescription = statusDescriptions[verification.status] ?? '';
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
       <div className={`flex items-center justify-center border-b px-6 py-8 ${statusStyle}`}>
         <p className="text-4xl font-extrabold tracking-tight">{statusLabel}</p>
       </div>
@@ -248,7 +248,7 @@ function FoundCard({ verification, t, locale }: CardProps) {
         </dl>
 
         {statusDescription && (
-          <p className="mt-5 border-t border-gray-100 pt-4 text-xs text-gray-500">
+          <p className="mt-5 border-t border-border pt-4 text-xs text-text-muted">
             {statusDescription}
           </p>
         )}
@@ -269,7 +269,7 @@ function StateCard({ tone, title, description, reference, t }: StateCardProps) {
   const toneStyle =
     tone === 'amber'
       ? 'bg-amber-50 border-amber-200 text-amber-700'
-      : 'bg-gray-50 border-gray-200 text-gray-600';
+      : 'bg-surface-alt border-border text-text-muted';
 
   return (
     <div className={`rounded-2xl border px-6 py-8 text-center ${toneStyle}`}>
@@ -290,8 +290,8 @@ interface FieldProps {
 function Field({ label, value, mono }: FieldProps) {
   return (
     <div className="flex justify-between gap-4">
-      <dt className="shrink-0 text-gray-500">{label}</dt>
-      <dd className={`text-right text-[#0A2540] ${mono ? 'font-mono' : 'font-medium'}`}>
+      <dt className="shrink-0 text-text-muted">{label}</dt>
+      <dd className={`min-w-0 break-words text-right text-bookly-navy ${mono ? 'font-mono' : 'font-medium'}`}>
         {value || '—'}
       </dd>
     </div>

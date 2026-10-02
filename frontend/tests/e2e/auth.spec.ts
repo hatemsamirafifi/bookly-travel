@@ -29,7 +29,7 @@ test.describe('Auth', () => {
 
   test('register page links to login', async ({ page }) => {
     await page.goto('/en/auth/register');
-    const link = page.getByRole('link', { name: /Sign in/i });
+    const link = page.locator('main').getByRole('link', { name: 'Sign in', exact: true });
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute('href', '/en/auth/login');
   });

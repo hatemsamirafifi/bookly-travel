@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { PricingInfo, AvailabilityInfo } from '@/lib/api/types';
 import WishlistButton from '@/components/wishlist/WishlistButton';
+import { useTranslations } from 'next-intl';
 
 interface BookingCTAProps {
   pricing: PricingInfo;
@@ -16,18 +17,20 @@ interface BookingCTAProps {
 
 export default function BookingCTA({ pricing, availability, groupSize, locale, slug, tourId }: BookingCTAProps) {
   const [participants, setParticipants] = useState(groupSize.min);
+  const t = useTranslations('tour');
 
   const isAvailable =
     !availability.is_unavailable &&
     availability.next_available_date !== null &&
-    availability.available_dates.length > 0;
+    availability.available_dates.includes(availability.next_available_date) &&
+    pricing.base_price.amount > 0;
 
   return (
     <div className="sticky top-4 rounded-lg border border-gray-200 bg-white p-5 shadow-md">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
           <span className="text-2xl font-bold text-gray-900">{pricing.base_price.formatted}</span>
-          <span className="text-sm text-gray-500"> / person</span>
+          <span className="text-sm text-gray-500"> {t('perPerson')}</span>
         </div>
         <WishlistButton tourId={tourId} locale={locale} />
       </div>
@@ -36,14 +39,14 @@ export default function BookingCTA({ pricing, availability, groupSize, locale, s
         <>
           <div className="mb-3">
             <label htmlFor="participants" className="block text-sm font-medium text-gray-700 mb-1">
-              Participants
+              {t('participants')}
             </label>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setParticipants(Math.max(groupSize.min, participants - 1))}
                 disabled={participants <= groupSize.min}
                 className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Decrease participants"
+                aria-label={t('decreaseParticipants')}
               >
                 -
               </button>
@@ -54,38 +57,38 @@ export default function BookingCTA({ pricing, availability, groupSize, locale, s
                 onClick={() => setParticipants(Math.min(groupSize.max, participants + 1))}
                 disabled={participants >= groupSize.max}
                 className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Increase participants"
+                aria-label={t('increaseParticipants')}
               >
                 +
               </button>
               <span className="ml-2 text-xs text-gray-500">
-                {groupSize.min}–{groupSize.max} allowed
+                {t('allowedRange', { min: groupSize.min, max: groupSize.max })}
               </span>
             </div>
           </div>
 
           <Link
-            href={`/${locale}/booking?tour=${slug}&participants=${participants}&date=${availability.next_available_date}`}
+            href={`/${locale}/booking?tour=${encodeURIComponent(slug)}&participants=${participants}&date=${encodeURIComponent(availability.next_available_date!)}`}
             className="block w-full rounded-xl bg-[#FFB800] py-2.5 text-center text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 transition-colors"
           >
-            Book Now
+            {t('bookNow')}
           </Link>
 
           <p className="mt-2 text-center text-xs text-green-800">
-            Next available: {availability.next_available_date}
+            {t('nextAvailable')}: {new Date(`${availability.next_available_date}T00:00:00`).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
           </p>
         </>
       ) : (
         <div className="rounded-md bg-gray-100 py-3 text-center" role="status">
-          <p className="text-sm font-medium text-gray-500">Currently Unavailable</p>
-          <p className="mt-1 text-xs text-gray-500">Check back soon for new dates</p>
+          <p className="text-sm font-medium text-gray-500">{t('unavailable')}</p>
+          <p className="mt-1 text-xs text-gray-500">{t('unavailableHint')}</p>
           <button
             type="button"
             disabled
             aria-disabled="true"
             className="mt-3 w-full rounded-lg bg-gray-300 py-2.5 text-center text-sm font-semibold text-gray-500 cursor-not-allowed"
           >
-            Book Now
+            {t('bookNow')}
           </button>
         </div>
       )}

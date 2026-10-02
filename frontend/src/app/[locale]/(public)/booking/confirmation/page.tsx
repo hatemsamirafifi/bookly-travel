@@ -10,9 +10,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
   const titles: Record<string, string> = {
-    en: 'Booking Confirmed | Bookly',
-    es: 'Reserva Confirmada | Bookly',
-    it: 'Prenotazione Confermata | Bookly',
+    en: 'Booking Status | Bookly',
+    es: 'Estado de la Reserva | Bookly',
+    it: 'Stato della Prenotazione | Bookly',
   };
 
   return {

@@ -34,10 +34,10 @@ function PartnerStatusBanner({
           <Clock className="h-6 w-6 shrink-0 text-blue-600" />
           <div>
             <p className="font-semibold text-blue-950">
-              Account Status: <span className="inline-block rounded-md bg-blue-200 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-blue-800">pending review</span>
+              {t('accountStatus')}: <span className="inline-block rounded-md bg-blue-200 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-blue-800">{t('pendingReview')}</span>
             </p>
             <p className="mt-0.5 text-xs text-blue-800">
-              Your partner account is under review by our team. You will be notified once verified.
+              {t('pendingDescription')}
             </p>
           </div>
         </div>
@@ -45,7 +45,7 @@ function PartnerStatusBanner({
           href={`/${locale}/partner/onboarding`}
           className="shrink-0 rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-50 shadow-sm"
         >
-          View Onboarding Status &rarr;
+          {t('viewOnboarding')} &rarr;
         </Link>
       </div>
     );
@@ -58,10 +58,10 @@ function PartnerStatusBanner({
           <AlertCircle className="h-6 w-6 shrink-0 text-red-600" />
           <div>
             <p className="font-semibold text-red-950">
-              Account Status: <span className="inline-block rounded-md bg-red-200 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-red-800">rejected</span>
+              {t('accountStatus')}: <span className="inline-block rounded-md bg-red-200 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-red-800">{t('rejected')}</span>
             </p>
             <p className="mt-0.5 text-xs text-red-800">
-              {onboardingStatus?.rejection_reason || 'Your application was not approved. Please review feedback.'}
+              {onboardingStatus?.rejection_reason || t('rejectionDescription')}
             </p>
           </div>
         </div>
@@ -69,7 +69,7 @@ function PartnerStatusBanner({
           href={`/${locale}/partner/onboarding`}
           className="shrink-0 rounded-lg bg-red-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-800 shadow-sm"
         >
-          Review &amp; Resubmit &rarr;
+          {t('resubmit')} &rarr;
         </Link>
       </div>
     );
@@ -81,7 +81,7 @@ function PartnerStatusBanner({
         <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
         <div>
           <p className="font-medium">
-            Account Status: <span className="font-bold text-emerald-900">active</span> ({t('verified')})
+            {t('accountStatus')}: <span className="font-bold text-emerald-900">{t('active')}</span> ({t('verified')})
           </p>
           <p className="text-xs text-emerald-700">{t('verifiedDescription')}</p>
         </div>
@@ -128,9 +128,9 @@ export default function PartnerDashboardPage() {
       {isPendingReview ? (
         <div className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm">
           <div className="py-6 text-center">
-            <h2 className="text-lg font-bold text-[#0A2540]">Welcome to Bookly Partner!</h2>
+            <h2 className="text-lg font-bold text-[#0A2540]">{t('status.welcome')}</h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-gray-600">
-              Your application is currently <strong>pending review</strong>. Full operational features and analytics will become active as soon as your account is approved.
+              {t('status.pendingFeatures')}
             </p>
           </div>
         </div>

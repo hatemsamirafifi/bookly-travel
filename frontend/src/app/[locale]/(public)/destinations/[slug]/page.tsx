@@ -4,6 +4,7 @@ import { getDestinationTours } from '@/lib/api/destinations';
 import { NotFoundError } from '@/lib/api/client';
 import { parseSort } from '@/lib/validators/search';
 import ListingPage from '@/components/search/ListingPage';
+import { getTranslations } from 'next-intl/server';
 
 interface DestinationPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -11,18 +12,21 @@ interface DestinationPageProps {
 }
 
 export async function generateMetadata({ params }: DestinationPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'listing' });
   const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const title = `${t('destinationTitle', { name })} | Bookly`;
 
   return {
-    title: `Tours in ${name} | Bookly`,
-    description: `Discover and book the best tours in ${name}. Browse experiences across top locations.`,
+    title,
+    description: t('destinationDescription', { name }),
     robots: { index: true, follow: true },
   };
 }
 
 export default async function DestinationPage({ params, searchParams }: DestinationPageProps) {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'listing' });
   const sp = await searchParams;
 
   const currentPage = sp.page ? parseInt(sp.page, 10) : 1;
@@ -47,5 +51,5 @@ export default async function DestinationPage({ params, searchParams }: Destinat
 
   const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-  return <ListingPage title={`Tours in ${name}`} data={data} locale={locale} />;
+  return <ListingPage title={t('destinationTitle', { name })} data={data} locale={locale} />;
 }

@@ -8,6 +8,8 @@ interface PriceChangeModalProps {
   newPrice: string;
   onConfirm: () => void;
   onCancel: () => void;
+  busy?: boolean;
+  error?: string | null;
 }
 
 /**
@@ -22,6 +24,8 @@ export default function PriceChangeModal({
   newPrice,
   onConfirm,
   onCancel,
+  busy = false,
+  error,
 }: PriceChangeModalProps) {
   const t = useTranslations('booking.priceChangeModal');
   const confirmRef = useRef<HTMLButtonElement>(null);
@@ -35,11 +39,11 @@ export default function PriceChangeModal({
   // Escape key handler
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
+      if (e.key === 'Escape' && !busy) onCancel();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [onCancel]);
+  }, [onCancel, busy]);
 
   // Tab trap: keep focus inside the modal
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -111,12 +115,15 @@ export default function PriceChangeModal({
           </div>
         </div>
 
+        {error && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+
         {/* Actions */}
         <div className="flex flex-col gap-3 sm:flex-row-reverse">
           <button
             ref={confirmRef}
             type="button"
             onClick={onConfirm}
+            disabled={busy}
             className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             {t('confirm')}
@@ -125,6 +132,7 @@ export default function PriceChangeModal({
             ref={cancelRef}
             type="button"
             onClick={onCancel}
+            disabled={busy}
             className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
           >
             {t('cancel')}

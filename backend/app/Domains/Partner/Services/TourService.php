@@ -13,6 +13,13 @@ use Illuminate\Support\Str;
 
 class TourService
 {
+    private const SOURCE_FIELDS = [
+        'title', 'description', 'highlights', 'inclusions', 'exclusions',
+        'meeting_point', 'cancellation_policy', 'itinerary', 'important_information',
+    ];
+
+    public function __construct(private readonly TourTranslationService $translationService) {}
+
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
         return Tour::where('partner_id', $partnerId)
@@ -47,7 +54,13 @@ class TourService
                 'price_amount' => $data['price_amount'] ?? (int) (($data['price_from'] ?? 0) * 100),
                 'status' => $data['status'] ?? 'draft',
                 'cover_image_url' => $data['cover_image_url'] ?? null,
+                'difficulty_level' => $data['difficulty_level'] ?? null,
+                'guide_languages' => $this->normalizeGuideLanguages($data['guide_languages'] ?? $data['languages'] ?? []),
             ]);
+
+            if (array_key_exists('media', $data)) {
+                $this->syncMedia($tour, $data['media']);
+            }
 
             if (! empty($data['translations'])) {
                 $this->syncTranslations($tour, $data['translations']);
@@ -57,11 +70,18 @@ class TourService
                     'en' => [
                         'title' => $data['title'],
                         'description' => $data['description'] ?? null,
+                        'highlights' => $data['highlights'] ?? null,
                         'inclusions' => $data['inclusions'] ?? null,
+                        'exclusions' => $data['exclusions'] ?? null,
                         'meeting_point' => $data['meeting_point'] ?? null,
+                        'cancellation_policy' => $data['cancellation_policy'] ?? null,
+                        'itinerary' => $data['itinerary'] ?? null,
+                        'important_information' => $data['important_information'] ?? null,
                     ],
                 ]);
             }
+
+            $this->translationService->queueIfChanged($tour, null);
 
             if (! empty($data['pricing_tiers'])) {
                 $this->syncPricingTiers($tour, $data['pricing_tiers']);
@@ -82,6 +102,8 @@ class TourService
     public function updateTour(Tour $tour, array $data): Tour
     {
         return DB::transaction(function () use ($tour, $data) {
+            $existingEnglish = $tour->translations()->where('locale', 'en')->first();
+            $previousHash = $existingEnglish ? $this->translationService->sourceHash($existingEnglish) : null;
             $updateFields = [];
             if (isset($data['category_id'])) {
                 $updateFields['category_id'] = $data['category_id'];
@@ -108,26 +130,33 @@ class TourService
             if (isset($data['price_from'])) {
                 $updateFields['price_amount'] = (int) ($data['price_from'] * 100);
             }
-            if (isset($data['cover_image_url'])) {
+            if (isset($data['difficulty_level'])) {
+                $updateFields['difficulty_level'] = $data['difficulty_level'];
+            }
+            if (array_key_exists('cover_image_url', $data)) {
                 $updateFields['cover_image_url'] = $data['cover_image_url'];
+            }
+            if (array_key_exists('guide_languages', $data) || array_key_exists('languages', $data)) {
+                $updateFields['guide_languages'] = $this->normalizeGuideLanguages($data['guide_languages'] ?? $data['languages'] ?? []);
             }
 
             if (! empty($updateFields)) {
                 $tour->update($updateFields);
             }
 
+            if (array_key_exists('media', $data)) {
+                $this->syncMedia($tour, $data['media']);
+            }
+
             if (isset($data['translations'])) {
                 $this->syncTranslations($tour, $data['translations']);
-            } elseif (isset($data['title'])) {
+            } elseif (array_intersect(self::SOURCE_FIELDS, array_keys($data)) !== []) {
                 $this->syncTranslations($tour, [
-                    'en' => [
-                        'title' => $data['title'],
-                        'description' => $data['description'] ?? null,
-                        'inclusions' => $data['inclusions'] ?? null,
-                        'meeting_point' => $data['meeting_point'] ?? null,
-                    ],
+                    'en' => array_intersect_key($data, array_flip(self::SOURCE_FIELDS)),
                 ]);
             }
+
+            $this->translationService->queueIfChanged($tour, $previousHash);
 
             if (isset($data['pricing_tiers'])) {
                 $this->syncPricingTiers($tour, $data['pricing_tiers']);
@@ -157,20 +186,26 @@ class TourService
             if (isset($content['description'])) {
                 $updateData['description'] = $content['description'];
             }
-            if (isset($content['highlights'])) {
+            if (array_key_exists('highlights', $content)) {
                 $updateData['highlights'] = $content['highlights'];
             }
-            if (isset($content['inclusions'])) {
+            if (array_key_exists('inclusions', $content)) {
                 $updateData['inclusions'] = $content['inclusions'];
             }
-            if (isset($content['exclusions'])) {
+            if (array_key_exists('exclusions', $content)) {
                 $updateData['exclusions'] = $content['exclusions'];
             }
-            if (isset($content['meeting_point'])) {
+            if (array_key_exists('meeting_point', $content)) {
                 $updateData['meeting_point'] = $content['meeting_point'];
             }
-            if (isset($content['cancellation_policy'])) {
+            if (array_key_exists('cancellation_policy', $content)) {
                 $updateData['cancellation_policy'] = $content['cancellation_policy'];
+            }
+            if (array_key_exists('itinerary', $content)) {
+                $updateData['itinerary'] = $content['itinerary'];
+            }
+            if (array_key_exists('important_information', $content)) {
+                $updateData['important_information'] = $content['important_information'];
             }
 
             if (! empty($updateData)) {
@@ -180,6 +215,30 @@ class TourService
                 );
             }
         }
+    }
+
+    private function normalizeGuideLanguages(array $languages): array
+    {
+        return array_values(array_unique(array_map(
+            static fn (string $language): string => strtolower($language),
+            $languages
+        )));
+    }
+
+    private function syncMedia(Tour $tour, array $media): void
+    {
+        // Media order is the caller's array order. The selected cover is also
+        // kept in the legacy cover column for existing search/partner clients.
+        $cover = collect($media)->firstWhere('is_cover', true)['url'] ?? ($media[0]['url'] ?? null);
+        $tour->media()->delete();
+        foreach ($media as $index => $image) {
+            $tour->media()->create([
+                'type' => 'image',
+                'url' => $image['url'],
+                'sort_order' => $index,
+            ]);
+        }
+        $tour->update(['cover_image_url' => $cover]);
     }
 
     public function submitForReview(Tour $tour): Tour

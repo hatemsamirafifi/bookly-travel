@@ -42,13 +42,24 @@ export const tourMediaSchema = z.object({
   is_cover: z.boolean(),
 });
 
+export const tourItinerarySchema = z.array(z.object({
+  day: z.number().int().min(1).max(30),
+  title: z.string().min(1).max(160),
+  description: z.string().max(2000).optional().nullable(),
+  stops: z.array(z.object({
+    title: z.string().min(1).max(160),
+    description: z.string().max(2000).optional().nullable(),
+    duration_minutes: z.number().int().min(1).max(1440).optional().nullable(),
+  })).max(20).optional(),
+})).max(30);
+
 // Basic details form step (combines basic and details steps)
 export const tourBasicDetailsSchema = z.object({
   title: z
     .string()
     .min(1, { message: 'partner.tours.errors.titleRequired' })
     .max(120, { message: 'partner.tours.errors.titleMax' }),
-  description: z.string().min(10, { message: 'partner.tours.errors.descriptionMin' }),
+  description: z.string().min(100, { message: 'partner.tours.errors.descriptionMin' }).max(5000),
   category: z.string().min(1, { message: 'partner.tours.errors.categoryRequired' }),
   destination: z.string().min(1, { message: 'partner.tours.errors.destinationRequired' }),
   duration_value: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -57,7 +68,7 @@ export const tourBasicDetailsSchema = z.object({
   duration_unit: z.enum(['hour', 'day']),
   difficulty_level: z.enum(['easy', 'moderate', 'challenging']),
   meeting_point: z.string().min(1, { message: 'partner.tours.errors.meetingPointRequired' }),
-  itinerary: z.string().optional().or(z.literal('')),
+  itinerary: tourItinerarySchema,
   inclusions: z.string().optional().or(z.literal('')),
   languages: z.array(z.string()).default([]),
   cancellation_policy: z.string().optional().or(z.literal('')),

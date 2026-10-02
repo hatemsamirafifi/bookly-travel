@@ -5,43 +5,42 @@ test.describe('Review Submission', () => {
   // storageState (tests/e2e/auth.setup.ts logs in once). No per-test login —
   // that would re-hit the backend `auth` rate limiter (10/min/IP).
 
-  test('should show review form on completed booking page and allow submission', async ({ page }) => {
-    // Navigate to completed test booking BKO-TEST01
+  test('confirmed booking cannot submit a review before travel', async ({ page }) => {
     await page.goto('/en/my-bookings/BKO-TEST01');
     await expect(page.locator('text=Booking Detail')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Submit Review' })).toHaveCount(0);
+  });
 
-    // Verify review section is visible
-    const reviewForm = page.locator('form').filter({ hasText: /Leave a Review/i });
-    if (await reviewForm.isVisible()) {
-      await expect(reviewForm.locator('text=Your Rating')).toBeVisible();
-      await expect(reviewForm.locator('text=Your Review (optional)')).toBeVisible();
+  test('completed booking shows review form and validates the rating', async ({ page }) => {
+    await page.goto('/en/my-bookings/BKO-TEST02');
+    await expect(page.locator('text=Booking Detail')).toBeVisible();
+
+    const reviewForm = page.locator('form').filter({ has: page.getByRole('button', { name: 'Submit Review' }) });
+    await expect(reviewForm).toBeVisible();
+    await expect(reviewForm.locator('text=Your Rating')).toBeVisible();
+    await expect(reviewForm.locator('text=Your Review (optional)')).toBeVisible();
 
       // Attempt to submit without rating to verify validation
-      const submitBtn = reviewForm.getByRole('button', { name: /Submit Review/i });
-      await expect(submitBtn).toBeDisabled();
+    const submitBtn = reviewForm.getByRole('button', { name: /Submit Review/i });
+    await expect(submitBtn).toBeDisabled();
 
       // Click the 4th star to set rating to 4 (StarRating renders role="radio"
       // buttons with aria-labels "1 star".."5 stars" — not "Select N star rating").
-      const fourthStar = reviewForm.getByRole('radio', { name: '4 stars' });
-      if (await fourthStar.isVisible()) {
-        await fourthStar.click();
-      }
+    const fourthStar = reviewForm.getByRole('radio', { name: '4 stars' });
+    await expect(fourthStar).toBeVisible();
+    await fourthStar.click();
 
       // Enter review comment
-      await reviewForm.locator('textarea').fill('This was an absolutely wonderful tour! Highly recommended!');
+    await reviewForm.locator('textarea').fill('This was an absolutely wonderful tour! Highly recommended!');
 
       // Submit the form
-      await expect(submitBtn).toBeEnabled();
-      await submitBtn.click();
+    await expect(submitBtn).toBeEnabled();
+    await submitBtn.click();
 
-      // BKO-TEST02 is shared across the 3 authed projects: the first project to
-      // reach this submits the review ("Thank you for your review!"); later
-      // projects get a 403 "already submitted a review" because the completed-
-      // booking detail page always renders the form. Both outcomes are valid.
-      await expect(
-        page.getByText('Thank you for your review!').or(page.getByText(/already submitted/i))
-      ).toBeVisible();
-    }
+    // The shared fixture can already have a review from another project run.
+    await expect(
+      page.getByText('Thank you for your review!').or(page.getByText(/already submitted/i))
+    ).toBeVisible();
   });
 
   test('should restrict review editing after window limit', async ({ page }) => {
@@ -68,4 +67,15 @@ test.describe('Review Submission', () => {
       ).toBeVisible();
     }
   });
+
+  for (const { locale, submit } of [
+    { locale: 'es', submit: 'Enviar Reseña' },
+    { locale: 'it', submit: 'Invia Recensione' },
+  ]) {
+    test(`${locale} completed booking shows translated review controls`, async ({ page }) => {
+      await page.goto(`/${locale}/my-bookings/BKO-TEST02`);
+      await expect(page.getByRole('button', { name: submit })).toBeVisible();
+      await expect(page.getByText('reviews.leave_review')).toHaveCount(0);
+    });
+  }
 });

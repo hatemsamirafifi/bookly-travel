@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 interface ParticipantSelectorProps {
   value: number;
   onChange: (value: number) => void;
@@ -15,10 +17,11 @@ export default function ParticipantSelector({
   max,
   pricePerPerson,
 }: ParticipantSelectorProps) {
+  const t = useTranslations('booking');
   return (
     <div>
       <label id="participants-label" className="block text-sm font-medium text-[#0A2540] mb-2">
-        Participants
+        {t('participants')}
       </label>
       <div className="flex items-center gap-3">
         <button
@@ -26,7 +29,7 @@ export default function ParticipantSelector({
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
           className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
-          aria-label="Decrease participants"
+          aria-label={t('decreaseParticipants')}
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -44,19 +47,19 @@ export default function ParticipantSelector({
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
           className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
-          aria-label="Increase participants"
+          aria-label={t('increaseParticipants')}
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </button>
         <span className="text-sm text-[#5A6B7B]">
-          {min}–{max} allowed
+          {t('allowedRange', { min, max })}
         </span>
       </div>
       {pricePerPerson && (
         <p className="mt-1 text-sm text-[#5A6B7B]">
-          {pricePerPerson} per person
+          {pricePerPerson} {t('perPerson')}
         </p>
       )}
     </div>

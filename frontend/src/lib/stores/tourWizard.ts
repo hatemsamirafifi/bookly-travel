@@ -18,7 +18,7 @@ const INITIAL_FORM: TourFormData = {
   duration_value: '',
   duration_unit: 'hour',
   difficulty_level: 'easy',
-  itinerary: '',
+  itinerary: [],
   inclusions: '',
   meeting_point: '',
   languages: [],

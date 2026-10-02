@@ -2,6 +2,7 @@
 
 namespace App\Domains\Search\Transformers;
 
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Models\Tour;
 
 class TourCardTransformer
@@ -14,7 +15,7 @@ class TourCardTransformer
             ? $tour->translations
             : $tour->translations()->get();
 
-        $translation = $translations->firstWhere('locale', $locale)
+        $translation = app(TourTranslationService::class)->currentTranslation($tour, $locale)
             ?? $translations->firstWhere('locale', 'en');
 
         return [

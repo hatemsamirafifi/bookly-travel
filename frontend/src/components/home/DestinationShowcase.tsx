@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Destination } from '@/lib/api/types';
+import { getTranslations } from 'next-intl/server';
 
 interface DestinationShowcaseProps {
   destinations: Destination[];
@@ -8,13 +9,14 @@ interface DestinationShowcaseProps {
   title?: string;
 }
 
-export default function DestinationShowcase({ destinations, locale, title = 'Top Destinations' }: DestinationShowcaseProps) {
+export default async function DestinationShowcase({ destinations, locale, title }: DestinationShowcaseProps) {
   if (destinations.length === 0) return null;
+  const t = await getTranslations({ locale, namespace: 'home' });
 
   return (
-    <section className="py-12 bg-[#F7F9FB]">
+    <section className="bg-surface-alt py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-8 text-2xl font-bold text-[#0A2540]">{title}</h2>
+        <h2 className="mb-8 text-2xl font-bold text-bookly-navy">{title ?? t('topDestinations')}</h2>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {destinations.map((dest) => (
@@ -44,7 +46,7 @@ export default function DestinationShowcase({ destinations, locale, title = 'Top
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h3 className="text-lg font-semibold text-white">{dest.name}</h3>
                   <p className="text-sm text-gray-200">
-                    {dest.country && `${dest.country} · `}{dest.tour_count} tour{dest.tour_count !== 1 ? 's' : ''}
+                    {dest.country && `${dest.country} · `}{t(dest.tour_count === 1 ? 'tourCount' : 'tourCount_plural', { count: dest.tour_count })}
                   </p>
                 </div>
               </div>

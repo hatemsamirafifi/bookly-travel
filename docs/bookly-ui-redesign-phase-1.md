@@ -1,6 +1,6 @@
 # Bookly UI redesign: Phase 1
 
-This branch contains only the shared design foundations from master-plan Tasks 1.1-1.3. It starts from `origin/main` at `f3e8e25`; the separate all-work branch contains this phase plus the other redesign and backend work. The two PRs intentionally overlap and should be coordinated before merging.
+Phase 1 implements the shared design foundations from master-plan Tasks 1.1-1.3. The original extracted branch started from `f3e8e25`. Its implementation is now included in `main` through PR #27. PR #28 has been synchronized with that merged baseline; its remaining changes record this phase and exclude local `.phase1-evidence` files from Git and Docker build contexts.
 
 ## Scope
 
@@ -10,13 +10,13 @@ This branch contains only the shared design foundations from master-plan Tasks 1
 - Focus/scroll/inert management for nested dialogs, hidden/disabled focus filtering, server-render-safe portals and reduced motion.
 - Scoped EN/ES/IT retry/navigation/footer messages, unit tests and browser/Axe regressions.
 
-Other page redesigns, backend APIs/jobs/migrations, release tooling and Spec Kit task-state changes are excluded. Shared auth route layouts are included; the separate auth page/form redesign is excluded.
+The original Phase 1 extraction excluded other page redesigns, backend APIs/jobs/migrations, release tooling and Spec Kit task-state changes. Shared auth route layouts were included; the separate auth page/form redesign was excluded. Synchronizing with `main` preserves the additional work already merged through PR #27.
 
 ## Verification
 
 The complete all-work snapshot previously passed 255 Jest tests, lint, typecheck, production build and 29 final browser/Axe checks, with 48 locale/width shell captures. Those results apply to that snapshot and are not presented as standalone validation of this extracted branch.
 
-Standalone checks on this branch:
+Historical standalone checks on the extracted Phase 1 snapshot:
 
 | Check | Result |
 |---|---|
@@ -34,4 +34,4 @@ Standalone checks on this branch:
 - Phase 1 does not close release-wide performance, deployment/provider or manual acceptance gates.
 
 
-All-work PR: https://github.com/hatemsamirafifi/bookly-travel/pull/27. LiveReview is skipped with explicit user authorization for publication; no global hook is disabled.
+All-work PR: https://github.com/hatemsamirafifi/bookly-travel/pull/27. CI fixes were reviewed with LiveReview before publication. Current PR checks validate the synchronized branch separately from the historical results above.

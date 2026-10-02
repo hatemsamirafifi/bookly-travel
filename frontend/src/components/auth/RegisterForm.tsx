@@ -11,6 +11,9 @@ import { registerSchema } from '@/lib/validators/auth';
 import { authApi } from '@/lib/api/auth';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { AuthApiError } from '@/lib/api/auth';
+import { safeAuthReturnUrl } from '@/lib/auth/return-url';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -52,10 +55,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
       setAuth(response.data, response.token);
       setSuccess(true);
       
-      let validatedReturnUrl = `/${locale}/`;
-      if (returnUrl && returnUrl.startsWith(`/${locale}/`)) {
-        validatedReturnUrl = returnUrl;
-      }
+      const validatedReturnUrl = safeAuthReturnUrl(locale, returnUrl);
 
       // Small delay so success message shows briefly
       setTimeout(() => {
@@ -102,10 +102,10 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
         <label htmlFor="register-name" className="text-sm font-semibold text-foreground">
           {t('register.nameLabel')}
         </label>
-        <input
+        <Input
           id="register-name"
           type="text"
-          className={`w-full px-3.5 py-2.5 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.name ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
+          className={errors.name ? 'border-error' : undefined}
           placeholder={t('register.namePlaceholder')}
           autoComplete="name"
           aria-invalid={!!errors.name}
@@ -124,10 +124,10 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
         <label htmlFor="register-email" className="text-sm font-semibold text-foreground">
           {t('register.emailLabel')}
         </label>
-        <input
+        <Input
           id="register-email"
           type="email"
-          className={`w-full px-3.5 py-2.5 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.email ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
+          className={errors.email ? 'border-error' : undefined}
           placeholder={t('register.emailPlaceholder')}
           autoComplete="email"
           aria-invalid={!!errors.email}
@@ -147,10 +147,10 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           {t('register.passwordLabel')}
         </label>
         <div className="relative">
-          <input
+          <Input
             id="register-password"
             type={showPassword ? 'text' : 'password'}
-            className={`w-full px-3.5 py-2.5 pr-11 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.password ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
+            className={`pr-11 ${errors.password ? 'border-error' : ''}`}
             placeholder={t('register.passwordPlaceholder')}
             autoComplete="new-password"
             aria-invalid={!!errors.password}
@@ -186,10 +186,11 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
       )}
 
       {/* Submit */}
-      <button
+      <Button
         id="register-submit"
         type="submit"
-        className="flex items-center justify-center gap-2 w-full px-4 py-3 mt-1 bg-primary text-white text-[0.9375rem] font-semibold border-none rounded-md cursor-pointer transition-all hover:bg-primary-dark hover:shadow-[0_4px_14px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed"
+        size="lg"
+        className="mt-1 w-full gap-2 text-base"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
       >
@@ -197,7 +198,7 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
           <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />
         ) : null}
         {t('register.submitButton')}
-      </button>
+      </Button>
 
       {/* Sign-in prompt */}
       <p className="text-center text-sm text-text-muted m-0">

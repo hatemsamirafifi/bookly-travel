@@ -24,6 +24,16 @@ describe('ReviewForm', () => {
     expect(screen.getByText('0/2000')).toBeInTheDocument();
   });
 
+  it('uses readable contrast for normal and over-limit character counts', () => {
+    render(<ReviewForm {...defaultProps} />);
+    expect(screen.getByText('0/2000')).toHaveClass('text-gray-600');
+
+    fireEvent.change(screen.getByLabelText(/Your Review/), {
+      target: { value: 'a'.repeat(2001) },
+    });
+    expect(screen.getByText('2001/2000')).toHaveClass('text-red-600');
+  });
+
   it('disables submit button when no rating selected', () => {
     render(<ReviewForm {...defaultProps} />);
     expect(screen.getByRole('button', { name: 'Submit Review' })).toBeDisabled();

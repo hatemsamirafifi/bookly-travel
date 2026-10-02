@@ -9,6 +9,7 @@ use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Partner\Models\TourDraft;
 use App\Domains\Partner\Models\TourMedia;
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Reviews\Models\Review;
 use App\Enums\TourStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +52,8 @@ class Tour extends Model
         'price_amount',
         'status',
         'cover_image_url',
+        'difficulty_level',
+        'guide_languages',
         'is_featured',
         'published_at',
         'created_at',
@@ -66,6 +69,7 @@ class Tour extends Model
             'price_amount' => 'integer',
             'is_featured' => 'boolean',
             'published_at' => 'datetime',
+            'guide_languages' => 'array',
         ];
     }
 
@@ -73,8 +77,9 @@ class Tour extends Model
     {
         $translations = $this->translations->keyBy('locale');
         $en = $translations->get('en');
-        $es = $translations->get('es');
-        $it = $translations->get('it');
+        $resolver = app(TourTranslationService::class);
+        $es = $resolver->currentTranslation($this, 'es') ?? $en;
+        $it = $resolver->currentTranslation($this, 'it') ?? $en;
 
         return [
             'id' => $this->id,
@@ -98,12 +103,13 @@ class Tour extends Model
             'duration_label' => $this->duration_label,
             'average_rating' => $this->averageRating(),
             'review_count' => $this->reviewCount(),
-            'cover_image_url' => $this->cover_image_url,
+            'cover_image_url' => $this->allImageUrls()[0] ?? null,
             'image_urls' => $this->allImageUrls(),
             'group_size_min' => $this->group_size_min,
             'group_size_max' => $this->group_size_max,
             'available_dates' => $this->upcomingAvailableDates(),
-            'languages' => $this->availableLanguages(),
+            'languages' => $this->guideLanguages(),
+            'guide_languages' => $this->guideLanguages(),
             'status' => $this->status,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
@@ -187,8 +193,17 @@ class Tour extends Model
 
     public function allImageUrls(): array
     {
-        // Delegate to Tour Images (spec 003)
-        return $this->cover_image_url ? [$this->cover_image_url] : [];
+        $media = $this->relationLoaded('media') ? $this->media : $this->media()->get();
+        $urls = array_merge(
+            [$this->cover_image_url],
+            $media->where('type', 'image')->pluck('url')->all()
+        );
+
+        return array_values(array_unique(array_filter($urls, static function ($url): bool {
+            return is_string($url)
+                && filter_var($url, FILTER_VALIDATE_URL) !== false
+                && in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true);
+        })));
     }
 
     /**
@@ -351,18 +366,21 @@ class Tour extends Model
         return $date instanceof Carbon ? $date->toDateString() : (string) $date;
     }
 
-    public function availableLanguages(): array
+    public function guideLanguages(): array
     {
-        // Reuse the loaded `translations` collection (no extra query).
-        return $this->translations
-            ->filter(fn ($t) => filled($t->title))
-            ->pluck('locale')
-            ->all();
+        return $this->guide_languages ?? [];
     }
 
+    /** @return HasMany<TourTranslation, $this> */
     public function translations(): HasMany
     {
         return $this->hasMany(TourTranslation::class);
+    }
+
+    /** @return HasMany<TourTranslationState, $this> */
+    public function translationStates(): HasMany
+    {
+        return $this->hasMany(TourTranslationState::class);
     }
 
     /**
@@ -384,7 +402,7 @@ class Tour extends Model
             ? $this->translations
             : $this->translations()->get();
 
-        return optional($translations->firstWhere('locale', $locale))->title
+        return optional(app(TourTranslationService::class)->currentTranslation($this, $locale))->title
             ?? optional($translations->firstWhere('locale', $fallback))->title
             ?? optional($translations->first())->title
             ?? '';
@@ -471,7 +489,7 @@ class Tour extends Model
      * for backward compatibility with existing columns; this relation gives
      * the authoritative Partner for governance guards.
      */
-    public function partnerRecord()
+    public function partnerRecord(): BelongsTo
     {
         return $this->belongsTo(Partner::class, 'partner_id');
     }

@@ -31,7 +31,7 @@ function makeApprovedPartnerTour(string $status = 'pending_review'): Tour
         'is_active' => true,
     ]);
 
-    return Tour::create([
+    $tour = Tour::create([
         'partner_id' => $partner->id,
         'category_id' => Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test'])->id,
         'slug' => 'filament-tour-' . uniqid(),
@@ -43,6 +43,14 @@ function makeApprovedPartnerTour(string $status = 'pending_review'): Tour
         'price_amount' => 5000,
         'status' => $status,
     ]);
+    $tour->translations()->create([
+        'locale' => 'en',
+        'title' => 'English moderation source',
+        'description' => 'The required English description shown to moderators before publication.',
+        'itinerary' => [['day' => 1, 'title' => 'English arrival day', 'stops' => []]],
+    ]);
+
+    return $tour;
 }
 
 beforeEach(function () {
@@ -55,6 +63,35 @@ it('lists tour records in the Filament table', function () {
 
     Livewire::test(TourResource\Pages\ListTours::class)
         ->assertCanSeeTableRecords([$tour]);
+});
+
+it('shows the English source and derived statuses separately on the moderation view', function () {
+    $tour = makeApprovedPartnerTour();
+    $tour->translationStates()->create(['locale' => 'es', 'source_hash' => str_repeat('a', 64), 'status' => 'pending']);
+    $tour->translationStates()->create(['locale' => 'it', 'source_hash' => str_repeat('a', 64), 'status' => 'stale']);
+
+    Livewire::test(TourResource\Pages\ViewTour::class, ['record' => $tour->getRouteKey()])
+        ->assertSee('English moderation source')
+        ->assertSee('English arrival day')
+        ->assertSee('Spanish')
+        ->assertSee('Pending')
+        ->assertSee('Italian')
+        ->assertSee('Outdated')
+        ->assertDontSee(str_repeat('a', 64));
+});
+
+it('denies a traveler and an admin without manage-tours access to moderation', function () {
+    $tour = makeApprovedPartnerTour();
+    actingAs(User::factory()->create());
+    $this->get('/admin/tours')->assertForbidden();
+
+    $limitedAdmin = User::factory()->admin()->create();
+    $limitedAdmin->adminPermission()->create(['flags' => ['manage_tours' => false]]);
+    actingAs($limitedAdmin);
+    $this->get('/admin/tours')->assertForbidden();
+
+    expect($tour->fresh()->status)->toBe('pending_review')
+        ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
 });
 
 it('publishes a tour via the Filament publish action and writes audit', function () {

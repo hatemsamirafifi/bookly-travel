@@ -13,7 +13,7 @@ test.describe('Blog Index and Listing Page', () => {
     await page.goto('/en/blog');
 
     // Page title and header
-    await expect(page.locator('h1')).toContainText('Travel Insights & Guides');
+    await expect(page.locator('h1')).toContainText('Travel Insights & Stories');
 
     // Featured hero section exists
     await expect(page.getByText('Featured Story')).toBeVisible();
@@ -51,7 +51,18 @@ test.describe('Blog Index and Listing Page', () => {
 
   test('renders empty state when no articles match criteria', async ({ page }) => {
     await page.goto('/en/blog?category=nonexistent-category');
-    await expect(page.getByText('No articles found')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Browse Tours' })).toBeVisible();
+    await expect(page.getByText('No articles match your criteria.')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Browse tours' })).toBeVisible();
   });
+
+  for (const [locale, heading] of [
+    ['es', 'Inspiración y Guías de Viaje'],
+    ['it', 'Storie e Ispirazioni di Viaggio'],
+  ]) {
+    test(`${locale} blog index uses localized page copy`, async ({ page }) => {
+      await page.goto(`/${locale}/blog`);
+      await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+      await expect(page.getByText('Bookly Magazine')).toHaveCount(0);
+    });
+  }
 });

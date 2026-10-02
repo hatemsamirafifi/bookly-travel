@@ -38,6 +38,7 @@ describe('ReviewList', () => {
     await waitFor(() => {
       expect(screen.getByText('Marco')).toBeInTheDocument();
       expect(screen.getByText('4.0')).toBeInTheDocument();
+      expect(screen.getByText('May 12, 2026')).toHaveClass('text-gray-600');
     });
   });
 

@@ -1,4 +1,21 @@
-import type { TourDetail } from '@/lib/api/types';
+import type { TourDetail, TourImage } from '@/lib/api/types';
+
+function serializeJsonLd(value: unknown): string {
+  // JSON-LD is embedded in an HTML script element. Escaping '<' prevents
+  // untrusted tour/blog text from closing that element before the JSON ends.
+  return JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
+}
+
+export function getSafeAbsoluteImageUrls(images: Pick<TourImage, 'url'>[], baseUrl: string): string[] {
+  return Array.from(new Set(images.flatMap((image) => {
+    try {
+      const url = new URL(image.url, baseUrl);
+      return url.protocol === 'https:' || url.protocol === 'http:' ? [url.href] : [];
+    } catch {
+      return [];
+    }
+  })));
+}
 
 interface TouristTripSchemaProps {
   tour: TourDetail;
@@ -7,44 +24,60 @@ interface TouristTripSchemaProps {
 
 export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bookly.com';
+  const imageUrls = getSafeAbsoluteImageUrls(tour.images, baseUrl);
+  const meetingPointLabel = { en: 'Meeting point', es: 'Punto de encuentro', it: 'Punto di incontro' }[tour.content_locale];
+  const description = [
+    tour.description?.substring(0, 300),
+    tour.meeting_point?.trim() ? `${meetingPointLabel}: ${tour.meeting_point.trim()}` : null,
+  ].filter(Boolean).join(' · ');
+  const available = !tour.availability.is_unavailable
+    && !!tour.availability.next_available_date
+    && tour.availability.available_dates.includes(tour.availability.next_available_date)
+    && tour.pricing.base_price.amount > 0;
 
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'TouristTrip',
-    inLanguage: locale,
+    inLanguage: tour.content_locale,
     name: tour.title,
-    description: tour.description?.substring(0, 300) || '',
+    description,
     touristType: tour.category?.name || '',
     duration: `PT${tour.duration.minutes}M`,
-    offers: {
+    ...(tour.pricing.base_price.amount > 0 ? { offers: {
       '@type': 'Offer',
       price: (tour.pricing.base_price.amount / 100).toFixed(2),
       priceCurrency: tour.pricing.base_price.currency,
-      availability: tour.availability.next_available_date
+      availability: available
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      validFrom: tour.availability.next_available_date || undefined,
-    },
-    aggregateRating: {
+      validFrom: available ? tour.availability.next_available_date : undefined,
+    } } : {}),
+    ...(tour.reviews.count > 0 && tour.reviews.average_rating > 0 && tour.reviews.average_rating <= 5 ? { aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: tour.reviews.average_rating?.toFixed(1) || '0.0',
+      ratingValue: tour.reviews.average_rating.toFixed(1),
       reviewCount: tour.reviews.count,
       bestRating: '5',
       worstRating: '1',
-    },
-    itinerary: {
-      '@type': 'Place',
-      name: tour.location,
-      address: tour.meeting_point || tour.location,
-    },
-    image: tour.images.length > 0 ? tour.images[0].url : undefined,
+    } } : {}),
+    ...(tour.itinerary.length > 0 ? { itinerary: {
+      '@type': 'ItemList',
+      inLanguage: tour.itinerary_locale,
+      itemListElement: tour.itinerary.map((day, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        identifier: day.day,
+        name: day.title,
+        description: day.description || undefined,
+      })),
+    } } : {}),
+    ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
     url: `${baseUrl}/${locale}/tours/${tour.slug}`,
   };
 
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }
@@ -69,7 +102,7 @@ export function OrganizationSchema({ locale }: OrganizationSchemaProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }
@@ -98,7 +131,7 @@ export function ItemListSchema({ items, name }: ItemListSchemaProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }
@@ -161,7 +194,7 @@ export function BlogPostingSchema({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }
@@ -190,7 +223,7 @@ export function BreadcrumbListSchema({ items }: BreadcrumbListSchemaProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
     />
   );
 }

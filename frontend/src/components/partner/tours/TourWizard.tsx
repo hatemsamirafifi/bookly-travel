@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/select';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 import { ImageUploader } from './ImageUploader';
+import { ItineraryEditor } from './ItineraryEditor';
+import { TourContentPreview } from './TourContentPreview';
 import { PricingTierForm } from './PricingTierForm';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { createTour } from '@/lib/api/partner';
@@ -117,10 +119,9 @@ export function TourWizard() {
         duration_unit: formData.duration_unit,
         difficulty_level: formData.difficulty_level,
         meeting_point: formData.meeting_point,
-        itinerary: formData.itinerary,
-        inclusions: formData.inclusions,
-        languages: formData.languages,
+        guide_languages: formData.languages.filter(Boolean),
         cancellation_policy: formData.cancellation_policy,
+        itinerary: formData.itinerary,
         media: formData.media,
         pricing_tiers: formData.pricing_tiers.map((t) => ({
           name: t.name,
@@ -170,10 +171,9 @@ export function TourWizard() {
         duration_unit: formData.duration_unit,
         difficulty_level: formData.difficulty_level,
         meeting_point: formData.meeting_point,
-        itinerary: formData.itinerary,
-        inclusions: formData.inclusions,
-        languages: formData.languages,
+        guide_languages: formData.languages.filter(Boolean),
         cancellation_policy: formData.cancellation_policy,
+        itinerary: formData.itinerary,
         media: formData.media,
         pricing_tiers: formData.pricing_tiers.map((t) => ({
           name: t.name,
@@ -206,6 +206,7 @@ export function TourWizard() {
       case 'details':
         return (
           <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">{t('form.sourceLanguageNotice')}</p>
             <div className="space-y-1">
               <Label htmlFor="title">{t('form.title')}</Label>
               <Input
@@ -234,6 +235,7 @@ export function TourWizard() {
                 <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['description'])}</p>
               )}
             </div>
+            <ItineraryEditor value={formData.itinerary} onChange={(days) => updateField('itinerary', days)} disabled={isSubmitting} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label htmlFor="category">{t('form.category')}</Label>
@@ -326,6 +328,19 @@ export function TourWizard() {
                 <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['meeting_point'])}</p>
               )}
             </div>
+            <div className="space-y-1">
+              <Label htmlFor="guide_languages">{t('form.guideLanguageCodes')}</Label>
+              <Input
+                id="guide_languages"
+                value={formData.languages.join(', ')}
+                onChange={(e) => updateField('languages', e.target.value.split(',').map((code) => code.trim().toLowerCase()))}
+                onBlur={() => updateField('languages', formData.languages.filter(Boolean))}
+                placeholder="de, en, es"
+                aria-describedby="guide-languages-hint"
+                disabled={isSubmitting}
+              />
+              <p id="guide-languages-hint" className="text-xs text-gray-500">{t('form.guideLanguageCodesHint')}</p>
+            </div>
           </div>
         );
       case 'media':
@@ -377,6 +392,7 @@ export function TourWizard() {
               <dt className="text-gray-500">{t('form.recurringSchedule')}:</dt>
               <dd>{formData.availability_rules.length} defined</dd>
             </dl>
+            <TourContentPreview title={formData.title} description={formData.description} itinerary={formData.itinerary} media={formData.media} />
           </div>
         );
       default:

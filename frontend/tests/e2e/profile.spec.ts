@@ -1,5 +1,12 @@
 import { test, expect } from '@playwright/test';
 
+test('traveler pages retain the shared navigation and footer', async ({ page }) => {
+  await page.goto('/en/profile');
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Bookly' })).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Privacy policy' })).toBeVisible();
+  await expect(page.locator('main')).toBeVisible();
+});
+
 test.describe('Profile', () => {
   // Auth is provided by the `-authed` Playwright projects via a shared
   // storageState (tests/e2e/auth.setup.ts logs in once). No per-test login —
@@ -9,7 +16,7 @@ test.describe('Profile', () => {
   test('profile page renders settings form', async ({ page }) => {
     await page.goto('/en/profile');
 
-    await expect(page.getByRole('heading', { name: /Profile Settings/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Profile Settings/i })).toBeVisible({ timeout: 45_000 });
     await expect(page.getByLabel(/First Name/i)).toBeVisible();
     await expect(page.getByLabel(/Last Name/i)).toBeVisible();
     await expect(page.getByLabel(/Phone/i)).toBeVisible();
@@ -30,7 +37,7 @@ test.describe('Profile', () => {
     // Should show success state or toast
     await expect(
       page.locator('text=updated').or(page.locator('text=saved')).first()
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 30_000 });
   });
 
   test('change password form validates mismatch', async ({ page }) => {

@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 interface PriceBreakdownProps {
   pricePerPerson: string;
   participantCount: number;
@@ -5,18 +7,19 @@ interface PriceBreakdownProps {
 }
 
 export default function PriceBreakdown({ pricePerPerson, participantCount, total }: PriceBreakdownProps) {
+  const t = useTranslations('booking');
   return (
-    <div className="rounded-lg border border-gray-200 p-4">
-      <h3 className="text-sm font-medium text-[#0A2540] mb-3">Price Breakdown</h3>
+    <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+      <h3 className="text-sm font-semibold text-bookly-navy mb-3">{t('priceBreakdown')}</h3>
       <div className="space-y-2">
         <div className="flex justify-between text-sm text-[#5A6B7B]">
           <span>
-            {pricePerPerson} × {participantCount} {participantCount === 1 ? 'participant' : 'participants'}
+            {pricePerPerson} × {t('participantCount', { count: participantCount })}
           </span>
           <span>{total}</span>
         </div>
         <div className="border-t border-gray-200 pt-2 flex justify-between text-base font-semibold text-[#0A2540]">
-          <span>Total</span>
+          <span>{t('total')}</span>
           <span>{total}</span>
         </div>
       </div>

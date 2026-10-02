@@ -77,7 +77,9 @@ export interface Tour {
   inclusions: string[];
   exclusions: string[];
   cancellation_policy: string;
-  languages: string[];
+  /** Spoken/live-guide codes; not the EN/ES/IT content translation locales. */
+  languages?: string[];
+  guide_languages?: string[] | null;
   status: TourStatus;
   media: TourMedia[];
   pricing_tiers: PricingTier[];

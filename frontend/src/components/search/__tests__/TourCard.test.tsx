@@ -2,6 +2,15 @@ import { render, screen } from '@testing-library/react';
 import TourCard from '../TourCard';
 import type { TourCard as TourCardType } from '@/lib/api/types';
 
+jest.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: { date?: string; count?: number }) => {
+    if (key === 'nextAvailable') return `Next: ${values?.date}`;
+    if (key === 'reviewCount_one') return `${values?.count} review`;
+    if (key === 'reviewCount') return `${values?.count} reviews`;
+    return key;
+  },
+}));
+
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
@@ -39,6 +48,21 @@ const tour: TourCardType = {
 };
 
 describe('TourCard', () => {
+  it('eagerly loads an explicitly prioritized cover without changing its URL', () => {
+    render(<TourCard tour={tour} locale="en" imagePriority />);
+    const image = screen.getByRole('img', { name: tour.title });
+    expect(image).toHaveAttribute('loading', 'eager');
+    expect(image).toHaveAttribute('fetchpriority', 'high');
+    expect(image).toHaveAttribute('src', tour.cover_image_url);
+  });
+
+  it('does not prioritize ordinary listing covers', () => {
+    render(<TourCard tour={tour} locale="en" />);
+    const image = screen.getByRole('img', { name: tour.title });
+    expect(image).not.toHaveAttribute('loading', 'eager');
+    expect(image).not.toHaveAttribute('fetchpriority', 'high');
+  });
+
   it('renders tour title, location, and duration', () => {
     render(<TourCard tour={tour} locale="en" />);
 
@@ -95,5 +119,12 @@ describe('TourCard', () => {
     expect(btn).toBeInTheDocument();
     expect(btn).toHaveAttribute('data-tour-id', '42');
     expect(btn).toHaveAttribute('data-compact', 'true');
+    expect(btn.closest('a')).toBeNull();
+  });
+
+  it('does not present an invented rating when no reviews exist', () => {
+    render(<TourCard tour={{ ...tour, rating: { average: 0, count: 0 } }} locale="en" />);
+    expect(screen.queryByLabelText(/Rating:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/reviews/)).not.toBeInTheDocument();
   });
 });

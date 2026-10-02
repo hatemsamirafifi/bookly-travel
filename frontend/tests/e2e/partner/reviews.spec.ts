@@ -12,7 +12,7 @@ test.describe('Partner Reviews Page', () => {
     await firstSummary.click();
 
     // Expanded review card shows the "Verified Traveler" badge
-    await expect(page.getByText(/verified traveler/i)).toBeVisible();
+    await expect(page.getByText(/verified traveler/i).first()).toBeVisible();
   });
 
   test('should show review comment text', async ({ page }) => {
@@ -21,7 +21,7 @@ test.describe('Partner Reviews Page', () => {
     await firstSummary.click();
 
     // Seeded review (DatabaseSeeder, BKO-TEST03): "A wonderful hidden-gems walk…" (or edited in test run)
-    await expect(page.getByText(/hidden-gems walk|highly recommended|Updated comment/i)).toBeVisible();
+    await expect(page.getByText(/hidden-gems walk|highly recommended|Updated comment/i).first()).toBeVisible();
   });
 
   test('should display date on review cards', async ({ page }) => {

@@ -72,6 +72,10 @@ class DatabaseSeeder extends Seeder
         // out) — drives cancel-booking + booking-detail.
         $this->createBooking('BKO-TEST01', $traveler->id, $tour->id, now()->addWeeks(2)->toDateString(), 2, $price, Booking::STATUS_CONFIRMED);
 
+        // Independent confirmed fixture for partner detail/action assertions.
+        // Traveler cancellation specs may mutate BKO-TEST01 during the suite.
+        $this->createBooking('BKO-PART01', $traveler->id, $tour->id, now()->addWeeks(2)->toDateString(), 2, $price, Booking::STATUS_CONFIRMED);
+
         // BKO-TEST02: completed within the 30-day review window, no review yet
         // — drives review-submission (completed booking shows the review form).
         $this->createBooking('BKO-TEST02', $traveler->id, $tour->id, now()->subDays(5)->toDateString(), 2, $price, Booking::STATUS_COMPLETED);

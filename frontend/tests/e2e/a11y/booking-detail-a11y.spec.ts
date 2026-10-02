@@ -8,4 +8,11 @@ test.describe('Booking Detail Accessibility', () => {
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
     expect(accessibilityScanResults.violations).toEqual([]);
   });
+
+  test('completed booking review form has no accessibility violations', async ({ page }) => {
+    await page.goto('/en/my-bookings/BKO-TEST02');
+    await expect(page.getByRole('button', { name: 'Submit Review' })).toBeVisible();
+    const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
 });

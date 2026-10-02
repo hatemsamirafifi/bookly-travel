@@ -51,14 +51,18 @@ export default function BookingForm({ locale }: BookingFormProps) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bookingAttempt, setBookingAttempt] = useState(0);
 
   // Two-step payment flow state
-  const [paymentStep, setPaymentStep] = useState<{
+  type PaymentStep = {
     clientSecret: string;
     bookingReference: string;
     stripe_publishable_key: string | null;
     gateway: 'stripe' | 'deterministic';
-  } | null>(null);
+    serverTotal: string | null;
+    serverPerPerson: string | null;
+  };
+  const [paymentStep, setPaymentStep] = useState<PaymentStep | null>(null);
 
   // FR-027: price-change modal state
   const [priceChangeModal, setPriceChangeModal] = useState<{
@@ -66,6 +70,8 @@ export default function BookingForm({ locale }: BookingFormProps) {
     bookingReference: string;
     oldPriceFormatted: string;
     newPriceFormatted: string;
+    pendingPayment: PaymentStep | null;
+    cancelError: string | null;
   } | null>(null);
 
   // F2: stable across retries for the same selection, new on selection change.
@@ -77,7 +83,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
   const idempotencyKey = useMemo(
     () => generateIdempotencyKey(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tourSlug, date, participants],
+    [tourSlug, date, participants, bookingAttempt],
   );
 
   // F2: synchronous guard against double-click / double-submit. Set before any
@@ -154,16 +160,16 @@ export default function BookingForm({ locale }: BookingFormProps) {
           bookingReference: result.data.reference,
           oldPriceFormatted: oldFormatted,
           newPriceFormatted: confirmedPrice.formatted,
-        });
-        // Store payment info for after modal confirmation
-        if (result.payment) {
-          setPaymentStep({
+          pendingPayment: result.payment ? {
             clientSecret: result.payment.client_secret,
             bookingReference: result.data.reference,
             stripe_publishable_key: result.payment.stripe_publishable_key,
             gateway: result.payment.gateway,
-          });
-        }
+            serverTotal: result.data.pricing?.total?.formatted ?? result.data.total_price?.formatted ?? null,
+            serverPerPerson: result.data.pricing.price_per_person.formatted,
+          } : null,
+          cancelError: null,
+        });
         return;
       }
 
@@ -174,6 +180,8 @@ export default function BookingForm({ locale }: BookingFormProps) {
           bookingReference: result.data.reference,
           stripe_publishable_key: result.payment.stripe_publishable_key,
           gateway: result.payment.gateway,
+          serverTotal: result.data.pricing?.total?.formatted ?? result.data.total_price?.formatted ?? null,
+          serverPerPerson: result.data.pricing?.price_per_person?.formatted ?? null,
         });
       } else {
         router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
@@ -213,28 +221,46 @@ export default function BookingForm({ locale }: BookingFormProps) {
 
   // FR-027: traveler explicitly accepts the new price — dismiss modal (payment step already set)
   const handlePriceChangeConfirm = () => {
+    if (!priceChangeModal || submitting) return;
+    if (priceChangeModal.pendingPayment) {
+      setPaymentStep(priceChangeModal.pendingPayment);
+    } else {
+      router.push(`/${locale}/booking/confirmation?ref=${priceChangeModal.bookingReference}`);
+    }
     setPriceChangeModal(null);
   };
 
   // FR-027: traveler declines the new price — dismiss modal, clear payment step, and cancel booking on server
   const handlePriceChangeCancel = async () => {
-    if (priceChangeModal?.bookingReference) {
-      setSubmitting(true);
-      try {
-        await cancelBooking(priceChangeModal.bookingReference);
-      } catch (err) {
-        console.error('Failed to cancel rejected booking', err);
-      } finally {
-        setSubmitting(false);
-      }
+    if (!priceChangeModal?.bookingReference || submitting) return;
+    setSubmitting(true);
+    try {
+      await cancelBooking(priceChangeModal.bookingReference);
+      setPriceChangeModal(null);
+      setPaymentStep(null);
+      setBookingAttempt((attempt) => attempt + 1);
+    } catch {
+      setPriceChangeModal((current) => current ? { ...current, cancelError: t('errors.cancelFailed') } : null);
+    } finally {
+      setSubmitting(false);
     }
-    setPriceChangeModal(null);
-    setPaymentStep(null);
   };
 
   const totalFormatted = tour
     ? formatCurrency(tour.pricing.base_price.amount * participants, tour.pricing.base_price.currency, locale)
     : '';
+  const paymentSummary = paymentStep && tour && (
+    <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+      <h2 className="text-lg font-semibold text-bookly-navy">{tour.title}</h2>
+      <p className="mt-1 text-sm text-text-muted">{tour.location}</p>
+      <dl className="mt-5 space-y-3 text-sm">
+        <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('date')}</dt><dd className="font-medium text-bookly-navy">{new Date(`${date}T00:00:00`).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}</dd></div>
+        <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('participants')}</dt><dd className="font-medium text-bookly-navy">{participants}</dd></div>
+        {paymentStep.serverPerPerson && <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('perPerson')}</dt><dd className="font-medium text-bookly-navy">{paymentStep.serverPerPerson}</dd></div>}
+        {paymentStep.serverTotal && <div className="flex justify-between gap-4 border-t border-border pt-3"><dt className="font-semibold text-bookly-navy">{t('total')}</dt><dd className="font-bold text-bookly-navy">{paymentStep.serverTotal}</dd></div>}
+      </dl>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -256,8 +282,10 @@ export default function BookingForm({ locale }: BookingFormProps) {
 
   if (paymentStep?.gateway === 'deterministic') {
     return (
-      <div className="space-y-6">
-        <h2 className="text-lg font-semibold text-[#0A2540]">{t('paymentHeading')}</h2>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.85fr)] lg:items-start">
+        {paymentSummary}
+        <div className="space-y-6 rounded-xl border border-border bg-surface p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-bookly-navy">{t('paymentHeading')}</h2>
         <DeterministicPaymentForm
           bookingReference={paymentStep.bookingReference}
           clientSecret={paymentStep.clientSecret}
@@ -269,14 +297,17 @@ export default function BookingForm({ locale }: BookingFormProps) {
             {error}
           </div>
         )}
+        </div>
       </div>
     );
   }
 
   if (paymentStep && stripePromise) {
     return (
-      <div className="space-y-6">
-        <h2 className="text-lg font-semibold text-[#0A2540]">{t('paymentHeading')}</h2>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.85fr)] lg:items-start">
+        {paymentSummary}
+        <div className="space-y-6 rounded-xl border border-border bg-surface p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-bookly-navy">{t('paymentHeading')}</h2>
         <Elements stripe={stripePromise} options={{ clientSecret: paymentStep.clientSecret, appearance: { theme: 'stripe', variables: { colorPrimary: '#0A2540', colorBackground: '#F7F9FB', colorText: '#0A2540', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif', borderRadius: '8px', }, }, }}>
           <StripePaymentForm
             clientSecret={paymentStep.clientSecret}
@@ -291,6 +322,7 @@ export default function BookingForm({ locale }: BookingFormProps) {
             {error}
           </div>
         )}
+        </div>
       </div>
     );
   }
@@ -304,14 +336,16 @@ export default function BookingForm({ locale }: BookingFormProps) {
           newPrice={priceChangeModal.newPriceFormatted}
           onConfirm={handlePriceChangeConfirm}
           onCancel={handlePriceChangeCancel}
+          busy={submitting}
+          error={priceChangeModal.cancelError}
         />
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <DateConfirmation date={date} tourSlug={tourSlug} locale={locale} />
-
-        {tour && (
-          <>
+      <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.85fr)] lg:items-start">
+        <div className="space-y-6 rounded-xl border border-border bg-surface p-5 shadow-sm">
+          {tour && <div><h2 className="text-xl font-semibold text-bookly-navy">{tour.title}</h2><p className="mt-1 text-sm text-text-muted">{tour.location}</p></div>}
+          <DateConfirmation date={date} tourSlug={tourSlug} locale={locale} />
+          {tour && (
             <ParticipantSelector
               value={participants}
               onChange={setParticipants}
@@ -319,14 +353,16 @@ export default function BookingForm({ locale }: BookingFormProps) {
               max={tour.group_size.max}
               pricePerPerson={tour.pricing.base_price.formatted}
             />
-
+          )}
+        </div>
+        <div className="space-y-4">
+          {tour && (
             <PriceBreakdown
               pricePerPerson={tour.pricing.base_price.formatted}
               participantCount={participants}
               total={totalFormatted}
             />
-          </>
-        )}
+          )}
 
         {error && (
           <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
@@ -336,11 +372,12 @@ export default function BookingForm({ locale }: BookingFormProps) {
 
         <button
           type="submit"
-          disabled={submitting || !tourSlug || !date}
+          disabled={submitting || !tour || !tourSlug || !date}
           className="w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
         >
           {submitting ? t('confirming') : t('confirmButton')}
         </button>
+        </div>
       </form>
     </>
   );

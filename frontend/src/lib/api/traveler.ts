@@ -102,6 +102,14 @@ export function addTravelerWishlistItem(tourId: string | number) {
   });
 }
 
+export function getTravelerWishlistStatus(tourId: string | number) {
+  const params = new URLSearchParams();
+  params.append('tour_ids[]', String(tourId));
+  return apiClient<{ data: Record<string, boolean> }>(`/api/public/traveler/wishlist/status?${params}`, {
+    headers: authHeaders(),
+  });
+}
+
 export function removeTravelerWishlistItem(tourId: string | number) {
   return apiClient<void>(`/api/public/traveler/wishlist/${encodeURIComponent(String(tourId))}`, {
     method: 'DELETE',

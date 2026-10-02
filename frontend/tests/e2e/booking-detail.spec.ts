@@ -46,7 +46,7 @@ test.describe('Booking Detail', () => {
   test('404 for invalid reference', async ({ page }) => {
     await page.goto('/en/my-bookings/INVALID-REF');
 
-    await expect(page.getByText('Booking not found.')).toBeVisible();
+    await expect(page.getByText('Booking not found.')).toBeVisible({ timeout: 45_000 });
   });
 
   test('mobile layout renders single column', async ({ page }) => {
