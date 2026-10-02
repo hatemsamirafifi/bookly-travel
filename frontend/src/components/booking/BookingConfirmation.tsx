@@ -94,7 +94,7 @@ function renderHeader(status: string, t: TranslationFn) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h2 className="text-xl font-bold text-[#0A2540]">{t('confirmationTitle')}</h2>
+      <h2 className="text-xl font-bold text-[#0A2540]">{t('status')}</h2>
     </>
   );
 }
@@ -177,6 +177,15 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
   }
 
   const booking = state.booking;
+  const statusLabels: Record<string, string> = {
+    confirmed: t('statusConfirmed'),
+    completed: t('statusCompleted'),
+    cancelled: t('statusCancelled'),
+    pending_payment: t('statusPendingPayment'),
+    expired: t('expiredTitle'),
+    no_show: t('statusNoShow'),
+    cancellation_requested: t('cancelledTitle'),
+  };
   const tourName = booking.tour.name || booking.tour.title || 'Tour';
   const participants = booking.participants ?? booking.participant_count ?? 1;
   // L6: shared currency formatter. Prefer the server-formatted string when the
@@ -219,7 +228,7 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">{t('status')}</span>
           <span className="inline-flex items-center rounded-full bg-[#F7F9FB] px-2.5 py-0.5 text-xs font-medium text-[#0A2540]">
-            {booking.status}
+            {statusLabels[booking.status] ?? t('status')}
           </span>
         </div>
       </div>

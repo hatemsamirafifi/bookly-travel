@@ -25,8 +25,7 @@ class DeterministicPaymentGateway implements PaymentGateway
         ?string $destinationAccountId = null,
         ?int $applicationFeeAmount = null,
         array $metadata = []
-    ): string
-    {
+    ): string {
         $digest = hash_hmac(
             'sha256',
             implode('|', [$amount, strtoupper($currency), $idempotencyKey]),

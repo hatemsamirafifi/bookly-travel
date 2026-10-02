@@ -71,4 +71,13 @@ describe('useFilters', () => {
 
     expect(mockPush).toHaveBeenCalledWith('/en/categories/adventure', { scroll: false });
   });
+
+  it('clearAll removes filters but preserves the search query', () => {
+    mockSearchParams = new URLSearchParams('q=Rome&category=adventure&sort=price_asc&page=3');
+    const { result } = renderHook(() => useFilters());
+
+    act(() => result.current.clearAll());
+
+    expect(mockPush).toHaveBeenCalledWith('/en/search?q=Rome', { scroll: false });
+  });
 });

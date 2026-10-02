@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { resetPasswordSchema } from '@/lib/validators/auth';
 import { authApi, AuthApiError } from '@/lib/api/auth';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
@@ -102,10 +104,10 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
           {t('resetPassword.passwordLabel')}
         </label>
         <div className="relative">
-          <input
+          <Input
             id="reset-password"
             type={showPassword ? 'text' : 'password'}
-            className={`w-full px-3.5 py-2.5 pr-11 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.password ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
+            className={`pr-11 ${errors.password ? 'border-error' : ''}`}
             placeholder={t('register.passwordPlaceholder')}
             autoComplete="new-password"
             aria-invalid={!!errors.password}
@@ -139,10 +141,10 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
           {t('resetPassword.confirmPasswordLabel')}
         </label>
         <div className="relative">
-          <input
+          <Input
             id="reset-password-confirmation"
             type={showConfirmPassword ? 'text' : 'password'}
-            className={`w-full px-3.5 py-2.5 pr-11 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.password_confirmation ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
+            className={`pr-11 ${errors.password_confirmation ? 'border-error' : ''}`}
             placeholder={t('register.passwordPlaceholder')}
             autoComplete="new-password"
             aria-invalid={!!errors.password_confirmation}
@@ -178,10 +180,11 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
       )}
 
       {/* Submit */}
-      <button
+      <Button
         id="reset-submit"
         type="submit"
-        className="flex items-center justify-center gap-2 w-full px-4 py-3 mt-1 bg-primary text-white text-[0.9375rem] font-semibold border-none rounded-md cursor-pointer transition-all hover:bg-primary-dark hover:shadow-[0_4px_14px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed"
+        size="lg"
+        className="mt-1 w-full gap-2 text-base"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
       >
@@ -189,7 +192,7 @@ export function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
           <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />
         ) : null}
         {t('resetPassword.submitButton')}
-      </button>
+      </Button>
     </form>
   );
 }

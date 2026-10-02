@@ -174,12 +174,13 @@ test.describe('Partner Booking Detail', () => {
 
   test('partner booking detail page shows the seeded booking with status actions', async ({ page }) => {
     // End-to-end for PartnerBookingController::show + the partner detail
-    // route: BKO-TEST01 is a confirmed booking owned by the seeded partner.
-    await page.goto('/en/partner/bookings/BKO-TEST01');
+    // Independent from the traveler cancellation fixture BKO-TEST01.
+    // BKO-PART01 is a confirmed booking owned by the seeded partner.
+    await page.goto('/en/partner/bookings/BKO-PART01');
 
     // Detail heading, reference, and status badge render from the real API.
     await expect(page.getByRole('heading', { name: 'Booking details' })).toBeVisible();
-    await expect(page.getByText('BKO-TEST01').first()).toBeVisible();
+    await expect(page.getByText('BKO-PART01').first()).toBeVisible();
     await expect(page.getByText('Confirmed', { exact: true }).first()).toBeVisible();
 
     // Tour and traveler sections come from the scoped detail payload.

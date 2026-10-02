@@ -115,7 +115,7 @@ describe('ImageUploader', () => {
 
     expect(onChange).toHaveBeenCalledWith([
       expect.objectContaining({ id: 'cover', is_cover: true, sort_order: 0 }),
-      expect.objectContaining({ id: 'g2', sort_order: 2 }),
+      expect.objectContaining({ id: 'g2', sort_order: 1 }),
     ]);
   });
 
@@ -132,11 +132,10 @@ describe('ImageUploader', () => {
     expect(moveDownButtons).toHaveLength(2);
     fireEvent.click(moveDownButtons[0]);
 
-    expect(onChange).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ id: 'g1', sort_order: 2 }),
-        expect.objectContaining({ id: 'g2', sort_order: 1 }),
-      ])
-    );
+    expect(onChange).toHaveBeenCalledWith([
+      expect.objectContaining({ id: 'cover', sort_order: 0 }),
+      expect.objectContaining({ id: 'g2', sort_order: 1 }),
+      expect.objectContaining({ id: 'g1', sort_order: 2 }),
+    ]);
   });
 });

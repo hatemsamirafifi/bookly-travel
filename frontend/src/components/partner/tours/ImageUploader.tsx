@@ -33,7 +33,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
 
   const coverImage = media.find((m) => m.is_cover);
   const galleryImages = media.filter((m) => !m.is_cover);
-  const totalImages = media.length + uploads.filter((u) => u.status === 'done').length;
+  const totalImages = media.length + uploads.filter((u) => u.status === 'uploading').length;
 
   const uploadFile = useCallback(
     async (file: File, isCover: boolean): Promise<TourMedia | null> => {
@@ -99,6 +99,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
       const fileArray = Array.from(files);
       const newErrors: { name: string; reason: string }[] = [];
       let acceptedCount = 0;
+      const nextMedia = [...media];
 
       for (const file of fileArray) {
         // Validate total count (against media already saved + accepted this batch)
@@ -124,10 +125,11 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
           continue;
         }
 
-        const isCover = !coverImage && media.length === 0 && acceptedCount === 0;
+        const isCover = !coverImage && nextMedia.length === 0;
         const result = await uploadFile(file, isCover);
         if (result) {
-          onChange([...media, result]);
+          nextMedia.push({ ...result, sort_order: nextMedia.length });
+          onChange([...nextMedia]);
           acceptedCount += 1;
         }
       }
@@ -181,11 +183,10 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
 
   const setCover = useCallback(
     (mediaId: string | number) => {
-      const updated = media.map((m) => ({
-        ...m,
-        is_cover: String(m.id) === String(mediaId),
-        sort_order: String(m.id) === String(mediaId) ? 0 : m.sort_order,
-      }));
+      const selected = media.find((m) => String(m.id) === String(mediaId));
+      if (!selected) return;
+      const updated = [selected, ...media.filter((m) => String(m.id) !== String(mediaId))]
+        .map((m, index) => ({ ...m, is_cover: index === 0, sort_order: index }));
       onChange(updated);
     },
     [media, onChange]
@@ -198,26 +199,23 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
       if (!filtered.some((m) => m.is_cover) && filtered.length > 0) {
         filtered[0] = { ...filtered[0], is_cover: true, sort_order: 0 };
       }
-      onChange(filtered);
+      onChange(filtered.map((item, index) => ({ ...item, sort_order: index })));
     },
     [media, onChange]
   );
 
-  /** Reorders a gallery image (non-cover) by swapping sort_order with its neighbor. */
+  /** Reorders the array itself: the backend persists caller array order. */
   const reorderImage = useCallback(
     (mediaId: string | number, direction: -1 | 1) => {
       const gallery = media.filter((m) => !m.is_cover);
       const index = gallery.findIndex((m) => String(m.id) === String(mediaId));
       const swapIndex = index + direction;
       if (index === -1 || swapIndex < 0 || swapIndex >= gallery.length) return;
-      const target = gallery[swapIndex];
-      onChange(
-        media.map((m) => {
-          if (String(m.id) === String(mediaId)) return { ...m, sort_order: target.sort_order };
-          if (String(m.id) === String(target.id)) return { ...m, sort_order: gallery[index].sort_order };
-          return m;
-        })
-      );
+      const next = [...media];
+      const firstIndex = next.findIndex((m) => String(m.id) === String(gallery[index].id));
+      const secondIndex = next.findIndex((m) => String(m.id) === String(gallery[swapIndex].id));
+      [next[firstIndex], next[secondIndex]] = [next[secondIndex], next[firstIndex]];
+      onChange(next.map((item, order) => ({ ...item, sort_order: order })));
     },
     [media, onChange]
   );
@@ -356,7 +354,7 @@ export function ImageUploader({ media, onChange, disabled = false }: ImageUpload
                   height={80}
                   className="object-cover rounded-lg border border-gray-200"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                <div className="absolute inset-x-0 bottom-0 rounded-b-lg bg-black/60 p-1 flex items-center justify-center gap-1">
                   <button
                     type="button"
                     onClick={() => reorderImage(img.id, -1)}

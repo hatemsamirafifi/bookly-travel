@@ -88,8 +88,12 @@ export function useFilters() {
   );
 
   const clearAll = useCallback(() => {
-    router.push(basePath, { scroll: false });
-  }, [basePath, router]);
+    const query = searchParams.get('q');
+    const params = new URLSearchParams();
+    if (query) params.set('q', query);
+    const qs = params.toString();
+    router.push(`${basePath}${qs ? `?${qs}` : ''}`, { scroll: false });
+  }, [basePath, router, searchParams]);
 
   return { filters, activeFilterCount, setFilter, setMultipleFilters, clearAll };
 }

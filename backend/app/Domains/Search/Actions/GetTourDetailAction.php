@@ -2,15 +2,27 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Models\Tour;
 use App\Models\TourTranslation;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GetTourDetailAction
 {
+    public function __construct(
+        private readonly TourTranslationService $translationService,
+        private readonly GetPublicOperatorSummaryAction $operatorSummary,
+        private readonly GetRelatedToursAction $relatedTours,
+    ) {}
+
     public function execute(string $slug, string $locale): array
     {
-        $tour = Tour::with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
+        $tour = Tour::with([
+            'translations', 'translationStates', 'category', 'media',
+            'partnerRecord' => fn ($query) => $query->select(['id', 'onboarding_status', 'is_active']),
+            'partnerRecord.profile' => fn ($query) => $query->select(['id', 'partner_id', 'company_name', 'business_description', 'logo_url']),
+            'availabilityRules', 'availabilityExceptions',
+        ])
             ->where('slug', $slug)->first();
 
         if (! $tour) {
@@ -46,9 +58,12 @@ class GetTourDetailAction
         $isUnavailable = ! $tour->isPubliclyBookable();
 
         // Reuse the eager-loaded `translations` collection (no extra query).
-        $translation = $tour->translations->firstWhere('locale', $locale);
-        $fallback = $translation ? null : $tour->translations->firstWhere('locale', 'en');
-        $t = $translation ?? $fallback;
+        $english = $tour->translations->firstWhere('locale', 'en');
+        $translation = $this->translationService->currentTranslation($tour, $locale);
+        $t = $translation ?? $english;
+        $englishItinerary = $english->itinerary ?? null;
+        $itineraryFallback = $locale !== 'en' && $t?->itinerary === null && $englishItinerary !== null;
+        $contentLocale = $t->locale ?? $locale;
 
         $images = $tour->allImageUrls();
         $imageObjects = [];
@@ -66,10 +81,13 @@ class GetTourDetailAction
             'id' => $tour->id,
             'slug' => $tour->slug,
             'title' => optional($t)->title ?? '',
+            'content_locale' => $contentLocale,
             'description' => optional($t)->description ?? '',
+            'translation_status' => $this->translationService->publicStatus($tour, $locale),
             'highlights' => optional($t)->highlights ?? [],
             'inclusions' => optional($t)->inclusions ?? [],
             'exclusions' => optional($t)->exclusions ?? [],
+            'important_information' => optional($t)->important_information ?? [],
             'location' => $tour->location,
             'meeting_point' => optional($t)->meeting_point ?? '',
             'category' => [
@@ -80,7 +98,13 @@ class GetTourDetailAction
                 'minutes' => $tour->duration_minutes,
                 'label' => $tour->duration_label,
             ],
-            'languages' => $tour->availableLanguages(),
+            'difficulty_level' => $tour->difficulty_level,
+            // Keep the existing `languages` field for consumers of the public
+            // contract, but make its meaning explicit in the new field.
+            'languages' => $tour->guideLanguages(),
+            'guide_languages' => $tour->guideLanguages(),
+            'itinerary' => $t->itinerary ?? $englishItinerary ?? [],
+            'itinerary_locale' => $itineraryFallback ? 'en' : $contentLocale,
             'group_size' => [
                 'min' => $tour->group_size_min,
                 'max' => $tour->group_size_max,
@@ -116,10 +140,12 @@ class GetTourDetailAction
                 'count' => $tour->reviewCount(),
                 'distribution' => $tour->reviewDistribution(),
             ],
+            'operator' => $this->operatorSummary->execute($tour),
+            'related_tours' => $this->relatedTours->execute($tour, $locale),
             'seo' => $this->buildSeoMetadata($tour, $t, $locale),
         ];
 
-        if (! $translation && $fallback) {
+        if (($locale !== 'en' && ! $translation && $english) || $itineraryFallback) {
             $data['translation_warning'] = 'partial_translation';
         }
 

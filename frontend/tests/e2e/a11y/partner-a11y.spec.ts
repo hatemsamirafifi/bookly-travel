@@ -48,8 +48,8 @@ test.describe('Partner Layout Accessibility', () => {
     const sidebar = page.locator('nav[aria-label]');
     await expect(sidebar).toBeVisible();
 
-    // Nav items should have role="menuitem" or be links
-    const navLinks = sidebar.locator('a[role="menuitem"]');
+    // Destination navigation uses ordinary links, not application-menu roles.
+    const navLinks = sidebar.getByRole('link');
     const linkCount = await navLinks.count();
     expect(linkCount).toBeGreaterThanOrEqual(5); // dashboard, tours, bookings, reviews, profile
   });
@@ -67,7 +67,7 @@ test.describe('Partner Layout Accessibility', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/en/partner');
 
-    const menuButton = page.getByRole('button', { name: /open navigation|menu/i });
+    const menuButton = page.getByRole('button', { name: /^open navigation menu$/i });
     await expect(menuButton).toBeVisible();
   });
 
@@ -76,20 +76,24 @@ test.describe('Partner Layout Accessibility', () => {
     await page.goto('/en/partner');
 
     // Open the drawer
-    const menuButton = page.getByRole('button', { name: /open navigation|menu/i });
+    const menuButton = page.getByRole('button', { name: /^open navigation menu$/i });
     await menuButton.click();
 
     // Drawer should have dialog role and aria-modal
-    const drawer = page.locator('[role="dialog"][aria-modal="true"]');
+    const drawer = page.getByRole('dialog', { name: 'Main navigation', exact: true });
     await expect(drawer).toBeVisible();
+    await expect(drawer).toHaveAttribute('aria-modal', 'true');
 
     // Close button should have aria-label
-    const closeButton = page.getByRole('button', { name: /close navigation/i });
+    const closeButton = drawer.getByRole('button', { name: 'Close menu', exact: true });
     await expect(closeButton).toBeVisible();
+    await expect(closeButton).toBeFocused();
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
     await closeButton.click();
 
     // Drawer should close
     await expect(drawer).not.toBeVisible();
+    await expect(menuButton).toBeFocused();
   });
 
   test('notification bell should have accessible label', async ({ page }) => {

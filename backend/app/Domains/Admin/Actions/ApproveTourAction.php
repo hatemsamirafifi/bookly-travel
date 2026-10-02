@@ -30,6 +30,13 @@ class ApproveTourAction
                 'Tour cannot be published from its current state, or the owning partner is not approved.',
             );
 
+            $english = $locked->translations()->where('locale', 'en')->first();
+            abort_unless(
+                $english && filled($english->title) && filled($english->description),
+                422,
+                'Tour requires an English title and description before publication.',
+            );
+
             $before = ['status' => $locked->status];
 
             // Stamp the first-publication timestamp the first time a tour is

@@ -49,6 +49,11 @@ return [
         'gateway' => env('PAYMENT_GATEWAY', 'stripe'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'translation_model' => env('GEMINI_TRANSLATION_MODEL', 'gemini-3.5-flash-lite'),
+    ],
+
     // Spec 014: public base URL encoded in the voucher QR (FR-002, SC-009).
     // The QR resolves to {public_base_url}/v/{booking_reference}. Default is
     // the production origin; override locally (e.g. http://localhost:3000) so

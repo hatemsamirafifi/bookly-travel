@@ -24,43 +24,75 @@ test.describe('Wishlist', () => {
 
   test('tour card wishlist button toggles saved state', async ({ page }) => {
     await page.goto('/en/search');
+    await page.waitForLoadState('networkidle');
 
     // Find a tour card with a wishlist button
     const wishlistBtn = page.locator('[data-testid="wishlist-button"]').first();
-    if (await wishlistBtn.isVisible()) {
-      const initialAriaPressed = await wishlistBtn.getAttribute('aria-pressed');
-
-      await wishlistBtn.click();
-      await page.waitForTimeout(500);
-
-      const newAriaPressed = await wishlistBtn.getAttribute('aria-pressed');
-      expect(newAriaPressed).not.toBe(initialAriaPressed);
-    }
+    await expect(wishlistBtn).toBeVisible();
+    await expect(wishlistBtn).toBeEnabled();
+    const initialAriaPressed = await wishlistBtn.getAttribute('aria-pressed');
+    const mutation = page.waitForResponse((response) =>
+      response.url().includes('/api/public/traveler/wishlist') && ['POST', 'DELETE'].includes(response.request().method()),
+    );
+    await wishlistBtn.click();
+    await expect(wishlistBtn).toHaveAttribute('aria-pressed', initialAriaPressed === 'true' ? 'false' : 'true');
+    expect((await mutation).ok()).toBe(true);
+    await page.reload();
+    await expect(page.locator('[data-testid="wishlist-button"]').first()).toHaveAttribute(
+      'aria-pressed', initialAriaPressed === 'true' ? 'false' : 'true',
+    );
   });
 
   test('removing item from wishlist updates grid', async ({ page }) => {
     await page.goto('/en/wishlist');
 
-    const removeBtn = page.locator('button:has-text("Remove")').or(page.locator('[data-testid="remove-wishlist"]')).first();
-    if (await removeBtn.isVisible()) {
-      await removeBtn.click();
-      await page.waitForTimeout(500);
+    const grid = page.locator('[data-testid="wishlist-grid"]');
+    const empty = page.getByText('Your wishlist is empty.');
+    await expect(grid.or(empty).first()).toBeVisible();
+    if (await empty.isVisible()) {
+      await page.goto('/en/search?q=tour');
+      await page.waitForLoadState('networkidle');
+      const save = page.locator('[data-testid="wishlist-button"]').first();
+      await expect(save).toBeVisible();
+      await expect(save).toHaveAttribute('aria-pressed', 'false');
+      const addition = page.waitForResponse((response) =>
+        response.url().includes('/api/public/traveler/wishlist') && response.request().method() === 'POST',
+      );
+      await save.click();
+      expect((await addition).ok()).toBe(true);
+      await page.goto('/en/wishlist');
+      await expect(grid).toBeVisible();
+    }
 
-      // Item should disappear or empty state should show
-      await expect(
-        page.getByText('Your wishlist is empty.').or(page.locator('[data-testid="wishlist-grid"]')).first()
-      ).toBeVisible();
+    const initialCards = await grid.locator('article').count();
+    const removeBtn = grid.getByRole('button', { name: /remove/i }).first();
+    await expect(removeBtn).toBeVisible();
+    const removal = page.waitForResponse((response) =>
+      response.url().includes('/api/public/traveler/wishlist/') && response.request().method() === 'DELETE',
+    );
+    await removeBtn.click();
+    expect((await removal).status()).toBe(204);
+    if (initialCards === 1) {
+      await expect(empty).toBeVisible();
+    } else {
+      await expect(grid.locator('article')).toHaveCount(initialCards - 1);
     }
   });
 
   test('wishlist item links to tour detail', async ({ page }) => {
     await page.goto('/en/wishlist');
 
-    const tourLink = page.locator('a[href^="/en/tours/"]').first();
-    if (await tourLink.isVisible()) {
+    const grid = page.locator('[data-testid="wishlist-grid"]');
+    const empty = page.getByText('Your wishlist is empty.');
+    await expect(grid.or(empty).first()).toBeVisible();
+    if (await grid.isVisible()) {
+      const tourLink = grid.locator('a[href^="/en/tours/"]').first();
+      await expect(tourLink).toBeVisible();
       await tourLink.click();
       await page.waitForURL(/\/en\/tours\//);
       await expect(page.locator('h1')).toBeVisible();
+    } else {
+      await expect(empty).toBeVisible();
     }
   });
 });

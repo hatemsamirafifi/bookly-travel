@@ -1,27 +1,30 @@
 import { test, expect } from '@playwright/test';
+import en from '../../messages/en.json';
+import es from '../../messages/es.json';
+import it from '../../messages/it.json';
 
 test.describe('Multi-Language (i18n)', () => {
   test('English locale loads correctly', async ({ page }) => {
     await page.goto('/en/search');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.locator('select[aria-label="Switch language"]').first()).toHaveValue('en');
+    await expect(page.getByRole('combobox', { name: en.nav.switchLanguage }).first()).toHaveValue('en');
   });
 
   test('Spanish locale loads correctly', async ({ page }) => {
     await page.goto('/es/search');
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-    await expect(page.locator('select[aria-label="Switch language"]').first()).toHaveValue('es');
+    await expect(page.getByRole('combobox', { name: es.nav.switchLanguage }).first()).toHaveValue('es');
   });
 
   test('Italian locale loads correctly', async ({ page }) => {
     await page.goto('/it/search');
     await expect(page.locator('html')).toHaveAttribute('lang', 'it');
-    await expect(page.locator('select[aria-label="Switch language"]').first()).toHaveValue('it');
+    await expect(page.getByRole('combobox', { name: it.nav.switchLanguage }).first()).toHaveValue('it');
   });
 
   test('locale switcher navigates to same page in different language', async ({ page }) => {
     await page.goto('/en/search');
-    const switcher = page.locator('select[aria-label="Switch language"]').first();
+    const switcher = page.getByRole('contentinfo').getByRole('combobox', { name: en.nav.switchLanguage });
     // The switcher is a client component: a change fired before hydration
     // completes is lost (React resets the controlled value), so the
     // navigation never happens. Settle first, then retry the selection
@@ -41,7 +44,7 @@ test.describe('Multi-Language (i18n)', () => {
 
   test('locale switcher preserves path and query params', async ({ page }) => {
     await page.goto('/en/search?q=beach');
-    const switcher = page.locator('select[aria-label="Switch language"]').first();
+    const switcher = page.getByRole('contentinfo').getByRole('combobox', { name: en.nav.switchLanguage });
     // Same hydration race as above -- settle, then retry until commit.
     await page.waitForLoadState('networkidle').catch(() => undefined);
     for (let attempt = 0; attempt < 3; attempt++) {

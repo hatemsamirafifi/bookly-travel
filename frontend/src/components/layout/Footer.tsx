@@ -1,45 +1,47 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import LocaleSwitcher from './LocaleSwitcher';
+import { Container } from '@/components/ui/Container';
 
 interface FooterProps {
   locale: string;
 }
 
-export default function Footer({ locale }: FooterProps) {
+export default async function Footer({ locale }: FooterProps) {
+  const t = await getTranslations({ locale, namespace: 'footer' });
+  const nav = await getTranslations({ locale, namespace: 'nav' });
   return (
-    <footer className="bg-[#0A2540] text-gray-300">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="bg-primary text-text-on-dark">
+      <Container className="py-section">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           <div>
-            <p className="mb-3 text-lg font-semibold text-white">Bookly</p>
-            <p className="text-sm text-gray-400">
-              Discover and instantly book the best tours worldwide. Your next adventure awaits.
-            </p>
+            <p className="mb-3 text-lg font-semibold text-text-inverse">Bookly</p>
+            <p className="text-sm">{t('tagline')}</p>
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold text-white">Explore</p>
+            <p className="mb-3 text-sm font-semibold text-white">{t('explore')}</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href={`/${locale}/search`} className="hover:text-white transition-colors">Search Tours</Link></li>
-              <li><Link href={`/${locale}/categories`} className="hover:text-white transition-colors">Categories</Link></li>
-              <li><Link href={`/${locale}/destinations`} className="hover:text-white transition-colors">Destinations</Link></li>
+              <li><Link href={`/${locale}/search`} className="hover:text-white transition-colors">{t('searchTours')}</Link></li>
+              <li><Link href={`/${locale}/categories`} className="hover:text-white transition-colors">{nav('categories')}</Link></li>
+              <li><Link href={`/${locale}/destinations`} className="hover:text-white transition-colors">{nav('destinations')}</Link></li>
             </ul>
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold text-white">Company</p>
+            <p className="mb-3 text-sm font-semibold text-white">{t('company')}</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href={`/${locale}/terms`} className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t('privacy')}</Link></li>
+              <li><Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t('terms')}</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-300">
-          <span>&copy; {new Date().getFullYear()} Bookly. All rights reserved.</span>
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-text-on-dark/20 pt-8 text-sm sm:flex-row">
+          <span>&copy; {new Date().getFullYear()} Bookly. {t('rights')}</span>
           <LocaleSwitcher />
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

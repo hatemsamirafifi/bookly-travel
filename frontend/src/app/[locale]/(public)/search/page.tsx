@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { searchTours } from '@/lib/api/search';
 import { RateLimitError } from '@/lib/api/client';
 import { parseSort } from '@/lib/validators/search';
+import { getTranslations } from 'next-intl/server';
 import SearchBar from '@/components/search/SearchBar';
 import SearchResults from '@/components/search/SearchResults';
 import Pagination from '@/components/search/Pagination';
@@ -24,12 +25,12 @@ interface SearchPageProps {
   }>;
 }
 
-export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: SearchPageProps): Promise<Metadata> {
+  const { locale } = await params;
   const { q } = await searchParams;
-  const title = q ? `${q} - Search Results | Bookly` : 'Search Tours | Bookly';
-  const description = q
-    ? `Search results for "${q}". Find and book the best tours worldwide.`
-    : 'Search and discover amazing tours worldwide. Filter by category, location, price, and more.';
+  const t = await getTranslations({ locale, namespace: 'search' });
+  const title = q ? `${q} - ${t('pageTitle')} | Bookly` : `${t('pageTitle')} | Bookly`;
+  const description = t('noResultsHint');
 
   return {
     title,
@@ -41,6 +42,7 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
 
 export default async function SearchPage({ params, searchParams }: SearchPageProps) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'search' });
   const sp = await searchParams;
 
   const currentPage = sp.page ? parseInt(sp.page, 10) : 1;
@@ -71,13 +73,13 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
     } else if (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 503) {
       isServiceUnavailable = true;
     }
-    error = 'Failed to load search results. Please try again.';
+    error = t('loadError');
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F9FB]">
+    <div className="min-h-screen bg-surface-alt">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h1 className="sr-only">Search Tours</h1>
+        <h1 className="sr-only">{t('pageTitle')}</h1>
         <div className="mb-8 flex justify-center">
           <SearchBar initialQuery={query} />
         </div>
@@ -100,12 +102,12 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 {query && (
                   <p className="text-sm text-gray-500">
-                    {data.meta.total} result{data.meta.total !== 1 ? 's' : ''} for &quot;{query}&quot;
+                    {t(data.meta.total === 1 ? 'resultsFor' : 'resultsFor_plural', { total: data.meta.total, query })}
                   </p>
                 )}
                 {!query && (
                   <p className="text-sm text-gray-500">
-                    {data.meta.total} tour{data.meta.total !== 1 ? 's' : ''} available
+                    {t(data.meta.total === 1 ? 'toursAvailable' : 'toursAvailable_plural', { total: data.meta.total })}
                   </p>
                 )}
                 <SortDropdown />

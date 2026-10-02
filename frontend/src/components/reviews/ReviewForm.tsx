@@ -145,7 +145,7 @@ export default function ReviewForm({
         )}
         <div className="mt-1 flex justify-end">
           <span
-            className={`text-xs ${charCount > 2000 ? 'text-red-500 font-medium' : 'text-gray-400'}`}
+            className={`text-xs ${charCount > 2000 ? 'text-red-600 font-medium' : 'text-gray-600'}`}
           >
             {t('char_count', { count: charCount })}
           </span>

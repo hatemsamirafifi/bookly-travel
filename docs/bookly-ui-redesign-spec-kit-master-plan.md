@@ -20,12 +20,15 @@
 - [x] The Stripe payments prerequisite is satisfied: `feature/stripe-payments-connect-invoicing` resolves to `76b1f1e`, which is contained in `origin/main`.
 - [x] Feature number `017` is assigned retrospectively to the merged Stripe Payments, Connect & Invoicing Foundation. The UI redesign intentionally uses `018`; this is not an accidental numbering gap.
 - [x] Retrospective Spec Kit artifacts now exist under `specs/017-stripe-connect-invoicing/`; after Constitution v2 hardening, its PostgreSQL-backed feature suite passes 14 tests and 61 assertions.
+- [x] Revalidated on 2026-09-25 after `git fetch origin --prune`: `HEAD`, local `main`, and `origin/main` resolve to `f3e8e25`; no remote branch is unmerged into `origin/main`. The existing `018-bookly-ui-redesign` branch was retained because it contains uncommitted feature work.
 
 ## Global Constraints
 
 - Create `018-bookly-ui-redesign` from an updated local `main` at or after verified baseline `11c534e`.
 - Re-run the Phase 0 branch check immediately before creating the feature branch; stop if any published `origin` branch is ahead of `origin/main`.
 - Preserve EN/ES/IT; Arabic and RTL are out of scope.
+- Partners author English (EN) as the mandatory source of truth for tour content. The platform generates Spanish (ES) and Italian (IT) with AI; missing or outdated derived content does not block publishing and temporarily shows the current English source with a visible fallback notice. This decision is independent of live-guide languages.
+- Live-guide/spoken languages are separate tour metadata with stable language codes (for example `de`, `en`, `es`), and their display names are localized for the page language.
 - Redesign all web screens, including public, auth, traveler, checkout, partner, Filament admin, legal, blog, errors, and voucher verification.
 - Emails, generated PDFs, native apps, hotels, flights, restaurants, forums, ads, rewards, and AI planning are out of scope.
 - Preserve authentication, authorization, booking, payment, review-integrity, and publishing rules.
@@ -52,7 +55,7 @@
 
 ### Task 0.1: Revalidate the base and create the feature workspace
 
-Run from the repository root. The guard fails before feature creation if a newly published branch contains commits not present in `origin/main`:
+For a fresh workspace, run from the repository root. The guard fails before feature creation if a newly published branch contains commits not present in `origin/main`. If `018-bookly-ui-redesign` already exists with uncommitted work, verify the base and branch in place; do not switch branches or recreate it:
 
 ```powershell
 git fetch origin --prune
@@ -83,9 +86,11 @@ Expected branch and directory:
 specs/018-bookly-ui-redesign/
 ```
 
+**2026-09-25 result:** Base and remote-merge guard passed on the existing feature branch. Branch creation was correctly skipped because the workspace already exists; see `specs/018-bookly-ui-redesign/research.md` for the observed baseline.
+
 ### Task 0.2: Generate the standard Spec Kit artifacts
 
-- [ ] Create and fully populate the following artifacts:
+- [x] Create and fully populate the following artifacts:
 
 ```text
 specs/018-bookly-ui-redesign/
@@ -100,12 +105,11 @@ specs/018-bookly-ui-redesign/
 `-- tasks.md
 ```
 
-- [ ] Populate `spec.md` from this master plan.
-- [ ] Cite Bookly Constitution v2.0.0 in `spec.md` and record a principle-by-principle Constitution Check in `plan.md`.
-- [ ] Run `/speckit.plan`.
-- [ ] Require `/speckit.plan` to generate `research.md`, `data-model.md`, both API contracts, and `quickstart.md`.
-- [ ] Run `/speckit.tasks` only after the generated plan passes the Constitution Check.
-- [ ] Compare generated `tasks.md` against every phase below; no requirement may disappear.
+- [x] Populate `spec.md` from this master plan.
+- [x] Cite Bookly Constitution v2.0.0 in `spec.md` and record a principle-by-principle Constitution Check in `plan.md`.
+- [x] Verify the existing `/speckit.plan` deliverables: `plan.md`, `research.md`, `data-model.md`, both API contracts, and `quickstart.md`. The generator was not rerun over the dirty worktree during this Phase 0 audit.
+- [x] Verify the existing `/speckit.tasks` deliverable against the Constitution Check. The generator was not rerun over the dirty worktree during this Phase 0 audit.
+- [x] Compare `tasks.md` against every phase below and append explicit tasks for previously implicit media, operator, related-tour, auth, partner-editor, admin and supporting-page work. Existing task IDs stay stable.
 
 ### Task 0.3: Produce design documentation
 
@@ -129,6 +133,8 @@ Create visual acceptance matrices for:
 - Partner dashboard.
 - Filament admin.
 
+**2026-09-25 result:** `research.md` records the current route/component baseline, observed technical debt, reference-site hierarchy and originality boundary. `quickstart.md` contains the seven page-family matrices plus four-width, EN/ES/IT, keyboard, reduced-motion, data-integrity and production-build performance checks. The reference detail URL could be verified through search indexing but not fetched directly, so mobile behavior is documented as a Bookly proposal rather than a claimed observation.
+
 **Checkpoint:** Specification and implementation artifacts contain no `NEEDS CLARIFICATION`, `TBD`, or placeholder sections.
 
 **Commit:**
@@ -138,9 +144,13 @@ git add specs/018-bookly-ui-redesign
 git commit -m "docs: define Bookly UI redesign specification"
 ```
 
+**2026-09-25 commit scope:** Commit only `.specify/feature.json`, this master plan, and `specs/018-bookly-ui-redesign/` for Phase 0. Keep the ongoing backend/frontend translation implementation and the ignored local secret outside this documentation commit.
+
 ---
 
 ## Phase 1 - Design System and Shared Application Shells
+
+**Status: Implementation complete (2026-10-01).** Tasks 1.1-1.3 are complete. The isolated Phase 1 branch passed 206 tests, lint, typecheck and production build. [PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open; merge/CI acceptance and release-wide gates are still pending.
 
 ### Task 1.1: Establish semantic design tokens
 
@@ -153,12 +163,12 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 **Produces:** Semantic color, spacing, typography, elevation, radius, focus, motion, and layout tokens consumed by all later phases.
 
-- [ ] Write tests asserting that primary interactive components consume semantic token classes and expose visible focus states.
-- [ ] Run the focused test and verify it fails against the current implementation.
-- [ ] Define tokens for brand, text, border, surface, overlay, trust, error, warning, focus, content widths, responsive gutters, spacing, radius, shadows, z-index, and motion.
-- [ ] Configure `Plus Jakarta Sans` in the locale root layout through `next/font`.
-- [ ] Add `prefers-reduced-motion` behavior.
-- [ ] Run the focused test, typecheck, and lint.
+- [x] Write tests asserting that primary interactive components consume semantic token classes and expose visible focus states.
+- [x] Run the focused test and verify it fails against the current implementation.
+- [x] Define tokens for brand, text, border, surface, overlay, trust, error, warning, focus, content widths, responsive gutters, spacing, radius, shadows, z-index, and motion.
+- [x] Configure `Plus Jakarta Sans` in the locale root layout through `next/font`.
+- [x] Add `prefers-reduced-motion` behavior.
+- [x] Run the focused test, typecheck, and lint.
 
 ### Task 1.2: Build reusable primitives
 
@@ -186,10 +196,10 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 **Produces:** The only approved primitives for later public and dashboard work.
 
-- [ ] Add failing keyboard, ARIA, loading, disabled, and focus-management tests.
-- [ ] Implement each primitive with the minimum client-side boundary required.
-- [ ] Verify keyboard navigation, focus restoration, accessible names, and reduced-motion behavior.
-- [ ] Run Jest, typecheck, and lint.
+- [x] Add failing keyboard, ARIA, loading, disabled, and focus-management tests.
+- [x] Implement each primitive with the minimum client-side boundary required.
+- [x] Verify keyboard navigation, focus restoration, accessible names, and reduced-motion behavior.
+- [x] Run Jest, typecheck, and lint.
 
 ### Task 1.3: Redesign shared layouts
 
@@ -209,10 +219,10 @@ Public header behavior:
 - Mobile: compact logo/search/account bar and navigation drawer.
 - Do not render hotels, restaurants, rewards, AI planning, or other unsupported links.
 
-- [ ] Add failing guest, traveler, partner, mobile-menu, and keyboard navigation tests.
-- [ ] Implement the public, auth, traveler, and partner shells with shared primitives.
-- [ ] Verify existing auth guards and redirect semantics remain unchanged.
-- [ ] Capture visual snapshots at 390px and 1440px.
+- [x] Add failing guest, traveler, partner, mobile-menu, and keyboard navigation tests.
+- [x] Implement the public, auth, traveler, and partner shells with shared primitives.
+- [x] Verify existing auth guards and redirect semantics remain unchanged.
+- [x] Capture visual snapshots at 390px and 1440px.
 
 **Phase commands:**
 
@@ -275,16 +285,25 @@ Migration behavior:
 - Backfill valid `tours.itinerary` values into the English translation.
 - Invalid or empty legacy values become `[]`.
 - Keep `tours.itinerary` for backward compatibility.
+- Select itinerary content by page locale; if only its translation is missing, disclose an English fallback rather than treating guide-language codes as translation availability.
 - Stop writing new content to the legacy column.
 - Do not drop the legacy column in this feature.
+- Treat English as the canonical source for title, description, itinerary, inclusions/exclusions, important information, and all other traveler-facing tour fields. Partners are not required to author ES/IT.
+- Track whether each derived translation is current, pending, outdated, or failed relative to the English source revision; queue generation after English creation or change, and reject late results for superseded revisions.
+- Require the existing English title and description before publication; never gate publication on ES/IT translation readiness.
+- Select the actual current content locale for public display and SEO. A missing, outdated, or failed ES/IT translation uses the current English source with a visible notice; ready content replaces it automatically.
+- Gemini is the approved backend-only AI provider in the Spec Kit plan. Its model and key are configured through backend environment variables; the local key is ignored by Git and must be rotated before production use.
 
 - [ ] Write failing migration, validation, locale-selection, and fallback tests.
 - [ ] Add nullable JSONB `itinerary` to `tour_translations`.
 - [ ] Add fillable/cast configuration.
 - [ ] Update Form Requests, service synchronization, and draft serialization.
+- [ ] Add translation-state, retry, source-revision, stale-result, and English-only publishing tests, including frontend and browser-level fallback/ready transitions.
 - [ ] Run focused backend tests.
 
 ### Task 2.2: Persist difficulty and gallery media correctly
+
+Guide/spoken languages are persisted as a separate tour-level code list and exposed independently of the localized tour translation records.
 
 **Files:**
 
@@ -358,12 +377,16 @@ interface TourDetail {
   itinerary: ItineraryDay[];
   operator?: OperatorSummary;
   related_tours: TourCard[];
+  guide_languages: string[]; // spoken/live-guide language codes, not content locales
+  content_locale: 'en' | 'es' | 'it'; // actual displayed tour-content language
+  itinerary_locale: 'en' | 'es' | 'it'; // actual displayed itinerary language
 }
 ```
 
 - [ ] Add contract tests for the exact response shape.
 - [ ] Eager-load translations, category, media, availability, and partner profile.
 - [ ] Preserve every current response field.
+- [ ] Keep the existing `languages` response field compatible with its documented spoken-language meaning; never populate it from available content translations.
 - [ ] Emit real itinerary data as an ordered JSON-LD `ItemList`.
 - [ ] Retain meeting point as a `Place` and include all gallery image URLs.
 - [ ] Omit empty aggregate-rating structured data when no reviews exist.
@@ -421,6 +444,7 @@ Page order:
 4. Sticky section navigation.
 5. Overview and read-more control.
 6. Duration, group size, languages, and difficulty.
+   Here, languages means available live-guide languages, with names localized for EN/ES/IT.
 7. Highlights.
 8. Structured itinerary.
 9. Included/excluded accordions.
@@ -885,6 +909,7 @@ Phases 4, 5, and 6 may overlap only after Phase 1 is stable. Phase 7 requires th
 - Primary public pages score at least 90 in Lighthouse Performance.
 - Full frontend and backend suites pass.
 - No private partner data appears in public responses.
+- Live-guide language codes remain independent from EN/ES/IT tour content translations and display with localized names on tour detail pages.
 - Generated Spec Kit requirements, contracts, tasks, and implementation remain traceable to this master plan.
 
 ## Explicit Assumptions

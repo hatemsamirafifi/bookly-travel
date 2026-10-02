@@ -8,25 +8,25 @@ test.describe('Partner Reviews Page', () => {
   test('should display review cards with star ratings', async ({ page }) => {
     // The dashboard groups reviews by tour (collapsed by default).
     // Expand the first tour summary to reveal the review cards.
-    const firstSummary = page.locator('button').filter({ hasText: /Walking Tour/i }).first();
+    const firstSummary = page.getByRole('button', { name: /Walking Tour/i, expanded: false }).first();
     await firstSummary.click();
 
     // Expanded review card shows the "Verified Traveler" badge
-    await expect(page.getByText(/verified traveler/i)).toBeVisible();
+    await expect(page.getByText(/verified traveler/i).first()).toBeVisible();
   });
 
   test('should show review comment text', async ({ page }) => {
     // Expand the first tour summary
-    const firstSummary = page.locator('button').filter({ hasText: /Walking Tour/i }).first();
+    const firstSummary = page.getByRole('button', { name: /Walking Tour/i, expanded: false }).first();
     await firstSummary.click();
 
     // Seeded review (DatabaseSeeder, BKO-TEST03): "A wonderful hidden-gems walk…" (or edited in test run)
-    await expect(page.getByText(/hidden-gems walk|highly recommended|Updated comment/i)).toBeVisible();
+    await expect(page.getByText(/hidden-gems walk|highly recommended|Updated comment/i).first()).toBeVisible();
   });
 
   test('should display date on review cards', async ({ page }) => {
     // Expand the first tour summary if present
-    const firstSummary = page.locator('button').filter({ hasText: /Walking Tour/i }).first();
+    const firstSummary = page.getByRole('button', { name: /Walking Tour/i, expanded: false }).first();
     if (await firstSummary.isVisible()) {
       await firstSummary.click();
     }
@@ -159,7 +159,7 @@ test.describe('Partner Reviews - API Integration', () => {
     await page.goto('/en/partner/reviews');
 
     // Expand the first tour summary to reveal the review
-    await page.locator('button').filter({ hasText: /Rome Walking Tour/i }).first().click();
+    await page.getByRole('button', { name: /Rome Walking Tour/i, expanded: false }).first().click();
 
     await expect(page.getByText('Alice')).toBeVisible();
     await expect(page.getByText(/fantastic experience/i)).toBeVisible();

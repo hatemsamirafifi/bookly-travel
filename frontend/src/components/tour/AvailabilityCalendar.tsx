@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface AvailabilityCalendarProps {
   availableDates: string[];
@@ -9,6 +10,7 @@ interface AvailabilityCalendarProps {
 }
 
 export default function AvailabilityCalendar({ availableDates, nextAvailableDate, locale = 'en' }: AvailabilityCalendarProps) {
+  const t = useTranslations('tour');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
 
@@ -20,18 +22,18 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
   if (availableDates.length === 0) {
     return (
       <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-        <p className="text-sm font-medium text-yellow-800">Currently Unavailable</p>
-        <p className="mt-1 text-sm text-yellow-700">No upcoming dates are available for this tour. Check back soon.</p>
+        <p className="text-sm font-medium text-yellow-800">{t('unavailable')}</p>
+        <p className="mt-1 text-sm text-yellow-700">{t('unavailableHint')}</p>
       </div>
     );
   }
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-700">Select a Date</h2>
+      <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('selectDate')}</h2>
 
       <div className="mb-3">
-        <p className="text-xs text-gray-500">Next available</p>
+        <p className="text-xs text-gray-500">{t('nextAvailable')}</p>
         {nextAvailableDate && (
           <p className="text-sm font-medium text-green-700">{formatDisplay(nextAvailableDate)}</p>
         )}
@@ -65,7 +67,7 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
 
       {selectedDate && (
         <p className="mt-3 text-sm text-[#0A2540]">
-          Selected: <span className="font-medium">{formatDisplay(selectedDate)}</span>
+          {t('selected')} <span className="font-medium">{formatDisplay(selectedDate)}</span>
         </p>
       )}
     </div>

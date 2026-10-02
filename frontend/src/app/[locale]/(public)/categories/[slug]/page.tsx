@@ -4,6 +4,7 @@ import { getCategoryTours } from '@/lib/api/categories';
 import { NotFoundError } from '@/lib/api/client';
 import { parseSort } from '@/lib/validators/search';
 import ListingPage from '@/components/search/ListingPage';
+import { getTranslations } from 'next-intl/server';
 
 interface CategoryPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -11,18 +12,21 @@ interface CategoryPageProps {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'listing' });
   const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const title = `${t('categoryTitle', { name })} | Bookly`;
 
   return {
-    title: `${name} Tours | Bookly`,
-    description: `Browse ${name.toLowerCase()} tours. Find and book the best ${name.toLowerCase()} experiences worldwide.`,
+    title,
+    description: t('categoryDescription', { name }),
     robots: { index: true, follow: true },
   };
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'listing' });
   const sp = await searchParams;
 
   const currentPage = sp.page ? parseInt(sp.page, 10) : 1;
@@ -46,5 +50,5 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-  return <ListingPage title={`${name} Tours`} data={data} locale={locale} />;
+  return <ListingPage title={t('categoryTitle', { name })} data={data} locale={locale} />;
 }

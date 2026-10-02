@@ -78,6 +78,7 @@ function ProfileIcon({ className }: { className?: string }) {
 
 export function PartnerSidebar({ onNavigate }: PartnerSidebarProps) {
   const pathname = usePathname();
+  const locale = pathname.split('/')[1];
   const t = useTranslations('partner.nav');
 
   const isActive = (href: string) => {
@@ -94,30 +95,29 @@ export function PartnerSidebar({ onNavigate }: PartnerSidebarProps) {
   return (
     <nav className="flex h-full flex-col" aria-label={t('sidebarLabel', { defaultValue: 'Partner dashboard navigation' })}>
       <div className="flex items-center gap-3 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FFB800] text-[#0A2540] font-bold text-sm">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-primary font-bold text-sm">
           B
         </div>
-        <span className="text-lg font-semibold text-white tracking-tight">
+        <span className="text-lg font-semibold text-text-inverse tracking-tight">
           {t('appName', { defaultValue: 'Bookly' })}
         </span>
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-2">
-        <ul className="space-y-1" role="menubar">
+        <ul className="space-y-1">
           {navItems.map((item) => {
             const active = isActive(item.href);
             return (
-              <li key={item.key} role="none">
+              <li key={item.key}>
                 <Link
-                  href={item.href}
+                  href={`/${locale}${item.href}`}
                   onClick={onNavigate}
-                  role="menuitem"
                   aria-current={active ? 'page' : undefined}
                   className={[
-                    'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
+                    'flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors motion-reduce:transition-none',
                     active
-                      ? 'bg-[#FFB800] text-[#0A2540]'
-                      : 'text-gray-300 hover:bg-white/10 hover:text-white',
+                      ? 'bg-accent text-primary'
+                      : 'text-text-on-dark hover:bg-surface/10 hover:text-text-inverse',
                   ].join(' ')}
                 >
                   <item.icon className="h-5 w-5 shrink-0" />

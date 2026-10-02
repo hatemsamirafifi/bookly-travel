@@ -1,6 +1,27 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Auth Guards', () => {
+  for (const [locale, width] of [['en', 390], ['es', 768], ['it', 1440]] as const) {
+    test(`${locale} protected route preserves its return path at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto(`/${locale}/profile`);
+      await expect(page).toHaveURL(new RegExp(`/${locale}/auth/login\\?`));
+      const url = new URL(page.url());
+      expect(url.searchParams.get('returnUrl')).toBe(`/${locale}/profile`);
+      await expect(page.getByRole('heading', { name: /profile settings/i })).toHaveCount(0);
+    });
+  }
+
+  test('login returns to the exact originally protected traveler route', async ({ page }) => {
+    await page.goto('/en/my-bookings');
+    await expect(page).toHaveURL(/\/en\/auth\/login/);
+    expect(new URL(page.url()).searchParams.get('returnUrl')).toBe('/en/my-bookings');
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="password"]', 'Password123!');
+    await page.click('button[type="submit"]');
+    await expect(page).toHaveURL(/\/en\/my-bookings$/);
+    await expect(page.getByRole('heading', { name: 'My Bookings' })).toBeVisible();
+  });
   test.describe('Unauthenticated access redirects', () => {
     const protectedRoutes = [
       { path: '/en/my-bookings', name: 'My Bookings' },
@@ -30,7 +51,7 @@ test.describe('Auth Guards', () => {
       await page.fill('input[name="email"]', 'test@example.com');
       await page.fill('input[name="password"]', 'Password123!');
       await page.click('button[type="submit"]');
-      await page.waitForURL('**/en**');
+      await page.waitForURL((url) => url.pathname === '/en');
       await expect(page.locator('button[aria-haspopup="menu"]').first()).toBeVisible();
     });
 
@@ -86,7 +107,7 @@ test.describe('Auth Guards', () => {
       await page.click('button[type="submit"]');
 
       // Should land on home or the return URL
-      await page.waitForURL('**/en**');
+      await page.waitForURL((url) => ['/en', '/en/my-bookings'].includes(url.pathname));
     });
   });
 });

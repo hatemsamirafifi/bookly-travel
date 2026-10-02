@@ -14,8 +14,10 @@ use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Policies\BlogCategoryPolicy;
 use App\Domains\Blog\Policies\BlogPostPolicy;
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerInvitation;
+use App\Domains\Partner\Services\GeminiTourTranslator;
 use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Services\DeterministicPaymentGateway;
 use App\Domains\Payment\Services\StripeService;
@@ -37,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(TourContentTranslator::class, GeminiTourTranslator::class);
+
         $this->app->singleton(PaymentGateway::class, function ($app): PaymentGateway {
             $gateway = config('services.payment.gateway', 'stripe');
 
@@ -145,11 +149,19 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('booking.get', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+            $limit = app()->environment('local')
+                ? max(120, (int) config('app.browser_test_read_rate_limit'))
+                : 120;
+
+            return Limit::perMinute($limit)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('traveler', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+            $limit = app()->environment('local')
+                ? max(120, (int) config('app.browser_test_read_rate_limit'))
+                : 120;
+
+            return Limit::perMinute($limit)->by($request->user()?->id ?: $request->ip());
         });
 
         // Spec 014: public voucher verification lookup (FR-021, FR-024, SC-010).

@@ -8,6 +8,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { forgotPasswordSchema } from '@/lib/validators/auth';
 import { authApi, AuthApiError } from '@/lib/api/auth';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
@@ -75,10 +77,10 @@ export function ForgotPasswordForm() {
         <label htmlFor="forgot-email" className="text-sm font-semibold text-foreground">
           {t('forgotPassword.emailLabel')}
         </label>
-        <input
+        <Input
           id="forgot-email"
           type="email"
-          className={`w-full px-3.5 py-2.5 border-[1.5px] rounded-md bg-background text-foreground text-[0.9375rem] outline-none transition-all ${errors.email ? 'border-error focus:ring-3 focus:ring-error/20' : 'border-border focus:border-primary focus:ring-3 focus:ring-primary-ring/30'}`}
+          className={errors.email ? 'border-error' : undefined}
           placeholder={t('signin.emailPlaceholder')}
           autoComplete="email"
           aria-invalid={!!errors.email}
@@ -100,10 +102,11 @@ export function ForgotPasswordForm() {
       )}
 
       {/* Submit */}
-      <button
+      <Button
         id="forgot-submit"
         type="submit"
-        className="flex items-center justify-center gap-2 w-full px-4 py-3 mt-1 bg-primary text-white text-[0.9375rem] font-semibold border-none rounded-md cursor-pointer transition-all hover:bg-primary-dark hover:shadow-[0_4px_14px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed"
+        size="lg"
+        className="mt-1 w-full gap-2 text-base"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
       >
@@ -111,7 +114,7 @@ export function ForgotPasswordForm() {
           <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-hidden="true" />
         ) : null}
         {t('forgotPassword.submitButton')}
-      </button>
+      </Button>
 
       {/* Back to sign-in */}
       <p className="text-center text-sm text-text-muted m-0">

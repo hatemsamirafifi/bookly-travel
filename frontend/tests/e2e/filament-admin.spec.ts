@@ -27,6 +27,22 @@ test.describe('Filament Admin Panel', () => {
     await expect(page.getByRole('heading', { name: /sign in/i })).toBeVisible();
   });
 
+  test('unauthenticated tour moderation redirects to the admin login page', async ({ page }) => {
+    await page.goto('/admin/tours');
+    await page.waitForURL('**/admin/login', { timeout: 30000 });
+    await expect(page.getByRole('heading', { name: /sign in/i })).toBeVisible();
+  });
+
+  test('partner credentials cannot enter the admin moderation panel', async ({ page }) => {
+    await page.goto('/admin/login');
+    await page.getByLabel(/email address/i).first().fill('partner@bookly.test');
+    await page.getByLabel(/password/i).first().fill('password');
+    await page.getByRole('button', { name: /sign in/i }).click();
+    await expect(page).toHaveURL(/\/admin\/login/);
+    await page.goto('/admin/tours');
+    await expect(page).toHaveURL(/\/admin\/login/);
+  });
+
   test('admin can sign in and see the dashboard', async ({ page }) => {
     await page.goto('/admin/login');
     const email = page.getByLabel(/email address/i).first();
@@ -41,6 +57,8 @@ test.describe('Filament Admin Panel', () => {
       page.getByRole('button', { name: /sign in/i }).click(),
     ]);
     await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('#bookly-admin-theme')).toHaveCount(1);
+    await expect(page.locator('.bookly-admin-logo').first()).toHaveCount(1);
   });
 
   test('wrong password stays on the login page', async ({ page }) => {

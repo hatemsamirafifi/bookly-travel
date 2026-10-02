@@ -11,6 +11,7 @@
     "test": "jest",
     "test:e2e": "playwright test",
     "test:a11y": "playwright test --project=a11y",
+    "test:performance-tools": "node --test scripts/lighthouse-audit.test.mjs",
     "typecheck": "tsc --noEmit",
     "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags=\"--headless\" --only-categories=performance,accessibility,best-practices,seo",
     "lhci": "lhci autorun"

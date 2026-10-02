@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/.phase0-evidence/
+/.phase1-evidence/
 
 # generated Playwright auth storage state (created by tests/auth.setup.ts)
 /tests/.auth

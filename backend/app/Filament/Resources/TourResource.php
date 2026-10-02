@@ -6,6 +6,7 @@ use App\Domains\Admin\Actions\ApproveTourAction;
 use App\Domains\Admin\Actions\RejectTourAction;
 use App\Domains\Admin\Actions\UnpublishTourAction;
 use App\Domains\Admin\Services\AdminAuthorizationService;
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Filament\Resources\TourResource\Pages;
 use App\Models\Tour;
 use Filament\Forms;
@@ -226,21 +227,41 @@ class TourResource extends Resource
                             ->formatStateUsing(fn ($state) => $state ? Tour::formatPrice((int) $state, 'EUR') : '—'),
                     ])
                     ->columns(3),
-                Infolists\Components\Section::make('Translations')
+                Infolists\Components\Section::make('English source (required)')
                     ->schema([
-                        Infolists\Components\RepeatableEntry::make('translations')
-                            ->schema([
-                                Infolists\Components\TextEntry::make('locale')
-                                    ->label('Language')
-                                    ->badge(),
-                                Infolists\Components\TextEntry::make('title')
-                                    ->label('Title'),
-                                Infolists\Components\TextEntry::make('description')
-                                    ->label('Description')
-                                    ->limit(200),
-                            ])
-                            ->columns(3),
+                        Infolists\Components\TextEntry::make('english_source_title')
+                            ->label('Title')
+                            ->getStateUsing(fn (Tour $record): ?string => $record->translations->firstWhere('locale', 'en')?->title)
+                            ->placeholder('English source missing'),
+                        Infolists\Components\TextEntry::make('english_source_description')
+                            ->label('Description')
+                            ->getStateUsing(fn (Tour $record): ?string => $record->translations->firstWhere('locale', 'en')?->description)
+                            ->placeholder('English source missing'),
+                        Infolists\Components\TextEntry::make('english_source_itinerary')
+                            ->label('Itinerary')
+                            ->getStateUsing(function (Tour $record): ?string {
+                                $days = $record->translations->firstWhere('locale', 'en')?->itinerary ?? [];
+
+                                return $days === [] ? null : collect($days)
+                                    ->map(fn (array $day): string => 'Day ' . $day['day'] . ': ' . $day['title'])
+                                    ->implode(' · ');
+                            })
+                            ->placeholder('No itinerary provided'),
                     ]),
+                Infolists\Components\Section::make('AI translations (derived from English)')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('spanish_translation_status')
+                            ->label('Spanish')
+                            ->getStateUsing(fn (Tour $record): string => static::translationStatusLabel($record, 'es'))
+                            ->badge()
+                            ->color(fn (string $state): string => static::translationStatusColor($state)),
+                        Infolists\Components\TextEntry::make('italian_translation_status')
+                            ->label('Italian')
+                            ->getStateUsing(fn (Tour $record): string => static::translationStatusLabel($record, 'it'))
+                            ->badge()
+                            ->color(fn (string $state): string => static::translationStatusColor($state)),
+                    ])
+                    ->columns(2),
                 Infolists\Components\Section::make('Status & Dates')
                     ->schema([
                         Infolists\Components\TextEntry::make('status')
@@ -271,6 +292,26 @@ class TourResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    private static function translationStatusLabel(Tour $tour, string $locale): string
+    {
+        return match (app(TourTranslationService::class)->publicStatus($tour, $locale)) {
+            'ready' => 'Ready',
+            'stale' => 'Outdated',
+            'failed' => 'Unavailable',
+            default => 'Pending',
+        };
+    }
+
+    private static function translationStatusColor(string $status): string
+    {
+        return match ($status) {
+            'Ready' => 'success',
+            'Outdated' => 'warning',
+            'Unavailable' => 'danger',
+            default => 'gray',
+        };
     }
 
     public static function getPages(): array

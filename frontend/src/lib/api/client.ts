@@ -120,6 +120,12 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
     );
   }
 
+  // DELETE endpoints such as wishlist removal return 204 with no body. A
+  // successful empty response must not be converted into a JSON parse error.
+  if (response.status === 204 || response.status === 205 || fetchOptions.method?.toUpperCase() === 'HEAD') {
+    return undefined as T;
+  }
+
   return response.json();
 }
 

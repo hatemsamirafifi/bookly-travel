@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface PaginationProps {
   currentPage: number;
@@ -8,10 +9,11 @@ interface PaginationProps {
   ariaLabel?: string;
 }
 
-export default function Pagination({ currentPage, lastPage, ariaLabel = 'Search results pagination' }: PaginationProps) {
+export default function Pagination({ currentPage, lastPage, ariaLabel }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const t = useTranslations('search');
 
   if (lastPage <= 1) return null;
 
@@ -27,27 +29,27 @@ export default function Pagination({ currentPage, lastPage, ariaLabel = 'Search 
   const isLast = currentPage >= lastPage;
 
   return (
-    <nav className="flex items-center justify-center gap-3 py-8" aria-label={ariaLabel}>
+    <nav className="flex items-center justify-center gap-3 py-8" aria-label={ariaLabel ?? t('paginationLabel')}>
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={isFirst}
-        className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white"
-        aria-label="Previous page"
+        className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-bookly-navy hover:bg-surface-alt disabled:cursor-not-allowed disabled:opacity-50"
+        aria-label={t('previousPage')}
       >
-        Previous
+        {t('previous')}
       </button>
 
-      <span className="text-sm text-gray-600">
-        Page {currentPage} of {lastPage}
+      <span className="text-sm text-text-muted">
+        {t('pageOf', { currentPage, lastPage })}
       </span>
 
       <button
         onClick={() => goToPage(currentPage + 1)}
         disabled={isLast}
-        className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white"
-        aria-label="Next page"
+        className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-bookly-navy hover:bg-surface-alt disabled:cursor-not-allowed disabled:opacity-50"
+        aria-label={t('nextPage')}
       >
-        Next
+        {t('next')}
       </button>
     </nav>
   );

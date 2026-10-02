@@ -148,6 +148,13 @@ it('validates locale parameter for homepage', function () {
         ->assertJsonValidationErrors(['locale']);
 });
 
-it('supports all three locales for homepage', function (string $locale) {
-    getJson("/api/public/homepage?locale={$locale}")->assertOk();
-})->with(['en', 'es', 'it']);
+it('returns translated homepage metadata in all three locales', function (string $locale, string $title, string $description) {
+    getJson("/api/public/homepage?locale={$locale}")
+        ->assertOk()
+        ->assertJsonPath('meta.seo.meta_title', $title)
+        ->assertJsonPath('meta.seo.meta_description', $description);
+})->with([
+    'en' => ['en', 'Bookly — Discover & Book Amazing Tours', 'Explore tours and activities from Bookly partners. Find your next experience here.'],
+    'es' => ['es', 'Bookly — Descubre y Reserva Tours Increíbles', 'Explora tours y actividades de los socios de Bookly. Encuentra aquí tu próxima experiencia.'],
+    'it' => ['it', 'Bookly — Scopri e Prenota Tour Incredibili', 'Esplora tour e attività dei partner Bookly. Trova qui la tua prossima esperienza.'],
+]);

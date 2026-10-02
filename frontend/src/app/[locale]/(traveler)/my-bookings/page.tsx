@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import BookingList from '@/components/my-bookings/BookingList';
+import TravelerPageShell from '@/components/traveler/TravelerPageShell';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -21,10 +22,8 @@ export default async function MyBookingsPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'traveler.pages.myBookings' });
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
-      <h1 className="mb-2 text-2xl font-bold text-gray-900">{t('title')}</h1>
-      <p className="mb-6 text-sm text-gray-600">{t('subtitle')}</p>
+    <TravelerPageShell title={t('title')} subtitle={t('subtitle')}>
       <BookingList locale={locale} />
-    </main>
+    </TravelerPageShell>
   );
 }

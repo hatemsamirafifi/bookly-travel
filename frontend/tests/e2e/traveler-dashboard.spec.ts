@@ -1,13 +1,31 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Traveler Dashboard Smoke', () => {
+  for (const width of [390, 1440]) {
+    test(`account pages stay reachable without horizontal overflow at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto('/en/auth/login');
+      await page.fill('input[name="email"]', 'test@example.com');
+      await page.fill('input[name="password"]', 'Password123!');
+      await page.click('button[type="submit"]');
+      await page.waitForURL((url) => url.pathname === '/en');
+      await expect(page.locator('button[aria-haspopup="menu"]').first()).toBeVisible();
+      for (const route of ['my-bookings', 'profile', 'wishlist', 'my-reviews']) {
+        await page.goto(`/en/${route}`);
+        await expect(page.locator('main h1')).toBeVisible();
+        const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+        const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+        expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      }
+    });
+  }
   test('full authenticated journey', async ({ page }) => {
     // Login
     await page.goto('/en/auth/login');
     await page.fill('input[name="email"]', 'test@example.com');
     await page.fill('input[name="password"]', 'Password123!');
     await page.click('button[type="submit"]');
-    await page.waitForURL('**/en**');
+    await page.waitForURL((url) => url.pathname === '/en');
     await expect(page.locator('button[aria-haspopup="menu"]').first()).toBeVisible();
 
     // Dashboard
@@ -51,7 +69,7 @@ test.describe('Traveler Dashboard Smoke', () => {
     if (await userMenu.isVisible()) {
       await userMenu.click();
       await page.locator('role=menuitem', { hasText: 'Sign Out' }).click();
-      await page.waitForURL('**/en**');
+      await page.waitForURL((url) => url.pathname === '/en');
       await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
     }
   });

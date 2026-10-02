@@ -54,4 +54,25 @@ test.describe('Voucher Verification Page (/v/{reference})', () => {
     await page.goto('/v/BKO-AUDEXP');
     await expect(page.getByText('Expired', { exact: true }).first()).toBeVisible({ timeout: 30000 });
   });
+
+  for (const [language, expected] of [['es-ES,es;q=0.9,en;q=0.5', 'Válido'], ['it-IT,it;q=0.9,en;q=0.5', 'Valido']]) {
+    test(`root voucher honors ${language.slice(0, 2)} language without leaking private navigation`, async ({ browser }) => {
+      const context = await browser.newContext({ locale: language.slice(0, 5) });
+      const page = await context.newPage();
+      try {
+        await page.setViewportSize({ width: 390, height: 844 });
+        const navigation = page.waitForRequest((request) => request.url().includes('/v/BKO-AUDVWX'));
+        await page.goto('/v/BKO-AUDVWX');
+        expect((await navigation).headers()['accept-language']).toContain(language.slice(0, 2));
+        await expect(page.getByText(expected, { exact: true })).toBeVisible();
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+        await expect(page.getByRole('link', { name: /my bookings|partner/i })).toHaveCount(0);
+        const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+        const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+        expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      } finally {
+        await context.close();
+      }
+    });
+  }
 });

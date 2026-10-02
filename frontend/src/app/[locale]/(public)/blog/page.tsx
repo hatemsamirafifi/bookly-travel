@@ -7,6 +7,7 @@ import BlogList from '@/components/blog/BlogList';
 import { BlogUnavailable } from '@/components/blog/BlogUnavailable';
 import EmptyState from '@/components/ui/EmptyState';
 import { ItemListSchema } from '@/components/seo/StructuredData';
+import { getTranslations } from 'next-intl/server';
 
 interface BlogPageProps {
   params: Promise<{
@@ -85,6 +86,7 @@ export default async function BlogIndexPage({
   if (!validLocales.includes(locale)) {
     notFound();
   }
+  const t = await getTranslations({ locale, namespace: 'blog' });
 
   const currentPage = page ? parseInt(page, 10) : 1;
   const pageNum = isNaN(currentPage) || currentPage < 1 ? 1 : currentPage;
@@ -134,7 +136,7 @@ export default async function BlogIndexPage({
   }));
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-12">
+    <div className="min-h-screen bg-surface-alt py-10 sm:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Schema.org ItemList */}
         <ItemListSchema
@@ -143,15 +145,15 @@ export default async function BlogIndexPage({
         />
 
         {/* Page Header */}
-        <header className="mb-10 text-center sm:text-left">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-2">
-            Bookly Magazine
+        <header className="mb-10 max-w-3xl">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-bookly-navy">
+            {t('magazine')}
           </p>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
-            Travel Insights & Guides
+          <h1 className="text-3xl font-bold tracking-tight text-bookly-navy sm:text-4xl">
+            {t('title')}
           </h1>
-          <p className="mt-3 max-w-2xl text-base text-neutral-600">
-            Expert stories, destination breakdowns, and cultural guides crafted by local guides and seasoned globetrotters.
+          <p className="mt-3 max-w-2xl text-base text-text-muted">
+            {t('subtitle')}
           </p>
         </header>
 
@@ -164,11 +166,11 @@ export default async function BlogIndexPage({
         {posts.length > 0 ? (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-neutral-900">
-                {category ? `Articles in ${category}` : 'Latest Stories'}
+              <h2 className="text-xl font-bold text-bookly-navy">
+                {t('allPosts')}
               </h2>
-              <span className="text-xs text-neutral-500 font-medium">
-                {meta.total} {meta.total === 1 ? 'Article' : 'Articles'}
+              <span className="text-xs font-medium text-text-muted">
+                {t('articleCount', { count: meta.total })}
               </span>
             </div>
 
@@ -181,10 +183,10 @@ export default async function BlogIndexPage({
           </div>
         ) : (
           <EmptyState
-            title="No articles found"
-            description="We couldn't find any articles matching your criteria. Explore our tours or check back soon."
+            title={t('noPostsFound')}
+            description={t('emptyDescription')}
             cta={{
-              label: 'Browse Tours',
+              label: t('browseTours'),
               href: `/${locale}/search`,
             }}
           />

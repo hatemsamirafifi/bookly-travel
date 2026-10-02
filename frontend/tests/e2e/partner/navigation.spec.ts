@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 
 async function visiblePartnerNavigation(page: Page, isMobile: boolean) {
   if (isMobile) {
-    await page.getByRole('button', { name: /open navigation|menu/i }).click();
+    await page.getByRole('button', { name: /^open navigation menu$/i }).click();
     const dialog = page.locator('[role="dialog"][aria-modal="true"]');
     await expect(dialog).toBeVisible();
     return dialog.locator('nav');
@@ -22,24 +22,24 @@ test.describe('Partner Dashboard Navigation', () => {
     await visiblePartnerNavigation(page, Boolean(isMobile));
 
     // The header should be visible
-    await expect(page.getByText('Partner Dashboard')).toBeVisible();
+    await expect(page.locator('header').getByRole('heading', { name: 'Partner Dashboard', exact: true })).toBeVisible();
   });
 
   test('should render all sidebar navigation items', async ({ page, isMobile }) => {
     const sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
 
     // Check all nav items exist in sidebar
-    await expect(sidebar.getByRole('menuitem', { name: /dashboard/i })).toBeVisible();
-    await expect(sidebar.getByRole('menuitem', { name: /tours/i })).toBeVisible();
-    await expect(sidebar.getByRole('menuitem', { name: /bookings/i })).toBeVisible();
-    await expect(sidebar.getByRole('menuitem', { name: /reviews/i })).toBeVisible();
-    await expect(sidebar.getByRole('menuitem', { name: /profile/i })).toBeVisible();
+    await expect(sidebar.getByRole('link', { name: /dashboard/i })).toBeVisible();
+    await expect(sidebar.getByRole('link', { name: /tours/i })).toBeVisible();
+    await expect(sidebar.getByRole('link', { name: /bookings/i })).toBeVisible();
+    await expect(sidebar.getByRole('link', { name: /reviews/i })).toBeVisible();
+    await expect(sidebar.getByRole('link', { name: /profile/i })).toBeVisible();
   });
 
   test('should highlight active sidebar item based on current page', async ({ page, isMobile }) => {
     let sidebar = await visiblePartnerNavigation(page, Boolean(isMobile));
     // On the dashboard page, the dashboard nav item should be highlighted
-    const dashboardLink = sidebar.locator('a[href="/partner"], a[href$="/partner/"]').first();
+    const dashboardLink = sidebar.getByRole('link', { name: /dashboard/i });
     await expect(dashboardLink).toHaveAttribute('aria-current', 'page');
 
     // Navigate to tours
@@ -77,7 +77,7 @@ test.describe('Partner Dashboard Navigation', () => {
     await page.setViewportSize({ width: 390, height: 844 });
 
     // Mobile menu button should be visible
-    const menuButton = page.getByRole('button', { name: /open navigation|menu/i });
+    const menuButton = page.getByRole('button', { name: /^open navigation menu$/i });
     await expect(menuButton).toBeVisible();
 
     // Click to open mobile drawer
@@ -91,14 +91,14 @@ test.describe('Partner Dashboard Navigation', () => {
     await page.setViewportSize({ width: 390, height: 844 });
 
     // Open drawer
-    const menuButton = page.getByRole('button', { name: /open navigation|menu/i });
+    const menuButton = page.getByRole('button', { name: /^open navigation menu$/i });
     await menuButton.click();
     await expect(page.locator('[role="dialog"][aria-modal="true"]')).toBeVisible();
 
     // Close via the Close button (overlay click is intercepted by the dialog
     // focus trap in some browser engines; the Close button is the reliable
     // way to dismiss the mobile drawer)
-    await page.getByRole('button', { name: /close navigation/i }).click();
+    await page.getByRole('button', { name: /close (navigation )?menu/i }).click();
 
     // Drawer should close
     await expect(page.locator('[role="dialog"][aria-modal="true"]')).not.toBeVisible();
@@ -108,7 +108,7 @@ test.describe('Partner Dashboard Navigation', () => {
     await page.setViewportSize({ width: 390, height: 844 });
 
     // Open drawer
-    const menuButton = page.getByRole('button', { name: /open navigation|menu/i });
+    const menuButton = page.getByRole('button', { name: /^open navigation menu$/i });
     await menuButton.click();
     await expect(page.locator('[role="dialog"][aria-modal="true"]')).toBeVisible();
 
@@ -127,17 +127,17 @@ test.describe('Partner Dashboard Navigation', () => {
 
   test('should show user avatar and name in header', async ({ page }) => {
     // User initial avatar should be visible
-    const avatar = page.locator('.rounded-full.bg-\\[\\#0A2540\\]');
-    await expect(avatar).toBeVisible();
+    const account = page.getByRole('button', { name: 'Account menu', exact: true });
+    await expect(account.locator('.rounded-full')).toBeVisible();
   });
 
   test('should toggle user dropdown menu', async ({ page }) => {
     // Click the user menu button
-    const userButton = page.locator('header button[aria-haspopup="true"]');
+    const userButton = page.getByRole('button', { name: 'Account menu', exact: true });
     await userButton.click();
 
     // Dropdown should appear with sign out option
-    await expect(page.getByRole('button', { name: /sign out/i })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: /sign out/i })).toBeVisible();
   });
 });
 
@@ -157,9 +157,9 @@ test.describe('Partner Navigation - Sign Out (isolated)', () => {
     await page.locator('button[aria-haspopup="menu"]').first().waitFor({ state: 'visible' });
 
     // Open dropdown and sign out
-    const userButton = page.locator('header button').filter({ has: page.locator('.rounded-full') }).first();
+    const userButton = page.getByRole('button', { name: 'Account menu', exact: true });
     await userButton.click();
-    await page.getByText(/sign out/i).click();
+    await page.getByRole('menuitem', { name: /sign out/i }).click();
 
     // App redirects to the locale home after sign-out
     await expect(page).toHaveURL(/\/(auth\/login|en\/?|)$/);
