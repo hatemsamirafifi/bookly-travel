@@ -1,0 +1,93 @@
+# Isolated, disposable stack for browser CI; never shares development volumes.
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: bookly
+      POSTGRES_USER: bookly
+      POSTGRES_PASSWORD: secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bookly"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    environment:
+      MEILI_MASTER_KEY: development-key
+      MEILI_ENV: development
+
+  laravel:
+    image: bookly-ci-backend:latest
+    build: ./backend
+    volumes:
+      - ./backend:/var/www/html
+      - vendor:/var/www/html/vendor
+    environment:
+      APP_ENV: local
+      BROWSER_TEST_READ_RATE_LIMIT: 6000
+      APP_URL: http://localhost:8080
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_DATABASE: bookly
+      DB_USERNAME: bookly
+      DB_PASSWORD: secret
+      REDIS_HOST: redis
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_KEY: development-key
+      SCOUT_DRIVER: meilisearch
+      PAYMENT_GATEWAY: deterministic
+      MAIL_MAILER: log
+      QUEUE_CONNECTION: sync
+      SCOUT_QUEUE_CONNECTION: sync
+      SANCTUM_STATEFUL_DOMAINS: localhost:8080,nginx
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  nextjs:
+    image: node:22-bookworm-slim
+    working_dir: /app
+    # The preparation action builds after seeding, then starts the server.
+    command: sleep infinity
+    volumes:
+      - ./frontend:/app
+      - node_modules:/app/node_modules
+    environment:
+      API_INTERNAL_URL: http://nginx
+      NEXT_PUBLIC_API_URL: ""
+      ALLOW_PRIVATE_IMAGE_UPSTREAM: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${CI_HTTP_PORT:-8080}:80"
+    volumes:
+      - ./backend:/var/www/html:ro
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/cdn:/var/cdn:ro
+    networks:
+      default:
+        aliases:
+          - cdn.bookly.test
+    depends_on:
+      - laravel
+      - nextjs
+
+volumes:
+  vendor:
+  node_modules:

@@ -11,15 +11,12 @@ import { defineConfig, devices } from '@playwright/test';
 //   cross-origin (CORS-blocked), and nextjs:3000 makes the HMR handshake fail
 //   (ERR_INVALID_HTTP_RESPONSE) so pages never hydrate and input[name="email"]
 //   never appears.
-// - CI: GitHub Actions runner (no docker network) — kept on the service hostname.
+// - CI: browsers run on the runner through the published nginx port.
 // - local host dev (no Docker, no CI): localhost:8080 is the nginx reverse proxy.
 const isDockerContainer = process.env.DOCKER_ENV === 'true';
 const isCI = !!process.env.CI;
-const baseURL = isDockerContainer
-  ? 'http://nginx'
-  : isCI
-    ? 'http://nextjs:3000'
-    : 'http://localhost:8080';
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ||
+  (isDockerContainer ? 'http://nginx' : 'http://localhost:8080');
 
 // All accessibility (a11y) spec files
 const ALL_A11Y = /[\/]e2e[\/]a11y[\/].*\.spec\.ts$/;
@@ -50,6 +47,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // Stop a broken environment from repeating hundreds of identical failures.
+  maxFailures: isCI ? 10 : undefined,
+  globalTimeout: isCI ? 30 * 60 * 1000 : undefined,
   // In the Docker container the browser runs against the Next dev server, so
   // every route cold-compiles on first visit. With the default worker count
   // (CPU cores) many routes compile concurrently and queue on the dev server's
@@ -65,7 +65,7 @@ export default defineConfig({
   // test's beforeEach navigates to one route and the test body to another.
   // 60s tolerates the double-cold-compile without masking genuinely-hung tests.
   timeout: isDockerContainer ? 60000 : 30000,
-  reporter: 'html',
+  reporter: isCI ? [['line'], ['html', { open: 'never' }]] : 'html',
   use: {
     baseURL,
     trace: 'on-first-retry',

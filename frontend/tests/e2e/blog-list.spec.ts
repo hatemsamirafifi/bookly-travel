@@ -36,11 +36,11 @@ test.describe('Blog Index and Listing Page', () => {
     await page.goto('/en/blog/category/city-guides');
 
     // Category heading and description
-    await expect(page.locator('h1')).toContainText('City Guides');
-    await expect(page.getByText('Comprehensive destination breakdowns')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'City Guides' })).toBeVisible();
+    await expect(page.getByRole('main').getByText('Comprehensive destination breakdowns and insider walks.', { exact: true })).toBeVisible();
 
     // Breadcrumbs
-    const breadcrumbs = page.locator('nav[aria-label="Breadcrumbs"]');
+    const breadcrumbs = page.getByRole('navigation', { name: 'Breadcrumbs' });
     await expect(breadcrumbs).toBeVisible();
     await expect(breadcrumbs).toContainText('Blog');
     await expect(breadcrumbs).toContainText('City Guides');

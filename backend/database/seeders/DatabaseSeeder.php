@@ -6,6 +6,8 @@ use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Models\BookingAuditLog;
 use App\Domains\Payment\Models\FinancialLedgerEntry;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Reviews\Events\ReviewSubmitted;
+use App\Domains\Reviews\Listeners\UpdateTourAggregateRating;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
 use App\Models\User;
@@ -77,7 +79,7 @@ class DatabaseSeeder extends Seeder
         // BKO-TEST03: completed with a visible review — drives the My Reviews
         // card + edit/cancel-edit flow (created now so the 48h edit window is open).
         $booking3 = $this->createBooking('BKO-TEST03', $traveler->id, $tour->id, now()->subDays(3)->toDateString(), 1, $price, Booking::STATUS_COMPLETED);
-        Review::firstOrCreate(
+        $review = Review::firstOrCreate(
             ['booking_id' => $booking3->id],
             [
                 'tour_id' => $tour->id,
@@ -88,6 +90,10 @@ class DatabaseSeeder extends Seeder
                 'locale' => 'en',
             ]
         );
+
+        // Seeded reviews bypass SubmitReviewAction, which normally updates
+        // the tour aggregates. Keep the public detail and review list in sync.
+        app(UpdateTourAggregateRating::class)->handle(new ReviewSubmitted($review));
 
         // BKO-PAST01: confirmed but past the 24h cancellation window — the
         // cancel button renders disabled (cancel-booking error-handling case).

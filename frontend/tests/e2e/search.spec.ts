@@ -135,7 +135,7 @@ test.describe('Search Page', () => {
   test('clear all link appears when filters are active', async ({ page }) => {
     await page.goto('/en/search?category=adventure');
 
-    const clearButton = page.getByText(/Clear all/);
+    const clearButton = page.getByRole('button', { name: /^Clear all/ });
     await expect(clearButton).toBeVisible();
 
     await clearButton.click();

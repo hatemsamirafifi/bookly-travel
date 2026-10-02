@@ -28,6 +28,9 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    // Opt-in read budget for disposable local browser-test stacks.
+    'browser_test_read_rate_limit' => (int) env('BROWSER_TEST_READ_RATE_LIMIT', 120),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

@@ -145,11 +145,19 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('booking.get', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+            $limit = app()->environment('local')
+                ? max(120, (int) config('app.browser_test_read_rate_limit'))
+                : 120;
+
+            return Limit::perMinute($limit)->by($request->user()?->id ?: $request->ip());
         });
 
         RateLimiter::for('traveler', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+            $limit = app()->environment('local')
+                ? max(120, (int) config('app.browser_test_read_rate_limit'))
+                : 120;
+
+            return Limit::perMinute($limit)->by($request->user()?->id ?: $request->ip());
         });
 
         // Spec 014: public voucher verification lookup (FR-021, FR-024, SC-010).

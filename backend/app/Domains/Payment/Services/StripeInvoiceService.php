@@ -69,8 +69,8 @@ class StripeInvoiceService
             return $this->invoiceResult($invoice);
         }
 
-        $email = $booking->traveler?->email ?? $booking->guestIdentity?->email;
-        $name = $booking->traveler?->name ?? $booking->guestIdentity?->name ?? 'Valued Traveler';
+        $email = $booking->traveler->email ?? $booking->guestIdentity?->email;
+        $name = $booking->traveler->name ?? $booking->guestIdentity->name ?? 'Valued Traveler';
 
         if (empty($email)) {
             throw new \InvalidArgumentException('Booking must have an associated traveler or guest identity email for invoicing.');
@@ -80,7 +80,7 @@ class StripeInvoiceService
             'booking_reference' => $booking->reference,
         ]);
 
-        $tourTitle = $booking->tour?->slug ?? 'Tour Booking';
+        $tourTitle = $booking->tour->slug ?? 'Tour Booking';
 
         // Add line item to invoice
         $this->client()->invoiceItems->create(

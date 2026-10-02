@@ -31,10 +31,9 @@ test.describe('Homepage', () => {
   });
 
   test('locale switching works', async ({ page }) => {
-    await page.goto('/en/');
-    await page.selectOption('select[aria-label="Switch language"]', 'es');
     await page.goto('/en');
-    await page.locator('select[aria-label="Switch language"]').first().selectOption('es');
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('contentinfo').getByRole('combobox', { name: 'Switch language' }).selectOption('es');
     await expect(page).toHaveURL(/\/es/);
   });
 

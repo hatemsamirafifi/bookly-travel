@@ -224,6 +224,11 @@ namespace App\Domains\Partner\Models;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property bool $invited_by_admin
+ * @property string|null $stripe_account_id
+ * @property bool $stripe_charges_enabled
+ * @property bool $stripe_payouts_enabled
+ * @property bool $stripe_details_submitted
+ * @property bool $stripe_onboarding_completed
  * @property-read \App\Models\User|null $user
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tour> $tours
  * @property-read \App\Domains\Partner\Models\PartnerProfile|null $profile
@@ -538,7 +543,7 @@ namespace App\Models;
  * @property \Carbon\Carbon|null $archived_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TourTranslation> $translations
  * @property-read \App\Models\Category|null $category
- * @property-read \App\Models\User|null $partner
+ * @property-read \App\Domains\Partner\Models\Partner|null $partner
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\TourMedia> $media
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\PricingTier> $pricingTiers
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Partner\Models\AvailabilityRule> $availabilityRules
@@ -609,6 +614,5 @@ class Carbon extends \DateTime {}
 namespace Illuminate\Support;
 
 class Carbon extends \Carbon\Carbon {}
-
 
 
