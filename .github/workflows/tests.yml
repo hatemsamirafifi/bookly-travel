@@ -197,13 +197,17 @@ jobs:
   frontend-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     env:
-      COMPOSE_PROJECT_NAME: bookly-ci-e2e
+      COMPOSE_PROJECT_NAME: bookly-ci-e2e-${{ matrix.shard }}
       PLAYWRIGHT_BASE_URL: http://localhost:8080
     defaults:
       run:
         working-directory: frontend
-    name: E2E Tests
+    name: E2E shard ${{ matrix.shard }}/3
     needs: [frontend-checks]
 
     steps:
@@ -227,13 +231,13 @@ jobs:
         uses: ./.github/actions/prepare-browser-ci
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --shard=${{ matrix.shard }}/3
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: |
             frontend/playwright-report/
             frontend/test-results/
@@ -251,3 +255,19 @@ jobs:
         if: always()
         working-directory: .
         run: docker compose -f docker-compose.ci.yml down -v
+
+  frontend-e2e-result:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [frontend-e2e]
+    if: ${{ always() }}
+    steps:
+      - name: Require every E2E shard to pass
+        env:
+          E2E_RESULT: ${{ needs.frontend-e2e.result }}
+        run: |
+          if [ "$E2E_RESULT" != "success" ]; then
+            echo "::error::One or more E2E shards failed, were cancelled, or did not run."
+            exit 1
+          fi
