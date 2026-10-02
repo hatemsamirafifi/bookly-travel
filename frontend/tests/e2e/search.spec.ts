@@ -164,7 +164,7 @@ test.describe('Search Page', () => {
   test('clearing filters retains the search term', async ({ page }) => {
     await page.goto('/en/search?q=tour&category=adventure');
     await showFilters(page);
-    await page.getByText(/Clear all/).click();
+    await page.getByRole('button', { name: /^Clear all/ }).click();
     await expect(page).toHaveURL(/\/en\/search\?q=tour$/);
   });
 
@@ -195,7 +195,7 @@ test.describe('Search Page', () => {
     await page.goto('/en/search?category=adventure');
     await showFilters(page);
 
-    const clearButton = page.getByText(/Clear all/);
+    const clearButton = page.getByRole('button', { name: /^Clear all/ });
     await expect(clearButton).toBeVisible();
 
     await clearButton.click();

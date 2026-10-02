@@ -28,7 +28,7 @@ test.describe('Payment Flow', () => {
     });
     await page.goto(`/en/booking?tour=hidden-gems-rome-walking-tour&date=${date}&participants=2`);
     await page.getByRole('button', { name: 'Confirm & Pay' }).click();
-    await expect(page.getByText('€90.00')).toBeVisible();
+    await expect(page.getByRole('main').getByText('€90.00', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Complete test payment' }).click();
     await expect(page.getByRole('alert').filter({ hasText: 'could not be completed' })).toBeVisible();
     await page.getByRole('button', { name: 'Complete test payment' }).click();

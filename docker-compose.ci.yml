@@ -36,6 +36,7 @@ services:
       - vendor:/var/www/html/vendor
     environment:
       APP_ENV: local
+      BROWSER_TEST_READ_RATE_LIMIT: 6000
       APP_URL: http://localhost:8080
       DB_CONNECTION: pgsql
       DB_HOST: postgres
