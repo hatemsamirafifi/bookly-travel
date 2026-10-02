@@ -8,9 +8,31 @@
 
 **Tech Stack:** Laravel 11, PHP 8.3+, PostgreSQL, Redis, Filament 3.3, Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, next-intl, Jest, Playwright, Pest.
 
-**Spec:** This is the self-contained master plan for Spec Kit feature `018-bookly-ui-redesign`. Phase 0 generates the standard Spec Kit artifacts under `specs/018-bookly-ui-redesign/`.
+**Spec sequence:** This master plan governs the redesign program across Specs `018-027`. Spec `018-bookly-ui-redesign` retains the bootstrap, original program specification, and completed Phase 1 foundations. Phase 2 is Spec `019-tour-content-data`; subsequent phases own separate specifications as mapped below.
 
-**Governing Constitution:** Bookly Constitution v2.0.0 (`.specify/memory/constitution.md`). Every generated Spec Kit artifact and implementation phase must pass its applicable principles and quality gates.
+**Governing Constitution:** Bookly Constitution v2.1.0 (`.specify/memory/constitution.md`). Every generated Spec Kit artifact and implementation phase must pass its applicable principles and quality gates.
+
+## Phase-to-Spec Numbering
+
+| Master-plan phase | Spec | Canonical directory | Scope | Status |
+|---|---|---|---|---|
+| Phase 0 | `018` | `specs/018-bookly-ui-redesign/` | Spec Kit Bootstrap and Design Contracts | Existing baseline |
+| Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; CI/merge acceptance pending |
+| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Specification, design and tasks complete; implementation pending |
+| Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Planned |
+| Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Planned |
+| Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
+| Phase 6 | `023` | `specs/023-auth-traveler-checkout/` | Auth, Traveler, and Checkout | Planned |
+| Phase 7 | `024` | `specs/024-partner-dashboard-editor/` | Partner Dashboard and Tour Editor | Planned |
+| Phase 8 | `025` | `specs/025-filament-admin/` | Filament Admin | Planned |
+| Phase 9 | `026` | `specs/026-redesign-quality-gate/` | Cross-Cutting Quality Gate | Planned |
+| Phase 10 | `027` | `specs/027-redesign-deployment/` | Deployment and Compatibility | Planned |
+
+Phase numbers and task numbers (for example Phase 2 / Task 2.1) remain unchanged. A generated `tasks.md` may have its own setup/foundation phase headings; those do not redefine this mapping. Specs `020-027` are reservations, not created or completed features.
+
+Spec `018` and its existing artifacts MUST be preserved. Its original full-program requirements and contracts remain the design baseline; active Phase 2 requirements, contract revisions, and acceptance evidence belong to `specs/019-tour-content-data/`. Later specifications must reference their predecessor rather than overwrite its history. The former uncreated product-roadmap Specs `019-025` move to `028-034` in the PRD and product implementation roadmap.
+
+**Phase 2 baseline:** `codex/019-tour-content-data` originally started from `codex/bookly-ui-redesign-all-work` at `84ae4e5`, retaining Spec 018 and Phase 1. Rechecked on 2026-10-02: [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) is merged, while separate [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open. Fetched `origin/main` at `f1a1f37` contains the predecessor plus subsequent CI fixes and is the integration base for continued implementation. Preserve predecessor ancestry and do not duplicate overlapping Phase 1 work. Existing Phase 2 code still requires Spec 019 acceptance verification.
 
 ## Repository Readiness
 
@@ -24,8 +46,9 @@
 
 ## Global Constraints
 
-- Create `018-bookly-ui-redesign` from an updated local `main` at or after verified baseline `11c534e`.
-- Re-run the Phase 0 branch check immediately before creating the feature branch; stop if any published `origin` branch is ahead of `origin/main`.
+- The original Spec 018 bootstrap starts from updated `main` at or after verified baseline `11c534e`; its Phase 0 branch check applies to that fresh bootstrap.
+- Continue an existing or dependent phase from its verified predecessor when required to preserve approved work. Record the branch, base commit, and pending PR dependencies before editing. Existing redesign branches ahead of `main` are dependencies to document, not grounds to discard their specifications.
+- Keep each phase on its mapped specification and a separate `codex/` branch; preserve earlier spec directories and evidence when choosing a checkout.
 - Preserve EN/ES/IT; Arabic and RTL are out of scope.
 - Partners author English (EN) as the mandatory source of truth for tour content. The platform generates Spanish (ES) and Italian (IT) with AI; missing or outdated derived content does not block publishing and temporarily shows the current English source with a visible fallback notice. This decision is independent of live-guide languages.
 - Live-guide/spoken languages are separate tour metadata with stable language codes (for example `de`, `en`, `es`), and their display names are localized for the page language.
@@ -40,7 +63,7 @@
 - Use `Plus Jakarta Sans` through `next/font`; do not retain Inter as the final product font.
 - Support responsive layouts at 390px, 768px, 1024px, and 1440px.
 
-## Confirmed Baseline
+## Confirmed Baseline at Original Spec 018 Bootstrap
 
 - The current public tour contract does not expose structured itinerary, operator summary, difficulty, or related tours.
 - `tours.itinerary` exists as legacy JSONB but is not consistently persisted or returned publicly.
@@ -106,7 +129,7 @@ specs/018-bookly-ui-redesign/
 ```
 
 - [x] Populate `spec.md` from this master plan.
-- [x] Cite Bookly Constitution v2.0.0 in `spec.md` and record a principle-by-principle Constitution Check in `plan.md`.
+- [x] Original Phase 0 check: cite Bookly Constitution v2.0.0 in `spec.md` and record a principle-by-principle Constitution Check in `plan.md`. New phases and release acceptance evaluate v2.1.0; the original checked item is historical evidence.
 - [x] Verify the existing `/speckit.plan` deliverables: `plan.md`, `research.md`, `data-model.md`, both API contracts, and `quickstart.md`. The generator was not rerun over the dirty worktree during this Phase 0 audit.
 - [x] Verify the existing `/speckit.tasks` deliverable against the Constitution Check. The generator was not rerun over the dirty worktree during this Phase 0 audit.
 - [x] Compare `tasks.md` against every phase below and append explicit tasks for previously implicit media, operator, related-tour, auth, partner-editor, admin and supporting-page work. Existing task IDs stay stable.
@@ -244,6 +267,8 @@ git commit -m "feat: establish Bookly UI design system"
 
 ## Phase 2 - Tour Content Data Model and API
 
+**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Tasks 2.1-2.4 and their new contracts are owned by Spec 019; Spec 018 remains the reference baseline. Design and task generation completed on 2026-10-02; implementation acceptance remains pending.
+
 ### Task 2.1: Add localized structured itineraries
 
 **Files:**
@@ -332,16 +357,16 @@ Guide/spoken languages are persisted as a separate tour-level code list and expo
 
 ```php
 BuildPublicOperatorSummaryAction::execute(Partner $partner): ?array
-GetRelatedToursAction::execute(Tour $tour, string $locale, int $limit = 8): array
+GetRelatedToursAction::execute(Tour $tour, string $locale, int $limit = 4): array
 ```
 
 ```ts
 interface OperatorSummary {
-  company_name: string;
-  business_description: string | null;
+  name: string;
+  description: string | null;
   logo_url: string | null;
   verified: boolean;
-  average_rating: number;
+  average_rating: number | null;
   review_count: number;
   tour_count: number;
 }
@@ -350,11 +375,11 @@ interface OperatorSummary {
 Rules:
 
 - Never expose contact email, phone, tax, payout, address, user ID, or Stripe data.
-- `verified` means approved and active.
-- Aggregates include visible/flagged reviews from published tours only.
+- Public operator field names preserve the existing Spec 018 contract (`name`, `description`, `logo_url`, aggregates); `verified` is additive and means approved and active. Return no operator summary for an ineligible profile, and use a null average when no eligible reviews exist.
+- Aggregates include only visible/flagged reviews on published, currently bookable operator tours, preserving the existing eligibility rule.
 - Related tours must be published, currently bookable, and exclude the current tour.
 - Rank same destination first, then same category, then rating.
-- Return no more than eight using the existing TourCard contract.
+- Preserve the existing default of four related tours; eight is the absolute ceiling, not a requirement to expand the response. Use the existing TourCard contract.
 
 - [ ] Write failing privacy, aggregation, ranking, exclusion, and query-count tests.
 - [ ] Implement both actions without controller or model business logic.
@@ -367,15 +392,15 @@ Rules:
 - Modify: `backend/app/Domains/Search/Actions/GetTourDetailAction.php`
 - Modify: `frontend/src/lib/api/types.ts`
 - Modify: `frontend/src/components/seo/StructuredData.tsx`
-- Document: `specs/018-bookly-ui-redesign/contracts/tour-detail-api.md`
+- Create/update during planning: `specs/019-tour-content-data/contracts/tour-detail-api.md` and `partner-tour-content-api.md`, referencing the original Spec 018 contracts.
 
 Add optional/additive fields:
 
 ```ts
 interface TourDetail {
-  difficulty?: 'easy' | 'moderate' | 'challenging';
+  difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
   itinerary: ItineraryDay[];
-  operator?: OperatorSummary;
+  operator?: OperatorSummary | null;
   related_tours: TourCard[];
   guide_languages: string[]; // spoken/live-guide language codes, not content locales
   content_locale: 'en' | 'es' | 'it'; // actual displayed tour-content language
@@ -403,13 +428,15 @@ php artisan test
 **Commit:**
 
 ```bash
-git add backend frontend/src/lib/api/types.ts frontend/src/components/seo specs/018-bookly-ui-redesign/contracts
+git add backend frontend/src/lib/api/types.ts frontend/src/components/seo specs/019-tour-content-data/contracts
 git commit -m "feat: add structured tour content contract"
 ```
 
 ---
 
 ## Phase 3 - Tripadvisor-Style Tour Detail Experience
+
+**Spec:** `020-tour-detail-experience` (planned; create through Spec Kit when this phase starts).
 
 ### Task 3.1: Decompose the detail page
 
@@ -515,6 +542,8 @@ git commit -m "feat: rebuild tour detail experience"
 
 ## Phase 4 - Homepage and Discovery
 
+**Spec:** `021-homepage-discovery` (planned; create through Spec Kit when this phase starts).
+
 ### Task 4.1: Rebuild the homepage
 
 Order:
@@ -582,6 +611,8 @@ git commit -m "feat: redesign public discovery surfaces"
 
 ## Phase 5 - Blog, Legal, Verification, and Error Surfaces
 
+**Spec:** `022-supporting-web-pages` (planned; create through Spec Kit when this phase starts).
+
 **Files:** Existing blog, legal, not-found, error, rate-limit, and voucher-verification components/routes.
 
 - [ ] Add focused visual and accessibility tests for each layout family.
@@ -601,6 +632,8 @@ git commit -m "feat: unify supporting public surfaces"
 ---
 
 ## Phase 6 - Auth, Traveler, and Checkout
+
+**Spec:** `023-auth-traveler-checkout` (planned; create through Spec Kit when this phase starts).
 
 ### Task 6.1: Redesign authentication
 
@@ -657,6 +690,8 @@ git commit -m "feat: redesign traveler and checkout journeys"
 ---
 
 ## Phase 7 - Partner Dashboard and Tour Editor
+
+**Spec:** `024-partner-dashboard-editor` (planned; create through Spec Kit when this phase starts).
 
 ### Task 7.1: Redesign partner dashboard shell
 
@@ -724,6 +759,8 @@ git commit -m "feat: redesign partner dashboard and tour editor"
 
 ## Phase 8 - Filament Admin
 
+**Spec:** `025-filament-admin` (planned; create through Spec Kit when this phase starts).
+
 ### Task 8.1: Create the admin theme
 
 **Files:**
@@ -768,6 +805,8 @@ git commit -m "feat: apply Bookly design system to admin"
 ---
 
 ## Phase 9 - Cross-Cutting Quality Gate
+
+**Spec:** `026-redesign-quality-gate` (planned; create through Spec Kit when this phase starts).
 
 ### Internationalization
 
@@ -835,13 +874,15 @@ Compare information hierarchy and interaction density with the Tripadvisor refer
 **Commit:**
 
 ```bash
-git add frontend backend specs/018-bookly-ui-redesign
+git add frontend backend specs/026-redesign-quality-gate
 git commit -m "test: complete UI redesign quality gates"
 ```
 
 ---
 
 ## Phase 10 - Deployment and Compatibility
+
+**Spec:** `027-redesign-deployment` (planned; create through Spec Kit when this phase starts).
 
 Deployment order:
 
@@ -916,5 +957,5 @@ Phases 4, 5, and 6 may overlap only after Phase 1 is stable. Phase 7 requires th
 
 - Tripadvisor is a structural and interaction reference, not a pixel-perfect or trademark clone.
 - Existing URLs and core workflows remain stable.
-- The redesign ships incrementally from one feature branch, but each phase is independently testable.
+- The redesign ships incrementally through the mapped phase specifications and separate branches. Dependent branches document unmerged prerequisites; each phase remains independently testable, and release acceptance stays separate from implementation completion.
 - Emails, PDFs, Arabic/RTL, native applications, AI planning, and non-tour travel verticals remain outside this feature.
