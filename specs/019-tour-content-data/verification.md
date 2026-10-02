@@ -172,3 +172,42 @@ No phase is marked implemented and no gate is implied passed.
 4. **No external lookup failure occurred**: `gh` was authenticated and
    returned structured JSON for both PRs, so no uncertainty needs preserving
    on PR state; the only open item is the reconciliation decision above.
+
+## 8. Independent Orchestrator Review and Baseline Refresh
+
+T001 was independently reviewed and marked complete on 2026-10-02. Its earlier
+sections preserve the pre-dispatch facts, not the current moving HEAD.
+
+- OpenCode: `opencode/muse-spark-1.3-contributor-free`, version 1.18.34,
+  session `ses_f02237e4cffexZwsVcXfhEUp7r`, completed exit 0, reported cost $0.
+- Orchestrator repeated branch/pointer/ancestor/prerequisite/PR lookups,
+  checked the new document links and whitespace, and confirmed only the
+  assigned verification document was added by this OpenCode run.
+- `git fetch origin main` refreshed origin/main to `f1a1f37`;
+  `git merge-base --is-ancestor 84ae4e5 origin/main` returned 0. Main contains
+  the original source baseline and subsequent CI/browser-isolation fixes.
+- Verified design/governance documents plus T001 evidence were committed and
+  rebased onto that main commit. Current setup commit is `ed0a9f3`;
+  `git merge-base --is-ancestor f1a1f37 HEAD` returned 0. Spec 018 remains
+  present. No PR was merged or closed by this operation; PR #28 remains open.
+  Reconciliation is resolved: retain original ancestry, use the refreshed
+  integration base, and do not duplicate Phase 1.
+- Partner contract correction follows
+  `backend/app/Domains/Partner/Middleware/PartnerRoleMiddleware.php`: missing
+  partner capability/record returns 404; gated inactive/unapproved writes
+  return 403 with ONBOARDING_STATUS_BLOCKED. Existing behavior is preserved.
+- Independent inherited-backend baseline: `docker compose exec -T -e
+  GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest
+  --configuration=phpunit.pgsql.xml tests/Feature/Partner/TourCreateTest.php
+  tests/Feature/Partner/TourDraftTest.php
+  tests/Feature/Partner/TourTranslationTest.php
+  tests/Feature/Search/TourDetailTest.php
+  tests/Feature/Admin/TourModerationTest.php` returned exit 0: **60 passed,
+  332 assertions, 114.69 seconds**. Output: [baseline-backend.txt](evidence/baseline-backend.txt).
+  This proves inherited focused suites only; no new Spec 019 runtime
+  behavior is accepted by these results. Bootstrap targets bookly_test
+  on bookly-test-postgres; provider key was blank for this test invocation.
+- Runtime implementation remains pending. T002-T078 remain unchecked;
+  CI, staging, and Spec 019 PR/merge/release acceptance are pending.
+  LiveReview was skipped through `lrc review --staged --skip`; global hooks
+  remain enabled.
