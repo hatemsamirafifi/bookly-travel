@@ -54,9 +54,12 @@ export interface TourFormData {
   destination: string;
   duration_value: string;
   duration_unit: DurationUnit;
-  difficulty_level: DifficultyLevel;
+  /** Nullable: older tours without difficulty restore as null; new tours default to 'easy'. */
+  difficulty_level: DifficultyLevel | null;
   itinerary: TourItineraryDay[];
   inclusions: string;
+  exclusions: string;
+  important_information: string[];
   meeting_point: string;
   /** Spoken/live-guide language codes, independent of content locale. */
   languages: string[];
@@ -135,6 +138,8 @@ export const INITIAL_TOUR_FORM_DATA: TourFormData = {
   difficulty_level: 'easy',
   itinerary: [],
   inclusions: '',
+  exclusions: '',
+  important_information: [],
   meeting_point: '',
   languages: [],
   cancellation_policy: '',

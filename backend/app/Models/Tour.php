@@ -12,6 +12,7 @@ use App\Domains\Partner\Models\TourMedia;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Reviews\Models\Review;
 use App\Enums\TourStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -193,17 +194,64 @@ class Tour extends Model
 
     public function allImageUrls(): array
     {
-        $media = $this->relationLoaded('media') ? $this->media : $this->media()->get();
-        $urls = array_merge(
-            [$this->cover_image_url],
-            $media->where('type', 'image')->pluck('url')->all()
-        );
-
-        return array_values(array_unique(array_filter($urls, static function ($url): bool {
+        $isUsable = static function ($url): bool {
             return is_string($url)
                 && filter_var($url, FILTER_VALIDATE_URL) !== false
                 && in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true);
-        })));
+        };
+
+        // Compatible reader: accept legacy image plus new cover/gallery rows.
+        // The first usable cover-typed row leads even when its sort_order is
+        // later; remaining usable rows follow in deterministic
+        // sort_order/id order. The legacy cover column is only a fallback
+        // for media-empty tours, never prepended to a valid gallery.
+        /** @var Collection<int, TourMedia> $media */
+        $media = $this->relationLoaded('media') ? $this->media : $this->media()->get();
+        $rows = $media
+            ->whereIn('type', ['image', 'cover', 'gallery'])
+            ->sort(function (TourMedia $a, TourMedia $b): int {
+                if ($a->sort_order !== $b->sort_order) {
+                    return $a->sort_order <=> $b->sort_order;
+                }
+
+                return $a->id <=> $b->id;
+            })
+            ->values();
+
+        $coverUrl = null;
+        foreach ($rows as $row) {
+            if ($row->type === 'cover' && $isUsable($row->url)) {
+                $coverUrl = $row->url;
+
+                break;
+            }
+        }
+
+        $urls = [];
+        if ($coverUrl !== null) {
+            $urls[] = $coverUrl;
+        }
+        foreach ($rows as $row) {
+            if ($isUsable($row->url) && ! in_array($row->url, $urls, true)) {
+                $urls[] = $row->url;
+            }
+        }
+
+        if ($urls !== []) {
+            if ($coverUrl === null) {
+                // No cover-typed row: a usable legacy cover match still leads;
+                // a stale legacy cover is never prepended as an extra photo.
+                $legacy = $this->cover_image_url;
+                if (is_string($legacy) && in_array($legacy, $urls, true)) {
+                    $urls = array_values(array_diff($urls, [$legacy]));
+                    array_unshift($urls, $legacy);
+                }
+            }
+
+            return $urls;
+        }
+
+        return $isUsable($this->cover_image_url) ? [$this->cover_image_url] : [];
     }
 
     /**

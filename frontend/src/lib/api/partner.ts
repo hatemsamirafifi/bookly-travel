@@ -1,5 +1,6 @@
 import { apiClient } from './client';
 import { getAuthToken } from '@/lib/auth/token';
+import type { PartnerTourWritePayload } from '@/lib/api/types';
 import type {
   Tour,
   TourDraft,
@@ -46,7 +47,7 @@ export function getTour(id: string | number) {
   });
 }
 
-export function createTour(tour: Omit<Tour, 'id' | 'partner_id' | 'created_at' | 'updated_at' | 'published_at'>) {
+export function createTour(tour: PartnerTourWritePayload) {
   return apiClient<{ data: Tour }>('/api/partner/tours', {
     method: 'POST',
     requireCsrf: true,
@@ -55,7 +56,7 @@ export function createTour(tour: Omit<Tour, 'id' | 'partner_id' | 'created_at' |
   });
 }
 
-export function updateTour(id: string | number, tour: Partial<Tour>) {
+export function updateTour(id: string | number, tour: PartnerTourWritePayload) {
   return apiClient<{ data: Tour }>(`/api/partner/tours/${encodeURIComponent(String(id))}`, {
     method: 'PUT',
     requireCsrf: true,

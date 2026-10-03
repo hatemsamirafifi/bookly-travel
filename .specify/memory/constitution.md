@@ -1,57 +1,33 @@
 <!--
-  ============================================================
   SYNC IMPACT REPORT
-  ============================================================
-  Version change : 1.1.0 -> 2.0.0
-  Bump rationale : MAJOR — the previous constitution explicitly
-                   prohibited automated partner payouts. Stripe
-                   Connect marketplace payments and payout readiness
-                   are now implemented on main, so that prohibition
-                   is removed. This amendment also makes design-system,
-                   accessibility, localization, compatibility, and
-                   evidence-based quality rules constitutional gates
-                   for the full-product UI redesign.
+  Version change : 2.0.0 -> 2.1.0
+  Bump rationale : MINOR - adds mandatory phase/spec traceability and tour
+                   source/derived-content rules; clarifies continuation of
+                   existing work without weakening fresh-main or release gates.
   Ratified       : 2026-04-10
-  Last Amended   : 2026-09-21
-
+  Last Amended   : 2026-10-01
+  Owner direction: UI master-plan Phase 2 is Spec 019; align numbering and
+                   constitution while preserving existing Spec 018.
   Modified sections:
-    - Core Principles (consolidated marketplace, booking, publishing,
-      commerce, architecture, experience, and verification rules)
-    - Architecture & Approved Stack (aligned with current manifests)
-    - Security & Data Protection (expanded marketplace isolation and
-      financial-flow requirements)
-    - Delivery Workflow & Quality Gates (added Spec Kit traceability,
-      UI acceptance, regression, and deployment gates)
-    - Governance (clarified exceptions and historical version pins)
-
-  Added sections:
-    - Bookly Design System & Originality
-    - Accessibility, Localization & Responsive Behavior
-    - UI Acceptance Contract
-    - Compatibility and incremental-delivery gates under Delivery Workflow
-
-  Removed or superseded:
-    - Phase 1 prohibition on automated partner payouts
-    - "multi-language support planned" wording; EN/ES/IT are active
-    - Unversioned or inaccurate stack descriptions
-
+    - VI: distinguish translated interface copy from derived tour content.
+    - Public Contracts and SEO: English revision, fallback, guide-language rules.
+    - Specification and Planning: verified predecessor, phase/spec mapping.
+    - Compliance Review: separate implementation from CI/merge/release acceptance.
+  Added sections: phase/spec identity and preservation rules in delivery workflow.
+  Removed sections: none; original product, security and release gates retained.
   Propagation:
-    - docs/PRD.md — updated to v2.1.0 and aligned to the current
-      Spec 017/018 status and Constitution v2.0.0.
-    - docs/Phase 2 Implementation Plan.md — updated to v2.0.0,
-      renumbered against the delivered repository baseline, and linked
-      to Constitution v2.0.0.
-    - docs/bookly-ui-redesign-spec-kit-master-plan.md — updated to cite
-      Constitution v2.0.0 and require a Constitution Check.
-    - .specify/templates/plan-template.md — compatible; it already
-      contains a Constitution Check gate.
-    - .specify/templates/spec-template.md — compatible; no version token.
-    - .specify/templates/tasks-template.md — compatible; no version token.
-    - Historical specs and Phase 1 planning documents remain pinned to
-      the constitution version that governed their delivery.
-
-  Follow-up TODOs: none
-  ============================================================
+    - docs/bookly-ui-redesign-spec-kit-master-plan.md: Specs 018-027 mapping.
+    - docs/Phase 2 Implementation Plan.md: v2.1.0; future product Specs 028-034.
+    - docs/PRD.md: v2.2.0; matching numbering and active Constitution v2.1.0.
+    - specs/019-tour-content-data/spec.md: new Phase 2 scope under v2.1.0.
+    - specs/018-bookly-ui-redesign/spec.md and plan.md: original scope retained;
+      continuation ownership and current release governance annotated.
+    - .specify/templates/spec-template.md and plan-template.md: traceability fields.
+    - .specify/templates/tasks-template.md: affected critical-flow tests required.
+    - Existing Spec 018 contracts/research/tasks: preserved baseline, not rewritten.
+  Deferred acceptance: Spec 018 historical checks remain checks against v2.0.0;
+                       new phases and release checks evaluate v2.1.0 explicitly.
+  Follow-up TODOs: none.
 -->
 
 # Bookly Constitution
@@ -183,7 +159,10 @@ polish.
 - Motion MUST respect reduced-motion preferences. Information MUST NOT depend
   on color, hover, or animation alone.
 - Supported customer-facing locales are English (`en`), Spanish (`es`), and
-  Italian (`it`). New user-visible copy MUST ship in all three locales.
+  Italian (`it`). New interface copy, including fallback notices and language
+  labels, MUST ship in all three locales. Partner-authored tour content follows
+  the source/derived-content rules below; pending derived content does not
+  count as missing interface localization.
 - User-visible copy MUST NOT be hardcoded when it belongs in the localization
   catalog. Locale-prefixed routes, canonical URLs, and alternate-language
   metadata MUST remain correct.
@@ -271,6 +250,28 @@ amendment when it changes a principle.
 - Structured data MUST describe visible, truthful content and MUST NOT invent
   ratings, offers, prices, availability, or operator claims.
 
+### Tour Content Source and Derived Locales
+
+- English MUST be the canonical partner-authored source for traveler-facing
+  tour content, including structured itineraries. Required English title and
+  description MUST be validated before submission and admin publication.
+- Spanish and Italian tour content MUST be platform-generated derivatives.
+  Missing, pending, stale, or failed derivatives MUST NOT block an otherwise
+  eligible English tour from publication.
+- Derived content MUST be tied to an English source revision. Superseded
+  results MUST NOT replace current content; generation and retries MUST be
+  idempotent and MUST NOT delay a successful English save.
+- Public display MUST use a current derivative or the current English source
+  with a visible localized fallback notice. Content and itinerary MAY fall back
+  independently; their actual languages MUST be disclosed. SEO descriptions
+  and structured content MUST reflect those same selected values.
+- Live-guide/spoken language codes MUST remain independent of content locales.
+  Existing spoken-language aliases MUST preserve their meaning.
+- Gemini is the approved backend-only translation provider for the redesign.
+  Provider models and credentials MUST be environment-configured; secrets and
+  private partner, booking, or payment data MUST NOT be sent to client bundles
+  or translation requests.
+
 ## Security and Data Protection
 
 - Secrets MUST come from environment configuration or an approved secret store
@@ -309,8 +310,13 @@ Every redesigned route MUST be reviewed against all applicable items below:
 
 ### Specification and Planning
 
-1. Work MUST start from an up-to-date `main` with repository prerequisites
-   verified.
+1. A new independent feature MUST start from up-to-date `main` with repository
+   prerequisites verified. Continuing an existing feature, or creating an
+   explicitly requested dependent phase before its predecessor merges, MUST
+   retain that verified predecessor. Record the base branch, commit, and pending
+   PR dependencies; an unmerged predecessor is not evidence of merged readiness.
+   Do not switch to a checkout that omits existing required specifications
+   without preserving them and making the dependency explicit.
 2. A Spec Kit feature MUST contain a complete `spec.md`, `plan.md`, and
    `tasks.md`; research, data model, contracts, and quickstart artifacts are
    required when the feature changes those concerns.
@@ -320,6 +326,20 @@ Every redesigned route MUST be reviewed against all applicable items below:
    `NEEDS CLARIFICATION`, and invented backend behavior block execution.
 5. Deviations from this constitution MUST be recorded in the plan's Complexity
    Tracking section with rationale and a rejected simpler alternative.
+6. Specification numbers MUST be unique repository-wide. Before allocating a
+   number, check existing spec directories, branches, and roadmap reservations.
+   The approved master plan MUST map each product phase to its canonical spec
+   directory. Phase numbers and generated task-phase headings are separate
+   identifiers and MUST NOT silently redefine that mapping.
+7. Existing spec directories, numbers, requirements, and evidence MUST NOT be
+   deleted or renumbered to make room for a new phase. A new phase owns its new
+   artifacts and references its predecessor. Reassigning uncreated roadmap
+   reservations MUST update the master plan, PRD, and dependent roadmap together.
+8. The active feature pointer MUST resolve to the mapped directory. Each active
+   spec and plan MUST identify its spec number, master-plan phase, governing
+   constitution, and verified baseline/dependencies. A specification-only step
+   MAY precede planning; implementation MUST wait for the complete artifacts
+   required by item 2.
 
 ### Implementation
 
@@ -401,9 +421,13 @@ current version.
 - Every active feature plan MUST record its Constitution Check result.
 - Code review MUST verify the principles affected by the change, not merely
   assert generic compliance.
+- Implementation completion, verification results, CI status, merge status,
+  and release acceptance MUST be recorded separately. Marking a phase implemented
+  MUST cite its evidence and MUST NOT imply pending CI, merge, or release gates
+  have passed.
 - A release MUST NOT be declared complete while a non-negotiable constitutional
   gate is knowingly failing.
 - Exceptions require written owner approval, bounded scope, an expiry or
   remediation plan, and entry in the feature plan's Complexity Tracking table.
 
-**Version**: 2.0.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-09-21
+**Version**: 2.1.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-10-01

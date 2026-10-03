@@ -20,6 +20,8 @@ const INITIAL_FORM: TourFormData = {
   difficulty_level: 'easy',
   itinerary: [],
   inclusions: '',
+  exclusions: '',
+  important_information: [],
   meeting_point: '',
   languages: [],
   cancellation_policy: '',
