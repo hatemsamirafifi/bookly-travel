@@ -90,9 +90,10 @@ class TourContentRules
     /**
      * Normalize an authored itinerary for validation: preserve array order
      * (no day-number uniqueness is invented, repeated valid days stay
-     * valid), default absent optional stops to `[]`, and pass every other
-     * value through untouched so validation reports exact field errors for
-     * malformed input instead of this layer silently clearing it.
+     * valid), reindex day/stop lists canonically, default absent optional
+     * stops to `[]`, and pass every other value through untouched so
+     * validation reports exact field errors for malformed input instead of
+     * this layer silently clearing it.
      */
     public static function normalizeItinerary(mixed $value): mixed
     {
@@ -102,8 +103,12 @@ class TourContentRules
 
         $days = [];
         foreach (array_values($value) as $day) {
-            if (is_array($day) && ! array_key_exists('stops', $day)) {
-                $day['stops'] = [];
+            if (is_array($day)) {
+                if (! array_key_exists('stops', $day)) {
+                    $day['stops'] = [];
+                } elseif (is_array($day['stops'])) {
+                    $day['stops'] = array_values($day['stops']);
+                }
             }
             $days[] = $day;
         }
@@ -114,7 +119,9 @@ class TourContentRules
     /**
      * Shared source-field rules for create ($isCreate) and update. Title is
      * a non-null string whenever supplied; description is a nullable draft
-     * string with the existing top-level create minimum preserved.
+     * string with the existing top-level create minimum preserved. Source
+     * collections are canonical JSON lists (`list`): authored associative
+     * objects fail at their exact path while `[]` stays a valid clear.
      *
      * @return array<string, mixed>
      */
@@ -132,23 +139,23 @@ class TourContentRules
             'translations.en' => 'sometimes|nullable|array',
             'translations.en.title' => 'sometimes|string|max:120',
             'translations.en.description' => 'sometimes|nullable|string|max:5000',
-            'translations.en.highlights' => 'sometimes|nullable|array|max:30',
+            'translations.en.highlights' => 'sometimes|nullable|list|max:30',
             'translations.en.highlights.*' => 'string|max:500',
-            'translations.en.inclusions' => 'sometimes|nullable|array|max:30',
+            'translations.en.inclusions' => 'sometimes|nullable|list|max:30',
             'translations.en.inclusions.*' => 'string|max:500',
-            'translations.en.exclusions' => 'sometimes|nullable|array|max:30',
+            'translations.en.exclusions' => 'sometimes|nullable|list|max:30',
             'translations.en.exclusions.*' => 'string|max:500',
             'translations.en.meeting_point' => 'sometimes|nullable|string|max:500',
             'translations.en.cancellation_policy' => 'sometimes|nullable|string|max:2000',
-            'translations.en.important_information' => 'sometimes|nullable|array|max:30',
+            'translations.en.important_information' => 'sometimes|nullable|list|max:30',
             'translations.en.important_information.*' => 'string|max:500',
-            'highlights' => 'sometimes|nullable|array|max:30',
+            'highlights' => 'sometimes|nullable|list|max:30',
             'highlights.*' => 'string|max:500',
-            'inclusions' => 'sometimes|nullable|array|max:30',
+            'inclusions' => 'sometimes|nullable|list|max:30',
             'inclusions.*' => 'string|max:500',
-            'exclusions' => 'sometimes|nullable|array|max:30',
+            'exclusions' => 'sometimes|nullable|list|max:30',
             'exclusions.*' => 'string|max:500',
-            'important_information' => 'sometimes|nullable|array|max:30',
+            'important_information' => 'sometimes|nullable|list|max:30',
             'important_information.*' => 'string|max:500',
             'meeting_point' => 'sometimes|nullable|string|max:500',
             'cancellation_policy' => 'sometimes|nullable|string|max:2000',
@@ -157,27 +164,70 @@ class TourContentRules
 
     /**
      * Itinerary rules rooted at the given array path (shorthand
-     * `itinerary` or nested `translations.en.itinerary`). Day numbers are
-     * required integers 1-30; titles are required nonblank strings;
-     * descriptions are nullable strings; stops is an ordered array with at
-     * most 20 entries (absent defaults to `[]`, explicit null is
-     * rejected); durations are nullable integers 1-1440. Empty
-     * itineraries and zero-stop days (`[]`) are valid.
+     * `itinerary` or nested `translations.en.itinerary`). Days and stops
+     * are canonical JSON lists: authored associative objects fail at their
+     * exact path. Day numbers are required integers 1-30; titles are
+     * required nonblank strings; descriptions are nullable strings; stops
+     * is an ordered list with at most 20 entries (absent defaults to `[]`,
+     * explicit null is rejected); durations are nullable integers 1-1440.
+     * Empty itineraries and zero-stop days (`[]`) are valid.
      *
      * @return array<string, mixed>
      */
     public static function itineraryRules(string $prefix = 'itinerary'): array
     {
         return [
-            $prefix => 'sometimes|nullable|array|max:30',
+            $prefix => 'sometimes|nullable|list|max:30',
             "{$prefix}.*.day" => 'required|integer|min:1|max:30',
             "{$prefix}.*.title" => 'required|string|max:160|regex:/.*\\S.*/',
             "{$prefix}.*.description" => 'sometimes|nullable|string|max:2000',
-            "{$prefix}.*.stops" => 'sometimes|array|max:20',
+            "{$prefix}.*.stops" => 'sometimes|list|max:20',
             "{$prefix}.*.stops.*.title" => 'required|string|max:160|regex:/.*\\S.*/',
             "{$prefix}.*.stops.*.description" => 'sometimes|nullable|string|max:2000',
             "{$prefix}.*.stops.*.duration_minutes" => 'sometimes|nullable|integer|min:1|max:1440',
         ];
+    }
+
+    /**
+     * Cast validated numeric-string day and duration values to JSON integers.
+     *
+     * Laravel's `integer` rule accepts digit strings for compatibility; this
+     * runs only AFTER validation, so fractional inputs were already rejected
+     * and are never truncated into valid integers here. Nulls and stored
+     * types are preserved; non-array input passes through untouched.
+     */
+    public static function castItineraryInts(mixed $value): mixed
+    {
+        if (! is_array($value)) {
+            return $value;
+        }
+
+        return array_map(static function (mixed $day): mixed {
+            if (! is_array($day)) {
+                return $day;
+            }
+            if (array_key_exists('day', $day) && is_numeric($day['day'])) {
+                $day['day'] = (int) $day['day'];
+            }
+            if (array_key_exists('stops', $day) && is_array($day['stops'])) {
+                $day['stops'] = array_map(static function (mixed $stop): mixed {
+                    if (! is_array($stop)) {
+                        return $stop;
+                    }
+                    if (
+                        array_key_exists('duration_minutes', $stop)
+                        && $stop['duration_minutes'] !== null
+                        && is_numeric($stop['duration_minutes'])
+                    ) {
+                        $stop['duration_minutes'] = (int) $stop['duration_minutes'];
+                    }
+
+                    return $stop;
+                }, $day['stops']);
+            }
+
+            return $day;
+        }, $value);
     }
 
     /**

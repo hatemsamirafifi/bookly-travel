@@ -144,15 +144,29 @@ export interface PartnerTourWritePayload {
   pricing_tiers?: PartnerPricingTierInput[];
   availability_rules?: PartnerAvailabilityRuleInput[];
   availability_exceptions?: PartnerAvailabilityExceptionInput[];
-  min_participants?: number;
-  max_participants?: number;
-  status?: 'draft' | 'pending_review';
 }
 
 /** Sanitized owned per-locale readiness (partner detail only; `source` is
  *  EN-only so owned es/it keys never carry it). Hashes and provider errors
  *  are never serialized. */
 export type OwnedTranslationStatus = 'pending' | 'ready' | 'stale' | 'failed';
+
+/**
+ * Concrete owned draft snapshot as serialized by the partner draft
+ * endpoints (`POST .../drafts/save`, `GET .../drafts/latest`). The payload
+ * is opaque: arbitrary autosave content validated only on materialization,
+ * never trusted as canonical source without restoration/normalization.
+ */
+export interface TourDraftSnapshot {
+  id: number;
+  tour_id: number | null;
+  partner_id: number;
+  payload: unknown;
+  status: string;
+  auto_saved_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export interface TourItineraryDay {
   day: number;

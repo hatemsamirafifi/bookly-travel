@@ -1,0 +1,86 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/lib/validators/__tests__/partner.test.ts src/components/partner/tours/__tests__/ItineraryEditor.test.tsx src/components/partner/tours/__tests__/TourWizard.test.tsx src/components/partner/tours/__tests__/TourWizard.locale.test.tsx src/lib/stores/__tests__/tourWizard.test.ts src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx src/components/partner/tours/__tests__/TourCard.test.tsx src/components/partner/tours/__tests__/ImageUploader.test.tsx src/components/partner/tours/__tests__/PricingTierForm.test.tsx src/components/partner/tours/__tests__/AvailabilityCalendar.test.tsx src/components/tour/__tests__/TourDetail.test.tsx src/components/tour/__tests__/ImageGallery.test.tsx src/lib/api/__tests__/client.test.ts
+
+PASS src/components/partner/tours/__tests__/TourWizard.locale.test.tsx (7.64 s)
+PASS src/components/partner/tours/__tests__/TourCard.test.tsx
+  ● Console
+
+    console.error
+      Received `true` for a non-boolean attribute `fill`.
+
+      If you want to write it to the DOM, pass a string instead: fill="true" or fill={value.toString()}.
+
+      63 |
+      64 |   it('renders the cover image when cover media exists', () => {
+    > 65 |     render(
+         |           ^
+      66 |       <TourCard
+      67 |         tour={makeTour({
+      68 |           media: [{ id: 'm1', url: 'https://example.com/cover.png', is_cover: true, sort_order: 0 }],
+
+      at validateProperty (node_modules/react-dom/cjs/react-dom-client.development.js:3070:27)
+      at warnUnknownProperties (node_modules/react-dom/cjs/react-dom-client.development.js:3146:9)
+      at validatePropertiesInDevelopment (node_modules/react-dom/cjs/react-dom-client.development.js:19868:9)
+      at setInitialProperties (node_modules/react-dom/cjs/react-dom-client.development.js:20491:7)
+      at completeWork (node_modules/react-dom/cjs/react-dom-client.development.js:12662:18)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at completeUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:17777:19)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:17658:11)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16504:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-dom/cjs/react-dom-client.development.js:18957:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (src/components/partner/tours/__tests__/TourCard.test.tsx:65:11)
+
+    console.error
+      An update to TourCard inside a test was not wrapped in act(...).
+
+      When testing, code that causes React state updates should be wrapped into act(...):
+
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      51 |       setArchiveError(err instanceof Error ? err.message : t('archiveFailed'));
+      52 |     } finally {
+    > 53 |       setArchiving(false);
+         |       ^
+      54 |     }
+      55 |   };
+      56 |
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at handleArchive (src/components/partner/tours/TourCard.tsx:53:7)
+
+PASS src/components/partner/tours/__tests__/PricingTierForm.test.tsx
+PASS src/lib/validators/__tests__/partner.test.ts
+PASS src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx
+PASS src/components/tour/__tests__/TourDetail.test.tsx
+PASS src/components/tour/__tests__/ImageGallery.test.tsx
+PASS src/components/partner/tours/__tests__/TourWizard.test.tsx
+PASS src/components/partner/tours/__tests__/AvailabilityCalendar.test.tsx
+PASS src/components/partner/tours/__tests__/ItineraryEditor.test.tsx
+PASS src/components/partner/tours/__tests__/ImageUploader.test.tsx
+PASS src/lib/api/__tests__/client.test.ts
+PASS src/lib/stores/__tests__/tourWizard.test.ts
+
+Test Suites: 13 passed, 13 total
+Tests:       113 passed, 113 total
+Snapshots:   0 total
+Time:        20.406 s
+Ran all test suites within paths "src/lib/validators/__tests__/partner.test.ts", "src/components/partner/tours/__tests__/ItineraryEditor.test.tsx", "src/components/partner/tours/__tests__/TourWizard.test.tsx", "src/components/partner/tours/__tests__/TourWizard.locale.test.tsx", "src/lib/stores/__tests__/tourWizard.test.ts", "src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx", "src/components/partner/tours/__tests__/TourCard.test.tsx", "src/components/partner/tours/__tests__/ImageUploader.test.tsx", "src/components/partner/tours/__tests__/PricingTierForm.test.tsx", "src/components/partner/tours/__tests__/AvailabilityCalendar.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx", "src/components/tour/__tests__/ImageGallery.test.tsx", "src/lib/api/__tests__/client.test.ts".
+NUMERIC_EXIT=0

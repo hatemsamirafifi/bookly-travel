@@ -765,3 +765,165 @@ runtime source/tests unchanged. Both `803048e` and original `84ae4e5` are
 ancestors (exit 0). Spec 018 is preserved; main integration is complete.
 LiveReview used `lrc review --staged --skip` as requested; hooks stayed enabled.
 Stories T010-T078 and Spec 019 CI/merge/release acceptance remain pending.
+
+## 17. US1 Review Delta Corrections (2026-10-03, unreviewed)
+
+Bounded to four source corrections plus locale-test restoration and edit
+labels. No task markers changed, no commits, no later-story work. Root
+gates and T023/T024 browser work follow separately.
+
+### D1 — opaque snapshot padding preserved (T011)
+
+- Root readonly probe
+  (`us1-readonly-opaque-middleware-probe.json`) confirmed the defect: global
+  TrimStrings/ConvertEmptyStringsToNull rewrote padded/empty nested draft
+  strings (`'  Keep spaces  '` -> `'Keep spaces'`, `''` -> `null`).
+- New owner endpoint regression with padded/empty strings at multiple
+  depths plus ordered arrays and `'30'` vs `30` types failed first
+  (`Failed asserting that two arrays are identical`), then passed after the
+  scoped fix.
+- Fix (`backend/bootstrap/app.php` only): `trimStrings`/`convertEmptyStringsToNull`
+  `except` closures skipping BOTH normalizers solely for authenticated
+  `POST api/partner/tours/*/drafts/save` (installed Laravel 11
+  `Middleware::trimStrings` closure-partition and `skipWhen` APIs verified
+  in vendor). Auth/owner policy untouched.
+- Companion regression proves canonical create/update keep trim/null
+  normalization (padded title stored trimmed, padded meeting point trimmed,
+  `''` meeting point stored null).
+
+### D2 — late-failure rollback and destination alias (T016/T015)
+
+- Rollback test rewritten: scoped `TourTranslation::saved` injection fires
+  only AFTER the changed EN row and replacement media persist (service order
+  basic -> media -> EN -> states), records arrival, throws
+  `RuntimeException('spec019-injected-late-persistence-failure')` proven via
+  `withoutExceptionHandling` exact class/message catch with `finally`
+  `flushEventListeners` (model defines no other listeners). Fixture mutates
+  destination/group/media/source so restore is genuine.
+- Restored exactly: tour attrs, EN attrs, media ids/order/cover, states;
+  `Queue::assertNotPushed(GenerateTourTranslationJob::class)`. The Queue
+  fake also records the pre-existing synchronous `Tour::saved`
+  search-index dispatch; index after-commit timing stays US3 T042 scope.
+- Destination alias: update `{destination}` was ignored (red at the
+  location assertion), now maps to location/location_slug mirroring
+  create. New create -> update -> read proof covers destination, 2-day
+  duration (2880 min), group 4/8 and category change with read-back.
+
+### D3 — canonical NULL vs [] preservation (T021)
+
+- Backend regression: EN seeded with null meeting_point/highlights/
+  itinerary survives an unrelated basic save with identical source hash and
+  states, and reads back null.
+- Edit form tracks owned EN nulls (`nullSourceFields`), sends them back as
+  null while edited fields — including explicit user clears — send as
+  authored; snapshot explicit nulls register clearing. Component test
+  covers unrelated-save null round-trip. Snapshot merge stays
+  presence-aware (nested EN wins per field, shorthand fills missing,
+  omitted/media retained, readiness/hash ignored, raw snapshot untouched).
+
+### D4 — edit labels to catalog keys (T022)
+
+- Title/description/meetingPoint/cancellationPolicy/highlights/inclusions/
+  exclusions (+ placeholders, comma hint) now use `partner.tours.form`
+  keys with associated labels. Root replaced the catalog-only assertions
+  with EN/ES/IT rendered edit controls, field feedback and focused-summary
+  regressions. The shared catalog adapter throws for missing keys.
+
+### D5 — locale test restored (T012/T022)
+
+- `TourWizard.locale.test.tsx` restored using the catalog-backed next-intl
+  boundary adapter (BookingCard precedent): parameterized EN/ES/IT render
+  proves localized focused summaries, indexed server list errors under
+  their control, and fractional-duration integer feedback with real
+  catalog strings. The real next-intl ESM bundle is unparsable by the Jest
+  CJS runner, so the adapter stands in at the third-party boundary; real
+  browser ES/IT 422 evidence remains T023 scope.
+
+### Ordering honesty
+
+Prior-relay frontend production edits preceded its new frontend tests.
+The delta's frontend null-preservation implementation also preceded its
+new component regression; neither has retrospective tests-first acceptance.
+Opaque padding and destination alias demonstrated red before their fixes.
+New mapping tests caught non-capturing-group key loss and Laravel array-max
+"more than" wording. Root's rendered edit-locale regressions failed before
+the root inline-error correction. A separate frozen pre-delta edit-page
+reproduction later failed on `null` becoming `""`; that proves the defect,
+not chronological TDD compliance. These ordering deviations remain recorded.
+
+### Delegate observations (independent acceptance pending)
+
+- Backend 8-file set: reported exit 0 — 115 passed / 764 assertions
+  (`us1-delta-backend8.log`).
+- Frontend 7 focused suites: log reports 148 passed / 7 suites
+  (`us1-delta-jest7.log`), including the subsequently replaced catalog-only
+  cases. The delegate's PowerShell boolean and later fresh-shell `$?`
+  do not prove that Jest invocation's native numeric exit code.
+- `npm run typecheck`: exit 0. `npm run lint`: exit 0, 0 errors.
+- Pint (8 PHP files incl. bootstrap): PASS. PHPStan: no errors.
+- Pending: full frontend suite/build, T023 actual-API browser suites
+  (EN/ES/IT, viewports) and T024 collation — separate dispatch.
+
+Root independently reruns current tests, lint and static analysis before
+committing. Delegate observations above are historical and do not accept
+the current working tree, whole US1, or later stories.
+
+## 18. Independent US1 Source Review (2026-10-04)
+
+Root read the source and test diff and independently ran seven gates against
+the authoritative working tree. The [command manifest](evidence/us1-root-gates-20261004.jsonl)
+records exact arguments, UTC start/finish and native numeric exits:
+
+| Gate | Result | Retained output |
+|---|---|---|
+| Eight backend suites on disposable PostgreSQL | 115 passed, 764 assertions; exit 0 | [Backend](evidence/us1-root-backend-focused-20261004.txt) |
+| Pint | 16 files pass; exit 0 | [Pint](evidence/us1-root-pint-20261004.txt) |
+| PHPStan | No errors; exit 0 | [PHPStan](evidence/us1-root-phpstan-20261004.txt) |
+| Frontend lint | Exit 0 | [ESLint](evidence/us1-root-frontend-lint-20261004.txt) |
+| Frontend typecheck | Exit 0 | [TypeScript](evidence/us1-root-frontend-typecheck-20261004.txt) |
+| Thirteen focused frontend suites | 113 passed; exit 0 | [Jest](evidence/us1-root-frontend-focused-jest-20261004.txt) |
+| Next production build | Compiled and generated 89 pages; exit 0 | [Build](evidence/us1-root-frontend-production-build-20261004.txt) |
+
+The first backend attempt could not reach the stopped disposable services
+after Docker restarted. Root terminated only that verified Pest process
+(exit 143), retained the [interrupted output](evidence/us1-root-backend-focused-runtime-stopped-20261004.txt),
+restarted the dedicated test services, confirmed readiness and reran.
+Development database/services were not reset. Repository output copies
+remove terminal trailing whitespace only; full raw logs remain externally.
+
+Review corrections include strict rollback attribute/state comparisons;
+actual complete PUT-body assertions; rendered EN/ES/IT labels, localized
+inline errors, accessible field descriptions and focused summaries;
+and a shared catalog adapter that rejects missing keys. Internal pricing
+and availability components now run in Wizard tests. The new restoration
+case uses actual `localStorage`, `persist.rehydrate` and rendered controls,
+preserving old text/itinerary and absent difficulty. The shared custom
+Select uses its own generated ID, so difficulty is associated through
+`aria-labelledby`. No dependency or production fixture was added.
+
+The [frozen old edit-page reproduction](evidence/us1-old-edit-null-reproduction-20261004.txt)
+failed with native exit 1: an unrelated location edit sent untouched
+meeting_point as `""` instead of `null`. Eight cases were filtered by the
+explicit Jest `-t` invocation, not skipped in source. The current focused
+suite passes the stronger null/explicit-empty-list regressions. This is
+defect evidence, not retrospective tests-first compliance (see section 17).
+
+Jest retained two warnings from unchanged inherited TourCard tests
+(the next/image mock's `fill` attribute and async `act`); neither was
+suppressed. New Wizard/edit tests completed without those warnings.
+The production build passed independently. This source review does not accept whole
+US1: exact frontend/server bounds, remaining localized feedback, actual-API
+browser coverage and locale/viewport collation remain T017/T022-T024.
+Later stories, full Spec 019 acceptance, CI for this increment, merge and
+release remain pending. Local real-model rehearsal remains authorized and
+reserved for T077; it has not occurred.
+
+Accepted source/test tasks: T010-T016 and T018-T021. T017 remains pending
+the exact cross-runtime character-bound review. T022-T024 remain pending
+localized generic feedback and real API/browser acceptance. Task markers
+record implemented behavior with the ordering deviations above; they do
+not erase those deviations or accept all of SC-001. Guard review retained
+boundary validation and the existing HTTP/DB patterns, removed internal
+component mocks and shallow catalog-only cases, and corrected unsupported
+gate/TDD claims. No new source skips, weakened regression assertion, or
+fixture success path was accepted.

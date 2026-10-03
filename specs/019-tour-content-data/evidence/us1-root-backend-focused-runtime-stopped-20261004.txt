@@ -1,0 +1,42 @@
+
+  [44;1m INFO [49;22m Warning: The use statement with non-compound name 'RuntimeException' has no effect in /var/www/html/tests/Feature/Partner/TourCreateTest.php on line 19.
+
+
+   FAIL  Tests\Feature\Partner\TourContentRevisionTest
+  ⨯ it hashes fixed outer source field order regardless of input key order
+  ⨯ it ignores nested day/stop object key order but preserves array order and null/empty distinctions
+  ⨯ it keeps malformed persisted source explicit instead of hashing it as empty
+  ⨯ it locks Tour then EN then states in es/it order inside the shared boundary
+  ⨯ it rolls back partial writes when the boundary callback fails
+  ⨯ it observes fresh source written inside the boundary on completion
+  ⨯ it reaches the disposable database on an independent connection
+  ⨯ it pauses the fake provider mid-call and resumes to completed output
+  ⨯ it holds real Tour/EN/state row locks across separate connections until release
+  ⨯ it guarantees partner record IDs distinct from user IDs for owner separation
+  ⨯ it coordinates fake provider arrivals without network calls
+  ⨯ it reports current/ready only for matching translated hash via publicStatus
+
+   FAIL  Tests\Feature\Partner\TourContentInputTest
+  ⨯ it prefers explicit nested English keys while shorthand fills absent keys
+  ⨯ it preserves omitted keys and keeps null and empty-array meanings distinct
+  ⨯ it normalizes absent stops to empty arrays while passing malformed values through to validation
+  ⨯ it rejects over-limit source text and lists with exact field paths
+  ⨯ it rejects null titles while accepting nullable draft descriptions
+  ⨯ it rejects out-of-range itinerary values with exact nested paths
+  ⨯ it accepts boundary-valid itineraries including empty lists and zero-stop days
+  ⨯ it rejects explicit null stops instead of treating null as empty
+  ⨯ it rejects every authored non-English locale with its precise path
+  ⨯ it rejects platform-owned keys top-level and nested, even when null or empty
+  ⨯ it rejects nested provider state and top-level provider/job/error state
+  ⨯ it rejects unexpected English source keys while keeping valid non-source input intact
+  ⨯ it wires the shared boundary into both partner requests with field-specific errors
+
+   FAIL  Tests\Feature\Search\TourMediaReaderTest
+  ⨯ it reads new cover/gallery typed rows with cover-first deterministic URLs
+  ⨯ it prioritizes the first usable cover-typed row even at a later sort order
+  ⨯ it prefers the cover-typed row over a stale legacy cover and never prepends the stale URL
+  ⨯ it reads identically through loaded and unloaded media relations
+  ⨯ it deduplicates legacy repeated URLs preserving order and cover selection
+  ⨯ it uses the legacy cover only when no usable media exists and never prepends it to a valid gallery
+  ⨯ it ignores non-HTTP(S) and invalid media URLs
+NUMERIC_EXIT=143

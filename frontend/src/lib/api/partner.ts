@@ -1,9 +1,8 @@
 import { apiClient } from './client';
 import { getAuthToken } from '@/lib/auth/token';
-import type { PartnerTourWritePayload } from '@/lib/api/types';
+import type { PartnerTourWritePayload, TourDraftSnapshot } from '@/lib/api/types';
 import type {
   Tour,
-  TourDraft,
   PartnerBooking,
   PartnerReview,
   ReviewResponse,
@@ -65,6 +64,14 @@ export function updateTour(id: string | number, tour: PartnerTourWritePayload) {
   });
 }
 
+export function submitTour(id: string | number) {
+  return apiClient<{ data: Tour; message?: string }>(`/api/partner/tours/${encodeURIComponent(String(id))}/submit`, {
+    method: 'POST',
+    requireCsrf: true,
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
+  });
+}
+
 export function deleteTour(id: string | number) {
   return apiClient<void>(`/api/partner/tours/${encodeURIComponent(String(id))}`, {
     method: 'DELETE',
@@ -84,7 +91,7 @@ export function archiveTour(id: string | number) {
 /* ─── Tour Drafts ───────────────────────────────────────────────────────── */
 
 export function saveTourDraft(tourId: string | number, payload: Record<string, unknown>) {
-  return apiClient<TourDraft>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/save`, {
+  return apiClient<TourDraftSnapshot>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/save`, {
     method: 'POST',
     requireCsrf: true,
     headers: authHeaders({ 'Content-Type': 'application/json' }),
@@ -93,7 +100,7 @@ export function saveTourDraft(tourId: string | number, payload: Record<string, u
 }
 
 export function getLatestTourDraft(tourId: string | number) {
-  return apiClient<TourDraft>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/latest`, {
+  return apiClient<TourDraftSnapshot>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/latest`, {
     headers: authHeaders(),
   });
 }
