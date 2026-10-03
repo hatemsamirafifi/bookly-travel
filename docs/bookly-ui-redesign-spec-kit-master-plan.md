@@ -17,8 +17,8 @@
 | Master-plan phase | Spec | Canonical directory | Scope | Status |
 |---|---|---|---|---|
 | Phase 0 | `018` | `specs/018-bookly-ui-redesign/` | Spec Kit Bootstrap and Design Contracts | Existing baseline |
-| Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; CI/merge acceptance pending |
-| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Specification, design and tasks complete; implementation pending |
+| Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; PR #28 merged with successful checks; release pending |
+| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation in progress; setup/foundations T001-T009 reviewed; stories and final acceptance pending |
 | Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Planned |
 | Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Planned |
 | Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
@@ -32,7 +32,7 @@ Phase numbers and task numbers (for example Phase 2 / Task 2.1) remain unchanged
 
 Spec `018` and its existing artifacts MUST be preserved. Its original full-program requirements and contracts remain the design baseline; active Phase 2 requirements, contract revisions, and acceptance evidence belong to `specs/019-tour-content-data/`. Later specifications must reference their predecessor rather than overwrite its history. The former uncreated product-roadmap Specs `019-025` move to `028-034` in the PRD and product implementation roadmap.
 
-**Phase 2 baseline:** `codex/019-tour-content-data` originally started from `codex/bookly-ui-redesign-all-work` at `84ae4e5`, retaining Spec 018 and Phase 1. Rechecked on 2026-10-02: [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) is merged, while separate [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open. Fetched `origin/main` at `f1a1f37` contains the predecessor plus subsequent CI fixes and is the integration base for continued implementation. Preserve predecessor ancestry and do not duplicate overlapping Phase 1 work. Existing Phase 2 code still requires Spec 019 acceptance verification.
+**Phase 2 baseline:** `codex/019-tour-content-data` originally started from `codex/bookly-ui-redesign-all-work` at `84ae4e5`, retaining Spec 018 and Phase 1. Rechecked on 2026-10-03: [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) and [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) are merged. The branch was rebased onto `f1a1f37`; latest fetched `origin/main` is `803048e`, adding Phase 1 evidence and ignore rules. Reconcile the latest base after saving reviewed implementation changes, preserve predecessor ancestry and avoid duplicating Phase 1 work. Existing Phase 2 code still requires Spec 019 acceptance verification.
 
 ## Repository Readiness
 
@@ -173,7 +173,7 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 ## Phase 1 - Design System and Shared Application Shells
 
-**Status: Implementation complete (2026-10-01).** Tasks 1.1-1.3 are complete. The isolated Phase 1 branch passed 206 tests, lint, typecheck and production build. [PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open; merge/CI acceptance and release-wide gates are still pending.
+**Status: Implementation complete (2026-10-01).** Tasks 1.1-1.3 are complete. The isolated Phase 1 branch passed 206 tests, lint, typecheck and production build. Rechecked 2026-10-03: [PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) is merged and its returned CI checks succeeded; release-wide gates remain pending.
 
 ### Task 1.1: Establish semantic design tokens
 

@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-03",
+  "environment": "bookly-spec019-browser-laravel-1, isolated composer vendor volume",
+  "scope": "Read-only PSR-4 probe before foundation correction; no database or provider calls",
+  "procedure": "Require vendor/autoload.php; call class_exists for Tests\\Support\\Spec019FakeTranslator, Tests\\Support\\TourContentFixtures, then Tests\\Support\\Spec019FakeTranslator again",
+  "exit_code": 0,
+  "observed": {
+    "standalone_fake": false,
+    "fixture_loadable": true,
+    "fake_after_fixture": true
+  },
+  "conclusion": "Fake translator loading depends on a preceding fixture class load. Foundation acceptance requires a standalone PSR-4 file and a filtered test rerun."
+}

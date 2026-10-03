@@ -57,7 +57,102 @@ export interface TourImage {
   url: string;
   is_cover: boolean;
   alt: string;
+  /** Actual language of the specific alt text: 'en' for partner-supplied
+   *  English alt, otherwise the selected content locale. */
+  alt_locale?: 'en' | 'es' | 'it' | null;
 }
+
+/** Canonical English source patch (Spec 019 partner contract). Explicit
+ *  nested `translations.en` keys win; shorthand fills absent nested keys;
+ *  omitted keys preserve values; null clears nullable text; [] clears lists.
+ *  Title is a non-null string whenever supplied. */
+export interface EnglishSourceInput {
+  title?: string;
+  description?: string | null;
+  highlights?: string[] | null;
+  inclusions?: string[] | null;
+  exclusions?: string[] | null;
+  meeting_point?: string | null;
+  cancellation_policy?: string | null;
+  itinerary?: TourItineraryDay[] | null;
+  important_information?: string[] | null;
+}
+
+export interface PartnerTourMediaInput {
+  url: string;
+  is_cover?: boolean;
+  alt_text?: string | null;
+}
+
+export interface PartnerPricingTierInput {
+  name: string;
+  price: number;
+  currency: string;
+  min_participants: number;
+  max_participants: number;
+}
+
+export interface PartnerAvailabilityRuleInput {
+  id?: string;
+  rule_type: 'daily' | 'weekly' | 'monthly';
+  days_of_week: number[];
+  start_time: string;
+  start_date: string;
+  end_date?: string;
+  capacity: number;
+}
+
+export interface PartnerAvailabilityExceptionInput {
+  id?: string;
+  exception_type: 'blackout' | 'specific';
+  date: string;
+  start_time: string;
+  capacity: number;
+  price_multiplier: string;
+  note?: string;
+}
+
+export interface PartnerTourWritePayload {
+  title?: string;
+  description?: string | null;
+  highlights?: string[] | null;
+  inclusions?: string[] | null;
+  exclusions?: string[] | null;
+  meeting_point?: string | null;
+  cancellation_policy?: string | null;
+  itinerary?: TourItineraryDay[] | null;
+  important_information?: string[] | null;
+  translations?: { en?: EnglishSourceInput };
+  /** Nullable: older tours without difficulty stay null; never invented. */
+  difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
+  /** Spoken/live-guide codes, independent of EN/ES/IT content locales. */
+  guide_languages?: string[];
+  /** Compatibility alias for guide_languages; guide_languages wins. */
+  languages?: string[];
+  category?: string;
+  category_id?: number;
+  destination?: string;
+  location?: string;
+  duration_value?: number;
+  duration_unit?: 'hour' | 'day';
+  group_size_min?: number;
+  group_size_max?: number;
+  cover_image_url?: string | null;
+  media?: PartnerTourMediaInput[];
+  price_from?: number | null;
+  currency?: string | null;
+  pricing_tiers?: PartnerPricingTierInput[];
+  availability_rules?: PartnerAvailabilityRuleInput[];
+  availability_exceptions?: PartnerAvailabilityExceptionInput[];
+  min_participants?: number;
+  max_participants?: number;
+  status?: 'draft' | 'pending_review';
+}
+
+/** Sanitized owned per-locale readiness (partner detail only; `source` is
+ *  EN-only so owned es/it keys never carry it). Hashes and provider errors
+ *  are never serialized. */
+export type OwnedTranslationStatus = 'pending' | 'ready' | 'stale' | 'failed';
 
 export interface TourItineraryDay {
   day: number;
@@ -99,6 +194,8 @@ export interface PublicOperatorSummary {
   name: string;
   description: string | null;
   logo_url: string | null;
+  /** Additive: true only for approved + active eligible profiles. */
+  verified?: boolean;
   tour_count: number;
   review_count: number;
   average_rating: number | null;

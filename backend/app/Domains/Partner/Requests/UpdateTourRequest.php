@@ -2,8 +2,9 @@
 
 namespace App\Domains\Partner\Requests;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class UpdateTourRequest extends FormRequest
 {
@@ -18,40 +19,46 @@ class UpdateTourRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * Title uniqueness is scoped to the authenticated partner so that
-     * two different partners may share a tour title, but one partner
-     * cannot have two tours with the same title.
+     * Title is a non-null string whenever supplied and description follows
+     * the shared nullable draft rule; ownership scoping stays in the
+     * controller/service layer and the obsolete tours.title uniqueness
+     * check (titles live in tour_translations, not tours) is removed.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, Rule|array|string>
      */
     public function rules(): array
     {
-        $partnerId = $this->attributes->get('partner_id');
-
-        return [
-            'title' => [
-                'sometimes',
-                'string',
-                'max:120',
-                Rule::unique('tours')->where(function ($query) use ($partnerId) {
-                    return $query->where('partner_id', $partnerId);
-                })->ignore($this->route('id')),
+        return array_merge(
+            TourContentRules::sourceRules(false),
+            [
+                'category' => 'sometimes|string|max:50',
+                'destination' => 'sometimes|string|max:255',
+                'duration_value' => 'sometimes|integer|min:1',
+                'duration_unit' => 'sometimes|string|in:hour,day',
+                'difficulty_level' => 'sometimes|string|in:easy,moderate,challenging',
+                'cover_image_url' => 'nullable|url|max:2048',
+                'price_from' => 'nullable|numeric|min:0',
+                'currency' => 'nullable|string|size:3',
+                'pricing_tiers' => 'nullable|array',
+                'availability_rules' => 'nullable|array',
+                'availability_exceptions' => 'nullable|array',
             ],
-            'description' => 'sometimes|string|min:100|max:5000',
-            'category' => 'sometimes|string|max:50',
-            'destination' => 'sometimes|string|max:255',
-            'duration_value' => 'sometimes|integer|min:1',
-            'duration_unit' => 'sometimes|string|in:hour,day',
-            'difficulty_level' => 'sometimes|string|in:easy,moderate,challenging',
-            'itinerary' => 'nullable|array',
-            'inclusions' => 'nullable|array',
-            'meeting_point' => 'nullable|string|max:500',
-            'cover_image_url' => 'nullable|url|max:2048',
-            'price_from' => 'nullable|numeric|min:0',
-            'currency' => 'nullable|string|size:3',
-            'pricing_tiers' => 'nullable|array',
-            'availability_rules' => 'nullable|array',
-            'availability_exceptions' => 'nullable|array',
-        ];
+            TourContentRules::itineraryRules('itinerary'),
+            TourContentRules::itineraryRules('translations.en.itinerary')
+        );
+    }
+
+    /**
+     * Reject every authored non-English locale and platform-owned key with
+     * its precise offending path, including present-but-null/empty values
+     * that `prohibited` would let through.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            foreach (TourContentRules::forbiddenPresentPaths($this->all()) as $path => $message) {
+                $validator->errors()->add($path, $message);
+            }
+        });
     }
 }

@@ -4,8 +4,8 @@
 **Created**: 2026-10-01
 **Spec ID / Master-plan phase**: `019`; UI redesign Phase 2, Tasks 2.1-2.4
 **Governing Constitution**: [Bookly Constitution v2.1.0](../../.specify/memory/constitution.md)
-**Baseline / Dependencies**: Original source `codex/bookly-ui-redesign-all-work` at `84ae4e5`; [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) merged on 2026-10-02, while [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open. Updated `origin/main` at `f1a1f37` contains the original baseline and later CI fixes; retain that ancestry during implementation. Existing content work requires verification against this specification.
-**Status**: Draft; specification complete, implementation acceptance pending
+**Baseline / Dependencies**: Original source `codex/bookly-ui-redesign-all-work` at `84ae4e5`; [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) merged on 2026-10-02, while [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) merged on 2026-10-03 (Africa/Cairo). The feature branch was rebased onto `f1a1f37`, retaining the original baseline and later CI fixes. Latest fetched `origin/main` is `803048e`; integration of its Phase 1 evidence and ignore updates remains pending until the current implementation changes are reviewed and committed. Existing content work requires verification against this specification.
+**Status**: Specification complete; setup/foundations T001-T009 independently reviewed. Story implementation and full acceptance remain pending.
 **Input**: Specify master-plan Phase 2, Tour Content Data Model and API, as Spec 019. Preserve Spec 018 and align numbering and constitution.
 
 ## User Scenarios & Testing *(mandatory)*

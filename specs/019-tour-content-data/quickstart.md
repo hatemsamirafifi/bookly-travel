@@ -6,7 +6,7 @@
 
 ## Prerequisites and Isolation
 
-- Keep branch `codex/019-tour-content-data`, predecessor `84ae4e5`, Spec 018 and documented pending PR dependencies. Follow the generated [tasks.md](tasks.md) before implementation.
+- Keep branch `codex/019-tour-content-data` and Spec 018. Original predecessor `84ae4e5` remains in ancestry after rebasing onto merged `origin/main` at `f1a1f37`. PR #27 is merged; Phase 1 PR #28 is also merged as of 2026-10-03 and must not be applied twice. Latest fetched main is `803048e`; integration remains pending until reviewed changes are committed. Follow [tasks.md](tasks.md) during implementation.
 - Install backend/frontend dependencies and Docker tooling. Run feature suites against disposable PostgreSQL: `phpunit.pgsql.xml` and `tests/bootstrap.php` select `bookly_test`, never development/production data.
 - Only one backend suite may own the disposable database. Controlled multi-connection race tests belong inside that suite and clean their own fixtures.
 - Bind fake TourContentTranslator and fake HTTP/queue in automated tests; prevent real provider requests. Integrated browser writes use seeded non-production accounts/tours and controlled translation results.

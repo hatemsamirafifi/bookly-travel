@@ -3,9 +3,9 @@
 **Branch**: `codex/019-tour-content-data` | **Date**: 2026-10-02 | **Spec**: [spec.md](spec.md)
 **Spec ID / Master-plan phase**: `019`; UI master-plan Phase 2, Tasks 2.1-2.4
 **Governing Constitution**: [v2.1.0](../../.specify/memory/constitution.md)
-**Baseline / Dependencies**: Original source `codex/bookly-ui-redesign-all-work` at `84ae4e5`. [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) merged on 2026-10-02; [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) remains open. Fetched `origin/main` at `f1a1f37` includes the original baseline and later CI fixes; incorporate that integration base before further implementation and do not duplicate overlapping Phase 1 work.
+**Baseline / Dependencies**: Original source `codex/bookly-ui-redesign-all-work` at `84ae4e5`. [PR #27](https://github.com/hatemsamirafifi/bookly-travel/pull/27) merged on 2026-10-02; [Phase 1 PR #28](https://github.com/hatemsamirafifi/bookly-travel/pull/28) merged on 2026-10-03 (Africa/Cairo). The branch was rebased onto `origin/main` at `f1a1f37`, preserving the original baseline and incorporating later CI fixes. Do not duplicate overlapping Phase 1 work.
 **Input**: [Spec 019](spec.md), [master-plan Phase 2](../../docs/bookly-ui-redesign-spec-kit-master-plan.md#phase-2---tour-content-data-model-and-api), preserved [Spec 018](../018-bookly-ui-redesign/spec.md) and its original research/contracts.
-**Status**: Design and [task generation](tasks.md) complete. Implementation, execution evidence, CI, merge and release acceptance are pending.
+**Status**: Design and [task generation](tasks.md) complete. Setup/foundations T001-T009 independently reviewed; story implementation, full acceptance, CI, merge and release remain pending.
 
 ## Summary
 
@@ -41,7 +41,7 @@ Pre-research evaluation on 2026-10-02 found no unapproved design departure: appr
 | English/derived source rules | Keep approved revision/translation decisions | Common lock order, post-commit jobs, retry/recovery, independent current/EN selection | PASS |
 | Privacy / secrets | Use allowlists and backend configuration | State/hash forgery rejection; no secret/provider body serialization or live key in tests | PASS |
 | Compatibility / adoption / rollback | Preserve existing fields/URLs/schema | Forward corrective adoption; legacy image readers; backend before consumers; data retained | PASS |
-| Specification identity / baseline | Active pointer resolves to 019 | This directory owns new artifacts; Spec 018 remains intact; pending predecessor PRs recorded | PASS |
+| Specification identity / baseline | Active pointer resolves to 019 | This directory owns new artifacts; Spec 018 remains intact; merged predecessor PRs and current branch ancestry recorded | PASS |
 | Release governance | Separate design and execution evidence | Tasks generated; no implementation/CI/merge/release gate marked complete | PASS |
 
 No constitutional exception is requested. [tasks.md](tasks.md) was generated on 2026-10-02; confirm the predecessor/base still matches before implementation. Repeat the active Constitution Check before release using actual test and deployment results.
@@ -62,7 +62,7 @@ specs/019-tour-content-data/
     tour-detail-api.md
     partner-tour-content-api.md
     translation-generation.md
-  tasks.md                     # generated execution sequence; all tasks pending
+  tasks.md                     # execution ledger; accepted markers match evidence
 ```
 
 ### Source Code (repository root)

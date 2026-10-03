@@ -28,7 +28,8 @@ import {
   tourPricingStepSchema,
   tourAvailabilityStepSchema,
 } from '@/lib/validators/partner';
-import type { WizardStep, Tour } from '@/types/tour';
+import type { WizardStep } from '@/types/tour';
+import type { PartnerTourWritePayload } from '@/lib/api/types';
 
 const steps: { id: WizardStep; labelKey: string }[] = [
   { id: 'details', labelKey: 'wizard.details' },
@@ -110,7 +111,7 @@ export function TourWizard() {
     setIsSubmitting(true);
     setErrorMsg('');
     try {
-      const payload = {
+      const payload: PartnerTourWritePayload = {
         title: formData.title,
         description: formData.description,
         category: formData.category,
@@ -137,9 +138,7 @@ export function TourWizard() {
         status: 'draft',
       };
 
-      await createTour(
-        payload as unknown as Omit<Tour, 'id' | 'partner_id' | 'created_at' | 'updated_at' | 'published_at'>
-      );
+      await createTour(payload);
       reset();
       router.push(`/${locale}/partner`);
     } catch (err: unknown) {
@@ -162,7 +161,7 @@ export function TourWizard() {
     setIsSubmitting(true);
     setErrorMsg('');
     try {
-      const payload = {
+      const payload: PartnerTourWritePayload = {
         title: formData.title,
         description: formData.description,
         category: formData.category,
@@ -189,9 +188,7 @@ export function TourWizard() {
         status: 'pending_review',
       };
 
-      await createTour(
-        payload as unknown as Omit<Tour, 'id' | 'partner_id' | 'created_at' | 'updated_at' | 'published_at'>
-      );
+      await createTour(payload);
       reset();
       router.push(`/${locale}/partner`);
     } catch (err: unknown) {
@@ -303,7 +300,7 @@ export function TourWizard() {
             <div className="space-y-1">
               <Label htmlFor="difficulty_level">{t('form.difficultyLevel')}</Label>
               <Select
-                value={formData.difficulty_level}
+                value={formData.difficulty_level ?? ''}
                 onValueChange={(v) => updateField('difficulty_level', v as 'easy' | 'moderate' | 'challenging')}
                 disabled={isSubmitting}
               >
@@ -384,7 +381,7 @@ export function TourWizard() {
               <dt className="text-gray-500">{t('form.durationValue')}:</dt>
               <dd>{formData.duration_value} {formData.duration_unit}</dd>
               <dt className="text-gray-500">{t('form.difficultyLevel')}:</dt>
-              <dd className="capitalize">{formData.difficulty_level}</dd>
+              <dd className="capitalize">{formData.difficulty_level ?? '—'}</dd>
               <dt className="text-gray-500">{t('form.meetingPoint')}:</dt>
               <dd>{formData.meeting_point || '—'}</dd>
               <dt className="text-gray-500">{t('form.pricingTiers')}:</dt>

@@ -1,0 +1,113 @@
+
+   PASS  Tests\Feature\Partner\TourContentRevisionTest
+  ✓ it hashes fixed outer source field order regardless of input key or… 6.46s
+  ✓ it ignores nested day/stop object key order but preserves array ord… 0.23s
+  ✓ it keeps malformed persisted source explicit instead of hashing it…  0.21s
+  ✓ it locks Tour then EN then states in es/it order inside the shared…  0.19s
+  ✓ it rolls back partial writes when the boundary callback fails        0.19s
+  ✓ it observes fresh source written inside the boundary on completion   0.20s
+  ✓ it reaches the disposable database on an independent connection      0.18s
+  ✓ it pauses the fake provider mid-call and resumes to completed outpu… 0.23s
+  ✓ it holds real Tour/EN/state row locks across separate connections u… 1.36s
+  ✓ it guarantees partner record IDs distinct from user IDs for owner s… 0.18s
+  ✓ it coordinates fake provider arrivals without network calls          0.16s
+  ✓ it reports current/ready only for matching translated hash via publ… 0.18s
+
+   PASS  Tests\Feature\Partner\TourContentInputTest
+  ✓ it prefers explicit nested English keys while shorthand fills absen… 0.20s
+  ✓ it preserves omitted keys and keeps null and empty-array meanings d… 0.17s
+  ✓ it normalizes absent stops to empty arrays while passing malformed…  0.16s
+  ✓ it rejects over-limit source text and lists with exact field paths   1.19s
+  ✓ it rejects null titles while accepting nullable draft descriptions   0.19s
+  ✓ it rejects out-of-range itinerary values with exact nested paths     0.18s
+  ✓ it accepts boundary-valid itineraries including empty lists and zer… 0.16s
+  ✓ it rejects explicit null stops instead of treating null as empty     0.17s
+  ✓ it rejects every authored non-English locale with its precise path   0.28s
+  ✓ it rejects platform-owned keys top-level and nested, even when null… 0.18s
+  ✓ it rejects nested provider state and top-level provider/job/error s… 0.15s
+  ✓ it rejects unexpected English source keys while keeping valid non-s… 0.52s
+  ✓ it wires the shared boundary into both partner requests with field-… 0.35s
+
+   PASS  Tests\Feature\Search\TourMediaReaderTest
+  ✓ it reads new cover/gallery typed rows with cover-first deterministi… 0.20s
+  ✓ it prioritizes the first usable cover-typed row even at a later sor… 0.20s
+  ✓ it prefers the cover-typed row over a stale legacy cover and never…  0.18s
+  ✓ it reads identically through loaded and unloaded media relations     0.20s
+  ✓ it deduplicates legacy repeated URLs preserving order and cover sel… 0.18s
+  ✓ it uses the legacy cover only when no usable media exists and never… 0.37s
+  ✓ it ignores non-HTTP(S) and invalid media URLs                        0.18s
+
+   PASS  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates a tour with valid data                                    0.34s
+  ✓ it persists difficulty and ordered media with the selected cover on… 0.27s
+  ✓ it persists the structured English itinerary from partner creation   0.23s
+  ✓ it rejects malformed structured itinerary on create and update       0.24s
+  ✓ it round-trips media reordering and cover changes on partner update  0.39s
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 0.45s
+  ✓ it stores guide-language codes independently of content translation… 0.24s
+  ✓ it keeps the partner content read contract while exposing safe deri… 0.23s
+  ✓ it rejects language names where stable guide-language codes are req… 0.23s
+  ✓ it updates guide metadata and English itinerary without conflating…  0.24s
+  ✓ it returns 422 for invalid data with missing required fields         0.37s
+  ✓ it returns 401 for unauthenticated requests                          0.22s
+  ✓ it returns 404 for non-partner users                                 0.19s
+  ✓ it scopes tour to the authenticated partner                          0.22s
+
+   PASS  Tests\Feature\Partner\TourDraftTest
+  ✓ it creates a draft via save endpoint                                 1.03s
+  ✓ it returns the most recent draft via latest endpoint                 0.21s
+  ✓ it persists draft data correctly via auto-save                       0.22s
+  ✓ it returns 404 for non-existent draft on latest endpoint             0.20s
+  ✓ it returns 404 for tour belonging to another partner                 0.23s
+
+   PASS  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide c… 0.26s
+  ✓ it marks derived translations stale only when English source change… 0.27s
+  ✓ it requeues derived content when the English description changes wi… 0.32s
+  ✓ it clears optional English content and requeues derived translation… 0.28s
+  ✓ it translates traveler-facing itinerary and information while retai… 0.26s
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 0.23s
+  ✓ it accepts only the latest English revision when an older translati… 0.25s
+  ✓ it schedules a fresh search projection after a derived translation…  0.32s
+  ✓ it serves a visible English fallback until generated content is rea… 0.37s
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.27s
+  ✓ it uses backend-only Gemini structured output and rejects transient… 0.23s
+  ✓ it retries only transient Gemini failures                            0.51s
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   1.70s
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.25s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.23s
+  ✓ it returns only approved public operator fields and visible-review…  0.28s
+  ✓ it omits operator identity when its partner is not approved          0.22s
+  ✓ it ranks only published bookable related tours by destination then…  0.32s
+  ✓ it returns 404 for non-existent slug                                 0.19s
+  ✓ it returns 404 for draft tour                                        0.20s
+  ✓ it returns 404 for rejected tour                                     0.28s
+  ✓ it returns 410 for an archived tour that was previously published    0.23s
+  ✓ it returns 404 for an archived tour that was never published         0.22s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.24s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.40s
+  ✓ it serves a fully bookable published tour as available (F2)          0.29s
+  ✓ it returns content in the requested locale                           0.24s
+  ✓ it keeps guide languages separate from localized content and itiner… 0.28s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.23s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.27s
+  ✓ it falls back to English when requested locale is unavailable        0.30s
+  ✓ it validates locale parameter is required                            0.24s
+  ✓ it includes SEO metadata in response                                 0.24s
+  ✓ it computes the review distribution from visible reviews (L4)        0.26s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.37s
+
+   PASS  Tests\Feature\Admin\TourModerationTest
+  ✓ it publishes a pending tour for an approved partner and writes audi… 0.46s
+  ✓ it blocks publishing when the owning partner is not approved (FR-00… 0.23s
+  ✓ it requires English source at approval but not Spanish or Italian    0.22s
+  ✓ it rejects a pending tour with a reason and writes audit             0.91s
+  ✓ it unpublishes a published tour and writes audit                     0.37s
+  ✓ it prevents rejecting a tour that is not in a rejectable state       0.21s
+
+  Tests:    92 passed (548 assertions)
+  Duration: 35.10s
+
+NUMERIC_EXIT=0
