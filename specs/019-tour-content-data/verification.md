@@ -753,3 +753,15 @@ specific rollback exception proof corrected; no new package or fabricated
 production result. clean-code-guard: 2 fixed, 0 remaining foundation flags;
 test-guard: 1 assertion strengthened. docs-guard: current statuses corrected
 and historical pass counts retained with their dates.
+
+## 16. Reviewed Commit and Main Integration (2026-10-03)
+
+Foundation commit `fb5c718` contains accepted T001-T009 and the retained
+independent outputs above. Clean-tree merge `60ce24d` incorporates
+`origin/main` `803048e`: only the Phase 1 evidence document and frontend
+Git/Docker artifact ignores were added. `git diff --quiet fb5c718 HEAD --
+backend frontend/src frontend/eslint.config.mjs` returned 0, proving tested
+runtime source/tests unchanged. Both `803048e` and original `84ae4e5` are
+ancestors (exit 0). Spec 018 is preserved; main integration is complete.
+LiveReview used `lrc review --staged --skip` as requested; hooks stayed enabled.
+Stories T010-T078 and Spec 019 CI/merge/release acceptance remain pending.

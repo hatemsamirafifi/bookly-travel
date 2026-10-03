@@ -2,7 +2,7 @@
 
 **Date**: 2026-10-02
 **Governance**: [Constitution v2.1.0](../../.specify/memory/constitution.md)
-**Research baseline**: `codex/019-tour-content-data`, original HEAD `84ae4e5`, inherited from `codex/bookly-ui-redesign-all-work`. Implementation rechecks on 2026-10-02/03 confirmed both predecessor PRs merged. The branch was rebased onto `f1a1f37`; latest fetched `origin/main` is `803048e`, adding Phase 1 evidence and ignore rules. Reconcile that latest base after committing reviewed implementation changes. Code observations below remain static research evidence, not execution results.
+**Research baseline**: `codex/019-tour-content-data`, original HEAD `84ae4e5`, inherited from `codex/bookly-ui-redesign-all-work`. Implementation rechecks on 2026-10-02/03 confirmed both predecessor PRs merged. The branch was rebased onto `f1a1f37`; main `803048e`, adding Phase 1 evidence and ignore rules, is integrated by merge `60ce24d` after reviewed foundation commit `fb5c718`. Tested runtime source is unchanged. Code observations below remain static research evidence, not execution results.
 
 ## Evidence and gaps
 

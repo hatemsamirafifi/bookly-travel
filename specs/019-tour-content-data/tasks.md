@@ -1,7 +1,7 @@
 # Tasks: Spec 019 Tour Content Data Model and API
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [research.md](research.md), [data-model.md](data-model.md), [contracts/](contracts/), [quickstart.md](quickstart.md).
-**Branch / baseline**: `codex/019-tour-content-data`; original predecessor `codex/bookly-ui-redesign-all-work` at `84ae4e5` is preserved in ancestry. PR #27 is merged; the branch was rebased onto `origin/main` at `f1a1f37`. Phase 1 PR #28 is also merged as of 2026-10-03; do not duplicate its inherited work. Latest fetched main is `803048e`; reconcile it after saving reviewed implementation changes.
+**Branch / baseline**: `codex/019-tour-content-data`; original predecessor `codex/bookly-ui-redesign-all-work` at `84ae4e5` is preserved in ancestry. PR #27 is merged; the branch was rebased onto `origin/main` at `f1a1f37`. Phase 1 PR #28 is also merged as of 2026-10-03; do not duplicate its inherited work. Main `803048e` is integrated by merge `60ce24d` after verified foundation commit `fb5c718`; reviewed runtime source is unchanged.
 **Spec / program phase**: `019`; UI master-plan Phase 2, Tasks 2.1-2.4. The numbered phases below organize execution of this spec only.
 **Governance**: [Constitution v2.1.0](../../.specify/memory/constitution.md).
 **Generated**: 2026-10-02.
