@@ -1036,3 +1036,53 @@ passes; search/payment selector failures still require their own bounded
 repair and current-head CI verification. PR #29 remains draft. US2-US6 and
 T073-T078 are pending. T077 real-model rehearsal remains authorized in an
 isolated local environment using the configured model and has not run.
+
+## 21. Browser selector repair and accepted-head CI (2026-10-04)
+
+All reported GitHub checks on source commit `f8845156395304a62d03aa2bdc43a45419a3e13a`
+completed successfully: PHP 8.3/8.4/8.5, Pint, PHPStan, frontend checks/tests,
+all three E2E shards and the E2E aggregate, plus the home-page Lighthouse job.
+Runs `37168553360` and `37168553379` concern that exact source head. The home
+Lighthouse job is regression evidence, not the affected tour-page T076 audit.
+A later head still needs its own CI result; implementation remains 24/78.
+
+The original search/payment strict-selector failures on parent run
+`37161504610` remain recorded. The bounded OpenCode repair changes only the
+two browser spec files. Search price inputs are scoped to the actual open
+mobile dialog or desktop complementary panel; the exact `price_min=1000`
+and `price_max=5000` assertions remain. Current DOM capture has one input
+per label and one panel in both modes. The cause of the second input in the
+older CI merge tree remains unverified; this is selector hardening, not
+proof of two permanent responsive panel copies or an eliminated product defect.
+
+Payment waits for the payment-step heading, then finds the actual summary
+`dl` and its Total row before asserting the exact server-returned `€90.00`.
+The HTTP boundary mocks, failed-attempt alert, successful reference URL,
+one booking POST and two payment attempts remain unchanged. Current source
+renders two total spans in the earlier booking view, which explains why a
+page-wide assertion can match before the view swap. The first attempted
+term-role selector failed both project variants; the live DOM showed the
+Total `dt` while that role/name query matched zero. That retained exit-1
+run was corrected, not counted as acceptance or overwritten.
+
+No production code, money behavior, fixture data reset, environment, retry
+configuration, threshold, test skip or new dependency changed. Test-guard
+review kept observable behavior assertions and the inherited HTTP boundary.
+US2 and later task markers remain unchecked. PR #29 remains draft; no
+merge or deployment occurred.
+
+
+Root independently reran full lint/typecheck and both complete affected browser
+suites after the delegate exited. All native exits were 0: search 58 passed
+(Chromium/Pixel), payment 10 passed including authentication setup (both authed
+projects). Exact commands, timestamps and numeric exits are in
+[the manifest](evidence/ci-selector-root-manifest.jsonl); full outputs are
+[lint](evidence/ci-selector-root-frontend-lint.txt),
+[typecheck](evidence/ci-selector-root-frontend-typecheck.txt),
+[search](evidence/ci-selector-root-search-browser.txt) and
+[payment](evidence/ci-selector-root-payment-browser.txt).
+The exact-head GitHub snapshot is retained as
+[CI evidence](evidence/ci-f884515-20261004.json).
+Test-only changes use the independently built US1 production source; no
+production rebuild was needed. LiveReview is skipped at the staged boundary
+as the user directed; normal Git hooks remain enabled.

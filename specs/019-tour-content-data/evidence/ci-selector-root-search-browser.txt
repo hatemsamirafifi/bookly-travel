@@ -1,0 +1,67 @@
+
+> frontend@0.1.0 test:e2e
+> playwright test tests/e2e/search.spec.ts --project=chromium --project=mobile --reporter=line
+
+
+Running 58 tests using 1 worker
+
+[1A[2K[1/58] [chromium] › tests/e2e/search.spec.ts:17:7 › Search Page › search bar navigates to results page
+[1A[2K[2/58] [chromium] › tests/e2e/search.spec.ts:29:7 › Search Page › displays search results with tour cards
+[1A[2K[3/58] [chromium] › tests/e2e/search.spec.ts:43:7 › Search Page › shows empty state when no results
+[1A[2K[4/58] [chromium] › tests/e2e/search.spec.ts:52:7 › Search Page › invalid search criteria show a recoverable error without a fabricated result count
+[1A[2K[5/58] [chromium] › tests/e2e/search.spec.ts:59:7 › Search Page › announces loading while a client-side search navigation is pending
+[1A[2K[6/58] [chromium] › tests/e2e/search.spec.ts:72:7 › Search Page › pagination controls are visible when multiple pages exist
+[1A[2K[7/58] [chromium] › tests/e2e/search.spec.ts:85:7 › Search Page › previous button is disabled on first page
+[1A[2K[8/58] [chromium] › tests/e2e/search.spec.ts:94:7 › Search Page › clicking a tour card navigates to tour detail
+[1A[2K[9/58] [chromium] › tests/e2e/search.spec.ts:104:7 › Search Page › search page has proper page title
+[1A[2K[10/58] [chromium] › tests/e2e/search.spec.ts:109:7 › Search Page › search works in Spanish locale
+[1A[2K[11/58] [chromium] › tests/e2e/search.spec.ts:120:7 › Search Page › search works in Italian locale
+[1A[2K[12/58] [chromium] › tests/e2e/search.spec.ts:133:7 › Search Page › filter panel is visible on search page
+[1A[2K[13/58] [chromium] › tests/e2e/search.spec.ts:144:7 › Search Page › sort dropdown is visible on search page
+[1A[2K[14/58] [chromium] › tests/e2e/search.spec.ts:149:7 › Search Page › selecting sort option updates URL
+[1A[2K[15/58] [chromium] › tests/e2e/search.spec.ts:155:7 › Search Page › sort preserves query and browser Back restores the previous criteria
+[1A[2K[16/58] [chromium] › tests/e2e/search.spec.ts:164:7 › Search Page › clearing filters retains the search term
+[1A[2K[17/58] [chromium] › tests/e2e/search.spec.ts:171:7 › Search Page › applying category filter updates URL and results
+[1A[2K[18/58] [chromium] › tests/e2e/search.spec.ts:181:7 › Search Page › entering price range filter updates URL
+[1A[2K[19/58] [chromium] › tests/e2e/search.spec.ts:203:7 › Search Page › clear all link appears when filters are active
+[1A[2K[20/58] [chromium] › tests/e2e/search.spec.ts:214:7 › Search Page › filter sections are collapsible
+[1A[2K[21/58] [chromium] › tests/e2e/search.spec.ts:226:7 › Search Page › duration filter options are selectable
+[1A[2K[22/58] [chromium] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to mobile viewport (375px) without horizontal scroll
+[1A[2K[23/58] [chromium] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on mobile viewport
+[1A[2K[24/58] [chromium] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to tablet viewport (768px) without horizontal scroll
+[1A[2K[25/58] [chromium] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on tablet viewport
+[1A[2K[26/58] [chromium] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to desktop viewport (1280px) without horizontal scroll
+[1A[2K[27/58] [chromium] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on desktop viewport
+[1A[2K[28/58] [chromium] › tests/e2e/search.spec.ts:274:7 › Search Page › filter panel collapses on mobile viewport
+[1A[2K[29/58] [chromium] › tests/e2e/search.spec.ts:295:7 › Search Page › navigation switches to hamburger menu on mobile
+[1A[2K[30/58] [mobile] › tests/e2e/search.spec.ts:17:7 › Search Page › search bar navigates to results page
+[1A[2K[31/58] [mobile] › tests/e2e/search.spec.ts:29:7 › Search Page › displays search results with tour cards
+[1A[2K[32/58] [mobile] › tests/e2e/search.spec.ts:43:7 › Search Page › shows empty state when no results
+[1A[2K[33/58] [mobile] › tests/e2e/search.spec.ts:52:7 › Search Page › invalid search criteria show a recoverable error without a fabricated result count
+[1A[2K[34/58] [mobile] › tests/e2e/search.spec.ts:59:7 › Search Page › announces loading while a client-side search navigation is pending
+[1A[2K[35/58] [mobile] › tests/e2e/search.spec.ts:72:7 › Search Page › pagination controls are visible when multiple pages exist
+[1A[2K[36/58] [mobile] › tests/e2e/search.spec.ts:85:7 › Search Page › previous button is disabled on first page
+[1A[2K[37/58] [mobile] › tests/e2e/search.spec.ts:94:7 › Search Page › clicking a tour card navigates to tour detail
+[1A[2K[38/58] [mobile] › tests/e2e/search.spec.ts:104:7 › Search Page › search page has proper page title
+[1A[2K[39/58] [mobile] › tests/e2e/search.spec.ts:109:7 › Search Page › search works in Spanish locale
+[1A[2K[40/58] [mobile] › tests/e2e/search.spec.ts:120:7 › Search Page › search works in Italian locale
+[1A[2K[41/58] [mobile] › tests/e2e/search.spec.ts:133:7 › Search Page › filter panel is visible on search page
+[1A[2K[42/58] [mobile] › tests/e2e/search.spec.ts:144:7 › Search Page › sort dropdown is visible on search page
+[1A[2K[43/58] [mobile] › tests/e2e/search.spec.ts:149:7 › Search Page › selecting sort option updates URL
+[1A[2K[44/58] [mobile] › tests/e2e/search.spec.ts:155:7 › Search Page › sort preserves query and browser Back restores the previous criteria
+[1A[2K[45/58] [mobile] › tests/e2e/search.spec.ts:164:7 › Search Page › clearing filters retains the search term
+[1A[2K[46/58] [mobile] › tests/e2e/search.spec.ts:171:7 › Search Page › applying category filter updates URL and results
+[1A[2K[47/58] [mobile] › tests/e2e/search.spec.ts:181:7 › Search Page › entering price range filter updates URL
+[1A[2K[48/58] [mobile] › tests/e2e/search.spec.ts:203:7 › Search Page › clear all link appears when filters are active
+[1A[2K[49/58] [mobile] › tests/e2e/search.spec.ts:214:7 › Search Page › filter sections are collapsible
+[1A[2K[50/58] [mobile] › tests/e2e/search.spec.ts:226:7 › Search Page › duration filter options are selectable
+[1A[2K[51/58] [mobile] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to mobile viewport (375px) without horizontal scroll
+[1A[2K[52/58] [mobile] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on mobile viewport
+[1A[2K[53/58] [mobile] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to tablet viewport (768px) without horizontal scroll
+[1A[2K[54/58] [mobile] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on tablet viewport
+[1A[2K[55/58] [mobile] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to desktop viewport (1280px) without horizontal scroll
+[1A[2K[56/58] [mobile] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on desktop viewport
+[1A[2K[57/58] [mobile] › tests/e2e/search.spec.ts:274:7 › Search Page › filter panel collapses on mobile viewport
+[1A[2K[58/58] [mobile] › tests/e2e/search.spec.ts:295:7 › Search Page › navigation switches to hamburger menu on mobile
+[1A[2K  58 passed (36.7s)
+NUMERIC_EXIT=0

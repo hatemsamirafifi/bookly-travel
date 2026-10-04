@@ -18,7 +18,7 @@
 |---|---|---|---|---|
 | Phase 0 | `018` | `specs/018-bookly-ui-redesign/` | Spec Kit Bootstrap and Design Contracts | Existing baseline |
 | Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; PR #28 merged with successful checks; release pending |
-| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation in progress; 24/78 tasks accepted (T001-T024); US1 authoring/browser accepted, later stories and final acceptance pending; PR #29 draft, current-head CI/merge/release pending |
+| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation in progress; 24/78 tasks accepted (T001-T024); US1 authoring/browser accepted, later stories and final acceptance pending; PR #29 draft; source f884515 CI passed, later-head CI/merge/release pending |
 | Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Planned |
 | Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Planned |
 | Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
@@ -267,7 +267,7 @@ git commit -m "feat: establish Bookly UI design system"
 
 ## Phase 2 - Tour Content Data Model and API
 
-**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Tasks 2.1-2.4 and their new contracts are owned by Spec 019; Spec 018 remains the reference baseline. Design and task generation completed on 2026-10-02. As of 2026-10-04, 24/78 tasks (T001-T024) are independently accepted; US1 source authoring and browser evidence follow source commit `93474ab`. See [verification](../specs/019-tour-content-data/verification.md#20-independent-us1-browser-and-bounds-acceptance-2026-10-04). Later stories and final implementation acceptance remain pending. [PR #29](https://github.com/hatemsamirafifi/bookly-travel/pull/29) remains a draft. Prior-head CI run `37161504610` failed in browser shards; current-head CI, merge and release require separate verification.
+**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Tasks 2.1-2.4 and their new contracts are owned by Spec 019; Spec 018 remains the reference baseline. Design and task generation completed on 2026-10-02. As of 2026-10-04, 24/78 tasks (T001-T024) are independently accepted; US1 source authoring and browser evidence follow source commit `93474ab`. See [verification](../specs/019-tour-content-data/verification.md#20-independent-us1-browser-and-bounds-acceptance-2026-10-04). Later stories and final implementation acceptance remain pending. [PR #29](https://github.com/hatemsamirafifi/bookly-travel/pull/29) remains a draft. Prior-head CI run `37161504610` failed in browser shards; all checks on source `f884515` passed in runs `37168553360`/`37168553379`. Later-head CI, merge and release require separate verification; see verification section 21.
 
 ### Task 2.1: Add localized structured itineraries
 
