@@ -187,6 +187,60 @@ describe('tourBasicDetailsSchema source fields (Spec 019)', () => {
   });
 });
 
+describe('tourBasicDetailsSchema unicode code-point bounds (Spec 019 T017)', () => {
+  const BMP_CHAR = 'x';
+  const NON_BMP = String.fromCodePoint(0x1f30d);
+
+  it('counts title limit in code points, not UTF-16 units', () => {
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, title: BMP_CHAR.repeat(120) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, title: NON_BMP.repeat(120) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, title: NON_BMP.repeat(121) }).success).toBe(false);
+  });
+
+  it('counts top-level description min/max in code points', () => {
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, description: BMP_CHAR.repeat(99) }).success).toBe(false);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, description: NON_BMP.repeat(99) }).success).toBe(false);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, description: BMP_CHAR.repeat(100) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, description: NON_BMP.repeat(100) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, description: NON_BMP.repeat(5000) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, description: NON_BMP.repeat(5001) }).success).toBe(false);
+  });
+
+  it('counts list items and meeting point in code points', () => {
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, highlights: [NON_BMP.repeat(500)] }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, highlights: [NON_BMP.repeat(501)] }).success).toBe(false);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, meeting_point: NON_BMP.repeat(500) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, meeting_point: NON_BMP.repeat(501) }).success).toBe(false);
+  });
+
+  it('counts cancellation and day/stop descriptions in code points', () => {
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, cancellation_policy: NON_BMP.repeat(2000) }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, cancellation_policy: NON_BMP.repeat(2001) }).success).toBe(false);
+    const dayDescriptions = (text: string) => ({
+      ...validDetails,
+      itinerary: [{ day: 1, title: 'Day', description: text, stops: [{ title: 'Stop', description: text }] }],
+    });
+    expect(tourBasicDetailsSchema.safeParse(dayDescriptions(NON_BMP.repeat(2000))).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse(dayDescriptions(NON_BMP.repeat(2001))).success).toBe(false);
+  });
+
+  it('counts day and stop titles in code points', () => {
+    const dayTitles = (title: string) => ({
+      ...validDetails,
+      itinerary: [{ day: 1, title, stops: [{ title }] }],
+    });
+    expect(tourBasicDetailsSchema.safeParse(dayTitles(NON_BMP.repeat(160))).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse(dayTitles(NON_BMP.repeat(161))).success).toBe(false);
+  });
+
+  it('counts publication bounds in code points after trimming', () => {
+    expect(tourPublishSourceSchema.safeParse({ title: NON_BMP.repeat(120), description: validDetails.description }).success).toBe(true);
+    expect(tourPublishSourceSchema.safeParse({ title: NON_BMP.repeat(121), description: validDetails.description }).success).toBe(false);
+    expect(tourPublishSourceSchema.safeParse({ title: 'Valid', description: NON_BMP.repeat(100) }).success).toBe(true);
+    expect(tourPublishSourceSchema.safeParse({ title: 'Valid', description: NON_BMP.repeat(99) }).success).toBe(false);
+  });
+});
+
 describe('tourPublishSourceSchema (Spec 019 draft vs publication)', () => {
   it('requires trimmed nonempty title and the 100-character description', () => {
     expect(tourPublishSourceSchema.safeParse({ title: '   ', description: validDetails.description }).success).toBe(false);
@@ -248,6 +302,13 @@ describe('localizeServerFieldError + pickFieldErrors (Spec 019 i18n)', () => {
       'The translations.en.highlights must not have more than 30 items.',
       t
     )).toBe(catalogText(catalogs[locale], 'partner.tours.errors.highlightsMax'));
+    // Actual cleared-title 422: empty string normalizes to null, installed
+    // `string` rule reports "must be a string" (verified against live API).
+    expect(localizeServerFieldError(
+      'title',
+      'The translations.en.title field must be a string.',
+      t
+    )).toBe(catalogText(catalogs[locale], 'partner.tours.errors.titleRequired'));
     // Real catalog messages, not key echoes.
     expect(catalogText(catalogs[locale], 'partner.tours.errors.dayTitleRequired'))
       .not.toContain('partner.tours.errors.');

@@ -70,6 +70,10 @@ export function ItineraryEditor({ value, onChange, disabled = false, errors }: I
 
   const itineraryError = errorFor(errors, 'itinerary');
 
+  // Authored title/description controls carry no native maxlength: it counts
+  // UTF-16 units and would block the schema/server-accepted 160/2000
+  // code-point boundaries. Bounds stay enforced by validation with localized
+  // field feedback.
   return (
     <section className="space-y-4" aria-label={t('itinerary')}>
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -97,7 +101,7 @@ export function ItineraryEditor({ value, onChange, disabled = false, errors }: I
           </div>
           <div className="space-y-1 text-sm font-medium text-bookly-navy">
             <label htmlFor={`itinerary-day-${dayIndex}-title`}>{t('dayTitle')}</label>
-            <Input id={`itinerary-day-${dayIndex}-title`} value={day.title} maxLength={160} disabled={disabled}
+            <Input id={`itinerary-day-${dayIndex}-title`} value={day.title} disabled={disabled}
               aria-invalid={dayTitleError ? true : undefined}
               aria-describedby={dayTitleError ? `itinerary-day-${dayIndex}-title-error` : undefined}
               onChange={(event) => updateDay(dayIndex, { title: event.target.value })} />
@@ -107,7 +111,7 @@ export function ItineraryEditor({ value, onChange, disabled = false, errors }: I
           </div>
           <div className="space-y-1 text-sm font-medium text-bookly-navy">
             <label htmlFor={`itinerary-day-${dayIndex}-description`}>{t('dayDescription')}</label>
-            <Textarea id={`itinerary-day-${dayIndex}-description`} value={day.description ?? ''} maxLength={2000} disabled={disabled}
+            <Textarea id={`itinerary-day-${dayIndex}-description`} value={day.description ?? ''} disabled={disabled}
               aria-invalid={dayDescError ? true : undefined}
               aria-describedby={dayDescError ? `itinerary-day-${dayIndex}-description-error` : undefined}
               onChange={(event) => updateDay(dayIndex, { description: event.target.value })} />
@@ -131,7 +135,7 @@ export function ItineraryEditor({ value, onChange, disabled = false, errors }: I
               </div>
               <div className="space-y-1 text-sm font-medium text-bookly-navy">
                 <label htmlFor={`itinerary-day-${dayIndex}-stop-${stopIndex}-title`}>{t('stopTitle')}</label>
-                <Input id={`itinerary-day-${dayIndex}-stop-${stopIndex}-title`} value={stop.title} maxLength={160} disabled={disabled}
+                <Input id={`itinerary-day-${dayIndex}-stop-${stopIndex}-title`} value={stop.title} disabled={disabled}
                   aria-invalid={stopTitleError ? true : undefined}
                   aria-describedby={stopTitleError ? `itinerary-day-${dayIndex}-stop-${stopIndex}-title-error` : undefined}
                   onChange={(event) => updateStop(dayIndex, stopIndex, { title: event.target.value })} />
@@ -141,7 +145,7 @@ export function ItineraryEditor({ value, onChange, disabled = false, errors }: I
               </div>
               <div className="space-y-1 text-sm font-medium text-bookly-navy">
                 <label htmlFor={`itinerary-day-${dayIndex}-stop-${stopIndex}-description`}>{t('stopDescription')}</label>
-                <Textarea id={`itinerary-day-${dayIndex}-stop-${stopIndex}-description`} value={stop.description ?? ''} maxLength={2000} disabled={disabled}
+                <Textarea id={`itinerary-day-${dayIndex}-stop-${stopIndex}-description`} value={stop.description ?? ''} disabled={disabled}
                   aria-invalid={stopDescError ? true : undefined}
                   aria-describedby={stopDescError ? `itinerary-day-${dayIndex}-stop-${stopIndex}-description-error` : undefined}
                   onChange={(event) => updateStop(dayIndex, stopIndex, { description: event.target.value })} />

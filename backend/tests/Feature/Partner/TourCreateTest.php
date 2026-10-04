@@ -33,6 +33,36 @@ beforeEach(function () {
     $this->token = $this->partnerUser->createToken('test', ['partner'])->plainTextToken;
 });
 
+it('creates distinct stable nonempty links for repeated valid source titles', function (string $title) {
+    $ids = [];
+    $slugs = [];
+    for ($attempt = 0; $attempt < 2; $attempt++) {
+        $created = postJson('/api/partner/tours', [
+            'title' => $title,
+            'description' => str_repeat('A guided visit through historic Florence. ', 4),
+            'category' => 'wine-food',
+            'destination' => 'Florence, Italy',
+            'duration_value' => 3,
+            'duration_unit' => 'hour',
+            'difficulty_level' => 'easy',
+        ], ['Authorization' => 'Bearer ' . $this->token])->assertCreated();
+        $id = $created->json('data.id');
+        $detail = getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+        $slug = $detail->json('data.slug');
+        expect($slug)->toBeString()->not->toBe('');
+        expect($detail->json('data.translations.0.title'))->toBe($title);
+        putJson('/api/partner/tours/' . $id, ['destination' => 'Rome, Italy'], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+        getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk()->assertJsonPath('data.slug', $slug);
+        $ids[] = $id;
+        $slugs[] = $slug;
+    }
+    expect($ids[0])->not->toBe($ids[1]);
+    expect($slugs[0])->not->toBe($slugs[1]);
+})->with([
+    'emoji-only boundary' => [str_repeat("\u{1F30D}", 120)],
+    'repeated readable title' => ['Repeated Florence source tour'],
+]);
+
 it('creates a tour with valid data', function () {
     $response = postJson('/api/partner/tours', [
         'title' => 'Tuscan Wine Experience',

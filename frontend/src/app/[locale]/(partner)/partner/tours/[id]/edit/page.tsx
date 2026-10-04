@@ -167,6 +167,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const locale = resolvedParams.locale;
   const formT = useTranslations('partner.tours.form');
   const tourT = useTranslations('partner.tours');
+  // Page-locale feedback strings, resolved per render as stable values so
+  // async callbacks stay referentially stable (the translation function
+  // itself is not a stable callback identity).
+  const loadFailedMsg = formT('loadFailed');
+  const saveFailedMsg = formT('saveFailed');
+  const saveSucceededMsg = formT('saveSucceeded');
+  const submitFailedMsg = formT('submitFailed');
+  const submitSucceededMsg = formT('submitSucceeded');
 
   const [tour, setTour] = useState<Tour | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -243,10 +251,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           Accept: 'application/json',
         },
       });
-      if (!res.ok) throw new Error('Failed to load tour details');
+      if (!res.ok) throw new Error(loadFailedMsg);
       const json = await res.json();
       if (!isRecord(json.data) || typeof json.data.id !== 'number') {
-        throw new Error('Tour details not found.');
+        throw new Error(loadFailedMsg);
       }
       const t: Tour = json.data;
       setTour(t);
@@ -305,12 +313,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       } else {
         setNullSourceFields(new Set());
       }
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+    } catch {
+      // Load feedback stays page-localized (including cross-owner 404 denial);
+      // raw network/server English never reaches the UI.
+      setError(loadFailedMsg);
     } finally {
       setIsLoading(false);
     }
-  }, [id]);
+  }, [id, loadFailedMsg]);
 
   useEffect(() => {
     fetchTour();
@@ -430,13 +440,15 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           }
           setFieldErrors(mapped);
         }
-        throw new Error(typeof json.message === 'string' ? json.message : 'Failed to update tour details');
+        throw new Error(saveFailedMsg);
       }
 
-      setSuccessMsg('Tour details saved successfully!');
+      setSuccessMsg(saveSucceededMsg);
       fetchTour();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to save tour');
+    } catch {
+      // Field errors render localized inline + in the focused summary;
+      // generic save failures use page-locale feedback, never raw English.
+      setError(saveFailedMsg);
     }
   };
 
@@ -454,19 +466,19 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       });
 
       if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(typeof json.message === 'string' ? json.message : 'Failed to submit tour for review');
+        await res.json().catch(() => ({}));
+        throw new Error(submitFailedMsg);
       }
 
-      setSuccessMsg('Tour submitted for admin review successfully!');
+      setSuccessMsg(submitSucceededMsg);
       fetchTour();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to submit tour for review');
+    } catch {
+      setError(submitFailedMsg);
     }
   };
 
   if (isLoading) {
-    return <div className="text-center py-12 text-gray-500">Loading tour editor...</div>;
+    return <div className="text-center py-12 text-gray-500">{formT('loadingEditor')}</div>;
   }
 
   if (error && !tour) {
@@ -483,7 +495,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-[#0A2540]">Edit Tour</h1>
+              <h1 className="text-2xl font-bold text-[#0A2540]">{tourT('editTour')}</h1>
               <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${
                 tour?.status === 'published' ? 'bg-emerald-100 text-emerald-800' :
                 tour?.status === 'pending_review' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-800'
@@ -516,14 +528,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
             >
               <Send className="w-4 h-4" />
-              Submit For Review
+              {formT('submitForReview')}
             </button>
           )}
         </div>
       </div>
 
       {successMsg && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex items-center gap-2">
+        <div role="status" aria-live="polite" className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex items-center gap-2">
           <CheckCircle className="w-4 h-4" />
           {successMsg}
         </div>
@@ -536,7 +548,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         </div>
       )}
 
-      <form onSubmit={handleSave} className="grid gap-6 lg:grid-cols-[1fr_360px]">
+      {/* noValidate lets empty/fractional source reach the authoritative
+      server validation so custom localized field/summary feedback runs;
+      required/min/step metadata stays for assistive technology. */}
+      <form onSubmit={handleSave} noValidate className="grid gap-6 lg:grid-cols-[1fr_360px]">
         {/* Left: General Settings and Language Editor */}
         <div className="space-y-6 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <h2 className="font-bold text-lg text-[#0A2540] border-b border-gray-50 pb-2 mb-4">Tour Content Editing</h2>
@@ -786,7 +801,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               className="w-full flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0A2540] hover:bg-[#FFB800] hover:text-[#0A2540] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
             >
               <Save className="w-4 h-4" />
-              Save Tour Details
+              {formT('saveDetails')}
             </button>
           </div>
           <div className="rounded-xl border border-border bg-surface p-5">

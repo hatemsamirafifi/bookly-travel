@@ -180,12 +180,13 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
     const snapshotPayload = {
       translations: {
         en: {
+          title: 'Nested title wins',
           meeting_point: 'Snapshot point',
           highlights: ['Snapshot highlight'],
           meeting_point_decoy: 'Opaque extra snapshot content',
         },
       },
-      title: 'Shorthand title',
+      title: 'Shorthand title loses',
       translation_statuses: { es: 'ready' },
       source_hash: 'forged',
     };
@@ -202,10 +203,12 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
     fireEvent.click(screen.getByRole('button', { name: englishForm.restoreDraft }));
     await waitFor(() => expect(screen.getByText(englishForm.draftRestored)).toBeInTheDocument());
 
-    // Nested EN wins where present; shorthand fills only the missing title;
-    // omitted source keeps current values; readiness/hash never applied.
+    // Same-field conflict: explicit nested EN wins over shorthand; shorthand
+    // fills only fields missing from nested EN; omitted source keeps current
+    // values; omitted media retains the gallery; readiness/hash never applied.
     expect(screen.getByDisplayValue('Snapshot point')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Shorthand title')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Nested title wins')).toBeInTheDocument();
+    expect(screen.queryByDisplayValue('Shorthand title loses')).not.toBeInTheDocument();
     expect(screen.getByDisplayValue('Owned description for the tour reopen test.')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Snapshot highlight')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Old inclusion')).toBeInTheDocument();
@@ -224,7 +227,7 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
       media?: unknown;
     };
     expect(body.translations.en.meeting_point).toBe('Snapshot point');
-    expect(body.translations.en.title).toBe('Shorthand title');
+    expect(body.translations.en.title).toBe('Nested title wins');
     expect(body.translations.en.description).toBe('Owned description for the tour reopen test.');
     expect(body.translations.en).not.toHaveProperty('translation_statuses');
     expect(body.translations.en).not.toHaveProperty('source_hash');
@@ -234,12 +237,13 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
     expect(snapshotPayload).toEqual({
       translations: {
         en: {
+          title: 'Nested title wins',
           meeting_point: 'Snapshot point',
           highlights: ['Snapshot highlight'],
           meeting_point_decoy: 'Opaque extra snapshot content',
         },
       },
-      title: 'Shorthand title',
+      title: 'Shorthand title loses',
       translation_statuses: { es: 'ready' },
       source_hash: 'forged',
     });
@@ -322,7 +326,7 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
       ok: false, status: 422,
       json: async () => ({ errors: { 'translations.en.highlights': ['The translations.en.highlights must not have more than 30 items.'] } }),
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Save Tour Details' }));
+    fireEvent.click(screen.getByRole('button', { name: form.saveDetails }));
     await screen.findByText(errors.highlightsMax);
     const summary = screen.getByText(form.errorSummary).closest('[role="alert"]');
     expect(document.activeElement).toBe(summary);
@@ -355,6 +359,64 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
     expect(document.activeElement).toBe(summary);
     // The nested path maps onto the actual title field.
     expect(screen.getByText(en.partner.tours.errors.titleRequired)).toBeInTheDocument();
+  });
+
+  it('lets empty titles reach server validation via noValidate while retaining required metadata', async () => {
+    mockFetchTour();
+    await renderPage();
+    await screen.findByDisplayValue('Owned tour');
+
+    // Real form carries noValidate so custom localized server feedback runs;
+    // required/step metadata stays for assistive technology.
+    const form = screen.getByRole('button', { name: 'Save Tour Details' }).closest('form');
+    expect(form).not.toBeNull();
+    expect(form).toHaveAttribute('noValidate');
+    expect(screen.getByLabelText(/Title \(EN\)/i)).toHaveAttribute('required');
+  });
+
+  it.each(['en', 'es', 'it'] as const)('localizes the actual cleared-title string-rule 422 in %s with focused summary', async (locale) => {
+    mockFetchTour();
+    await renderPage(locale);
+    await screen.findByDisplayValue('Owned tour');
+    const form = catalogs[locale].partner.tours.form;
+    const errors = catalogs[locale].partner.tours.errors;
+
+    // Actual live-API response for a cleared title (empty string normalizes
+    // to null; installed `string` rule reports "must be a string").
+    (global.fetch as jest.Mock).mockImplementation(async (url: string, init?: RequestInit) => {
+      if (init?.method === 'PUT') {
+        return {
+          ok: false,
+          status: 422,
+          json: async () => ({
+            message: 'The translations.en.title field must be a string.',
+            errors: { 'translations.en.title': ['The translations.en.title field must be a string.'] },
+          }),
+        } as Response;
+      }
+      return { ok: true, status: 200, json: async () => ({ data: ownedTour }) } as Response;
+    });
+
+    fireEvent.change(screen.getByLabelText(`${form.title} (EN)`), { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: form.saveDetails }));
+    await screen.findByText(errors.titleRequired);
+    const summary = screen.getByText(form.errorSummary).closest('[role="alert"]');
+    expect(summary).not.toBeNull();
+    expect(document.activeElement).toBe(summary);
+    expect(screen.queryByText('The translations.en.title field must be a string.')).not.toBeInTheDocument();
+  });
+
+  it.each([
+    { locale: 'en' as const, saveLabel: 'Save Tour Details' },
+    { locale: 'es' as const, saveLabel: 'Guardar detalles del tour' },
+    { locale: 'it' as const, saveLabel: 'Salva i dettagli del tour' },
+  ])('offers a localized save action and announces success in $locale', async ({ locale, saveLabel }) => {
+    await renderPage(locale);
+    await screen.findByDisplayValue('Owned tour');
+    expect(screen.getByRole('heading', { name: catalogs[locale].partner.tours.editTour })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: saveLabel }));
+    const status = await screen.findByRole('status');
+    expect(status).toHaveTextContent(catalogs[locale].partner.tours.form.saveSucceeded);
   });
 
   it('reports no draft only on 404 and keeps the form on other failures', async () => {

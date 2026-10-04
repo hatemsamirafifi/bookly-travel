@@ -187,14 +187,18 @@ export function TourWizard() {
     group_size_max: formData.group_size_max,
   });
 
-  const applyServerError = (err: unknown, fallbackKey: string) => {
+  // Server failures stay page-localized: field errors render through the
+  // catalog (retained in the focused summary), while generic save/submit
+  // failures use the passed localized message. Raw backend/English text
+  // never reaches the UI.
+  const applyServerError = (err: unknown, fallbackMessage: string) => {
     if (err instanceof ValidationError) {
       const fields = mapServerErrorsToFields(err.errors);
       setServerErrors(fields);
-      setErrorMsg(err.message || fallbackKey);
+      setErrorMsg(Object.keys(fields).length > 0 ? '' : fallbackMessage);
       return;
     }
-    setErrorMsg(err instanceof Error ? err.message : fallbackKey);
+    setErrorMsg(fallbackMessage);
   };
 
   // Materialize the draft: create once, then update the retained id so
@@ -222,7 +226,7 @@ export function TourWizard() {
       await materializeDraft();
       setNotice(t('wizard.saved'));
     } catch (err: unknown) {
-      applyServerError(err, 'Failed to save draft');
+      applyServerError(err, t('wizard.saveFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -269,10 +273,29 @@ export function TourWizard() {
       reset();
       router.push(`/${locale}/partner`);
     } catch (err: unknown) {
-      applyServerError(err, 'Failed to submit review');
+      applyServerError(err, t('wizard.submitFailed'));
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Translated visible labels for the stored enum codes; stored values
+  // stay codes (walking/hour/easy) and absent difficulty stays blank.
+  const categoryLabels: Record<string, string> = {
+    walking: t('form.walking'),
+    food: t('form.food'),
+    adventure: t('form.adventure'),
+    cultural: t('form.cultural'),
+    nature: t('form.nature'),
+  };
+  const durationUnitLabels: Record<string, string> = {
+    hour: t('form.hours'),
+    day: t('form.days'),
+  };
+  const difficultyLabels: Record<string, string> = {
+    easy: t('form.easy'),
+    moderate: t('form.moderate'),
+    challenging: t('form.challenging'),
   };
 
   const commaListProps = (key: 'highlights' | 'inclusions' | 'exclusions' | 'important_information') => ({
@@ -314,12 +337,14 @@ export function TourWizard() {
             <p className="text-sm text-muted-foreground">{t('form.sourceLanguageNotice')}</p>
             <div className="space-y-1">
               <Label htmlFor="title">{t('form.title')}</Label>
+              {/* No native maxlength: it counts UTF-16 units and would block the
+                  schema/server-accepted 120 code-point boundary. The bound stays
+                  enforced by validation with localized feedback. */}
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => updateField('title', e.target.value)}
                 placeholder={t('form.titlePlaceholder')}
-                maxLength={120}
                 disabled={isSubmitting}
                 aria-invalid={validationErrors['title'] || serverErrors['title'] ? true : undefined}
               />
@@ -383,13 +408,13 @@ export function TourWizard() {
             <ItineraryEditor value={formData.itinerary} onChange={(days) => updateField('itinerary', days)} disabled={isSubmitting} errors={itineraryErrors} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label htmlFor="category">{t('form.category')}</Label>
+                <Label id="category-label">{t('form.category')}</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(v) => updateField('category', v)}
                   disabled={isSubmitting}
                 >
-                  <SelectTrigger><SelectValue placeholder={t('form.categoryPlaceholder')} /></SelectTrigger>
+                  <SelectTrigger aria-labelledby="category-label"><SelectValue placeholder={t('form.categoryPlaceholder')} displayValue={formData.category ? categoryLabels[formData.category] : undefined} /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="walking">{t('form.walking')}</SelectItem>
                     <SelectItem value="food">{t('form.food')}</SelectItem>
@@ -431,13 +456,13 @@ export function TourWizard() {
                 )}
               </div>
               <div className="space-y-1">
-                <Label htmlFor="duration_unit">{t('form.durationUnit')}</Label>
+                <Label id="duration_unit-label">{t('form.durationUnit')}</Label>
                 <Select
                   value={formData.duration_unit}
                   onValueChange={(v) => updateField('duration_unit', v as 'hour' | 'day')}
                   disabled={isSubmitting}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger aria-labelledby="duration_unit-label"><SelectValue displayValue={durationUnitLabels[formData.duration_unit]} /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="hour">{t('form.hours')}</SelectItem>
                     <SelectItem value="day">{t('form.days')}</SelectItem>
@@ -452,7 +477,7 @@ export function TourWizard() {
                 onValueChange={(v) => updateField('difficulty_level', v as 'easy' | 'moderate' | 'challenging')}
                 disabled={isSubmitting}
               >
-                <SelectTrigger aria-labelledby="difficulty_level-label"><SelectValue /></SelectTrigger>
+                <SelectTrigger aria-labelledby="difficulty_level-label"><SelectValue displayValue={formData.difficulty_level ? difficultyLabels[formData.difficulty_level] : ''} /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="easy">{t('form.easy')}</SelectItem>
                   <SelectItem value="moderate">{t('form.moderate')}</SelectItem>

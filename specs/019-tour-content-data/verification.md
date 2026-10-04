@@ -927,3 +927,112 @@ boundary validation and the existing HTTP/DB patterns, removed internal
 component mocks and shallow catalog-only cases, and corrected unsupported
 gate/TDD claims. No new source skips, weakened regression assertion, or
 fixture success path was accepted.
+## 19. US1 Browser and Bounds Review in Progress (2026-10-04)
+
+This checkpoint does not accept T017/T022-T024 or change the 20 accepted task markers. The source commit remains `93474ab`; its [CI run 37161504610](https://github.com/hatemsamirafifi/bookly-travel/actions/runs/37161504610) completed with failure. PHP 8.3/8.4/8.5, Pint/PHPStan and frontend checks/tests passed; browser shards 2/3 and 3/3 failed. The logs identify the ordered draft payload's missing nullable fields and a mobile search-price locator matching two inputs; payment retry also encountered duplicate exact price text before succeeding on retry. These are unresolved acceptance failures. A separate home-page Lighthouse CI pass does not accept affected-tour T076.
+
+Root independently reproduced a cross-runtime string-bound mismatch without database writes or provider calls. For 120 repetitions of Unicode code point U+1F30D, installed Laravel `string|max:120` accepts the value (`mb_strlen=120`), while installed Zod `z.string().max(120)` rejects it (`String.length=240`). Both probes had native numeric exit 0: [Laravel](evidence/us1-unicode-laravel-readonly-20261004.txt), [Zod](evidence/us1-unicode-zod-readonly-20261004.txt). Laravel rejects 121 characters. The probes establish the primitive mismatch used by the current authored schemas; they do not prove that an eventual schema correction passes. T017 requires actual exported-schema regressions and independent acceptance after correction.
+
+The first delegated Chromium partner browser run reported 10 failed and 13 passed. Full output is retained externally as `us1-browser-first-chromium-failures-20261004.txt` under the Spec 019 delegation evidence directory. Its command expanded PowerShell `$?` into `True` inside a double-quoted shell string; `NATIVE_EXIT:True` is not a numeric test exit. The report is failure evidence, never a passed gate. Failures include new API tests reading localStorage on `about:blank`, an ambiguous Duration/Duration Unit locator, and the inherited nullable-payload expectation. Correction and browser reruns remain in progress.
+
+Constitution VI, this task plan and quickstart require the 390/768/1024/1440 viewport matrix. The browser brief mistakenly substituted 320 for 390. Retain 320 as additional narrow-width coverage; acceptance still requires 390. No governing viewport requirement or checklist was changed. Root also retains review gaps for actual Wizard retry identity, exact source/media/settings preservation after browser saves, and localized selected control values. No generation, whole-story, CI, merge or release acceptance is inferred from the work in progress.
+
+## 20. Independent US1 Browser and Bounds Acceptance (2026-10-04)
+
+Root accepts T017 and T022-T024 after independently reviewing the complete
+working tree following source commit `93474ab`. Together with the earlier
+reviewed tasks, T001-T024 are accepted (24/78). SC-001 is satisfied by the
+current acceptance set: all nine English source fields, null/empty
+semantics, day/stop order and durations survive real browser saves;
+invalid writes leave canonical source/media unchanged. This is US1
+acceptance, not full Spec 019, CI, merge or release acceptance.
+
+The [command manifest](evidence/us1-browser-root-manifest.jsonl) records
+exact arguments, timestamps and native numeric exits. Root ran these gates
+sequentially after OpenCode stopped. The owned FPM service was restarted;
+after building, root restarted/started the owned production Next service
+and waited for EN HTTP 200 before browser tests.
+
+| Independent gate | Result | Output |
+|---|---|---|
+| Eight affected backend suites on disposable PostgreSQL | 117 passed, 800 assertions; exit 0 | [Backend](evidence/us1-browser-root-backend-focused.txt) |
+| Pint | 16 files pass; exit 0 | [Pint](evidence/us1-browser-root-pint.txt) |
+| PHPStan | No errors; exit 0 | [PHPStan](evidence/us1-browser-root-phpstan.txt) |
+| Frontend lint and typecheck | Both exit 0 | [Lint](evidence/us1-browser-root-frontend-lint.txt), [Types](evidence/us1-browser-root-frontend-typecheck.txt) |
+| Thirteen focused frontend suites | 136 passed; exit 0 | [Jest](evidence/us1-browser-root-frontend-focused-jest.txt) |
+| Next production build | 89 pages; exit 0 | [Build](evidence/us1-browser-root-frontend-production-build.txt) |
+| Chromium/Pixel partner create/edit suites | 48 passed including setup and inherited cases; exit 0 | [Browser](evidence/us1-browser-root-frontend-partner-browser.txt) |
+
+The new real-API cases observe canonical POST 201, PUT 200/422, owned GET
+200, submit 422/200 and cross-owner GET 404; inherited mocked browser
+cases remain regression coverage. The actual Wizard retry asserts the
+complete browser write sequence: one creation, two submissions and one
+update to the same retained ID. A pass-through route only clears persisted
+cover via an actual same-owner fixture PUT before the first real submit,
+so the backend guard supplies the failure; it never fulfills a response.
+GET proves the corrected title, destination and restored cover on that ID.
+List totals use API metadata and remain meaningful above 100 tours.
+
+An unrelated browser save preserves the exact pricing, availability,
+exceptions, gallery rows and all nine source fields from the pre-save GET,
+including custom group sizes 2/7. Restored snapshots test conflicting
+nested/shorthand titles, preserve omitted nonempty gallery/source, ignore
+forged readiness, and retain the saved payload by deep JSON equality.
+This does not assert byte identity for JSONB serialization. Cleared titles
+in EN/ES/IT and fractional duration/overlong-list errors have actual 422,
+associated inline errors and a focused alert. The full authored projection
+and media remain unchanged after rejection.
+
+T017 now counts Unicode code points through the exported schemas for the
+120/160/500/2000/5000 boundaries and the create/publication minimum 100.
+Native UTF-16 maxlength restrictions were removed from affected authored
+controls. The delegated pre-fix browser regression retained only 60 of 120
+typed non-BMP characters (native exit 1; external
+`us1-final-20261004-run/us1-unicode-red.log` and its event-stream exit).
+The final root browser run types and persists the full 120-code-point
+emoji-only title, 160-code-point day title and 2000-code-point description,
+then checks localized rejection at 121. The schema suites cover the other
+limits and nullable/integer behavior.
+
+That real-input run exposed a separate existing create defect: emoji-only
+titles generated empty slugs, and repeated readable titles generated a
+duplicate slug/500. Root added two failing API regressions before fixing it:
+[slug red](evidence/us1-root-slug-red-20261004.txt), exit 1. Generated links
+now use the canonical English title prefix (bounded to leave suffix room),
+a nonempty fallback and a unique ULID suffix. Source text is preserved.
+Sequential duplicate-title creation and stable links after an unrelated
+update pass; this is not a claim that concurrent transaction tests ran here.
+The browser fixture was restored to the original all-emoji boundary rather
+than relying on an ASCII uniqueness suffix.
+
+Root also reproduced the absent announced success status and English-only
+edit heading/actions before correction:
+[feedback red](evidence/us1-root-edit-actions-red-20261004.txt), three failed,
+exit 1. The actual localized Save/Submit actions and edit heading now use
+the catalogs; successful saves announce a polite status in all three
+locales. Generic and field feedback, selected Wizard labels and server
+validation remain localized. The shared SelectValue addition has actual
+Wizard callers and preserves the original fallback when absent.
+
+Create/edit rendering screenshots cover EN/ES/IT at the required
+390/768/1024/1440 widths, plus supplemental 320, on both partner projects.
+They remain in the local ignored Playwright results; full T073
+keyboard/reduced-motion/Axe acceptance is still pending. The initial
+clipboard-origin, ambiguous-locator and relation-key failures were
+corrected and rerun, not counted as passes. The editor's first unit red
+also had an ambiguous label query; that is not accepted as clean editor
+tests-first proof. Existing chronology deviations in section 17 remain.
+The full rooted source/gate review does not erase them.
+
+Clean/test/documentation guard review rejected DOM attribute bypasses,
+kept strict nullable payloads and strengthened preservation/request-count
+assertions. Root-owned output copies remove terminal trailing whitespace
+only; raw output remains external. The unchanged TourCard image/act
+warnings remain visible. No dependency, live provider traffic, personal
+database reset, applied migration rewrite or deployment was added.
+
+Prior-head CI failure `37161504610` remains distinct from these independent
+passes; search/payment selector failures still require their own bounded
+repair and current-head CI verification. PR #29 remains draft. US2-US6 and
+T073-T078 are pending. T077 real-model rehearsal remains authorized in an
+isolated local environment using the configured model and has not run.

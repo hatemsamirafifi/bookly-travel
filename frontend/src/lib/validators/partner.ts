@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+/** Count Unicode code points (U+1F30D counts as 1, matching Laravel
+ *  mb_strlen), unlike String.length which counts UTF-16 code units. */
+export const unicodeCodePointLength = (value: string): number => Array.from(value).length;
+
 export const pricingTierSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: 'partner.tours.errors.tierNameRequired' }),
@@ -49,12 +53,12 @@ export const tourMediaSchema = z.object({
 const nonBlankTitle = (message: string) =>
   z.string()
     .min(1, { message })
-    .max(160, { message: 'partner.tours.errors.titleMax160' })
+    .refine((value) => unicodeCodePointLength(value) <= 160, { message: 'partner.tours.errors.titleMax160' })
     .regex(/\S/, { message });
 
 export const tourItineraryStopSchema = z.object({
   title: nonBlankTitle('partner.tours.errors.stopTitleRequired'),
-  description: z.string().max(2000, { message: 'partner.tours.errors.descriptionMax2000' }).optional().nullable(),
+  description: z.string().refine((value) => unicodeCodePointLength(value) <= 2000, { message: 'partner.tours.errors.descriptionMax2000' }).optional().nullable(),
   duration_minutes: z.number().int({ message: 'partner.tours.errors.durationMinutesInteger' })
     .min(1, { message: 'partner.tours.errors.durationMinutesRange' })
     .max(1440, { message: 'partner.tours.errors.durationMinutesRange' })
@@ -66,7 +70,7 @@ export const tourItineraryDaySchema = z.object({
     .min(1, { message: 'partner.tours.errors.dayRange' })
     .max(30, { message: 'partner.tours.errors.dayRange' }),
   title: nonBlankTitle('partner.tours.errors.dayTitleRequired'),
-  description: z.string().max(2000, { message: 'partner.tours.errors.descriptionMax2000' }).optional().nullable(),
+  description: z.string().refine((value) => unicodeCodePointLength(value) <= 2000, { message: 'partner.tours.errors.descriptionMax2000' }).optional().nullable(),
   stops: z.array(tourItineraryStopSchema)
     .max(20, { message: 'partner.tours.errors.stopsMax' })
     .optional(),
@@ -75,10 +79,10 @@ export const tourItineraryDaySchema = z.object({
 export const tourItinerarySchema = z.array(tourItineraryDaySchema)
   .max(30, { message: 'partner.tours.errors.itineraryMax' });
 
-// Nullable authored source lists: at most 30 strings of at most 500 chars;
-// [] clears, omitted preserves (server semantics).
+// Nullable authored source lists: at most 30 strings of at most 500 code
+// points each; [] clears, omitted preserves (server semantics).
 const sourceList = (listMessage: string) =>
-  z.array(z.string().max(500, { message: 'partner.tours.errors.listItemMax' }))
+  z.array(z.string().refine((value) => unicodeCodePointLength(value) <= 500, { message: 'partner.tours.errors.listItemMax' }))
     .max(30, { message: listMessage })
     .optional()
     .default([]);
@@ -91,9 +95,10 @@ export const tourBasicDetailsSchema = z.object({
   title: z
     .string()
     .min(1, { message: 'partner.tours.errors.titleRequired' })
-    .max(120, { message: 'partner.tours.errors.titleMax' }),
-  description: z.string().min(100, { message: 'partner.tours.errors.descriptionMin' })
-    .max(5000, { message: 'partner.tours.errors.descriptionMax' }),
+    .refine((value) => unicodeCodePointLength(value) <= 120, { message: 'partner.tours.errors.titleMax' }),
+  description: z.string()
+    .refine((value) => unicodeCodePointLength(value) >= 100, { message: 'partner.tours.errors.descriptionMin' })
+    .refine((value) => unicodeCodePointLength(value) <= 5000, { message: 'partner.tours.errors.descriptionMax' }),
   category: z.string().min(1, { message: 'partner.tours.errors.categoryRequired' }),
   destination: z.string().min(1, { message: 'partner.tours.errors.destinationRequired' }),
   duration_value: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -101,23 +106,24 @@ export const tourBasicDetailsSchema = z.object({
   }),
   duration_unit: z.enum(['hour', 'day']),
   difficulty_level: z.enum(['easy', 'moderate', 'challenging']),
-  meeting_point: z.string().max(500, { message: 'partner.tours.errors.meetingPointMax' }).optional().or(z.literal('')),
+  meeting_point: z.string().refine((value) => unicodeCodePointLength(value) <= 500, { message: 'partner.tours.errors.meetingPointMax' }).optional().or(z.literal('')),
   highlights: sourceList('partner.tours.errors.highlightsMax'),
   inclusions: sourceList('partner.tours.errors.inclusionsMax'),
   exclusions: sourceList('partner.tours.errors.exclusionsMax'),
   important_information: sourceList('partner.tours.errors.importantInfoMax'),
   itinerary: tourItinerarySchema,
   languages: z.array(z.string()).default([]),
-  cancellation_policy: z.string().max(2000, { message: 'partner.tours.errors.cancellationMax' }).optional().or(z.literal('')),
+  cancellation_policy: z.string().refine((value) => unicodeCodePointLength(value) <= 2000, { message: 'partner.tours.errors.cancellationMax' }).optional().or(z.literal('')),
 });
 
 // Publication requires trimmed nonempty English source plus the existing
 // 100-character draft minimum; incomplete drafts stay saveable above.
 export const tourPublishSourceSchema = z.object({
   title: z.string().trim().min(1, { message: 'partner.tours.errors.titleRequired' })
-    .max(120, { message: 'partner.tours.errors.titleMax' }),
-  description: z.string().trim().min(100, { message: 'partner.tours.errors.descriptionMin' })
-    .max(5000, { message: 'partner.tours.errors.descriptionMax' }),
+    .refine((value) => unicodeCodePointLength(value) <= 120, { message: 'partner.tours.errors.titleMax' }),
+  description: z.string().trim()
+    .refine((value) => unicodeCodePointLength(value) >= 100, { message: 'partner.tours.errors.descriptionMin' })
+    .refine((value) => unicodeCodePointLength(value) <= 5000, { message: 'partner.tours.errors.descriptionMax' }),
 });
 
 export const tourMediaStepSchema = z.object({
@@ -208,6 +214,10 @@ const SOURCE_LIST_ITEM_PATTERN = `^(?:${SOURCE_LIST_NAMES})\\.\\d+$`;
  *  English. Unmapped paths fall back to the raw server message. */
 const SERVER_ERROR_MAPPINGS: ServerErrorMapping[] = [
   { test: (p, m) => p === 'title' && /required/i.test(m), keyFor: fixedKey('partner.tours.errors.titleRequired') },
+  // Cleared title normalizes to null via ConvertEmptyStringsToNull; the
+  // installed `string` rule then reports "must be a string" (verified live
+  // 422). Map to the required-title copy so no raw English leaks.
+  { test: (p, m) => p === 'title' && /must be a string/i.test(m), keyFor: fixedKey('partner.tours.errors.titleRequired') },
   { test: (p, m) => p === 'title' && /greater than/i.test(m), keyFor: fixedKey('partner.tours.errors.titleMax') },
   { test: (p, m) => p === 'description' && /at least/i.test(m), keyFor: fixedKey('partner.tours.errors.descriptionMin') },
   { test: (p, m) => p === 'description' && /greater than/i.test(m), keyFor: fixedKey('partner.tours.errors.descriptionMax') },

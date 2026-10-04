@@ -79,13 +79,22 @@ class TourService
         return $data;
     }
 
+    private function generatedTourSlug(string $title): string
+    {
+        // The suffix also separates simultaneous creates with identical titles.
+        $prefix = Str::limit(Str::slug($title) ?: 'tour', 200, '');
+
+        return rtrim($prefix, '-') . '-' . Str::lower((string) Str::ulid());
+    }
+
     public function createTour(int $partnerId, array $data): Tour
     {
         return DB::transaction(function () use ($partnerId, $data) {
+            $patch = TourContentRules::normalizeEnglishPatch($data);
             $tour = Tour::create([
                 'partner_id' => $partnerId,
                 'category_id' => $data['category_id'] ?? null,
-                'slug' => $data['slug'] ?? Str::slug($data['title'] ?? ($data['translations']['en']['title'] ?? 'tour-' . uniqid())),
+                'slug' => $data['slug'] ?? $this->generatedTourSlug($patch['title'] ?? ''),
                 'location' => $data['location'] ?? $data['destination'] ?? '',
                 'location_slug' => $data['location_slug'] ?? Str::slug($data['location'] ?? $data['destination'] ?? 'location'),
                 'duration_minutes' => $data['duration_minutes'] ?? (($data['duration_unit'] ?? '') === 'day' ? ($data['duration_value'] ?? 1) * 1440 : ($data['duration_value'] ?? 1) * 60),
@@ -108,7 +117,6 @@ class TourService
             // Canonical English patch: explicit nested keys win, shorthand
             // fills absent keys, omitted keys preserve (nothing to preserve
             // on create). Media above and source here commit atomically.
-            $patch = TourContentRules::normalizeEnglishPatch($data);
             if (array_key_exists('itinerary', $patch)) {
                 $patch['itinerary'] = TourContentRules::castItineraryInts(
                     TourContentRules::normalizeItinerary($patch['itinerary'])

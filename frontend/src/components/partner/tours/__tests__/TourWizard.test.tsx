@@ -106,6 +106,15 @@ describe('TourWizard (Spec 019)', () => {
     expect(screen.getByText('itinerary')).toBeInTheDocument();
   });
 
+  it('carries no native maxlength on the authored title (Spec 019 T017)', () => {
+    // Native maxlength counts UTF-16 units and would block typing/pasting the
+    // schema/server-accepted 120 code-point non-BMP boundary. The 120 bound
+    // stays enforced by schema/server validation with localized feedback.
+    seedForm();
+    render(<TourWizard />);
+    expect(screen.getByLabelText('form.title')).not.toHaveAttribute('maxlength');
+  });
+
   it('sends nested English source with all fields while preserving pricing and availability', async () => {
     seedForm({
       pricing_tiers: [{ id: 't1', name: 'Adult', price: '50', currency: 'USD', min_participants: 1, max_participants: 10 }],
@@ -240,11 +249,26 @@ describe('TourWizard (Spec 019)', () => {
 
     await waitFor(() => expect(screen.getAllByRole('alert')).not.toHaveLength(0));
     const alerts = screen.getAllByRole('alert');
-    // Announced summary (heading plus raw message) and the nested field
-    // mapped onto the actual input (localized here through the key mock).
+    // Announced summary (heading plus localized field errors) with the
+    // nested field mapped onto the actual input (localized here through
+    // the key mock). Raw backend English never reaches the summary.
     const summary = alerts.find((a) => (a.textContent ?? '').includes('form.errorSummary'));
-    expect(summary?.textContent).toContain('Validation failed');
+    expect(summary?.textContent).not.toContain('Validation failed');
     expect(alerts.map((a) => a.textContent)).toContain('errors.dayTitleRequired');
     expect(screen.getByLabelText('form.title')).toBeInTheDocument();
+  });
+
+  it('shows page-localized feedback for generic save failures, never raw errors', async () => {
+    seedForm();
+    mockedCreateTour.mockRejectedValue(new Error('boom: connection reset'));
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+
+    const heading = await screen.findByText('form.errorSummary');
+    const summary = heading.closest('[role="alert"]');
+    expect(summary).not.toBeNull();
+    expect(summary).toHaveTextContent('wizard.saveFailed');
+    expect(summary?.textContent).not.toContain('boom: connection reset');
+    expect(document.activeElement).toBe(summary);
   });
 });

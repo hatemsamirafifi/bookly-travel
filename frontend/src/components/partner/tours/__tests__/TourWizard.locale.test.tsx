@@ -135,4 +135,40 @@ describe.each(['en', 'es', 'it'] as const)('TourWizard locale %s (Spec 019)', (l
     expect(summary).toHaveTextContent(text('partner.tours.errors.durationMinutesInteger'));
     expect(document.activeElement).toBe(summary);
   });
+
+  it('shows translated selected category/duration/difficulty labels with stored codes unchanged', async () => {
+    seedForm({ category: 'walking', duration_unit: 'hour', difficulty_level: 'easy' });
+    renderWizard(locale);
+    const categoryTrigger = screen.getByRole('button', { name: text('partner.tours.form.category') });
+    expect(categoryTrigger).toHaveAttribute('aria-labelledby', 'category-label');
+    expect(categoryTrigger).toHaveTextContent(text('partner.tours.form.walking'));
+    expect(categoryTrigger.textContent).not.toBe('walking');
+    const durationTrigger = screen.getByRole('button', { name: text('partner.tours.form.durationUnit') });
+    expect(durationTrigger).toHaveAttribute('aria-labelledby', 'duration_unit-label');
+    expect(durationTrigger).toHaveTextContent(text('partner.tours.form.hours'));
+    expect(durationTrigger.textContent).not.toBe('hour');
+    const difficultyTrigger = screen.getByRole('button', { name: text('partner.tours.form.difficultyLevel') });
+    expect(difficultyTrigger).toHaveAttribute('aria-labelledby', 'difficulty_level-label');
+    expect(difficultyTrigger).toHaveTextContent(text('partner.tours.form.easy'));
+    expect(difficultyTrigger.textContent).not.toBe('easy');
+    expect(useTourWizardStore.getState().formData.category).toBe('walking');
+    expect(useTourWizardStore.getState().formData.duration_unit).toBe('hour');
+    expect(useTourWizardStore.getState().formData.difficulty_level).toBe('easy');
+  });
+
+  it('keeps absent old difficulty blank while offering translated options via keyboard', async () => {
+    seedForm({ difficulty_level: null });
+    renderWizard(locale);
+    const difficultyTrigger = screen.getByRole('button', { name: text('partner.tours.form.difficultyLevel') });
+    expect(difficultyTrigger).toHaveTextContent(/^$/);
+    expect(useTourWizardStore.getState().formData.difficulty_level).toBeNull();
+    difficultyTrigger.focus();
+    fireEvent.keyDown(difficultyTrigger, { key: 'ArrowDown' });
+    const option = await screen.findByRole('option', { name: text('partner.tours.form.moderate') });
+    fireEvent.click(option);
+    expect(useTourWizardStore.getState().formData.difficulty_level).toBe('moderate');
+    expect(screen.getByRole('button', { name: text('partner.tours.form.difficultyLevel') })).toHaveTextContent(
+      text('partner.tours.form.moderate')
+    );
+  });
 });
