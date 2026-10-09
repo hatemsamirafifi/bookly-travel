@@ -17,11 +17,57 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Laravel\Scout\Searchable;
+use Throwable;
 
 class Tour extends Model
 {
-    use Searchable;
+    use Searchable {
+        queueMakeSearchable as private traitQueueMakeSearchable;
+        queueRemoveFromSearch as private traitQueueRemoveFromSearch;
+    }
+
+    /**
+     * Contain async Scout queue dispatch loss so it can never fail the
+     * accepted source commit (lost dispatch is recoverable via queued
+     * refresh). The actual dispatch is still attempted; only its push
+     * failure is contained. Sync-engine failures still propagate for
+     * worker retry.
+     */
+    public function queueMakeSearchable($models)
+    {
+        if (! config('scout.queue')) {
+            $this->traitQueueMakeSearchable($models);
+
+            return;
+        }
+
+        try {
+            $this->traitQueueMakeSearchable($models);
+        } catch (Throwable) {
+            Log::warning('tour scout queue dispatch contained');
+        }
+    }
+
+    /**
+     * Contain async Scout queue dispatch loss as above; sync-engine
+     * failures still propagate for worker retry.
+     */
+    public function queueRemoveFromSearch($models)
+    {
+        if (! config('scout.queue')) {
+            $this->traitQueueRemoveFromSearch($models);
+
+            return;
+        }
+
+        try {
+            $this->traitQueueRemoveFromSearch($models);
+        } catch (Throwable) {
+            Log::warning('tour scout queue dispatch contained');
+        }
+    }
 
     // Meilisearch index settings for Scout sync-index-settings
     protected array $meilisearchSettings = [

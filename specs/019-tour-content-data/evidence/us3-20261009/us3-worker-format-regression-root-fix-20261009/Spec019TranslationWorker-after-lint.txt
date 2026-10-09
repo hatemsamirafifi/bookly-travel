@@ -1,0 +1,2 @@
+No syntax errors detected in tests/Support/Spec019TranslationWorker.php
+NUMERIC_EXIT=0

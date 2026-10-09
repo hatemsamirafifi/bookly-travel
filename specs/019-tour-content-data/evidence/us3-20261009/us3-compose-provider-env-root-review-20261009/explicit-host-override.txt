@@ -1,0 +1,5 @@
+{
+    "key_matches_fixture": true,
+    "model_matches_fixture": true,
+    "real_provider_called": false
+}

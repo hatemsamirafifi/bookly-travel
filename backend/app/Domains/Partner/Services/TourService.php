@@ -89,7 +89,7 @@ class TourService
 
     public function createTour(int $partnerId, array $data): Tour
     {
-        return DB::transaction(function () use ($partnerId, $data) {
+        [$tour, $planned] = DB::transaction(function () use ($partnerId, $data) {
             $patch = TourContentRules::normalizeEnglishPatch($data);
             $tour = Tour::create([
                 'partner_id' => $partnerId,
@@ -126,7 +126,7 @@ class TourService
                 $this->syncTranslations($tour, ['en' => $patch]);
             }
 
-            $this->translationService->queueIfChanged($tour, null);
+            $planned = $this->translationService->planSourceDispatches($tour, null);
 
             if (! empty($data['pricing_tiers'])) {
                 $this->syncPricingTiers($tour, $data['pricing_tiers']);
@@ -140,15 +140,23 @@ class TourService
                 $this->syncAvailabilityExceptions($tour, $data['availability_exceptions']);
             }
 
-            return $tour;
+            return [$tour, $planned];
         });
+
+        // Generation pushes run only after the source transaction committed:
+        // a lost queue push is contained per locale and can never fail the
+        // accepted source write.
+        $this->translationService->dispatchPlannedTranslations($planned);
+
+        return $tour;
     }
 
     public function updateTour(Tour $tour, array $data): Tour
     {
         // Tour-first lock boundary (Tour -> EN -> states in es/it order);
         // the fresh source is rechecked inside before mutating state.
-        return $this->translationService->withContentLock($tour->id, function () use ($tour, $data) {
+        // Generation plans persist inside the lock; pushes run after commit.
+        [$freshTour, $planned] = $this->translationService->withContentLock($tour->id, function () use ($tour, $data) {
             $fresh = Tour::findOrFail($tour->id);
             $existingEnglish = $fresh->translations()->where('locale', 'en')->first();
             $previousHash = $existingEnglish ? $this->translationService->sourceHash($existingEnglish) : null;
@@ -238,7 +246,7 @@ class TourService
                 $this->syncTranslations($fresh, ['en' => $patch]);
             }
 
-            $this->translationService->queueIfChanged($fresh, $previousHash);
+            $planned = $this->translationService->planSourceDispatches($fresh, $previousHash);
 
             if (isset($data['pricing_tiers'])) {
                 $this->syncPricingTiers($fresh, $data['pricing_tiers']);
@@ -254,8 +262,12 @@ class TourService
 
             $fresh->touch();
 
-            return $fresh->fresh();
+            return [$fresh->fresh(), $planned];
         });
+
+        $this->translationService->dispatchPlannedTranslations($planned);
+
+        return $freshTour;
     }
 
     protected function syncTranslations(Tour $tour, array $translations): void
@@ -312,14 +324,56 @@ class TourService
         $tour->update(['cover_image_url' => $cover]);
     }
 
+    /**
+     * Scoped owned-detail projection for the partner show endpoint.
+     *
+     * Keeps the exact ownership 404 and response envelope: owned relations
+     * plus current-hash-aware sanitized translation statuses. Operational
+     * translation internals (loaded state models, hashes, error categories,
+     * provider/job details) are explicitly excluded from serialization;
+     * apparent ready rows with a hash mismatch already project as stale via
+     * the shared status boundary.
+     */
+    public function getOwnedTourDetail(int $tourId, int $partnerId): array
+    {
+        $tour = $this->requireOwnedTour($tourId, $partnerId);
+        $tour->load(['translations', 'media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions']);
+
+        $data = $tour->toArray();
+        unset($data['translationStates'], $data['translation_states']);
+        $data['translation_statuses'] = [
+            'es' => $this->translationService->publicStatus($tour, 'es'),
+            'it' => $this->translationService->publicStatus($tour, 'it'),
+        ];
+
+        return $data;
+    }
+
     public function submitForReview(Tour $tour): Tour
     {
-        $tour->update([
-            'status' => 'pending_review',
-            'submitted_at' => now(),
-        ]);
+        // Trimmed required English under the shared Tour-first lock. ES/IT
+        // readiness is never required; lifecycle/auth/pricing/media guards
+        // stay at their existing boundaries and no extra publication policy
+        // is added here.
+        return $this->translationService->withContentLock($tour->id, function () use ($tour) {
+            $fresh = Tour::findOrFail($tour->id);
+            $english = $fresh->translations()->where('locale', 'en')->first();
 
-        return $tour;
+            abort_unless(
+                $english
+                    && trim($english->title) !== ''
+                    && is_string($english->description) && trim($english->description) !== '',
+                422,
+                'Tour must have at least an English title and description.',
+            );
+
+            $fresh->update([
+                'status' => 'pending_review',
+                'submitted_at' => now(),
+            ]);
+
+            return $fresh->fresh();
+        });
     }
 
     public function archiveTour(Tour $tour): Tour

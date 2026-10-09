@@ -1,0 +1,8 @@
+
+  ⨯..
+
+  ──────────────────────────────────────────────────────────────────── Laravel
+    FAIL   ............................................ 3 files, 1 style issue
+  ⨯ tests/Feature/Admin/TourModerationTest.php unary_operator_spaces, not_ope…
+
+NUMERIC_EXIT=1

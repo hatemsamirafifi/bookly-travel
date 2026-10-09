@@ -1,0 +1,163 @@
+
+   FAIL  Tests\Feature\Admin\TourModerationTest
+  ✓ it publishes a pending tour for an approved partner and writes audi… 7.43s
+  ✓ it blocks publishing when the owning partner is not approved (FR-00… 0.30s
+  ✓ it requires English source at approval but not Spanish or Italian    0.45s
+  ✓ it rejects a pending tour with a reason and writes audit             0.61s
+  ✓ it unpublishes a published tour and writes audit                     0.34s
+  ✓ it prevents rejecting a tour that is not in a rejectable state       0.28s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 1.44s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.28s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 1.58s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.72s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.31s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.26s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.26s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.97s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.96s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.27s
+  ✓ it T036 submits via the scoped TourService when the English source…  0.26s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.24s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.29s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.33s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.27s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.27s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.73s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.26s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.26s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.30s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.65s
+  ✓ it T036 refuses approval when the English source is missing or blan… 1.60s
+  ✓ it T036 refuses approval when the English source is missing or blan… 2.75s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.33s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.49s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.27s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.25s
+  ✓ it T036 keeps submit owner scoping with cross-partner and unknown i… 0.52s
+
+   PASS  Tests\Feature\Admin\Filament\TourResourceTest
+  ✓ it lists tour records in the Filament table                          1.07s
+  ✓ it shows the English source and derived statuses separately on the…  1.52s
+  ✓ it denies a traveler and an admin without manage-tours access to mo… 0.98s
+  ✓ it publishes a tour via the Filament publish action and writes audi… 1.73s
+  ✓ it rejects a tour via the Filament reject action with a reason       3.30s
+  ✓ it bulk-publishes selected tours and writes an audit per item        2.46s
+  ✓ it bulk-rejects selected tours with a shared reason and writes an a… 2.77s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 2.24s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 2.76s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 2.21s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 1.72s
+  ✓ it T036 refuses the Filament publish action when the English source… 3.06s
+  ✓ it T036 refuses the Filament publish action when the English source… 1.08s
+  ✓ it T036 refuses the Filament publish action when the English source… 3.09s
+  ✓ it T036 refuses the Filament publish action when the English source… 1.14s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.85s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.77s
+  ✓ it T036 keeps publish authorization tied to manage-tours on the rea… 0.34s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+
+  Tests:    6 failed, 46 passed (239 assertions)
+  Duration: 60.08s
+
+NUMERIC_EXIT=1

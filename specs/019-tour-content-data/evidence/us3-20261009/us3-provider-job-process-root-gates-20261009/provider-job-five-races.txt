@@ -1,0 +1,121 @@
+
+   PASS  Tests\Feature\Partner\TourTranslationProviderTest
+  ✓ it sends backend header with configured model and structured json…  20.12s
+  ✓ it uses a forty second provider timeout                              0.22s
+  ✓ it reconstructs out of order provider items into source path order   0.21s
+  ✓ it rejects duplicate provider keys as permanent output invalid       0.28s
+  ✓ it rejects missing provider keys as permanent output invalid         0.17s
+  ✓ it rejects unknown provider keys as permanent output invalid         0.18s
+  ✓ it rejects non string provider text as permanent output invalid      0.18s
+  ✓ it rejects blank provider text as permanent output invalid           0.17s
+  ✓ it rejects malformed provider body as permanent output invalid       0.18s
+  ✓ it rejects blocked provider finish reasons as permanent blocked      0.20s
+  ✓ it rejects client errors as permanent provider rejected              0.26s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.16s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.20s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.17s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.23s
+  ✓ it treats connection failures as transient network errors            0.66s
+  ✓ it rejects unsupported locales and empty input as invalid requests   0.29s
+  ✓ it rejects missing provider configuration without leaking secrets    0.28s
+  ✓ it emits only fixed sanitized transient categories                   0.28s
+  ✓ it emits only fixed sanitized permanent categories                   0.21s
+  ✓ it makes exactly one http attempt for a transient failure without n… 0.21s
+  ✓ it extracts only non blank strings while skipping structural intege… 0.24s
+  ✓ it reconstructs translated strings retaining integers nulls order a… 0.50s
+  ✓ it allows valid empty itinerary and zero stop days                   0.29s
+  ✓ it accepts boundary valid shared limits                              0.46s
+  ✓ it rejects overbound shared limits with dataset "title over 120"     0.47s
+  ✓ it rejects overbound shared limits with dataset "description over 5… 0.21s
+  ✓ it rejects overbound shared limits with dataset "highlights over 30… 0.19s
+  ✓ it rejects overbound shared limits with dataset "highlight item ove… 0.18s
+  ✓ it rejects overbound shared limits with dataset "inclusions over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "inclusion item ove… 0.19s
+  ✓ it rejects overbound shared limits with dataset "exclusions over 30… 0.18s
+  ✓ it rejects overbound shared limits with dataset "exclusion item ove… 0.18s
+  ✓ it rejects overbound shared limits with dataset "information over 3… 0.16s
+  ✓ it rejects overbound shared limits with dataset "information item o… 0.22s
+  ✓ it rejects overbound shared limits with dataset "meeting point over… 0.16s
+  ✓ it rejects overbound shared limits with dataset "cancellation over…  0.20s
+  ✓ it rejects overbound shared limits with dataset "itinerary over 30…  0.25s
+  ✓ it rejects overbound shared limits with dataset "day number zero"    0.18s
+  ✓ it rejects overbound shared limits with dataset "day number over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "day title over 160… 0.16s
+  ✓ it rejects overbound shared limits with dataset "day description ov… 0.16s
+  ✓ it rejects overbound shared limits with dataset "stops over 20"      0.19s
+  ✓ it rejects overbound shared limits with dataset "stop title over 16… 0.18s
+  ✓ it rejects overbound shared limits with dataset "stop description o… 0.16s
+  ✓ it rejects overbound shared limits with dataset "duration zero"      0.31s
+  ✓ it rejects overbound shared limits with dataset "duration over 1440… 0.19s
+  ✓ it rejects overbound shared limits with dataset "explicit null stop… 0.23s
+  ✓ it rejects overbound shared limits with dataset "blank day title re… 0.17s
+  ✓ it rejects overbound shared limits with dataset "blank stop title r… 0.19s
+  ✓ it rejects objects in place of translated source lists with ('highl… 0.22s
+  ✓ it rejects objects in place of translated source lists with ('inclu… 0.15s
+  ✓ it rejects objects in place of translated source lists with ('exclu… 0.24s
+  ✓ it rejects objects in place of translated source lists with ('impor… 0.18s
+  ✓ it rejects objects in place of translated day and stop lists with (… 0.15s
+  ✓ it rejects objects in place of translated day and stop lists with (… 0.18s
+  ✓ it rejects persisted digit strings instead of translating or coerci… 0.19s
+  ✓ it rejects persisted digit strings instead of translating or coerci… 0.21s
+  ✓ it measures translated text bounds in Unicode characters             0.32s
+  ✓ it never emits malformed persisted day strings as translated prose   0.36s
+  ✓ it never emits malformed persisted duration strings as translated p… 0.24s
+  ✓ it retries translation jobs four times with five fifteen sixty back… 0.26s
+
+   PASS  Tests\Feature\Partner\TourContentRevisionTest
+  ✓ it hashes fixed outer source field order regardless of input key or… 1.81s
+  ✓ it ignores nested day/stop object key order but preserves array ord… 0.35s
+  ✓ it keeps malformed persisted source explicit instead of hashing it…  0.39s
+  ✓ it locks Tour then EN then states in es/it order inside the shared…  0.32s
+  ✓ it rolls back partial writes when the boundary callback fails        0.32s
+  ✓ it observes fresh source written inside the boundary on completion   0.23s
+  ✓ it reaches the disposable database on an independent connection      0.42s
+  ✓ it pauses the fake provider mid-call and resumes to completed outpu… 0.40s
+  ✓ it holds real Tour/EN/state row locks across separate connections u… 0.40s
+  ✓ it guarantees partner record IDs distinct from user IDs for owner s… 0.30s
+  ✓ it coordinates fake provider arrivals without network calls          0.21s
+  ✓ it reports current/ready only for matching translated hash via publ… 0.22s
+
+   PASS  Tests\Feature\Partner\TourContentInputTest
+  ✓ it prefers explicit nested English keys while shorthand fills absen… 0.50s
+  ✓ it preserves omitted keys and keeps null and empty-array meanings d… 0.47s
+  ✓ it normalizes absent stops to empty arrays while passing malformed…  0.34s
+  ✓ it rejects over-limit source text and lists with exact field paths   0.20s
+  ✓ it rejects null titles while accepting nullable draft descriptions   0.59s
+  ✓ it rejects out-of-range itinerary values with exact nested paths     0.35s
+  ✓ it accepts boundary-valid itineraries including empty lists and zer… 0.24s
+  ✓ it rejects explicit null stops instead of treating null as empty     0.24s
+  ✓ it rejects every authored non-English locale with its precise path   0.36s
+  ✓ it rejects platform-owned keys top-level and nested, even when null… 0.29s
+  ✓ it rejects nested provider state and top-level provider/job/error s… 0.23s
+  ✓ it rejects unexpected English source keys while keeping valid non-s… 0.32s
+  ✓ it wires the shared boundary into both partner requests with field-… 0.49s
+
+   PASS  Tests\Feature\Partner\TourTranslationJobStateTest
+  ✓ it skips provider and derivative rewrites for an already current re… 0.41s
+  ✓ it repairs a matching ready state whose derivative row is missing    0.32s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.30s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.25s
+  ✓ it checks fresh English before recording terminal failure even when… 0.27s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.33s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.39s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.31s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.25s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.30s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.35s
+  ✓ it does not serialize internal revision hashes or error categories…  0.23s
+  ✓ it does not turn malformed persisted day or stop objects into a val… 0.31s
+  ✓ it does not turn malformed persisted day or stop objects into a val… 0.26s
+
+   PASS  Tests\Feature\Partner\TourTranslationConcurrencyTest
+  ✓ it old translation completion never writes after a newer source edi… 2.86s
+  ✓ it first same-hash completion wins when two jobs overlap in real pr… 2.10s
+  ✓ it terminal provider failure never clobbers a genuine ready complet… 2.90s
+  ✓ it terminal provider failure stays scoped to its stale hash after a… 2.79s
+  ✓ it overlapping source edits through TourService retain both disjoin… 3.43s
+
+  Tests:    106 passed (448 assertions)
+  Duration: 70.34s
+
+NUMERIC_EXIT=0

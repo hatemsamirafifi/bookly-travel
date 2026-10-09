@@ -1,0 +1,23 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Partner/TourTranslationTest.php",
+    "tests/Feature/Search/TourSearchIndexTest.php",
+    "tests/Feature/Search/TourProjectionRecoveryTest.php"
+  ],
+  "started": "2026-10-09T18:50:03.5840038+00:00",
+  "finished": "2026-10-09T18:50:37.3647983+00:00",
+  "native_exit": 2,
+  "context": "Dispatch tests authorcompletednative0/processabsent,rootfixedtestharness and added genuinelystoredprojectionrecovery. Sourcequeue/command/events/controller stillbaseline; jobracefix authored already. SoleRootPest DB owner."
+}

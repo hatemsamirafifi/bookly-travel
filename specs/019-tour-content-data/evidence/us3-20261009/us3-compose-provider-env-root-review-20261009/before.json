@@ -1,0 +1,24 @@
+{
+  "native_exit": 0,
+  "at": "2026-10-09T19:36:27.0991537+00:00",
+  "services": [
+    {
+      "service": "laravel",
+      "key_is_explicit_empty": true,
+      "model_has_explicit_default": true,
+      "queue": "redis",
+      "retry_after": "90"
+    },
+    {
+      "service": "queue",
+      "key_is_explicit_empty": true,
+      "model_has_explicit_default": true,
+      "queue": "redis",
+      "retry_after": "90"
+    }
+  ],
+  "backend_dotenv_key_configured": true,
+  "root_dotenv_key_configured": false,
+  "effect": "Empty environment masks existing backend/.env key on container recreation; no service restarted",
+  "source": "https://docs.docker.com/reference/compose-file/services/"
+}

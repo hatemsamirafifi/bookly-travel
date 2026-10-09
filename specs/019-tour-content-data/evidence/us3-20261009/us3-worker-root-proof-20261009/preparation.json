@@ -1,0 +1,6 @@
+{
+  "status": "prepared only; not executed",
+  "directory": "C:\\Users\\HaTeM\\.codex\\delegation\\bookly-spec019-20261003\\us3-worker-root-proof-20261009",
+  "runtime_image": "bookly-spec019-worker-review:20261009",
+  "requires": "T043 config/jobtimeout author finish and review; own network and mounts verified; bootstrap syntax review"
+}

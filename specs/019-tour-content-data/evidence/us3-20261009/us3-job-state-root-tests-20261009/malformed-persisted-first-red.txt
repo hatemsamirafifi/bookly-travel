@@ -1,0 +1,43 @@
+
+   FAIL  Tests\Feature\Partner\TourTranslationJobStateTest
+  ⨯ it does not turn malformed persisted day or stop objects into a va… 14.03s
+  ⨯ it does not turn malformed persisted day or stop objects into a val… 2.93s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it does not t…
+  Failed asserting that true is false.
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:129
+    125▕     $beforeSource = $this->english->fresh()->getRawOriginal('itinerary');
+    126▕     $translator = spec019CountingTranslator();
+    127▕     (new GenerateTourTranslationJob($this->tour->id, 'es', $hash))->handle($this->service, $translator);
+    128▕
+  ➜ 129▕     expect($this->tour->translations()->where('locale', 'es')->exists())->toBeFalse();
+    130▕     $state = $this->tour->translationStates()->where('locale', 'es')->firstOrFail();
+    131▕     expect($state->status)->toBe('failed');
+    132▕     expect($state->last_error_code)->toBe('translation_output_invalid');
+    133▕     expect($this->english->fresh()->getRawOriginal('itinerary'))->toBe($beforeSource);
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:129
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it does not t…
+  Failed asserting that true is false.
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:129
+    125▕     $beforeSource = $this->english->fresh()->getRawOriginal('itinerary');
+    126▕     $translator = spec019CountingTranslator();
+    127▕     (new GenerateTourTranslationJob($this->tour->id, 'es', $hash))->handle($this->service, $translator);
+    128▕
+  ➜ 129▕     expect($this->tour->translations()->where('locale', 'es')->exists())->toBeFalse();
+    130▕     $state = $this->tour->translationStates()->where('locale', 'es')->firstOrFail();
+    131▕     expect($state->status)->toBe('failed');
+    132▕     expect($state->last_error_code)->toBe('translation_output_invalid');
+    133▕     expect($this->english->fresh()->getRawOriginal('itinerary'))->toBe($beforeSource);
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:129
+
+
+  Tests:    2 failed (2 assertions)
+  Duration: 18.82s
+
+NUMERIC_EXIT=1

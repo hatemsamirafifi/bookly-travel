@@ -1,0 +1,2 @@
+{"mode":"dispatch","kind":"timeout","queued":1,"locales":["es"]}
+NUMERIC_EXIT=0 EXPECTED_EXIT=0

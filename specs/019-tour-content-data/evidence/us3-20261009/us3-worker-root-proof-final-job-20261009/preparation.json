@@ -1,0 +1,5 @@
+{
+  "status": "prepared final-job proof; NOTEXECUTED",
+  "why": "Job implementation changed after earlier timeout proof; record real Laravel JobTimedOut/WorkerStopping with monotonic duration and actual tries/backoff, not just total Dockerwall time",
+  "baseline": "daemon proof all8gates matched expectednative exits, cleanup0; --once failure retained separately"
+}

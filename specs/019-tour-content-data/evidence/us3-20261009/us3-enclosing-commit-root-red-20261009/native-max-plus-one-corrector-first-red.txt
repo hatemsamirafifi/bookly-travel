@@ -1,0 +1,10 @@
+
+   PASS  Tests\Feature\Partner\TourAfterCommitContainmentTest
+  ✓ it rejects reconcile cursors outside the native integer range with…  5.23s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.25s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.23s
+
+  Tests:    3 passed (15 assertions)
+  Duration: 6.71s
+
+NUMERIC_EXIT=0

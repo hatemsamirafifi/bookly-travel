@@ -5,7 +5,6 @@ namespace App\Domains\Partner\Controllers;
 use App\Domains\Partner\Requests\StoreTourRequest;
 use App\Domains\Partner\Requests\UpdateTourRequest;
 use App\Domains\Partner\Services\TourService;
-use App\Domains\Partner\Services\TourTranslationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,7 +12,6 @@ class TourController
 {
     public function __construct(
         private readonly TourService $service,
-        private readonly TourTranslationService $translationService,
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -40,19 +38,8 @@ class TourController
     public function show(Request $request, string $id): JsonResponse
     {
         $partnerId = $request->attributes->get('partner_id');
-        $tour = $this->service->getForPartner((int) $id, $partnerId);
 
-        if (! $tour) {
-            abort(404);
-        }
-
-        $data = $tour->load(['translations', 'media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions'])->toArray();
-        $data['translation_statuses'] = [
-            'es' => $this->translationService->publicStatus($tour, 'es'),
-            'it' => $this->translationService->publicStatus($tour, 'it'),
-        ];
-
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $this->service->getOwnedTourDetail((int) $id, $partnerId)]);
     }
 
     public function store(StoreTourRequest $request): JsonResponse

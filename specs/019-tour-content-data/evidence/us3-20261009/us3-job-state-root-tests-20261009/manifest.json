@@ -1,0 +1,41 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Partner/TourTranslationJobStateTest.php"
+  ],
+  "started": "2026-10-09T18:21:17.2117032+00:00",
+  "finished": "2026-10-09T18:21:32.0114106+00:00",
+  "native_exit": 2,
+  "before": [
+    {
+      "path": "backend/app/Domains/Partner/Jobs/GenerateTourTranslationJob.php",
+      "sha256": "B32BB4F613EBEE2BF9270BD4354856CBA3DF2B6D1386000CB01C7CDBCBE3822E"
+    },
+    {
+      "path": "backend/app/Models/TourTranslationState.php",
+      "sha256": "12809F2271376C086666134D2E4E45EA4D5B4D60F2523AA46B690F90E95834D8"
+    }
+  ],
+  "after": [
+    {
+      "path": "backend/app/Domains/Partner/Jobs/GenerateTourTranslationJob.php",
+      "sha256": "B32BB4F613EBEE2BF9270BD4354856CBA3DF2B6D1386000CB01C7CDBCBE3822E"
+    },
+    {
+      "path": "backend/app/Models/TourTranslationState.php",
+      "sha256": "12809F2271376C086666134D2E4E45EA4D5B4D60F2523AA46B690F90E95834D8"
+    }
+  ],
+  "context": "Other CLI sessions AUTHORING ONLY; root sole DB suite owner. Product job/model logic is unchanged; timeout property independent author."
+}

@@ -1444,3 +1444,126 @@ isolated model/rollback rehearsal remain T034-T078. The prior selector head
 0cd1f0a has all CI checks successful on recheck ([proof](evidence/selector-head-ci-recheck-20261009.json));
 that does not establish CI for the ensuing US2 commit. PR29 remains draft;
 merge/deployment/release acceptance is pending.
+
+## 25. Independent US3 publication, races and recovery acceptance (2026-10-09)
+
+Accept T034-T046, bringing independently reviewed markers to 46/78. English
+source writes, submission and approval remain independent of ES/IT readiness.
+Source plans persist atomically under the shared Tour/EN/es/it locks; actual
+queue pushes run inside guarded outermost after-commit callbacks. Both locale
+pushes are attempted independently. Source validation/SQL errors still propagate.
+The Scout asynchronous queue boundary also contains dispatch loss, while
+synchronous engine errors propagate for projection-worker retry. Owned detail
+queries reside in TourService and expose current sanitized statuses only.
+
+Jobs check fresh source before provider work and again under completion locks.
+The first genuine same-hash ready result wins; superseded completions and late
+terminal failures cannot overwrite ready/current content. Reconstruction validates
+both persisted source and generated text, exact key coverage, list/text limits,
+integer structure, nulls and order. Existing backend Gemini adapter/structured
+response interface remains intact. Recovery scans IDs in bounded pages (limit
+1-500, non-negative native-range cursor), re-arms orphan pending/stale/failed or
+missing-row derivatives, and --refresh-ready repairs projections without
+regenerating current derivatives. Ordinary runs preserve current ready rows.
+
+Independent root verification uses PostgreSQL bookly_test and blank/fake provider
+credentials. The five race scenarios execute independent PHP processes with
+provider barriers. [Observed PostgreSQL waits](evidence/us3-20261009/us3-provider-job-process-root-gates-20261009/process-observations/overlapping-writers.json)
+prove that both source writers waited on real locks before release; the final
+rows preserve both disjoint edits. Twelve true-commit containment cases use a
+separate guarded connection with the production transaction manager rather than
+RefreshDatabase's simulated callback boundary. Cleanup deletes only owned fixture
+rows and restores the original connection/transaction manager. Projection recovery
+records an actually stale Scout document, executes the recovered fresh indexing
+job and observes the new document, rather than relying on a SQL-backed search read.
+
+| Final independent root gate | Result | Evidence |
+|---|---|---|
+| 14 focused backend suites | 293 passed, 2442 assertions, 102.34 seconds, exit 0 | [Pest](evidence/us3-20261009/reviewer-us3-gates-final-20261009/backend-focused.txt) |
+| PHP syntax: both subprocess workers | exit 0 each | [translation](evidence/us3-20261009/reviewer-us3-gates-final-20261009/translation-worker-syntax.txt), [source](evidence/us3-20261009/reviewer-us3-gates-final-20261009/source-worker-syntax.txt) |
+| Pint, all 22 changed PHP files | PASS, exit 0 | [Pint](evidence/us3-20261009/reviewer-us3-gates-final-20261009/pint.txt) |
+| PHPStan, changed production PHP | No errors, exit 0 | [PHPStan](evidence/us3-20261009/reviewer-us3-gates-final-20261009/phpstan.txt) |
+| Diff whitespace | exit 0 | [diff](evidence/us3-20261009/reviewer-us3-gates-final-20261009/diff-check.txt) |
+
+Exact commands, UTC timestamps and numeric exits are retained in the
+[final manifest](evidence/us3-20261009/reviewer-us3-gates-final-20261009/manifest.jsonl).
+The focused gate is US3 acceptance and regression evidence; whole-stack checks
+remain T074-T075. No frontend source changed in this increment.
+
+### Failing behavior and corrections retained
+
+- Provider: 47 passed/15 genuine failures/99 assertions, exit 1; invalid persisted
+  structure and generated lengths were accepted. [Original red](evidence/us3-20261009/us3-provider-root-tests-20261009/provider-red.txt).
+- Moderation: corrected harness 46 passed/6 genuine failures/239 assertions,
+  exit 1; missing/blank English submission was accepted. The initial 40/12 run
+  included six Livewire helper defects, separately retained.
+  [Corrected red](evidence/us3-20261009/us3-moderation-root-tests-20261009/moderation-corrected-red.txt).
+- Two-process race: one passed/one failed/37 assertions, exit 1; the second
+  completion overwrote the first. [Red](evidence/us3-20261009/us3-race-root-tests-20261009/two-process-races-first-red.txt).
+- Dispatch/recovery: 24 passed/8 genuine failures/192 assertions, exit 2;
+  committed source returned HTTP 500, rollback projected a removal, indexing ran
+  before commit, invalid cursors were accepted and recovery was incomplete.
+  [Red](evidence/us3-20261009/us3-dispatch-root-tests-20261009/source-dispatch-first-red.txt).
+- True enclosing commit: corrected six cases all failed/29 assertions, exit 2;
+  generation/removal callbacks threw after commit and overflowing cursors were
+  accepted. Initial four fixture-helper failures were corrected before this red.
+  [Red](evidence/us3-20261009/us3-enclosing-commit-root-red-20261009/real-enclosing-commit-corrected.txt).
+  The extra nearest-native-overflow probe passed before the final gate; its
+  filename contains first-red but does not establish a failing result.
+- Scout: initial missing-price fixture defect was corrected, then the real
+  asynchronous push failure escaped commit. [Corrected red](evidence/us3-20261009/us3-enclosing-commit-root-red-20261009/scout-queue-corrected-red.txt).
+
+The first complete root gate had 288 passes/five subprocess arrival failures,
+exit 2. Root formatting moved imports ahead of strict_types in shebang scripts,
+causing native PHP parse failures before DB/provider startup. Removing unnecessary
+shebangs and keeping declare first repaired both scripts. Native syntax/Pint
+before/after logs are [retained](evidence/us3-20261009/us3-worker-format-regression-root-fix-20261009/Spec019TranslationWorker-before-lint.txt).
+No timeouts, retries or assertions were weakened. The ensuing full rerun passed
+all 293 cases but PHPStan found three issues: unused controller dependency,
+redundant title type check and repeated narrowed recovery expression. The final
+reviewer gate above follows those mechanical corrections; both earlier complete
+logs remain under their original directories in this evidence bundle.
+
+OpenCode used only the authorized opencode/muse-spark-1.3-contributor-free model.
+Bounded authors supplied implementation and tests, independently reviewed by root.
+The final true-commit correction relay timed out at 45 minutes with native exit 1
+after editing five owned files and checking syntax; delegate success is not
+claimed. Root reviewed its actual diff, corrected fixture-manager restoration and
+accepted only after independent gates. Additional root coverage followed some
+implementation changes, so complete chronological TDD compliance is not claimed.
+
+### Real asynchronous worker and secret configuration proof
+
+The owned isolated Redis/PostgreSQL project and independently built PHP 8.3.32
+image run actual Laravel workers with pcntl. The real fake-provider ES/IT jobs
+reached ready/current, and a 75-second blocked provider caused JobTimedOut then
+WorkerStopping with native exit 1 after 60.000010002 seconds. Four attempts and
+5/15/60 backoff remain configured. Job/worker timeouts are 60, provider HTTP
+is 40, and retry-after is 90. [Event timing](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/actual-worker-timeout-proof.json),
+[success state](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/after-success.txt),
+[manifest](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/manifest.jsonl)
+and [owned cleanup](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/cleanup.txt)
+retain expected native outcomes. The earlier --once probe failed its expected
+exit because Laravel's one-job path does not register the daemon alarm; it is
+retained with [root diagnosis](evidence/us3-20261009/us3-worker-root-proof-20261009/root-probe-correction.json).
+The corrected daemon runs provide timeout acceptance.
+
+Compose now uses bare backend/worker GEMINI_API_KEY and GEMINI_TRANSLATION_MODEL
+passthrough. Explicit empty defaults would mask the existing backend .env settings.
+Sanitized effective config and actual Illuminate Env/Dotenv fixture runs prove
+fallback and explicit host overrides without exposing the configured key or
+making live provider calls. [Before](evidence/us3-20261009/us3-compose-provider-env-root-review-20261009/before.json),
+[after](evidence/us3-20261009/us3-compose-provider-env-root-review-20261009/after.json),
+[fixture runtime manifest](evidence/us3-20261009/us3-compose-provider-env-root-review-20261009/runtime-manifest.jsonl).
+This follows the [Docker environment reference](https://docs.docker.com/reference/compose-file/services/#environment).
+No personal service was restarted. This establishes T043 runtime/configuration
+behavior with a fake provider; actual configured-model generation and compatible
+application/worker rollback remain T077.
+
+US2 commit cc838f42 has all CI checks successful on recheck
+([exact-head evidence](evidence/us2-head-ci-success-20261009.json)). This does not
+establish CI for the ensuing US3 commit. PR29 remains draft. US4-US6 and final
+T047-T078 are pending; Phase 2, merge, staging rehearsal and release are not done.
+Repository evidence copies normalize trailing whitespace; original raw logs remain
+outside the repository. Spec 018, applied migrations, Constitution and TODO store
+are preserved.

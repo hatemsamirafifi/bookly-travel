@@ -1,0 +1,1 @@
+{"at":"2026-10-09T19:06:55+00:00","monotonic":25202619653648,"pid":1,"connection":"redis","attempts":1,"timeout":60,"name":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob"}
