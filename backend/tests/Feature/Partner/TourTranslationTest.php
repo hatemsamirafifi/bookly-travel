@@ -92,7 +92,7 @@ it('queues Spanish and Italian from English without treating guide codes as cont
 
     expect($tour->translations()->pluck('locale')->all())->toBe(['en']);
     expect($tour->guideLanguages())->toBe(['de', 'en', 'es']);
-    expect($tour->translationStates()->pluck('status', 'locale')->all())
+    expect($tour->translationStates()->orderBy('locale')->pluck('status', 'locale')->all())
         ->toBe(['es' => 'pending', 'it' => 'pending']);
     Queue::assertPushed(GenerateTourTranslationJob::class, 2);
 });
@@ -107,7 +107,7 @@ it('marks derived translations stale only when English source changes', function
 
     $this->putJson("/api/partner/tours/{$tour->id}", ['title' => 'New English tour title'], $headers)->assertOk();
     Queue::assertPushed(GenerateTourTranslationJob::class, 2);
-    expect($tour->fresh()->translationStates()->pluck('status', 'locale')->all())
+    expect($tour->fresh()->translationStates()->orderBy('locale')->pluck('status', 'locale')->all())
         ->toBe(['es' => 'pending', 'it' => 'pending']);
 });
 
@@ -378,7 +378,7 @@ it('spec019 ignores reordered English object keys without content change', funct
     ], $headers)->assertOk();
 
     expect($service->sourceHash($tour->fresh()->translations()->where('locale', 'en')->firstOrFail()))->toBe($hash);
-    expect($tour->fresh()->translationStates()->pluck('status', 'locale')->all())
+    expect($tour->fresh()->translationStates()->orderBy('locale')->pluck('status', 'locale')->all())
         ->toBe(['es' => 'pending', 'it' => 'pending']);
     Queue::assertNotPushed(GenerateTourTranslationJob::class);
 });
@@ -398,7 +398,7 @@ it('spec019 ignores media and guide-language saves without English changes', fun
     ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
 
     expect($service->sourceHash($tour->fresh()->translations()->where('locale', 'en')->firstOrFail()))->toBe($hash);
-    expect($tour->fresh()->translationStates()->pluck('status', 'locale')->all())
+    expect($tour->fresh()->translationStates()->orderBy('locale')->pluck('status', 'locale')->all())
         ->toBe(['es' => 'pending', 'it' => 'pending']);
     Queue::assertNotPushed(GenerateTourTranslationJob::class);
 });
@@ -425,7 +425,7 @@ it('spec019 stales both locales while retaining old derivatives on an English ed
     ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
 
     $fresh = $tour->fresh();
-    expect($fresh->translationStates()->pluck('status', 'locale')->all())
+    expect($fresh->translationStates()->orderBy('locale')->pluck('status', 'locale')->all())
         ->toBe(['es' => 'stale', 'it' => 'stale']);
     foreach ($fresh->translationStates as $state) {
         expect(in_array($state->status, ['pending', 'ready', 'stale', 'failed'], true))->toBeTrue();
@@ -473,7 +473,7 @@ it('spec019 commits the English source when generation dispatch fails after comm
         expect($english->title)->toBe($title);
 
         $service = app(TourTranslationService::class);
-        $states = $tour->translationStates()->pluck('status', 'locale')->all();
+        $states = $tour->translationStates()->orderBy('locale')->pluck('status', 'locale')->all();
         ksort($states);
         expect(array_keys($states))->toBe(['es', 'it']);
         foreach (['es', 'it'] as $locale) {

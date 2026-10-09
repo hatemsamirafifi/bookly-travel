@@ -1567,3 +1567,13 @@ T047-T078 are pending; Phase 2, merge, staging rehearsal and release are not don
 Repository evidence copies normalize trailing whitespace; original raw logs remain
 outside the repository. Spec 018, applied migrations, Constitution and TODO store
 are preserved.
+### US3 exact-head CI follow-up
+
+CI on 076a9b6 failed PHP 8.5 with two strict associative-array order assertions;
+PHP 8.3/8.4 were cancelled by matrix fail-fast. Values/locale associations were
+correct. PostgreSQL queries without ORDER BY do not promise locale row order.
+The root correction orders the six status-map test reads by locale while keeping
+all expected keys, values and strict assertions. Production code is unchanged.
+The affected complete suite passes locally on PHP 8.3: 23 tests, 241 assertions,
+exit 0, with Pint PASS. PHP 8.5 and the complete matrix still require exact-head
+CI after this correction. Retained logs are under evidence/us3-ci-order-20261009.
