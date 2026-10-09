@@ -1,0 +1,11 @@
+docker.exe : Note: Using configuration file /var/www/html/phpstan.neon.
+At C:\Users\HaTeM\.codex\delegation\bookly-spec019-20261003\run-reviewer-us2-gates-20261009.ps1:11 char:9
++         & docker @CommandArguments 2>&1 | Tee-Object -FilePath "$evid ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Note: Using con...l/phpstan.neon.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+ [OK] No errors
+
+NUMERIC_EXIT=0

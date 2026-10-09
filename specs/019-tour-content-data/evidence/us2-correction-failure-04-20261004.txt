@@ -1,0 +1,27 @@
+docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter="matrix|ENGLISH SOURCE"
+
+
+   FAIL  Tests\Feature\Search\TourDetailTest
+  ⨯ it selects actual languages across the full es/it status matrix (US… 5.00s
+  ✓ it always serves English source irrespective of derived states (US2… 0.46s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourDetailTest > it selects actual languages…
+  Failed asserting that null is identical to 'partial_translation'.
+
+  at tests/Feature/Search/TourDetailTest.php:1129
+    1125▕                     ->assertJsonPath('data.itinerary.0.title', $expItinerary[0]['title']);
+    1126▕             }
+    1127▕
+    1128▕             if ($expWarn) {
+  ➜ 1129▕                 $response->assertJsonPath('data.translation_warning', 'partial_translation');
+    1130▕             } else {
+    1131▕                 $response->assertJsonMissingPath('data.translation_warning');
+    1132▕             }
+    1133▕         }
+
+
+  Tests:    1 failed, 1 passed (253 assertions)
+  Duration: 6.04s
+
+
+NUMERIC_EXIT=1

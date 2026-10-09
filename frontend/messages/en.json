@@ -211,7 +211,9 @@
     "perPerson": "/ person",
     "allowedRange": "{min}–{max} allowed",
     "selected": "Selected:",
-    "partialTranslation": "Some content is displayed in English"
+    "partialTranslation": "Some content is displayed in English",
+    "contentFallback": "Content is shown in English",
+    "itineraryFallback": "Itinerary is shown in English"
   },
   "home": {
     "heroTitle": "Discover & Book Amazing Tours",
@@ -724,6 +726,8 @@
           "stale": "Translation outdated",
           "failed": "Translation unavailable"
         },
+        "savedTranslations": "Saved translations",
+        "previewReadinessNote": "Translation status reflects the last saved revision.",
         "meetingPointPlaceholder": "e.g., Colosseum main entrance",
         "itinerary": "Itinerary",
         "addDay": "Add day",

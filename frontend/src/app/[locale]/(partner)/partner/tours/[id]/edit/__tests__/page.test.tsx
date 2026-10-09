@@ -419,6 +419,36 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
     expect(status).toHaveTextContent(catalogs[locale].partner.tours.form.saveSucceeded);
   });
 
+  it('passes all nine English source fields and saved statuses to the preview', async () => {
+    await renderPage();
+    await screen.findByDisplayValue('Owned tour');
+
+    // Authorized US2 integration: the actual edit preview caller forwards
+    // the full current English source (not just title/description/itinerary)
+    // plus the sanitized owned translation_statuses via the shared DTO.
+    fireEvent.click(screen.getByRole('button', { name: englishForm.previewTour }));
+    const preview = screen.getByLabelText(englishForm.previewTour);
+    expect(preview.querySelector('h2')).toHaveTextContent('Owned tour');
+    expect(preview.querySelector('h2')).toHaveAttribute('lang', 'en');
+    for (const text of [
+      'Owned description for the tour reopen test.',
+      'Old highlight',
+      'Old inclusion',
+      'Old exclusion',
+      'Old info',
+      'Old meeting point',
+      'Old policy',
+      'Old day',
+    ]) {
+      expect(preview.textContent).toContain(text);
+    }
+    expect(preview.textContent).toContain('Day 1:');
+    expect(preview.textContent).toContain(`ES: ${englishForm.translationStatus.pending}`);
+    expect(preview.textContent).toContain(`IT: ${englishForm.translationStatus.pending}`);
+    expect(preview.textContent).toContain(englishForm.previewReadinessNote);
+    expect(preview.textContent).not.toMatch(/source_hash|provider|job_state/i);
+  });
+
   it('reports no draft only on 404 and keeps the form on other failures', async () => {
     mockedGetLatestTourDraft.mockRejectedValueOnce(new NotFoundError('missing'));
     await renderPage();

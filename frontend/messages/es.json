@@ -211,7 +211,9 @@
     "perPerson": "/ persona",
     "allowedRange": "{min}–{max} permitidos",
     "selected": "Seleccionado:",
-    "partialTranslation": "Parte del contenido se muestra en inglés"
+    "partialTranslation": "Parte del contenido se muestra en inglés",
+    "contentFallback": "El contenido se muestra en inglés",
+    "itineraryFallback": "El itinerario se muestra en inglés"
   },
   "home": {
     "heroTitle": "Descubre y Reserva Tours Increíbles",
@@ -724,6 +726,8 @@
           "stale": "Traducción desactualizada",
           "failed": "Traducción no disponible"
         },
+        "savedTranslations": "Traducciones guardadas",
+        "previewReadinessNote": "El estado de la traducción refleja la última revisión guardada.",
         "meetingPointPlaceholder": "Ej., Entrada principal del Coliseo",
         "itinerary": "Itinerario",
         "addDay": "Añadir día",

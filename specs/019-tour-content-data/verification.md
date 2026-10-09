@@ -2,10 +2,10 @@
 
 **Owner**: Spec 019 implementation workflow; independent acceptance by root reviewer.
 **Created**: 2026-10-02.
-**Current scope (2026-10-03)**: T001-T009 setup/foundations independently
-reviewed; section 15 records current accepted evidence. Earlier sections
-retain their dated findings. US1-US6, final gates, Spec 019 CI/merge and
-release acceptance remain pending.
+**Current scope (2026-10-09)**: T001-T033 (33/78) independently accepted.
+Sections 20/24 record US1 authoring and US2 reader evidence. Earlier sections
+retain dated findings. US3-US6, whole-spec checks, live isolated model/rollback
+rehearsal and subsequent CI/merge/release acceptance remain pending.
 
 **Traceability**:
 
@@ -1086,3 +1086,361 @@ The exact-head GitHub snapshot is retained as
 Test-only changes use the independently built US1 production source; no
 production rebuild was needed. LiveReview is skipped at the staged boundary
 as the user directed; normal Git hooks remain enabled.
+
+## 22. US2 Localized Reader Slice T025-T033 (executed 2026-10-04, unreviewed)
+
+Bounded to Spec019 US2 T025-T033 on accepted HEAD
+`0cd1f0adf38aabee5c292fe0c9f5ddc049b1ada1` (clean tree at dispatch).
+No task markers changed, no commits, no US3/US4/US5/US6 work. Root owns
+acceptance, task markers, plan/governance and Git. Full raw logs plus
+immediate numeric `$LASTEXITCODE` (all `0`) are retained outside the repo
+under `C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/` as
+`us2-backend-3file.log`, `us2-pint.log`, `us2-phpstan.log`,
+`us2-frontend-lint.log`, `us2-frontend-typecheck.log`,
+`us2-jest-5suite.log`, `us2-frontend-build.log`,
+`us2-playwright-ssr-chromium.log`, `us2-playwright-ssr-mobile.log`.
+Provider key blank/fake everywhere (`-e GEMINI_API_KEY=` for Pest, no live
+Gemini calls). Dev services/port 8080 and personal data untouched; only the
+owned `bookly-spec019-browser` Laravel (opcache refresh after the action
+edit) and Next (production rebuild + restarts) were touched.
+
+### T025 initial backend regression and locale/state coverage
+
+Extended `backend/tests/Feature/Search/TourDetailTest.php` (+9 cases,
+helpers `spec019Us2MakeTour/spec019Us2English/spec019Us2Derivative/
+spec019Us2State`; inherited cases untouched):
+
+| Requested | Derivative/state | content_locale | itinerary_locale | status | warning |
+|---|---|---|---|---|---|
+| en | source | en | en | source | none |
+| es/it | current row+ready+hash | es/it | es/it | ready | none |
+| es | missing row+missing state | en | en | pending | partial_translation |
+| es | pending, no row | en | en | pending | partial_translation |
+| es | stale (old row, new hash) | en | en | stale | partial_translation |
+| it | failed, no row | en | en | failed | partial_translation |
+| es | apparent-ready hash mismatch | en | en | stale | partial_translation |
+| es | current general, null itinerary, nonempty EN | es | en | ready | partial_translation |
+| es | current general, explicit [] itinerary | es | es | ready | none |
+| es | current general, null itinerary, EN [] | es | es | ready | none (regression) |
+| it | missing derivative, EN itinerary null | en | en (=content) | pending | partial_translation |
+| any | failed state | — | — | failed | no hash/provider/job fields |
+
+The `us2-empty-english` case failed first on the accepted baseline:
+`itinerary_locale` returned `en` (fallback wrongly true for EN `[]`)
+instead of `es`, reproducing the reported `!== null` defect; the
+`translation_warning` assertion would likewise have failed. After the T028
+repair it passes. An additional self-inflicted failure in the same first
+run (a new compat case reusing another test's slug across isolated
+RefreshDatabase tests, 404) was corrected to seed its own tour; it is a
+test-isolation mistake, not product evidence.
+
+### T028 GetTourDetailAction repair
+
+`backend/app/Domains/Search/Actions/GetTourDetailAction.php`: only
+row+ready+matching `translated_hash` is current (via
+`currentTranslation`); EN status is source. `null` derivative itinerary
+may use a nonempty EN itinerary; explicit `[]` stays empty and never
+substitutes English. Empty English (`[]`/null) is not a fallback:
+`itinerary_locale` retains the selected content locale and no itinerary
+warning is produced. `partial_translation` is preserved as the compatible
+summary flag but now requires an actual nonempty fallback (nonempty EN
+general content, or a nonempty EN itinerary substitution) via
+`hasNonemptyGeneralContent`. Null-safe reads (`optional()`) cover a
+missing EN row. No new public fields; hashes/provider errors/job state
+remain unexposed. Rate limiting, routes, canonicals/hreflang, guide codes
+and money/booking behavior untouched (asserted in T025).
+
+### T026/T029/T030 frontend reader + preview
+
+- `TourDetail.tsx`: separate localized content/itinerary fallback notices
+derived from `content_locale`/`itinerary_locale` vs the requested locale
+plus nonempty checks; legacy `partial_translation` renders only when
+neither specific notice applies. `lang` attributes on actual title,
+description, lists, meeting/cancellation/important text
+(`content_locale`) and day/stop text (`itinerary_locale`); page-locale
+headings/labels unmarked. Repeated valid day numbers use
+`key={day-dayIndex}` and stops `key={day-dayIndex-stop-index}` (day-only
+keys removed). Guide-language labels stay page-localized via
+`Intl.DisplayNames`; spoken codes unaffected.
+- `TourContentPreview.tsx`: visible day labels use authored `day.day`
+(not `index + 1`) with `key={day-index-day}`; all list keys are
+index-based (repeated valid strings render without duplicate string
+keys). Source text carries `lang="en"`; headings stay page-localized.
+Optional `translationStatuses` (`OwnedTranslationStatus` shared DTO)
+renders sanitized saved ES/IT readiness plus a saved-revision note; no
+hashes/provider errors/generated-field editing. Absent statuses (wizard
+unsaved drafts) render no readiness: nothing fabricated.
+- `TourContentPreview.test.tsx` (new, 6 tests incl. en/es/it Day 3,3
+regression asserting two `Day 3`/`Día 3`/`Giorno 3` headings, nine-field
+`lang="en"` coverage, repeated strings, all four sanitized statuses,
+unsaved-draft absence, empty-itinerary scope). `TourDetail.test.tsx`
+extended (independent-notice matrix in en/es/it, empty suppression,
+legacy compat, lang attributes, repeated-day keys); the inherited single
+`partialTranslation` fallback case now asserts the two specific notices.
+- Authorized edit-preview integration only:
+`partner/tours/[id]/edit/page.tsx` forwards all nine current EN source
+fields plus sanitized owned `translation_statuses` (concrete shared DTO
+shape) to the preview; save/restore behavior preserved (null/[] semantics,
+no readiness/hash writes). New caller test asserts all nine fields, both
+saved statuses, the readiness note and absence of internal fields.
+`TourWizard.tsx` untouched (review preview already passes nine fields and
+no statuses; unsaved drafts fabricate nothing).
+
+### T031/T032 freshness + copy
+
+- `lib/api/tours.ts`: `getTourDetail` passes `cache: 'no-store'` with a
+comment citing the installed Next.js fetch reference (`no-store` fetches
+every request even for statically prerendered routes) so the next load of
+the same URL sees a newly current derivative. `client.ts` unchanged
+(`cache` already forwards via `RequestInit`; unrelated endpoint caching
+untouched, no polling/SLA added). Public page unchanged (both
+`generateMetadata` and the page use the same fresh fetch).
+- `messages/en|es|it.json`: `tour.contentFallback` /
+`tour.itineraryFallback` and `partner.tours.form.savedTranslations` /
+`previewReadinessNote` added in all three locales; existing keys and US1
+bounds/feedback untouched.
+
+### T027 SSR transitions (real fixture server, same-URL reload)
+
+Extended `frontend/tests/e2e/tour-detail.spec.ts`: new ES test serves a
+current-ES-general/null-ES-itinerary fixture (asserts served
+`content_locale=es`, `itinerary_locale=en`, `ready`,
+`partial_translation`, guide codes `[de,en,es]`), shows only the itinerary
+notice with English day text, then serves the ready ES itinerary and
+reloads the identical URL (asserted equal) showing the Spanish day, no
+notices, stable guide label and `inLanguage=es` structured data. The
+inherited ES/IT full-fallback test was updated from the retired single
+notice copy to the two independent notices (content + itinerary) plus
+stable-URL assertions; transition/SEO/guide-code logic preserved.
+
+### T033 gates (all numeric exits `0`, logs listed above)
+
+| Gate | Result |
+|---|---|
+| Pest `TourDetailTest + TourTranslationTest + TourContentRevisionTest` (`phpunit.pgsql.xml`, `bookly_test`) | 56 passed / 391 assertions |
+| Pint (2 touched PHP files) | PASS |
+| PHPStan (action path) | No errors (an initial 4-finding run on `?-> ??`/`is_array` narrowing was reworked to the file's existing `optional()` idiom plus a `@var mixed` guard; no behavior change, backend rerun green) |
+| Full frontend `lint` + `typecheck` | both exit 0 |
+| Jest detail/preview/page (TourDetail, TourContentPreview, edit page, TourWizard, public slug page) | 5 suites / 59 passed |
+| Next production `build` | 89 pages, `tours/[slug]` dynamic |
+| Playwright SSR `tour-detail.spec.ts -g SSR` chromium | 2 passed |
+| Playwright SSR `tour-detail.spec.ts -g SSR` mobile (Pixel 7) | 2 passed |
+| `git diff --check` | clean (CRLF advisories only) |
+
+Changed files (12 modified + 1 new): `backend/.../GetTourDetailAction.php`,
+`backend/tests/.../TourDetailTest.php`, `frontend/messages/{en,es,it}.json`,
+`frontend/src/components/tour/TourDetail.tsx`,
+`frontend/src/components/tour/__tests__/TourDetail.test.tsx`,
+`frontend/src/components/partner/tours/TourContentPreview.tsx`,
+`frontend/src/components/partner/tours/__tests__/TourContentPreview.test.tsx`
+(new), `frontend/.../edit/page.tsx`, `frontend/.../edit/__tests__/page.test.tsx`,
+`frontend/src/lib/api/tours.ts`, `frontend/tests/e2e/tour-detail.spec.ts`.
+
+### Decisions and unresolved
+
+- Empty-itinerary `itinerary_locale` retains the selected content locale
+(contract: no translated-text claim for empty output); warning summary
+requires nonempty fallback content.
+- Full-fallback pages show both content and itinerary notices (the
+nonempty EN itinerary is independently identified, per contract).
+- No `client.ts`/`page.tsx`/`TourWizard.tsx` behavior changes; US1
+`noValidate`/Unicode bounds/retry assertions/nine-field snapshots/slugs
+preserved (no US1 file semantics altered; wizard/edit suites pass
+unmodified except the additive preview-caller case).
+- Unresolved for root: T025-T033 review/acceptance; full-spec CI on this
+  head (the `0cd1f0a` selector-repair CI status is unchanged by this
+  slice); US3 worker/recovery/approval, US4 media writer, US5 discovery,
+  US6 adoption/SEO, T073-T078 porch-light gates. No full-spec/CI/merge/
+  release claim. Stopping for root review.
+
+## 23. US2 Completion Corrections and Gate Evidence (executed 2026-10-09, unreviewed)
+
+Bounded to the outstanding US2 items on HEAD `0cd1f0a`. No task markers
+changed, no commits, no US3/US4/US5/US6 work. Root owns acceptance, task
+markers, plan/governance and Git. Full raw logs plus immediate numeric
+`NUMERIC_EXIT` (all `0`) are retained outside the repo under
+`C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/
+reviewer-us2-completion-20261009/` as `backend-focused.txt`, `pint.txt`,
+`phpstan.txt`, `frontend-lint.txt`, `frontend-typecheck.txt`,
+`frontend-focused-jest.txt`, `frontend-production-build.txt`,
+`frontend-restart.txt`, `frontend-start.txt`,
+`frontend-tour-browser.txt`, plus `manifest.jsonl` (UTC start/finish per
+filesystem timestamps, exact commands, numeric exits) and
+`own-db-reseed.txt`. Earlier `us2-*` failure/evidence logs were not
+overwritten. Provider key blank/fake everywhere (`-e GEMINI_API_KEY=`
+for Pest, no live Gemini calls). Dev services/port 8080 and personal
+data untouched; only the owned `bookly-spec019-browser` stack (restarted
+after the host reboot wiped its tmpfs PG) and the disposable
+`bookly-test-postgres` were touched. No Next/Chromium recreation or
+browser dependency install was performed by this session.
+
+### Truthfulness corrections to section 22
+
+- The initial backend empty-English-itinerary regression failed before its
+  repair. Separately, the October 4 correction run added R1 (English-only
+  itinerary summary), R2 (empty/current sections with a legacy summary
+  flag) and R3 (breadcrumb source language) before their respective
+  production fixes; their retained native failures provide distinct
+  red-before-fix evidence. The first US2 preview/day-number tests were
+  written after production edits and do not establish tests-first
+  compliance. The edit-preview caller coverage was also added later.
+  PHPStan findings are static-analysis failures, not behavioral TDD proof.
+- Section 22's R4 "full es/it status matrix" claim was inaccurate as a
+  completeness statement: the matrix asserted itinerary only by count
+  plus first-day `day`/`title`, with an explicit comment declining whole
+  array comparison. It is now strengthened (see below); the earlier
+  title-only form is retained as history, not as full-itinerary proof.
+- The same first backend run's slug-reuse 404 was a test-isolation
+  mistake (two RefreshDatabase tests sharing one slug), corrected to
+  seed its own tour; recorded here as a test defect, not product
+  evidence. A `playwright install chromium` prerequisite attempt in this
+  session was interrupted by the root handoff message before any browser
+  download completed and wrote no log (no partial file exists in the
+  evidence directory); per the handoff, no install/recreate was retried.
+  Root retained the existing isolated Node 22 container and copied the
+  matching Chromium cache, missing shared libraries and fonts from the
+  matching Debian 12 runtime using read-only source access. The actual
+  launch smoke passed; the marker explicitly records image_replacement=false.
+  Root's interrupted apt/image-build attempts are retained as failures,
+  not accepted gates. No personal container was restarted or replaced. No failed log was overwritten with a later pass.
+
+### Changes in this completion
+
+- Backend R4 matrix (`TourDetailTest.php`): EN/derivative itineraries are
+  now two-day fixtures with repeated day number 3, day descriptions
+  (string and null), and ordered stops carrying title/description/
+  `duration_minutes` (populated and null). Every matrix row asserts the
+  FULL expected itinerary with `$this->assertEquals`, which uses loose
+  equality: JSONB object key order is ignored while indexed day/stop
+  order and all nested values are enforced. The title-only comment was
+  removed.
+- Preview readiness (`TourContentPreview.test.tsx`): the page-locale
+  readiness case now covers all four sanitized statuses
+  (pending/ready/stale/failed) in all three page locales (EN/ES/IT, 12
+  combinations) using real catalog `translationStatus` strings, plus the
+  saved-revision note, `lang="en"` source assertion and internal-field
+  absence. The earlier EN-all-four plus ES/IT pending+failed form is
+  superseded by this matrix.
+- Production scaffolding comments removed (no behavior change):
+  `GetTourDetailAction.php` (US2/R1 narrative, compatible-summary
+  narrative), `TourDetail.tsx` (R2 narrative, itinerary key narrative),
+  `TourContentPreview.tsx` (`Spec 019` references), `tours.ts` (US2
+  no-store narrative). Functional semantics (independent selection,
+  empty/[] handling, `partial_translation` summary rule, no-store detail
+  fetch, composite keys, `lang` attributes, guide-language separation,
+  privacy) are unchanged and covered by the gates below.
+- Own disposable PG was empty after the host reboot (`tours` relation
+  absent), so the owned stack was restored with `docker start` of the
+  existing containers only, followed by own `migrate --force --seed`
+  through the original runtime prefix/browser.env
+  (`own-db-reseed.txt`). The seeded `hidden-gems-rome-walking-tour`
+  fixture was reverified over actual served HTTP (`200`, EN source,
+  Colosseum description) before any browser gate. Personal DB, `.env`
+  and dev services were never touched.
+
+### Gate results (all numeric exits `0`, logs listed above)
+
+| Gate | Result |
+|---|---|
+| Pest `TourDetailTest + TourTranslationTest + TourContentRevisionTest` (`phpunit.pgsql.xml`, `bookly_test`) | 59 passed / 970 assertions |
+| Pint (2 touched PHP files) | PASS |
+| PHPStan (action path) | No errors |
+| Full frontend `lint` + `typecheck` | both exit 0 |
+| Jest 7 focused suites (TourDetail, TourContentPreview, edit page, TourWizard x2, public slug page, API client) | 7 suites / 94 passed |
+| Next production `build` | 89 pages, `tours/[slug]` dynamic (static-gen 60s retries succeeded; final 89/89) |
+| Production restart + start, `/en` HTTP 200 readiness | exit 0, `OWN_NEXT_READY` |
+| Playwright `tour-detail.spec.ts` chromium + mobile (real fixture server + isolated real Next, same-URL reloads) | 46 passed (23 + 23), incl. both SSR transitions on both projects |
+| `git diff --check` | clean (CRLF advisories only) |
+
+Changed files (12 modified + 1 new, same set as section 22):
+`backend/.../GetTourDetailAction.php`,
+`backend/tests/.../TourDetailTest.php`,
+`frontend/messages/{en,es,it}.json`,
+`frontend/src/components/tour/TourDetail.tsx`,
+`frontend/src/components/tour/__tests__/TourDetail.test.tsx`,
+`frontend/src/components/partner/tours/TourContentPreview.tsx`,
+`frontend/src/components/partner/tours/__tests__/TourContentPreview.test.tsx`
+(new), `frontend/.../edit/page.tsx`, `frontend/.../edit/__tests__/page.test.tsx`,
+`frontend/src/lib/api/tours.ts`, `frontend/tests/e2e/tour-detail.spec.ts`,
+plus this evidence section.
+
+Unresolved for root: T025-T033 review/acceptance; full-spec CI on this
+head; US3-US6 and T073-T078. No US2/whole-story, full-spec, CI, merge
+or release claim. Stopping for root review and independent rerun.
+
+## 24. Independent US2 reader acceptance (2026-10-09)
+
+Root reviewed the US2 implementation against T025-T033, preserving accepted
+US1 and selector fixes on baseline `0cd1f0a`. Source changes independently
+select current general content and itinerary, retain explicit empty arrays,
+disclose only actual nonempty English fallbacks, declare authored languages,
+show saved sanitized readiness, and make detail SSR reads explicit no-store.
+The edit preview forwards all nine source fields and saved revision status.
+No unrelated endpoint caching changed. Spec 018 remains unchanged.
+
+Root strengthened test evidence without changing production behavior:
+- Every ES/IT state-matrix itinerary compares its full ordered structure;
+  additional assertSame checks preserve integer day/duration and nullable
+  day/stop descriptions independently of PostgreSQL JSONB object-key order.
+- All four readiness states in each EN/ES/IT page locale now use differing
+  ES/IT status pairs, so swapping/duplicating status associations fails.
+- Repeated valid day/list values retain authored order and rendered labels;
+  scoped console spies also reject actual React duplicate-key warnings,
+  retain original console behavior, and restore spies in finally.
+
+Original October 4 correction failures are retained in
+[evidence manifest](evidence/us2-correction-failure-manifest-20261004.json):
+R1 missing itinerary-only summary (failure 02), R2 six misleading legacy
+notices (06), and R3 breadcrumb lang absence (07). Failures 01/05 were runtime
+prerequisites; 03/04 were test expectations, not product defects. Initial
+preview/day-number coverage followed implementation, so complete US2
+chronological TDD compliance is not claimed. These new root guard assertions
+also followed implementation and strengthen coverage only.
+
+Runtime recovery retained the existing owned Node22 container and exact
+Chromium1223/148 runtime. See [runtime marker](evidence/us2-root-browser-runtime-20261009.json)
+and [actual launch smoke](evidence/us2-root-chromium-smoke-20261009.txt).
+Missing libraries/fonts were copied with read-only source access; no personal
+service/image was replaced or restarted. The owned reboot-empty tmpfs PG
+was reseeded only within its isolated project. PHP gates execute in the
+existing Laravel container, but explicit phpunit.pgsql.xml and its bootstrap
+assert the separate bookly_test database/user before migrations. No real
+provider generation occurred. Browser fixture servers exercise actual built
+Next SSR; backend selection correctness comes from the real API matrix.
+
+| Independent root gate | Result | Full retained log |
+|---|---|---|
+| Pest: detail/translation/revision, PostgreSQL bookly_test, blank provider | 59 passed / 1130 assertions | [backend](evidence/us2-root-backend-focused-20261009.txt) |
+| Pint (2 changed PHP files) | PASS | [Pint](evidence/us2-root-pint-20261009.txt) |
+| PHPStan (detail action) | No errors | [PHPStan](evidence/us2-root-phpstan-20261009.txt) |
+| Full frontend lint / typecheck | both exit 0 | [lint](evidence/us2-root-frontend-lint-20261009.txt), [types](evidence/us2-root-frontend-typecheck-20261009.txt) |
+| Jest 7 affected suites | 90 passed | [Jest](evidence/us2-root-frontend-focused-jest-20261009.txt) |
+| Fresh production build | 89 pages; detail dynamic | [build](evidence/us2-root-frontend-production-build-20261009.txt) |
+| Owned Next restart/start, HTTP readiness | exit 0 / EN HTTP 200 | [restart](evidence/us2-root-frontend-restart-20261009.txt), [start](evidence/us2-root-frontend-start-20261009.txt) |
+| Initial full browser run | 45 passed, 1 page-setup timeout; exit 1 | [initial failure](evidence/us2-root-frontend-tour-browser-20261009.txt) |
+| Complete browser rerun, identical code/config | 46 passed; exit 0 | [browser](evidence/us2-root-frontend-tour-browser-rerun-20261009.txt) |
+
+The first independent browser run passed 45/46 and failed while creating
+its first Chromium page, before executing that SSR scenario (native exit 1).
+The remaining scenarios passed, including independent SSR and mobile full
+fallback. A subsequent complete 46-test run used identical source, timeouts,
+retry settings and browser configuration. Both complete logs are preserved;
+the exact cause of the initial page-setup delay remains unproven and should
+be watched during whole-spec browser checks. This is not a product TDD red.
+
+All root commands, UTC start/finish and native numeric exits are retained in
+[gate manifest](evidence/us2-root-gates-manifest-20261009.jsonl), with complete
+logs linked above. Repository text copies normalize trailing whitespace only;
+original raw gate logs remain outside the repository in reviewer-us2-gates-20261009.
+Earlier correction failures are relay tool captures, with truncation metadata
+retained in their manifest. Jest reported its asynchronous-handle shutdown warning;
+its native exit was zero. PHPStan's stderr configuration note is
+informational; the full result is No errors and native exit zero.
+
+Accept T025-T033 only, bringing reviewed task markers to 33/78. This accepts
+US2 reader behavior under controlled revisions; actual queued generation,
+concurrency/recovery, media/operator/SEO, whole-spec checks and the live
+isolated model/rollback rehearsal remain T034-T078. The prior selector head
+0cd1f0a has all CI checks successful on recheck ([proof](evidence/selector-head-ci-recheck-20261009.json));
+that does not establish CI for the ensuing US2 commit. PR29 remains draft;
+merge/deployment/release acceptance is pending.

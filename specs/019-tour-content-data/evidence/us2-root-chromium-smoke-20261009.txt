@@ -1,0 +1,4 @@
+NODE=v22.23.3
+CHROMIUM_LAUNCH_OK 148.0.7778.96
+Hello · España · Italia · €
+NUMERIC_EXIT=0

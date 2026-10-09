@@ -812,7 +812,21 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       <button type="button" onClick={() => setPreviewOpen((open) => !open)} className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy">
         {formT(previewOpen ? 'hidePreview' : 'previewTour')}
       </button>
-      {previewOpen && <TourContentPreview title={translationData.en.title} description={translationData.en.description} itinerary={translationData.en.itinerary} media={media} />}
+      {previewOpen && (
+        <TourContentPreview
+          title={translationData.en.title}
+          description={translationData.en.description}
+          itinerary={translationData.en.itinerary}
+          media={media}
+          highlights={translationData.en.highlights}
+          inclusions={translationData.en.inclusions}
+          exclusions={translationData.en.exclusions}
+          important_information={translationData.en.important_information}
+          meeting_point={translationData.en.meeting_point || null}
+          cancellation_policy={translationData.en.cancellation_policy || null}
+          translationStatuses={tour?.translation_statuses ?? null}
+        />
+      )}
     </div>
   );
 }

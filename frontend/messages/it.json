@@ -211,7 +211,9 @@
     "perPerson": "/ persona",
     "allowedRange": "{min}–{max} consentiti",
     "selected": "Selezionato:",
-    "partialTranslation": "Alcuni contenuti sono visualizzati in inglese"
+    "partialTranslation": "Alcuni contenuti sono visualizzati in inglese",
+    "contentFallback": "Il contenuto è mostrato in inglese",
+    "itineraryFallback": "L'itinerario è mostrato in inglese"
   },
   "home": {
     "heroTitle": "Scopri e Prenota Tour Incredibili",
@@ -724,6 +726,8 @@
           "stale": "Traduzione non aggiornata",
           "failed": "Traduzione non disponibile"
         },
+        "savedTranslations": "Traduzioni salvate",
+        "previewReadinessNote": "Lo stato della traduzione riflette l'ultima revisione salvata.",
         "meetingPointPlaceholder": "Es., Ingresso principale del Colosseo",
         "itinerary": "Itinerario",
         "addDay": "Aggiungi giorno",

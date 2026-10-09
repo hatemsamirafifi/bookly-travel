@@ -61,9 +61,25 @@ class GetTourDetailAction
         $english = $tour->translations->firstWhere('locale', 'en');
         $translation = $this->translationService->currentTranslation($tour, $locale);
         $t = $translation ?? $english;
-        $englishItinerary = $english->itinerary ?? null;
-        $itineraryFallback = $locale !== 'en' && $t?->itinerary === null && $englishItinerary !== null;
-        $contentLocale = $t->locale ?? $locale;
+        $englishItinerary = optional($english)->itinerary;
+        $hasNonemptyEnglishItinerary = is_array($englishItinerary) && count($englishItinerary) > 0;
+        // An explicit [] derivative stays empty; missing/empty English never warns.
+        $itineraryFallback = $locale !== 'en'
+            && $hasNonemptyEnglishItinerary
+            && ($translation === null || optional($t)->itinerary === null);
+        $contentLocale = optional($t)->locale ?? $locale;
+
+        /** @var mixed $selectedItinerary */
+        $selectedItinerary = optional($t)->itinerary ?? $englishItinerary ?? [];
+        if (! is_array($selectedItinerary)) {
+            $selectedItinerary = [];
+        }
+        // A nonempty itinerary claims its actual language; an empty
+        // itinerary retains the selected content locale without claiming
+        // translated text exists.
+        $itineraryLocale = count($selectedItinerary) > 0
+            ? ($itineraryFallback ? 'en' : $contentLocale)
+            : $contentLocale;
 
         $images = $tour->allImageUrls();
         $imageObjects = [];
@@ -103,8 +119,8 @@ class GetTourDetailAction
             // contract, but make its meaning explicit in the new field.
             'languages' => $tour->guideLanguages(),
             'guide_languages' => $tour->guideLanguages(),
-            'itinerary' => $t->itinerary ?? $englishItinerary ?? [],
-            'itinerary_locale' => $itineraryFallback ? 'en' : $contentLocale,
+            'itinerary' => $selectedItinerary,
+            'itinerary_locale' => $itineraryLocale,
             'group_size' => [
                 'min' => $tour->group_size_min,
                 'max' => $tour->group_size_max,
@@ -145,11 +161,41 @@ class GetTourDetailAction
             'seo' => $this->buildSeoMetadata($tour, $t, $locale),
         ];
 
-        if (($locale !== 'en' && ! $translation && $english) || $itineraryFallback) {
+        // `partial_translation` summarizes actual nonempty English fallbacks only.
+        $generalFallback = $locale !== 'en' && ! $translation && $english && $this->hasNonemptyGeneralContent($english);
+        if ($generalFallback || $itineraryFallback) {
             $data['translation_warning'] = 'partial_translation';
         }
 
         return ['data' => $data];
+    }
+
+    /**
+     * Whether the English source carries any nonempty general traveler
+     * content worth disclosing as a fallback. Lists count when any entry
+     * is a nonempty string.
+     */
+    protected function hasNonemptyGeneralContent(TourTranslation $english): bool
+    {
+        foreach (['title', 'description', 'meeting_point', 'cancellation_policy'] as $field) {
+            $value = $english->{$field};
+            if (is_string($value) && trim($value) !== '') {
+                return true;
+            }
+        }
+
+        foreach (['highlights', 'inclusions', 'exclusions', 'important_information'] as $field) {
+            $value = $english->{$field};
+            if (is_array($value)) {
+                foreach ($value as $entry) {
+                    if (is_string($entry) && trim($entry) !== '') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
