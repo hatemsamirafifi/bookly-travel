@@ -54,9 +54,14 @@ export interface TourFormData {
   destination: string;
   duration_value: string;
   duration_unit: DurationUnit;
-  difficulty_level: DifficultyLevel;
+  /** Nullable: older tours without difficulty restore as null; new tours default to 'easy'. */
+  difficulty_level: DifficultyLevel | null;
   itinerary: TourItineraryDay[];
-  inclusions: string;
+  /** Authored English source lists (Spec 019); arrays preserve order. */
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  important_information: string[];
   meeting_point: string;
   /** Spoken/live-guide language codes, independent of content locale. */
   languages: string[];
@@ -65,8 +70,9 @@ export interface TourFormData {
   pricing_tiers: PricingTierFormInput[];
   availability_rules: AvailabilityRuleFormInput[];
   availability_exceptions: AvailabilityExceptionFormInput[];
-  min_participants: number;
-  max_participants: number;
+  /** Tour-level group size; the API contract names are group_size_min/max. */
+  group_size_min: number;
+  group_size_max: number;
 }
 
 /** New pricing tier input (no id yet) */
@@ -134,7 +140,10 @@ export const INITIAL_TOUR_FORM_DATA: TourFormData = {
   duration_unit: 'hour',
   difficulty_level: 'easy',
   itinerary: [],
-  inclusions: '',
+  highlights: [],
+  inclusions: [],
+  exclusions: [],
+  important_information: [],
   meeting_point: '',
   languages: [],
   cancellation_policy: '',
@@ -142,6 +151,6 @@ export const INITIAL_TOUR_FORM_DATA: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
-  min_participants: 1,
-  max_participants: 20,
+  group_size_min: 1,
+  group_size_max: 20,
 };

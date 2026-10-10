@@ -1,0 +1,27 @@
+
+   FAIL  Tests\Feature\Partner\TourAfterCommitContainmentTest
+  ⨯ it keeps a committed public source save successful when Scouts queu… 6.76s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmen…  RuntimeException
+  spec019_projection_dispatch_probe
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:30
+     26▕         $fails = self::$failScout
+     27▕             ? $job instanceof Laravel\Scout\Jobs\MakeSearchable || $job instanceof Laravel\Scout\Jobs\RemoveFromSearch
+     28▕             : $job instanceof IndexTourAction || $job instanceof RemoveFromIndexAction;
+     29▕         if ($fails) {
+  ➜  30▕             throw new RuntimeException('spec019_projection_dispatch_probe');
+     31▕         }
+     32▕
+     33▕         return 0;
+     34▕     }
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:30
+      [2m+21 vendor frames [22m
+  23  tests/Feature/Partner/TourAfterCommitContainmentTest.php:166
+
+
+  Tests:    1 failed (6 assertions)
+  Duration: 7.06s
+
+NUMERIC_EXIT=2

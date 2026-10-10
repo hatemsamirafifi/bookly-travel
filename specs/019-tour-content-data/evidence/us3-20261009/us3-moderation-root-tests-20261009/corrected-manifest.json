@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-10-09T17:46:33.0352328+00:00",
+  "finished_at": "2026-10-09T17:47:35.8861531+00:00",
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Admin/TourModerationTest.php",
+    "tests/Feature/Admin/Filament/TourResourceTest.php"
+  ],
+  "exit_code": 1,
+  "purpose": "Corrected Filament 422 rejection harness; before production edits",
+  "accepted": false
+}

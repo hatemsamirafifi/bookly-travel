@@ -1,4 +1,6 @@
-﻿export type TourStatus = 'draft' | 'pending_review' | 'published' | 'rejected' | 'archived';
+﻿import type { EnglishSourceInput, OwnedTranslationStatus } from '@/lib/api/types';
+
+export type TourStatus = 'draft' | 'pending_review' | 'published' | 'rejected' | 'archived';
 
 export type BookingStatus = 'confirmed' | 'completed' | 'cancelled' | 'pending_payment' | 'expired' | 'no_show' | 'cancellation_requested';
 
@@ -24,7 +26,9 @@ export interface TourMedia {
   url: string;
   thumbnail_url?: string;
   is_cover: boolean;
-  alt_text?: string;
+  alt_text?: string | null;
+  /** Actual language of alt_text when present. */
+  alt_locale?: 'en' | 'es' | 'it' | null;
   sort_order: number;
 }
 
@@ -72,7 +76,20 @@ export interface Tour {
     label: string;
   };
   difficulty?: string;
+  /** Nullable authoritative difficulty; older tours without difficulty stay null. */
+  difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
   meeting_point: string;
+  important_information?: string[] | null;
+  itinerary?: Array<{
+    day: number;
+    title: string;
+    description?: string | null;
+    stops?: Array<{ title: string; description?: string | null; duration_minutes?: number | null }>;
+  }>;
+  /** Owned responses return localized rows; writes use nested English input. */
+  translations?: Array<EnglishSourceInput & { locale: string }>;
+  /** Sanitized owned readiness; hashes/provider errors never serialized. */
+  translation_statuses?: { es: OwnedTranslationStatus; it: OwnedTranslationStatus };
   highlights: string[];
   inclusions: string[];
   exclusions: string[];

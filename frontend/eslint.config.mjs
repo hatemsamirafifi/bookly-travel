@@ -13,6 +13,10 @@ const eslintConfig = defineConfig([
     "build/**",
     "coverage/**",
     "next-env.d.ts",
+    // Generated local Phase 1 audit artifact (git-ignored, not
+    // production source). Application and test sources stay linted and
+    // no rule is disabled.
+    ".phase1-evidence/**",
   ]),
 ]);
 

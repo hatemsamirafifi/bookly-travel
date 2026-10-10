@@ -1,0 +1,21 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Partner/TourTranslationConcurrencyTest.php"
+  ],
+  "started": "2026-10-09T18:33:50.9625160+00:00",
+  "finished": "2026-10-09T18:34:04.9926417+00:00",
+  "native_exit": 1,
+  "context": "Provider service validation authored independently; job completion/failure baseline except T043 timeout60; ownbookly_test sole Pest owner."
+}

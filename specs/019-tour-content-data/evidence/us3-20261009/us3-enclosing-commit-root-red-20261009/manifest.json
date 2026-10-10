@@ -1,0 +1,6 @@
+{
+  "started_at": "2026-10-09T19:16:38.6911321+00:00",
+  "finished_at": "2026-10-09T19:16:51.0989327+00:00",
+  "native_exit": 2,
+  "command": "docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Partner/TourAfterCommitContainmentTest.php"
+}

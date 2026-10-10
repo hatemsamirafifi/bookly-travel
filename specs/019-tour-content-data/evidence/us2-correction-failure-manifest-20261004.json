@@ -1,0 +1,65 @@
+[
+  {
+    "file": "us2-correction-failure-01-20261004.txt",
+    "command": "docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter=\"English-only itinerary\"",
+    "exit_code": 1,
+    "timestamp": 1791138371532,
+    "classification": "environment prerequisite",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  },
+  {
+    "file": "us2-correction-failure-02-20261004.txt",
+    "command": "docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter=\"English-only itinerary\"",
+    "exit_code": 1,
+    "timestamp": 1791138428807,
+    "classification": "product regression",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  },
+  {
+    "file": "us2-correction-failure-03-20261004.txt",
+    "command": "docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter=\"matrix|ENGLISH SOURCE|English-only\"",
+    "exit_code": 1,
+    "timestamp": 1791138556139,
+    "classification": "test expectation defect",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  },
+  {
+    "file": "us2-correction-failure-04-20261004.txt",
+    "command": "docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter=\"matrix|ENGLISH SOURCE\"",
+    "exit_code": 1,
+    "timestamp": 1791138606174,
+    "classification": "test expectation defect",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  },
+  {
+    "file": "us2-correction-failure-05-20261004.txt",
+    "command": "docker exec -w /app bookly-spec019-browser-nextjs-1 npm test -- --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t \"summary flag\"",
+    "exit_code": 1,
+    "timestamp": 1791138672740,
+    "classification": "environment prerequisite",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  },
+  {
+    "file": "us2-correction-failure-06-20261004.txt",
+    "command": "docker compose --env-file C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser.env -p bookly-spec019-browser --project-directory 'F:/Travel Website/bookly travel' -f docker-compose.ci.yml -f C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser-overrides.yml exec -T nextjs npm test -- --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t \"summary flag\"",
+    "exit_code": 1,
+    "timestamp": 1791138964000,
+    "classification": "product regression",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  },
+  {
+    "file": "us2-correction-failure-07-20261004.txt",
+    "command": "docker compose --env-file C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser.env -p bookly-spec019-browser --project-directory 'F:/Travel Website/bookly travel' -f docker-compose.ci.yml -f C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser-overrides.yml exec -T nextjs npm test -- --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t \"actual text languages\"",
+    "exit_code": 1,
+    "timestamp": 1791139009694,
+    "classification": "product regression",
+    "truncated": false,
+    "source": "OpenCode relay tool capture: us2-review-corrections-20261004-run/events.jsonl"
+  }
+]

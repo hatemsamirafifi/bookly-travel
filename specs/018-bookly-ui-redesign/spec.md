@@ -8,7 +8,9 @@
 
 **Input**: Phase 0 of the Bookly UI redesign in `docs/bookly-ui-redesign-spec-kit-master-plan.md`: use Tripadvisor-inspired information hierarchy for discovery and tour details while retaining Bookly's identity, tours-only model, and existing business rules.
 
-**Governance**: Bookly Constitution v2.0.0 (`.specify/memory/constitution.md`).
+**Governance**: Original specification baseline: Constitution v2.0.0. Active continuation and release acceptance use [Constitution v2.1.0](../../.specify/memory/constitution.md).
+
+**Spec ID / phase ownership**: `018`; master-plan bootstrap and Phase 1 foundations. The original full-program scope below remains the design baseline. Phase 2 owns its active requirements and revised contracts in [Spec 019](../019-tour-content-data/spec.md); later phases follow the [master-plan mapping](../../docs/bookly-ui-redesign-spec-kit-master-plan.md#phase-to-spec-numbering).
 
 ## Clarifications
 

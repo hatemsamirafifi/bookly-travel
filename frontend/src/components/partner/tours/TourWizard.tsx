@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { useTourWizardStore } from '@/lib/stores/tourWizard';
@@ -21,14 +21,20 @@ import { ItineraryEditor } from './ItineraryEditor';
 import { TourContentPreview } from './TourContentPreview';
 import { PricingTierForm } from './PricingTierForm';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
-import { createTour } from '@/lib/api/partner';
+import { createTour, updateTour, submitTour } from '@/lib/api/partner';
+import { ValidationError } from '@/lib/api/client';
 import {
   tourBasicDetailsSchema,
   tourMediaStepSchema,
   tourPricingStepSchema,
   tourAvailabilityStepSchema,
+  tourPublishSourceSchema,
+  mapServerErrorsToFields,
+  localizeServerFieldErrors,
+  pickFieldErrors,
 } from '@/lib/validators/partner';
-import type { WizardStep, Tour } from '@/types/tour';
+import type { WizardStep } from '@/types/tour';
+import type { PartnerTourWritePayload } from '@/lib/api/types';
 
 const steps: { id: WizardStep; labelKey: string }[] = [
   { id: 'details', labelKey: 'wizard.details' },
@@ -55,14 +61,47 @@ export function TourWizard() {
   } = useTourWizardStore();
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
   const [errorMsg, setErrorMsg] = useState('');
+  const [notice, setNotice] = useState('');
+  // Successfully materialized draft id: retries update THIS tour instead of
+  // creating duplicates after a partial success (created, submit failed).
+  const [createdDraftId, setCreatedDraftId] = useState<number | null>(null);
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const currentStepIdx = steps.findIndex((s) => s.id === currentStep);
 
+  const tKey = (key: string) => t(key.startsWith('partner.tours.') ? key.replace('partner.tours.', '') : key);
+
   const formatError = (key?: string) => {
     if (!key) return '';
-    return t(key.startsWith('partner.tours.') ? key.replace('partner.tours.', '') : key);
+    return tKey(key);
   };
+
+  // Raw server messages localized for the page locale at render time.
+  const localizedServerErrors = localizeServerFieldErrors(serverErrors, tKey);
+
+  // Summary entries for the announced error box: localized client messages
+  // plus localized server messages, exact paths retained for mapping.
+  const summaryEntries: Array<{ path: string; message: string }> = [
+    ...Object.entries(validationErrors).map(([path, key]) => ({ path, message: formatError(key) })),
+    ...Object.entries(localizedServerErrors).map(([path, message]) => ({ path, message })),
+  ];
+
+  // Move keyboard focus to the announced summary only when a NEW error set
+  // appears (not on every keystroke while errors stay visible).
+  const errorSignature =
+    errorMsg + '|' + summaryEntries.map((entry) => `${entry.path}:${entry.message}`).join(';');
+  const prevErrorSignatureRef = useRef('');
+  useEffect(() => {
+    if (errorSignature && errorSignature !== prevErrorSignatureRef.current) {
+      prevErrorSignatureRef.current = errorSignature;
+      errorSummaryRef.current?.focus();
+    }
+    if (!errorSignature) {
+      prevErrorSignatureRef.current = '';
+    }
+  }, [errorSignature]);
 
   const validateStep = (step: WizardStep) => {
     let result;
@@ -106,44 +145,88 @@ export function TourWizard() {
     }
   };
 
+  // Canonical English source: nested translations.en wins per field on the
+  // server; shorthand basics travel alongside for compatibility. Pricing,
+  // availability, group size and media are preserved in every submission.
+  const buildPayload = (): PartnerTourWritePayload => ({
+    title: formData.title,
+    description: formData.description,
+    category: formData.category,
+    destination: formData.destination,
+    duration_value: Number(formData.duration_value) || 0,
+    duration_unit: formData.duration_unit,
+    difficulty_level: formData.difficulty_level,
+    meeting_point: formData.meeting_point || null,
+    guide_languages: formData.languages.filter(Boolean),
+    cancellation_policy: formData.cancellation_policy || null,
+    itinerary: formData.itinerary,
+    translations: {
+      en: {
+        title: formData.title,
+        description: formData.description,
+        highlights: formData.highlights,
+        inclusions: formData.inclusions,
+        exclusions: formData.exclusions,
+        meeting_point: formData.meeting_point || null,
+        cancellation_policy: formData.cancellation_policy || null,
+        itinerary: formData.itinerary,
+        important_information: formData.important_information,
+      },
+    },
+    media: formData.media,
+    pricing_tiers: formData.pricing_tiers.map((t) => ({
+      name: t.name,
+      price: parseFloat(t.price) || 0,
+      currency: t.currency,
+      min_participants: t.min_participants,
+      max_participants: t.max_participants,
+    })),
+    availability_rules: formData.availability_rules,
+    availability_exceptions: formData.availability_exceptions,
+    group_size_min: formData.group_size_min,
+    group_size_max: formData.group_size_max,
+  });
+
+  // Server failures stay page-localized: field errors render through the
+  // catalog (retained in the focused summary), while generic save/submit
+  // failures use the passed localized message. Raw backend/English text
+  // never reaches the UI.
+  const applyServerError = (err: unknown, fallbackMessage: string) => {
+    if (err instanceof ValidationError) {
+      const fields = mapServerErrorsToFields(err.errors);
+      setServerErrors(fields);
+      setErrorMsg(Object.keys(fields).length > 0 ? '' : fallbackMessage);
+      return;
+    }
+    setErrorMsg(fallbackMessage);
+  };
+
+  // Materialize the draft: create once, then update the retained id so
+  // retries after a partial success never duplicate the tour.
+  const materializeDraft = async () => {
+    const payload = buildPayload();
+    if (createdDraftId !== null) {
+      const updated = await updateTour(createdDraftId, payload);
+      return updated.data.id;
+    }
+    const created = await createTour(payload);
+    setCreatedDraftId(Number(created.data.id));
+    return created.data.id;
+  };
+
   const handleSaveDraft = async () => {
     setIsSubmitting(true);
     setErrorMsg('');
+    setNotice('');
+    setServerErrors({});
     try {
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        category: formData.category,
-        destination: formData.destination,
-        duration_value: parseFloat(formData.duration_value) || 0,
-        duration_unit: formData.duration_unit,
-        difficulty_level: formData.difficulty_level,
-        meeting_point: formData.meeting_point,
-        guide_languages: formData.languages.filter(Boolean),
-        cancellation_policy: formData.cancellation_policy,
-        itinerary: formData.itinerary,
-        media: formData.media,
-        pricing_tiers: formData.pricing_tiers.map((t) => ({
-          name: t.name,
-          price: parseFloat(t.price) || 0,
-          currency: t.currency,
-          min_participants: t.min_participants,
-          max_participants: t.max_participants,
-        })),
-        availability_rules: formData.availability_rules,
-        availability_exceptions: formData.availability_exceptions,
-        min_participants: formData.min_participants,
-        max_participants: formData.max_participants,
-        status: 'draft',
-      };
-
-      await createTour(
-        payload as unknown as Omit<Tour, 'id' | 'partner_id' | 'created_at' | 'updated_at' | 'published_at'>
-      );
-      reset();
-      router.push(`/${locale}/partner`);
+      // The server validates materialized drafts; incomplete local state
+      // remains persisted when a write is refused. Retain the saved id
+      // for retry-safe updates.
+      await materializeDraft();
+      setNotice(t('wizard.saved'));
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Failed to save draft');
+      applyServerError(err, t('wizard.saveFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -159,47 +242,92 @@ export function TourWizard() {
       return;
     }
 
+    // Publication requires trimmed nonempty English source on top of the
+    // step checks; incomplete drafts stay saveable via Save Draft instead.
+    const publishCheck = tourPublishSourceSchema.safeParse({
+      title: formData.title,
+      description: formData.description,
+    });
+    if (!publishCheck.success) {
+      const fieldErrors: Record<string, string> = {};
+      publishCheck.error.issues.forEach((issue) => {
+        fieldErrors[issue.path.join('.')] = issue.message;
+      });
+      setValidationErrors(fieldErrors);
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg('');
+    setNotice('');
+    setServerErrors({});
     try {
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        category: formData.category,
-        destination: formData.destination,
-        duration_value: parseFloat(formData.duration_value) || 0,
-        duration_unit: formData.duration_unit,
-        difficulty_level: formData.difficulty_level,
-        meeting_point: formData.meeting_point,
-        guide_languages: formData.languages.filter(Boolean),
-        cancellation_policy: formData.cancellation_policy,
-        itinerary: formData.itinerary,
-        media: formData.media,
-        pricing_tiers: formData.pricing_tiers.map((t) => ({
-          name: t.name,
-          price: parseFloat(t.price) || 0,
-          currency: t.currency,
-          min_participants: t.min_participants,
-          max_participants: t.max_participants,
-        })),
-        availability_rules: formData.availability_rules,
-        availability_exceptions: formData.availability_exceptions,
-        min_participants: formData.min_participants,
-        max_participants: formData.max_participants,
-        status: 'pending_review',
-      };
-
-      await createTour(
-        payload as unknown as Omit<Tour, 'id' | 'partner_id' | 'created_at' | 'updated_at' | 'published_at'>
-      );
+      // Materialize a draft first, then submit through the guarded endpoint
+      // (pricing/cover/lifecycle checks stay server-side). Creation never
+      // publishes: supplied status is prohibited by the API. A failed
+      // submit keeps the materialized id so the next retry updates it.
+      const id = await materializeDraft();
+      await submitTour(id);
+      setNotice(t('wizard.submitted'));
+      setCreatedDraftId(null);
       reset();
       router.push(`/${locale}/partner`);
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Failed to submit review');
+      applyServerError(err, t('wizard.submitFailed'));
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Translated visible labels for the stored enum codes; stored values
+  // stay codes (walking/hour/easy) and absent difficulty stays blank.
+  const categoryLabels: Record<string, string> = {
+    walking: t('form.walking'),
+    food: t('form.food'),
+    adventure: t('form.adventure'),
+    cultural: t('form.cultural'),
+    nature: t('form.nature'),
+  };
+  const durationUnitLabels: Record<string, string> = {
+    hour: t('form.hours'),
+    day: t('form.days'),
+  };
+  const difficultyLabels: Record<string, string> = {
+    easy: t('form.easy'),
+    moderate: t('form.moderate'),
+    challenging: t('form.challenging'),
+  };
+
+  const commaListProps = (key: 'highlights' | 'inclusions' | 'exclusions' | 'important_information') => ({
+    value: formData[key].join(', '),
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+      updateField(key, e.target.value.split(',').map((s) => s.trim()).filter(Boolean)),
+  });
+
+  // Combined field messages: localized client messages plus localized
+  // server messages, including indexed descendants (e.g. `highlights.0`)
+  // under their shared source control.
+  const controlErrors = (base: string): string[] => [
+    ...(validationErrors[base] ? [formatError(validationErrors[base])] : []),
+    ...pickFieldErrors(localizedServerErrors, base),
+  ];
+
+  const renderControlErrors = (base: string) =>
+    controlErrors(base).map((message, index) => (
+      <p key={`${base}-${index}`} className="text-xs text-red-500 mt-1" role="alert">
+        {message}
+      </p>
+    ));
+
+  const clientItineraryErrors = Object.fromEntries(
+    Object.entries(validationErrors)
+      .filter(([path]) => path.startsWith('itinerary'))
+      .map(([path, key]) => [path, formatError(key)])
+  );
+  const serverItineraryErrors = Object.fromEntries(
+    Object.entries(localizedServerErrors).filter(([path]) => path.startsWith('itinerary'))
+  );
+  const itineraryErrors = { ...clientItineraryErrors, ...serverItineraryErrors };
 
   const stepContent = () => {
     switch (currentStep) {
@@ -209,17 +337,18 @@ export function TourWizard() {
             <p className="text-sm text-muted-foreground">{t('form.sourceLanguageNotice')}</p>
             <div className="space-y-1">
               <Label htmlFor="title">{t('form.title')}</Label>
+              {/* No native maxlength: it counts UTF-16 units and would block the
+                  schema/server-accepted 120 code-point boundary. The bound stays
+                  enforced by validation with localized feedback. */}
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => updateField('title', e.target.value)}
                 placeholder={t('form.titlePlaceholder')}
-                maxLength={120}
                 disabled={isSubmitting}
+                aria-invalid={validationErrors['title'] || serverErrors['title'] ? true : undefined}
               />
-              {validationErrors['title'] && (
-                <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['title'])}</p>
-              )}
+              {renderControlErrors('title')}
             </div>
             <div className="space-y-1">
               <Label htmlFor="description">{t('form.description')}</Label>
@@ -230,31 +359,72 @@ export function TourWizard() {
                 placeholder={t('form.descriptionPlaceholder')}
                 rows={5}
                 disabled={isSubmitting}
+                aria-invalid={validationErrors['description'] || serverErrors['description'] ? true : undefined}
               />
-              {validationErrors['description'] && (
-                <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['description'])}</p>
-              )}
+              {renderControlErrors('description')}
             </div>
-            <ItineraryEditor value={formData.itinerary} onChange={(days) => updateField('itinerary', days)} disabled={isSubmitting} />
+            <div className="space-y-1">
+              <Label htmlFor="highlights">{t('form.highlights')}</Label>
+              <Input
+                id="highlights"
+                {...commaListProps('highlights')}
+                placeholder={t('form.highlightsPlaceholder')}
+                disabled={isSubmitting}
+              />
+              {renderControlErrors('highlights')}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <Label htmlFor="category">{t('form.category')}</Label>
+                <Label htmlFor="inclusions">{t('form.inclusions')}</Label>
+                <Input
+                  id="inclusions"
+                  {...commaListProps('inclusions')}
+                  placeholder={t('form.inclusionsPlaceholder')}
+                  disabled={isSubmitting}
+                />
+                {renderControlErrors('inclusions')}
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="exclusions">{t('form.exclusions')}</Label>
+                <Input
+                  id="exclusions"
+                  {...commaListProps('exclusions')}
+                  placeholder={t('form.exclusionsPlaceholder')}
+                  disabled={isSubmitting}
+                />
+                {renderControlErrors('exclusions')}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="important_information">{t('form.importantInformation')}</Label>
+              <Input
+                id="important_information"
+                {...commaListProps('important_information')}
+                placeholder={t('form.importantInformationPlaceholder')}
+                disabled={isSubmitting}
+              />
+              {renderControlErrors('important_information')}
+            </div>
+            <ItineraryEditor value={formData.itinerary} onChange={(days) => updateField('itinerary', days)} disabled={isSubmitting} errors={itineraryErrors} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label id="category-label">{t('form.category')}</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(v) => updateField('category', v)}
                   disabled={isSubmitting}
                 >
-                  <SelectTrigger><SelectValue placeholder={t('form.categoryPlaceholder')} /></SelectTrigger>
+                  <SelectTrigger aria-labelledby="category-label"><SelectValue placeholder={t('form.categoryPlaceholder')} displayValue={formData.category ? categoryLabels[formData.category] : undefined} /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="walking">{t('form.walking') || 'Walking'}</SelectItem>
-                    <SelectItem value="food">{t('form.food') || 'Food'}</SelectItem>
-                    <SelectItem value="adventure">{t('form.adventure') || 'Adventure'}</SelectItem>
-                    <SelectItem value="cultural">{t('form.cultural') || 'Cultural'}</SelectItem>
-                    <SelectItem value="nature">{t('form.nature') || 'Nature'}</SelectItem>
+                    <SelectItem value="walking">{t('form.walking')}</SelectItem>
+                    <SelectItem value="food">{t('form.food')}</SelectItem>
+                    <SelectItem value="adventure">{t('form.adventure')}</SelectItem>
+                    <SelectItem value="cultural">{t('form.cultural')}</SelectItem>
+                    <SelectItem value="nature">{t('form.nature')}</SelectItem>
                   </SelectContent>
                 </Select>
                 {validationErrors['category'] && (
-                  <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['category'])}</p>
+                  <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['category'])}</p>
                 )}
               </div>
               <div className="space-y-1">
@@ -267,7 +437,7 @@ export function TourWizard() {
                   disabled={isSubmitting}
                 />
                 {validationErrors['destination'] && (
-                  <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['destination'])}</p>
+                  <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['destination'])}</p>
                 )}
               </div>
             </div>
@@ -282,36 +452,36 @@ export function TourWizard() {
                   disabled={isSubmitting}
                 />
                 {validationErrors['duration_value'] && (
-                  <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['duration_value'])}</p>
+                  <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['duration_value'])}</p>
                 )}
               </div>
               <div className="space-y-1">
-                <Label htmlFor="duration_unit">{t('form.durationUnit')}</Label>
+                <Label id="duration_unit-label">{t('form.durationUnit')}</Label>
                 <Select
                   value={formData.duration_unit}
                   onValueChange={(v) => updateField('duration_unit', v as 'hour' | 'day')}
                   disabled={isSubmitting}
                 >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger aria-labelledby="duration_unit-label"><SelectValue displayValue={durationUnitLabels[formData.duration_unit]} /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hour">{t('form.daily') || 'Hours'}</SelectItem>
-                    <SelectItem value="day">{t('form.weekly') || 'Days'}</SelectItem>
+                    <SelectItem value="hour">{t('form.hours')}</SelectItem>
+                    <SelectItem value="day">{t('form.days')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="space-y-1">
-              <Label htmlFor="difficulty_level">{t('form.difficultyLevel')}</Label>
+              <Label id="difficulty_level-label">{t('form.difficultyLevel')}</Label>
               <Select
-                value={formData.difficulty_level}
+                value={formData.difficulty_level ?? ''}
                 onValueChange={(v) => updateField('difficulty_level', v as 'easy' | 'moderate' | 'challenging')}
                 disabled={isSubmitting}
               >
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger aria-labelledby="difficulty_level-label"><SelectValue displayValue={formData.difficulty_level ? difficultyLabels[formData.difficulty_level] : ''} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="easy">{t('form.easy') || 'Easy'}</SelectItem>
-                  <SelectItem value="moderate">{t('form.moderate') || 'Moderate'}</SelectItem>
-                  <SelectItem value="challenging">{t('form.challenging') || 'Challenging'}</SelectItem>
+                  <SelectItem value="easy">{t('form.easy')}</SelectItem>
+                  <SelectItem value="moderate">{t('form.moderate')}</SelectItem>
+                  <SelectItem value="challenging">{t('form.challenging')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -324,9 +494,19 @@ export function TourWizard() {
                 placeholder={t('form.meetingPointPlaceholder')}
                 disabled={isSubmitting}
               />
-              {validationErrors['meeting_point'] && (
-                <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['meeting_point'])}</p>
-              )}
+              {renderControlErrors('meeting_point')}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="cancellation_policy">{t('form.cancellationPolicy')}</Label>
+              <Textarea
+                id="cancellation_policy"
+                value={formData.cancellation_policy}
+                onChange={(e) => updateField('cancellation_policy', e.target.value)}
+                placeholder={t('form.cancellationPolicyPlaceholder')}
+                rows={3}
+                disabled={isSubmitting}
+              />
+              {renderControlErrors('cancellation_policy')}
             </div>
             <div className="space-y-1">
               <Label htmlFor="guide_languages">{t('form.guideLanguageCodes')}</Label>
@@ -348,7 +528,7 @@ export function TourWizard() {
           <div className="space-y-4">
             <ImageUploader media={formData.media} onChange={setMedia} disabled={isSubmitting} />
             {validationErrors['media'] && (
-              <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['media'])}</p>
+              <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['media'])}</p>
             )}
           </div>
         );
@@ -357,7 +537,7 @@ export function TourWizard() {
           <div className="space-y-4">
             <PricingTierForm disabled={isSubmitting} />
             {validationErrors['pricing_tiers'] && (
-              <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['pricing_tiers'])}</p>
+              <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['pricing_tiers'])}</p>
             )}
           </div>
         );
@@ -366,7 +546,7 @@ export function TourWizard() {
           <div className="space-y-4">
             <AvailabilityCalendar disabled={isSubmitting} />
             {validationErrors['availability_rules'] && (
-              <p className="text-xs text-red-500 mt-1">{formatError(validationErrors['availability_rules'])}</p>
+              <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['availability_rules'])}</p>
             )}
           </div>
         );
@@ -384,7 +564,7 @@ export function TourWizard() {
               <dt className="text-gray-500">{t('form.durationValue')}:</dt>
               <dd>{formData.duration_value} {formData.duration_unit}</dd>
               <dt className="text-gray-500">{t('form.difficultyLevel')}:</dt>
-              <dd className="capitalize">{formData.difficulty_level}</dd>
+              <dd className="capitalize">{formData.difficulty_level ?? '—'}</dd>
               <dt className="text-gray-500">{t('form.meetingPoint')}:</dt>
               <dd>{formData.meeting_point || '—'}</dd>
               <dt className="text-gray-500">{t('form.pricingTiers')}:</dt>
@@ -392,7 +572,18 @@ export function TourWizard() {
               <dt className="text-gray-500">{t('form.recurringSchedule')}:</dt>
               <dd>{formData.availability_rules.length} defined</dd>
             </dl>
-            <TourContentPreview title={formData.title} description={formData.description} itinerary={formData.itinerary} media={formData.media} />
+            <TourContentPreview
+              title={formData.title}
+              description={formData.description}
+              itinerary={formData.itinerary}
+              media={formData.media}
+              highlights={formData.highlights}
+              inclusions={formData.inclusions}
+              exclusions={formData.exclusions}
+              important_information={formData.important_information}
+              meeting_point={formData.meeting_point || null}
+              cancellation_policy={formData.cancellation_policy || null}
+            />
           </div>
         );
       default:
@@ -425,9 +616,22 @@ export function TourWizard() {
         </div>
       </div>
 
-      {errorMsg && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm" role="alert">
-          {errorMsg}
+      {(errorMsg || summaryEntries.length > 0) && (
+        <div ref={errorSummaryRef} tabIndex={-1} className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm" role="alert" aria-live="assertive">
+          <p className="font-semibold">{t('form.errorSummary')}</p>
+          {errorMsg && <p>{errorMsg}</p>}
+          {summaryEntries.length > 0 && (
+            <ul className="mt-1 list-inside list-disc">
+              {summaryEntries.map(({ path, message }) => (
+                <li key={path}>{message}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+      {notice && (
+        <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm" role="status" aria-live="polite">
+          {notice}
         </div>
       )}
 

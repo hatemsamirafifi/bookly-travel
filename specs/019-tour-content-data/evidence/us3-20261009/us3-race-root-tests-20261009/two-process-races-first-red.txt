@@ -1,0 +1,29 @@
+
+   FAIL  Tests\Feature\Partner\TourTranslationConcurrencyTest
+  ✓ it old translation completion never writes after a newer source edi… 9.75s
+  ⨯ it first same-hash completion wins when two jobs overlap in real pr… 2.68s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationConcurrencyTest > it first s…
+  Failed asserting that two strings are identical.
+  -'Morning walking tour (es FIRST)'
+  +'Morning walking tour (es SECOND)'
+
+
+  at tests/Feature/Partner/TourTranslationConcurrencyTest.php:330
+    326▕         expect($secondProc->waitExit(30.0))->toBe(0);
+    327▕         expect(str_starts_with(trim((string) file_get_contents($secondPaths['done'])), 'ok'))->toBeTrue();
+    328▕
+    329▕         $derivative = TourTranslation::where('tour_id', $seed['tourId'])->where('locale', 'es')->firstOrFail();
+  ➜ 330▕         expect($derivative->title)->toBe($expectedFirst);
+    331▕         $state = spec019RaceState($seed['tourId'], 'es');
+    332▕         expect($state->status)->toBe('ready');
+    333▕         expect($state->source_hash)->toBe($seed['hash']);
+    334▕         expect($state->translated_hash)->toBe($seed['hash']);
+
+  1   tests/Feature/Partner/TourTranslationConcurrencyTest.php:330
+
+
+  Tests:    1 failed, 1 passed (37 assertions)
+  Duration: 13.20s
+
+NUMERIC_EXIT=1

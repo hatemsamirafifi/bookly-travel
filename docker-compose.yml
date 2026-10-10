@@ -74,6 +74,11 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_QUEUE_RETRY_AFTER=${REDIS_QUEUE_RETRY_AFTER:-90}
+      # Pass explicit host values; otherwise let Laravel read backend/.env.
+      - GEMINI_API_KEY
+      - GEMINI_TRANSLATION_MODEL
       - APP_URL=http://localhost
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
@@ -100,7 +105,7 @@ services:
     # Processes both the default queue and the `scout` queue (config/scout.php
     # queues Meilisearch index syncs on `scout`); without `scout` here, newly
     # created/updated tours never reach the search index.
-    command: php artisan queue:work --queue=default,booking_emails,scout
+    command: php artisan queue:work --queue=default,booking_emails,scout --timeout=60
     volumes:
       - ./backend:/var/www/html
       - backend_vendor:/var/www/html/vendor
@@ -112,6 +117,11 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_QUEUE_RETRY_AFTER=${REDIS_QUEUE_RETRY_AFTER:-90}
+      # Use the same provider configuration as the backend.
+      - GEMINI_API_KEY
+      - GEMINI_TRANSLATION_MODEL
       - APP_URL=http://localhost
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}

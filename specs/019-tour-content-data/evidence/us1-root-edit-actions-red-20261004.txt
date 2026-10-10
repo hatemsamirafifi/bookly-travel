@@ -1,0 +1,1409 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx -t localized save action
+
+FAIL src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx
+  PartnerTourEditPage snapshot restore (Spec 019)
+    ✕ offers a localized save action and announces success in en (1216 ms)
+    ✕ offers a localized save action and announces success in es (212 ms)
+    ✕ offers a localized save action and announces success in it (202 ms)
+    ○ skipped merges a partial owned snapshot per field and retains omitted source and media
+    ○ skipped applies explicit null and empty-list clearing from the snapshot
+    ○ skipped sends untouched canonical nulls back as null on an unrelated save
+    ○ skipped persists an explicitly edited empty list while retaining other canonical nulls
+    ○ skipped renders source labels and focused field feedback from the en catalog
+    ○ skipped renders source labels and focused field feedback from the es catalog
+    ○ skipped renders source labels and focused field feedback from the it catalog
+    ○ skipped focuses an announced error summary when saving fails validation
+    ○ skipped lets empty titles reach server validation via noValidate while retaining required metadata
+    ○ skipped localizes the actual cleared-title string-rule 422 in en with focused summary
+    ○ skipped localizes the actual cleared-title string-rule 422 in es with focused summary
+    ○ skipped localizes the actual cleared-title string-rule 422 in it with focused summary
+    ○ skipped reports no draft only on 404 and keeps the form on other failures
+
+  ● PartnerTourEditPage snapshot restore (Spec 019) › offers a localized save action and announces success in en
+
+    Unable to find role="status"
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="max-w-5xl mx-auto space-y-6 p-4"
+        >
+          <div
+            class="flex flex-wrap items-center justify-between border-b border-gray-100 pb-4 gap-4"
+          >
+            <div
+              class="flex items-center gap-3"
+            >
+              <a
+                href="/en/partner"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-arrow-left w-5 h-5"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12 19-7-7 7-7"
+                  />
+                  <path
+                    d="M19 12H5"
+                  />
+                </svg>
+              </a>
+              <div>
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <h1
+                    class="text-2xl font-bold text-[#0A2540]"
+                  >
+                    Edit Tour
+                  </h1>
+                  <span
+                    class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase bg-gray-100 text-gray-800"
+                  >
+                    draft
+                  </span>
+                </div>
+                <p
+                  class="text-sm text-gray-500"
+                >
+                  ID:
+                  42
+                   —
+                  Edit English source content. Spanish and Italian are generated automatically and never block publication.
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-2"
+            >
+              <a
+                href="/en/partner/tours/42/pricing"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-coins w-4 h-4 text-gray-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.744 17.736a6 6 0 1 1-7.48-7.48"
+                  />
+                  <path
+                    d="M15 6h1v4"
+                  />
+                  <path
+                    d="m6.134 14.768.866-.5 2 3.464"
+                  />
+                  <circle
+                    cx="16"
+                    cy="8"
+                    r="6"
+                  />
+                </svg>
+                Manage Pricing
+              </a>
+              <a
+                href="/en/partner/tours/42/availability"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-calendar w-4 h-4 text-gray-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2v4"
+                  />
+                  <path
+                    d="M16 2v4"
+                  />
+                  <rect
+                    height="18"
+                    rx="2"
+                    width="18"
+                    x="3"
+                    y="4"
+                  />
+                  <path
+                    d="M3 10h18"
+                  />
+                </svg>
+                Manage Availability
+              </a>
+              <button
+                class="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-send w-4 h-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+                  />
+                  <path
+                    d="m21.854 2.147-10.94 10.939"
+                  />
+                </svg>
+                Submit For Review
+              </button>
+            </div>
+          </div>
+          <div
+            class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex items-center gap-2"
+          >...
+
+      415 |     expect(screen.getByRole('heading', { name: catalogs[locale].partner.tours.editTour })).toBeInTheDocument();
+      416 |     fireEvent.click(screen.getByRole('button', { name: saveLabel }));
+    > 417 |     const status = await screen.findByRole('status');
+          |                                 ^
+      418 |     expect(status).toHaveTextContent(catalogs[locale].partner.tours.form.saveSucceeded);
+      419 |   });
+      420 |
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+      at /app/src/app/[locale]/(partner)../partner/tours/[id]/edit/__tests__/page.test.tsx:417:33
+
+  ● PartnerTourEditPage snapshot restore (Spec 019) › offers a localized save action and announces success in es
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "Editar Tour"
+
+    Here are the accessible roles:
+
+      link:
+
+      Name "":
+      <a
+        href="/es/partner"
+      />
+
+      Name "Manage Pricing":
+      <a
+        href="/es/partner/tours/42/pricing"
+      />
+
+      Name "Manage Availability":
+      <a
+        href="/es/partner/tours/42/availability"
+      />
+
+      --------------------------------------------------
+      heading:
+
+      Name "Edit Tour":
+      <h1
+        class="text-2xl font-bold text-[#0A2540]"
+      />
+
+      Name "Tour Content Editing":
+      <h2
+        class="font-bold text-lg text-[#0A2540] border-b border-gray-50 pb-2 mb-4"
+      />
+
+      Name "Itinerario":
+      <h3
+        class="text-lg font-semibold text-bookly-navy"
+      />
+
+      Name "Día 1":
+      <h4
+        class="font-semibold text-bookly-navy"
+      />
+
+      Name "Technical Parameters":
+      <h3
+        class="font-bold text-sm text-[#0A2540] border-b border-gray-100 pb-2"
+      />
+
+      --------------------------------------------------
+      paragraph:
+
+      Name "":
+      <p
+        class="text-sm text-gray-500"
+      />
+
+      Name "":
+      <p
+        class="text-sm text-gray-600"
+      />
+
+      Name "":
+      <p
+        aria-live="polite"
+        class="text-sm text-gray-600"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-500"
+        id="edit-source-lists-hint"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-500"
+        id="edit-guide-languages-hint"
+      />
+
+      Name "":
+      <p
+        class="text-sm text-gray-600 font-medium"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-400"
+      />
+
+      Name "":
+      <p
+        class="text-sm font-medium text-[#0A2540]"
+      />
+
+      Name "":
+      <p
+        class="text-sm font-medium text-[#0A2540]"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-400"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Submit For Review":
+      <button
+        class="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+      />
+
+      Name "Restaurar borrador guardado":
+      <button
+        class="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy disabled:opacity-50"
+        type="button"
+      />
+
+      Name "Añadir día":
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        type="button"
+      />
+
+      Name "Subir día":
+      <button
+        aria-label="Subir día"
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        disabled=""
+        type="button"
+      />
+
+      Name "Bajar día":
+      <button
+        aria-label="Bajar día"
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        disabled=""
+        type="button"
+      />
+
+      Name "Eliminar día":
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        type="button"
+      />
+
+      Name "Añadir parada":
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        type="button"
+      />
+
+      Name "Save Tour Details":
+      <button
+        class="w-full flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0A2540] hover:bg-[#FFB800] hover:text-[#0A2540] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+        type="submit"
+      />
+
+      Name "Eliminar":
+      <button
+        aria-label="Eliminar"
+        class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+        type="button"
+      />
+
+      Name "Subir":
+      <button
+        aria-label="Subir"
+        class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        disabled=""
+        type="button"
+      />
+
+      Name "Bajar":
+      <button
+        aria-label="Bajar"
+        class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        disabled=""
+        type="button"
+      />
+
+      Name "Establecer como portada":
+      <button
+        class="px-2 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100"
+        type="button"
+      />
+
+      Name "Eliminar":
+      <button
+        class="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600"
+        type="button"
+      />
+
+      Name "Vista previa del tour":
+      <button
+        class="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy"
+        type="button"
+      />
+
+      --------------------------------------------------
+      textbox:
+
+      Name "Título del Tour (EN)":
+      <input
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none focus:border-blue-500"
+        id="edit-source-title"
+        placeholder="Ej., Joyas Ocultas de Roma a Pie"
+        required=""
+        type="text"
+        value="Owned tour"
+      />
+
+      Name "Descripción (EN)":
+      <textarea
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none focus:border-blue-500"
+        id="edit-source-description"
+        placeholder="Describe tu tour en detalle (mín. 100 caracteres)..."
+        required=""
+        rows="5"
+      />
+
+      Name "Punto de Encuentro (EN)":
+      <input
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-meeting-point"
+        placeholder="Ej., Entrada principal del Coliseo"
+        type="text"
+        value="Old meeting point"
+      />
+
+      Name "Política de cancelación (EN)":
+      <input
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-cancellation-policy"
+        placeholder="Ej., cancela hasta 24 horas antes para un reembolso completo"
+        type="text"
+        value="Old policy"
+      />
+
+      Name "Aspectos destacados":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-highlights"
+        placeholder="Ej., entrada sin colas, guía local"
+        type="text"
+        value="Old highlight"
+      />
+
+      Name "Qué Incluye":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-inclusions"
+        placeholder="Ej., entradas, guía, bebidas"
+        type="text"
+        value="Old inclusion"
+      />
+
+      Name "Exclusiones":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-exclusions"
+        placeholder="Ej., recogida en el hotel, almuerzo"
+        type="text"
+        value="Old exclusion"
+      />
+
+      Name "Información importante":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-important-information"
+        placeholder="Ej., se recomienda calzado cómodo"
+        type="text"
+        value="Old info"
+      />
+
+      Name "Título del día":
+      <input
+        class="flex min-h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-primary placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50"
+        id="itinerary-day-0-title"
+        value="Old day"
+      />
+
+      Name "Descripción del día":
+      <textarea
+        class="flex min-h-[80px] w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-primary placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50"
+        id="itinerary-day-0-description"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        placeholder="e.g. Rome, Italy"
+        required=""
+        type="text"
+        value="Florence, Italy"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        placeholder="https://example.com/image.jpg"
+        type="text"
+        value="https://cdn.example.com/cover.jpg"
+      />
+
+      Name "Códigos de idiomas del guía en vivo":
+      <input
+        aria-describedby="edit-guide-languages-hint"
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        id="edit-guide-languages"
+        placeholder="de, en, es"
+        type="text"
+        value="en"
+      />
+
+      --------------------------------------------------
+      region:
+
+      Name "Itinerario":
+      <section
+        aria-label="Itinerario"
+        class="space-y-4"
+      />
+
+      --------------------------------------------------
+      complementary:
+
+      Name "":
+      <aside
+        class="space-y-6"
+      />
+
+      --------------------------------------------------
+      spinbutton:
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        min="1"
+        required=""
+        type="number"
+        value="3"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        min="1"
+        required=""
+        type="number"
+        value="2"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        min="1"
+        required=""
+        type="number"
+        value="7"
+      />
+
+      --------------------------------------------------
+      combobox:
+
+      Name "":
+      <select
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+      />
+
+      --------------------------------------------------
+      option:
+
+      Name "Hours":
+      <option
+        value="hour"
+      />
+
+      Name "Days":
+      <option
+        value="day"
+      />
+
+      --------------------------------------------------
+      img:
+
+      Name "Imagen de Portada":
+      <img
+        alt="Imagen de Portada"
+        class="object-cover rounded-lg border border-gray-200"
+        data-nimg="1"
+        decoding="async"
+        height="128"
+        loading="lazy"
+        src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fcover.jpg&w=384&q=75"
+        srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fcover.jpg&w=256&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fcover.jpg&w=384&q=75 2x"
+        style="color: transparent;"
+        width="192"
+      />
+
+      Name "Imagen de la galería":
+      <img
+        alt="Imagen de la galería"
+        class="object-cover rounded-lg border border-gray-200"
+        data-nimg="1"
+        decoding="async"
+        height="80"
+        loading="lazy"
+        src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fsecond.jpg&w=256&q=75"
+        srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fsecond.jpg&w=96&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fsecond.jpg&w=256&q=75 2x"
+        style="color: transparent;"
+        width="96"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="max-w-5xl mx-auto space-y-6 p-4"
+        >
+          <div
+            class="flex flex-wrap items-center justify-between border-b border-gray-100 pb-4 gap-4"
+          >
+            <div
+              class="flex items-center gap-3"
+            >
+              <a
+                href="/es/partner"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-arrow-left w-5 h-5"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12 19-7-7 7-7"
+                  />
+                  <path
+                    d="M19 12H5"
+                  />
+                </svg>
+              </a>
+              <div>
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <h1
+                    class="text-2xl font-bold text-[#0A2540]"
+                  >
+                    Edit Tour
+                  </h1>
+                  <span
+                    class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase bg-gray-100 text-gray-800"
+                  >
+                    draft
+                  </span>
+                </div>
+                <p
+                  class="text-sm text-gray-500"
+                >
+                  ID:
+                  42
+                   —
+                  Edita el contenido original en inglés. Las traducciones al español y al italiano se generan automáticamente y no bloquean la publicación.
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-2"
+            >
+              <a
+                href="/es/partner/tours/42/pricing"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-coins w-4 h-4 text-gray-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.744 17.736a6 6 0 1 1-7.48-7.48"
+                  />
+                  <path
+                    d="M15 6h1v4"
+                  />
+                  <path
+                    d="m6.134 14.768.866-.5 2 3.464"
+                  />
+                  <circle
+                    cx="16"
+                    cy="8"
+                    r="6"
+                  />
+                </svg>
+                Manage Pricing
+              </a>
+              <a
+                href="/es/partner/tours/42/availability"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-calendar w-4 h-4 text-gray-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2v4"
+                  />
+                  <path
+                    d="M16 2v4"
+                  />
+                  <rect
+                    height="18"
+                    rx="2"
+                    width="18"
+                    x="3"
+                    y="4"
+                  />
+                  <path
+                    d="M3 10h18"
+                  />
+                </svg>
+                Manage Availability
+              </a>
+              <button
+                class="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-send w-4 h-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+                  />
+                  <path
+                    d="m21.854 2.147-10.94 10.939"
+                  />
+                </svg>
+                Submit For Review
+              </button>
+            </div>
+          </div>
+          <form
+            class="grid gap-6 lg:grid-cols-[1fr_360px]"
+            novalidate=""
+          ...
+
+      413 |     await renderPage(locale);
+      414 |     await screen.findByDisplayValue('Owned tour');
+    > 415 |     expect(screen.getByRole('heading', { name: catalogs[locale].partner.tours.editTour })).toBeInTheDocument();
+          |                   ^
+      416 |     fireEvent.click(screen.getByRole('button', { name: saveLabel }));
+      417 |     const status = await screen.findByRole('status');
+      418 |     expect(status).toHaveTextContent(catalogs[locale].partner.tours.form.saveSucceeded);
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at /app/src/app/[locale]/(partner)../partner/tours/[id]/edit/__tests__/page.test.tsx:415:19
+
+  ● PartnerTourEditPage snapshot restore (Spec 019) › offers a localized save action and announces success in it
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "Modifica Tour"
+
+    Here are the accessible roles:
+
+      link:
+
+      Name "":
+      <a
+        href="/it/partner"
+      />
+
+      Name "Manage Pricing":
+      <a
+        href="/it/partner/tours/42/pricing"
+      />
+
+      Name "Manage Availability":
+      <a
+        href="/it/partner/tours/42/availability"
+      />
+
+      --------------------------------------------------
+      heading:
+
+      Name "Edit Tour":
+      <h1
+        class="text-2xl font-bold text-[#0A2540]"
+      />
+
+      Name "Tour Content Editing":
+      <h2
+        class="font-bold text-lg text-[#0A2540] border-b border-gray-50 pb-2 mb-4"
+      />
+
+      Name "Itinerario":
+      <h3
+        class="text-lg font-semibold text-bookly-navy"
+      />
+
+      Name "Giorno 1":
+      <h4
+        class="font-semibold text-bookly-navy"
+      />
+
+      Name "Technical Parameters":
+      <h3
+        class="font-bold text-sm text-[#0A2540] border-b border-gray-100 pb-2"
+      />
+
+      --------------------------------------------------
+      paragraph:
+
+      Name "":
+      <p
+        class="text-sm text-gray-500"
+      />
+
+      Name "":
+      <p
+        class="text-sm text-gray-600"
+      />
+
+      Name "":
+      <p
+        aria-live="polite"
+        class="text-sm text-gray-600"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-500"
+        id="edit-source-lists-hint"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-500"
+        id="edit-guide-languages-hint"
+      />
+
+      Name "":
+      <p
+        class="text-sm text-gray-600 font-medium"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-400"
+      />
+
+      Name "":
+      <p
+        class="text-sm font-medium text-[#0A2540]"
+      />
+
+      Name "":
+      <p
+        class="text-sm font-medium text-[#0A2540]"
+      />
+
+      Name "":
+      <p
+        class="text-xs text-gray-400"
+      />
+
+      --------------------------------------------------
+      button:
+
+      Name "Submit For Review":
+      <button
+        class="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+      />
+
+      Name "Ripristina bozza salvata":
+      <button
+        class="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy disabled:opacity-50"
+        type="button"
+      />
+
+      Name "Aggiungi giorno":
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        type="button"
+      />
+
+      Name "Sposta giorno su":
+      <button
+        aria-label="Sposta giorno su"
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        disabled=""
+        type="button"
+      />
+
+      Name "Sposta giorno giù":
+      <button
+        aria-label="Sposta giorno giù"
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        disabled=""
+        type="button"
+      />
+
+      Name "Rimuovi giorno":
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        type="button"
+      />
+
+      Name "Aggiungi tappa":
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-border bg-surface text-primary hover:bg-surface-alt min-h-11 px-3 text-sm"
+        type="button"
+      />
+
+      Name "Save Tour Details":
+      <button
+        class="w-full flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0A2540] hover:bg-[#FFB800] hover:text-[#0A2540] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+        type="submit"
+      />
+
+      Name "Rimuovi":
+      <button
+        aria-label="Rimuovi"
+        class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+        type="button"
+      />
+
+      Name "Sposta su":
+      <button
+        aria-label="Sposta su"
+        class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        disabled=""
+        type="button"
+      />
+
+      Name "Sposta giù":
+      <button
+        aria-label="Sposta giù"
+        class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        disabled=""
+        type="button"
+      />
+
+      Name "Imposta come copertina":
+      <button
+        class="px-2 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100"
+        type="button"
+      />
+
+      Name "Rimuovi":
+      <button
+        class="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600"
+        type="button"
+      />
+
+      Name "Anteprima del tour":
+      <button
+        class="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy"
+        type="button"
+      />
+
+      --------------------------------------------------
+      textbox:
+
+      Name "Titolo del Tour (EN)":
+      <input
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none focus:border-blue-500"
+        id="edit-source-title"
+        placeholder="Es., Gioielli Nascosti di Roma a Piedi"
+        required=""
+        type="text"
+        value="Owned tour"
+      />
+
+      Name "Descrizione (EN)":
+      <textarea
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none focus:border-blue-500"
+        id="edit-source-description"
+        placeholder="Descrivi il tuo tour in dettaglio (min 100 caratteri)..."
+        required=""
+        rows="5"
+      />
+
+      Name "Punto di Incontro (EN)":
+      <input
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-meeting-point"
+        placeholder="Es., Ingresso principale del Colosseo"
+        type="text"
+        value="Old meeting point"
+      />
+
+      Name "Politica di cancellazione (EN)":
+      <input
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-cancellation-policy"
+        placeholder="Es. cancella fino a 24 ore prima per un rimborso completo"
+        type="text"
+        value="Old policy"
+      />
+
+      Name "Punti salienti":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-highlights"
+        placeholder="Es. ingresso salta-coda, guida locale"
+        type="text"
+        value="Old highlight"
+      />
+
+      Name "Cosa è Incluso":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-inclusions"
+        placeholder="Es. biglietti d'ingresso, guida, bevande"
+        type="text"
+        value="Old inclusion"
+      />
+
+      Name "Esclusioni":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-exclusions"
+        placeholder="Es. transfer dall'hotel, pranzo"
+        type="text"
+        value="Old exclusion"
+      />
+
+      Name "Informazioni importanti":
+      <input
+        aria-describedby="edit-source-lists-hint"
+        class="px-3.5 py-2 border rounded-lg bg-white outline-none"
+        id="edit-source-important-information"
+        placeholder="Es. si consigliano scarpe comode"
+        type="text"
+        value="Old info"
+      />
+
+      Name "Titolo del giorno":
+      <input
+        class="flex min-h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-primary placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50"
+        id="itinerary-day-0-title"
+        value="Old day"
+      />
+
+      Name "Descrizione del giorno":
+      <textarea
+        class="flex min-h-[80px] w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-primary placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50"
+        id="itinerary-day-0-description"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        placeholder="e.g. Rome, Italy"
+        required=""
+        type="text"
+        value="Florence, Italy"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        placeholder="https://example.com/image.jpg"
+        type="text"
+        value="https://cdn.example.com/cover.jpg"
+      />
+
+      Name "Codici delle lingue della guida dal vivo":
+      <input
+        aria-describedby="edit-guide-languages-hint"
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        id="edit-guide-languages"
+        placeholder="de, en, es"
+        type="text"
+        value="en"
+      />
+
+      --------------------------------------------------
+      region:
+
+      Name "Itinerario":
+      <section
+        aria-label="Itinerario"
+        class="space-y-4"
+      />
+
+      --------------------------------------------------
+      complementary:
+
+      Name "":
+      <aside
+        class="space-y-6"
+      />
+
+      --------------------------------------------------
+      spinbutton:
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        min="1"
+        required=""
+        type="number"
+        value="3"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        min="1"
+        required=""
+        type="number"
+        value="2"
+      />
+
+      Name "":
+      <input
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+        min="1"
+        required=""
+        type="number"
+        value="7"
+      />
+
+      --------------------------------------------------
+      combobox:
+
+      Name "":
+      <select
+        class="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+      />
+
+      --------------------------------------------------
+      option:
+
+      Name "Hours":
+      <option
+        value="hour"
+      />
+
+      Name "Days":
+      <option
+        value="day"
+      />
+
+      --------------------------------------------------
+      img:
+
+      Name "Immagine di Copertina":
+      <img
+        alt="Immagine di Copertina"
+        class="object-cover rounded-lg border border-gray-200"
+        data-nimg="1"
+        decoding="async"
+        height="128"
+        loading="lazy"
+        src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fcover.jpg&w=384&q=75"
+        srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fcover.jpg&w=256&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fcover.jpg&w=384&q=75 2x"
+        style="color: transparent;"
+        width="192"
+      />
+
+      Name "Immagine della galleria":
+      <img
+        alt="Immagine della galleria"
+        class="object-cover rounded-lg border border-gray-200"
+        data-nimg="1"
+        decoding="async"
+        height="80"
+        loading="lazy"
+        src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fsecond.jpg&w=256&q=75"
+        srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fsecond.jpg&w=96&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fsecond.jpg&w=256&q=75 2x"
+        style="color: transparent;"
+        width="96"
+      />
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="max-w-5xl mx-auto space-y-6 p-4"
+        >
+          <div
+            class="flex flex-wrap items-center justify-between border-b border-gray-100 pb-4 gap-4"
+          >
+            <div
+              class="flex items-center gap-3"
+            >
+              <a
+                href="/it/partner"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-arrow-left w-5 h-5"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12 19-7-7 7-7"
+                  />
+                  <path
+                    d="M19 12H5"
+                  />
+                </svg>
+              </a>
+              <div>
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <h1
+                    class="text-2xl font-bold text-[#0A2540]"
+                  >
+                    Edit Tour
+                  </h1>
+                  <span
+                    class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase bg-gray-100 text-gray-800"
+                  >
+                    draft
+                  </span>
+                </div>
+                <p
+                  class="text-sm text-gray-500"
+                >
+                  ID:
+                  42
+                   —
+                  Modifica il contenuto originale in inglese. Le traduzioni in spagnolo e italiano vengono generate automaticamente e non bloccano la pubblicazione.
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-2"
+            >
+              <a
+                href="/it/partner/tours/42/pricing"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-coins w-4 h-4 text-gray-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.744 17.736a6 6 0 1 1-7.48-7.48"
+                  />
+                  <path
+                    d="M15 6h1v4"
+                  />
+                  <path
+                    d="m6.134 14.768.866-.5 2 3.464"
+                  />
+                  <circle
+                    cx="16"
+                    cy="8"
+                    r="6"
+                  />
+                </svg>
+                Manage Pricing
+              </a>
+              <a
+                href="/it/partner/tours/42/availability"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-calendar w-4 h-4 text-gray-500"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2v4"
+                  />
+                  <path
+                    d="M16 2v4"
+                  />
+                  <rect
+                    height="18"
+                    rx="2"
+                    width="18"
+                    x="3"
+                    y="4"
+                  />
+                  <path
+                    d="M3 10h18"
+                  />
+                </svg>
+                Manage Availability
+              </a>
+              <button
+                class="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-send w-4 h-4"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+                  />
+                  <path
+                    d="m21.854 2.147-10.94 10.939"
+                  />
+                </svg>
+                Submit For Review
+              </button>
+            </div>
+          </div>
+          <form
+            class="grid gap-6 lg:grid-cols-[1fr_360px]"
+            novalidate=""[3...
+
+      413 |     await renderPage(locale);
+      414 |     await screen.findByDisplayValue('Owned tour');
+    > 415 |     expect(screen.getByRole('heading', { name: catalogs[locale].partner.tours.editTour })).toBeInTheDocument();
+          |                   ^
+      416 |     fireEvent.click(screen.getByRole('button', { name: saveLabel }));
+      417 |     const status = await screen.findByRole('status');
+      418 |     expect(status).toHaveTextContent(catalogs[locale].partner.tours.form.saveSucceeded);
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at /app/src/app/[locale]/(partner)../partner/tours/[id]/edit/__tests__/page.test.tsx:415:19
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 13 skipped, 16 total
+Snapshots:   0 total
+Time:        4.85 s
+Ran all test suites within paths "src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx".
+NUMERIC_EXIT=1

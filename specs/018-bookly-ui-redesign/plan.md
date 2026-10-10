@@ -4,6 +4,8 @@
 
 **Input**: `specs/018-bookly-ui-redesign/spec.md`, [master plan](../../docs/bookly-ui-redesign-spec-kit-master-plan.md), Constitution v2.0.0.
 
+**Continuation governance**: [Constitution v2.1.0](../../.specify/memory/constitution.md) applies to new phases and release acceptance. The checks recorded below remain historical v2.0.0 design evidence, not a v2.1.0 revalidation. Spec 018 retains the original program plan and completed Phase 1 foundations; active master-plan Phase 2 planning belongs to [Spec 019](../019-tour-content-data/spec.md). Its dependent branch starts from `codex/bookly-ui-redesign-all-work` at `84ae4e5`, with PRs #27/#28 pending merge.
+
 ## Summary
 
 Deliver a phased, Tripadvisor-inspired but distinctly Bookly tours-only redesign. Preserve marketplace, booking, payment, publishing, authorization, and URL contracts. Add partner-owned English tour content with asynchronous Gemini-generated Spanish/Italian derivatives. A current derivative is displayed in its locale; pending, failed, or stale derivatives show current English with a visible notice. Live-guide language codes remain separate.

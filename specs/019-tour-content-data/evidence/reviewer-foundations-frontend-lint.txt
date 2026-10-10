@@ -1,0 +1,5 @@
+
+> frontend@0.1.0 lint
+> eslint
+
+NUMERIC_EXIT=0

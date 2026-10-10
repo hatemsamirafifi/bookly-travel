@@ -2,12 +2,16 @@
 
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Models\PricingTier;
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Enums\TourStatus;
 use App\Filament\Resources\TourResource;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 
 use function Pest\Laravel\actingAs;
 
@@ -51,6 +55,95 @@ function makeApprovedPartnerTour(string $status = 'pending_review'): Tour
     ]);
 
     return $tour;
+}
+
+if (! function_exists('t036FilSeedTour')) {
+    function t036FilSeedTour(string $status = 'pending_review'): Tour
+    {
+        $partnerUser = User::factory()->partner()->create();
+        $partner = Partner::create([
+            'user_id' => $partnerUser->id,
+            'role' => 'partner',
+            'onboarding_status' => 'approved',
+            'is_active' => true,
+        ]);
+
+        $tour = Tour::create([
+            'partner_id' => $partner->id,
+            'category_id' => Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test'])->id,
+            'slug' => 't036-filament-' . uniqid(),
+            'location' => 'Rome, Italy',
+            'duration_minutes' => 120,
+            'duration_label' => '2 hours',
+            'group_size_min' => 1,
+            'group_size_max' => 10,
+            'price_amount' => 5000,
+            'cover_image_url' => 'https://images.example.com/t036-cover.jpg',
+            'status' => $status,
+        ]);
+        $tour->translations()->create([
+            'locale' => 'en',
+            'title' => 'T036 filament English source',
+            'description' => 'T036 filament authoritative English description.',
+        ]);
+        PricingTier::create([
+            'tour_id' => $tour->id,
+            'name' => 'Standard',
+            'price' => 50.00,
+            'min_participants' => 1,
+            'max_participants' => 10,
+        ]);
+
+        return $tour->fresh();
+    }
+}
+
+if (! function_exists('t036FilDerivativeStates')) {
+    function t036FilDerivativeStates(Tour $tour, string $esStatus, string $itStatus): void
+    {
+        $english = $tour->translations()->where('locale', 'en')->firstOrFail();
+        $hash = app(TourTranslationService::class)->sourceHash($english);
+
+        foreach (['es' => $esStatus, 'it' => $itStatus] as $locale => $status) {
+            $tour->translationStates()->updateOrCreate(
+                ['locale' => $locale],
+                [
+                    'source_hash' => $hash,
+                    'translated_hash' => null,
+                    'status' => $status,
+                    'last_error_code' => $status === 'failed' ? 'PROVIDER_TIMEOUT' : null,
+                ]
+            );
+        }
+    }
+}
+
+if (! function_exists('t036FilEnglishCase')) {
+    function t036FilEnglishCase(Tour $tour, string $case): void
+    {
+        $enId = $tour->translations()->where('locale', 'en')->first()?->id;
+
+        switch ($case) {
+            case 'missing row':
+                $tour->translations()->where('locale', 'en')->delete();
+                break;
+            case 'empty title':
+                DB::table('tour_translations')->where('id', $enId)->update(['title' => '']);
+                break;
+            case 'whitespace title':
+                DB::table('tour_translations')->where('id', $enId)->update(['title' => '   ']);
+                break;
+            case 'empty description':
+                DB::table('tour_translations')->where('id', $enId)->update(['description' => '']);
+                break;
+            case 'whitespace description raw':
+                DB::table('tour_translations')->where('id', $enId)->update(['description' => "  \t \n  "]);
+                break;
+            case 'null description':
+                DB::table('tour_translations')->where('id', $enId)->update(['description' => null]);
+                break;
+        }
+    }
 }
 
 beforeEach(function () {
@@ -141,4 +234,68 @@ it('bulk-rejects selected tours with a shared reason and writes an audit per ite
     expect($tourA->fresh()->status)->toBe(TourStatus::Rejected->value)
         ->and($tourB->fresh()->status)->toBe(TourStatus::Rejected->value)
         ->and(GovernanceAuditLog::whereIn('target_id', [$tourA->id, $tourB->id])->where('action', 'tour.reject')->count())->toBe(2);
+});
+
+// ---- T036 (Spec019 US3): Filament publish English-source gate ----
+
+it('T036 publishes via the Filament publish action despite pending/failed ES/IT derivative states', function (string $es, string $it) {
+    Queue::fake();
+    $tour = t036FilSeedTour('pending_review');
+    t036FilDerivativeStates($tour, $es, $it);
+
+    Livewire::test(TourResource\Pages\ListTours::class)
+        ->callTableAction('publish', $tour)
+        ->assertHasNoTableActionErrors();
+
+    expect($tour->fresh()->status)->toBe(TourStatus::Published->value);
+
+    $log = GovernanceAuditLog::where('action', 'tour.publish')->where('target_id', $tour->id)->first();
+    expect($log)->not->toBeNull()
+        ->and($log->actor_type)->toBe('admin')
+        ->and($log->actor_id)->toBe($this->admin->id)
+        ->and($log->before_state)->toBe(['status' => 'pending_review'])
+        ->and($log->after_state)->toBe(['status' => 'published']);
+})->with([
+    'both pending' => ['pending', 'pending'],
+    'es pending it failed' => ['pending', 'failed'],
+    'es failed it pending' => ['failed', 'pending'],
+    'both failed' => ['failed', 'failed'],
+]);
+
+it('T036 refuses the Filament publish action when the English source is missing or blank', function (string $case) {
+    Queue::fake();
+    $tour = t036FilSeedTour('pending_review');
+    t036FilDerivativeStates($tour, 'pending', 'failed');
+    t036FilEnglishCase($tour, $case);
+
+    Livewire::test(TourResource\Pages\ListTours::class)
+        ->mountTableAction('publish', $tour->fresh())
+        ->call('callMountedTableAction')
+        ->assertStatus(422);
+
+    expect($tour->fresh()->status)->toBe('pending_review')
+        ->and(GovernanceAuditLog::where('action', 'tour.publish')->where('target_id', $tour->id)->exists())->toBeFalse();
+})->with([
+    'missing row' => ['missing row'],
+    'empty title' => ['empty title'],
+    'whitespace title' => ['whitespace title'],
+    'empty description' => ['empty description'],
+    'whitespace description raw' => ['whitespace description raw'],
+    'null description' => ['null description'],
+]);
+
+it('T036 keeps publish authorization tied to manage-tours on the real record', function () {
+    $tour = t036FilSeedTour('pending_review');
+
+    expect($this->admin->can('publish', $tour))->toBeTrue();
+
+    $limitedAdmin = User::factory()->admin()->create();
+    $limitedAdmin->adminPermission()->create(['flags' => ['manage_tours' => false]]);
+    expect($limitedAdmin->can('publish', $tour))->toBeFalse();
+
+    actingAs($limitedAdmin);
+    $this->get('/admin/tours')->assertForbidden();
+
+    expect($tour->fresh()->status)->toBe('pending_review')
+        ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
 });

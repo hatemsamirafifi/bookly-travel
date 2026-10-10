@@ -1,0 +1,57 @@
+
+> frontend@0.1.0 test:e2e
+> playwright test tests/e2e/partner/tour-create.spec.ts tests/e2e/partner/tour-edit.spec.ts --project=chromium-partner --project=mobile-partner --reporter=line
+
+
+Running 48 tests using 1 worker
+
+[1A[2K[1/48] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/48] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[1A[2K[3/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+[1A[2K[4/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+[1A[2K[5/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+[1A[2K[6/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+[1A[2K[7/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:285:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+[1A[2K[8/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:353:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+[1A[2K[9/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:543:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[1A[2K[10/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:570:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+[1A[2K[11/48] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:580:7 › Partner Tour Edit › should navigate to edit page from tour card
+[1A[2K[12/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:13:7 › Partner Tour Edit Workflow › reorders English itinerary and gallery, selects cover, previews and saves the same order
+[1A[2K[13/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:74:7 › Partner Tour Edit Workflow › edits English source only while showing generated translation states
+[1A[2K[14/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:109:7 › Partner Tour Edit Workflow › should load the edit page for an existing tour
+[1A[2K[15/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:118:7 › Partner Tour Edit Workflow › should show tour cards with status badges on tours list
+[1A[2K[16/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:193:7 › Partner Tour Edit Workflow › should show tour destination in card
+[1A[2K[17/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:236:7 › Partner Tour Edit Workflow › should link to edit page from tour card
+[1A[2K[18/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:291:7 › Partner Tour Edit - Real API (Spec 019 US1) › round-trips owned English source with repeated days via real API and reopens
+[1A[2K[19/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:361:7 › Partner Tour Edit - Real API (Spec 019 US1) › preserves nullable source on unrelated save and clears on explicit empty list
+[1A[2K[20/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:423:7 › Partner Tour Edit - Real API (Spec 019 US1) › restores a partial owned snapshot with nested EN precedence via real API
+[1A[2K[21/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:510:7 › Partner Tour Edit - Real API (Spec 019 US1) › shows localized cleared-title validation in EN/ES/IT via real API
+[1A[2K[22/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:587:7 › Partner Tour Edit - Real API (Spec 019 US1) › rejects fractional durations and over-long list items with localized errors via real API
+[1A[2K[23/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:667:7 › Partner Tour Edit - Real API (Spec 019 US1) › denies cross-owner reads with 404 for a real second principal and localizes denied loads
+[1A[2K[24/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:718:7 › Partner Tour Edit - Real API (Spec 019 US1) › failed submit retains the owned draft id and retry submits the same tour
+[1A[2K[25/48] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:786:7 › Partner Tour Edit - Real API (Spec 019 US1) › renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[1A[2K[26/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+[1A[2K[27/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+[1A[2K[28/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+[1A[2K[29/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+[1A[2K[30/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:285:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+[1A[2K[31/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:353:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+[1A[2K[32/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:543:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[1A[2K[33/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:570:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+[1A[2K[34/48] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:580:7 › Partner Tour Edit › should navigate to edit page from tour card
+[1A[2K[35/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:13:7 › Partner Tour Edit Workflow › reorders English itinerary and gallery, selects cover, previews and saves the same order
+[1A[2K[36/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:74:7 › Partner Tour Edit Workflow › edits English source only while showing generated translation states
+[1A[2K[37/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:109:7 › Partner Tour Edit Workflow › should load the edit page for an existing tour
+[1A[2K[38/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:118:7 › Partner Tour Edit Workflow › should show tour cards with status badges on tours list
+[1A[2K[39/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:193:7 › Partner Tour Edit Workflow › should show tour destination in card
+[1A[2K[40/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:236:7 › Partner Tour Edit Workflow › should link to edit page from tour card
+[1A[2K[41/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:291:7 › Partner Tour Edit - Real API (Spec 019 US1) › round-trips owned English source with repeated days via real API and reopens
+[1A[2K[42/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:361:7 › Partner Tour Edit - Real API (Spec 019 US1) › preserves nullable source on unrelated save and clears on explicit empty list
+[1A[2K[43/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:423:7 › Partner Tour Edit - Real API (Spec 019 US1) › restores a partial owned snapshot with nested EN precedence via real API
+[1A[2K[44/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:510:7 › Partner Tour Edit - Real API (Spec 019 US1) › shows localized cleared-title validation in EN/ES/IT via real API
+[1A[2K[45/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:587:7 › Partner Tour Edit - Real API (Spec 019 US1) › rejects fractional durations and over-long list items with localized errors via real API
+[1A[2K[46/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:667:7 › Partner Tour Edit - Real API (Spec 019 US1) › denies cross-owner reads with 404 for a real second principal and localizes denied loads
+[1A[2K[47/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:718:7 › Partner Tour Edit - Real API (Spec 019 US1) › failed submit retains the owned draft id and retry submits the same tour
+[1A[2K[48/48] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:786:7 › Partner Tour Edit - Real API (Spec 019 US1) › renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[1A[2K  48 passed (2.7m)
+NUMERIC_EXIT=0

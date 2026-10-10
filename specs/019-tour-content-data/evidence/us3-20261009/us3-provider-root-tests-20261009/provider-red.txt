@@ -1,0 +1,324 @@
+
+   FAIL  Tests\Feature\Partner\TourTranslationProviderTest
+  ✓ it sends backend header with configured model and structured json…  10.36s
+  ✓ it uses a forty second provider timeout                              0.17s
+  ✓ it reconstructs out of order provider items into source path order   0.16s
+  ✓ it rejects duplicate provider keys as permanent output invalid       0.22s
+  ✓ it rejects missing provider keys as permanent output invalid         0.22s
+  ✓ it rejects unknown provider keys as permanent output invalid         0.21s
+  ✓ it rejects non string provider text as permanent output invalid      0.18s
+  ✓ it rejects blank provider text as permanent output invalid           0.26s
+  ✓ it rejects malformed provider body as permanent output invalid       0.20s
+  ✓ it rejects blocked provider finish reasons as permanent blocked      0.22s
+  ✓ it rejects client errors as permanent provider rejected              0.23s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.20s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.21s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.23s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.22s
+  ✓ it treats connection failures as transient network errors            0.48s
+  ✓ it rejects unsupported locales and empty input as invalid requests   0.22s
+  ✓ it rejects missing provider configuration without leaking secrets    0.46s
+  ✓ it emits only fixed sanitized transient categories                   0.27s
+  ✓ it emits only fixed sanitized permanent categories                   0.22s
+  ✓ it makes exactly one http attempt for a transient failure without n… 0.32s
+  ✓ it extracts only non blank strings while skipping structural intege… 0.27s
+  ✓ it reconstructs translated strings retaining integers nulls order a… 0.24s
+  ✓ it allows valid empty itinerary and zero stop days                   0.25s
+  ✓ it accepts boundary valid shared limits                              0.24s
+  ✓ it rejects overbound shared limits with dataset "title over 120"     0.22s
+  ✓ it rejects overbound shared limits with dataset "description over 5… 0.20s
+  ✓ it rejects overbound shared limits with dataset "highlights over 30… 0.25s
+  ✓ it rejects overbound shared limits with dataset "highlight item ove… 0.21s
+  ✓ it rejects overbound shared limits with dataset "inclusions over 30… 0.21s
+  ✓ it rejects overbound shared limits with dataset "inclusion item ove… 0.22s
+  ✓ it rejects overbound shared limits with dataset "exclusions over 30… 0.23s
+  ✓ it rejects overbound shared limits with dataset "exclusion item ove… 0.27s
+  ✓ it rejects overbound shared limits with dataset "information over 3… 0.22s
+  ✓ it rejects overbound shared limits with dataset "information item o… 0.59s
+  ✓ it rejects overbound shared limits with dataset "meeting point over… 0.18s
+  ✓ it rejects overbound shared limits with dataset "cancellation over…  0.21s
+  ✓ it rejects overbound shared limits with dataset "itinerary over 30…  0.22s
+  ⨯ it rejects overbound shared limits with dataset "day number zero"    0.22s
+  ⨯ it rejects overbound shared limits with dataset "day number over 30… 0.28s
+  ✓ it rejects overbound shared limits with dataset "day title over 160… 0.65s
+  ✓ it rejects overbound shared limits with dataset "day description ov… 0.40s
+  ✓ it rejects overbound shared limits with dataset "stops over 20"      1.05s
+  ✓ it rejects overbound shared limits with dataset "stop title over 16… 0.71s
+  ✓ it rejects overbound shared limits with dataset "stop description o… 0.31s
+  ⨯ it rejects overbound shared limits with dataset "duration zero"      0.34s
+  ⨯ it rejects overbound shared limits with dataset "duration over 1440… 0.26s
+  ⨯ it rejects overbound shared limits with dataset "explicit null stop… 0.37s
+  ✓ it rejects overbound shared limits with dataset "blank day title re… 0.24s
+  ✓ it rejects overbound shared limits with dataset "blank stop title r… 0.29s
+  ⨯ it rejects objects in place of translated source lists with ('highl… 0.18s
+  ⨯ it rejects objects in place of translated source lists with ('inclu… 0.17s
+  ⨯ it rejects objects in place of translated source lists with ('exclu… 0.20s
+  ⨯ it rejects objects in place of translated source lists with ('impor… 0.39s
+  ⨯ it rejects objects in place of translated day and stop lists with (… 0.19s
+  ⨯ it rejects objects in place of translated day and stop lists with (… 0.17s
+  ⨯ it rejects persisted digit strings instead of translating or coerci… 0.23s
+  ⨯ it rejects persisted digit strings instead of translating or coerci… 0.22s
+  ✓ it measures translated text bounds in Unicode characters             0.31s
+  ⨯ it never emits malformed persisted day strings as translated prose   0.25s
+  ⨯ it never emits malformed persisted duration strings as translated p… 0.20s
+  ✓ it retries translation jobs four times with five fifteen sixty back… 0.21s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ov…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:417
+    413▕     foreach ($service->strings($source) as $path => $text) {
+    414▕         $translated[$path] = "es: {$text}";
+    415▕     }
+    416▕
+  ➜ 417▕     expect(fn () => $service->applyStrings($source, $translated))->toThrow(ValidationException::class);
+    418▕ })->with([
+    419▕     'title over 120' => [fn (array &$s) => $s['title'] = str_repeat('t', 121)],
+    420▕     'description over 5000' => [fn (array &$s) => $s['description'] = str_repeat('d', 5001)],
+    421▕     'highlights over 30 items' => [fn (array &$s) => $s['highlights'] = array_fill(0, 31, 'ok')],
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:417
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ov…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:417
+    413▕     foreach ($service->strings($source) as $path => $text) {
+    414▕         $translated[$path] = "es: {$text}";
+    415▕     }
+    416▕
+  ➜ 417▕     expect(fn () => $service->applyStrings($source, $translated))->toThrow(ValidationException::class);
+    418▕ })->with([
+    419▕     'title over 120' => [fn (array &$s) => $s['title'] = str_repeat('t', 121)],
+    420▕     'description over 5000' => [fn (array &$s) => $s['description'] = str_repeat('d', 5001)],
+    421▕     'highlights over 30 items' => [fn (array &$s) => $s['highlights'] = array_fill(0, 31, 'ok')],
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:417
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ov…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:417
+    413▕     foreach ($service->strings($source) as $path => $text) {
+    414▕         $translated[$path] = "es: {$text}";
+    415▕     }
+    416▕
+  ➜ 417▕     expect(fn () => $service->applyStrings($source, $translated))->toThrow(ValidationException::class);
+    418▕ })->with([
+    419▕     'title over 120' => [fn (array &$s) => $s['title'] = str_repeat('t', 121)],
+    420▕     'description over 5000' => [fn (array &$s) => $s['description'] = str_repeat('d', 5001)],
+    421▕     'highlights over 30 items' => [fn (array &$s) => $s['highlights'] = array_fill(0, 31, 'ok')],
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:417
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ov…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:417
+    413▕     foreach ($service->strings($source) as $path => $text) {
+    414▕         $translated[$path] = "es: {$text}";
+    415▕     }
+    416▕
+  ➜ 417▕     expect(fn () => $service->applyStrings($source, $translated))->toThrow(ValidationException::class);
+    418▕ })->with([
+    419▕     'title over 120' => [fn (array &$s) => $s['title'] = str_repeat('t', 121)],
+    420▕     'description over 5000' => [fn (array &$s) => $s['description'] = str_repeat('d', 5001)],
+    421▕     'highlights over 30 items' => [fn (array &$s) => $s['highlights'] = array_fill(0, 31, 'ok')],
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:417
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ov…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:417
+    413▕     foreach ($service->strings($source) as $path => $text) {
+    414▕         $translated[$path] = "es: {$text}";
+    415▕     }
+    416▕
+  ➜ 417▕     expect(fn () => $service->applyStrings($source, $translated))->toThrow(ValidationException::class);
+    418▕ })->with([
+    419▕     'title over 120' => [fn (array &$s) => $s['title'] = str_repeat('t', 121)],
+    420▕     'description over 5000' => [fn (array &$s) => $s['description'] = str_repeat('d', 5001)],
+    421▕     'highlights over 30 items' => [fn (array &$s) => $s['highlights'] = array_fill(0, 31, 'ok')],
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:417
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ob…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:454
+    450▕     $source = t035ValidSource();
+    451▕     $source[$field] = ['named' => 'Authored text'];
+    452▕
+    453▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 454▕         ->toThrow(ValidationException::class);
+    455▕ })->with(['highlights', 'inclusions', 'exclusions', 'important_information']);
+    456▕
+    457▕ it('rejects objects in place of translated day and stop lists', function (bool $replaceStops) {
+    458▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:454
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ob…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:454
+    450▕     $source = t035ValidSource();
+    451▕     $source[$field] = ['named' => 'Authored text'];
+    452▕
+    453▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 454▕         ->toThrow(ValidationException::class);
+    455▕ })->with(['highlights', 'inclusions', 'exclusions', 'important_information']);
+    456▕
+    457▕ it('rejects objects in place of translated day and stop lists', function (bool $replaceStops) {
+    458▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:454
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ob…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:454
+    450▕     $source = t035ValidSource();
+    451▕     $source[$field] = ['named' => 'Authored text'];
+    452▕
+    453▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 454▕         ->toThrow(ValidationException::class);
+    455▕ })->with(['highlights', 'inclusions', 'exclusions', 'important_information']);
+    456▕
+    457▕ it('rejects objects in place of translated day and stop lists', function (bool $replaceStops) {
+    458▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:454
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ob…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:454
+    450▕     $source = t035ValidSource();
+    451▕     $source[$field] = ['named' => 'Authored text'];
+    452▕
+    453▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 454▕         ->toThrow(ValidationException::class);
+    455▕ })->with(['highlights', 'inclusions', 'exclusions', 'important_information']);
+    456▕
+    457▕ it('rejects objects in place of translated day and stop lists', function (bool $replaceStops) {
+    458▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:454
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ob…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:467
+    463▕         $source['itinerary'] = ['named' => $source['itinerary'][0]];
+    464▕     }
+    465▕
+    466▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 467▕         ->toThrow(ValidationException::class);
+    468▕ })->with([false, true]);
+    469▕
+    470▕ it('rejects persisted digit strings instead of translating or coercing structural numbers', function (bool $isDuration) {
+    471▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:467
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects ob…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:467
+    463▕         $source['itinerary'] = ['named' => $source['itinerary'][0]];
+    464▕     }
+    465▕
+    466▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 467▕         ->toThrow(ValidationException::class);
+    468▕ })->with([false, true]);
+    469▕
+    470▕ it('rejects persisted digit strings instead of translating or coercing structural numbers', function (bool $isDuration) {
+    471▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:467
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects pe…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:480
+    476▕         $source['itinerary'][0]['day'] = '1';
+    477▕     }
+    478▕
+    479▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 480▕         ->toThrow(ValidationException::class);
+    481▕ })->with([false, true]);
+    482▕
+    483▕ it('measures translated text bounds in Unicode characters', function () {
+    484▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:480
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it rejects pe…
+  Exception "Illuminate\Validation\ValidationException" not thrown.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:480
+    476▕         $source['itinerary'][0]['day'] = '1';
+    477▕     }
+    478▕
+    479▕     expect(fn () => $service->applyStrings($source, $service->strings($source)))
+  ➜ 480▕         ->toThrow(ValidationException::class);
+    481▕ })->with([false, true]);
+    482▕
+    483▕ it('measures translated text bounds in Unicode characters', function () {
+    484▕     $service = app(TourTranslationService::class);
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:480
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it never emit…
+  Expecting […] not to have key 'itinerary.0.day'.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:501
+    497▕     $service = app(TourTranslationService::class);
+    498▕     $source = t035ValidSource();
+    499▕     $source['itinerary'][0]['day'] = '1.5';
+    500▕
+  ➜ 501▕     expect($service->strings($source))->not->toHaveKey('itinerary.0.day');
+    502▕
+    503▕     $translated = [];
+    504▕     foreach ($service->strings($source) as $path => $text) {
+    505▕         $translated[$path] = "es: {$text}";
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:501
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationProviderTest > it never emit…
+  Expecting […] not to have key 'itinerary.0.stops.0.duration_minutes'.
+
+  at tests/Feature/Partner/TourTranslationProviderTest.php:517
+    513▕     $service = app(TourTranslationService::class);
+    514▕     $source = t035ValidSource();
+    515▕     $source['itinerary'][0]['stops'][0]['duration_minutes'] = 'soon';
+    516▕
+  ➜ 517▕     expect($service->strings($source))->not->toHaveKey('itinerary.0.stops.0.duration_minutes');
+    518▕
+    519▕     $translated = [];
+    520▕     foreach ($service->strings($source) as $path => $text) {
+    521▕         $translated[$path] = "es: {$text}";
+
+  1   tests/Feature/Partner/TourTranslationProviderTest.php:517
+
+
+  Tests:    15 failed, 47 passed (99 assertions)
+  Duration: 29.79s
+
+NUMERIC_EXIT=1

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Partner/TourTranslationJobStateTest.php",
+    "--filter=does not turn malformed persisted"
+  ],
+  "started": "2026-10-09T18:24:07.9344240+00:00",
+  "finished": "2026-10-09T18:24:29.7295219+00:00",
+  "native_exit": 1,
+  "purpose": "New two cases only; canonical hash projection must not silently validate malformed persisted lists for generation."
+}

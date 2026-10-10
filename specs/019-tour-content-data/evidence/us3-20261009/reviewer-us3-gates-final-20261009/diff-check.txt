@@ -1,0 +1,2 @@
+warning: in the working copy of 'docker-compose.yml', LF will be replaced by CRLF the next time Git touches it
+NUMERIC_EXIT=0

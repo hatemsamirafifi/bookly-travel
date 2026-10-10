@@ -1,0 +1,70 @@
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                  25.60s
+  ✓ it returns the selected cover before ordered gallery media and expo… 1.08s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 1.82s
+  ✓ it returns only approved public operator fields and visible-review…  1.56s
+  ✓ it omits operator identity when its partner is not approved          0.37s
+  ✓ it ranks only published bookable related tours by destination then…  0.41s
+  ✓ it returns 404 for non-existent slug                                 0.25s
+  ✓ it returns 404 for draft tour                                        0.26s
+  ✓ it returns 404 for rejected tour                                     0.31s
+  ✓ it returns 410 for an archived tour that was previously published    0.48s
+  ✓ it returns 404 for an archived tour that was never published         1.22s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.37s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.47s
+  ✓ it serves a fully bookable published tour as available (F2)          0.46s
+  ✓ it returns content in the requested locale                           0.44s
+  ✓ it keeps guide languages separate from localized content and itiner… 0.53s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.33s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.43s
+  ✓ it falls back to English when requested locale is unavailable        0.73s
+  ✓ it validates locale parameter is required                            1.95s
+  ✓ it includes SEO metadata in response                                 0.32s
+  ✓ it computes the review distribution from visible reviews (L4)        0.36s
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.33s
+  ✓ it falls back to current English for missing row+state, pending, st… 0.68s
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 0.37s
+  ✓ it keeps requested general content while a null itinerary independe… 0.37s
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.63s
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.48s
+  ✓ it returns empty itinerary without an itinerary claim when English…  3.02s
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.58s
+  ✓ it selects actual languages across the full es/it status matrix (US… 8.61s
+  ✓ it always serves English source irrespective of derived states (US2… 2.20s
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.68s
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.51s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.31s
+
+   PASS  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide c… 2.41s
+  ✓ it marks derived translations stale only when English source change… 0.48s
+  ✓ it requeues derived content when the English description changes wi… 0.31s
+  ✓ it clears optional English content and requeues derived translation… 1.90s
+  ✓ it translates traveler-facing itinerary and information while retai… 1.27s
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 0.41s
+  ✓ it accepts only the latest English revision when an older translati… 0.46s
+  ✓ it schedules a fresh search projection after a derived translation…  1.73s
+  ✓ it serves a visible English fallback until generated content is rea… 1.08s
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.42s
+  ✓ it uses backend-only Gemini structured output and rejects transient… 0.73s
+  ✓ it retries only transient Gemini failures                            0.35s
+
+   PASS  Tests\Feature\Partner\TourContentRevisionTest
+  ✓ it hashes fixed outer source field order regardless of input key or… 2.86s
+  ✓ it ignores nested day/stop object key order but preserves array ord… 0.65s
+  ✓ it keeps malformed persisted source explicit instead of hashing it…  0.34s
+  ✓ it locks Tour then EN then states in es/it order inside the shared…  0.30s
+  ✓ it rolls back partial writes when the boundary callback fails        0.61s
+  ✓ it observes fresh source written inside the boundary on completion   0.36s
+  ✓ it reaches the disposable database on an independent connection      0.23s
+  ✓ it pauses the fake provider mid-call and resumes to completed outpu… 0.30s
+  ✓ it holds real Tour/EN/state row locks across separate connections u… 3.43s
+  ✓ it guarantees partner record IDs distinct from user IDs for owner s… 0.95s
+  ✓ it coordinates fake provider arrivals without network calls          0.18s
+  ✓ it reports current/ready only for matching translated hash via publ… 0.29s
+
+  Tests:    59 passed (1130 assertions)
+  Duration: 85.93s
+
+NUMERIC_EXIT=0

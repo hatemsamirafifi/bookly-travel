@@ -133,8 +133,145 @@ describe('TourDetail', () => {
   it('labels an English content fallback without changing guide languages', () => {
     renderTour('es', { ...tour, translation_warning: 'partial_translation' });
 
-    expect(screen.getByText(esMessages.tour.partialTranslation)).toBeInTheDocument();
+    // Spec 019 US2: full fallback discloses general content and the
+    // nonempty English itinerary independently; guide codes stay unchanged.
+    expect(screen.getByText(esMessages.tour.contentFallback)).toBeInTheDocument();
+    expect(screen.getByText(esMessages.tour.itineraryFallback)).toBeInTheDocument();
+    expect(screen.queryByText(esMessages.tour.partialTranslation)).not.toBeInTheDocument();
     expect(screen.getByText('Alemán, Inglés, Español')).toBeInTheDocument();
+  });
+
+  it.each([
+    ['en', enMessages.tour.contentFallback, enMessages.tour.itineraryFallback],
+    ['es', esMessages.tour.contentFallback, esMessages.tour.itineraryFallback],
+    ['it', itMessages.tour.contentFallback, itMessages.tour.itineraryFallback],
+  ] as const)('shows independent content/itinerary fallback notices in %s', (locale, contentNotice, itineraryNotice) => {
+    // Current requested general content with a null itinerary falling back
+    // to nonempty English: only the itinerary notice appears.
+    renderTour(locale, {
+      ...tour,
+      title: locale === 'en' ? tour.title : 'Contenido localizado',
+      content_locale: locale,
+      itinerary: [{ day: 1, title: 'English day', stops: [] }],
+      itinerary_locale: 'en',
+      translation_status: locale === 'en' ? 'source' : 'ready',
+      translation_warning: locale === 'en' ? undefined : 'partial_translation',
+    });
+
+    if (locale === 'en') {
+      expect(screen.queryByText(contentNotice)).not.toBeInTheDocument();
+      expect(screen.queryByText(itineraryNotice)).not.toBeInTheDocument();
+    } else {
+      expect(screen.queryByText(contentNotice)).not.toBeInTheDocument();
+      expect(screen.getByText(itineraryNotice)).toBeInTheDocument();
+    }
+  });
+
+  it('suppresses the itinerary section and notice for an empty itinerary', () => {
+    renderTour('es', {
+      ...tour,
+      content_locale: 'es',
+      itinerary: [],
+      itinerary_locale: 'es',
+      translation_status: 'ready',
+    });
+
+    expect(screen.queryByRole('heading', { name: esMessages.tour.itinerary })).not.toBeInTheDocument();
+    expect(screen.queryByText(esMessages.tour.itineraryFallback)).not.toBeInTheDocument();
+    expect(screen.queryByText(esMessages.tour.contentFallback)).not.toBeInTheDocument();
+    expect(screen.queryByText(esMessages.tour.partialTranslation)).not.toBeInTheDocument();
+  });
+
+  // Root correction R2 (red first): the optional API summary flag alone
+  // must never produce a UI notice for empty sections or requested-language
+  // content. Notices derive from actual locales AND nonempty sections only.
+  it.each([
+    ['en', enMessages.tour],
+    ['es', esMessages.tour],
+    ['it', itMessages.tour],
+  ] as const)('shows no fallback notice for empty sections in %s even with the summary flag', (locale, messages) => {
+    renderTour(locale, {
+      ...tour,
+      title: '',
+      description: '',
+      highlights: [],
+      inclusions: [],
+      exclusions: [],
+      meeting_point: '',
+      cancellation_policy: '',
+      important_information: [],
+      content_locale: locale,
+      itinerary: [],
+      itinerary_locale: locale,
+      translation_warning: 'partial_translation',
+    });
+
+    expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+    expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ['en', enMessages.tour],
+    ['es', esMessages.tour],
+    ['it', itMessages.tour],
+  ] as const)('shows no fallback notice for current requested content in %s even with the summary flag', (locale, messages) => {
+    renderTour(locale, {
+      ...tour,
+      content_locale: locale,
+      itinerary: [{ day: 1, title: 'Localized day', stops: [] }],
+      itinerary_locale: locale,
+      translation_warning: 'partial_translation',
+    });
+
+    expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+    expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+  });
+
+  it('declares actual text languages while keeping page-locale labels', () => {
+    const { container } = renderTour('es', {
+      ...tour,
+      content_locale: 'es',
+      itinerary: [{ day: 1, title: 'Día español', stops: [] }],
+      itinerary_locale: 'es',
+    });
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveAttribute('lang', 'es');
+    // Root correction R3: the breadcrumb carries the same authored title,
+    // so its source span also declares the actual content language.
+    expect(screen.getByText('Tuscany Wine Tasting', { selector: 'span' })).toHaveAttribute('lang', 'es');
+    const itineraryHeading = screen.getByRole('heading', { name: 'Día 1: Día español' });
+    expect(itineraryHeading.querySelector('span')).toHaveAttribute('lang', 'es');
+    // Page-locale section labels carry no content lang override.
+    expect(screen.getByRole('heading', { name: esMessages.tour.itinerary })).not.toHaveAttribute('lang');
+    expect(container.querySelector('#itinerary')).not.toBeNull();
+  });
+
+  it('renders repeated valid day numbers with stable composite keys', () => {
+    const errors = jest.spyOn(console, 'error');
+    try {
+      // React duplicate-key regression: two valid days numbered 3 must both
+      // render their actual day value, not their list position.
+      const repeated = {
+        ...tour,
+        itinerary: [
+          { day: 3, title: 'First third day', stops: [] },
+          { day: 3, title: 'Second third day', stops: [] },
+        ],
+        itinerary_locale: 'en' as const,
+      };
+      const { container } = renderTour('en', repeated);
+
+      const headings = screen.getAllByRole('heading', { name: /Day 3:/ });
+      expect(headings).toHaveLength(2);
+      expect(screen.getByRole('heading', { name: 'Day 3: First third day' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Day 3: Second third day' })).toBeInTheDocument();
+      expect(container.querySelectorAll('#itinerary li').length).toBeGreaterThanOrEqual(2);
+      expect(errors.mock.calls.filter((args) => /same key|unique.*key|two children/i.test(args.join(' ')))).toEqual([]);
+    } finally {
+      errors.mockRestore();
+    }
   });
 
   it.each([

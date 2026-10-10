@@ -8,6 +8,6 @@ export interface TourDetailResponse {
 export async function getTourDetail(slug: string, locale: string): Promise<TourDetailResponse> {
   return apiClient<TourDetailResponse>(
     `/api/public/tours/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`,
-    { locale }
+    { locale, cache: 'no-store' }
   );
 }

@@ -110,9 +110,9 @@ function SelectItem({ value, children }: { value: string; children: React.ReactN
   );
 }
 
-function SelectValue({ placeholder }: { placeholder?: string }) {
+function SelectValue({ placeholder, displayValue }: { placeholder?: string; displayValue?: string }) {
   const { value } = useSelect();
-  return <>{value || placeholder}</>;
+  return <>{displayValue ?? (value || placeholder)}</>;
 }
 
 export { Select, SelectTrigger, SelectContent, SelectItem, SelectValue };

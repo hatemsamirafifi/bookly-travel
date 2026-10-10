@@ -1,0 +1,33 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx src/components/partner/tours/__tests__/TourContentPreview.test.tsx src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx src/components/partner/tours/__tests__/TourWizard.test.tsx src/components/partner/tours/__tests__/TourWizard.locale.test.tsx src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx src/lib/api/__tests__/client.test.ts
+
+docker.exe : PASS src/components/tour/__tests__/TourDetail.test.tsx (14.326 s)
+At C:\Users\HaTeM\.codex\delegation\bookly-spec019-20261003\run-reviewer-us2-gates-20261009.ps1:11 char:9
++         & docker @CommandArguments 2>&1 | Tee-Object -FilePath "$evid ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PASS src/compon....tsx (14.326 s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+PASS src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx (10.616 s)
+PASS src/components/partner/tours/__tests__/TourWizard.test.tsx
+PASS src/components/partner/tours/__tests__/TourWizard.locale.test.tsx
+PASS src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+PASS src/components/partner/tours/__tests__/TourContentPreview.test.tsx
+PASS src/lib/api/__tests__/client.test.ts
+
+Test Suites: 7 passed, 7 total
+Tests:       90 passed, 90 total
+Snapshots:   0 total
+Time:        33.291 s
+Ran all test suites within paths "src/components/tour/__tests__/TourDetail.test.tsx",
+"src/components/partner/tours/__tests__/TourContentPreview.test.tsx",
+"src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx",
+"src/components/partner/tours/__tests__/TourWizard.test.tsx",
+"src/components/partner/tours/__tests__/TourWizard.locale.test.tsx",
+"src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx", "src/lib/api/__tests__/client.test.ts".
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest
+with `--detectOpenHandles` to troubleshoot this issue.
+NUMERIC_EXIT=0

@@ -1,0 +1,73 @@
+
+> frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.2.3 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 98s
+  Running TypeScript ...
+  Finished TypeScript in 27.6s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/89) ...
+  Generating static pages using 7 workers (22/89)
+  Generating static pages using 7 workers (44/89)
+  Generating static pages using 7 workers (66/89)
+✓ Generating static pages using 7 workers (89/89) in 9.8s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/[...notFound]
+├ ƒ /[locale]/auth/forgot-password
+├ ƒ /[locale]/auth/login
+├ ƒ /[locale]/auth/partner-register
+├ ƒ /[locale]/auth/register
+├ ƒ /[locale]/auth/reset-password
+├ ƒ /[locale]/auth/verify-email
+├ ƒ /[locale]/blog
+├ ƒ /[locale]/blog/[slug]
+├ ƒ /[locale]/blog/[slug]/preview
+├ ƒ /[locale]/blog/category/[slug]
+├ ƒ /[locale]/booking
+├ ƒ /[locale]/booking/confirmation
+├ ƒ /[locale]/categories
+├ ƒ /[locale]/categories/[slug]
+├ ƒ /[locale]/destinations
+├ ƒ /[locale]/destinations/[slug]
+├ ƒ /[locale]/my-bookings
+├ ƒ /[locale]/my-bookings/[reference]
+├ ƒ /[locale]/my-reviews
+├ ƒ /[locale]/partner
+├ ƒ /[locale]/partner-invite/[token]
+├ ƒ /[locale]/partner-register
+├ ƒ /[locale]/partner/analytics
+├ ƒ /[locale]/partner/bookings
+├ ƒ /[locale]/partner/bookings/[reference]
+├ ƒ /[locale]/partner/onboarding
+├ ƒ /[locale]/partner/profile
+├ ƒ /[locale]/partner/reviews
+├ ƒ /[locale]/partner/tours
+├ ƒ /[locale]/partner/tours/[id]/availability
+├ ƒ /[locale]/partner/tours/[id]/edit
+├ ƒ /[locale]/partner/tours/[id]/pricing
+├ ƒ /[locale]/partner/tours/create
+├ ƒ /[locale]/privacy
+├ ƒ /[locale]/profile
+├ ƒ /[locale]/search
+├ ƒ /[locale]/terms
+├ ƒ /[locale]/tours/[slug]
+├ ƒ /[locale]/wishlist
+├ ƒ /api/auth/session
+├ ○ /robots.txt
+└ ƒ /v/[reference]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+NUMERIC_EXIT=0

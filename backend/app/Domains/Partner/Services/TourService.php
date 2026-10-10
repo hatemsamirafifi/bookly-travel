@@ -6,18 +6,18 @@ use App\Domains\Partner\Models\AvailabilityException;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Partner\Models\TourDraft;
+use App\Domains\Partner\Requests\TourContentRules;
+use App\Models\Category;
 use App\Models\Tour;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TourService
 {
-    private const SOURCE_FIELDS = [
-        'title', 'description', 'highlights', 'inclusions', 'exclusions',
-        'meeting_point', 'cancellation_policy', 'itinerary', 'important_information',
-    ];
-
     public function __construct(private readonly TourTranslationService $translationService) {}
 
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
@@ -38,13 +38,63 @@ class TourService
             ->first();
     }
 
+    /**
+     * Scoped owner policy: return the partner-owned tour or abort 404 for
+     * cross-partner and unknown ids. Used by request authorization (before
+     * validation) and controller handlers alike so ownership has one home.
+     */
+    public function requireOwnedTour(int $tourId, int $partnerId): Tour
+    {
+        $tour = $tourId > 0 ? $this->getForPartner($tourId, $partnerId) : null;
+
+        if (! $tour) {
+            throw new NotFoundHttpException;
+        }
+
+        return $tour;
+    }
+
+    /**
+     * Resolve the category slug from the request payload to a category_id,
+     * mirroring the historical controller behavior (required on create,
+     * optional on update, unknown slugs rejected with 422).
+     */
+    public function resolveCategoryId(array $data, bool $required): array
+    {
+        if (! array_key_exists('category', $data)) {
+            if ($required && empty($data['category_id'])) {
+                throw new UnprocessableEntityHttpException('The category field is required.');
+            }
+
+            return $data;
+        }
+
+        $category = Category::where('slug', $data['category'])->first();
+        if (! $category) {
+            throw new UnprocessableEntityHttpException('Unknown category: ' . $data['category']);
+        }
+
+        $data['category_id'] = $category->id;
+
+        return $data;
+    }
+
+    private function generatedTourSlug(string $title): string
+    {
+        // The suffix also separates simultaneous creates with identical titles.
+        $prefix = Str::limit(Str::slug($title) ?: 'tour', 200, '');
+
+        return rtrim($prefix, '-') . '-' . Str::lower((string) Str::ulid());
+    }
+
     public function createTour(int $partnerId, array $data): Tour
     {
-        return DB::transaction(function () use ($partnerId, $data) {
+        [$tour, $planned] = DB::transaction(function () use ($partnerId, $data) {
+            $patch = TourContentRules::normalizeEnglishPatch($data);
             $tour = Tour::create([
                 'partner_id' => $partnerId,
                 'category_id' => $data['category_id'] ?? null,
-                'slug' => $data['slug'] ?? Str::slug($data['title'] ?? ($data['translations']['en']['title'] ?? 'tour-' . uniqid())),
+                'slug' => $data['slug'] ?? $this->generatedTourSlug($patch['title'] ?? ''),
                 'location' => $data['location'] ?? $data['destination'] ?? '',
                 'location_slug' => $data['location_slug'] ?? Str::slug($data['location'] ?? $data['destination'] ?? 'location'),
                 'duration_minutes' => $data['duration_minutes'] ?? (($data['duration_unit'] ?? '') === 'day' ? ($data['duration_value'] ?? 1) * 1440 : ($data['duration_value'] ?? 1) * 60),
@@ -52,7 +102,9 @@ class TourService
                 'group_size_min' => $data['group_size_min'] ?? 1,
                 'group_size_max' => $data['group_size_max'] ?? 10,
                 'price_amount' => $data['price_amount'] ?? (int) (($data['price_from'] ?? 0) * 100),
-                'status' => $data['status'] ?? 'draft',
+                // Creation always materializes a draft; supplied `status` is
+                // prohibited at the Request boundary and never trusted here.
+                'status' => 'draft',
                 'cover_image_url' => $data['cover_image_url'] ?? null,
                 'difficulty_level' => $data['difficulty_level'] ?? null,
                 'guide_languages' => $this->normalizeGuideLanguages($data['guide_languages'] ?? $data['languages'] ?? []),
@@ -62,26 +114,19 @@ class TourService
                 $this->syncMedia($tour, $data['media']);
             }
 
-            if (! empty($data['translations'])) {
-                $this->syncTranslations($tour, $data['translations']);
-            } elseif (! empty($data['title'])) {
-                // Fallback support for single-title style create payloads
-                $this->syncTranslations($tour, [
-                    'en' => [
-                        'title' => $data['title'],
-                        'description' => $data['description'] ?? null,
-                        'highlights' => $data['highlights'] ?? null,
-                        'inclusions' => $data['inclusions'] ?? null,
-                        'exclusions' => $data['exclusions'] ?? null,
-                        'meeting_point' => $data['meeting_point'] ?? null,
-                        'cancellation_policy' => $data['cancellation_policy'] ?? null,
-                        'itinerary' => $data['itinerary'] ?? null,
-                        'important_information' => $data['important_information'] ?? null,
-                    ],
-                ]);
+            // Canonical English patch: explicit nested keys win, shorthand
+            // fills absent keys, omitted keys preserve (nothing to preserve
+            // on create). Media above and source here commit atomically.
+            if (array_key_exists('itinerary', $patch)) {
+                $patch['itinerary'] = TourContentRules::castItineraryInts(
+                    TourContentRules::normalizeItinerary($patch['itinerary'])
+                );
+            }
+            if ($patch !== []) {
+                $this->syncTranslations($tour, ['en' => $patch]);
             }
 
-            $this->translationService->queueIfChanged($tour, null);
+            $planned = $this->translationService->planSourceDispatches($tour, null);
 
             if (! empty($data['pricing_tiers'])) {
                 $this->syncPricingTiers($tour, $data['pricing_tiers']);
@@ -95,15 +140,57 @@ class TourService
                 $this->syncAvailabilityExceptions($tour, $data['availability_exceptions']);
             }
 
-            return $tour;
+            return [$tour, $planned];
         });
+
+        // Generation pushes run only after the source transaction committed:
+        // a lost queue push is contained per locale and can never fail the
+        // accepted source write.
+        $this->translationService->dispatchPlannedTranslations($planned);
+
+        return $tour;
     }
 
     public function updateTour(Tour $tour, array $data): Tour
     {
-        return DB::transaction(function () use ($tour, $data) {
-            $existingEnglish = $tour->translations()->where('locale', 'en')->first();
+        // Tour-first lock boundary (Tour -> EN -> states in es/it order);
+        // the fresh source is rechecked inside before mutating state.
+        // Generation plans persist inside the lock; pushes run after commit.
+        [$freshTour, $planned] = $this->translationService->withContentLock($tour->id, function () use ($tour, $data) {
+            $fresh = Tour::findOrFail($tour->id);
+            $existingEnglish = $fresh->translations()->where('locale', 'en')->first();
             $previousHash = $existingEnglish ? $this->translationService->sourceHash($existingEnglish) : null;
+
+            // Canonical English patch with the same precedence/omission
+            // semantics as create; omitted keys stay absent and preserve.
+            $patch = TourContentRules::normalizeEnglishPatch($data);
+            if (array_key_exists('itinerary', $patch)) {
+                $patch['itinerary'] = TourContentRules::castItineraryInts(
+                    TourContentRules::normalizeItinerary($patch['itinerary'])
+                );
+            }
+
+            // Published or approval-bound English must not be cleared: a
+            // clearing update (null/blank title or description) fails
+            // atomically instead of partially wiping live source.
+            if (in_array($fresh->status, ['published', 'pending_review'], true)) {
+                if (array_key_exists('title', $patch) && ! is_string($patch['title'] ?? null)) {
+                    throw ValidationException::withMessages([
+                        'translations.en.title' => 'Published content requires an English title.',
+                    ]);
+                }
+                if (array_key_exists('title', $patch) && trim((string) $patch['title']) === '') {
+                    throw ValidationException::withMessages([
+                        'translations.en.title' => 'Published content requires an English title.',
+                    ]);
+                }
+                if (array_key_exists('description', $patch) && trim((string) ($patch['description'] ?? '')) === '') {
+                    throw ValidationException::withMessages([
+                        'translations.en.description' => 'Published content requires an English description.',
+                    ]);
+                }
+            }
+
             $updateFields = [];
             if (isset($data['category_id'])) {
                 $updateFields['category_id'] = $data['category_id'];
@@ -114,9 +201,14 @@ class TourService
             if (isset($data['location'])) {
                 $updateFields['location'] = $data['location'];
                 $updateFields['location_slug'] = Str::slug($data['location']);
+            } elseif (isset($data['destination'])) {
+                // The update contract accepts the historical `destination`
+                // alias; it maps onto the stored location, mirroring create.
+                $updateFields['location'] = $data['destination'];
+                $updateFields['location_slug'] = Str::slug($data['destination']);
             }
             if (isset($data['duration_value']) || isset($data['duration_unit'])) {
-                $val = $data['duration_value'] ?? ($tour->duration_minutes / 60);
+                $val = $data['duration_value'] ?? ($fresh->duration_minutes / 60);
                 $unit = $data['duration_unit'] ?? 'hour';
                 $updateFields['duration_minutes'] = $unit === 'day' ? $val * 1440 : $val * 60;
                 $updateFields['duration_label'] = $val . ' ' . $unit . ($val > 1 ? 's' : '');
@@ -141,74 +233,65 @@ class TourService
             }
 
             if (! empty($updateFields)) {
-                $tour->update($updateFields);
+                $fresh->update($updateFields);
             }
 
             if (array_key_exists('media', $data)) {
-                $this->syncMedia($tour, $data['media']);
+                $this->syncMedia($fresh, $data['media']);
             }
 
-            if (isset($data['translations'])) {
-                $this->syncTranslations($tour, $data['translations']);
-            } elseif (array_intersect(self::SOURCE_FIELDS, array_keys($data)) !== []) {
-                $this->syncTranslations($tour, [
-                    'en' => array_intersect_key($data, array_flip(self::SOURCE_FIELDS)),
-                ]);
+            // Only present patch keys are written: omitted values preserve
+            // old rows, explicit null clears nullable text, [] clears lists.
+            if ($patch !== []) {
+                $this->syncTranslations($fresh, ['en' => $patch]);
             }
 
-            $this->translationService->queueIfChanged($tour, $previousHash);
+            $planned = $this->translationService->planSourceDispatches($fresh, $previousHash);
 
             if (isset($data['pricing_tiers'])) {
-                $this->syncPricingTiers($tour, $data['pricing_tiers']);
+                $this->syncPricingTiers($fresh, $data['pricing_tiers']);
             }
 
             if (isset($data['availability_rules'])) {
-                $this->syncAvailabilityRules($tour, $data['availability_rules']);
+                $this->syncAvailabilityRules($fresh, $data['availability_rules']);
             }
 
             if (isset($data['availability_exceptions'])) {
-                $this->syncAvailabilityExceptions($tour, $data['availability_exceptions']);
+                $this->syncAvailabilityExceptions($fresh, $data['availability_exceptions']);
             }
 
-            $tour->touch();
+            $fresh->touch();
 
-            return $tour->fresh();
+            return [$fresh->fresh(), $planned];
         });
+
+        $this->translationService->dispatchPlannedTranslations($planned);
+
+        return $freshTour;
     }
 
     protected function syncTranslations(Tour $tour, array $translations): void
     {
         foreach ($translations as $locale => $content) {
+            if ($locale !== 'en' || ! is_array($content)) {
+                continue;
+            }
+            // Present-key semantics over the canonical source list: title is
+            // written only when supplied non-null; every other present key
+            // is written verbatim so explicit null clears nullable text and
+            // [] clears lists while omitted keys preserve stored values.
             $updateData = [];
-            if (isset($content['title'])) {
-                $updateData['title'] = $content['title'];
-            }
-            if (isset($content['description'])) {
-                $updateData['description'] = $content['description'];
-            }
-            if (array_key_exists('highlights', $content)) {
-                $updateData['highlights'] = $content['highlights'];
-            }
-            if (array_key_exists('inclusions', $content)) {
-                $updateData['inclusions'] = $content['inclusions'];
-            }
-            if (array_key_exists('exclusions', $content)) {
-                $updateData['exclusions'] = $content['exclusions'];
-            }
-            if (array_key_exists('meeting_point', $content)) {
-                $updateData['meeting_point'] = $content['meeting_point'];
-            }
-            if (array_key_exists('cancellation_policy', $content)) {
-                $updateData['cancellation_policy'] = $content['cancellation_policy'];
-            }
-            if (array_key_exists('itinerary', $content)) {
-                $updateData['itinerary'] = $content['itinerary'];
-            }
-            if (array_key_exists('important_information', $content)) {
-                $updateData['important_information'] = $content['important_information'];
+            foreach (TourContentRules::SOURCE_FIELDS as $field) {
+                if (! array_key_exists($field, $content)) {
+                    continue;
+                }
+                if ($field === 'title' && $content[$field] === null) {
+                    continue;
+                }
+                $updateData[$field] = $content[$field];
             }
 
-            if (! empty($updateData)) {
+            if ($updateData !== []) {
                 $tour->translations()->updateOrCreate(
                     ['locale' => $locale],
                     $updateData
@@ -241,14 +324,56 @@ class TourService
         $tour->update(['cover_image_url' => $cover]);
     }
 
+    /**
+     * Scoped owned-detail projection for the partner show endpoint.
+     *
+     * Keeps the exact ownership 404 and response envelope: owned relations
+     * plus current-hash-aware sanitized translation statuses. Operational
+     * translation internals (loaded state models, hashes, error categories,
+     * provider/job details) are explicitly excluded from serialization;
+     * apparent ready rows with a hash mismatch already project as stale via
+     * the shared status boundary.
+     */
+    public function getOwnedTourDetail(int $tourId, int $partnerId): array
+    {
+        $tour = $this->requireOwnedTour($tourId, $partnerId);
+        $tour->load(['translations', 'media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions']);
+
+        $data = $tour->toArray();
+        unset($data['translationStates'], $data['translation_states']);
+        $data['translation_statuses'] = [
+            'es' => $this->translationService->publicStatus($tour, 'es'),
+            'it' => $this->translationService->publicStatus($tour, 'it'),
+        ];
+
+        return $data;
+    }
+
     public function submitForReview(Tour $tour): Tour
     {
-        $tour->update([
-            'status' => 'pending_review',
-            'submitted_at' => now(),
-        ]);
+        // Trimmed required English under the shared Tour-first lock. ES/IT
+        // readiness is never required; lifecycle/auth/pricing/media guards
+        // stay at their existing boundaries and no extra publication policy
+        // is added here.
+        return $this->translationService->withContentLock($tour->id, function () use ($tour) {
+            $fresh = Tour::findOrFail($tour->id);
+            $english = $fresh->translations()->where('locale', 'en')->first();
 
-        return $tour;
+            abort_unless(
+                $english
+                    && trim($english->title) !== ''
+                    && is_string($english->description) && trim($english->description) !== '',
+                422,
+                'Tour must have at least an English title and description.',
+            );
+
+            $fresh->update([
+                'status' => 'pending_review',
+                'submitted_at' => now(),
+            ]);
+
+            return $fresh->fresh();
+        });
     }
 
     public function archiveTour(Tour $tour): Tour

@@ -1,0 +1,2 @@
+{"mode":"timeout","start":"2026-10-09T19:05:55+00:00","pid":1,"pcntl":true,"worker_timeout":60,"retry_after":90,"provider":"fake; no live key"}
+NUMERIC_EXIT=1 EXPECTED_EXIT=1

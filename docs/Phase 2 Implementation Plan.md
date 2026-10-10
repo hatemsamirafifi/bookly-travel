@@ -1,10 +1,10 @@
 # Bookly — Phase 2 Implementation Plan
 
-> **Version**: 2.0.0
-> **Date**: 2026-09-22
-> **Status**: Active — Spec 017 merged; Spec 018 is the next feature
-> **Governing Constitution**: [Bookly Constitution v2.0.0](../.specify/memory/constitution.md)
-> **Authoritative product source**: [PRD v2.1.0](PRD.md)
+> **Version**: 2.1.0
+> **Date**: 2026-10-01
+> **Status**: Active — Spec 017 merged; UI Phase 1 implemented; Spec 019 is the active specification
+> **Governing Constitution**: [Bookly Constitution v2.1.0](../.specify/memory/constitution.md)
+> **Authoritative product source**: [PRD v2.2.0](PRD.md)
 
 ---
 
@@ -16,8 +16,8 @@ repository-aligned sequence.
 - Specs `001–016` remain the delivered Phase 1 sequence.
 - Spec `017` is assigned to the Stripe payments, Connect, and invoicing work
   already merged into `main` through PR #26.
-- Spec `018` is assigned to the Bookly full-product UI redesign.
-- Remaining Phase 2 features are renumbered `019–025`.
+- Specs `018-027` cover the Bookly full-product UI redesign. Spec `018` preserves the bootstrap and Phase 1 foundations; UI master-plan Phase 2 is `019-tour-content-data`.
+- Remaining product Phase 2 features are renumbered `028-034`; their former `019-025` reservations were never implemented specifications. Product roadmap waves and UI master-plan phases are distinct numbering systems.
 - Partner review responses are removed from the future roadmap because their
   database, API, and partner UI already exist.
 - Refunds, pricing tiers, and partner analytics are treated as existing
@@ -64,17 +64,21 @@ The broader Payment regression suite passed **59 tests and 224 assertions**.
 
 ## 3. Phase 2 Feature Map
 
+The [UI master-plan Phase-to-Spec Numbering](bookly-ui-redesign-spec-kit-master-plan.md#phase-to-spec-numbering) is authoritative for Specs 018-027. Existing Spec 018 files retain their original numbers; only uncreated future product reservations move to 028-034.
+
 | Spec | Feature | Wave | Status | Primary value |
 |:----:|---------|:----:|:------:|---------------|
 | `017` | Stripe Payments, Connect & Invoicing Foundation | Delivered baseline | ✅ Merged | Marketplace payment routing and B2B invoice foundation |
-| `018` | Bookly Full-Product UI Redesign | 1 | 🟡 Next | Consistent, conversion-focused, accessible product experience |
-| `019` | Partner Earnings & Settlement Operations | 2 | Planned | Operational visibility and reconciliation without double-paying partners |
-| `020` | Cancellation Policies & Partial Refunds | 2 | Planned | Policy-driven cancellation and reduced manual support |
-| `021` | Social Login (OAuth) | 2 | Planned | Lower registration friction |
-| `022` | Multi-Staff Partner Accounts | 3 | Planned | Team access for tour operators |
-| `023` | Participant Category Pricing | 3 | Planned | Adult/child/infant booking calculations |
-| `024` | SMS & Push Notifications | 4 | Planned | Opt-in real-time reminders |
-| `025` | Advanced Analytics & Reporting Exports | 4 | Planned | Conversion visibility and governed reporting |
+| `018` | UI Bootstrap, Design System and Shared Shells | 1 | Implementation complete; CI/merge acceptance pending | Shared foundations and preserved original redesign baseline |
+| `019` | Tour Content Data Model and API | 1 | Active specification | Structured English content and derived locales with compatible public contracts |
+| `020-027` | Remaining UI Redesign Phases | 1 | Planned | Tour detail through deployment; see the master-plan mapping |
+| `028` | Partner Earnings & Settlement Operations | 2 | Planned | Operational visibility and reconciliation without double-paying partners |
+| `029` | Cancellation Policies & Partial Refunds | 2 | Planned | Policy-driven cancellation and reduced manual support |
+| `030` | Social Login (OAuth) | 2 | Planned | Lower registration friction |
+| `031` | Multi-Staff Partner Accounts | 3 | Planned | Team access for tour operators |
+| `032` | Participant Category Pricing | 3 | Planned | Adult/child/infant booking calculations |
+| `033` | SMS & Push Notifications | 4 | Planned | Opt-in real-time reminders |
+| `034` | Advanced Analytics & Reporting Exports | 4 | Planned | Conversion visibility and governed reporting |
 
 ---
 
@@ -104,8 +108,8 @@ The broader Payment regression suite passed **59 tests and 224 assertions**.
 - Scheduled payout batches or transfer jobs.
 - Payout reconciliation jobs and operational exception queues.
 
-Those remaining responsibilities move to Spec 019. Because destination charges
-already route funds to the connected account, Spec 019 MUST NOT create a second
+Those remaining responsibilities move to Spec 028. Because destination charges
+already route funds to the connected account, Spec 028 MUST NOT create a second
 transfer for the same booking. Its research phase must choose the correct
 Stripe balance-transaction/payout reconciliation model before defining tables
 or jobs.
@@ -132,9 +136,9 @@ settlement operations, cites implementation commit `76b1f1e` and merge commit
 
 ---
 
-## 5. Wave 1 — Spec 018 Bookly Full-Product UI Redesign
+## 5. Wave 1 - Specs 018-027 Bookly Full-Product UI Redesign
 
-**Status:** Next feature. The authoritative implementation plan is
+**Status:** Spec 018 Phase 1 implementation is complete with CI/merge acceptance pending. Spec 019 is the active specification for UI master-plan Phase 2; Specs 020-027 are planned. The authoritative implementation plan is
 [bookly-ui-redesign-spec-kit-master-plan.md](bookly-ui-redesign-spec-kit-master-plan.md).
 
 ### Objective
@@ -162,8 +166,10 @@ tours-only scope, and existing business behavior.
 
 ### Required artifacts
 
+Retain the existing Spec 018 program artifacts. Each new mapped phase owns its specification and subsequent planning artifacts in its own directory. Spec 019 is being specified; its plan, data model, contracts, quickstart, and tasks are generated by later Spec Kit commands, not claimed complete here.
+
 ```text
-specs/018-bookly-ui-redesign/
+specs/019-tour-content-data/
 |-- spec.md
 |-- plan.md
 |-- research.md
@@ -182,7 +188,7 @@ specs/018-bookly-ui-redesign/
   coverage.
 - Primary visual acceptance matrices pass at all target viewports.
 - EN/ES/IT, accessibility, frontend/backend tests, production build, and
-  documented Lighthouse runs meet the Constitution v2.0.0 gates.
+  documented Lighthouse runs meet the Constitution v2.1.0 gates.
 
 ---
 
@@ -192,7 +198,7 @@ Wave 2 starts after Spec 018 establishes stable shared UI primitives. Backend
 research and contract design may begin earlier, but customer-facing UI must use
 the Spec 018 system.
 
-### Spec 019 — Partner Earnings & Settlement Operations
+### Spec 028 — Partner Earnings & Settlement Operations
 
 **Objective:** Add Bookly-owned operational records and reconciliation around
 the Stripe Connect destination-charge model delivered in Spec 017.
@@ -213,7 +219,7 @@ the Stripe Connect destination-charge model delivered in Spec 017.
 **Research gate:** Map PaymentIntent, charge, transfer, balance transaction,
 connected-account balance, and payout objects before finalizing the data model.
 
-### Spec 020 — Cancellation Policies & Partial Refunds
+### Spec 029 — Cancellation Policies & Partial Refunds
 
 **Objective:** Extend the existing idempotent full-refund flow with explicit,
 versioned tour cancellation policies and partial refunds.
@@ -229,7 +235,7 @@ versioned tour cancellation policies and partial refunds.
 - Idempotent Stripe refund initiation and webhook reconciliation.
 - Existing full-refund behavior remains backward-compatible.
 
-### Spec 021 — Social Login (OAuth)
+### Spec 030 — Social Login (OAuth)
 
 **Objective:** Add Google and Facebook sign-in without weakening the current
 email/password, guest checkout, verification, or return-URL behavior.
@@ -248,7 +254,7 @@ email/password, guest checkout, verification, or return-URL behavior.
 
 ## 7. Wave 3 — Partner Operations and Pricing
 
-### Spec 022 — Multi-Staff Partner Accounts
+### Spec 031 — Multi-Staff Partner Accounts
 
 **Objective:** Allow approved partners to invite staff while retaining strict
 tenant isolation.
@@ -263,7 +269,7 @@ tenant isolation.
   controllable.
 - Material membership and role changes are audited.
 
-### Spec 023 — Participant Category Pricing
+### Spec 032 — Participant Category Pricing
 
 **Objective:** Extend existing generic `pricing_tiers` into booking-time
 adult/child/infant pricing without replacing the table blindly.
@@ -283,7 +289,7 @@ adult/child/infant pricing without replacing the table blindly.
 
 ## 8. Wave 4 — Engagement and Intelligence
 
-### Spec 024 — SMS & Push Notifications
+### Spec 033 — SMS & Push Notifications
 
 **Objective:** Add optional SMS and browser push to the existing email and
 in-app notification system.
@@ -298,7 +304,7 @@ in-app notification system.
 - Browser push subscription lifecycle and service-worker security review.
 - No booking failure when a notification provider is unavailable.
 
-### Spec 025 — Advanced Analytics & Reporting Exports
+### Spec 034 — Advanced Analytics & Reporting Exports
 
 **Objective:** Extend the existing partner analytics summary and chart with
 measured conversion data and governed exports.
@@ -321,32 +327,32 @@ measured conversion data and governed exports.
 ```text
 Spec 017 merged
    |
-   +---------------------> Spec 019 settlement operations
+   +---------------------> Spec 028 settlement operations
    |
-   +---------------------> Spec 020 cancellation/partial refunds
+   +---------------------> Spec 029 cancellation/partial refunds
    |
    v
-Spec 018 design system and full-product redesign
+Specs 018-027 phased full-product redesign (018 foundations -> 019 content -> mapped UI phases)
    |
    +----------+-----------+-----------+
    v          v           v           v
-Spec 021   Spec 022    Spec 023    Spec 024
+Spec 030   Spec 031    Spec 032    Spec 033
  OAuth      teams       pricing     messaging
    \          |           |           /
     +---------+-----------+----------+
                       |
                       v
-             Spec 025 advanced analytics
+             Spec 034 advanced analytics
 ```
 
 Rules:
 
-- Spec 018 starts from the verified `main` containing Spec 017.
-- Specs 019 and 020 depend on the Spec 017 payment contracts.
-- Spec 022 must land before later features rely on staff-level permissions.
-- Spec 023 must preserve existing pricing and booking compatibility during its
+- The original Spec 018 bootstrap starts from verified `main` containing Spec 017. Spec 019 continues from its documented Spec 018 predecessor until that prerequisite merges; do not discard existing artifacts when selecting the baseline.
+- Specs 028 and 029 depend on the Spec 017 payment contracts.
+- Spec 031 must land before later features rely on staff-level permissions.
+- Spec 032 must preserve existing pricing and booking compatibility during its
   migration.
-- Spec 025 consumes stable events from earlier features; it must not become a
+- Spec 034 consumes stable events from earlier features; it must not become a
   blocker for their transactional workflows.
 
 ---
@@ -356,14 +362,23 @@ Rules:
 | Directory | State |
 |-----------|-------|
 | `specs/017-stripe-connect-invoicing/` | ✅ Retrospective documentation and Constitution v2 hardening complete; targeted suites verified |
-| `specs/018-bookly-ui-redesign/` | Create next through Spec Kit |
-| `specs/019-partner-settlement-operations/` | Planned |
-| `specs/020-cancellation-partial-refunds/` | Planned |
-| `specs/021-social-login/` | Planned |
-| `specs/022-multi-staff-partners/` | Planned |
-| `specs/023-participant-category-pricing/` | Planned |
-| `specs/024-sms-push-notifications/` | Planned |
-| `specs/025-advanced-analytics/` | Planned |
+| `specs/018-bookly-ui-redesign/` | Existing baseline; Phase 1 implementation complete, CI/merge pending |
+| `specs/019-tour-content-data/` | Active specification |
+| `specs/020-tour-detail-experience/` | Planned; UI master-plan Phase 3 |
+| `specs/021-homepage-discovery/` | Planned; UI master-plan Phase 4 |
+| `specs/022-supporting-web-pages/` | Planned; UI master-plan Phase 5 |
+| `specs/023-auth-traveler-checkout/` | Planned; UI master-plan Phase 6 |
+| `specs/024-partner-dashboard-editor/` | Planned; UI master-plan Phase 7 |
+| `specs/025-filament-admin/` | Planned; UI master-plan Phase 8 |
+| `specs/026-redesign-quality-gate/` | Planned; UI master-plan Phase 9 |
+| `specs/027-redesign-deployment/` | Planned; UI master-plan Phase 10 |
+| `specs/028-partner-settlement-operations/` | Planned |
+| `specs/029-cancellation-partial-refunds/` | Planned |
+| `specs/030-social-login/` | Planned |
+| `specs/031-multi-staff-partners/` | Planned |
+| `specs/032-participant-category-pricing/` | Planned |
+| `specs/033-sms-push-notifications/` | Planned |
+| `specs/034-advanced-analytics/` | Planned |
 
 No later spec may reuse these numbers without a roadmap amendment.
 
@@ -376,14 +391,14 @@ schema.
 
 | Existing area | Planned change | Spec | Risk |
 |---------------|----------------|:----:|:----:|
-| Tours/content/media | Structured itinerary, difficulty, gallery ordering, operator summary contract | `018` | Medium — additive plus legacy JSONB compatibility |
-| Partners/Stripe | Earnings and settlement operational records linked to existing Connect fields | `019` | High — financial reconciliation |
-| Tours/bookings/payments | Versioned cancellation-policy snapshot and partial-refund metadata | `020` | High — financial correctness |
-| Users/auth | Provider identities and account-linking audit data | `021` | Medium — identity collision risk |
-| Partners/users | Membership and invitation model | `022` | High — tenant authorization |
-| Pricing/bookings | Participant categories and booking price snapshot | `023` | High — migration and price integrity |
-| Notification preferences | SMS/push consent, subscriptions, delivery attempts | `024` | Medium — privacy and provider reliability |
-| Analytics/events | View/funnel events, aggregates, export jobs | `025` | Medium — privacy and data growth |
+| Tours/content/media | Structured itinerary, difficulty, gallery ordering, operator summary contract | `019` | Medium — additive plus legacy JSONB compatibility |
+| Partners/Stripe | Earnings and settlement operational records linked to existing Connect fields | `028` | High — financial reconciliation |
+| Tours/bookings/payments | Versioned cancellation-policy snapshot and partial-refund metadata | `029` | High — financial correctness |
+| Users/auth | Provider identities and account-linking audit data | `030` | Medium — identity collision risk |
+| Partners/users | Membership and invitation model | `031` | High — tenant authorization |
+| Pricing/bookings | Participant categories and booking price snapshot | `032` | High — migration and price integrity |
+| Notification preferences | SMS/push consent, subscriptions, delivery attempts | `033` | Medium — privacy and provider reliability |
+| Analytics/events | View/funnel events, aggregates, export jobs | `034` | Medium — privacy and data growth |
 
 ---
 
@@ -394,13 +409,13 @@ until their research artifacts are approved:
 
 | Candidate | Purpose | Spec | Current repository state |
 |-----------|---------|:----:|--------------------------|
-| Laravel Socialite + Facebook provider | OAuth abstraction | `021` | Not installed |
-| SMS provider SDK | Transactional SMS | `024` | Provider not selected |
-| Web Push library + service worker | Browser push | `024` | Not installed |
+| Laravel Socialite + Facebook provider | OAuth abstraction | `030` | Not installed |
+| SMS provider SDK | Transactional SMS | `033` | Provider not selected |
+| Web Push library + service worker | Browser push | `033` | Not installed |
 
 Stripe PHP, Next.js, React, Laravel, Redis, PostgreSQL, Scout, Filament, Jest,
 Playwright, Pest, and the existing accessibility/Lighthouse tooling remain the
-approved foundation under Constitution v2.0.0.
+approved foundation under Constitution v2.1.0.
 
 ---
 
@@ -416,7 +431,7 @@ approved foundation under Constitution v2.0.0.
 
 ### Internationalization
 
-- Every customer-facing change ships in EN/ES/IT.
+- Every new customer-facing interface message ships in EN/ES/IT. Spec 019 tour content uses English source and revision-bound platform derivatives; unavailable derivatives use disclosed current English without blocking publication. Guide languages remain separate.
 - Provider error messages are mapped to localized Bookly messages; raw provider
   errors are not shown to users.
 
@@ -429,10 +444,10 @@ approved foundation under Constitution v2.0.0.
 
 - Integer minor units, explicit currency, idempotency, auditability, and
   webhook reconciliation are mandatory.
-- Spec 019 must prove no duplicate movement of funds under the destination
+- Spec 028 must prove no duplicate movement of funds under the destination
   charge model.
-- Spec 020 must snapshot the policy and calculated refund inputs.
-- Spec 023 must snapshot participant counts, category rates, and totals.
+- Spec 029 must snapshot the policy and calculated refund inputs.
+- Spec 032 must snapshot participant counts, category rates, and totals.
 
 ### Backward Compatibility
 
@@ -466,14 +481,15 @@ Minimum evidence by feature:
 | Spec | Required evidence |
 |:----:|-------------------|
 | `017` | Database-backed rerun of Stripe Connect/invoicing tests and partner endpoint authorization |
-| `018` | Visual matrices, responsive screenshots, accessibility checks, regression suites, production build, documented Lighthouse runs |
-| `019` | Reconciliation fixtures, retry/idempotency tests, duplicate-transfer prevention, ownership tests |
-| `020` | Boundary-time policy tests, full/partial/no-refund math, price/policy snapshot tests, webhook replay |
-| `021` | OAuth state/callback tests, account-link collision cases, provider failure, guest checkout regression |
-| `022` | Capability matrix tests, cross-partner denial, invitation/revocation, last-owner protection |
-| `023` | Category calculation/property tests, migration/backfill verification, price-drift and snapshot tests |
-| `024` | Consent/opt-out, queue retry, provider outage, deduplication, locale tests |
-| `025` | Event accuracy, ownership, aggregation reconciliation, retention, export authorization |
+| `018-027` | Visual matrices, responsive screenshots, accessibility checks, regression suites, production build, documented Lighthouse runs |
+| `019` | English round-trip and publication, translation revision/fallback, migration preservation, media, operator privacy, related-tour ranking and contract compatibility |
+| `028` | Reconciliation fixtures, retry/idempotency tests, duplicate-transfer prevention, ownership tests |
+| `029` | Boundary-time policy tests, full/partial/no-refund math, price/policy snapshot tests, webhook replay |
+| `030` | OAuth state/callback tests, account-link collision cases, provider failure, guest checkout regression |
+| `031` | Capability matrix tests, cross-partner denial, invitation/revocation, last-owner protection |
+| `032` | Category calculation/property tests, migration/backfill verification, price-drift and snapshot tests |
+| `033` | Consent/opt-out, queue retry, provider outage, deduplication, locale tests |
+| `034` | Event accuracy, ownership, aggregation reconciliation, retention, export authorization |
 
 An unavailable dependency is reported as blocked verification, not a passing or
 failing assertion.
@@ -485,20 +501,20 @@ failing assertion.
 The following decisions belong to their named research/spec phase and MUST NOT
 be guessed during implementation:
 
-1. **Spec 019:** Which Stripe objects are the source of truth for Bookly
+1. **Spec 028:** Which Stripe objects are the source of truth for Bookly
    settlement history under destination charges, and which hold/release
    controls are technically valid?
-2. **Spec 020:** Global default cancellation windows versus partner-configured
+2. **Spec 029:** Global default cancellation windows versus partner-configured
    policies, and the allowed partial-refund percentages.
-3. **Spec 021:** Whether Facebook remains required at launch alongside Google,
+3. **Spec 030:** Whether Facebook remains required at launch alongside Google,
    and the explicit account-linking consent flow.
-4. **Spec 022:** Final owner/manager/staff capability matrix, especially access
+4. **Spec 031:** Final owner/manager/staff capability matrix, especially access
    to earnings, Connect, refunds, and exports.
-5. **Spec 023:** Fixed or per-tour age bands and whether existing generic tier
+5. **Spec 032:** Fixed or per-tour age bands and whether existing generic tier
    names remain available beside participant categories.
-6. **Spec 024:** SMS provider selection, supported countries, quiet hours, and
+6. **Spec 033:** SMS provider selection, supported countries, quiet hours, and
    message-retention policy.
-7. **Spec 025:** Event retention window, anonymization strategy, and PDF export
+7. **Spec 034:** Event retention window, anonymization strategy, and PDF export
    necessity versus CSV-only launch.
 
 ---
@@ -507,14 +523,14 @@ be guessed during implementation:
 
 | Original item | Current disposition |
 |---------------|---------------------|
-| Old `017` Partner Payouts & Commission Ledger | Split: implemented Connect/invoicing foundation is new `017`; remaining operations move to `019` |
-| Old `018` Automated Refunds | Renamed/renumbered to `020`; full refund exists, only policies and partial refunds remain |
-| Old `019` Social Login | Renumbered to `021` |
-| Old `020` Multi-Staff Partners | Renumbered to `022` |
-| Old `021` Tiered Pricing | Renumbered to `023` and narrowed to participant categories because generic tiers exist |
+| Old `017` Partner Payouts & Commission Ledger | Split: implemented Connect/invoicing foundation is new `017`; remaining operations move to `028` |
+| Old `018` Automated Refunds | Renamed/renumbered to `029`; full refund exists, only policies and partial refunds remain |
+| Old `019` Social Login | Renumbered to `030` |
+| Old `020` Multi-Staff Partners | Renumbered to `031` |
+| Old `021` Tiered Pricing | Renumbered to `032` and narrowed to participant categories because generic tiers exist |
 | Old `022` Partner Review Replies | Removed from roadmap; already delivered |
-| Old `023` SMS / Push | Renumbered to `024` |
-| Old `024` Advanced Analytics | Renumbered to `025` and defined as an extension of existing analytics |
-| New `018` Bookly UI Redesign | Inserted as the current priority |
+| Old `023` SMS / Push | Renumbered to `033` |
+| Old `024` Advanced Analytics | Renumbered to `034` and defined as an extension of existing analytics |
+| New `018-027` Bookly UI Redesign | Phased current priority; Spec 018 foundations retained, UI Phase 2 is Spec 019 |
 
 This mapping is normative for new Spec Kit branches and directories.

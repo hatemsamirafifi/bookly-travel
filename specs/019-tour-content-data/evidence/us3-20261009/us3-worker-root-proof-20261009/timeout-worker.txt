@@ -1,0 +1,7 @@
+{"mode":"timeout","start":"2026-10-09T18:33:44+00:00","pid":1,"pcntl":true,"worker_timeout":60,"retry_after":90,"provider":"fake; no live key"}
+  2026-10-09 18:33:44 App\Domains\Partner\Jobs\GenerateTourTranslationJob  RUNNING
+  2026-10-09 18:35:01 Laravel\Scout\Jobs\RemoveFromSearch ............ RUNNING
+  2026-10-09 18:35:01 Laravel\Scout\Jobs\RemoveFromSearch ........ 3.14ms DONE
+  2026-10-09 18:35:01 App\Domains\Partner\Jobs\GenerateTourTranslationJob  15.22ms DONE
+WORKER_EXIT=0
+NUMERIC_EXIT=0 EXPECTED_EXIT=1

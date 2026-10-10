@@ -1,0 +1,1579 @@
+# Verification Evidence: Spec 019 Tour Content Data Model and API
+
+**Owner**: Spec 019 implementation workflow; independent acceptance by root reviewer.
+**Created**: 2026-10-02.
+**Current scope (2026-10-09)**: T001-T033 (33/78) independently accepted.
+Sections 20/24 record US1 authoring and US2 reader evidence. Earlier sections
+retain dated findings. US3-US6, whole-spec checks, live isolated model/rollback
+rehearsal and subsequent CI/merge/release acceptance remain pending.
+
+**Traceability**:
+
+- Spec: [spec.md](spec.md) (Spec `019`; UI master-plan Phase 2, Tasks 2.1-2.4)
+- Plan: [plan.md](plan.md)
+- Tasks: [tasks.md](tasks.md) (T001-T078; current accepted markers match dated evidence)
+- Design: [research.md](research.md), [data-model.md](data-model.md),
+  [quickstart.md](quickstart.md)
+- Contracts: [public detail](contracts/tour-detail-api.md),
+  [partner content](contracts/partner-tour-content-api.md),
+  [generation/recovery](contracts/translation-generation.md)
+- Quality gate: [requirements.md](checklists/requirements.md) (16/16 checked,
+  0 unchecked; document readiness, not implementation acceptance)
+- Governance: [Constitution v2.1.0](../../.specify/memory/constitution.md)
+- Predecessor baseline: [Spec 018 spec](../018-bookly-ui-redesign/spec.md),
+  [Spec 018 plan](../018-bookly-ui-redesign/plan.md)
+- Program mapping:
+  [master plan](../../docs/bookly-ui-redesign-spec-kit-master-plan.md),
+  [PRD](../../docs/PRD.md),
+  [Phase 2 plan](../../docs/Phase%202%20Implementation%20Plan.md)
+
+## 1. Branch, HEAD, and Active Pointer (checked 2026-10-02)
+
+| Fact | Observed value | Expected | Verdict |
+|---|---|---|---|
+| Current branch (`git branch --show-current`) | `codex/019-tour-content-data` | `codex/019-tour-content-data` | MATCH |
+| HEAD (`git rev-parse HEAD`) | `84ae4e59b49a1603d59a624ff9706f17ff02338f` | `84ae4e5` (prefix of same commit) | MATCH |
+| HEAD commit message/date | `docs: mark master-plan Phase 1 implementation complete` / 2026-10-01 | Inherited baseline commit | MATCH |
+| Ancestry (`git merge-base --is-ancestor 84ae4e5 HEAD`, exit `0`) | `84ae4e5` is an ancestor of HEAD (HEAD equals the baseline commit) | Baseline retained | MATCH |
+| Active pointer (`.specify/feature.json`) | `{"feature_directory": "specs/019-tour-content-data"}` | Spec 019 | MATCH |
+| Spec 019 directory status | Untracked (`?? specs/019-tour-content-data/`), 10 files: `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `quickstart.md`, `contracts/` (3 files), `checklists/requirements.md` | Pre-existing authorized work, preserved | MATCH |
+| Prerequisite script (`.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks`) | `FEATURE_DIR: .../specs/019-tour-content-data`; `AVAILABLE_DOCS: research.md, data-model.md, contracts/, quickstart.md, tasks.md` | Complete Spec Kit artifacts present | MATCH |
+| Task inventory (`tasks.md`) | 78 checkboxes `T001`-`T078`, all `- [ ]` (pending); 0 checked | 78 pending per task-generation record | MATCH |
+| Requirements gate (`checklists/requirements.md`) | 16 `[x]` checked, 0 `[ ]` unchecked | 16/16 read-only quality gate | MATCH |
+
+The extra `- [ ]` literal match in `tasks.md` is the format-description line
+("Each task uses `- [ ] Tnnn ...`"), not a 79th task.
+
+## 2. Spec 018 Preservation (checked 2026-10-02)
+
+`git diff --stat -- specs/018-bookly-ui-redesign` (working tree, uncommitted):
+
+```text
+specs/018-bookly-ui-redesign/plan.md | 2 ++
+specs/018-bookly-ui-redesign/spec.md | 4 +++-
+```
+
+Full diff consists of two additive annotation insertions and no deletions of
+substantive content:
+
+1. `specs/018-bookly-ui-redesign/plan.md`: +2 lines, a "**Continuation
+   governance**" paragraph stating the recorded checks remain historical
+   v2.0.0 design evidence, Spec 018 retains the original program plan and
+   completed Phase 1 foundations, and active Phase 2 planning belongs to
+   Spec 019 with its dependent branch/PR facts.
+2. `specs/018-bookly-ui-redesign/spec.md`: governance line extended (+3/-1):
+   original baseline pinned to Constitution v2.0.0 with active continuation
+   under v2.1.0; plus a "**Spec ID / phase ownership**" paragraph keeping
+   `018` as bootstrap/Phase 1 foundations and pointing Phase 2 requirements
+   and revised contracts at Spec 019.
+
+No Spec 018 file was deleted, renumbered, or rewritten; research, contracts,
+data model, quickstart, tasks, checklists, and `phase-1-verification.md`
+under `specs/018-bookly-ui-redesign/` show no diff. Verdict: **Spec 018
+preserved** (annotation-only change, consistent with Constitution v2.1.0
+items 6-7). These modifications are pre-existing authorized work and were
+not made or altered by T001.
+
+## 3. Predecessor / Prerequisite PR Facts (checked 2026-10-02 via `gh`)
+
+Read-only lookup only: `gh pr view 27` / `gh pr view 28` with structured
+JSON fields (`state`, `isDraft`, `baseRefName`, `headRefName`, `mergedAt`,
+`url`). No comments, messages, merges, or other writes were issued.
+
+| PR | Title | State | isDraft | base | head | mergedAt (UTC) | URL |
+|---|---|---|---|---|---|---|---|
+| #27 | Apply Bookly UI redesign and supporting tour workflows | **MERGED** | false | `main` | `codex/bookly-ui-redesign-all-work` | **2026-10-02T18:17:25Z** | <https://github.com/hatemsamirafifi/bookly-travel/pull/27> |
+| #28 | Implement Phase 1 design foundations and shared shells | **OPEN** | false | `main` | `codex/bookly-ui-phase-1` | null (not merged) | <https://github.com/hatemsamirafifi/bookly-travel/pull/28> |
+
+**Deviating finding (T001 -> orchestrator)**: [spec.md](spec.md) and
+[plan.md](plan.md) record PR #27 and Phase 1 PR #28 as "pending merge" /
+"remain unmerged" as of 2026-10-01/02. As of this check, **PR #27 is
+MERGED** (2026-10-02T18:17:25Z) while **PR #28 remains OPEN**. The plan's
+"confirm the predecessor/base still matches before implementation" step and
+the plan's compatibility/rollout item 1 ("pending all-work/Phase 1 PRs must
+be resolved or carried as an explicit stacked dependency before merge")
+therefore need reconciliation before T002+ implementation begins. T001 does
+not rebase, merge, or reinterpret the baseline; HEAD remains `84ae4e5` and
+no merge readiness is claimed from either PR's state. Local presence of code
+was not treated as merge evidence, per task instructions.
+
+## 4. Working-Tree Status (checked 2026-10-02, read-only)
+
+`git status --short`:
+
+```text
+M .specify/feature.json
+M .specify/memory/constitution.md
+M .specify/templates/plan-template.md
+M .specify/templates/spec-template.md
+M .specify/templates/tasks-template.md
+M docs/PRD.md
+M "docs/Phase 2 Implementation Plan.md"
+M docs/bookly-ui-redesign-spec-kit-master-plan.md
+M specs/018-bookly-ui-redesign/plan.md
+M specs/018-bookly-ui-redesign/spec.md
+?? specs/019-tour-content-data/
+```
+
+All modifications are pre-existing authorized specification/governance work
+(Constitution v2.1.0 propagation, master-plan/PRD/roadmap renumbering,
+Spec 018 annotations, feature pointer, templates) plus untracked Spec 019
+artifacts. T001 created only this file and did not overwrite, revert, or
+discard any of them.
+
+`git diff --check`: exit `0`, no whitespace errors (only LF/CRLF advisory
+warnings from Git on already-modified files).
+
+## 5. Separate Acceptance Statuses
+
+Per Constitution v2.1.0 Compliance Review, these are recorded separately.
+No phase is marked implemented and no gate is implied passed.
+
+| Gate | Status | Evidence / note |
+|---|---|---|
+| Implementation (Spec 019 code/tests) | **NOT STARTED** | T001 is documentation-only; T002-T078 pending, 0/78 complete |
+| Runtime verification (backend/frontend suites, E2E, adoption/recovery rehearsal) | **NOT RUN** | No test, build, lint, typecheck, or Lighthouse command executed for T001; none required for this documentation-only task |
+| CI (remote pipelines) | **NOT RUN / UNKNOWN** | No CI triggered or inspected |
+| Merge | **PENDING / BLOCKED on reconciliation** | PR #27 MERGED, PR #28 OPEN (see Section 3); predecessor/base must be reconfirmed per [plan.md](plan.md) before implementation |
+| Staging / release | **NOT STARTED** | No deployment, migration, or live-provider activity; explicitly out of scope |
+
+## 6. Commands Executed (all read-only) and Outcomes
+
+| # | Command | Outcome |
+|---|---|---|
+| 1 | `git branch --show-current` | `codex/019-tour-content-data` |
+| 2 | `git rev-parse HEAD` | `84ae4e59b49a1603d59a624ff9706f17ff02338f` |
+| 3 | `git merge-base --is-ancestor 84ae4e5 HEAD` | exit `0` — baseline is ancestor (HEAD equals it) |
+| 4 | `git log --oneline -8` | HEAD `84ae4e5`; parent chain via `8ff6ba3`, `f3e8e25`, PR #26 merge — no unexpected divergence observed |
+| 5 | `git status --short` (+ `--stat`, untracked listing) | 10 modified + `?? specs/019-tour-content-data/` (10 files), as in Section 4 |
+| 6 | `git diff -- specs/018-bookly-ui-redesign` | Additive 2-line plan note + 4-line spec governance/ownership note; no deletions of substance |
+| 7 | `Get-Content .specify/feature.json -Raw` | `specs/019-tour-content-data` |
+| 8 | `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` | `FEATURE_DIR` resolves to Spec 019; all design docs + `tasks.md` available |
+| 9 | `gh pr view 27 --json state,isDraft,baseRefName,headRefName,mergedAt,url,title` | MERGED, mergedAt `2026-10-02T18:17:25Z`, base `main`, head `codex/bookly-ui-redesign-all-work` |
+| 10 | `gh pr view 28 --json state,isDraft,baseRefName,headRefName,mergedAt,url,title` | OPEN, mergedAt null, base `main`, head `codex/bookly-ui-phase-1` |
+| 11 | `git diff --check` | exit `0`, clean |
+| 12 | Checkbox counts via `Select-String` on `tasks.md` / `requirements.md` | tasks: 78 `T001`-`T078` pending / 0 checked; requirements: 16 checked / 0 unchecked |
+| 13 | `Test-Path` on `docs/bookly-ui-redesign-spec-kit-master-plan.md`, `docs/PRD.md`, `docs/Phase 2 Implementation Plan.md`, prerequisite script | All `True`; every relative link in this file targets a verified-existing path |
+| — | Runtime gates (`php artisan test`, `npm test/lint/build`, Playwright, Lighthouse) | **Explicitly not run** — documentation-only task, no code changed |
+
+## 7. Unknowns and Follow-ups for the Orchestrator
+
+1. **PR #27 merged after plan text**: plan/spec say both PRs unmerged; #27
+   merged 2026-10-02T18:17:25Z. Whether the baseline moves off `84ae4e5`,
+   restacks onto `main`, or stays with an explicit stacked dependency on
+   open PR #28 is an orchestrator decision — T001 takes no position beyond
+   recording the facts.
+2. **PR #28 still open**: Phase 1 worktree remains separate and outside this
+   task; its merge/removal effect on Spec 019's predecessor record is
+   unresolved.
+3. **T002-T004 next**: disposable PostgreSQL/Meilisearch isolation,
+   frontend command/SSR-fixture verification, and schema/consumer inventory
+   are unverified by T001 and must precede foundations (per the task graph
+   T001 -> T002/T003, then T004).
+4. **No external lookup failure occurred**: `gh` was authenticated and
+   returned structured JSON for both PRs, so no uncertainty needs preserving
+   on PR state; the only open item is the reconciliation decision above.
+
+## 8. Independent Orchestrator Review and Baseline Refresh
+
+T001 was independently reviewed and marked complete on 2026-10-02. Its earlier
+sections preserve the pre-dispatch facts, not the current moving HEAD.
+
+- OpenCode: `opencode/muse-spark-1.3-contributor-free`, version 1.18.34,
+  session `ses_f02237e4cffexZwsVcXfhEUp7r`, completed exit 0, reported cost $0.
+- Orchestrator repeated branch/pointer/ancestor/prerequisite/PR lookups,
+  checked the new document links and whitespace, and confirmed only the
+  assigned verification document was added by this OpenCode run.
+- `git fetch origin main` refreshed origin/main to `f1a1f37`;
+  `git merge-base --is-ancestor 84ae4e5 origin/main` returned 0. Main contains
+  the original source baseline and subsequent CI/browser-isolation fixes.
+- Verified design/governance documents plus T001 evidence were committed and
+  rebased onto that main commit. Current setup commit is `ed0a9f3`;
+  `git merge-base --is-ancestor f1a1f37 HEAD` returned 0. Spec 018 remains
+  present. No PR was merged or closed by this operation; PR #28 remains open.
+  Reconciliation is resolved: retain original ancestry, use the refreshed
+  integration base, and do not duplicate Phase 1.
+- Partner contract correction follows
+  `backend/app/Domains/Partner/Middleware/PartnerRoleMiddleware.php`: missing
+  partner capability/record returns 404; gated inactive/unapproved writes
+  return 403 with ONBOARDING_STATUS_BLOCKED. Existing behavior is preserved.
+- Independent inherited-backend baseline: `docker compose exec -T -e
+  GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest
+  --configuration=phpunit.pgsql.xml tests/Feature/Partner/TourCreateTest.php
+  tests/Feature/Partner/TourDraftTest.php
+  tests/Feature/Partner/TourTranslationTest.php
+  tests/Feature/Search/TourDetailTest.php
+  tests/Feature/Admin/TourModerationTest.php` returned exit 0: **60 passed,
+  332 assertions, 114.69 seconds**. Output: [baseline-backend.txt](evidence/baseline-backend.txt).
+  This proves inherited focused suites only; no new Spec 019 runtime
+  behavior is accepted by these results. Bootstrap targets bookly_test
+  on bookly-test-postgres; provider key was blank for this test invocation.
+- Runtime implementation remains pending. T002-T078 remain unchecked;
+  CI, staging, and Spec 019 PR/merge/release acceptance are pending.
+  LiveReview was skipped through `lrc review --staged --skip`; global hooks
+  remain enabled.
+
+## 9. T002 Disposable Test Isolation and Fake-Provider Setup (checked 2026-10-02)
+
+- `backend/phpunit.pgsql.xml`: forces `DB_CONNECTION=pgsql`,
+  `DB_HOST=bookly-test-postgres`, `DB_DATABASE=bookly_test`,
+  `DB_USERNAME=bookly_test`, `QUEUE_CONNECTION=sync`,
+  `SCOUT_DRIVER=collection` (+ `SCOUT_PREFIX=bookly_test_`), `CACHE_STORE=array`,
+  `SESSION_DRIVER=array`; `MEILISEARCH_HOST=http://bookly-test-meilisearch:7700`
+  with `MEILISEARCH_KEY=test-key`. Comment states Scout uses the in-memory
+  collection driver and sync queue so tests stay isolated with no Meilisearch
+  or Redis dependency.
+- `backend/tests/bootstrap.php`: sets the same disposable values via
+  `putenv`/`$_ENV`/`$_SERVER` before Laravel/Dotenv loads, including
+  `APP_ENV=testing`, `PAYMENT_GATEWAY=stripe`, `SCOUT_QUEUE_CONNECTION=sync`.
+  Enforces the single-suite owner: when `TEST_TOKEN` is empty, it takes an
+  exclusive non-blocking `flock` on
+  `storage/framework/testing-database.lock` and throws
+  `Another test suite owns the disposable test database.` otherwise.
+  ParaTest workers carry `TEST_TOKEN` and receive suffixed databases.
+- `docker-compose.test.yml`: defines only `test-postgres` (postgres:15-alpine,
+  `POSTGRES_DB=bookly_test`, `POSTGRES_USER=bookly_test`, trust auth, tmpfs
+  `/var/lib/postgresql/data`, no host port, no persistent volume) and
+  `test-meilisearch` (v1.10, `MEILI_MASTER_KEY=test-key`, tmpfs
+  `/meili_data`) on `bookly-network`.
+- Live services observed running (`docker ps`): `bookly-test-postgres` and
+  `bookly-test-meilisearch` Up; dev `bookly-postgres`/`bookly-meilisearch` are
+  separate containers. Test bootstrap targets `bookly_test` on
+  `bookly-test-postgres`, never dev/prod data.
+- Single backend-suite owner: the process holding the `testing-database.lock`
+  flock. Only one database suite runs at a time; controlled multi-connection
+  race tests live inside that owning suite and clean their own fixtures.
+- Fake-provider rule: `AppServiceProvider` binds `TourContentTranslator` to
+  `GeminiTourTranslator`; `GeminiTourTranslator::translate` requires
+  backend-only `GEMINI_API_KEY`/`GEMINI_TRANSLATION_MODEL` and performs live
+  HTTP to `generativelanguage.googleapis.com` with a 40s timeout.
+  `TourTranslationTest` fakes with anonymous `TourContentTranslator`
+  implementations and `Http::fake`, asserting no credential/body leakage.
+  **Live provider traffic is forbidden in automated tests**: suites run with a
+  blank `GEMINI_API_KEY` (`-e GEMINI_API_KEY=`), bind fake translator/HTTP/queue
+  implementations, and never call the live Gemini endpoint.
+
+## 10. T003 Frontend Guides, Commands, SSR Fixtures and Seeded Partners (checked 2026-10-02)
+
+- `frontend/AGENTS.md`: Next.js 16 App Router conventions; Server vs Client
+  component separation with React hooks/context; locale-aware `next-intl`
+  error boundaries; Tailwind constraints; full access inside `frontend/src/`;
+  `npm run lint` + TypeScript strict; Sanctum-token HTTP only, no direct DB.
+- Installed Next.js guides read (before code):
+  `node_modules/next/dist/docs/01-app/01-getting-started/06-fetching-data.md`
+  (server `fetch`/ORM fetches, client fetches, streaming),
+  `14-metadata-and-og-images.md` (static `metadata`, dynamic
+  `generateMetadata`, file conventions; Server Components only),
+  plus `05-server-and-client-components.md` and `08-caching.md` for
+  Server/Client boundaries and cache/no-store semantics used by detail SSR.
+- `frontend/package.json` scripts: `lint` (`eslint`), `typecheck`
+  (`tsc --noEmit`), `test` (`jest`), `test:e2e` (`playwright test`),
+  `test:a11y`, `build` (`next build`), `lighthouse`/`lhci`. Deps: Next
+  16.2.3, React 19.2.4, next-intl 4.9, zod 4, zustand 5, Playwright 1.60.
+- `frontend/playwright.config.ts:18` (re-verified 2026-10-03, file
+  unmodified): `const baseURL = process.env.PLAYWRIGHT_BASE_URL || ...`
+  override IS present; defaults to `http://nginx` in-container
+  (`DOCKER_ENV=true`), CI runner via published nginx port, else
+  `http://localhost:8080`. Projects: `setup`
+  (traveler + partner storage states), `chromium`/`mobile` base, `a11y`,
+  `chromium-authed`/`mobile-authed`, `chromium-partner`/`mobile-partner`
+  (depend on `setup`, reuse `tests/.auth/partner.json` seeded
+  `partner@bookly.test`), `a11y-partner`. Serial workers + 20s expect/60s
+  test timeouts in Docker for cold compiles.
+- SSR fixture prerequisite: existing detail browser tests start a local API
+  fixture + isolated built Next process; browser route mocks alone cannot
+  intercept SSR server fetches. Build/SSR needs `API_INTERNAL_URL` (native:
+  `http://127.0.0.1:8080`) or `NEXT_PUBLIC_API_URL`; no secret in
+  `NEXT_PUBLIC_*`.
+- Seeded partner projects: `tests/e2e/partner.setup.ts` +
+  `tests/.auth/partner.json`; partner specs require these authed projects.
+  Browser isolation (per task constraints): never copy over `backend/.env`,
+  generate keys into real `.env`, seed/reset dev DB, stop user services, or
+  bind port 8080. Permitted: isolated compose project (e.g.
+  `bookly-spec019-browser`, `CI_HTTP_PORT=8189`) with CI tmpfs DB/separate
+  volumes + non-secret test-only env overrides; configurable test base URL
+  via existing `PLAYWRIGHT_BASE_URL` (default behavior intact).
+
+## 11. T004 Schema, Authoring Consumers and Focused Baseline (checked 2026-10-02)
+
+- `2026_09_25_000001_add_guide_languages_and_localized_itinerary.php`: adds
+  `tours.guide_languages` JSONB nullable + `tour_translations.itinerary` JSONB
+  nullable; backfills valid legacy `tours.itinerary` into existing EN rows
+  with null itinerary only (strings -> numbered days; structured days
+  preserved with T014 bounds; malformed/partially-invalid/empty -> `[]`
+  skipped, never fabricated). Reused as-is; no edit to applied migration.
+- `2026_09_25_000002_create_tour_translation_states_table.php`: adds
+  `tour_translations.important_information` JSONB nullable + creates
+  `tour_translation_states` (`tour_id` FK cascade, `locale` 2-char,
+  `source_hash` char64, `translated_hash` char64 nullable,
+  `status` 16-char, `last_error_code` 40-char nullable, timestamps, unique
+  tour+locale). Reused as-is; nullable media alt storage belongs to US4.
+- Active authoring consumers: `TourController::store/update` use **inline**
+  `$request->validate()` today (store :103, update :167); `StoreTourRequest`
+  / `UpdateTourRequest` exist but are unwired. `TourService::createTour`
+  / `updateTour` own business writes (scoped `getForPartner` by
+  partner-record ID). `TourTranslationService::queueIfChanged` schedules
+  ES/IT after commit; `GenerateTourTranslationJob` locks state-only.
+  Frontend: `TourWizard.tsx` writes EN/itinerary/difficulty/guide codes but
+  drops inclusions/exclusions/important_information; `edit/page.tsx` omits
+  difficulty/important_information; `ItineraryEditor.tsx` lacks duration
+  control; `validators/partner.ts:48` validates duration but wizard treats
+  nested EN errors as translation keys.
+- Focused inherited baseline (NOT new acceptance):
+  `TourCreateTest/TourDraftTest/TourTranslationTest/TourDetailTest/TourModerationTest`:
+  60 passed, 332 assertions, 114.69s (evidence/baseline-backend.txt).
+  `TourCreateTest` already covers basic create, difficulty/media order,
+  structured EN itinerary persist, malformed itinerary 422, guide codes,
+  safe `translation_statuses`, cross-partner scoping, 401/404. Gaps NOT
+  closed by foundations and still pending US1 review: full EN field round
+  trips, nested-vs-shorthand precedence, omitted/null/[] semantics, exact
+  title/list/text/itinerary boundaries, IDOR with distinct user/partner
+  IDs, ES/IT/state forgery, atomic content/media rejection (T010);
+  opaque/legacy snapshot round trips (T011). Nothing in T002-T009 claims
+  T010/T011 acceptance.
+- Middleware (actual behavior, preserved):
+  `PartnerRoleMiddleware`: missing partner capability/record -> 404;
+  inactive/unapproved blocked writes -> 403 `ONBOARDING_STATUS_BLOCKED`;
+  unauthenticated -> 401 (via auth); scoped cross-partner unknown -> 404 via
+  `getForPartner`. These statuses are not changed by this slice.
+
+## 12. Foundations T005-T009 Implementation Results (executed 2026-10-03)
+
+Scope: setup/foundations plus reviewer-ordered regression repairs only.
+US1 T010-T024 is explicitly not implemented here and remains pending
+orchestrator review. No browser suite was run (deferred to US1). An
+isolated `bookly-spec019-browser-*` compose project was observed running
+(`docker ps` 2026-10-03) and was left untouched.
+
+### T005 Shared revision hash and lock boundary
+
+- New `backend/tests/Feature/Partner/TourContentRevisionTest.php` (9 tests).
+  Before the fix it demonstrated: nested day/stop key reordering changed
+  `sourceHash`, and `withContentLock` did not exist (`method_exists` false).
+- `TourTranslationService`: added `normalizeSourceProjection` (fixed outer
+  field order; day objects rebuilt day/title/description/stops, stop
+  objects title/description/duration_minutes; array order preserved;
+  null vs `[]` vs `''` preserved; absent stops default to `[]`) and
+  `withContentLock` (Tour -> EN -> states in es/it order inside one DB
+  transaction; provider/network work stays outside; fresh source rechecked
+  by the caller inside the callback).
+- Malformed persisted source is kept explicit (scalar day/stop carried as
+  title input; non-array itinerary kept verbatim) so it never hashes as
+  empty/valid; authored validation (T008) rejects before writes.
+- Serialization flags deliberately unchanged
+  (`JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE`) so existing persisted
+  desired hashes stay comparable; only documented key-order
+  canonicalization affects identity.
+- Lock-order proof: query-log assertion pins exactly 4 `FOR UPDATE`
+  statements in tours -> tour_translations(en) -> states(es) -> states(it)
+  order with matching bindings. Transactionality and fresh-source
+  visibility are asserted. This does NOT prove concurrency: real
+  save/completion interleavings stay US3 acceptance (T034+).
+
+### T006 Shared frontend DTOs (compile-safe only)
+
+- `lib/api/types.ts`: added `EnglishSourceInput`,
+  `PartnerTourWritePayload` (full supported writes: source fields,
+  translations.en, nullable difficulty, guide_languages + languages alias,
+  category/destination/location, numeric duration, group sizes, media,
+  pricing_tiers, opaque availability payloads, draft/pending_review
+  status), `TranslationReadiness`, `translation_statuses`,
+  `TourImage.alt_locale`, `PublicOperatorSummary.verified` (additive).
+- `types/partner.ts`: nullable `difficulty_level`, `important_information`,
+  structured `itinerary`, `translations.en`, `translation_statuses`,
+  `TourMedia.alt_text` nullable + `alt_locale`. `types/tour.ts`:
+  nullable `difficulty_level`, `exclusions`, `important_information`.
+- `lib/api/partner.ts`: `createTour`/`updateTour` take the typed payload
+  (no `as unknown` casts).
+- `TourWizard.tsx`: both submissions restored to the full pre-existing
+  field set (pricing/availability/min/max included) behind the typed
+  payload; string `duration_value` conversion retained;
+  `difficulty_level ?? ''` keeps the required Select controlled for the
+  nullable type. `tourWizard.ts` initial state extended with
+  `exclusions: ''` and `important_information: []`. No payment/booking
+  workflow altered.
+
+### T007 Compatible media readers
+
+- `Tour::allImageUrls` now accepts legacy `image` plus `cover`/`gallery`
+  rows; first usable cover-typed row leads even at a later sort_order;
+  rest follows deterministic sort_order/id order; dedupes safe HTTP(S)
+  URLs; legacy `cover_image_url` is fallback only for media-empty tours
+  and is never prepended to a valid gallery (stale or not).
+- New `backend/tests/Feature/Search/TourMediaReaderTest.php` (7 tests):
+  before the fix, cover/gallery rows were invisible and a stale legacy
+  cover was prepended. Covers nonzero-sort cover priority, stale/absent
+  legacy cover, loaded vs unloaded relation paths, legacy dedup, empty
+  gallery, invalid URLs. Typed writers still belong to US4.
+
+### T008 English input boundary
+
+- New `backend/app/Domains/Partner/Requests/TourContentRules.php`:
+  `normalizeEnglishPatch` (nested wins, shorthand fills, omitted stays
+  absent, null/`[]` retained), `normalizeItinerary` (absent/null stops to
+  `[]`, order and repeated days preserved), `sourceRules` (title max120,
+  description max5000 with existing create min100 preserved, lists max30 /
+  item max500, meeting_point max500, cancellation_policy max2000),
+  `itineraryRules` (array max30, day int 1-30, titles nonblank max160,
+  descriptions max2000, stops max20, duration int 1-1440, exact nested
+  paths), `forgeryRules` (`translations.es/it`, hashes, readiness fields
+  `prohibited`) with field-specific messages.
+- `StoreTourRequest`/`UpdateTourRequest` merge the boundary while
+  preserving existing create requirements and partner-scoped title
+  uniqueness. Controller/service application is US1 (T015/T016); the
+  active routes still use inline validation.
+- New `backend/tests/Feature/Partner/TourContentInputTest.php` (7 tests)
+  failed first (`TourContentRules` missing, requests unwired), now green.
+
+### T009 Fixtures and fake-provider barriers
+
+- New `backend/tests/Support/TourContentFixtures.php` (`Tests\Support`,
+  autoloadable): deterministic `englishAttributes`, `seedDerivative`
+  (current/missing/stale/failed), `partnerPairWithDistinctIds`
+  (partner-record IDs distinct from user IDs), `secondConnection`
+  (independent PDO to the disposable DB), `barrierKey` (crc32
+  advisory-lock keys), `Spec019FakeTranslator` (deterministic suffix
+  translations, arrival counts, no network).
+- Proven in-suite: second connection reports `current_database() =
+  bookly_test`; advisory-lock exclusion/ordering works across the two
+  connections; `GEMINI_API_KEY` blank asserted; fake arrivals recorded.
+  Cross-connection row fixtures stay invisible inside the
+  RefreshDatabase transaction by design; US3 owns true race tests.
+
+### Gate commands and results (actual, 2026-10-03)
+
+- Backend (from repo root, disposable PG, blank provider key):
+  `docker compose exec -T -e GEMINI_API_KEY= laravel php -d
+  memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml`
+  with the 3 new files + `TourCreateTest/TourDraftTest/
+  TourTranslationTest/TourDetailTest/TourModerationTest`:
+  **83 passed, 425 assertions, 106.84s, exit 0** (23 new foundation +
+  60 inherited; inherited results are regression checks, not new
+  acceptance). Full-suite logs: `/tmp/spec019-full8.log` (container).
+- `php vendor/bin/pint --test` on all 10 touched PHP files: PASS after
+  auto-fixes. `phpstan analyse` on the 6 touched app/support paths:
+  **No errors** (initial Tour.php property findings fixed via TourMedia
+  `@property` tags + typed closure).
+- Frontend (from `frontend/`): `npm run typecheck`: PASS (two new
+  nullability errors from the extended DTOs fixed at the source).
+  Scoped `npx eslint` on all 6 touched TS/TSX files: PASS with no
+  output. Full `npm run lint` (whole project) **times out on this host
+  (>600s) — environment limitation, NOT a pass**; full-lint acceptance
+  stays pending.
+- Jest `--runInBand`: `partner.test.ts` **19 passed** (after recreating
+  the host-wiped `%TEMP%/jest` cache dir); 7 tour/partner/api suites
+  **38 passed**. Total 57 passed, 0 skipped/weakened.
+- New tests use `spec019`-prefixed helpers (no global Pest collisions);
+  combined multi-file runs verified. Pint-normalized style only; no
+  test was skipped or loosened and no assertion weakened.
+- `git diff --check`: clean (verified at report time).
+- Pending after this slice: US1 T010-T024, then US2-US6 and T073-T078
+  cross-cutting gates (full lint/build, Lighthouse, adoption/recovery
+  rehearsal, FR/SC reconciliation).
+
+## 13. Foundation Rework After Review (executed 2026-10-03, second pass)
+
+Section 12 is retained as the first-pass record; this section records the
+reviewer-ordered corrections. US1 T010-T024 remains unimplemented and no
+full-spec completion is claimed. Orchestrator-owned files observed during
+this pass (`docs/...master-plan.md`, `research.md`, `spec.md`,
+`evidence/foundation-*.json`, isolated `bookly-spec019-browser-*`
+stack, PR28 merged, origin/main `803048e`) were left untouched; merge and
+integration ownership stays with the orchestrator.
+
+### Corrected boundary contract (review items 1-2, 5)
+
+- `TourContentRules::sourceRules`: title is now a non-null string whenever
+  supplied in both create and update (`translations.en.title` likewise);
+  description follows the shared nullable draft rule in both Requests (the
+  obsolete update `min:100`/non-null override is removed).
+- `UpdateTourRequest` no longer carries the obsolete `tours.title`
+  uniqueness override (titles live in `tour_translations`, not `tours`);
+  ownership scoping stays in the controller/service layer for US1 wiring.
+- `normalizeItinerary` passes non-array input through verbatim and keeps
+  explicit `stops: null` as null; only an absent `stops` key normalizes to
+  `[]`. Validation therefore reports exact field errors instead of this
+  layer silently clearing malformed input.
+- Forgery rejection is now behavioral, not rule-string based:
+  `forbiddenPresentPaths` scans raw input and reports every authored
+  non-EN locale (`es/it/fr/de/...`, any value including null/empty) and
+  every platform-owned key top-level or nested under a translations entry,
+  by precise path. Both Requests enforce it through `withValidator`
+  after-hooks (Laravel `prohibited` lets present-but-null/empty values
+  through, so the hook is the enforcement). The old `forgeryRules()` /
+  `messages()` scaffolding is removed.
+- `TourTranslationService` normalization preserves malformed day/stop
+  scalars and non-array stops lists verbatim (no invented titled objects,
+  no numeric-string coercion); only valid objects get key-order
+  canonicalization and absent-stops defaults. Serialization flags remain
+  the inherited set. `sourcePayload` exposes the raw preservation and
+  `applyStrings` rejects malformed source via real validation.
+
+### Real row-lock proof (review item 3)
+
+- New test seeds dedicated fixtures on its own named default connection
+  (`spec019_owner`, unique slug, committed for real) so a second
+  connection can see them despite the wrapping RefreshDatabase
+  transaction; the original default is restored and fixtures cleaned in
+  `finally`. While `withContentLock` holds, the contender's NOWAIT
+  `SELECT ... FOR UPDATE` on the Tour, EN, es-state and it-state rows
+  each fail with SQLSTATE `55P03`; after release all four lock cleanly.
+  Every contender statement is NOWAIT/bounded — no hangs possible.
+- Query-log order pinning (Tour -> EN -> es -> it with exact bindings) is
+  retained as the order proof; the NOWAIT test is the reality proof.
+  True job interleavings remain US3.
+
+### Fixtures, gate and standalone fake (review items 4, 8)
+
+- `partnerPairWithDistinctIds` now assigns explicit high partner IDs with
+  `partners_id_seq` repair and throws unless both record IDs differ from
+  both user IDs and each other; proven by a dedicated guarantee test.
+- New `Spec019Gate` (advisory-lock hold/tryHold/release) gives US3 a
+  controlled pause/release hook; proven held-then-released in-suite.
+- The fake lives in its own PSR-4 file
+  (`tests/Support/Spec019FakeTranslator.php`): `class_exists` is true
+  straight from `vendor/autoload.php`, and the filtered fake test passes
+  in isolation (exit 0, 1 passed / 4 assertions).
+
+### Concrete write DTOs (review item 6)
+
+- `availability_rules/exceptions: unknown[]` replaced with concrete
+  `PartnerAvailabilityRuleInput` / `PartnerAvailabilityExceptionInput`
+  (server shapes; wizard form objects assign directly) plus
+  `PartnerTourMediaInput` / `PartnerPricingTierInput`.
+- `EnglishSourceInput.title` is now `title?: string` (non-null when
+  supplied); top-level `description?: string | null` (nullable draft
+  description supported in both places).
+- `translation_statuses` removed from public `TourDetail` (the public
+  contract carries only singular `translation_status`; verified
+  `GetTourDetailAction.php:86`). Owned es/it readiness is now
+  `OwnedTranslationStatus` (`pending|ready|stale|failed`, no `source`),
+  consumed by partner `Tour.translation_statuses`; the widened
+  `TranslationReadiness` alias is deleted.
+- `lib/api/partner.ts` uses a top-level `import type`; no dead
+  imports/helpers remain. All wizard pricing/availability fields intact.
+
+### Corrected gate methodology and results (review item 7)
+
+- Exit-code discipline fixed: every gate below redirects to a host-side
+  log with PowerShell `$LASTEXITCODE` captured numerically. The earlier
+  `EXIT:True` lines were PowerShell interpolating `$?` inside the remote
+  `sh -c` string — a bool, not a shell status — and are discarded as
+  evidence. Piped `Select-Object -First N` output was never the pass
+  criterion; full logs were read for the `Tests:`/`OK`/`PASS` lines.
+- The first `TourContentInputTest` run timed out with no output (missing
+  class + cold migration under host pressure): environment uncertainty,
+  NOT red evidence. The rerun after creating the class failed honestly
+  (class-not-found per test), then passed after implementation — genuine
+  TDD red/green, preserved in container `/tmp/spec019-input-test*.log`.
+- Backend full set (same 8 files as §12), blank provider key:
+  **exit 0 — 89 passed, 535 assertions, 75.51s** (29 new foundation +
+  60 inherited). New-file rerun post-Pint: **exit 0 — 29 passed, 203
+  assertions**. Filtered fake-only run: **exit 0 — 1 passed**.
+- `pint --test` (11 touched PHP files): **exit 0 — PASS** (after
+  auto-fixes). `phpstan analyse` (8 touched paths): **exit 0 — No
+  errors**.
+- Frontend gates ran in the isolated `bookly-spec019-browser` nextjs
+  container (Node v22.23.3), dev services untouched:
+  `npm run typecheck` **exit 0**; `npm test -- --runInBand` (validator +
+  7 consumer suites) **exit 0 — 8 suites, 57 tests, 114.232s**.
+  Full `npm run lint` **exit 1 with the only 3 errors in
+  `frontend/.phase1-evidence/extract-phase1.cjs`** (`no-require-imports`;
+  git-ignored pre-existing Phase 1 tooling, unrelated to this slice,
+  left untouched) — all 7 touched TS/TSX files lint clean. The earlier
+  native `npm run lint` >600s timeout is a Windows-host I/O limitation,
+  not a result.
+- `git diff --check` clean (CRLF advisories only, on orchestrator-owned
+  docs). Staged diff empty; nothing committed.
+- Standing by for the independent reviewer rerun. Pending acceptance
+  after foundations: US1 T010-T024 first, then US2-US6 and T073-T078.
+
+## 14. Delta Corrections After Second Review (executed 2026-10-03, third pass)
+
+Sections 12-13 retained as history. This pass closes the five follow-up
+items; US1 T010-T024 remains unimplemented and no full-spec completion
+is claimed. Orchestrator metadata, evidence JSON, browser stack and
+`.todo` untouched; no git mutations; provider key blank everywhere.
+
+### Item 1 — explicit null stops rejected, not treated as empty
+
+- `itineraryRules` day-stops rule is now `sometimes|array|max:20`
+  (nullable removed), matching the partner contract table and
+  data-model: stops is an ordered array, absent defaults to `[]`, valid
+  zero stops is `[]`. `normalizeItinerary` still passes explicit null
+  through untouched so validation rejects it at the exact `.stops` path.
+  Duration/description nullability unchanged.
+- New behavioral case `rejects explicit null stops instead of treating
+  null as empty` asserts failure at
+  `translations.en.itinerary.0.stops`; the boundary-valid case uses
+  `stops: []`. Null is never described as empty.
+
+### Item 2 — provider/job/error and unexpected EN keys rejected
+
+- `forbiddenPresentPaths` now additionally rejects: any
+  `translations.en` key outside the 9-field source allowlist with its
+  precise path (`provider_body`, `custom_field`, ...), and seven
+  top-level provider/job/error state fields (`provider`,
+  `provider_body`, `provider_error`, `provider_response`, `job_id`,
+  `job_state`, `generation_status`), including present-but-null/empty
+  values. Deeper unknown keys (inside days/stops) cannot reach writes
+  because only validated data is applied.
+- Behavioral cases added: `translations.en.provider_body=null`,
+  top-level `provider_error=null` + `job_state=[]`, unexpected
+  `translations.en.custom_field`, and a valid lifecycle/pricing/
+  availability payload proving non-source input stays intact. These were
+  unwired-rule defects (the active controller already rejects non-EN
+  locales independently); not deployed-API bypass claims.
+
+### Item 3 — real fake pause plus accurate lock documentation
+
+- `Spec019Gate` removed from `TourContentFixtures.php` (no matching
+  PSR-4 file, and wrapping advisory primitives never paused the fake).
+  `barrierKey` removed with it as unused scaffolding.
+- `Spec019FakeTranslator::onArrival` hook added: a Fiber test suspends
+  inside `translate()` after the arrival is recorded, the parent
+  observes suspension + arrival with no output yet, resumes, and asserts
+  the completed deterministic output — an actual tested pause/release on
+  the fake, no network, deterministic. Real job interleavings stay US3.
+- The separate-connection NOWAIT Tour/EN/es/it lock test is kept and now
+  documented (code + here) as proving conflicting lock acquisition on
+  real rows, not actual concurrent writes or jobs.
+
+### Item 4 — full lint green via generated-artifact ignore
+
+- `frontend/eslint.config.mjs` `globalIgnores` gained
+  `.phase1-evidence/**` only (generated local audit artifact,
+  git-ignored, not production source). No application/test source
+  excluded, no rule disabled, evidence/helper files preserved.
+- Full `npm run lint` in the isolated nextjs container: **exit 0**
+  (previously exit 1 solely on that artifact; scoped-file lint was never
+  claimed as full-lint success).
+
+### Item 5 — hash-normalizer docblock corrected
+
+- The stale private-method docblock claiming scalar days become titled
+  objects now describes the actual raw-preserving projection.
+
+### Final gate results (numeric `$LASTEXITCODE`, host-side logs)
+
+- Backend 8-file set: **exit 0 — 92 passed / 547 assertions / 85.47s**
+  (32 new foundation + 60 inherited regression-only). Post-Pint rerun
+  of the 3 new files: **exit 0 — 32 passed / 215 assertions**.
+  Filtered standalone-fake run earlier: **exit 0 — 1 passed**.
+  A mid-pass failure is recorded honestly: a bad edit duplicated the
+  fake's method body (parse error, exit 2 in `spec019-delta1.log`),
+  repaired and green thereafter.
+- `pint --test` (11 files): **exit 0 — PASS**. `phpstan` (8 paths):
+  **exit 0 — No errors**.
+- Container frontend: `typecheck` **exit 0**; `npm run lint` **exit 0**;
+  Jest 8 suites **exit 0 — 57 passed, 0 snapshots**.
+- `git diff --check` **exit 0** (CRLF advisories only, on
+  orchestrator-owned docs). Staged diff empty; nothing committed.
+- Standing by for the independent reviewer rerun. Pending: US1 T010-T024,
+  then US2-US6 and T073-T078.
+
+## 15. Independent Foundation Acceptance (root reviewer, 2026-10-03)
+
+T001-T009 accepted; US1 T010-T024 is next. HEAD before this acceptance
+commit is `7d60da9`; every gate ran on the reviewed working tree including
+the corrections below. A later main integration must preserve this source.
+
+- Read production/test diffs against the contracts; no inherited test was
+  removed, weakened or skipped. Removed the advisory wrapper; actual fake
+  pause/resume and separate-connection row-lock acquisition are verified.
+  Real job/write interleavings remain US3 acceptance.
+- Reviewer corrected the partner read DTO to the actual localized-row
+  array returned by `TourController::show`, using concrete source fields;
+  write input remains nested EN. Strengthened the rollback regression to
+  assert the intended exception message, preventing a different database
+  failure from being mistaken for successful rollback proof. Clarified
+  hash docblocks: object-key projection is separate from bounds validation.
+- Backend suite owner for the independent rerun: root reviewer; the
+  OpenCode process exited first. `phpunit.pgsql.xml`/bootstrap force the
+  disposable `bookly_test` database on `bookly-test-postgres`; automated
+  provider key blank and no live provider traffic. Existing applied
+  migrations and raw legacy/derived data preserved.
+
+| Gate | Actual result | Full retained output |
+|---|---|---|
+| PostgreSQL 8-file focused set | exit 0; 92 passed / 548 assertions / 35.10s (32 new foundation + 60 inherited) | [backend](evidence/reviewer-foundations-backend-focused.txt) |
+| Pint, 11 PHP files | exit 0; PASS | [Pint](evidence/reviewer-foundations-pint.txt) |
+| PHPStan, affected paths/support | exit 0; no errors | [PHPStan](evidence/reviewer-foundations-phpstan.txt) |
+| Full frontend lint | exit 0 | [lint](evidence/reviewer-foundations-frontend-lint.txt) |
+| Frontend typecheck | exit 0 | [types](evidence/reviewer-foundations-frontend-typecheck.txt) |
+| Focused Jest, 8 suites | exit 0; 57 passed / 5.555s | [Jest](evidence/reviewer-foundations-frontend-focused-jest.txt) |
+
+[Manifest](evidence/reviewer-foundations-manifest.jsonl) records UTC start,
+finish and numeric exits. [Exact rerun commands](evidence/reviewer-foundations-commands.ps1)
+retain this host's paths and runtime prerequisites; frontend ran in the isolated Node
+v22.23.3 browser container. Jest emits existing TourCard mock/act warnings;
+its inherited tests were untouched. The Laravel lockfile is v11.54.0.
+Repository log copies remove terminal whitespace only for Git checks;
+original unmodified logs remain in the external delegation evidence directory.
+
+The independent [final rule probe](evidence/foundation-boundary-probe-final-20261003.json)
+verified all ten cases, including exact null-stops/unknown-EN/provider/job
+rejection paths and accepted empty stops/valid patch. Bare Composer
+PSR-4 autoload independently returned true for fake and fixtures (exit 0).
+This is reusable-rule acceptance; actual endpoint wiring/round trips remain
+US1. Source/itinerary DTOs, compatible image readers, and T009 barriers are
+shared foundations, not complete story or browser acceptance.
+
+Runtime prepared: separate `bookly-spec019-browser` project, port 8189,
+seeded disposable storage/database, isolated Node/.next volumes and
+Chromium/dependencies installed (exit 0). Production Next build/server and
+integrated browser acceptance remain pending. The generated local Phase 1
+artifact is now excluded from ESLint; application/test coverage remains.
+The prior native lint timeout's cause was not established; it is not
+reliable evidence of a particular host I/O bottleneck.
+
+User authorized the currently configured translation model. Existing local
+backend reports configured Gemini `gemini-3.5-flash-lite`; sanitized
+[metadata request](evidence/configured-model-metadata-20261003.json) returned
+HTTP 200 with generateContent supported. No real generation yet; automated
+suites stay fake/key blank. Remote staging host is not identified; local
+isolation must not be described as a remote staging deployment.
+
+US3 prerequisite probe: existing PHP has `pcntl_fork=false`,
+`pcntl_async_signals=false`, `proc_open=true` (exit 0). Installed
+`Illuminate/Queue/Worker.php::supportsAsyncSignals` checks `pcntl` before
+registering alarm-based timeouts; the current Dockerfile omits it. T043
+must verify an effective timeout in an isolated review image, rather than
+accepting flags alone. No personal service was changed.
+
+Predecessor recheck: `gh pr view 28 --json state,mergedAt,url,statusCheckRollup`
+returned MERGED at 2026-10-02T21:55:43Z and every returned check concluded
+SUCCESS. Latest fetched main `803048e` still awaits clean-tree integration;
+Spec 018 remains preserved. Spec 019 CI/merge/release are independently
+pending. Execution follows the user's explicit OpenCode + Spec Kit workflow
+with reviewed increments and this evidence ledger.
+
+Guard review: concrete read shape, raw-preservation documentation and
+specific rollback exception proof corrected; no new package or fabricated
+production result. clean-code-guard: 2 fixed, 0 remaining foundation flags;
+test-guard: 1 assertion strengthened. docs-guard: current statuses corrected
+and historical pass counts retained with their dates.
+
+## 16. Reviewed Commit and Main Integration (2026-10-03)
+
+Foundation commit `fb5c718` contains accepted T001-T009 and the retained
+independent outputs above. Clean-tree merge `60ce24d` incorporates
+`origin/main` `803048e`: only the Phase 1 evidence document and frontend
+Git/Docker artifact ignores were added. `git diff --quiet fb5c718 HEAD --
+backend frontend/src frontend/eslint.config.mjs` returned 0, proving tested
+runtime source/tests unchanged. Both `803048e` and original `84ae4e5` are
+ancestors (exit 0). Spec 018 is preserved; main integration is complete.
+LiveReview used `lrc review --staged --skip` as requested; hooks stayed enabled.
+Stories T010-T078 and Spec 019 CI/merge/release acceptance remain pending.
+
+## 17. US1 Review Delta Corrections (2026-10-03, unreviewed)
+
+Bounded to four source corrections plus locale-test restoration and edit
+labels. No task markers changed, no commits, no later-story work. Root
+gates and T023/T024 browser work follow separately.
+
+### D1 — opaque snapshot padding preserved (T011)
+
+- Root readonly probe
+  (`us1-readonly-opaque-middleware-probe.json`) confirmed the defect: global
+  TrimStrings/ConvertEmptyStringsToNull rewrote padded/empty nested draft
+  strings (`'  Keep spaces  '` -> `'Keep spaces'`, `''` -> `null`).
+- New owner endpoint regression with padded/empty strings at multiple
+  depths plus ordered arrays and `'30'` vs `30` types failed first
+  (`Failed asserting that two arrays are identical`), then passed after the
+  scoped fix.
+- Fix (`backend/bootstrap/app.php` only): `trimStrings`/`convertEmptyStringsToNull`
+  `except` closures skipping BOTH normalizers solely for authenticated
+  `POST api/partner/tours/*/drafts/save` (installed Laravel 11
+  `Middleware::trimStrings` closure-partition and `skipWhen` APIs verified
+  in vendor). Auth/owner policy untouched.
+- Companion regression proves canonical create/update keep trim/null
+  normalization (padded title stored trimmed, padded meeting point trimmed,
+  `''` meeting point stored null).
+
+### D2 — late-failure rollback and destination alias (T016/T015)
+
+- Rollback test rewritten: scoped `TourTranslation::saved` injection fires
+  only AFTER the changed EN row and replacement media persist (service order
+  basic -> media -> EN -> states), records arrival, throws
+  `RuntimeException('spec019-injected-late-persistence-failure')` proven via
+  `withoutExceptionHandling` exact class/message catch with `finally`
+  `flushEventListeners` (model defines no other listeners). Fixture mutates
+  destination/group/media/source so restore is genuine.
+- Restored exactly: tour attrs, EN attrs, media ids/order/cover, states;
+  `Queue::assertNotPushed(GenerateTourTranslationJob::class)`. The Queue
+  fake also records the pre-existing synchronous `Tour::saved`
+  search-index dispatch; index after-commit timing stays US3 T042 scope.
+- Destination alias: update `{destination}` was ignored (red at the
+  location assertion), now maps to location/location_slug mirroring
+  create. New create -> update -> read proof covers destination, 2-day
+  duration (2880 min), group 4/8 and category change with read-back.
+
+### D3 — canonical NULL vs [] preservation (T021)
+
+- Backend regression: EN seeded with null meeting_point/highlights/
+  itinerary survives an unrelated basic save with identical source hash and
+  states, and reads back null.
+- Edit form tracks owned EN nulls (`nullSourceFields`), sends them back as
+  null while edited fields — including explicit user clears — send as
+  authored; snapshot explicit nulls register clearing. Component test
+  covers unrelated-save null round-trip. Snapshot merge stays
+  presence-aware (nested EN wins per field, shorthand fills missing,
+  omitted/media retained, readiness/hash ignored, raw snapshot untouched).
+
+### D4 — edit labels to catalog keys (T022)
+
+- Title/description/meetingPoint/cancellationPolicy/highlights/inclusions/
+  exclusions (+ placeholders, comma hint) now use `partner.tours.form`
+  keys with associated labels. Root replaced the catalog-only assertions
+  with EN/ES/IT rendered edit controls, field feedback and focused-summary
+  regressions. The shared catalog adapter throws for missing keys.
+
+### D5 — locale test restored (T012/T022)
+
+- `TourWizard.locale.test.tsx` restored using the catalog-backed next-intl
+  boundary adapter (BookingCard precedent): parameterized EN/ES/IT render
+  proves localized focused summaries, indexed server list errors under
+  their control, and fractional-duration integer feedback with real
+  catalog strings. The real next-intl ESM bundle is unparsable by the Jest
+  CJS runner, so the adapter stands in at the third-party boundary; real
+  browser ES/IT 422 evidence remains T023 scope.
+
+### Ordering honesty
+
+Prior-relay frontend production edits preceded its new frontend tests.
+The delta's frontend null-preservation implementation also preceded its
+new component regression; neither has retrospective tests-first acceptance.
+Opaque padding and destination alias demonstrated red before their fixes.
+New mapping tests caught non-capturing-group key loss and Laravel array-max
+"more than" wording. Root's rendered edit-locale regressions failed before
+the root inline-error correction. A separate frozen pre-delta edit-page
+reproduction later failed on `null` becoming `""`; that proves the defect,
+not chronological TDD compliance. These ordering deviations remain recorded.
+
+### Delegate observations (independent acceptance pending)
+
+- Backend 8-file set: reported exit 0 — 115 passed / 764 assertions
+  (`us1-delta-backend8.log`).
+- Frontend 7 focused suites: log reports 148 passed / 7 suites
+  (`us1-delta-jest7.log`), including the subsequently replaced catalog-only
+  cases. The delegate's PowerShell boolean and later fresh-shell `$?`
+  do not prove that Jest invocation's native numeric exit code.
+- `npm run typecheck`: exit 0. `npm run lint`: exit 0, 0 errors.
+- Pint (8 PHP files incl. bootstrap): PASS. PHPStan: no errors.
+- Pending: full frontend suite/build, T023 actual-API browser suites
+  (EN/ES/IT, viewports) and T024 collation — separate dispatch.
+
+Root independently reruns current tests, lint and static analysis before
+committing. Delegate observations above are historical and do not accept
+the current working tree, whole US1, or later stories.
+
+## 18. Independent US1 Source Review (2026-10-04)
+
+Root read the source and test diff and independently ran seven gates against
+the authoritative working tree. The [command manifest](evidence/us1-root-gates-20261004.jsonl)
+records exact arguments, UTC start/finish and native numeric exits:
+
+| Gate | Result | Retained output |
+|---|---|---|
+| Eight backend suites on disposable PostgreSQL | 115 passed, 764 assertions; exit 0 | [Backend](evidence/us1-root-backend-focused-20261004.txt) |
+| Pint | 16 files pass; exit 0 | [Pint](evidence/us1-root-pint-20261004.txt) |
+| PHPStan | No errors; exit 0 | [PHPStan](evidence/us1-root-phpstan-20261004.txt) |
+| Frontend lint | Exit 0 | [ESLint](evidence/us1-root-frontend-lint-20261004.txt) |
+| Frontend typecheck | Exit 0 | [TypeScript](evidence/us1-root-frontend-typecheck-20261004.txt) |
+| Thirteen focused frontend suites | 113 passed; exit 0 | [Jest](evidence/us1-root-frontend-focused-jest-20261004.txt) |
+| Next production build | Compiled and generated 89 pages; exit 0 | [Build](evidence/us1-root-frontend-production-build-20261004.txt) |
+
+The first backend attempt could not reach the stopped disposable services
+after Docker restarted. Root terminated only that verified Pest process
+(exit 143), retained the [interrupted output](evidence/us1-root-backend-focused-runtime-stopped-20261004.txt),
+restarted the dedicated test services, confirmed readiness and reran.
+Development database/services were not reset. Repository output copies
+remove terminal trailing whitespace only; full raw logs remain externally.
+
+Review corrections include strict rollback attribute/state comparisons;
+actual complete PUT-body assertions; rendered EN/ES/IT labels, localized
+inline errors, accessible field descriptions and focused summaries;
+and a shared catalog adapter that rejects missing keys. Internal pricing
+and availability components now run in Wizard tests. The new restoration
+case uses actual `localStorage`, `persist.rehydrate` and rendered controls,
+preserving old text/itinerary and absent difficulty. The shared custom
+Select uses its own generated ID, so difficulty is associated through
+`aria-labelledby`. No dependency or production fixture was added.
+
+The [frozen old edit-page reproduction](evidence/us1-old-edit-null-reproduction-20261004.txt)
+failed with native exit 1: an unrelated location edit sent untouched
+meeting_point as `""` instead of `null`. Eight cases were filtered by the
+explicit Jest `-t` invocation, not skipped in source. The current focused
+suite passes the stronger null/explicit-empty-list regressions. This is
+defect evidence, not retrospective tests-first compliance (see section 17).
+
+Jest retained two warnings from unchanged inherited TourCard tests
+(the next/image mock's `fill` attribute and async `act`); neither was
+suppressed. New Wizard/edit tests completed without those warnings.
+The production build passed independently. This source review does not accept whole
+US1: exact frontend/server bounds, remaining localized feedback, actual-API
+browser coverage and locale/viewport collation remain T017/T022-T024.
+Later stories, full Spec 019 acceptance, CI for this increment, merge and
+release remain pending. Local real-model rehearsal remains authorized and
+reserved for T077; it has not occurred.
+
+Accepted source/test tasks: T010-T016 and T018-T021. T017 remains pending
+the exact cross-runtime character-bound review. T022-T024 remain pending
+localized generic feedback and real API/browser acceptance. Task markers
+record implemented behavior with the ordering deviations above; they do
+not erase those deviations or accept all of SC-001. Guard review retained
+boundary validation and the existing HTTP/DB patterns, removed internal
+component mocks and shallow catalog-only cases, and corrected unsupported
+gate/TDD claims. No new source skips, weakened regression assertion, or
+fixture success path was accepted.
+## 19. US1 Browser and Bounds Review in Progress (2026-10-04)
+
+This checkpoint does not accept T017/T022-T024 or change the 20 accepted task markers. The source commit remains `93474ab`; its [CI run 37161504610](https://github.com/hatemsamirafifi/bookly-travel/actions/runs/37161504610) completed with failure. PHP 8.3/8.4/8.5, Pint/PHPStan and frontend checks/tests passed; browser shards 2/3 and 3/3 failed. The logs identify the ordered draft payload's missing nullable fields and a mobile search-price locator matching two inputs; payment retry also encountered duplicate exact price text before succeeding on retry. These are unresolved acceptance failures. A separate home-page Lighthouse CI pass does not accept affected-tour T076.
+
+Root independently reproduced a cross-runtime string-bound mismatch without database writes or provider calls. For 120 repetitions of Unicode code point U+1F30D, installed Laravel `string|max:120` accepts the value (`mb_strlen=120`), while installed Zod `z.string().max(120)` rejects it (`String.length=240`). Both probes had native numeric exit 0: [Laravel](evidence/us1-unicode-laravel-readonly-20261004.txt), [Zod](evidence/us1-unicode-zod-readonly-20261004.txt). Laravel rejects 121 characters. The probes establish the primitive mismatch used by the current authored schemas; they do not prove that an eventual schema correction passes. T017 requires actual exported-schema regressions and independent acceptance after correction.
+
+The first delegated Chromium partner browser run reported 10 failed and 13 passed. Full output is retained externally as `us1-browser-first-chromium-failures-20261004.txt` under the Spec 019 delegation evidence directory. Its command expanded PowerShell `$?` into `True` inside a double-quoted shell string; `NATIVE_EXIT:True` is not a numeric test exit. The report is failure evidence, never a passed gate. Failures include new API tests reading localStorage on `about:blank`, an ambiguous Duration/Duration Unit locator, and the inherited nullable-payload expectation. Correction and browser reruns remain in progress.
+
+Constitution VI, this task plan and quickstart require the 390/768/1024/1440 viewport matrix. The browser brief mistakenly substituted 320 for 390. Retain 320 as additional narrow-width coverage; acceptance still requires 390. No governing viewport requirement or checklist was changed. Root also retains review gaps for actual Wizard retry identity, exact source/media/settings preservation after browser saves, and localized selected control values. No generation, whole-story, CI, merge or release acceptance is inferred from the work in progress.
+
+## 20. Independent US1 Browser and Bounds Acceptance (2026-10-04)
+
+Root accepts T017 and T022-T024 after independently reviewing the complete
+working tree following source commit `93474ab`. Together with the earlier
+reviewed tasks, T001-T024 are accepted (24/78). SC-001 is satisfied by the
+current acceptance set: all nine English source fields, null/empty
+semantics, day/stop order and durations survive real browser saves;
+invalid writes leave canonical source/media unchanged. This is US1
+acceptance, not full Spec 019, CI, merge or release acceptance.
+
+The [command manifest](evidence/us1-browser-root-manifest.jsonl) records
+exact arguments, timestamps and native numeric exits. Root ran these gates
+sequentially after OpenCode stopped. The owned FPM service was restarted;
+after building, root restarted/started the owned production Next service
+and waited for EN HTTP 200 before browser tests.
+
+| Independent gate | Result | Output |
+|---|---|---|
+| Eight affected backend suites on disposable PostgreSQL | 117 passed, 800 assertions; exit 0 | [Backend](evidence/us1-browser-root-backend-focused.txt) |
+| Pint | 16 files pass; exit 0 | [Pint](evidence/us1-browser-root-pint.txt) |
+| PHPStan | No errors; exit 0 | [PHPStan](evidence/us1-browser-root-phpstan.txt) |
+| Frontend lint and typecheck | Both exit 0 | [Lint](evidence/us1-browser-root-frontend-lint.txt), [Types](evidence/us1-browser-root-frontend-typecheck.txt) |
+| Thirteen focused frontend suites | 136 passed; exit 0 | [Jest](evidence/us1-browser-root-frontend-focused-jest.txt) |
+| Next production build | 89 pages; exit 0 | [Build](evidence/us1-browser-root-frontend-production-build.txt) |
+| Chromium/Pixel partner create/edit suites | 48 passed including setup and inherited cases; exit 0 | [Browser](evidence/us1-browser-root-frontend-partner-browser.txt) |
+
+The new real-API cases observe canonical POST 201, PUT 200/422, owned GET
+200, submit 422/200 and cross-owner GET 404; inherited mocked browser
+cases remain regression coverage. The actual Wizard retry asserts the
+complete browser write sequence: one creation, two submissions and one
+update to the same retained ID. A pass-through route only clears persisted
+cover via an actual same-owner fixture PUT before the first real submit,
+so the backend guard supplies the failure; it never fulfills a response.
+GET proves the corrected title, destination and restored cover on that ID.
+List totals use API metadata and remain meaningful above 100 tours.
+
+An unrelated browser save preserves the exact pricing, availability,
+exceptions, gallery rows and all nine source fields from the pre-save GET,
+including custom group sizes 2/7. Restored snapshots test conflicting
+nested/shorthand titles, preserve omitted nonempty gallery/source, ignore
+forged readiness, and retain the saved payload by deep JSON equality.
+This does not assert byte identity for JSONB serialization. Cleared titles
+in EN/ES/IT and fractional duration/overlong-list errors have actual 422,
+associated inline errors and a focused alert. The full authored projection
+and media remain unchanged after rejection.
+
+T017 now counts Unicode code points through the exported schemas for the
+120/160/500/2000/5000 boundaries and the create/publication minimum 100.
+Native UTF-16 maxlength restrictions were removed from affected authored
+controls. The delegated pre-fix browser regression retained only 60 of 120
+typed non-BMP characters (native exit 1; external
+`us1-final-20261004-run/us1-unicode-red.log` and its event-stream exit).
+The final root browser run types and persists the full 120-code-point
+emoji-only title, 160-code-point day title and 2000-code-point description,
+then checks localized rejection at 121. The schema suites cover the other
+limits and nullable/integer behavior.
+
+That real-input run exposed a separate existing create defect: emoji-only
+titles generated empty slugs, and repeated readable titles generated a
+duplicate slug/500. Root added two failing API regressions before fixing it:
+[slug red](evidence/us1-root-slug-red-20261004.txt), exit 1. Generated links
+now use the canonical English title prefix (bounded to leave suffix room),
+a nonempty fallback and a unique ULID suffix. Source text is preserved.
+Sequential duplicate-title creation and stable links after an unrelated
+update pass; this is not a claim that concurrent transaction tests ran here.
+The browser fixture was restored to the original all-emoji boundary rather
+than relying on an ASCII uniqueness suffix.
+
+Root also reproduced the absent announced success status and English-only
+edit heading/actions before correction:
+[feedback red](evidence/us1-root-edit-actions-red-20261004.txt), three failed,
+exit 1. The actual localized Save/Submit actions and edit heading now use
+the catalogs; successful saves announce a polite status in all three
+locales. Generic and field feedback, selected Wizard labels and server
+validation remain localized. The shared SelectValue addition has actual
+Wizard callers and preserves the original fallback when absent.
+
+Create/edit rendering screenshots cover EN/ES/IT at the required
+390/768/1024/1440 widths, plus supplemental 320, on both partner projects.
+They remain in the local ignored Playwright results; full T073
+keyboard/reduced-motion/Axe acceptance is still pending. The initial
+clipboard-origin, ambiguous-locator and relation-key failures were
+corrected and rerun, not counted as passes. The editor's first unit red
+also had an ambiguous label query; that is not accepted as clean editor
+tests-first proof. Existing chronology deviations in section 17 remain.
+The full rooted source/gate review does not erase them.
+
+Clean/test/documentation guard review rejected DOM attribute bypasses,
+kept strict nullable payloads and strengthened preservation/request-count
+assertions. Root-owned output copies remove terminal trailing whitespace
+only; raw output remains external. The unchanged TourCard image/act
+warnings remain visible. No dependency, live provider traffic, personal
+database reset, applied migration rewrite or deployment was added.
+
+Prior-head CI failure `37161504610` remains distinct from these independent
+passes; search/payment selector failures still require their own bounded
+repair and current-head CI verification. PR #29 remains draft. US2-US6 and
+T073-T078 are pending. T077 real-model rehearsal remains authorized in an
+isolated local environment using the configured model and has not run.
+
+## 21. Browser selector repair and accepted-head CI (2026-10-04)
+
+All reported GitHub checks on source commit `f8845156395304a62d03aa2bdc43a45419a3e13a`
+completed successfully: PHP 8.3/8.4/8.5, Pint, PHPStan, frontend checks/tests,
+all three E2E shards and the E2E aggregate, plus the home-page Lighthouse job.
+Runs `37168553360` and `37168553379` concern that exact source head. The home
+Lighthouse job is regression evidence, not the affected tour-page T076 audit.
+A later head still needs its own CI result; implementation remains 24/78.
+
+The original search/payment strict-selector failures on parent run
+`37161504610` remain recorded. The bounded OpenCode repair changes only the
+two browser spec files. Search price inputs are scoped to the actual open
+mobile dialog or desktop complementary panel; the exact `price_min=1000`
+and `price_max=5000` assertions remain. Current DOM capture has one input
+per label and one panel in both modes. The cause of the second input in the
+older CI merge tree remains unverified; this is selector hardening, not
+proof of two permanent responsive panel copies or an eliminated product defect.
+
+Payment waits for the payment-step heading, then finds the actual summary
+`dl` and its Total row before asserting the exact server-returned `€90.00`.
+The HTTP boundary mocks, failed-attempt alert, successful reference URL,
+one booking POST and two payment attempts remain unchanged. Current source
+renders two total spans in the earlier booking view, which explains why a
+page-wide assertion can match before the view swap. The first attempted
+term-role selector failed both project variants; the live DOM showed the
+Total `dt` while that role/name query matched zero. That retained exit-1
+run was corrected, not counted as acceptance or overwritten.
+
+No production code, money behavior, fixture data reset, environment, retry
+configuration, threshold, test skip or new dependency changed. Test-guard
+review kept observable behavior assertions and the inherited HTTP boundary.
+US2 and later task markers remain unchecked. PR #29 remains draft; no
+merge or deployment occurred.
+
+
+Root independently reran full lint/typecheck and both complete affected browser
+suites after the delegate exited. All native exits were 0: search 58 passed
+(Chromium/Pixel), payment 10 passed including authentication setup (both authed
+projects). Exact commands, timestamps and numeric exits are in
+[the manifest](evidence/ci-selector-root-manifest.jsonl); full outputs are
+[lint](evidence/ci-selector-root-frontend-lint.txt),
+[typecheck](evidence/ci-selector-root-frontend-typecheck.txt),
+[search](evidence/ci-selector-root-search-browser.txt) and
+[payment](evidence/ci-selector-root-payment-browser.txt).
+The exact-head GitHub snapshot is retained as
+[CI evidence](evidence/ci-f884515-20261004.json).
+Test-only changes use the independently built US1 production source; no
+production rebuild was needed. LiveReview is skipped at the staged boundary
+as the user directed; normal Git hooks remain enabled.
+
+## 22. US2 Localized Reader Slice T025-T033 (executed 2026-10-04, unreviewed)
+
+Bounded to Spec019 US2 T025-T033 on accepted HEAD
+`0cd1f0adf38aabee5c292fe0c9f5ddc049b1ada1` (clean tree at dispatch).
+No task markers changed, no commits, no US3/US4/US5/US6 work. Root owns
+acceptance, task markers, plan/governance and Git. Full raw logs plus
+immediate numeric `$LASTEXITCODE` (all `0`) are retained outside the repo
+under `C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/` as
+`us2-backend-3file.log`, `us2-pint.log`, `us2-phpstan.log`,
+`us2-frontend-lint.log`, `us2-frontend-typecheck.log`,
+`us2-jest-5suite.log`, `us2-frontend-build.log`,
+`us2-playwright-ssr-chromium.log`, `us2-playwright-ssr-mobile.log`.
+Provider key blank/fake everywhere (`-e GEMINI_API_KEY=` for Pest, no live
+Gemini calls). Dev services/port 8080 and personal data untouched; only the
+owned `bookly-spec019-browser` Laravel (opcache refresh after the action
+edit) and Next (production rebuild + restarts) were touched.
+
+### T025 initial backend regression and locale/state coverage
+
+Extended `backend/tests/Feature/Search/TourDetailTest.php` (+9 cases,
+helpers `spec019Us2MakeTour/spec019Us2English/spec019Us2Derivative/
+spec019Us2State`; inherited cases untouched):
+
+| Requested | Derivative/state | content_locale | itinerary_locale | status | warning |
+|---|---|---|---|---|---|
+| en | source | en | en | source | none |
+| es/it | current row+ready+hash | es/it | es/it | ready | none |
+| es | missing row+missing state | en | en | pending | partial_translation |
+| es | pending, no row | en | en | pending | partial_translation |
+| es | stale (old row, new hash) | en | en | stale | partial_translation |
+| it | failed, no row | en | en | failed | partial_translation |
+| es | apparent-ready hash mismatch | en | en | stale | partial_translation |
+| es | current general, null itinerary, nonempty EN | es | en | ready | partial_translation |
+| es | current general, explicit [] itinerary | es | es | ready | none |
+| es | current general, null itinerary, EN [] | es | es | ready | none (regression) |
+| it | missing derivative, EN itinerary null | en | en (=content) | pending | partial_translation |
+| any | failed state | — | — | failed | no hash/provider/job fields |
+
+The `us2-empty-english` case failed first on the accepted baseline:
+`itinerary_locale` returned `en` (fallback wrongly true for EN `[]`)
+instead of `es`, reproducing the reported `!== null` defect; the
+`translation_warning` assertion would likewise have failed. After the T028
+repair it passes. An additional self-inflicted failure in the same first
+run (a new compat case reusing another test's slug across isolated
+RefreshDatabase tests, 404) was corrected to seed its own tour; it is a
+test-isolation mistake, not product evidence.
+
+### T028 GetTourDetailAction repair
+
+`backend/app/Domains/Search/Actions/GetTourDetailAction.php`: only
+row+ready+matching `translated_hash` is current (via
+`currentTranslation`); EN status is source. `null` derivative itinerary
+may use a nonempty EN itinerary; explicit `[]` stays empty and never
+substitutes English. Empty English (`[]`/null) is not a fallback:
+`itinerary_locale` retains the selected content locale and no itinerary
+warning is produced. `partial_translation` is preserved as the compatible
+summary flag but now requires an actual nonempty fallback (nonempty EN
+general content, or a nonempty EN itinerary substitution) via
+`hasNonemptyGeneralContent`. Null-safe reads (`optional()`) cover a
+missing EN row. No new public fields; hashes/provider errors/job state
+remain unexposed. Rate limiting, routes, canonicals/hreflang, guide codes
+and money/booking behavior untouched (asserted in T025).
+
+### T026/T029/T030 frontend reader + preview
+
+- `TourDetail.tsx`: separate localized content/itinerary fallback notices
+derived from `content_locale`/`itinerary_locale` vs the requested locale
+plus nonempty checks; legacy `partial_translation` renders only when
+neither specific notice applies. `lang` attributes on actual title,
+description, lists, meeting/cancellation/important text
+(`content_locale`) and day/stop text (`itinerary_locale`); page-locale
+headings/labels unmarked. Repeated valid day numbers use
+`key={day-dayIndex}` and stops `key={day-dayIndex-stop-index}` (day-only
+keys removed). Guide-language labels stay page-localized via
+`Intl.DisplayNames`; spoken codes unaffected.
+- `TourContentPreview.tsx`: visible day labels use authored `day.day`
+(not `index + 1`) with `key={day-index-day}`; all list keys are
+index-based (repeated valid strings render without duplicate string
+keys). Source text carries `lang="en"`; headings stay page-localized.
+Optional `translationStatuses` (`OwnedTranslationStatus` shared DTO)
+renders sanitized saved ES/IT readiness plus a saved-revision note; no
+hashes/provider errors/generated-field editing. Absent statuses (wizard
+unsaved drafts) render no readiness: nothing fabricated.
+- `TourContentPreview.test.tsx` (new, 6 tests incl. en/es/it Day 3,3
+regression asserting two `Day 3`/`Día 3`/`Giorno 3` headings, nine-field
+`lang="en"` coverage, repeated strings, all four sanitized statuses,
+unsaved-draft absence, empty-itinerary scope). `TourDetail.test.tsx`
+extended (independent-notice matrix in en/es/it, empty suppression,
+legacy compat, lang attributes, repeated-day keys); the inherited single
+`partialTranslation` fallback case now asserts the two specific notices.
+- Authorized edit-preview integration only:
+`partner/tours/[id]/edit/page.tsx` forwards all nine current EN source
+fields plus sanitized owned `translation_statuses` (concrete shared DTO
+shape) to the preview; save/restore behavior preserved (null/[] semantics,
+no readiness/hash writes). New caller test asserts all nine fields, both
+saved statuses, the readiness note and absence of internal fields.
+`TourWizard.tsx` untouched (review preview already passes nine fields and
+no statuses; unsaved drafts fabricate nothing).
+
+### T031/T032 freshness + copy
+
+- `lib/api/tours.ts`: `getTourDetail` passes `cache: 'no-store'` with a
+comment citing the installed Next.js fetch reference (`no-store` fetches
+every request even for statically prerendered routes) so the next load of
+the same URL sees a newly current derivative. `client.ts` unchanged
+(`cache` already forwards via `RequestInit`; unrelated endpoint caching
+untouched, no polling/SLA added). Public page unchanged (both
+`generateMetadata` and the page use the same fresh fetch).
+- `messages/en|es|it.json`: `tour.contentFallback` /
+`tour.itineraryFallback` and `partner.tours.form.savedTranslations` /
+`previewReadinessNote` added in all three locales; existing keys and US1
+bounds/feedback untouched.
+
+### T027 SSR transitions (real fixture server, same-URL reload)
+
+Extended `frontend/tests/e2e/tour-detail.spec.ts`: new ES test serves a
+current-ES-general/null-ES-itinerary fixture (asserts served
+`content_locale=es`, `itinerary_locale=en`, `ready`,
+`partial_translation`, guide codes `[de,en,es]`), shows only the itinerary
+notice with English day text, then serves the ready ES itinerary and
+reloads the identical URL (asserted equal) showing the Spanish day, no
+notices, stable guide label and `inLanguage=es` structured data. The
+inherited ES/IT full-fallback test was updated from the retired single
+notice copy to the two independent notices (content + itinerary) plus
+stable-URL assertions; transition/SEO/guide-code logic preserved.
+
+### T033 gates (all numeric exits `0`, logs listed above)
+
+| Gate | Result |
+|---|---|
+| Pest `TourDetailTest + TourTranslationTest + TourContentRevisionTest` (`phpunit.pgsql.xml`, `bookly_test`) | 56 passed / 391 assertions |
+| Pint (2 touched PHP files) | PASS |
+| PHPStan (action path) | No errors (an initial 4-finding run on `?-> ??`/`is_array` narrowing was reworked to the file's existing `optional()` idiom plus a `@var mixed` guard; no behavior change, backend rerun green) |
+| Full frontend `lint` + `typecheck` | both exit 0 |
+| Jest detail/preview/page (TourDetail, TourContentPreview, edit page, TourWizard, public slug page) | 5 suites / 59 passed |
+| Next production `build` | 89 pages, `tours/[slug]` dynamic |
+| Playwright SSR `tour-detail.spec.ts -g SSR` chromium | 2 passed |
+| Playwright SSR `tour-detail.spec.ts -g SSR` mobile (Pixel 7) | 2 passed |
+| `git diff --check` | clean (CRLF advisories only) |
+
+Changed files (12 modified + 1 new): `backend/.../GetTourDetailAction.php`,
+`backend/tests/.../TourDetailTest.php`, `frontend/messages/{en,es,it}.json`,
+`frontend/src/components/tour/TourDetail.tsx`,
+`frontend/src/components/tour/__tests__/TourDetail.test.tsx`,
+`frontend/src/components/partner/tours/TourContentPreview.tsx`,
+`frontend/src/components/partner/tours/__tests__/TourContentPreview.test.tsx`
+(new), `frontend/.../edit/page.tsx`, `frontend/.../edit/__tests__/page.test.tsx`,
+`frontend/src/lib/api/tours.ts`, `frontend/tests/e2e/tour-detail.spec.ts`.
+
+### Decisions and unresolved
+
+- Empty-itinerary `itinerary_locale` retains the selected content locale
+(contract: no translated-text claim for empty output); warning summary
+requires nonempty fallback content.
+- Full-fallback pages show both content and itinerary notices (the
+nonempty EN itinerary is independently identified, per contract).
+- No `client.ts`/`page.tsx`/`TourWizard.tsx` behavior changes; US1
+`noValidate`/Unicode bounds/retry assertions/nine-field snapshots/slugs
+preserved (no US1 file semantics altered; wizard/edit suites pass
+unmodified except the additive preview-caller case).
+- Unresolved for root: T025-T033 review/acceptance; full-spec CI on this
+  head (the `0cd1f0a` selector-repair CI status is unchanged by this
+  slice); US3 worker/recovery/approval, US4 media writer, US5 discovery,
+  US6 adoption/SEO, T073-T078 porch-light gates. No full-spec/CI/merge/
+  release claim. Stopping for root review.
+
+## 23. US2 Completion Corrections and Gate Evidence (executed 2026-10-09, unreviewed)
+
+Bounded to the outstanding US2 items on HEAD `0cd1f0a`. No task markers
+changed, no commits, no US3/US4/US5/US6 work. Root owns acceptance, task
+markers, plan/governance and Git. Full raw logs plus immediate numeric
+`NUMERIC_EXIT` (all `0`) are retained outside the repo under
+`C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/
+reviewer-us2-completion-20261009/` as `backend-focused.txt`, `pint.txt`,
+`phpstan.txt`, `frontend-lint.txt`, `frontend-typecheck.txt`,
+`frontend-focused-jest.txt`, `frontend-production-build.txt`,
+`frontend-restart.txt`, `frontend-start.txt`,
+`frontend-tour-browser.txt`, plus `manifest.jsonl` (UTC start/finish per
+filesystem timestamps, exact commands, numeric exits) and
+`own-db-reseed.txt`. Earlier `us2-*` failure/evidence logs were not
+overwritten. Provider key blank/fake everywhere (`-e GEMINI_API_KEY=`
+for Pest, no live Gemini calls). Dev services/port 8080 and personal
+data untouched; only the owned `bookly-spec019-browser` stack (restarted
+after the host reboot wiped its tmpfs PG) and the disposable
+`bookly-test-postgres` were touched. No Next/Chromium recreation or
+browser dependency install was performed by this session.
+
+### Truthfulness corrections to section 22
+
+- The initial backend empty-English-itinerary regression failed before its
+  repair. Separately, the October 4 correction run added R1 (English-only
+  itinerary summary), R2 (empty/current sections with a legacy summary
+  flag) and R3 (breadcrumb source language) before their respective
+  production fixes; their retained native failures provide distinct
+  red-before-fix evidence. The first US2 preview/day-number tests were
+  written after production edits and do not establish tests-first
+  compliance. The edit-preview caller coverage was also added later.
+  PHPStan findings are static-analysis failures, not behavioral TDD proof.
+- Section 22's R4 "full es/it status matrix" claim was inaccurate as a
+  completeness statement: the matrix asserted itinerary only by count
+  plus first-day `day`/`title`, with an explicit comment declining whole
+  array comparison. It is now strengthened (see below); the earlier
+  title-only form is retained as history, not as full-itinerary proof.
+- The same first backend run's slug-reuse 404 was a test-isolation
+  mistake (two RefreshDatabase tests sharing one slug), corrected to
+  seed its own tour; recorded here as a test defect, not product
+  evidence. A `playwright install chromium` prerequisite attempt in this
+  session was interrupted by the root handoff message before any browser
+  download completed and wrote no log (no partial file exists in the
+  evidence directory); per the handoff, no install/recreate was retried.
+  Root retained the existing isolated Node 22 container and copied the
+  matching Chromium cache, missing shared libraries and fonts from the
+  matching Debian 12 runtime using read-only source access. The actual
+  launch smoke passed; the marker explicitly records image_replacement=false.
+  Root's interrupted apt/image-build attempts are retained as failures,
+  not accepted gates. No personal container was restarted or replaced. No failed log was overwritten with a later pass.
+
+### Changes in this completion
+
+- Backend R4 matrix (`TourDetailTest.php`): EN/derivative itineraries are
+  now two-day fixtures with repeated day number 3, day descriptions
+  (string and null), and ordered stops carrying title/description/
+  `duration_minutes` (populated and null). Every matrix row asserts the
+  FULL expected itinerary with `$this->assertEquals`, which uses loose
+  equality: JSONB object key order is ignored while indexed day/stop
+  order and all nested values are enforced. The title-only comment was
+  removed.
+- Preview readiness (`TourContentPreview.test.tsx`): the page-locale
+  readiness case now covers all four sanitized statuses
+  (pending/ready/stale/failed) in all three page locales (EN/ES/IT, 12
+  combinations) using real catalog `translationStatus` strings, plus the
+  saved-revision note, `lang="en"` source assertion and internal-field
+  absence. The earlier EN-all-four plus ES/IT pending+failed form is
+  superseded by this matrix.
+- Production scaffolding comments removed (no behavior change):
+  `GetTourDetailAction.php` (US2/R1 narrative, compatible-summary
+  narrative), `TourDetail.tsx` (R2 narrative, itinerary key narrative),
+  `TourContentPreview.tsx` (`Spec 019` references), `tours.ts` (US2
+  no-store narrative). Functional semantics (independent selection,
+  empty/[] handling, `partial_translation` summary rule, no-store detail
+  fetch, composite keys, `lang` attributes, guide-language separation,
+  privacy) are unchanged and covered by the gates below.
+- Own disposable PG was empty after the host reboot (`tours` relation
+  absent), so the owned stack was restored with `docker start` of the
+  existing containers only, followed by own `migrate --force --seed`
+  through the original runtime prefix/browser.env
+  (`own-db-reseed.txt`). The seeded `hidden-gems-rome-walking-tour`
+  fixture was reverified over actual served HTTP (`200`, EN source,
+  Colosseum description) before any browser gate. Personal DB, `.env`
+  and dev services were never touched.
+
+### Gate results (all numeric exits `0`, logs listed above)
+
+| Gate | Result |
+|---|---|
+| Pest `TourDetailTest + TourTranslationTest + TourContentRevisionTest` (`phpunit.pgsql.xml`, `bookly_test`) | 59 passed / 970 assertions |
+| Pint (2 touched PHP files) | PASS |
+| PHPStan (action path) | No errors |
+| Full frontend `lint` + `typecheck` | both exit 0 |
+| Jest 7 focused suites (TourDetail, TourContentPreview, edit page, TourWizard x2, public slug page, API client) | 7 suites / 94 passed |
+| Next production `build` | 89 pages, `tours/[slug]` dynamic (static-gen 60s retries succeeded; final 89/89) |
+| Production restart + start, `/en` HTTP 200 readiness | exit 0, `OWN_NEXT_READY` |
+| Playwright `tour-detail.spec.ts` chromium + mobile (real fixture server + isolated real Next, same-URL reloads) | 46 passed (23 + 23), incl. both SSR transitions on both projects |
+| `git diff --check` | clean (CRLF advisories only) |
+
+Changed files (12 modified + 1 new, same set as section 22):
+`backend/.../GetTourDetailAction.php`,
+`backend/tests/.../TourDetailTest.php`,
+`frontend/messages/{en,es,it}.json`,
+`frontend/src/components/tour/TourDetail.tsx`,
+`frontend/src/components/tour/__tests__/TourDetail.test.tsx`,
+`frontend/src/components/partner/tours/TourContentPreview.tsx`,
+`frontend/src/components/partner/tours/__tests__/TourContentPreview.test.tsx`
+(new), `frontend/.../edit/page.tsx`, `frontend/.../edit/__tests__/page.test.tsx`,
+`frontend/src/lib/api/tours.ts`, `frontend/tests/e2e/tour-detail.spec.ts`,
+plus this evidence section.
+
+Unresolved for root: T025-T033 review/acceptance; full-spec CI on this
+head; US3-US6 and T073-T078. No US2/whole-story, full-spec, CI, merge
+or release claim. Stopping for root review and independent rerun.
+
+## 24. Independent US2 reader acceptance (2026-10-09)
+
+Root reviewed the US2 implementation against T025-T033, preserving accepted
+US1 and selector fixes on baseline `0cd1f0a`. Source changes independently
+select current general content and itinerary, retain explicit empty arrays,
+disclose only actual nonempty English fallbacks, declare authored languages,
+show saved sanitized readiness, and make detail SSR reads explicit no-store.
+The edit preview forwards all nine source fields and saved revision status.
+No unrelated endpoint caching changed. Spec 018 remains unchanged.
+
+Root strengthened test evidence without changing production behavior:
+- Every ES/IT state-matrix itinerary compares its full ordered structure;
+  additional assertSame checks preserve integer day/duration and nullable
+  day/stop descriptions independently of PostgreSQL JSONB object-key order.
+- All four readiness states in each EN/ES/IT page locale now use differing
+  ES/IT status pairs, so swapping/duplicating status associations fails.
+- Repeated valid day/list values retain authored order and rendered labels;
+  scoped console spies also reject actual React duplicate-key warnings,
+  retain original console behavior, and restore spies in finally.
+
+Original October 4 correction failures are retained in
+[evidence manifest](evidence/us2-correction-failure-manifest-20261004.json):
+R1 missing itinerary-only summary (failure 02), R2 six misleading legacy
+notices (06), and R3 breadcrumb lang absence (07). Failures 01/05 were runtime
+prerequisites; 03/04 were test expectations, not product defects. Initial
+preview/day-number coverage followed implementation, so complete US2
+chronological TDD compliance is not claimed. These new root guard assertions
+also followed implementation and strengthen coverage only.
+
+Runtime recovery retained the existing owned Node22 container and exact
+Chromium1223/148 runtime. See [runtime marker](evidence/us2-root-browser-runtime-20261009.json)
+and [actual launch smoke](evidence/us2-root-chromium-smoke-20261009.txt).
+Missing libraries/fonts were copied with read-only source access; no personal
+service/image was replaced or restarted. The owned reboot-empty tmpfs PG
+was reseeded only within its isolated project. PHP gates execute in the
+existing Laravel container, but explicit phpunit.pgsql.xml and its bootstrap
+assert the separate bookly_test database/user before migrations. No real
+provider generation occurred. Browser fixture servers exercise actual built
+Next SSR; backend selection correctness comes from the real API matrix.
+
+| Independent root gate | Result | Full retained log |
+|---|---|---|
+| Pest: detail/translation/revision, PostgreSQL bookly_test, blank provider | 59 passed / 1130 assertions | [backend](evidence/us2-root-backend-focused-20261009.txt) |
+| Pint (2 changed PHP files) | PASS | [Pint](evidence/us2-root-pint-20261009.txt) |
+| PHPStan (detail action) | No errors | [PHPStan](evidence/us2-root-phpstan-20261009.txt) |
+| Full frontend lint / typecheck | both exit 0 | [lint](evidence/us2-root-frontend-lint-20261009.txt), [types](evidence/us2-root-frontend-typecheck-20261009.txt) |
+| Jest 7 affected suites | 90 passed | [Jest](evidence/us2-root-frontend-focused-jest-20261009.txt) |
+| Fresh production build | 89 pages; detail dynamic | [build](evidence/us2-root-frontend-production-build-20261009.txt) |
+| Owned Next restart/start, HTTP readiness | exit 0 / EN HTTP 200 | [restart](evidence/us2-root-frontend-restart-20261009.txt), [start](evidence/us2-root-frontend-start-20261009.txt) |
+| Initial full browser run | 45 passed, 1 page-setup timeout; exit 1 | [initial failure](evidence/us2-root-frontend-tour-browser-20261009.txt) |
+| Complete browser rerun, identical code/config | 46 passed; exit 0 | [browser](evidence/us2-root-frontend-tour-browser-rerun-20261009.txt) |
+
+The first independent browser run passed 45/46 and failed while creating
+its first Chromium page, before executing that SSR scenario (native exit 1).
+The remaining scenarios passed, including independent SSR and mobile full
+fallback. A subsequent complete 46-test run used identical source, timeouts,
+retry settings and browser configuration. Both complete logs are preserved;
+the exact cause of the initial page-setup delay remains unproven and should
+be watched during whole-spec browser checks. This is not a product TDD red.
+
+All root commands, UTC start/finish and native numeric exits are retained in
+[gate manifest](evidence/us2-root-gates-manifest-20261009.jsonl), with complete
+logs linked above. Repository text copies normalize trailing whitespace only;
+original raw gate logs remain outside the repository in reviewer-us2-gates-20261009.
+Earlier correction failures are relay tool captures, with truncation metadata
+retained in their manifest. Jest reported its asynchronous-handle shutdown warning;
+its native exit was zero. PHPStan's stderr configuration note is
+informational; the full result is No errors and native exit zero.
+
+Accept T025-T033 only, bringing reviewed task markers to 33/78. This accepts
+US2 reader behavior under controlled revisions; actual queued generation,
+concurrency/recovery, media/operator/SEO, whole-spec checks and the live
+isolated model/rollback rehearsal remain T034-T078. The prior selector head
+0cd1f0a has all CI checks successful on recheck ([proof](evidence/selector-head-ci-recheck-20261009.json));
+that does not establish CI for the ensuing US2 commit. PR29 remains draft;
+merge/deployment/release acceptance is pending.
+
+## 25. Independent US3 publication, races and recovery acceptance (2026-10-09)
+
+Accept T034-T046, bringing independently reviewed markers to 46/78. English
+source writes, submission and approval remain independent of ES/IT readiness.
+Source plans persist atomically under the shared Tour/EN/es/it locks; actual
+queue pushes run inside guarded outermost after-commit callbacks. Both locale
+pushes are attempted independently. Source validation/SQL errors still propagate.
+The Scout asynchronous queue boundary also contains dispatch loss, while
+synchronous engine errors propagate for projection-worker retry. Owned detail
+queries reside in TourService and expose current sanitized statuses only.
+
+Jobs check fresh source before provider work and again under completion locks.
+The first genuine same-hash ready result wins; superseded completions and late
+terminal failures cannot overwrite ready/current content. Reconstruction validates
+both persisted source and generated text, exact key coverage, list/text limits,
+integer structure, nulls and order. Existing backend Gemini adapter/structured
+response interface remains intact. Recovery scans IDs in bounded pages (limit
+1-500, non-negative native-range cursor), re-arms orphan pending/stale/failed or
+missing-row derivatives, and --refresh-ready repairs projections without
+regenerating current derivatives. Ordinary runs preserve current ready rows.
+
+Independent root verification uses PostgreSQL bookly_test and blank/fake provider
+credentials. The five race scenarios execute independent PHP processes with
+provider barriers. [Observed PostgreSQL waits](evidence/us3-20261009/us3-provider-job-process-root-gates-20261009/process-observations/overlapping-writers.json)
+prove that both source writers waited on real locks before release; the final
+rows preserve both disjoint edits. Twelve true-commit containment cases use a
+separate guarded connection with the production transaction manager rather than
+RefreshDatabase's simulated callback boundary. Cleanup deletes only owned fixture
+rows and restores the original connection/transaction manager. Projection recovery
+records an actually stale Scout document, executes the recovered fresh indexing
+job and observes the new document, rather than relying on a SQL-backed search read.
+
+| Final independent root gate | Result | Evidence |
+|---|---|---|
+| 14 focused backend suites | 293 passed, 2442 assertions, 102.34 seconds, exit 0 | [Pest](evidence/us3-20261009/reviewer-us3-gates-final-20261009/backend-focused.txt) |
+| PHP syntax: both subprocess workers | exit 0 each | [translation](evidence/us3-20261009/reviewer-us3-gates-final-20261009/translation-worker-syntax.txt), [source](evidence/us3-20261009/reviewer-us3-gates-final-20261009/source-worker-syntax.txt) |
+| Pint, all 22 changed PHP files | PASS, exit 0 | [Pint](evidence/us3-20261009/reviewer-us3-gates-final-20261009/pint.txt) |
+| PHPStan, changed production PHP | No errors, exit 0 | [PHPStan](evidence/us3-20261009/reviewer-us3-gates-final-20261009/phpstan.txt) |
+| Diff whitespace | exit 0 | [diff](evidence/us3-20261009/reviewer-us3-gates-final-20261009/diff-check.txt) |
+
+Exact commands, UTC timestamps and numeric exits are retained in the
+[final manifest](evidence/us3-20261009/reviewer-us3-gates-final-20261009/manifest.jsonl).
+The focused gate is US3 acceptance and regression evidence; whole-stack checks
+remain T074-T075. No frontend source changed in this increment.
+
+### Failing behavior and corrections retained
+
+- Provider: 47 passed/15 genuine failures/99 assertions, exit 1; invalid persisted
+  structure and generated lengths were accepted. [Original red](evidence/us3-20261009/us3-provider-root-tests-20261009/provider-red.txt).
+- Moderation: corrected harness 46 passed/6 genuine failures/239 assertions,
+  exit 1; missing/blank English submission was accepted. The initial 40/12 run
+  included six Livewire helper defects, separately retained.
+  [Corrected red](evidence/us3-20261009/us3-moderation-root-tests-20261009/moderation-corrected-red.txt).
+- Two-process race: one passed/one failed/37 assertions, exit 1; the second
+  completion overwrote the first. [Red](evidence/us3-20261009/us3-race-root-tests-20261009/two-process-races-first-red.txt).
+- Dispatch/recovery: 24 passed/8 genuine failures/192 assertions, exit 2;
+  committed source returned HTTP 500, rollback projected a removal, indexing ran
+  before commit, invalid cursors were accepted and recovery was incomplete.
+  [Red](evidence/us3-20261009/us3-dispatch-root-tests-20261009/source-dispatch-first-red.txt).
+- True enclosing commit: corrected six cases all failed/29 assertions, exit 2;
+  generation/removal callbacks threw after commit and overflowing cursors were
+  accepted. Initial four fixture-helper failures were corrected before this red.
+  [Red](evidence/us3-20261009/us3-enclosing-commit-root-red-20261009/real-enclosing-commit-corrected.txt).
+  The extra nearest-native-overflow probe passed before the final gate; its
+  filename contains first-red but does not establish a failing result.
+- Scout: initial missing-price fixture defect was corrected, then the real
+  asynchronous push failure escaped commit. [Corrected red](evidence/us3-20261009/us3-enclosing-commit-root-red-20261009/scout-queue-corrected-red.txt).
+
+The first complete root gate had 288 passes/five subprocess arrival failures,
+exit 2. Root formatting moved imports ahead of strict_types in shebang scripts,
+causing native PHP parse failures before DB/provider startup. Removing unnecessary
+shebangs and keeping declare first repaired both scripts. Native syntax/Pint
+before/after logs are [retained](evidence/us3-20261009/us3-worker-format-regression-root-fix-20261009/Spec019TranslationWorker-before-lint.txt).
+No timeouts, retries or assertions were weakened. The ensuing full rerun passed
+all 293 cases but PHPStan found three issues: unused controller dependency,
+redundant title type check and repeated narrowed recovery expression. The final
+reviewer gate above follows those mechanical corrections; both earlier complete
+logs remain under their original directories in this evidence bundle.
+
+OpenCode used only the authorized opencode/muse-spark-1.3-contributor-free model.
+Bounded authors supplied implementation and tests, independently reviewed by root.
+The final true-commit correction relay timed out at 45 minutes with native exit 1
+after editing five owned files and checking syntax; delegate success is not
+claimed. Root reviewed its actual diff, corrected fixture-manager restoration and
+accepted only after independent gates. Additional root coverage followed some
+implementation changes, so complete chronological TDD compliance is not claimed.
+
+### Real asynchronous worker and secret configuration proof
+
+The owned isolated Redis/PostgreSQL project and independently built PHP 8.3.32
+image run actual Laravel workers with pcntl. The real fake-provider ES/IT jobs
+reached ready/current, and a 75-second blocked provider caused JobTimedOut then
+WorkerStopping with native exit 1 after 60.000010002 seconds. Four attempts and
+5/15/60 backoff remain configured. Job/worker timeouts are 60, provider HTTP
+is 40, and retry-after is 90. [Event timing](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/actual-worker-timeout-proof.json),
+[success state](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/after-success.txt),
+[manifest](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/manifest.jsonl)
+and [owned cleanup](evidence/us3-20261009/us3-worker-root-proof-final-job-20261009/cleanup.txt)
+retain expected native outcomes. The earlier --once probe failed its expected
+exit because Laravel's one-job path does not register the daemon alarm; it is
+retained with [root diagnosis](evidence/us3-20261009/us3-worker-root-proof-20261009/root-probe-correction.json).
+The corrected daemon runs provide timeout acceptance.
+
+Compose now uses bare backend/worker GEMINI_API_KEY and GEMINI_TRANSLATION_MODEL
+passthrough. Explicit empty defaults would mask the existing backend .env settings.
+Sanitized effective config and actual Illuminate Env/Dotenv fixture runs prove
+fallback and explicit host overrides without exposing the configured key or
+making live provider calls. [Before](evidence/us3-20261009/us3-compose-provider-env-root-review-20261009/before.json),
+[after](evidence/us3-20261009/us3-compose-provider-env-root-review-20261009/after.json),
+[fixture runtime manifest](evidence/us3-20261009/us3-compose-provider-env-root-review-20261009/runtime-manifest.jsonl).
+This follows the [Docker environment reference](https://docs.docker.com/reference/compose-file/services/#environment).
+No personal service was restarted. This establishes T043 runtime/configuration
+behavior with a fake provider; actual configured-model generation and compatible
+application/worker rollback remain T077.
+
+US2 commit cc838f42 has all CI checks successful on recheck
+([exact-head evidence](evidence/us2-head-ci-success-20261009.json)). This does not
+establish CI for the ensuing US3 commit. PR29 remains draft. US4-US6 and final
+T047-T078 are pending; Phase 2, merge, staging rehearsal and release are not done.
+Repository evidence copies normalize trailing whitespace; original raw logs remain
+outside the repository. Spec 018, applied migrations, Constitution and TODO store
+are preserved.
+### US3 exact-head CI follow-up
+
+CI on 076a9b6 failed PHP 8.5 with two strict associative-array order assertions;
+PHP 8.3/8.4 were cancelled by matrix fail-fast. Values/locale associations were
+correct. PostgreSQL queries without ORDER BY do not promise locale row order.
+The root correction orders the six status-map test reads by locale while keeping
+all expected keys, values and strict assertions. Production code is unchanged.
+The affected complete suite passes locally on PHP 8.3: 23 tests, 241 assertions,
+exit 0, with Pint PASS. PHP 8.5 and the complete matrix still require exact-head
+CI after this correction. Retained logs are under evidence/us3-ci-order-20261009.

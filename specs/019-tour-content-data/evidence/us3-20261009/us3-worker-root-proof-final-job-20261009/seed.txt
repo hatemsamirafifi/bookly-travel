@@ -1,0 +1,2 @@
+{"mode":"seed","db":"bookly","user":"bookly","queue_connection":"redis","retry_after":90,"pcntl":true,"job_timeout":60}
+NUMERIC_EXIT=0 EXPECTED_EXIT=0

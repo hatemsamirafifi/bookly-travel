@@ -1,0 +1,326 @@
+
+   PASS  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide c… 5.28s
+  ✓ it marks derived translations stale only when English source change… 0.32s
+  ✓ it requeues derived content when the English description changes wi… 0.30s
+  ✓ it clears optional English content and requeues derived translation… 0.32s
+  ✓ it translates traveler-facing itinerary and information while retai… 0.33s
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 0.26s
+  ✓ it accepts only the latest English revision when an older translati… 0.31s
+  ✓ it schedules a fresh search projection after a derived translation…  0.40s
+  ✓ it serves a visible English fallback until generated content is rea… 0.41s
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.31s
+  ✓ it uses backend-only Gemini structured output and rejects transient… 0.27s
+  ✓ it retries only transient Gemini failures                            0.23s
+  ✓ it spec019 ignores reordered English object keys without content ch… 0.31s
+  ✓ it spec019 ignores media and guide-language saves without English c… 0.29s
+  ✓ it spec019 stales both locales while retaining old derivatives on a… 0.37s
+  ✓ it spec019 commits the English source when generation dispatch fail… 0.33s
+  ✓ it spec019 commits the English update when regeneration dispatch fa… 0.32s
+  ✓ it spec019 schedules no generation when the source transaction roll… 0.22s
+  ✓ it spec019 rejects non-bounded reconcile cursors and limits          0.21s
+  ✓ it spec019 resumes bounded reconcile runs in ID order with a reusab… 0.45s
+  ✓ it spec019 requeues orphaned, stale, failed, and projection-less tr… 0.41s
+  ✓ it spec019 bounded reruns never rewrite current derivatives or sour… 0.35s
+  ✓ it spec019 refresh-ready requeues only the search projection for cu… 0.36s
+
+   PASS  Tests\Feature\Partner\TourAfterCommitContainmentTest
+  ✓ it contains real generation failures when the enclosing transaction… 0.36s
+  ✓ it contains real generation failures when the enclosing transaction… 0.37s
+  ✓ it contains a real search projection dispatch failure after commit…  0.35s
+  ✓ it contains a real search projection dispatch failure after commit…  0.34s
+  ✓ it contains a real search projection dispatch failure after commit…  0.33s
+  ✓ it keeps a committed public source write successful when Scouts que… 0.44s
+  ✓ it keeps a committed public source write successful when Scouts que… 0.27s
+  ✓ it propagates synchronous Scout engine failures so a projection wor… 0.24s
+  ✓ it propagates synchronous Scout engine failures so a projection wor… 0.27s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.19s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.21s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.20s
+
+   PASS  Tests\Feature\Partner\TourTranslationConcurrencyTest
+  ✓ it old translation completion never writes after a newer source edi… 2.02s
+  ✓ it first same-hash completion wins when two jobs overlap in real pr… 1.73s
+  ✓ it terminal provider failure never clobbers a genuine ready complet… 1.78s
+  ✓ it terminal provider failure stays scoped to its stale hash after a… 2.14s
+  ✓ it overlapping source edits through TourService retain both disjoin… 1.64s
+
+   PASS  Tests\Feature\Partner\TourTranslationProviderTest
+  ✓ it sends backend header with configured model and structured json p… 0.26s
+  ✓ it uses a forty second provider timeout                              0.17s
+  ✓ it reconstructs out of order provider items into source path order   0.16s
+  ✓ it rejects duplicate provider keys as permanent output invalid       0.16s
+  ✓ it rejects missing provider keys as permanent output invalid         0.16s
+  ✓ it rejects unknown provider keys as permanent output invalid         0.16s
+  ✓ it rejects non string provider text as permanent output invalid      0.15s
+  ✓ it rejects blank provider text as permanent output invalid           0.15s
+  ✓ it rejects malformed provider body as permanent output invalid       0.16s
+  ✓ it rejects blocked provider finish reasons as permanent blocked      0.16s
+  ✓ it rejects client errors as permanent provider rejected              0.21s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.16s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.16s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.16s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.20s
+  ✓ it treats connection failures as transient network errors            0.16s
+  ✓ it rejects unsupported locales and empty input as invalid requests   0.15s
+  ✓ it rejects missing provider configuration without leaking secrets    0.16s
+  ✓ it emits only fixed sanitized transient categories                   0.15s
+  ✓ it emits only fixed sanitized permanent categories                   0.17s
+  ✓ it makes exactly one http attempt for a transient failure without n… 0.17s
+  ✓ it extracts only non blank strings while skipping structural intege… 0.16s
+  ✓ it reconstructs translated strings retaining integers nulls order a… 0.18s
+  ✓ it allows valid empty itinerary and zero stop days                   0.17s
+  ✓ it accepts boundary valid shared limits                              0.22s
+  ✓ it rejects overbound shared limits with dataset "title over 120"     0.21s
+  ✓ it rejects overbound shared limits with dataset "description over 5… 0.16s
+  ✓ it rejects overbound shared limits with dataset "highlights over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "highlight item ove… 0.16s
+  ✓ it rejects overbound shared limits with dataset "inclusions over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "inclusion item ove… 0.16s
+  ✓ it rejects overbound shared limits with dataset "exclusions over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "exclusion item ove… 0.17s
+  ✓ it rejects overbound shared limits with dataset "information over 3… 0.17s
+  ✓ it rejects overbound shared limits with dataset "information item o… 0.19s
+  ✓ it rejects overbound shared limits with dataset "meeting point over… 0.16s
+  ✓ it rejects overbound shared limits with dataset "cancellation over…  0.17s
+  ✓ it rejects overbound shared limits with dataset "itinerary over 30…  0.17s
+  ✓ it rejects overbound shared limits with dataset "day number zero"    0.17s
+  ✓ it rejects overbound shared limits with dataset "day number over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "day title over 160… 0.16s
+  ✓ it rejects overbound shared limits with dataset "day description ov… 0.16s
+  ✓ it rejects overbound shared limits with dataset "stops over 20"      0.16s
+  ✓ it rejects overbound shared limits with dataset "stop title over 16… 0.17s
+  ✓ it rejects overbound shared limits with dataset "stop description o… 0.16s
+  ✓ it rejects overbound shared limits with dataset "duration zero"      0.16s
+  ✓ it rejects overbound shared limits with dataset "duration over 1440… 0.18s
+  ✓ it rejects overbound shared limits with dataset "explicit null stop… 0.17s
+  ✓ it rejects overbound shared limits with dataset "blank day title re… 0.15s
+  ✓ it rejects overbound shared limits with dataset "blank stop title r… 0.45s
+  ✓ it rejects objects in place of translated source lists with ('highl… 0.19s
+  ✓ it rejects objects in place of translated source lists with ('inclu… 0.16s
+  ✓ it rejects objects in place of translated source lists with ('exclu… 0.21s
+  ✓ it rejects objects in place of translated source lists with ('impor… 0.22s
+  ✓ it rejects objects in place of translated day and stop lists with (… 0.18s
+  ✓ it rejects objects in place of translated day and stop lists with (… 0.19s
+  ✓ it rejects persisted digit strings instead of translating or coerci… 0.24s
+  ✓ it rejects persisted digit strings instead of translating or coerci… 0.15s
+  ✓ it measures translated text bounds in Unicode characters             0.19s
+  ✓ it never emits malformed persisted day strings as translated prose   0.24s
+  ✓ it never emits malformed persisted duration strings as translated p… 0.20s
+  ✓ it retries translation jobs four times with five fifteen sixty back… 0.20s
+  ✓ it rejects overlong generated text even when the complete English s… 0.22s
+  ✓ it rejects overlong generated text even when the complete English s… 0.19s
+  ✓ it rejects overlong generated text even when the complete English s… 0.19s
+  ✓ it rejects overlong generated text even when the complete English s… 0.21s
+  ✓ it rejects overlong generated text even when the complete English s… 0.23s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+
+   PASS  Tests\Feature\Partner\TourTranslationJobStateTest
+  ✓ it skips provider and derivative rewrites for an already current re… 0.36s
+  ✓ it repairs a matching ready state whose derivative row is missing    0.34s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.23s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.20s
+  ✓ it checks fresh English before recording terminal failure even when… 0.19s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.22s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.20s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.21s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.19s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.21s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.19s
+  ✓ it does not serialize internal revision hashes or error categories…  0.19s
+  ✓ it does not turn malformed persisted day or stop objects into a val… 0.27s
+  ✓ it does not turn malformed persisted day or stop objects into a val… 0.42s
+
+   PASS  Tests\Feature\Partner\TourContentRevisionTest
+  ✓ it hashes fixed outer source field order regardless of input key or… 0.21s
+  ✓ it ignores nested day/stop object key order but preserves array ord… 0.25s
+  ✓ it keeps malformed persisted source explicit instead of hashing it…  0.22s
+  ✓ it locks Tour then EN then states in es/it order inside the shared…  0.20s
+  ✓ it rolls back partial writes when the boundary callback fails        0.23s
+  ✓ it observes fresh source written inside the boundary on completion   0.22s
+  ✓ it reaches the disposable database on an independent connection      0.22s
+  ✓ it pauses the fake provider mid-call and resumes to completed outpu… 0.23s
+  ✓ it holds real Tour/EN/state row locks across separate connections u… 0.26s
+  ✓ it guarantees partner record IDs distinct from user IDs for owner s… 0.19s
+  ✓ it coordinates fake provider arrivals without network calls          0.16s
+  ✓ it reports current/ready only for matching translated hash via publ… 0.21s
+
+   PASS  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.35s
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.87s
+  ✓ it creates a tour with valid data                                    0.28s
+  ✓ it persists difficulty and ordered media with the selected cover on… 0.34s
+  ✓ it persists the structured English itinerary from partner creation   0.26s
+  ✓ it rejects malformed structured itinerary on create and update       0.28s
+  ✓ it round-trips media reordering and cover changes on partner update  0.29s
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 0.25s
+  ✓ it stores guide-language codes independently of content translation… 0.28s
+  ✓ it keeps the partner content read contract while exposing safe deri… 0.26s
+  ✓ it rejects language names where stable guide-language codes are req… 0.37s
+  ✓ it updates guide metadata and English itinerary without conflating…  0.34s
+  ✓ it returns 422 for invalid data with missing required fields         0.22s
+  ✓ it returns 401 for unauthenticated requests                          0.99s
+  ✓ it returns 404 for non-partner users                                 0.96s
+  ✓ it scopes tour to the authenticated partner                          0.27s
+  ✓ it round-trips all nine English source fields on create and read     0.69s
+  ✓ it round-trips a nested English update while preserving omitted fie… 0.28s
+  ✓ it prefers explicit nested English keys over top-level shorthand     0.32s
+  ✓ it treats null as clear and empty array as clear while omitted keys… 1.77s
+  ✓ it rejects null titles and over-limit source fields with exact path… 0.53s
+  ✓ it rejects invalid itinerary boundaries with exact nested paths      0.36s
+  ✓ it accepts boundary-valid itineraries with canonical integer day an… 0.31s
+  ✓ it denies cross-partner updates with 404 and leaves the tour unchan… 0.30s
+  ✓ it returns 404 for unknown tours before validating malformed payloa… 0.31s
+  ✓ it rejects authored locales and platform-owned state with 422 and n… 0.59s
+  ✓ it rejects invalid media atomically without partial content changes  0.40s
+  ✓ it rejects associative objects for source lists, days and stops wit… 0.91s
+  ✓ it round-trips custom group sizes on create, read and reopen         0.35s
+  ✓ it rolls back fully persisted source and media when a late write fa… 0.32s
+  ✓ it applies destination, duration, group and category aliases on upd… 0.28s
+  ✓ it preserves existing null source fields through unrelated basic sa… 0.26s
+  ✓ it keeps a single draft across failed submit and update retries      0.28s
+  ✓ it refuses to clear required English on published tours              0.31s
+
+   PASS  Tests\Feature\Partner\TourDraftTest
+  ✓ it creates a draft via save endpoint                                 0.25s
+  ✓ it returns the most recent draft via latest endpoint                 0.23s
+  ✓ it persists draft data correctly via auto-save                       0.20s
+  ✓ it returns 404 for non-existent draft on latest endpoint             0.21s
+  ✓ it returns 404 for tour belonging to another partner                 0.48s
+  ✓ it preserves opaque payload values, types and list order through js… 0.21s
+  ✓ it preserves padded and empty opaque strings exactly through save a… 0.20s
+  ✓ it keeps trimming canonical source input on create and update        0.36s
+  ✓ it round-trips incomplete and legacy string-array itinerary snapsho… 0.23s
+  ✓ it isolates draft saves by owner and never writes source from autos… 0.22s
+
+   PASS  Tests\Feature\Partner\TourContentInputTest
+  ✓ it prefers explicit nested English keys while shorthand fills absen… 0.17s
+  ✓ it preserves omitted keys and keeps null and empty-array meanings d… 0.16s
+  ✓ it normalizes absent stops to empty arrays while passing malformed…  0.16s
+  ✓ it rejects over-limit source text and lists with exact field paths   0.17s
+  ✓ it rejects null titles while accepting nullable draft descriptions   0.16s
+  ✓ it rejects out-of-range itinerary values with exact nested paths     0.17s
+  ✓ it accepts boundary-valid itineraries including empty lists and zer… 0.15s
+  ✓ it rejects explicit null stops instead of treating null as empty     0.16s
+  ✓ it rejects every authored non-English locale with its precise path   0.19s
+  ✓ it rejects platform-owned keys top-level and nested, even when null… 0.21s
+  ✓ it rejects nested provider state and top-level provider/job/error s… 0.15s
+  ✓ it rejects unexpected English source keys while keeping valid non-s… 0.16s
+  ✓ it wires the shared boundary into both partner requests with field-… 0.23s
+
+   PASS  Tests\Feature\Admin\TourModerationTest
+  ✓ it publishes a pending tour for an approved partner and writes audi… 0.46s
+  ✓ it blocks publishing when the owning partner is not approved (FR-00… 0.24s
+  ✓ it requires English source at approval but not Spanish or Italian    0.24s
+  ✓ it rejects a pending tour with a reason and writes audit             0.25s
+  ✓ it unpublishes a published tour and writes audit                     0.24s
+  ✓ it prevents rejecting a tour that is not in a rejectable state       0.20s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.27s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.26s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.26s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.25s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.29s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.29s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.29s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.29s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.25s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.24s
+  ✓ it T036 submits via the scoped TourService when the English source…  0.22s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.27s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.26s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.26s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.23s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.20s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.21s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.22s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.23s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.25s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.22s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.25s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.22s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.26s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.21s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.22s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.23s
+  ✓ it T036 keeps submit owner scoping with cross-partner and unknown i… 0.24s
+
+   PASS  Tests\Feature\Admin\Filament\TourResourceTest
+  ✓ it lists tour records in the Filament table                          0.91s
+  ✓ it shows the English source and derived statuses separately on the…  0.48s
+  ✓ it denies a traveler and an admin without manage-tours access to mo… 0.27s
+  ✓ it publishes a tour via the Filament publish action and writes audi… 0.65s
+  ✓ it rejects a tour via the Filament reject action with a reason       1.15s
+  ✓ it bulk-publishes selected tours and writes an audit per item        0.86s
+  ✓ it bulk-rejects selected tours with a shared reason and writes an a… 0.98s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.67s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.68s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.72s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.66s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.68s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.70s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.65s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.67s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.66s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.62s
+  ✓ it T036 keeps publish authorization tied to manage-tours on the rea… 0.25s
+
+   PASS  Tests\Feature\Search\TourSearchIndexTest
+  ✓ it derives upcoming available dates from a specific_date rule        0.21s
+  ✓ it excludes blocked exception dates from upcoming availability       0.20s
+  ✓ it indexes a published tour with pricing and availability in Scout   0.25s
+  ✓ it does not consider a draft tour searchable even with rules and pr… 0.19s
+  ✓ it spec019 defers the search projection until after the source tran… 0.22s
+  ✓ it spec019 refreshes the latest English and current derivatives aft… 0.39s
+  ✓ it spec019 delayed translation jobs load fresh source and state      0.25s
+  ✓ it exposes the rating contract on the tour detail endpoint           0.23s
+
+   PASS  Tests\Feature\Search\TourProjectionRecoveryTest
+  ✓ it repairs an actually stale recorded search document through refre… 0.39s
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   0.25s
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.24s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.25s
+  ✓ it returns only approved public operator fields and visible-review…  0.42s
+  ✓ it omits operator identity when its partner is not approved          0.28s
+  ✓ it ranks only published bookable related tours by destination then…  0.39s
+  ✓ it returns 404 for non-existent slug                                 0.33s
+  ✓ it returns 404 for draft tour                                        0.22s
+  ✓ it returns 404 for rejected tour                                     0.25s
+  ✓ it returns 410 for an archived tour that was previously published    0.26s
+  ✓ it returns 404 for an archived tour that was never published         0.25s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.24s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.27s
+  ✓ it serves a fully bookable published tour as available (F2)          0.25s
+  ✓ it returns content in the requested locale                           0.26s
+  ✓ it keeps guide languages separate from localized content and itiner… 0.36s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.31s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.35s
+  ✓ it falls back to English when requested locale is unavailable        0.30s
+  ✓ it validates locale parameter is required                            0.21s
+  ✓ it includes SEO metadata in response                                 0.28s
+  ✓ it computes the review distribution from visible reviews (L4)        0.32s
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.29s
+  ✓ it falls back to current English for missing row+state, pending, st… 0.39s
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 0.32s
+  ✓ it keeps requested general content while a null itinerary independe… 0.44s
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.27s
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.47s
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.38s
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.36s
+  ✓ it selects actual languages across the full es/it status matrix (US… 1.91s
+  ✓ it always serves English source irrespective of derived states (US2… 0.43s
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.32s
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 1.36s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.67s
+
+  Tests:    293 passed (2442 assertions)
+  Duration: 102.34s
+
+NUMERIC_EXIT=0
