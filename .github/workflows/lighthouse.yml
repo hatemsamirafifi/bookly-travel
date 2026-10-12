@@ -32,6 +32,7 @@ jobs:
       - name: Verify browser CPU readiness without visiting the application
         working-directory: ./frontend
         run: |
+          echo "CHROME_PATH=$(command -v google-chrome)" >> "$GITHUB_ENV"
           node --test scripts/lighthouse-runtime-preflight.test.mjs
           node scripts/lighthouse-runtime-preflight.mjs
 

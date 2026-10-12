@@ -8,6 +8,12 @@ module.exports = {
         '/en/blog/hidden-gems-florence',
       ].map((path) => `${process.env.LIGHTHOUSE_BASE_URL || 'http://localhost:3000'}${path}`),
       numberOfRuns: 3,
+      chromePath: process.env.CHROME_PATH,
+      puppeteerScript: `${__dirname}/scripts/lighthouse-browser-ready.cjs`,
+      puppeteerLaunchOptions: {
+        headless: true,
+        args: ['--no-sandbox', '--disable-dev-shm-usage'],
+      },
     },
     assert: {
       assertions: {

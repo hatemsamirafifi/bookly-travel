@@ -29,14 +29,9 @@ export function cpuReady(samples) {
     && Math.max(...pair) / Math.min(...pair) <= 1.2;
 }
 
-async function main() {
-  const browser = await puppeteer.launch({
-    executablePath: await chromePath(),
-    headless: true,
-    args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking'],
-  });
+export async function prepareBrowserCpu(browser) {
+  const page = await browser.newPage();
   try {
-    const page = await browser.newPage();
     const samples = [];
     for (let attempt = 1; attempt <= 5; attempt++) {
       if (page.url() !== 'about:blank') throw new Error('CPU preflight must not visit the application');
@@ -46,6 +41,19 @@ async function main() {
       if (cpuReady(samples)) return;
     }
     throw new Error('CPU baseline is slow or unstable; performance audit must not start');
+  } finally {
+    await page.close();
+  }
+}
+
+async function main() {
+  const browser = await puppeteer.launch({
+    executablePath: await chromePath(),
+    headless: true,
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking'],
+  });
+  try {
+    await prepareBrowserCpu(browser);
   } finally {
     await browser.close();
   }
