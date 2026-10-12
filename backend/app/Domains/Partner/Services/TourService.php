@@ -107,7 +107,7 @@ class TourService
                 'status' => 'draft',
                 'cover_image_url' => $data['cover_image_url'] ?? null,
                 'difficulty_level' => $data['difficulty_level'] ?? null,
-                'guide_languages' => $this->normalizeGuideLanguages($data['guide_languages'] ?? $data['languages'] ?? []),
+                'guide_languages' => $this->resolveGuideLanguages($data, []),
             ]);
 
             if (array_key_exists('media', $data)) {
@@ -229,7 +229,7 @@ class TourService
                 $updateFields['cover_image_url'] = $data['cover_image_url'];
             }
             if (array_key_exists('guide_languages', $data) || array_key_exists('languages', $data)) {
-                $updateFields['guide_languages'] = $this->normalizeGuideLanguages($data['guide_languages'] ?? $data['languages'] ?? []);
+                $updateFields['guide_languages'] = $this->resolveGuideLanguages($data, null);
             }
 
             if (! empty($updateFields)) {
@@ -300,24 +300,108 @@ class TourService
         }
     }
 
-    private function normalizeGuideLanguages(array $languages): array
+    /**
+     * Canonical guide-language resolution (Spec 019 US4 T050/T051).
+     *
+     * Canonical `guide_languages` presence wins over the `languages`
+     * compatibility alias even when [] or null; omitted canonical accepts
+     * the alias. Null is stored null (the existing reader represents it as
+     * empty); otherwise codes normalize to stable lowercase distinct values
+     * preserving first-seen order. Never infers codes from derivatives.
+     */
+    private function resolveGuideLanguages(array $data, mixed $default): ?array
     {
-        return array_values(array_unique(array_map(
-            static fn (string $language): string => strtolower($language),
-            $languages
-        )));
+        if (array_key_exists('guide_languages', $data)) {
+            return $this->normalizeGuideLanguages($data['guide_languages']);
+        }
+
+        if (array_key_exists('languages', $data)) {
+            return $this->normalizeGuideLanguages($data['languages']);
+        }
+
+        return $this->normalizeGuideLanguages($default);
+    }
+
+    /**
+     * @param  array<int, string>|null  $languages
+     */
+    private function normalizeGuideLanguages(mixed $languages): ?array
+    {
+        if ($languages === null) {
+            return null;
+        }
+
+        $normalized = [];
+        foreach ($languages as $language) {
+            $code = strtolower(trim($language));
+            if ($code === '' || in_array($code, $normalized, true)) {
+                continue;
+            }
+            $normalized[] = $code;
+        }
+
+        return $normalized;
     }
 
     private function syncMedia(Tour $tour, array $media): void
     {
-        // Media order is the caller's array order. The selected cover is also
-        // kept in the legacy cover column for existing search/partner clients.
-        $cover = collect($media)->firstWhere('is_cover', true)['url'] ?? ($media[0]['url'] ?? null);
+        // Spec 019 US4 T051: snapshot prior specific alt by URL before
+        // deletion so omitted alt retains it for the same URL while explicit
+        // null clears it; new URLs default to null. Storage types are
+        // cover/gallery (legacy image stays readable); the first flagged
+        // real HTTP(S) image — or the first real image when none is flagged —
+        // is the cover. Input sort order is preserved; the public reader
+        // (allImageUrls) stays authoritative for cover-first/dedup/fallback.
+        $isUsable = static fn (mixed $url): bool => is_string($url)
+            && filter_var($url, FILTER_VALIDATE_URL) !== false
+            && in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true);
+
+        $priorAlt = [];
+        foreach ($tour->media()->get(['url', 'alt_text']) as $row) {
+            $url = $row->getAttribute('url');
+            if (! is_string($url) || array_key_exists($url, $priorAlt)) {
+                continue;
+            }
+            $priorAlt[$url] = $row->getAttribute('alt_text');
+        }
+
+        $cover = null;
+        foreach ($media as $image) {
+            if (! empty($image['is_cover']) && $isUsable($image['url'] ?? null)) {
+                $cover = $image['url'];
+
+                break;
+            }
+        }
+        if ($cover === null) {
+            foreach ($media as $image) {
+                if ($isUsable($image['url'] ?? null)) {
+                    $cover = $image['url'];
+
+                    break;
+                }
+            }
+        }
+
         $tour->media()->delete();
+        $coverAssigned = false;
         foreach ($media as $index => $image) {
+            $url = $image['url'];
+            if (array_key_exists('alt_text', $image)) {
+                $alt = $image['alt_text'];
+            } else {
+                $alt = $priorAlt[$url] ?? null;
+            }
+
+            $isCoverRow = $cover !== null && $url === $cover && ! $coverAssigned;
+            if ($isCoverRow) {
+                $coverAssigned = true;
+            }
+
             $tour->media()->create([
-                'type' => 'image',
-                'url' => $image['url'],
+                'type' => $isCoverRow ? 'cover' : 'gallery',
+                'url' => $url,
+                'alt_text' => $alt,
                 'sort_order' => $index,
             ]);
         }
@@ -341,6 +425,12 @@ class TourService
 
         $data = $tour->toArray();
         unset($data['translationStates'], $data['translation_states']);
+        // Compatible spoken-language alias: derived from the canonical codes
+        // so `languages` and `guide_languages` share one meaning (FR-017).
+        // Null canonical storage is represented empty by the reader.
+        $codes = $tour->guideLanguages();
+        $data['guide_languages'] = $codes;
+        $data['languages'] = $codes;
         $data['translation_statuses'] = [
             'es' => $this->translationService->publicStatus($tour, 'es'),
             'it' => $this->translationService->publicStatus($tour, 'it'),

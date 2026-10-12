@@ -42,8 +42,18 @@ export const availabilityExceptionSchema = z.object({
 
 export const tourMediaSchema = z.object({
   id: z.string().optional(),
-  url: z.string().url({ message: 'partner.tours.errors.invalidUrl' }),
+  url: z.string().url({ message: 'partner.tours.errors.invalidUrl' }).refine(
+    (value) => value.startsWith('http://') || value.startsWith('https://'),
+    { message: 'partner.tours.errors.invalidUrl' }
+  ).refine((value) => value.length <= 2048, { message: 'partner.tours.errors.invalidUrl' }),
   is_cover: z.boolean(),
+  // Optional English-specific alternative text (Spec 019 US4): omitted
+  // stays absent, explicit null clears, strings count Unicode code points
+  // (astral text counts once, matching the server mb_strlen bound).
+  alt_text: z.string()
+    .refine((value) => unicodeCodePointLength(value) <= 500, { message: 'partner.tours.errors.altTextMax' })
+    .optional()
+    .nullable(),
 });
 
 // Spec 019 source bounds (backend TourContentRules): day integer 1-30,
@@ -87,6 +97,22 @@ const sourceList = (listMessage: string) =>
     .optional()
     .default([]);
 
+// Spec 019 US4: spoken/live-guide codes are stable 2/3-letter codes with
+// optional subtags (en, de, pt-BR); validated case-insensitively, at most
+// 20 distinct entries. Their meaning never depends on content locale.
+const GUIDE_CODE_PATTERN = /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/i;
+
+const guideLanguagesSchema = z.array(
+  z.string().refine((code) => GUIDE_CODE_PATTERN.test(code.trim()), {
+    message: 'partner.tours.errors.guideLanguageInvalid',
+  })
+)
+  .max(20, { message: 'partner.tours.errors.guideLanguagesMax' })
+  .refine(
+    (codes) => new Set(codes.map((code) => code.trim().toLowerCase())).size === codes.length,
+    { message: 'partner.tours.errors.duplicateGuideLanguage' }
+  );
+
 // Basic details form step (combines basic and details steps). Draft-tolerant:
 // optional source fields stay optional here; the stricter publication schema
 // below (and the server submit guards) require trimmed English title and
@@ -105,14 +131,17 @@ export const tourBasicDetailsSchema = z.object({
     message: 'partner.tours.errors.durationPositive',
   }),
   duration_unit: z.enum(['hour', 'day']),
-  difficulty_level: z.enum(['easy', 'moderate', 'challenging']),
+  // Nullable: older tours without difficulty restore as null and stay
+  // omitted from updates; new tours keep the supported `easy` default in
+  // form state. Supplied codes are the only accepted values.
+  difficulty_level: z.enum(['easy', 'moderate', 'challenging'], { message: 'partner.tours.errors.difficultyInvalid' }).nullish(),
   meeting_point: z.string().refine((value) => unicodeCodePointLength(value) <= 500, { message: 'partner.tours.errors.meetingPointMax' }).optional().or(z.literal('')),
   highlights: sourceList('partner.tours.errors.highlightsMax'),
   inclusions: sourceList('partner.tours.errors.inclusionsMax'),
   exclusions: sourceList('partner.tours.errors.exclusionsMax'),
   important_information: sourceList('partner.tours.errors.importantInfoMax'),
   itinerary: tourItinerarySchema,
-  languages: z.array(z.string()).default([]),
+  languages: guideLanguagesSchema.default([]),
   cancellation_policy: z.string().refine((value) => unicodeCodePointLength(value) <= 2000, { message: 'partner.tours.errors.cancellationMax' }).optional().or(z.literal('')),
 });
 
@@ -127,9 +156,14 @@ export const tourPublishSourceSchema = z.object({
 });
 
 export const tourMediaStepSchema = z.object({
-  media: z.array(tourMediaSchema).refine((media) => media.some((m) => m.is_cover), {
-    message: 'partner.tours.errors.coverImageRequired',
-  }),
+  media: z.array(tourMediaSchema)
+    .max(20, { message: 'partner.tours.errors.mediaMax' })
+    .refine((media) => new Set(media.map((m) => m.url)).size === media.length, {
+      message: 'partner.tours.errors.invalidUrl',
+    })
+    .refine((media) => media.some((m) => m.is_cover), {
+      message: 'partner.tours.errors.coverImageRequired',
+    }),
 });
 
 export const tourPricingStepSchema = z.object({

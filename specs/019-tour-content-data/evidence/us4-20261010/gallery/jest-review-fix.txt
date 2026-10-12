@@ -1,0 +1,13 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/ImageGallery.test.tsx src/components/tour/__tests__/TourDetail.test.tsx
+
+PASS src/components/tour/__tests__/ImageGallery.test.tsx (13.997 s)
+PASS src/components/tour/__tests__/TourDetail.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       32 passed, 32 total
+Snapshots:   0 total
+Time:        16.141 s, estimated 18 s
+Ran all test suites within paths "src/components/tour/__tests__/ImageGallery.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx".
+NUMERIC_EXIT=0

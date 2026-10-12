@@ -176,6 +176,7 @@
     "difficulty_moderate": "Moderata",
     "difficulty_challenging": "Impegnativa",
     "operator": "Operatore turistico",
+    "operatorVerified": "Operatore verificato",
     "operatorTourCount": "{count} tour",
     "operatorReviewCount": "{count} recensioni",
     "relatedTours": "Altre esperienze da scoprire",
@@ -715,6 +716,12 @@
         "destinationPlaceholder": "Es., Roma, Italia",
         "durationValue": "Durata",
         "durationUnit": "Unità di Durata",
+        "backToDashboard": "Torna al pannello",
+        "tourSettings": "Impostazioni del tour",
+        "locationName": "Nome del luogo",
+        "coverImageUrl": "URL dell’immagine di copertina",
+        "minGuests": "Minimo di partecipanti",
+        "maxGuests": "Massimo di partecipanti",
         "difficultyLevel": "Livello di Difficoltà",
         "meetingPoint": "Punto di Incontro",
         "guideLanguageCodes": "Codici delle lingue della guida dal vivo",
@@ -814,6 +821,7 @@
         "imagesCount": "{current} / {max} immagini",
         "coverBadge": "Copertina",
         "galleryImageAlt": "Immagine della galleria",
+        "altText": "Testo alternativo (inglese, facoltativo)",
         "walking": "A piedi",
         "food": "Gastronomia",
         "adventure": "Avventura",
@@ -823,7 +831,8 @@
         "days": "Giorni",
         "easy": "Facile",
         "moderate": "Moderata",
-        "challenging": "Impegnativa"
+        "challenging": "Impegnativa",
+        "difficultyUnspecified": "Non specificato"
       },
       "errors": {
         "titleRequired": "Il titolo è obbligatorio.",
@@ -868,7 +877,13 @@
         "invalidUrl": "Formato URL non valido.",
         "unsupportedType": "Tipo di file non supportato. Usa JPEG, PNG o WebP.",
         "fileTooLarge": "Il file è troppo grande. La dimensione massima è {mb} MB.",
-        "maxImagesReached": "Puoi caricare un massimo di {max} immagini."
+        "maxImagesReached": "Puoi caricare un massimo di {max} immagini.",
+        "mediaMax": "Massimo 20 immagini.",
+        "altTextMax": "Il testo alternativo deve contenere al massimo 500 caratteri.",
+        "guideLanguageInvalid": "Ogni lingua della guida deve essere un codice di 2 o 3 lettere con sottotag opzionali (es. en, pt-BR).",
+        "guideLanguagesMax": "Massimo 20 lingue della guida.",
+        "duplicateGuideLanguage": "Lingua della guida duplicata.",
+        "difficultyInvalid": "La difficoltà deve essere easy, moderate o challenging."
       },
       "noCoverImage": "Nessuna immagine di copertina",
       "untitled": "Tour senza titolo",

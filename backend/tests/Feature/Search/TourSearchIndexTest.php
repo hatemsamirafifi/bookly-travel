@@ -233,3 +233,129 @@ it('exposes the rating contract on the tour detail endpoint', function () {
             ],
         ]);
 });
+
+it('spec019 delayed index refresh never presents a stale derivative as current and preserves links aliases money eligibility', function () {
+    config(['scout.driver' => 'collection']);
+    $slug = 'spec019-stale-index-' . uniqid();
+    $tour = makeSearchableTour('published', $slug);
+    addTranslation($tour, 'en', 'Spec019 Stale Index Source Tour');
+    addAvailabilityRule($tour);
+
+    $service = app(TourTranslationService::class);
+    $translator = new class implements TourContentTranslator
+    {
+        public function translate(array $strings, string $locale): array
+        {
+            return array_map(fn (string $text): string => "{$locale}: {$text}", $strings);
+        }
+    };
+    $hashV1 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
+    $tour->translationStates()->updateOrCreate(
+        ['locale' => 'es'],
+        ['source_hash' => $hashV1, 'translated_hash' => null, 'status' => 'pending', 'last_error_code' => null]
+    );
+    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1))->handle($service, $translator);
+    expect($tour->fresh()->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('ready');
+
+    // English source advances; the stored derivative is genuinely stale.
+    $tour->translations()->where('locale', 'en')->update(['title' => 'Spec019 Stale Index Revised Source']);
+    $tour = $tour->fresh();
+    $hashV2 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
+    expect($hashV2)->not->toBe($hashV1);
+    $tour->translationStates()->where('locale', 'es')->update([
+        'source_hash' => $hashV2, 'translated_hash' => $hashV1, 'status' => 'stale',
+    ]);
+
+    // Baseline detail before the delayed/queued index refresh runs: the
+    // current English source is served with a disclosed fallback.
+    $before = getJson("/api/public/tours/{$slug}?locale=es")->assertOk()->json('data');
+    expect($before['content_locale'])->toBe('en')
+        ->and($before['title'])->toBe('Spec019 Stale Index Revised Source')
+        ->and($before['translation_status'])->toBe('stale')
+        ->and($before['translation_warning'])->toBe('partial_translation')
+        ->and($before['languages'])->toBe($before['guide_languages'])
+        ->and($before['seo']['canonical_url'])->toContain("/es/tours/{$slug}")
+        ->and($before['seo']['hreflang']['en'])->toContain("/en/tours/{$slug}")
+        ->and($before['seo']['hreflang']['es'])->toContain("/es/tours/{$slug}")
+        ->and($before['seo']['hreflang']['it'])->toContain("/it/tours/{$slug}");
+    $money = $before['pricing'];
+    $availability = $before['availability'];
+    expect($money['base_price']['amount'])->toBe(5000)
+        ->and($money['base_price']['currency'])->toBe('EUR')
+        ->and($availability['available_dates'])->not->toBeEmpty();
+
+    // The delayed index refresh re-reads current source/state; it must not
+    // promote the old derivative to current in the search projection.
+    (new IndexTourAction($tour->id))->handle();
+
+    $projected = $tour->fresh()->toSearchableArray();
+    expect($projected['title_en'])->toBe('Spec019 Stale Index Revised Source')
+        ->and($projected['title_es'])->toBe('Spec019 Stale Index Revised Source')
+        ->and($projected['title_it'])->toBe('Spec019 Stale Index Revised Source')
+        ->and($projected['slug'])->toBe($slug)
+        ->and($projected['languages'])->toBe($projected['guide_languages'])
+        ->and($projected['price_amount'])->toBe(5000)
+        ->and($projected['price_currency'])->toBe('EUR')
+        ->and($projected['available_dates'])->toBe($availability['available_dates']);
+
+    // Detail still serves the current source with identical links, spoken
+    // aliases, money and booking availability after the delayed refresh.
+    $after = getJson("/api/public/tours/{$slug}?locale=es")->assertOk()->json('data');
+    expect($after['title'])->toBe($before['title'])
+        ->and($after['content_locale'])->toBe('en')
+        ->and($after['translation_status'])->toBe('stale')
+        ->and($after['translation_warning'])->toBe('partial_translation')
+        ->and($after['pricing'])->toBe($money)
+        ->and($after['availability'])->toBe($availability)
+        ->and($after['seo'])->toBe($before['seo'])
+        ->and($after['languages'])->toBe($before['languages'])
+        ->and($after['guide_languages'])->toBe($before['guide_languages']);
+
+    expect($tour->fresh()->shouldBeSearchable())->toBeTrue();
+
+    $results = Tour::search('Spec019 Stale Index Revised Source')->get();
+    expect($results->pluck('id'))->toContain($tour->id);
+});
+
+it('spec019 delayed index keeps an unbookable tour out of search while detail keeps money links and unavailable semantics', function () {
+    config(['scout.driver' => 'collection']);
+    $slug = 'spec019-unbookable-index-' . uniqid();
+    $tour = makeSearchableTour('published', $slug);
+    addTranslation($tour, 'en', 'Spec019 Unbookable Index Tour');
+    // No availability rule: the tour genuinely fails the public bookability
+    // invariant (published + valid pricing + upcoming availability).
+
+    expect($tour->fresh()->shouldBeSearchable())->toBeFalse();
+
+    $before = getJson("/api/public/tours/{$slug}?locale=en")->assertOk()->json('data');
+    expect($before['content_locale'])->toBe('en')
+        ->and($before['translation_status'])->toBe('source')
+        ->and($before['availability']['is_unavailable'])->toBeTrue()
+        ->and($before['pricing']['base_price']['amount'])->toBe(5000)
+        ->and($before['pricing']['base_price']['currency'])->toBe('EUR')
+        ->and($before['languages'])->toBe($before['guide_languages'])
+        ->and($before['seo']['canonical_url'])->toContain("/en/tours/{$slug}")
+        ->and($before['seo']['hreflang']['en'])->toContain("/en/tours/{$slug}")
+        ->and($before['seo']['hreflang']['es'])->toContain("/es/tours/{$slug}")
+        ->and($before['seo']['hreflang']['it'])->toContain("/it/tours/{$slug}");
+    $money = $before['pricing'];
+    $availability = $before['availability'];
+    $seo = $before['seo'];
+
+    // A delayed index run must no-op for the unbookable tour and must not
+    // alter the served detail contract.
+    (new IndexTourAction($tour->id))->handle();
+
+    expect($tour->fresh()->shouldBeSearchable())->toBeFalse();
+
+    $after = getJson("/api/public/tours/{$slug}?locale=en")->assertOk()->json('data');
+    expect($after['title'])->toBe($before['title'])
+        ->and($after['content_locale'])->toBe('en')
+        ->and($after['translation_status'])->toBe('source')
+        ->and($after['availability'])->toBe($availability)
+        ->and($after['availability']['is_unavailable'])->toBeTrue()
+        ->and($after['pricing'])->toBe($money)
+        ->and($after['seo'])->toBe($seo)
+        ->and($after['languages'])->toBe($before['languages'])
+        ->and($after['guide_languages'])->toBe($before['guide_languages']);
+});

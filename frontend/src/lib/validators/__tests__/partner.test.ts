@@ -454,3 +454,72 @@ describe('tourAvailabilityStepSchema', () => {
     expect(r.success).toBe(false);
   });
 });
+
+describe('tourMediaStepSchema US4 twenty-image gallery with specific alt (Spec 019)', () => {
+  const NON_BMP = String.fromCodePoint(0x1f30d);
+  const media20 = Array.from({ length: 20 }, (_, i) => ({
+    id: String(i),
+    url: `https://example.com/${i}.png`,
+    is_cover: i === 0,
+  }));
+
+  it('accepts twenty ordered media with a cover', () => {
+    expect(tourMediaStepSchema.safeParse({ media: media20 }).success).toBe(true);
+  });
+
+  it('rejects a twenty-first authored image', () => {
+    expect(tourMediaStepSchema.safeParse({
+      media: [...media20, { id: '20', url: 'https://example.com/20.png', is_cover: false }],
+    }).success).toBe(false);
+  });
+
+  it('retains omitted, cleared, and written alt_text', () => {
+    const r = tourMediaStepSchema.safeParse({
+      media: [
+        { id: 'a', url: 'https://example.com/a.png', is_cover: true },
+        { id: 'b', url: 'https://example.com/b.png', is_cover: false, alt_text: null },
+        { id: 'c', url: 'https://example.com/c.png', is_cover: false, alt_text: 'Stone archway' },
+      ],
+    });
+    expect(r.success).toBe(true);
+    if (r.success) {
+      expect(r.data.media[0]).toEqual(expect.objectContaining({ id: 'a' }));
+      expect(r.data.media[0]).not.toEqual(expect.objectContaining({ alt_text: expect.anything() }));
+      expect(r.data.media[1]).toEqual(expect.objectContaining({ alt_text: null }));
+      expect(r.data.media[2]).toEqual(expect.objectContaining({ alt_text: 'Stone archway' }));
+    }
+  });
+
+  it('counts alt_text in code points: 500 valid, 501 invalid', () => {
+    const withAlt = (alt_text: string) =>
+      tourMediaStepSchema.safeParse({
+        media: [{ id: 'a', url: 'https://example.com/a.png', is_cover: true, alt_text }],
+      }).success;
+    expect(withAlt(NON_BMP.repeat(500))).toBe(true);
+    expect(withAlt(NON_BMP.repeat(501))).toBe(false);
+    expect(withAlt('x'.repeat(500))).toBe(true);
+    expect(withAlt('x'.repeat(501))).toBe(false);
+  });
+});
+
+describe('tourBasicDetailsSchema US4 nullable difficulty and guide codes (Spec 019)', () => {
+  it('keeps missing or null difficulty absent instead of inventing a default', () => {
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, difficulty_level: undefined }).success).toBe(true);
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, difficulty_level: null }).success).toBe(true);
+  });
+
+  it('accepts each supported explicit difficulty code and rejects invented values', () => {
+    for (const difficulty_level of ['easy', 'moderate', 'challenging'] as const) {
+      expect(tourBasicDetailsSchema.safeParse({ ...validDetails, difficulty_level }).success).toBe(true);
+    }
+    expect(tourBasicDetailsSchema.safeParse({ ...validDetails, difficulty_level: 'extreme' }).success).toBe(false);
+  });
+
+  it('retains spoken guide codes as authored, independent of content locale', () => {
+    const r = tourBasicDetailsSchema.safeParse({ ...validDetails, languages: ['de', 'es'] });
+    expect(r.success).toBe(true);
+    if (r.success) {
+      expect(r.data.languages).toEqual(['de', 'es']);
+    }
+  });
+});

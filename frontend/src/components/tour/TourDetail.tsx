@@ -105,7 +105,7 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
       {/* Two-column layout: gallery + sidebar */}
       <div className="mt-8 flex flex-col gap-8 lg:flex-row">
         <div className="lg:w-2/3">
-          <ImageGallery images={tour.images} title={tour.title} />
+          <ImageGallery images={tour.images} title={tour.title} contentLocale={tour.content_locale} />
         </div>
 
         <div className="lg:w-1/3 space-y-5">
@@ -258,6 +258,7 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
               title={t('operator')}
               tourCountLabel={t('operatorTourCount', { count: tour.operator.tour_count })}
               reviewCountLabel={t('operatorReviewCount', { count: tour.operator.review_count })}
+              verifiedLabel={t('operatorVerified')}
             />
           )}
           {tour.reviews.count > 0 && <section id="reviews" className="scroll-mt-20"><ReviewList tourSlug={tour.slug} locale={locale} /></section>}

@@ -3,10 +3,17 @@ import {
   apiGet,
   apiPost,
   apiPut,
+  buildOrderedMedia,
   LONG_DESCRIPTION,
+  ownedCoverUrl,
+  ownedDifficulty,
   ownedEnRow,
   ownedEnglishSource,
+  ownedGuideLanguages,
+  ownedMedia,
+  ownedMediaUrls,
   uniqueTitle,
+  seededOwnedTourId,
 } from './tour-content-helpers';
 
 test.describe('Partner Tour Edit Workflow', () => {
@@ -68,7 +75,7 @@ test.describe('Partner Tour Edit Workflow', () => {
     expect(media.filter((image) => image.is_cover)).toHaveLength(1);
     await page.reload();
     await expect(page.getByRole('textbox', { name: 'Day title' }).first()).toHaveValue('Explore Rome');
-    await expect(page.getByRole('img', { name: 'Cover Image' })).toHaveAttribute('src', /rome-third\.jpg/);
+    await expect(page.locator('img[alt="Ordered tour"][src*="rome-third.jpg"]')).toBeVisible();
   });
 
   test('edits English source only while showing generated translation states', async ({ page }) => {
@@ -786,17 +793,346 @@ test.describe('Partner Tour Edit - Real API (Spec 019 US1)', () => {
   test('renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix', async ({
     page,
   }, testInfo) => {
+    await page.goto('/en/partner/tours');
+    const tourId = await seededOwnedTourId(page);
     for (const locale of ['en', 'es', 'it'] as const) {
       // 320 stays as supplemental narrow-width coverage; 390 is the
       // Constitution VI required narrow viewport.
       for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 900 });
-        await page.goto(`/${locale}/partner/tours/1/edit`);
+        await page.goto(`/${locale}/partner/tours/${tourId}/edit`);
         await expect(page.locator('#edit-source-title')).toBeVisible();
         await page.screenshot({
           path: testInfo.outputPath(`edit-${locale}-${width}.png`),
         });
       }
+    }
+  });
+});
+
+test.describe('Partner Tour Edit - Real API (Spec 019 US4)', () => {
+  test.beforeEach(async ({ context }) => {
+    await context.addCookies([
+      { name: 'bookly_cookie_consent', value: 'true', domain: 'localhost', path: '/' },
+      { name: 'bookly_cookie_consent', value: 'true', domain: 'nginx', path: '/' },
+      { name: 'bookly_cookie_consent', value: 'true', domain: '127.0.0.1', path: '/' },
+    ]);
+  });
+
+  test('authors alt, difficulty, guide codes and gallery order/cover in the edit UI with GET proof', async ({
+    page,
+  }) => {
+    // Assumptions (reported, pending root actual gate): the source author is
+    // still landing the new authoring controls, so the alt/difficulty
+    // locators below follow the existing US4 unit tests and the EN catalog
+    // instead of inventing selectors. Alt: /alt/i associated fields with the
+    // actual displayed value ('Old street') per ImageUploader.test.tsx
+    // getAllByLabelText(/alt/i)/getByDisplayValue. Difficulty: 'Difficulty
+    // Level' label per messages/en.json partner.tours.form.difficultyLevel
+    // with the supported 'challenging' value. Guide codes: 'Live-guide
+    // language codes' label per messages/en.json
+    // partner.tours.form.guideLanguageCodes (already rendered as
+    // #edit-guide-languages). Gallery order/cover uses the existing real
+    // 'Set Cover' buttons. No browser-pass is claimed until the source
+    // controls land and the root gate runs.
+    const title = uniqueTitle('US4 media roundtrip');
+    const stamp = Date.now().toString(36);
+    const coverUrl = `http://cdn.bookly.test/tours/rome-cover.jpg?us4=${stamp}-cover`;
+    const secondUrl = `http://cdn.bookly.test/tours/rome-gallery-1.jpg?us4=${stamp}-second`;
+    const thirdUrl = `http://cdn.bookly.test/tours/rome-gallery-2.jpg?us4=${stamp}-third`;
+    const coverAlt = 'Sunrise over the harbor \u2014 Caf\u00e9 \u2615 \uD800\uDF48';
+    const updatedAlt = 'Old street at dusk';
+    await page.goto('/en/partner/tours');
+    const created = await apiPost(page, '/api/partner/tours', {
+      title,
+      description: LONG_DESCRIPTION,
+      category: 'walking',
+      destination: 'Rome, Italy',
+      duration_value: 3,
+      duration_unit: 'hour',
+      difficulty_level: 'moderate',
+      guide_languages: ['EN', 'DE'],
+      translations: { en: { title, description: LONG_DESCRIPTION } },
+      media: [
+        { url: coverUrl, is_cover: true, alt_text: coverAlt },
+        { url: secondUrl, is_cover: false, alt_text: 'Old street' },
+        { url: thirdUrl, is_cover: false, alt_text: null },
+      ],
+    });
+    expect(created.status).toBe(201);
+    const tourId = (created.json as { data: { id: number } }).data.id;
+
+    const stored = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(stored.status).toBe(200);
+    const storedRows = ownedMedia(stored.json);
+    expect(storedRows.map((row) => row.url)).toEqual([coverUrl, secondUrl, thirdUrl]);
+    expect(storedRows.filter((row) => row.is_cover)).toHaveLength(1);
+    expect(storedRows[0].is_cover).toBe(true);
+    expect(storedRows[0].alt_text).toBe(coverAlt);
+    expect(storedRows[1].alt_text).toBe('Old street');
+    expect(storedRows[2].alt_text).toBeNull();
+    expect(ownedCoverUrl(stored.json)).toBe(coverUrl);
+    expect(ownedDifficulty(stored.json)).toBe('moderate');
+    // Guide codes normalize independently of EN/ES/IT page languages.
+    expect(ownedGuideLanguages(stored.json)).toEqual(['en', 'de']);
+
+    // Author through the real edit UI: alt via its displayed old value,
+    // challenging difficulty via its label, guide codes via their label,
+    // then gallery order/cover via the existing real buttons.
+    await page.goto(`/en/partner/tours/${tourId}/edit`);
+    await expect(page.locator('#edit-source-title')).toHaveValue(title);
+    await page.locator('input[id^="tour-image-alt-"][value="Old street"]').fill(updatedAlt);
+    await page.getByLabel(/Difficulty Level/i).selectOption('challenging');
+    await page.getByLabel(/Live-guide language codes/i).fill('EN, de, ES');
+    await page.getByRole('button', { name: 'Set Cover' }).last().click();
+    const savedPromise = page.waitForResponse(
+      (resp) =>
+        resp.url().includes(`/api/partner/tours/${tourId}`) &&
+        resp.request().method() === 'PUT'
+    );
+    await page.getByRole('button', { name: 'Save Tour Details' }).click();
+    const saved = await savedPromise;
+    expect(saved.status()).toBe(200);
+    await expect(page.getByText('Tour details saved successfully.')).toBeVisible();
+
+    // Real saved GET: changed alt, difficulty, guides, complete ordered
+    // URLs and selected cover. Set Cover moves the third gallery image
+    // first, so the persisted order is third/cover/second.
+    const reread = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(reread.status).toBe(200);
+    expect(ownedMediaUrls(reread.json)).toEqual([thirdUrl, coverUrl, secondUrl]);
+    const authored = ownedMedia(reread.json);
+    expect(authored.filter((row) => row.is_cover)).toHaveLength(1);
+    expect(authored[0].url).toBe(thirdUrl);
+    expect(authored[0].is_cover).toBe(true);
+    expect(ownedCoverUrl(reread.json)).toBe(thirdUrl);
+    const altByUrl = new Map(authored.map((row) => [row.url, row.alt_text]));
+    expect(altByUrl.get(coverUrl)).toBe(coverAlt);
+    expect(altByUrl.get(secondUrl)).toBe(updatedAlt);
+    expect(altByUrl.get(thirdUrl)).toBeNull();
+    expect(ownedDifficulty(reread.json)).toBe('challenging');
+    expect(ownedGuideLanguages(reread.json)).toEqual(['en', 'de', 'es']);
+
+    // Reopen the edit UI to prove the persisted control values.
+    await page.goto(`/en/partner/tours/${tourId}/edit`);
+    await expect(page.locator(`input[id^="tour-image-alt-"][value="${updatedAlt}"]`)).toBeVisible();
+    await expect(page.getByLabel(/Difficulty Level/i)).toHaveValue('challenging');
+    await expect(page.getByLabel(/Live-guide language codes/i)).toHaveValue('en, de, es');
+    await expect(page.getByRole('img', { name: title, exact: true })).toHaveAttribute(
+      'src',
+      new RegExp(`${stamp}-third`)
+    );
+
+    // Explicit null clears one alt while an omitted alt preserves the other,
+    // against the actual edited order/cover above.
+    const cleared = await apiPut(page, `/api/partner/tours/${tourId}`, {
+      media: [
+        { url: thirdUrl, is_cover: true },
+        { url: coverUrl, is_cover: false },
+        { url: secondUrl, is_cover: false, alt_text: null },
+      ],
+    });
+    expect(cleared.status).toBe(200);
+    const afterClear = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(afterClear.status).toBe(200);
+    const clearedRows = ownedMedia(afterClear.json);
+    expect(clearedRows.map((row) => row.url)).toEqual([thirdUrl, coverUrl, secondUrl]);
+    expect(clearedRows.filter((row) => row.is_cover)).toHaveLength(1);
+    expect(ownedCoverUrl(afterClear.json)).toBe(thirdUrl);
+    const clearedAltByUrl = new Map(clearedRows.map((row) => [row.url, row.alt_text]));
+    expect(clearedAltByUrl.get(coverUrl)).toBe(coverAlt);
+    expect(clearedAltByUrl.get(secondUrl)).toBeNull();
+    expect(clearedAltByUrl.get(thirdUrl)).toBeNull();
+
+    // Omitted media preserves all rows on an unrelated source save.
+    const omitted = await apiPut(page, `/api/partner/tours/${tourId}`, {
+      translations: { en: { meeting_point: 'US4 garden gate v2' } },
+    });
+    expect(omitted.status).toBe(200);
+    const afterOmit = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(afterOmit.status).toBe(200);
+    expect(ownedMediaUrls(afterOmit.json)).toEqual([thirdUrl, coverUrl, secondUrl]);
+    const omittedAltByUrl = new Map(ownedMedia(afterOmit.json).map((row) => [row.url, row.alt_text]));
+    expect(omittedAltByUrl.get(coverUrl)).toBe(coverAlt);
+    expect(ownedDifficulty(afterOmit.json)).toBe('challenging');
+    expect(ownedGuideLanguages(afterOmit.json)).toEqual(['en', 'de', 'es']);
+  });
+
+  test('accepts 20 photos with a 500-codepoint alt and rejects the 21st at the real boundary', async ({
+    page,
+  }) => {
+    const title = uniqueTitle('US4 media bounds');
+    const stamp = Date.now().toString(36);
+    await page.goto('/en/partner/tours');
+    const created = await apiPost(page, '/api/partner/tours', {
+      title,
+      description: LONG_DESCRIPTION,
+      category: 'walking',
+      destination: 'Rome, Italy',
+      duration_value: 2,
+      duration_unit: 'hour',
+      difficulty_level: 'easy',
+      translations: { en: { title, description: LONG_DESCRIPTION } },
+    });
+    expect(created.status).toBe(201);
+    const tourId = (created.json as { data: { id: number } }).data.id;
+
+    // 497 ASCII + 3 single codepoints (incl. one surrogate pair) = 500.
+    const alt500 = `${'A'.repeat(497)}\u2615\uD800\uDF48\u00e9`;
+    expect(Array.from(alt500).length).toBe(500);
+    const media20 = buildOrderedMedia(20, `us4-${stamp}-m20`, {
+      altText: (index) => (index === 0 ? alt500 : index === 1 ? 'Old street' : null),
+    });
+    const saved20 = await apiPut(page, `/api/partner/tours/${tourId}`, {
+      media: media20,
+      cover_image_url: media20[0].url,
+    });
+    expect(saved20.status).toBe(200);
+    const after20 = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(after20.status).toBe(200);
+    const rows20 = ownedMedia(after20.json);
+    expect(rows20).toHaveLength(20);
+    expect(rows20.map((row) => row.url)).toEqual(media20.map((item) => item.url));
+    expect(rows20.filter((row) => row.is_cover)).toHaveLength(1);
+    expect(rows20[0].is_cover).toBe(true);
+    expect(ownedCoverUrl(after20.json)).toBe(media20[0].url);
+    const actualAlt = rows20[0].alt_text;
+    expect(actualAlt).toBe(alt500);
+    if (typeof actualAlt === 'string') {
+      expect(Array.from(actualAlt).length).toBe(500);
+    } else {
+      throw new Error('Expected string alt_text for the 500-codepoint check');
+    }
+    expect(rows20[1].alt_text).toBe('Old street');
+
+    // 21 distinct URLs are rejected without partial change.
+    const media21 = buildOrderedMedia(21, `us4-${stamp}-m21`);
+    const rejected21 = await apiPut(page, `/api/partner/tours/${tourId}`, {
+      media: media21,
+      cover_image_url: media21[0].url,
+    });
+    expect(rejected21.status).toBe(422);
+    const after21 = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(after21.status).toBe(200);
+    expect(ownedMediaUrls(after21.json)).toEqual(media20.map((item) => item.url));
+
+    // A 501-codepoint alt is rejected without partial change.
+    const overlong = buildOrderedMedia(20, `us4-${stamp}-m20b`, {
+      altText: (index) => (index === 0 ? 'b'.repeat(501) : null),
+    });
+    const rejectedAlt = await apiPut(page, `/api/partner/tours/${tourId}`, {
+      media: overlong,
+    });
+    expect(rejectedAlt.status).toBe(422);
+    const afterAlt = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(afterAlt.status).toBe(200);
+    expect(ownedMediaUrls(afterAlt.json)).toEqual(media20.map((item) => item.url));
+    expect(ownedMedia(afterAlt.json)[0].alt_text).toBe(alt500);
+  });
+
+  test('blocks an invalid alt draft without partial saving and supports the keyboard file chooser', async ({ page }) => {
+    const title = uniqueTitle('US4 alt draft validity');
+    await page.goto('/en/partner/tours');
+    const imageUrl = `http://cdn.bookly.test/tours/rome-cover.jpg?alt-draft=${Date.now()}`;
+    const created = await apiPost(page, '/api/partner/tours', {
+      title,
+      description: LONG_DESCRIPTION,
+      category: 'walking',
+      destination: 'Rome, Italy',
+      duration_value: 2,
+      duration_unit: 'hour',
+      difficulty_level: 'easy',
+      translations: { en: { title, description: LONG_DESCRIPTION } },
+      media: [{ url: imageUrl, is_cover: true, alt_text: 'Original caption' }],
+    });
+    expect(created.status).toBe(201);
+    const tourId = (created.json as { data: { id: number } }).data.id;
+    await page.goto(`/en/partner/tours/${tourId}/edit`);
+    const alt = page.locator('input[id^="tour-image-alt-"]');
+    await expect(alt).toHaveValue('Original caption');
+    await expect(alt).toHaveAttribute('lang', 'en');
+    let saves = 0;
+    page.on('request', (request) => {
+      if (request.method() === 'PUT' && request.url().includes(`/api/partner/tours/${tourId}`)) saves++;
+    });
+    await page.locator('#edit-source-title').fill(`${title} revised`);
+    const alt501 = '𐍈'.repeat(501);
+    await alt.fill(alt501);
+    await expect(alt).toHaveAttribute('aria-invalid', 'true');
+    const errorId = await alt.getAttribute('aria-describedby');
+    expect(errorId).toBeTruthy();
+    await expect(page.locator(`[id="${errorId}"]`)).toBeVisible();
+    const save = page.getByRole('button', { name: 'Save Tour Details', exact: true });
+    await expect(save).toBeDisabled();
+    await alt.blur();
+    const unchanged = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(unchanged.status).toBe(200);
+    expect(ownedEnRow(unchanged.json).title).toBe(title);
+    expect(ownedMedia(unchanged.json)[0].alt_text).toBe('Original caption');
+    expect(saves).toBe(0);
+
+    const alt500 = '𐍈'.repeat(500);
+    await alt.fill(alt500);
+    await alt.blur();
+    await expect(save).toBeEnabled();
+    const saved = page.waitForResponse((response) => response.request().method() === 'PUT'
+      && response.url().includes(`/api/partner/tours/${tourId}`));
+    await save.click();
+    expect((await saved).status()).toBe(200);
+    const reread = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(reread.status).toBe(200);
+    expect(ownedEnRow(reread.json).title).toBe(`${title} revised`);
+    expect(ownedMedia(reread.json)[0].alt_text).toBe(alt500);
+    expect(saves).toBe(1);
+
+    const upload = page.getByRole('button', { name: /Drag.*drop/i });
+    await expect(upload).toBeEnabled();
+    const chooser = page.waitForEvent('filechooser');
+    await upload.focus();
+    await page.keyboard.press('Enter');
+    await (await chooser).setFiles([]);
+    await expect(upload).toBeFocused();
+    expect(saves).toBe(1);
+  });
+
+  test('preserves legacy null difficulty through unrelated UI and guide-code saves', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+    const published = await page.request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
+    expect(published.status()).toBe(200);
+    const publicBody: unknown = await published.json();
+    if (typeof publicBody !== 'object' || publicBody === null || !('data' in publicBody)
+      || typeof publicBody.data !== 'object' || publicBody.data === null || !('id' in publicBody.data)
+      || typeof publicBody.data.id !== 'number') throw new Error('Missing seeded legacy tour identity');
+    const tourId = publicBody.data.id;
+    const before = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(before.status).toBe(200);
+    expect(ownedDifficulty(before.json)).toBeNull();
+    const source = ownedEnglishSource(before.json);
+    const guideCodes = ownedGuideLanguages(before.json);
+    try {
+      await page.goto(`/en/partner/tours/${tourId}/edit`);
+      const saved = page.waitForResponse((response) => response.url().includes(`/api/partner/tours/${tourId}`)
+        && response.request().method() === 'PUT');
+      await page.locator('#edit-source-meeting-point').fill('US4 legacy-null garden gate');
+      await page.getByRole('button', { name: 'Save Tour Details' }).click();
+      expect((await saved).status()).toBe(200);
+      const afterUi = await apiGet(page, `/api/partner/tours/${tourId}`);
+      expect(afterUi.status).toBe(200);
+      expect(ownedDifficulty(afterUi.json)).toBeNull();
+      expect(ownedEnRow(afterUi.json).meeting_point).toBe('US4 legacy-null garden gate');
+      const guided = await apiPut(page, `/api/partner/tours/${tourId}`, {
+        guide_languages: ['EN', 'de', 'en', 'ES'], languages: ['fr'],
+      });
+      expect(guided.status).toBe(200);
+      const afterGuide = await apiGet(page, `/api/partner/tours/${tourId}`);
+      expect(afterGuide.status).toBe(200);
+      expect(ownedDifficulty(afterGuide.json)).toBeNull();
+      expect(ownedGuideLanguages(afterGuide.json)).toEqual(['en', 'de', 'es']);
+    } finally {
+      const restored = await apiPut(page, `/api/partner/tours/${tourId}`, {
+        translations: { en: source }, guide_languages: guideCodes,
+      });
+      expect(restored.status).toBe(200);
     }
   });
 });

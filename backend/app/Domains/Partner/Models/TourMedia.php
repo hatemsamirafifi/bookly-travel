@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $type
  * @property string $url
  * @property string|null $thumbnail_url
+ * @property string|null $alt_text
  * @property int $sort_order
  */
 class TourMedia extends Model
@@ -25,6 +26,7 @@ class TourMedia extends Model
         'type',
         'url',
         'thumbnail_url',
+        'alt_text',
         'sort_order',
     ];
 

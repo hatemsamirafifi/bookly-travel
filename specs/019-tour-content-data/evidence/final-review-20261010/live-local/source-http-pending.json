@@ -1,0 +1,14 @@
+{
+    "http_status": 201,
+    "elapsed_seconds": 3.4088099002838135,
+    "tour_id": 48,
+    "states": {
+        "es": "pending",
+        "it": "pending"
+    },
+    "public_status": 200,
+    "public_content_locale": "en",
+    "configured_model": "gemini-3.5-flash-lite",
+    "key_present": true,
+    "source_hash": "7034bcabc96842bd70af8e00a7e1cff3518bfea39feaef80fb3768ade1c735b3"
+}

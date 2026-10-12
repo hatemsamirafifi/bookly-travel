@@ -1,0 +1,43 @@
+{
+  "tour_id": 49,
+  "locale": "it",
+  "http_status": 200,
+  "title": "Spec019 legacy adoption rehearsal",
+  "content_locale": "en",
+  "itinerary_locale": "en",
+  "itinerary": [
+    {
+      "day": 1,
+      "stops": [],
+      "title": "Meet the local guide",
+      "description": null
+    },
+    {
+      "day": 2,
+      "stops": [],
+      "title": "Explore the historic route",
+      "description": null
+    }
+  ],
+  "price": {
+    "amount": 7500,
+    "currency": "EUR",
+    "formatted": "€75.00"
+  },
+  "images": [],
+  "canonical": "http://localhost:8189/it/tours/spec019-legacy-rehearsal-6328890a73",
+  "hreflang": [
+    [
+      "en",
+      "http://localhost:8189/en/tours/spec019-legacy-rehearsal-6328890a73"
+    ],
+    [
+      "es",
+      "http://localhost:8189/es/tours/spec019-legacy-rehearsal-6328890a73"
+    ],
+    [
+      "it",
+      "http://localhost:8189/it/tours/spec019-legacy-rehearsal-6328890a73"
+    ]
+  ]
+}

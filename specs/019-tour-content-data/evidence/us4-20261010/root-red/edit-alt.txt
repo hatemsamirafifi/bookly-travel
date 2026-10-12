@@ -1,0 +1,63 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx
+
+FAIL src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx (37.068 s)
+  PartnerTourEditPage snapshot restore (Spec 019)
+    ✕ retains specific English alt through snapshot media restoration and the owned update (785 ms)
+    ✓ merges a partial owned snapshot per field and retains omitted source and media (310 ms)
+    ✓ applies explicit null and empty-list clearing from the snapshot (565 ms)
+    ✓ sends untouched canonical nulls back as null on an unrelated save (154 ms)
+    ✓ persists an explicitly edited empty list while retaining other canonical nulls (257 ms)
+    ✓ renders source labels and focused field feedback from the en catalog (317 ms)
+    ✓ renders source labels and focused field feedback from the es catalog (196 ms)
+    ✓ renders source labels and focused field feedback from the it catalog (251 ms)
+    ✓ focuses an announced error summary when saving fails validation (173 ms)
+    ✓ lets empty titles reach server validation via noValidate while retaining required metadata (120 ms)
+    ✓ localizes the actual cleared-title string-rule 422 in en with focused summary (232 ms)
+    ✓ localizes the actual cleared-title string-rule 422 in es with focused summary (259 ms)
+    ✓ localizes the actual cleared-title string-rule 422 in it with focused summary (289 ms)
+    ✓ offers a localized save action and announces success in en (132 ms)
+    ✓ offers a localized save action and announces success in es (170 ms)
+    ✓ offers a localized save action and announces success in it (90 ms)
+    ✓ passes all nine English source fields and saved statuses to the preview (91 ms)
+    ✓ reports no draft only on 404 and keeps the form on other failures (213 ms)
+
+  ● PartnerTourEditPage snapshot restore (Spec 019) › retains specific English alt through snapshot media restoration and the owned update
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 2
+
+      Array [
+    -   ObjectContaining {
+    -     "alt_text": "Sunrise above the harbor",
+    +   Object {
+          "is_cover": true,
+          "url": "https://cdn.example.com/cover.jpg",
+        },
+    -   ObjectContaining {
+    -     "alt_text": null,
+    +   Object {
+          "is_cover": false,
+          "url": "https://cdn.example.com/second.jpg",
+        },
+      ]
+
+      197 |     fireEvent.click(screen.getByRole('button', { name: englishForm.saveDetails }));
+      198 |     await waitFor(() => expect(putBodies).toHaveLength(1));
+    > 199 |     expect(lastPutBody(putBodies).media).toEqual([
+          |                                          ^
+      200 |       expect.objectContaining({ url: ownedTour.cover_image_url, is_cover: true, alt_text: 'Sunrise above the harbor' }),
+      201 |       expect.objectContaining({ url: ownedTour.media[1].url, is_cover: false, alt_text: null }),
+      202 |     ]);
+
+      at Object.<anonymous> (/app/src/app/[locale]/(partner)../partner/tours/[id]/edit/__tests__/page.test.tsx:199:42)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 17 passed, 18 total
+Snapshots:   0 total
+Time:        41.916 s
+Ran all test suites within paths "src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx".
+NUMERIC_EXIT=1

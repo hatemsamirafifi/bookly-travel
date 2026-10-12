@@ -13,7 +13,7 @@ import { ImageUploader } from '@/components/partner/tours/ImageUploader';
 import { ItineraryEditor } from '@/components/partner/tours/ItineraryEditor';
 import { TourContentPreview } from '@/components/partner/tours/TourContentPreview';
 import type { TourItineraryDay } from '@/lib/api/types';
-import type { TourMedia } from '@/types/tour';
+import type { TourMedia, DifficultyLevel } from '@/types/tour';
 
 interface Translation {
   title: string;
@@ -45,6 +45,10 @@ interface SnapshotRestore {
   nulled: Array<keyof Translation>;
   /** Restored gallery, or null when the snapshot omits media (retain current). */
   media: TourMedia[] | null;
+  /** Restored difficulty code, or null for explicit-null/invalid content. */
+  difficulty: DifficultyLevel | null;
+  /** True when the snapshot carries difficulty_level (retain current when absent). */
+  difficultyPresent: boolean;
 }
 
 /** Build a presence-aware restore patch from an opaque stored snapshot
@@ -115,15 +119,33 @@ function snapshotRestorePatch(payload: unknown): SnapshotRestore | null {
   if (Array.isArray(payload.media)) {
     media = payload.media
       .filter((entry): entry is Record<string, unknown> => isRecord(entry) && typeof entry.url === 'string')
-      .map((entry, index) => ({
-        id: `restored-${index}`,
-        url: entry.url as string,
-        is_cover: entry.is_cover === true,
-        sort_order: index,
-      }));
+      .map((entry, index) => {
+        const restored: TourMedia = {
+          id: `restored-${index}`,
+          url: entry.url as string,
+          is_cover: entry.is_cover === true,
+          sort_order: index,
+        };
+        // alt_text presence is contractual: omitted stays absent (keep
+        // current per-item text), explicit null clears, strings restore.
+        if ('alt_text' in entry) {
+          restored.alt_text = typeof entry.alt_text === 'string' ? entry.alt_text : null;
+        }
+        return restored;
+      });
   }
 
-  return { source, nulled, media };
+  // Difficulty restores like the wizard: a supported code selects it,
+  // explicit null/invalid reads truthfully as unknown, and omission retains
+  // the current form state (never inferred as easy here either).
+  const rawDifficulty: unknown = payload.difficulty_level;
+  const difficultyPresent = 'difficulty_level' in payload;
+  const difficulty: DifficultyLevel | null =
+    rawDifficulty === 'easy' || rawDifficulty === 'moderate' || rawDifficulty === 'challenging'
+      ? rawDifficulty
+      : null;
+
+  return { source, nulled, media, difficulty, difficultyPresent };
 }
 
 /** Strip the canonical `translations.en.` prefix so nested server 422 paths
@@ -140,6 +162,8 @@ interface Tour {
   duration_value?: number;
   duration_unit?: string;
   duration_minutes?: number;
+  /** Nullable: older tours read truthfully as null/missing, never inferred. */
+  difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
   group_size_min: number;
   group_size_max: number;
   status: string;
@@ -212,12 +236,20 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [coverImageUrl, setCoverImageUrl] = useState('');
   const [media, setMedia] = useState<TourMedia[]>([]);
   const [mediaDirty, setMediaDirty] = useState(false);
+  // FR021/US4: a pending over-long English alt draft stays local inside the
+  // uploader and must block save until fixed or discarded.
+  const [mediaAltValid, setMediaAltValid] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [guideLanguagesInput, setGuideLanguagesInput] = useState('');
   const [groupSizeMin, setGroupSizeMin] = useState(1);
   const [groupSizeMax, setGroupSizeMax] = useState(10);
   const [durationValue, setDurationValue] = useState(2);
   const [durationUnit, setDurationUnit] = useState('hour');
+  // Nullable difficulty: older null/missing reads truthfully as blank and is
+  // omitted on save (the backend rejects supplied null); only an actually
+  // chosen supported code travels, tracked by difficultyDirty.
+  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel | null>(null);
+  const [difficultyDirty, setDifficultyDirty] = useState(false);
 
   // Partners edit the English source only; ES/IT are generated server-side.
   const activeLangTab = 'en' as const;
@@ -275,6 +307,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       const unit = t.duration_minutes && t.duration_minutes >= 1440 ? 'day' : 'hour';
       setDurationValue(val);
       setDurationUnit(unit);
+      // Older null/missing difficulty stays unknown (blank select), never
+      // inferred as easy; only supported codes restore as selected.
+      setDifficultyLevel(
+        t.difficulty_level === 'easy' || t.difficulty_level === 'moderate' || t.difficulty_level === 'challenging'
+          ? t.difficulty_level
+          : null
+      );
+      setDifficultyDirty(false);
 
       // Populate translations
       const newTrans: Record<'en' | 'es' | 'it', Translation> = {
@@ -377,6 +417,12 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         setMedia(patch.media);
         setMediaDirty(true);
       }
+      if (patch.difficultyPresent) {
+        setDifficultyLevel(patch.difficulty);
+        // A restored supported code is an actual choice and travels on save;
+        // restored null/missing stays omitted (backend rejects supplied null).
+        setDifficultyDirty(patch.difficulty !== null);
+      }
       setRestoreNotice(formT('draftRestored'));
     } catch (err) {
       // Only a true 404 means "no draft"; denial, network or server failure
@@ -389,6 +435,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Never partially save while a bad alt draft is pending: it was never
+    // emitted into media and would be silently discarded.
+    if (!mediaAltValid) {
+      setSuccessMsg(null);
+      setFieldErrors({});
+      setError(formT('saveBlockedErrors'));
+      return;
+    }
     setError(null);
     setSuccessMsg(null);
     setFieldErrors({});
@@ -413,13 +467,24 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           category_id: categoryId,
           location,
           cover_image_url: coverImageUrl || null,
-          guide_languages: guideLanguagesInput.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean),
+          guide_languages: [...new Set(guideLanguagesInput.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean))],
           group_size_min: groupSizeMin,
           group_size_max: groupSizeMax,
           duration_value: durationValue,
           duration_unit: durationUnit,
+          // Old nullable difficulty unrelated to this save stays omitted
+          // (backend rejects supplied null; omission preserves absence);
+          // only an actually chosen supported code travels.
+          ...(difficultyDirty && difficultyLevel ? { difficulty_level: difficultyLevel } : {}),
           translations: translationsPayload,
-          ...(mediaDirty ? { media: media.map(({ url, is_cover }) => ({ url, is_cover })) } : {}),
+          // Media carry alt_text presence exactly (omitted stays absent,
+          // explicit null clears), preserving URL identity, order, and
+          // cover flags; omission retains the gallery untouched.
+          ...(mediaDirty ? { media: media.map((item) => ({
+            url: item.url,
+            is_cover: item.is_cover,
+            ...('alt_text' in item ? { alt_text: item.alt_text } : {}),
+          })) } : {}),
         }),
       });
 
@@ -490,7 +555,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between border-b border-gray-100 pb-4 gap-4">
         <div className="flex items-center gap-3">
-          <Link href={`/${locale}/partner`} className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500">
+          <Link href={`/${locale}/partner`} aria-label={formT('backToDashboard')} className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
@@ -702,23 +767,25 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         {/* Right: Technical Metadata Settings */}
         <aside className="space-y-6">
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4 shadow-sm">
-            <h3 className="font-bold text-sm text-[#0A2540] border-b border-gray-100 pb-2">Technical Parameters</h3>
+            <h3 className="font-bold text-sm text-[#0A2540] border-b border-gray-100 pb-2">{formT('tourSettings')}</h3>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-gray-600">Location Name</label>
+              <label htmlFor="edit-location" className="text-xs font-semibold text-gray-600">{formT('locationName')}</label>
               <input
+                id="edit-location"
                 type="text"
                 required
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Rome, Italy"
+                placeholder={formT('destinationPlaceholder')}
                 className="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-gray-600">Cover Image URL</label>
+              <label htmlFor="edit-cover-image-url" className="text-xs font-semibold text-gray-600">{formT('coverImageUrl')}</label>
               <input
+                id="edit-cover-image-url"
                 type="text"
                 value={coverImageUrl}
                 onChange={(e) => setCoverImageUrl(e.target.value)}
@@ -743,8 +810,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
             <div className="grid grid-cols-2 gap-2">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">Duration</label>
+                <label htmlFor="edit-duration-value" className="text-xs font-semibold text-gray-600">{formT('durationValue')}</label>
                 <input
+                  id="edit-duration-value"
                   type="number"
                   required
                   min={1}
@@ -759,22 +827,43 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">Unit</label>
+                <label htmlFor="edit-duration-unit" className="text-xs font-semibold text-gray-600">{formT('durationUnit')}</label>
                 <select
+                  id="edit-duration-unit"
                   value={durationUnit}
                   onChange={(e) => setDurationUnit(e.target.value)}
                   className="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
                 >
-                  <option value="hour">Hours</option>
-                  <option value="day">Days</option>
+                  <option value="hour">{formT('hours')}</option>
+                  <option value="day">{formT('days')}</option>
                 </select>
               </div>
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="edit-difficulty" className="text-xs font-semibold text-gray-600">{formT('difficultyLevel')}</label>
+              <select
+                id="edit-difficulty"
+                value={difficultyLevel ?? ''}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setDifficultyLevel(next === 'easy' || next === 'moderate' || next === 'challenging' ? next : null);
+                  setDifficultyDirty(true);
+                }}
+                className="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
+              >
+                <option value="">{formT('difficultyUnspecified')}</option>
+                <option value="easy">{formT('easy')}</option>
+                <option value="moderate">{formT('moderate')}</option>
+                <option value="challenging">{formT('challenging')}</option>
+              </select>
+            </div>
+
             <div className="grid grid-cols-2 gap-2">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">Min Guests</label>
+                <label htmlFor="edit-min-guests" className="text-xs font-semibold text-gray-600">{formT('minGuests')}</label>
                 <input
+                  id="edit-min-guests"
                   type="number"
                   required
                   min={1}
@@ -784,8 +873,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">Max Guests</label>
+                <label htmlFor="edit-max-guests" className="text-xs font-semibold text-gray-600">{formT('maxGuests')}</label>
                 <input
+                  id="edit-max-guests"
                   type="number"
                   required
                   min={1}
@@ -798,6 +888,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
             <button
               type="submit"
+              disabled={!mediaAltValid}
               className="w-full flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0A2540] hover:bg-[#FFB800] hover:text-[#0A2540] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
             >
               <Save className="w-4 h-4" />
@@ -805,7 +896,13 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
             </button>
           </div>
           <div className="rounded-xl border border-border bg-surface p-5">
-            <ImageUploader media={media} onChange={(next) => { setMedia(next); setMediaDirty(true); setCoverImageUrl(next.find((item) => item.is_cover)?.url ?? ''); }} />
+            <ImageUploader
+              key={tour?.id}
+              media={media}
+              title={translationData.en.title}
+              onValidityChange={setMediaAltValid}
+              onChange={(next) => { setMedia(next); setMediaDirty(true); setCoverImageUrl(next.find((item) => item.is_cover)?.url ?? ''); }}
+            />
           </div>
         </aside>
       </form>

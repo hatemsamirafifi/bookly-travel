@@ -176,6 +176,32 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
     mockFetchTour();
   });
 
+  it('retains specific English alt through snapshot media restoration and the owned update', async () => {
+    const putBodies = mockFetchTour();
+    mockedGetLatestTourDraft.mockResolvedValue({
+      id: 6,
+      tour_id: 42,
+      partner_id: 9,
+      status: 'draft',
+      payload: {
+        media: [
+          { url: ownedTour.cover_image_url, is_cover: true, alt_text: 'Sunrise above the harbor' },
+          { url: ownedTour.media[1].url, is_cover: false, alt_text: null },
+        ],
+      },
+    });
+    await renderPage();
+    await screen.findByDisplayValue('Owned tour');
+    fireEvent.click(screen.getByRole('button', { name: englishForm.restoreDraft }));
+    await screen.findByText(englishForm.draftRestored);
+    fireEvent.click(screen.getByRole('button', { name: englishForm.saveDetails }));
+    await waitFor(() => expect(putBodies).toHaveLength(1));
+    expect(lastPutBody(putBodies).media).toEqual([
+      expect.objectContaining({ url: ownedTour.cover_image_url, is_cover: true, alt_text: 'Sunrise above the harbor' }),
+      expect.objectContaining({ url: ownedTour.media[1].url, is_cover: false, alt_text: null }),
+    ]);
+  });
+
   it('merges a partial owned snapshot per field and retains omitted source and media', async () => {
     const snapshotPayload = {
       translations: {

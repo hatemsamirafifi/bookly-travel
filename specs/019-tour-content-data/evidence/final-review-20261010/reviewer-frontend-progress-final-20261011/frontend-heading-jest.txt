@@ -1,0 +1,13 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/partner/tours/__tests__/TourWizard.test.tsx src/components/partner/tours/__tests__/TourWizard.locale.test.tsx
+
+PASS src/components/partner/tours/__tests__/TourWizard.locale.test.tsx (13.636 s)
+PASS src/components/partner/tours/__tests__/TourWizard.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       31 passed, 31 total
+Snapshots:   0 total
+Time:        16.475 s
+Ran all test suites within paths "src/components/partner/tours/__tests__/TourWizard.test.tsx", "src/components/partner/tours/__tests__/TourWizard.locale.test.tsx".
+NUMERIC_EXIT=0

@@ -1,0 +1,71 @@
+
+   PASS  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates distinct stable nonempty links for repeated valid sourc… 10.25s
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.56s
+  ✓ it creates a tour with valid data                                    0.27s
+  ✓ it persists difficulty and ordered media with the selected cover on… 0.42s
+  ✓ it persists the structured English itinerary from partner creation   0.45s
+  ✓ it rejects malformed structured itinerary on create and update       0.36s
+  ✓ it round-trips media reordering and cover changes on partner update  0.28s
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 0.24s
+  ✓ it stores guide-language codes independently of content translation… 0.40s
+  ✓ it keeps the partner content read contract while exposing safe deri… 0.55s
+  ✓ it rejects language names where stable guide-language codes are req… 0.30s
+  ✓ it updates guide metadata and English itinerary without conflating…  0.38s
+  ✓ it returns 422 for invalid data with missing required fields         0.35s
+  ✓ it returns 401 for unauthenticated requests                          0.49s
+  ✓ it returns 404 for non-partner users                                 0.55s
+  ✓ it scopes tour to the authenticated partner                          0.37s
+  ✓ it round-trips all nine English source fields on create and read     0.27s
+  ✓ it round-trips a nested English update while preserving omitted fie… 0.42s
+  ✓ it prefers explicit nested English keys over top-level shorthand     0.41s
+  ✓ it treats null as clear and empty array as clear while omitted keys… 0.39s
+  ✓ it rejects null titles and over-limit source fields with exact path… 0.38s
+  ✓ it rejects invalid itinerary boundaries with exact nested paths      0.32s
+  ✓ it accepts boundary-valid itineraries with canonical integer day an… 0.35s
+  ✓ it denies cross-partner updates with 404 and leaves the tour unchan… 0.46s
+  ✓ it returns 404 for unknown tours before validating malformed payloa… 0.34s
+  ✓ it rejects authored locales and platform-owned state with 422 and n… 0.39s
+  ✓ it rejects invalid media atomically without partial content changes  0.50s
+  ✓ it rejects associative objects for source lists, days and stops wit… 1.35s
+  ✓ it round-trips custom group sizes on create, read and reopen         0.92s
+  ✓ it rolls back fully persisted source and media when a late write fa… 0.43s
+  ✓ it applies destination, duration, group and category aliases on upd… 0.32s
+  ✓ it preserves existing null source fields through unrelated basic sa… 0.42s
+  ✓ it keeps a single draft across failed submit and update retries      0.65s
+  ✓ it refuses to clear required English on published tours              0.67s
+  ✓ it retains a null legacy difficulty through an unrelated English sa… 1.01s
+  ✓ it round-trips a supported difficulty and rejects an unsupported va… 0.51s
+  ✓ it gives explicit guide_languages precedence over the languages ali… 0.47s
+  ✓ it accepts the languages alias when canonical guide_languages is om… 0.50s
+  ✓ it enforces the twenty-code bound for guide languages (US4 T047)     0.45s
+  ✓ it accepts twenty distinct gallery URLs and rejects the twenty-firs… 0.41s
+  ✓ it rejects an over-limit alt description atomically without partial… 0.32s
+  ✓ it accepts a 500-codepoint alt and declares the pending alt storage… 0.26s
+  ✓ it writes cover/gallery types with the flagged cover synchronized t… 0.43s
+  ✓ it defaults the cover to the first valid image when none is flagged… 0.29s
+  ✓ it keeps exact media rows, ids and cover when media is omitted from… 0.33s
+  ✓ it retains prior specific alt when a current URL is resent without…  0.46s
+  ✓ it clears specific alt on explicit null while keeping the row (US4…  0.41s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.81s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.32s
+
+   PASS  Tests\Feature\Partner\TourContentInputTest
+  ✓ it prefers explicit nested English keys while shorthand fills absen… 0.36s
+  ✓ it preserves omitted keys and keeps null and empty-array meanings d… 0.38s
+  ✓ it normalizes absent stops to empty arrays while passing malformed…  0.46s
+  ✓ it rejects over-limit source text and lists with exact field paths   0.35s
+  ✓ it rejects null titles while accepting nullable draft descriptions   0.45s
+  ✓ it rejects out-of-range itinerary values with exact nested paths     0.41s
+  ✓ it accepts boundary-valid itineraries including empty lists and zer… 0.35s
+  ✓ it rejects explicit null stops instead of treating null as empty     0.51s
+  ✓ it rejects every authored non-English locale with its precise path   0.69s
+  ✓ it rejects platform-owned keys top-level and nested, even when null… 0.44s
+  ✓ it rejects nested provider state and top-level provider/job/error s… 0.30s
+  ✓ it rejects unexpected English source keys while keeping valid non-s… 0.41s
+  ✓ it wires the shared boundary into both partner requests with field-… 0.36s
+
+  Tests:    62 passed (528 assertions)
+  Duration: 38.66s
+
+NUMERIC_EXIT=0

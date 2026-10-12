@@ -1,0 +1,28 @@
+{
+    "observed_at": "2026-10-10T22:00:47+00:00",
+    "scope": "Only the two exclusively owned synthetic rehearsal tours; reversible status archive, no row deletion",
+    "results": [
+        {
+            "tour_id": 48,
+            "slug": "spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y",
+            "status": "archived",
+            "retained_content_sha256": "09c2da86ca05e198ccc0f1dab098a78a3303030a6fc9b4dbda9db709d1afa6f8",
+            "source_rows_retained": true,
+            "raw_legacy_retained": true,
+            "media_retained": true,
+            "availability_retained": true,
+            "public_http_status": 410
+        },
+        {
+            "tour_id": 49,
+            "slug": "spec019-legacy-rehearsal-6328890a73",
+            "status": "archived",
+            "retained_content_sha256": "6959a599e5379001e7d58ba8ec7b953b7f4a5e595e1facd8aa04591596c3b78f",
+            "source_rows_retained": true,
+            "raw_legacy_retained": true,
+            "media_retained": true,
+            "availability_retained": true,
+            "public_http_status": 410
+        }
+    ]
+}

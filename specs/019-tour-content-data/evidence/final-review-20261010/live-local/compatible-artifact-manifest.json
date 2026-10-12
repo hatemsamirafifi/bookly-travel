@@ -1,0 +1,54 @@
+{
+  "file_hashes": [
+    {
+      "sha256": "4E6ABA36BA951CF0E4B27694EC0448BEBBA6E2ECDF11140550C8A0443765FBEE",
+      "path": "app/Domains/Partner/Models/TourMedia.php"
+    },
+    {
+      "sha256": "36B8EB51355E363CFD894E832E91489EB1CEF002893863719ACE36B6013FCA4D",
+      "path": "app/Domains/Partner/Requests/StoreTourRequest.php"
+    },
+    {
+      "sha256": "5F78E40D64A4F23AD9E05DBB7247522D485FF56E798FB475720CA67163C9FFCC",
+      "path": "app/Domains/Partner/Requests/TourContentRules.php"
+    },
+    {
+      "sha256": "0601AC450B10B3629B5EEE150AE03B8AB5E95FA8B584810E3AE28602315E7184",
+      "path": "app/Domains/Partner/Requests/UpdateTourRequest.php"
+    },
+    {
+      "sha256": "4040E9597E344DD015BCF3349AB4702B361296CB8C18C4791558D8E1549D42EB",
+      "path": "app/Domains/Partner/Services/TourService.php"
+    },
+    {
+      "sha256": "EDBF431876860C448C47A7819EDF0A9CDF453859D34F85BB9BDDD82F9CB6C016",
+      "path": "app/Domains/Search/Actions/GetPublicOperatorSummaryAction.php"
+    },
+    {
+      "sha256": "74C773ADABB21071A59E94B012398FCB0C7762645163E64D9334B26368DC3C55",
+      "path": "app/Domains/Search/Actions/GetRelatedToursAction.php"
+    },
+    {
+      "sha256": "AD42212277E0101FE6C1A92C9209CF12C6A41C7D01D56931696F7BD2D63770DD",
+      "path": "app/Domains/Search/Actions/GetTourDetailAction.php"
+    },
+    {
+      "sha256": "D58347CA2D1E2C8CCF4E2137EE6DDA2F22729031DB5BE28531B6361481C0AB65",
+      "path": "database/migrations/2026_10_02_000001_add_alt_text_to_tour_media_table.php"
+    }
+  ],
+  "retains_alt_column": true,
+  "base_commit": "4613fe8",
+  "adoption_command_present": false,
+  "compatibility_source_files": [
+    "app/Domains/Partner/Models/TourMedia.php",
+    "app/Domains/Partner/Requests/StoreTourRequest.php",
+    "app/Domains/Partner/Requests/TourContentRules.php",
+    "app/Domains/Partner/Requests/UpdateTourRequest.php",
+    "app/Domains/Partner/Services/TourService.php",
+    "app/Domains/Search/Actions/GetPublicOperatorSummaryAction.php",
+    "app/Domains/Search/Actions/GetRelatedToursAction.php",
+    "app/Domains/Search/Actions/GetTourDetailAction.php",
+    "database/migrations/2026_10_02_000001_add_alt_text_to_tour_media_table.php"
+  ]
+}

@@ -1,0 +1,51 @@
+
+   FAIL  Tests\Feature\Partner\TourCreateTest
+  ⨯ it creates distinct stable nonempty links for repeated valid source titles with dataset "emoji-only boundary"
+  ⨯ it creates distinct stable nonempty links for repeated valid source titles with dataset "repeated readable title"
+  ⨯ it creates a tour with valid data
+  ⨯ it persists difficulty and ordered media with the selected cover on create
+  ⨯ it persists the structured English itinerary from partner creation
+  ⨯ it rejects malformed structured itinerary on create and update
+  ⨯ it round-trips media reordering and cover changes on partner update
+  ⨯ it rejects duplicate gallery URLs instead of silently changing ordering
+  ⨯ it stores guide-language codes independently of content translations
+  ⨯ it keeps the partner content read contract while exposing safe derived statuses
+  ⨯ it rejects language names where stable guide-language codes are required
+  ⨯ it updates guide metadata and English itinerary without conflating them
+  ⨯ it returns 422 for invalid data with missing required fields
+  ⨯ it returns 401 for unauthenticated requests
+  ⨯ it returns 404 for non-partner users
+  ⨯ it scopes tour to the authenticated partner
+  ⨯ it round-trips all nine English source fields on create and read
+  ⨯ it round-trips a nested English update while preserving omitted fields
+  ⨯ it prefers explicit nested English keys over top-level shorthand
+  ⨯ it treats null as clear and empty array as clear while omitted keys preserve values
+  ⨯ it rejects null titles and over-limit source fields with exact paths
+  ⨯ it rejects invalid itinerary boundaries with exact nested paths
+  ⨯ it accepts boundary-valid itineraries with canonical integer day and duration types
+  ⨯ it denies cross-partner updates with 404 and leaves the tour unchanged
+  ⨯ it returns 404 for unknown tours before validating malformed payloads
+  ⨯ it rejects authored locales and platform-owned state with 422 and no writes
+  ⨯ it rejects invalid media atomically without partial content changes
+  ⨯ it rejects associative objects for source lists, days and stops with exact paths
+  ⨯ it round-trips custom group sizes on create, read and reopen
+  ⨯ it rolls back fully persisted source and media when a late write fails
+  ⨯ it applies destination, duration, group and category aliases on update and read
+  ⨯ it preserves existing null source fields through unrelated basic saves
+  ⨯ it keeps a single draft across failed submit and update retries
+  ⨯ it refuses to clear required English on published tours
+  ⨯ it retains a null legacy difficulty through an unrelated English save without inferring a default (US4 T047)
+  ⨯ it round-trips a supported difficulty and rejects an unsupported value atomically (US4 T047)
+  ⨯ it gives explicit guide_languages precedence over the languages alias, including empty and null (US4 T047)
+  ⨯ it accepts the languages alias when canonical guide_languages is omitted and normalizes codes (US4 T047)
+  ⨯ it enforces the twenty-code bound for guide languages (US4 T047)
+  ⨯ it accepts twenty distinct gallery URLs and rejects the twenty-first (US4 T047)
+  ⨯ it rejects an over-limit alt description atomically without partial source or media writes (US4 T047)
+  ⨯ it accepts a 500-codepoint alt and declares the pending alt storage contract (US4 T047)
+  ⨯ it writes cover/gallery types with the flagged cover synchronized to the legacy column (US4 T047)
+  ⨯ it defaults the cover to the first valid image when none is flagged (US4 T047)
+  ⨯ it keeps exact media rows, ids and cover when media is omitted from an update (US4 T047)
+  ⨯ it retains prior specific alt when a current URL is resent without alt (US4 T047)
+  ⨯ it clears specific alt on explicit null while keeping the row (US4 T047)
+  ⨯ it rejects an unusable media URL together with a source change atomically (US4 T047)
+NUMERIC_EXIT=143

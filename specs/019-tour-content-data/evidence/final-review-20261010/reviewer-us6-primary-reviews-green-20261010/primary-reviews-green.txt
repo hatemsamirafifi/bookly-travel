@@ -1,0 +1,8 @@
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it projects genuine primary review facts even when cached legacy a… 10.12s
+
+  Tests:    1 passed (15 assertions)
+  Duration: 11.52s
+
+NUMERIC_EXIT=0

@@ -13,10 +13,16 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
   const t = useTranslations('tour');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const displayFormatter = useMemo(() => new Intl.DateTimeFormat(locale, {
+    weekday: 'short', month: 'short', day: 'numeric',
+  }), [locale]);
+  const dayFormatter = useMemo(() => new Intl.DateTimeFormat(locale, {
+    month: 'short', day: 'numeric',
+  }), [locale]);
 
   const formatDisplay = (dateStr: string) => {
     const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
+    return displayFormatter.format(d);
   };
 
   if (availableDates.length === 0) {
@@ -59,7 +65,7 @@ export default function AvailabilityCalendar({ availableDates, nextAvailableDate
               aria-label={formatDisplay(date)}
               aria-pressed={isSelected}
             >
-              {new Date(date + 'T00:00:00').toLocaleDateString(locale, { month: 'short', day: 'numeric' })}
+              {dayFormatter.format(new Date(date + 'T00:00:00'))}
             </button>
           );
         })}

@@ -1,0 +1,20 @@
+2026-10-10T21:35:53.610Z LH:ChromeLauncher Waiting for browser.
+2026-10-10T21:35:53.610Z LH:ChromeLauncher Waiting for browser...
+2026-10-10T21:35:54.120Z LH:ChromeLauncher Waiting for browser.....
+2026-10-10T21:35:54.622Z LH:ChromeLauncher Waiting for browser.......
+2026-10-10T21:35:55.312Z LH:ChromeLauncher Waiting for browser.........
+2026-10-10T21:35:55.413Z LH:ChromeLauncher Waiting for browser.........✓
+2026-10-10T21:36:01.752Z LH:ChromeLauncher Killing Chrome instance 10315
+Runtime error encountered: Failed to fetch browser webSocket URL from http://127.0.0.1:36677/json/version: fetch failed
+TypeError: Failed to fetch browser webSocket URL from http://127.0.0.1:36677/json/version: fetch failed
+    at node:internal/deps/undici/undici:15270:13
+    at async getWSEndpoint (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/common/BrowserConnector.js:121:24)
+    at async getConnectionTransport (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/common/BrowserConnector.js:67:31)
+    at async _connectToBrowser (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/common/BrowserConnector.js:34:50)
+    at async gatherFn (file:///app/node_modules/lighthouse/core/gather/navigation-runner.js:283:19)
+    at async Runner.gather (file:///app/node_modules/lighthouse/core/runner.js:211:25)
+    at async navigationGather (file:///app/node_modules/lighthouse/core/gather/navigation-runner.js:306:21)
+    at async navigation (file:///app/node_modules/lighthouse/core/index.js:58:24)
+    at async runLighthouse (file:///app/node_modules/lighthouse/cli/run.js:210:26)
+    at async file:///app/node_modules/lighthouse/cli/index.js:10:1
+NUMERIC_EXIT=1

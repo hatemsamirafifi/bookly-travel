@@ -1,0 +1,45 @@
+{
+  "observed_at": "2026-10-10T21:48:01.216Z",
+  "phase": "current",
+  "origin": "http://nextjs:3000",
+  "build_id": "1h7I7N6dpRg2PtBQVfPBL",
+  "results": [
+    {
+      "tour_id": 48,
+      "locale": "en",
+      "actual_ssr_http": 200,
+      "source_facts_match": true
+    },
+    {
+      "tour_id": 48,
+      "locale": "es",
+      "actual_ssr_http": 200,
+      "source_facts_match": true
+    },
+    {
+      "tour_id": 48,
+      "locale": "it",
+      "actual_ssr_http": 200,
+      "source_facts_match": true
+    },
+    {
+      "tour_id": 49,
+      "locale": "en",
+      "actual_ssr_http": 200,
+      "source_facts_match": true
+    },
+    {
+      "tour_id": 49,
+      "locale": "es",
+      "actual_ssr_http": 200,
+      "source_facts_match": true
+    },
+    {
+      "tour_id": 49,
+      "locale": "it",
+      "actual_ssr_http": 200,
+      "source_facts_match": true
+    }
+  ],
+  "actual_comparison": true
+}

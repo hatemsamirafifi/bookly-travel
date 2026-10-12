@@ -1,0 +1,3 @@
+{"page":"home","round":1,"passed":false,"scores":{"performance":null,"accessibility":null,"best-practices":null,"seo":null},"benchmarkIndex":null,"runtimeError":null}
+Reports retained: /app/.phase0-evidence/lighthouse/run-2026-10-10T21-33-44-741Z; not run: 7; gate: FAIL
+NUMERIC_EXIT=1

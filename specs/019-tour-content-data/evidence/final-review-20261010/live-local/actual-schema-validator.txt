@@ -1,0 +1,147 @@
+Observed 2026-10-10T20:59:36.648Z at https://validator.schema.org/
+Schema.org
+DocumentationSchemasValidateAbout
+
+public
+إجراء اختبار جديد
+language_japanese_kana
+info
+1
+<script type="application/ld+json">{"@context":{"@vocab":"https://schema.org/","name":{"@id":"https://schema.org/name","@language":"es"},"description":{"@id":"https://schema.org/description","@language":"es"}},"@type":["TouristTrip","Service"],"name":"Spec019 local real generation 20261010193622","description":"Pasea por la Roma histórica con un guía local, explorando calles antiguas y dos paradas auténticas mientras aprendes sobre su historia, cultura e historias durante esta experiencia a pie cuidadosamente planificada. · Punto de encuentro: Entrada principal del Coliseo","touristType":"Walking Tours","mainEntityOfPage":{"@type":"WebPage","@id":"https://bookly.com/es/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y","inLanguage":"es"},"tripOrigin":{"@type":"Place","name":"Entrada principal del Coliseo"},"offers":{"@type":"Offer","price":"75.00","priceCurrency":"EUR","availability":"https://schema.org/InStock","validFrom":"2026-10-11"},"itinerary":{"@type":"ItemList","@context":{"name":{"@id":"https://schema.org/name","@language":"es"},"description":{"@id":"https://schema.org/description","@language":"es"}},"itemListElement":[{"@type":"ListItem","position":1,"identifier":7,"name":"Llegada","item":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Thing","name":"Conoce al guía"}},{"@type":"ListItem","position":2,"item":{"@type":"Thing","name":"Paseo por el casco antiguo","description":"Explora las calles históricas."}}]}},{"@type":"ListItem","position":2,"identifier":7,"name":"Explorar"}]},"image":["https://cdn.bookly.test/tours/rome-cover.jpg"],"url":"https://bookly.com/es/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y"}</script>
+TouristTrip / Service
+All (1)arrow_drop_down
+TouristTrip / Service
+0 خطأ
+0 تحذير
+expand_less
+@type
+TouristTrip
+
+@type
+Service
+
+touristType
+Walking Tours
+
+image
+https://cdn.bookly.test/tours/rome-cover.jpg
+
+url
+https://bookly.com/es/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y
+
+name
+Spec019 local real generation 20261010193622
+
+description
+Pasea por la Roma histórica con un guía local, explorando calles antiguas y dos paradas auténticas mientras aprendes sobre su historia, cultura e historias durante esta experiencia a pie cuidadosamente planificada. · Punto de encuentro: Entrada principal del Coliseo
+
+mainEntityOfPage
+
+@type
+WebPage
+
+@id
+https://bookly.com/es/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y
+
+inLanguage
+es
+
+tripOrigin
+
+@type
+Place
+
+name
+Entrada principal del Coliseo
+
+offers
+
+@type
+Offer
+
+price
+75.00
+
+priceCurrency
+EUR
+
+availability
+http://schema.org/InStock
+
+validFrom
+2026-10-11
+
+itinerary
+
+@type
+ItemList
+
+itemListElement
+
+@type
+ListItem
+
+position
+1
+
+identifier
+7
+
+name
+Llegada
+
+item
+
+@type
+ItemList
+
+itemListElement
+
+@type
+ListItem
+
+position
+1
+
+item
+
+@type
+Thing
+
+name
+Conoce al guía
+
+itemListElement
+
+@type
+ListItem
+
+position
+2
+
+item
+
+@type
+Thing
+
+name
+Paseo por el casco antiguo
+
+description
+Explora las calles históricas.
+
+itemListElement
+
+@type
+ListItem
+
+position
+2
+
+identifier
+7
+
+name
+Explorar
+play_arrow
+التحقق من الصحة

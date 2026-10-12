@@ -1,0 +1,306 @@
+
+   FAIL  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates distinct stable nonempty links for repeated valid sourc… 38.51s
+  ✓ it creates distinct stable nonempty links for repeated valid source… 3.31s
+  ✓ it creates a tour with valid data                                    1.53s
+  ✓ it persists difficulty and ordered media with the selected cover on… 1.54s
+  ✓ it persists the structured English itinerary from partner creation   1.81s
+  ✓ it rejects malformed structured itinerary on create and update       4.75s
+  ✓ it round-trips media reordering and cover changes on partner update  3.31s
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 2.09s
+  ✓ it stores guide-language codes independently of content translation… 1.71s
+  ✓ it keeps the partner content read contract while exposing safe deri… 2.74s
+  ✓ it rejects language names where stable guide-language codes are req… 2.31s
+  ✓ it updates guide metadata and English itinerary without conflating…  1.74s
+  ✓ it returns 422 for invalid data with missing required fields         1.97s
+  ✓ it returns 401 for unauthenticated requests                          2.96s
+  ✓ it returns 404 for non-partner users                                 2.46s
+  ✓ it scopes tour to the authenticated partner                          2.12s
+  ✓ it round-trips all nine English source fields on create and read     1.82s
+  ✓ it round-trips a nested English update while preserving omitted fie… 1.22s
+  ✓ it prefers explicit nested English keys over top-level shorthand     1.13s
+  ✓ it treats null as clear and empty array as clear while omitted keys… 2.37s
+  ✓ it rejects null titles and over-limit source fields with exact path… 2.32s
+  ✓ it rejects invalid itinerary boundaries with exact nested paths      2.54s
+  ✓ it accepts boundary-valid itineraries with canonical integer day an… 1.30s
+  ✓ it denies cross-partner updates with 404 and leaves the tour unchan… 3.32s
+  ✓ it returns 404 for unknown tours before validating malformed payloa… 2.17s
+  ✓ it rejects authored locales and platform-owned state with 422 and n… 4.08s
+  ✓ it rejects invalid media atomically without partial content changes  4.31s
+  ✓ it rejects associative objects for source lists, days and stops wit… 1.47s
+  ✓ it round-trips custom group sizes on create, read and reopen         1.99s
+  ✓ it rolls back fully persisted source and media when a late write fa… 1.15s
+  ✓ it applies destination, duration, group and category aliases on upd… 1.97s
+  ✓ it preserves existing null source fields through unrelated basic sa… 1.27s
+  ✓ it keeps a single draft across failed submit and update retries      2.84s
+  ✓ it refuses to clear required English on published tours              1.54s
+  ✓ it retains a null legacy difficulty through an unrelated English sa… 2.87s
+  ✓ it round-trips a supported difficulty and rejects an unsupported va… 1.89s
+  ⨯ it gives explicit guide_languages precedence over the languages ali… 2.26s
+  ⨯ it accepts the languages alias when canonical guide_languages is om… 3.67s
+  ✓ it enforces the twenty-code bound for guide languages (US4 T047)     2.40s
+  ✓ it accepts twenty distinct gallery URLs and rejects the twenty-firs… 3.43s
+  ⨯ it rejects an over-limit alt description atomically without partial… 2.17s
+  ⨯ it accepts a 500-codepoint alt and declares the pending alt storage… 1.44s
+  ⨯ it writes cover/gallery types with the flagged cover synchronized t… 3.15s
+  ⨯ it defaults the cover to the first valid image when none is flagged… 2.12s
+  ✓ it keeps exact media rows, ids and cover when media is omitted from… 2.48s
+  ⨯ it retains prior specific alt when a current URL is resent without…  1.97s
+  ⨯ it clears specific alt on explicit null while keeping the row (US4…  1.20s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.47s
+
+   FAIL  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   5.41s
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.86s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 1.05s
+  ✓ it returns only approved public operator fields and visible-review…  2.68s
+  ✓ it omits operator identity when its partner is not approved          0.88s
+  ✓ it ranks only published bookable related tours by destination then…  0.69s
+  ✓ it returns 404 for non-existent slug                                 0.72s
+  ✓ it returns 404 for draft tour                                        0.77s
+  ✓ it returns 404 for rejected tour                                     0.66s
+  ✓ it returns 410 for an archived tour that was previously published    0.84s
+  ✓ it returns 404 for an archived tour that was never published         0.47s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.91s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.37s
+  ✓ it serves a fully bookable published tour as available (F2)          0.97s
+  ✓ it returns content in the requested locale                           0.88s
+  ✓ it keeps guide languages separate from localized content and itiner… 1.52s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.83s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 1.29s
+  ✓ it falls back to English when requested locale is unavailable        1.31s
+  ✓ it validates locale parameter is required                            1.49s
+  ✓ it includes SEO metadata in response                                 1.59s
+  ✓ it computes the review distribution from visible reviews (L4)        1.26s
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.81s
+  ✓ it falls back to current English for missing row+state, pending, st… 3.70s
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 1.88s
+  ✓ it keeps requested general content while a null itinerary independe… 1.30s
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 1.14s
+  ✓ it produces no misleading itinerary warning when English itinerary…  1.97s
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.92s
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 2.45s
+  ✓ it selects actual languages across the full es/it status matrix (US… 4.51s
+  ✓ it always serves English source irrespective of derived states (US2… 0.90s
+  ✓ it never exposes hashes, provider errors or job state on public det… 1.62s
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.84s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.63s
+  ✓ it dedupes mixed legacy and typed gallery rows into sorted unique H… 1.76s
+  ⨯ it surfaces an HTTP-authored specific English alt with an English l… 1.63s
+  ⨯ it falls back to the current Spanish title and content locale for i… 2.50s
+  ⨯ it falls back to the English title for image alt when the derivativ… 3.20s
+  ✓ it serves the nonblank legacy cover only without usable media and e… 4.76s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it gives explicit guide_la…
+  Expected response status code [201] but received 422.
+Failed asserting that 422 is identical to 201.
+
+The following errors occurred during the last request:
+
+{
+    "message": "The guide languages field must be an array.",
+    "errors": {
+        "guide_languages": [
+            "The guide languages field must be an array."
+        ]
+    }
+}
+
+  at tests/Feature/Partner/TourCreateTest.php:1084
+    1080▕     // to the alias via `??`; both are wrong per the contract.
+    1081▕     $nulled = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+    1082▕         'guide_languages' => null,
+    1083▕         'languages' => ['de'],
+  ➜ 1084▕     ]), $headers)->assertCreated();
+    1085▕     expect(Tour::findOrFail($nulled->json('data.id'))->guideLanguages())->toBe([]);
+    1086▕ });
+    1087▕
+    1088▕ it('accepts the languages alias when canonical guide_languages is omitted and normalizes codes (US4 T047)', function () {
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it accepts the languages a…
+  Failed asserting that null is identical to Array &0 [
+    0 => 'en',
+    1 => 'de',
+    2 => 'es-mx',
+].
+
+  at tests/Feature/Partner/TourCreateTest.php:1099
+    1095▕     // FR-017: case/subtag normalization, stable first-seen order, dedupe.
+    1096▕     expect(Tour::findOrFail($id)->guideLanguages())->toBe(['en', 'de', 'es-mx']);
+    1097▕     getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+    1098▕         ->assertJsonPath('data.guide_languages', ['en', 'de', 'es-mx'])
+  ➜ 1099▕         ->assertJsonPath('data.languages', ['en', 'de', 'es-mx']);
+    1100▕
+    1101▕     // Spoken codes never infer content derivatives.
+    1102▕     expect(Tour::findOrFail($id)->translations()->pluck('locale')->all())->toBe(['en']);
+    1103▕
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it rejects an over-limit a…
+  Expected response status code [422] but received 200.
+Failed asserting that 200 is identical to 422.
+
+  at tests/Feature/Partner/TourCreateTest.php:1159
+    1155▕
+    1156▕     putJson("/api/partner/tours/{$id}", [
+    1157▕         'translations' => ['en' => ['title' => 'Changed with bad alt']],
+    1158▕         'media' => [['url' => 'https://images.example.com/a.jpg', 'alt_text' => str_repeat("\u{00E9}", 501)]],
+  ➜ 1159▕     ], $headers)->assertUnprocessable()->assertJsonValidationErrors(['media.0.alt_text']);
+    1160▕
+    1161▕     // FR-019: the invalid write changes neither source nor media.
+    1162▕     expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+    1163▕     expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('url')->all())->toBe(['https://images.example.com/a.jpg']);
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it accepts a 500-codepoint…
+  Failed asserting that false is true.
+
+  at tests/Feature/Partner/TourCreateTest.php:1175
+    1171▕     postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+    1172▕         'media' => [['url' => 'https://images.example.com/a.jpg', 'alt_text' => str_repeat("\u{00E9}", 500)]],
+    1173▕     ]), $headers)->assertCreated();
+    1174▕
+  ➜ 1175▕     expect(Schema::hasColumn('tour_media', 'alt_text'))->toBeTrue();
+    1176▕ });
+    1177▕
+    1178▕ it('writes cover/gallery types with the flagged cover synchronized to the legacy column (US4 T047)', function () {
+    1179▕     // RED until T051: the old writer stores every row as type image and drops
+
+  1   tests/Feature/Partner/TourCreateTest.php:1175
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it writes cover/gallery ty…
+  Failed asserting that two arrays are identical.
+   Array &0 [
+  -    0 => 'gallery',
+  -    1 => 'cover',
+  +    0 => 'image',
+  +    1 => 'image',
+   ]
+
+
+  at tests/Feature/Partner/TourCreateTest.php:1194
+    1190▕     $id = $created->json('data.id');
+    1191▕
+    1192▕     $rows = Tour::findOrFail($id)->media()->orderBy('sort_order')->get();
+    1193▕     expect($rows->pluck('url')->all())->toBe([$second, $cover]);
+  ➜ 1194▕     expect($rows->pluck('type')->all())->toBe(['gallery', 'cover']);
+    1195▕     expect(Tour::findOrFail($id)->cover_image_url)->toBe($cover);
+    1196▕
+    1197▕     getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+    1198▕         ->assertJsonPath('data.cover_image_url', $cover)
+
+  1   tests/Feature/Partner/TourCreateTest.php:1194
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it defaults the cover to t…
+  Failed asserting that two arrays are identical.
+   Array &0 [
+  -    0 => 'cover',
+  -    1 => 'gallery',
+  +    0 => 'image',
+  +    1 => 'image',
+   ]
+
+
+  at tests/Feature/Partner/TourCreateTest.php:1213
+    1209▕         'media' => [['url' => $first], ['url' => $next]],
+    1210▕     ]), $headers)->assertCreated();
+    1211▕     $id = $created->json('data.id');
+    1212▕
+  ➜ 1213▕     expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('type')->all())->toBe(['cover', 'gallery']);
+    1214▕     expect(Tour::findOrFail($id)->cover_image_url)->toBe($first);
+    1215▕ });
+    1216▕
+    1217▕ it('keeps exact media rows, ids and cover when media is omitted from an update (US4 T047)', function () {
+
+  1   tests/Feature/Partner/TourCreateTest.php:1213
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it retains prior specific…
+  Failed asserting that false is true.
+
+  at tests/Feature/Partner/TourCreateTest.php:1261
+    1257▕     ], $headers)->assertOk();
+    1258▕
+    1259▕     $media = getJson("/api/partner/tours/{$id}", $headers)->assertOk()->json('data.media');
+    1260▕     $byUrl = array_column($media, null, 'url');
+  ➜ 1261▕     expect(array_key_exists('alt_text', $byUrl[$url]))->toBeTrue();
+    1262▕     expect($byUrl[$url]['alt_text'])->toBe('Terrace view over Florence');
+    1263▕ });
+    1264▕
+    1265▕ it('clears specific alt on explicit null while keeping the row (US4 T047)', function () {
+
+  1   tests/Feature/Partner/TourCreateTest.php:1261
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it clears specific alt on…
+  Failed asserting that an array has the key 'alt_text'
+
+  at tests/Feature/Partner/TourCreateTest.php:1280
+    1276▕     ], $headers)->assertOk();
+    1277▕
+    1278▕     $media = getJson("/api/partner/tours/{$id}", $headers)->assertOk()->json('data.media');
+    1279▕     $byUrl = array_column($media, null, 'url');
+  ➜ 1280▕     expect($byUrl[$url])->toHaveKey('alt_text');
+    1281▕     expect($byUrl[$url]['alt_text'])->toBeNull();
+    1282▕     expect(Tour::findOrFail($id)->media()->count())->toBe(1);
+    1283▕     expect(Tour::findOrFail($id)->cover_image_url)->toBe($url);
+    1284▕ });
+
+  1   tests/Feature/Partner/TourCreateTest.php:1280
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourDetailTest > it surfaces an HTTP-authore…
+  Failed asserting that two strings are identical.
+  -'Sunset over the vineyard rows'
+  +'US4 Specific Alt Gallery Tour'
+
+
+  at tests/Feature/Search/TourDetailTest.php:1369
+    1365▕         ->assertJsonPath('data.guide_languages', ['en', 'de'])
+    1366▕         ->assertJsonPath('data.languages', ['en', 'de'])
+    1367▕         ->assertJsonPath('data.images.0.url', 'https://images.example.com/vineyard-cover.jpg')
+    1368▕         ->assertJsonPath('data.images.0.is_cover', true)
+  ➜ 1369▕         ->assertJsonPath('data.images.0.alt', 'Sunset over the vineyard rows')
+    1370▕         ->assertJsonPath('data.images.0.alt_locale', 'en');
+    1371▕ });
+    1372▕
+    1373▕ it('falls back to the current Spanish title and content locale for image alt without specific text (US4 T047)', function () {
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourDetailTest > it falls back to the curren…
+  Failed asserting that null is identical to 'es'.
+
+  at tests/Feature/Search/TourDetailTest.php:1385
+    1381▕     getJson('/api/public/tours/us4-alt-current-es?locale=es')->assertOk()
+    1382▕         ->assertJsonPath('data.content_locale', 'es')
+    1383▕         ->assertJsonPath('data.title', 'Title es')
+    1384▕         ->assertJsonPath('data.images.0.alt', 'Title es')
+  ➜ 1385▕         ->assertJsonPath('data.images.0.alt_locale', 'es');
+    1386▕ });
+    1387▕
+    1388▕ it('falls back to the English title for image alt when the derivative is stale (US4 T047)', function () {
+    1389▕     // RED until T052 on alt_locale only; stale English fallback itself holds.
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourDetailTest > it falls back to the Englis…
+  Failed asserting that null is identical to 'en'.
+
+  at tests/Feature/Search/TourDetailTest.php:1399
+    1395▕     getJson('/api/public/tours/us4-alt-stale-es?locale=es')->assertOk()
+    1396▕         ->assertJsonPath('data.content_locale', 'en')
+    1397▕         ->assertJsonPath('data.title', 'English title')
+    1398▕         ->assertJsonPath('data.images.0.alt', 'English title')
+  ➜ 1399▕         ->assertJsonPath('data.images.0.alt_locale', 'en');
+    1400▕ });
+    1401▕
+    1402▕ it('serves the nonblank legacy cover only without usable media and empty images when there is no photo (US4 T047)', function () {
+    1403▕     // FR-020: a real legacy cover survives with no gallery; no photo means
+
+
+  Tests:    11 failed, 77 passed (1377 assertions)
+  Duration: 214.53s
+
+NUMERIC_EXIT=1

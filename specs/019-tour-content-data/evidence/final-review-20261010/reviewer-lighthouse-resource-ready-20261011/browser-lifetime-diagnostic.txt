@@ -1,0 +1,57 @@
+Sat, 10 Oct 2026 21:40:24 GMT ChromeLauncher Waiting for browser.
+Sat, 10 Oct 2026 21:40:24 GMT ChromeLauncher Waiting for browser...
+Sat, 10 Oct 2026 21:40:24 GMT ChromeLauncher Waiting for browser.....
+Sat, 10 Oct 2026 21:40:25 GMT ChromeLauncher Waiting for browser.......
+Sat, 10 Oct 2026 21:40:25 GMT ChromeLauncher Waiting for browser.........
+Sat, 10 Oct 2026 21:40:26 GMT ChromeLauncher Waiting for browser...........
+Sat, 10 Oct 2026 21:40:26 GMT ChromeLauncher Waiting for browser...........✓
+{"port":43011,"pid":10739,"disable_gpu":false,"chrome_exit":null}
+{"attempt":0,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":1,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":2,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":3,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":4,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":5,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":6,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+{"attempt":7,"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true,"chrome_exit":null,"signal":null}
+chrome-err.log cp" and on UNIX "unix")
+[10482:10482:1010/213759.204134:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10502:1010/213759.204464:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10482:1010/213759.204504:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10502:1010/213759.204556:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10482:1010/213759.204576:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+(process:10482): GLib-GIO-CRITICAL **: 21:37:59.310: g_settings_schema_source_lookup: assertion 'source != NULL' failed
+[10482:10482:1010/213759.518961:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote
+[10739:10760:1010/214025.587206:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10739:10760:1010/214025.728149:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10760:1010/214025.728361:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10739:10760:1010/214025.728449:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+Sat, 10 Oct 2026 21:40:38 GMT ChromeLauncher Killing Chrome instance 10739
+[10739:10760:1010/214025.740571:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10760:1010/214026.099647:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10760:1010/214026.297310:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10739:1010/214026.299798:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10760:1010/214026.299948:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10739:1010/214026.300058:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10739:1010/214026.303480:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+DevTools listening on ws://127.0.0.1:43011/devtools/browser/a4aecf9e-dfef-4fbc-9aea-6d40db2c789c
+[10739:10739:1010/214026.693276:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10739:1010/214026.694301:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10760:1010/214026.695031:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10760:1010/214026.695114:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10739:10760:1010/214026.695157:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+
+(process:10739): GLib-GIO-CRITICAL **: 21:40:26.700: g_settings_schema_source_lookup: assertion 'source != NULL' failed
+[10739:10739:1010/214029.391567:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10739:1010/214029.391674:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type:
+[10739:10760:1010/214029.391720:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10739:1010/214029.923496:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10760:1010/214029.923644:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10739:1010/214030.192905:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10739:10760:1010/214030.193173:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10739:10739:1010/214030.290931:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10842:10851:1010/214031.291183:ERROR:gpu/ipc/client/command_buffer_proxy_impl.cc:285] ContextResult::kTransientFailure: Failed to send GpuControl.CreateCommandBuffer.
+
+chrome-out.log

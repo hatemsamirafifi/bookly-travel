@@ -1,0 +1,1 @@
+{"name":"adoption-tests-red","started_at":"2026-10-10T16:12:54.5293916+00:00","finished_at":"2026-10-10T16:13:34.8201820+00:00","command":["docker","compose","exec","-T","-e","GEMINI_API_KEY=","laravel","php","-d","memory_limit=512M","vendor/bin/pest","--configuration=phpunit.pgsql.xml","tests/Feature/Partner/TourItineraryAdoptionTest.php"],"exit_code":2}

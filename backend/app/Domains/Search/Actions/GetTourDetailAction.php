@@ -81,17 +81,65 @@ class GetTourDetailAction
             ? ($itineraryFallback ? 'en' : $contentLocale)
             : $contentLocale;
 
+        // Spec 019 US4 T052: allImageUrls stays authoritative for order,
+        // dedup, legacy fallback and no-image []. Per-URL specific alt comes
+        // from the eager-loaded media collection (no extra queries):
+        // nonblank English alt projects with alt_locale=en, otherwise the
+        // selected current title with the actual content locale (not the
+        // requested locale when falling back to EN). No placeholder or
+        // fabricated photo is introduced.
         $images = $tour->allImageUrls();
+        $mediaRows = $tour->relationLoaded('media') ? $tour->media : collect();
+        $specificAltByUrl = [];
+        foreach ($mediaRows as $row) {
+            $rowUrl = $row->getAttribute('url');
+            if (! is_string($rowUrl) || $rowUrl === '') {
+                continue;
+            }
+            $rowAlt = $row->getAttribute('alt_text');
+            $isSpecific = is_string($rowAlt) && trim($rowAlt) !== '';
+            if (! array_key_exists($rowUrl, $specificAltByUrl)) {
+                $specificAltByUrl[$rowUrl] = $isSpecific ? $rowAlt : null;
+            } elseif ($isSpecific && $specificAltByUrl[$rowUrl] === null) {
+                $specificAltByUrl[$rowUrl] = $rowAlt;
+            }
+        }
+        $selectedTitle = optional($t)->title ?? '';
         $imageObjects = [];
         foreach ($images as $i => $url) {
-            $imageObjects[] = [
-                'url' => $url,
-                'is_cover' => $i === 0,
-                'alt' => optional($t)->title ?? '',
-            ];
+            $specific = $specificAltByUrl[$url] ?? null;
+            if (is_string($specific) && trim($specific) !== '') {
+                $imageObjects[] = [
+                    'url' => $url,
+                    'is_cover' => $i === 0,
+                    'alt' => $specific,
+                    'alt_locale' => 'en',
+                ];
+            } else {
+                $imageObjects[] = [
+                    'url' => $url,
+                    'is_cover' => $i === 0,
+                    'alt' => $selectedTitle,
+                    'alt_locale' => $contentLocale,
+                ];
+            }
         }
 
         $availableDates = $tour->upcomingAvailableDates();
+
+        // Bounded primary-review fix: derive the public aggregate from the
+        // same actual visible+flagged review set as the distribution (one
+        // reviewDistribution() query, no cached claims, no cache rewrites).
+        // Empty = 0/0; visible 5 + flagged 3 = avg 4 / count 2; hidden is
+        // excluded by reviewDistribution() itself.
+        $reviewDistribution = $tour->reviewDistribution();
+        $reviewCount = (int) array_sum($reviewDistribution);
+        $reviewSum = 5 * (int) ($reviewDistribution['5'] ?? 0)
+            + 4 * (int) ($reviewDistribution['4'] ?? 0)
+            + 3 * (int) ($reviewDistribution['3'] ?? 0)
+            + 2 * (int) ($reviewDistribution['2'] ?? 0)
+            + 1 * (int) ($reviewDistribution['1'] ?? 0);
+        $reviewAverage = $reviewCount > 0 ? round($reviewSum / $reviewCount, 2) : 0;
 
         $data = [
             'id' => $tour->id,
@@ -147,14 +195,15 @@ class GetTourDetailAction
             ],
             // `rating` mirrors the TourCard contract (TourDetail extends TourCard)
             // so the frontend can render the listing-style StarRating uniformly.
+            // Both share the genuine visible+flagged facts derived above.
             'rating' => [
-                'average' => $tour->averageRating(),
-                'count' => $tour->reviewCount(),
+                'average' => $reviewAverage,
+                'count' => $reviewCount,
             ],
             'reviews' => [
-                'average_rating' => $tour->averageRating(),
-                'count' => $tour->reviewCount(),
-                'distribution' => $tour->reviewDistribution(),
+                'average_rating' => $reviewAverage,
+                'count' => $reviewCount,
+                'distribution' => $reviewDistribution,
             ],
             'operator' => $this->operatorSummary->execute($tour),
             'related_tours' => $this->relatedTours->execute($tour, $locale),

@@ -1,0 +1,5 @@
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15270:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async main (/tmp/spec019-live-proof/frontend-rollback-proof.cjs:16:19)
+NUMERIC_EXIT=1

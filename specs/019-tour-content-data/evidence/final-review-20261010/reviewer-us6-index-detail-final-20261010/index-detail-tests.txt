@@ -1,0 +1,60 @@
+
+   PASS  Tests\Feature\Search\TourSearchIndexTest
+  ✓ it derives upcoming available dates from a specific_date rule        5.68s
+  ✓ it excludes blocked exception dates from upcoming availability       0.20s
+  ✓ it indexes a published tour with pricing and availability in Scout   1.33s
+  ✓ it does not consider a draft tour searchable even with rules and pr… 0.18s
+  ✓ it spec019 defers the search projection until after the source tran… 0.98s
+  ✓ it spec019 refreshes the latest English and current derivatives aft… 0.48s
+  ✓ it spec019 delayed translation jobs load fresh source and state      0.84s
+  ✓ it exposes the rating contract on the tour detail endpoint           0.91s
+  ✓ it spec019 delayed index refresh never presents a stale derivative…  0.36s
+  ✓ it spec019 delayed index keeps an unbookable tour out of search whi… 0.25s
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   1.02s
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.31s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.33s
+  ✓ it returns only approved public operator fields and visible-review…  1.68s
+  ✓ it omits operator identity when its partner is not approved          0.28s
+  ✓ it ranks only published bookable related tours by destination then…  0.38s
+  ✓ it returns 404 for non-existent slug                                 0.27s
+  ✓ it returns 404 for draft tour                                        0.28s
+  ✓ it returns 404 for rejected tour                                     0.25s
+  ✓ it returns 410 for an archived tour that was previously published    0.24s
+  ✓ it returns 404 for an archived tour that was never published         0.30s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.27s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.22s
+  ✓ it serves a fully bookable published tour as available (F2)          0.24s
+  ✓ it returns content in the requested locale                           0.30s
+  ✓ it keeps guide languages separate from localized content and itiner… 0.33s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.33s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.33s
+  ✓ it falls back to English when requested locale is unavailable        0.47s
+  ✓ it validates locale parameter is required                            0.27s
+  ✓ it includes SEO metadata in response                                 0.25s
+  ✓ it computes the review distribution from visible reviews (L4)        0.28s
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.31s
+  ✓ it falls back to current English for missing row+state, pending, st… 0.50s
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 1.06s
+  ✓ it keeps requested general content while a null itinerary independe… 0.71s
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.28s
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.30s
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.40s
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.36s
+  ✓ it selects actual languages across the full es/it status matrix (US… 1.43s
+  ✓ it always serves English source irrespective of derived states (US2… 0.25s
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.47s
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.26s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.23s
+  ✓ it dedupes mixed legacy and typed gallery rows into sorted unique H… 0.23s
+  ✓ it surfaces an HTTP-authored specific English alt with an English l… 0.42s
+  ✓ it falls back to the current Spanish title and content locale for i… 0.25s
+  ✓ it falls back to the English title for image alt when the derivativ… 0.25s
+  ✓ it serves the nonblank legacy cover only without usable media and e… 0.34s
+  ✓ it projects genuine primary review facts even when cached legacy ag… 0.27s
+
+  Tests:    51 passed (1153 assertions)
+  Duration: 28.61s
+
+NUMERIC_EXIT=0

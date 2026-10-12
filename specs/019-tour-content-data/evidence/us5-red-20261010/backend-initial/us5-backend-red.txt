@@ -1,0 +1,193 @@
+
+   FAIL  Tests\Feature\Search\PublicOperatorSummaryTest
+  ⨯ it returns the exact allowlisted summary with verified true for an…  5.17s
+  ⨯ it returns nullable description and logo facts without new mandator… 0.21s
+  ✓ it returns null summary for an inactive partner                      1.20s
+  ✓ it returns null summary for an unapproved partner                    0.22s
+  ⨯ it treats a whitespace-only public name as a missing name prerequis… 0.16s
+  ✓ it returns null summary when the partner has no profile              0.22s
+  ⨯ it matches every eligibility fixture against the shared exact invar… 0.20s
+  ⨯ it counts only exact eligible tours and their visible/flagged revie… 0.17s
+  ⨯ it scopes ownership to the partner record id, not the user id        0.17s
+  ⨯ it issues a bounded query count with eager-loaded availability coll… 0.16s
+
+   FAIL  Tests\Feature\Search\RelatedToursTest
+  ✓ it excludes the current, unpublished and unbookable tours while ran… 1.28s
+  ⨯ it finds valid recommendations beyond more than 32 leading ineligib… 0.97s
+  ✓ it ranks genuine review stats ahead of stale cached aggregates       0.32s
+  ✓ it breaks rating ties deterministically by review count then stable… 0.38s
+  ✓ it returns the default four cards and fewer real cards without padd… 0.39s
+  ✓ it exposes no public limit parameter for related selection           0.34s
+  ⨯ it preserves the TourCard contract with server minor-unit pricing a… 0.29s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest > it returns the e…
+  Failed asserting that null is identical to true.
+
+  at tests/Feature/Search/PublicOperatorSummaryTest.php:122
+    118▕     $response = getJson('/api/public/tours/allowlisted-operator-tour?locale=en')->assertOk()
+    119▕         ->assertJsonPath('data.operator.name', 'Rome Walks')
+    120▕         ->assertJsonPath('data.operator.description', 'Locally operated walks.')
+    121▕         ->assertJsonPath('data.operator.logo_url', 'https://images.example.com/operator.jpg')
+  ➜ 122▕         ->assertJsonPath('data.operator.verified', true)
+    123▕         ->assertJsonPath('data.operator.tour_count', 1)
+    124▕         ->assertJsonPath('data.operator.review_count', 0)
+    125▕         ->assertJsonPath('data.operator.average_rating', null);
+    126▕
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest >…   QueryException
+  SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "contact_email" of relation "partner_profiles" violates not-null constraint
+DETAIL:  Failing row contains (2, 2, Minimal Operator, null, null, null, null, null, null, null, null, null, null, null, null, null, 2026-10-10 16:14:48, 2026-10-10 16:14:48, null). (Connection: pgsql, SQL: insert into "partner_profiles" ("company_name", "partner_id", "updated_at", "created_at") values (Minimal Operator, 2, 2026-10-10 16:14:48, 2026-10-10 16:14:48) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+    408▕             );
+    409▕
+    410▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    411▕
+  ➜ 412▕             $statement->execute();
+    413▕
+    414▕             return $statement->fetchAll();
+    415▕         });
+    416▕     }
+
+      +14 vendor frames
+  15  tests/Feature/Search/PublicOperatorSummaryTest.php:144
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest >…   QueryException
+  SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "contact_email" of relation "partner_profiles" violates not-null constraint
+DETAIL:  Failing row contains (5, 5,    , null, null, null, null, null, null, null, null, null, null, null, null, null, 2026-10-10 16:14:50, 2026-10-10 16:14:50, null). (Connection: pgsql, SQL: insert into "partner_profiles" ("company_name", "partner_id", "updated_at", "created_at") values (   , 5, 2026-10-10 16:14:50, 2026-10-10 16:14:50) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+    408▕             );
+    409▕
+    410▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    411▕
+  ➜ 412▕             $statement->execute();
+    413▕
+    414▕             return $statement->fetchAll();
+    415▕         });
+    416▕     }
+
+      +14 vendor frames
+  15  tests/Feature/Search/PublicOperatorSummaryTest.php:190
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest >…   QueryException
+  SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "contact_email" of relation "partner_profiles" violates not-null constraint
+DETAIL:  Failing row contains (6, 7, Invariant Operator, null, null, null, null, null, null, null, null, null, null, null, null, null, 2026-10-10 16:14:50, 2026-10-10 16:14:50, null). (Connection: pgsql, SQL: insert into "partner_profiles" ("company_name", "partner_id", "updated_at", "created_at") values (Invariant Operator, 7, 2026-10-10 16:14:50, 2026-10-10 16:14:50) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+    408▕             );
+    409▕
+    410▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    411▕
+  ➜ 412▕             $statement->execute();
+    413▕
+    414▕             return $statement->fetchAll();
+    415▕         });
+    416▕     }
+
+      +14 vendor frames
+  15  tests/Feature/Search/PublicOperatorSummaryTest.php:211
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest >…   QueryException
+  SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "contact_email" of relation "partner_profiles" violates not-null constraint
+DETAIL:  Failing row contains (7, 8, Aggregate Operator, null, null, null, null, null, null, null, null, null, null, null, null, null, 2026-10-10 16:14:51, 2026-10-10 16:14:51, null). (Connection: pgsql, SQL: insert into "partner_profiles" ("company_name", "partner_id", "updated_at", "created_at") values (Aggregate Operator, 8, 2026-10-10 16:14:51, 2026-10-10 16:14:51) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+    408▕             );
+    409▕
+    410▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    411▕
+  ➜ 412▕             $statement->execute();
+    413▕
+    414▕             return $statement->fetchAll();
+    415▕         });
+    416▕     }
+
+      +14 vendor frames
+  15  tests/Feature/Search/PublicOperatorSummaryTest.php:253
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest >…   QueryException
+  SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "contact_email" of relation "partner_profiles" violates not-null constraint
+DETAIL:  Failing row contains (8, 9, Record Scoped Operator, null, null, null, null, null, null, null, null, null, null, null, null, null, 2026-10-10 16:14:51, 2026-10-10 16:14:51, null). (Connection: pgsql, SQL: insert into "partner_profiles" ("company_name", "partner_id", "updated_at", "created_at") values (Record Scoped Operator, 9, 2026-10-10 16:14:51, 2026-10-10 16:14:51) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+    408▕             );
+    409▕
+    410▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    411▕
+  ➜ 412▕             $statement->execute();
+    413▕
+    414▕             return $statement->fetchAll();
+    415▕         });
+    416▕     }
+
+      +14 vendor frames
+  15  tests/Feature/Search/PublicOperatorSummaryTest.php:314
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest >…   QueryException
+  SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "contact_email" of relation "partner_profiles" violates not-null constraint
+DETAIL:  Failing row contains (9, 10, Query Operator, null, null, null, null, null, null, null, null, null, null, null, null, null, 2026-10-10 16:14:51, 2026-10-10 16:14:51, null). (Connection: pgsql, SQL: insert into "partner_profiles" ("company_name", "partner_id", "updated_at", "created_at") values (Query Operator, 10, 2026-10-10 16:14:51, 2026-10-10 16:14:51) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+    408▕             );
+    409▕
+    410▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    411▕
+  ➜ 412▕             $statement->execute();
+    413▕
+    414▕             return $statement->fetchAll();
+    415▕         });
+    416▕     }
+
+      +14 vendor frames
+  15  tests/Feature/Search/PublicOperatorSummaryTest.php:333
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\RelatedToursTest > it finds valid recommenda…
+  Failed to assert that the response count matched the expected 4
+Failed asserting that actual size 0 matches expected size 4.
+
+  at tests/Feature/Search/RelatedToursTest.php:173
+    169▕         $expected[] = "related-paged-valid-{$i}";
+    170▕     }
+    171▕
+    172▕     $response = getJson('/api/public/tours/related-paged-current?locale=en')->assertOk()
+  ➜ 173▕         ->assertJsonCount(4, 'data.related_tours');
+    174▕
+    175▕     expect($response->json('data.related_tours.*.slug'))->toBe($expected);
+    176▕ });
+    177▕
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\RelatedToursTest > it preserves the TourCard…
+  Failed asserting that two arrays are identical.
+   Array &0 [
+  -    'average' => 0.0,
+  +    'average' => 0,
+       'count' => 0,
+   ]
+
+
+  at tests/Feature/Search/RelatedToursTest.php:313
+    309▕     expect($card['title'])->toBe('related-card-candidate')
+    310▕         ->and($card['price']['amount'])->toBe(5000)
+    311▕         ->and($card['price']['currency'])->toBe('EUR')
+    312▕         ->and($card['price']['formatted'])->toBe('€50.00')
+  ➜ 313▕         ->and($card['rating'])->toBe(['average' => 0.0, 'count' => 0])
+    314▕         ->and($card['next_available_date'])->toBe($ruleDate);
+    315▕ });
+    316▕
+
+  1   tests/Feature/Search/RelatedToursTest.php:313
+
+
+  Tests:    9 failed, 8 passed (86 assertions)
+  Duration: 12.30s
+
+NUMERIC_EXIT=2

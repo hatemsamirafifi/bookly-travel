@@ -34,9 +34,12 @@ it('marks English fallback content and itinerary as English on a Spanish page', 
   const { container } = render(<TouristTripSchema tour={tour} locale="es" />);
   const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')?.textContent ?? '{}');
 
-  expect(schema.inLanguage).toBe('en');
+  expect(schema['@context'].name['@language']).toBe('en');
+  expect(schema.mainEntityOfPage.inLanguage).toBe('en');
+  expect(schema.inLanguage).toBeUndefined();
   expect(schema.url).toContain('/es/tours/guided-rome');
-  expect(schema.itinerary.inLanguage).toBe('en');
+  expect(schema.itinerary['@context'].name['@language']).toBe('en');
+  expect(schema.itinerary.inLanguage).toBeUndefined();
   expect(schema.itinerary.itemListElement[0].name).toBe('English day');
   expect(schema.aggregateRating).toBeUndefined();
 });
@@ -52,8 +55,9 @@ it('uses the localized content language without changing guide metadata', () => 
   }} locale="it" />);
   const schema = JSON.parse(container.querySelector('script[type="application/ld+json"]')?.textContent ?? '{}');
 
-  expect(schema.inLanguage).toBe('it');
-  expect(schema.itinerary.inLanguage).toBe('it');
+  expect(schema['@context'].name['@language']).toBe('it');
+  expect(schema.mainEntityOfPage.inLanguage).toBe('it');
+  expect(schema.itinerary['@context'].name['@language']).toBe('it');
   expect(schema.itinerary.itemListElement[0].name).toBe('Giornata italiana');
 });
 
@@ -89,7 +93,9 @@ it('omits unearned review and availability claims when the tour is unavailable',
 
   expect(schema.aggregateRating).toBeUndefined();
   expect(schema.offers.availability).toBe('https://schema.org/OutOfStock');
-  expect(schema.inLanguage).toBe('en');
+  expect(schema['@context'].name['@language']).toBe('en');
+  expect(schema.mainEntityOfPage.inLanguage).toBe('en');
+  expect(schema.inLanguage).toBeUndefined();
 });
 
 it('does not allow traveler-facing content to break out of the JSON-LD script', () => {
@@ -98,4 +104,54 @@ it('does not allow traveler-facing content to break out of the JSON-LD script', 
   const script = container.querySelector('script[type="application/ld+json"]');
   expect(script?.innerHTML).not.toContain('</script>');
   expect(JSON.parse(script?.textContent ?? '{}').name).toBe(malicious);
+});
+
+it('represents the actual booked tour as a trip and service without unsupported duration or invented places', () => {
+  const { container } = render(<TouristTripSchema tour={{
+    ...tour,
+    meeting_point: '  Authored gate  ',
+    reviews: { average_rating: 4.5, count: 2, distribution: { 4: 1, 5: 1 } },
+  }} locale="es" />);
+  const schema = JSON.parse(container.querySelector('script')?.textContent ?? '{}');
+  expect(schema['@type']).toEqual(['TouristTrip', 'Service']);
+  expect(schema.duration).toBeUndefined();
+  expect(schema.tripOrigin).toEqual({ '@type': 'Place', name: 'Authored gate' });
+  expect(schema.aggregateRating).toMatchObject({ '@type': 'AggregateRating', ratingValue: '4.5', reviewCount: 2 });
+  expect(schema.geo).toBeUndefined();
+});
+
+it('retains repeated authored day numbers and every ordered stop with the actual itinerary language', () => {
+  const { container } = render(<TouristTripSchema tour={{
+    ...tour,
+    title: 'Titolo italiano',
+    content_locale: 'it',
+    itinerary_locale: 'en',
+    itinerary: [
+      { day: 7, title: 'First authored day', description: 'English description', stops: [
+        { title: 'Walking activity', description: 'Walk with the guide', duration_minutes: 30 },
+        { title: 'Rest break', description: null, duration_minutes: null },
+      ] },
+      { day: 7, title: 'Second authored day', description: null, stops: [] },
+    ],
+  }} locale="it" />);
+  const schema = JSON.parse(container.querySelector('script')?.textContent ?? '{}');
+  expect(schema['@context'].name['@language']).toBe('it');
+  expect(schema.itinerary['@context'].name['@language']).toBe('en');
+  const days = schema.itinerary.itemListElement;
+  expect(days.map((day: { position: number; identifier: number }) => [day.position, day.identifier])).toEqual([[1, 7], [2, 7]]);
+  expect(days[0].item.itemListElement.map((stop: { position: number; item: { name: string } }) => [stop.position, stop.item.name])).toEqual([
+    [1, 'Walking activity'], [2, 'Rest break'],
+  ]);
+  expect(days[0].item.itemListElement[0].item).toEqual({ '@type': 'Thing', name: 'Walking activity', description: 'Walk with the guide' });
+  expect(days[0].item.itemListElement[1].item.description).toBeUndefined();
+  expect(days[1].item).toBeUndefined();
+});
+
+it('keeps unknown photos, itinerary, meeting point and genuine ratings absent', () => {
+  const { container } = render(<TouristTripSchema tour={{ ...tour, images: [], itinerary: [], meeting_point: '   ' }} locale="en" />);
+  const schema = JSON.parse(container.querySelector('script')?.textContent ?? '{}');
+  expect(schema.image).toBeUndefined();
+  expect(schema.itinerary).toBeUndefined();
+  expect(schema.tripOrigin).toBeUndefined();
+  expect(schema.aggregateRating).toBeUndefined();
 });

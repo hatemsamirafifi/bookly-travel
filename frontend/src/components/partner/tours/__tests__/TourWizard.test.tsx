@@ -272,3 +272,111 @@ describe('TourWizard (Spec 019)', () => {
     expect(document.activeElement).toBe(summary);
   });
 });
+
+describe('TourWizard US4 truthful facts (Spec 019)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    localStorage.clear();
+    useTourWizardStore.getState().reset();
+    useTourWizardStore.setState({ currentStep: 'details' });
+  });
+
+  it('restores twenty media and keeps a missing/null older difficulty blank', async () => {
+    const media = Array.from({ length: 20 }, (_, i) => ({
+      id: `m${i}`,
+      url: `https://cdn.example.com/${i}.png`,
+      is_cover: i === 0,
+      sort_order: i,
+      alt_text: i === 0 ? 'Harbor sunrise' : null,
+      alt_locale: 'en' as const,
+    }));
+    localStorage.setItem('partner-tour-wizard', JSON.stringify({
+      state: {
+        currentStep: 'details',
+        formData: { title: 'Restored gallery tour', media, difficulty_level: null },
+      },
+      version: 0,
+    }));
+
+    await act(async () => {
+      await useTourWizardStore.persist.rehydrate();
+    });
+    render(<TourWizard />);
+
+    expect(useTourWizardStore.getState().formData.media).toHaveLength(20);
+    expect(useTourWizardStore.getState().formData.difficulty_level).toBeNull();
+    expect(screen.getByLabelText('form.difficultyLevel')).toHaveTextContent(/^$/);
+  });
+
+  it('omits an untouched missing difficulty on save instead of inventing easy', async () => {
+    seedForm({ difficulty_level: null });
+    mockedCreateTour.mockResolvedValue({ data: { id: 21, status: 'draft' } });
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+
+    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    expect(mockedCreateTour.mock.calls[0][0]).not.toHaveProperty('difficulty_level');
+  });
+
+  it('sends an explicitly chosen difficulty code', async () => {
+    seedForm({ difficulty_level: 'moderate' });
+    mockedCreateTour.mockResolvedValue({ data: { id: 24, status: 'draft' } });
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+
+    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    expect(mockedCreateTour.mock.calls[0][0].difficulty_level).toBe('moderate');
+  });
+
+  it('retains guide codes independently while media alt leaves the nine English fields untouched', async () => {
+    seedForm({
+      languages: ['de', 'es'],
+      media: [{
+        id: 'm0',
+        url: 'https://cdn.example.com/0.png',
+        is_cover: true,
+        sort_order: 0,
+        alt_text: 'Harbor sunrise',
+        alt_locale: 'en' as const,
+      }],
+    });
+    mockedCreateTour.mockResolvedValue({ data: { id: 22, status: 'draft' } });
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+
+    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    const payload = mockedCreateTour.mock.calls[0][0];
+    expect(payload.guide_languages).toEqual(['de', 'es']);
+    expect(payload.translations.en).toEqual({
+      title: 'Morning walking tour',
+      description: baseForm.description,
+      highlights: ['Old-town route'],
+      inclusions: ['Live guide'],
+      exclusions: ['Lunch'],
+      meeting_point: 'Metro exit',
+      cancellation_policy: 'Cancel up to 24 hours in advance.',
+      itinerary: [{ day: 1, title: 'Old town', description: null, stops: [] }],
+      important_information: ['Comfortable shoes recommended'],
+    });
+    expect(payload.media).toEqual([
+      expect.objectContaining({ url: 'https://cdn.example.com/0.png', is_cover: true, alt_text: 'Harbor sunrise' }),
+    ]);
+  });
+
+  it('saves all twenty restored media without a ten-image cap', async () => {
+    seedForm({
+      media: Array.from({ length: 20 }, (_, i) => ({
+        id: `m${i}`,
+        url: `https://cdn.example.com/${i}.png`,
+        is_cover: i === 0,
+        sort_order: i,
+      })),
+    });
+    mockedCreateTour.mockResolvedValue({ data: { id: 23, status: 'draft' } });
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+
+    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    expect(mockedCreateTour.mock.calls[0][0].media).toHaveLength(20);
+  });
+});

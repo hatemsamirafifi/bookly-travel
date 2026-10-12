@@ -2,6 +2,7 @@
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityRule;
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\TourMedia;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Reviews\Events\ReviewSubmitted;
@@ -14,9 +15,13 @@ use App\Models\TourTranslationState;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
+
+use Tests\Support\TourContentFixtures;
 
 uses(RefreshDatabase::class);
 
@@ -212,7 +217,7 @@ it('returns only approved public operator fields and visible-review aggregates',
         ->assertJsonPath('data.operator.review_count', 1)
         ->assertJsonPath('data.operator.average_rating', 5);
     $operator = $response->json('data.operator');
-    expect(array_keys($operator))->toBe(['name', 'description', 'logo_url', 'tour_count', 'review_count', 'average_rating']);
+    expect(array_keys($operator))->toBe(['name', 'description', 'logo_url', 'verified', 'tour_count', 'review_count', 'average_rating']);
     expect(json_encode($operator))->not->toContain('private@example.com', 'SECRET-TAX', 'IT60');
 });
 
@@ -1281,3 +1286,189 @@ it('excludes hidden reviews from the distribution (L4)', function () {
             '5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0,
         ]);
 });
+
+// ---------------------------------------------------------------------------
+// Spec 019 US4 (T047): public gallery truthfulness and alt language.
+// Authoring-only red-first regressions; root must run red before production
+// (T052 projects real ordered images with optional alt_locale). Queue is
+// faked inside the HTTP-driven test only (in-test artifact); provider key
+// stays blank via the shared test env. Fixture derivatives reuse the shared
+// TourContentFixtures state helper (current hash + stored derivative).
+// ---------------------------------------------------------------------------
+
+it('dedupes mixed legacy and typed gallery rows into sorted unique HTTP(S) images with the cover first (US4 T047)', function () {
+    $tour = spec019Us2MakeTour('us4-mixed-gallery', [
+        'cover_image_url' => 'https://images.example.com/legacy.jpg',
+        'guide_languages' => ['de', 'en'],
+        'difficulty_level' => 'moderate',
+    ]);
+    spec019Us2English($tour);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/b.jpg', 'sort_order' => 2]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 1]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'image', 'url' => 'https://images.example.com/legacy.jpg', 'sort_order' => 5]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'cover', 'url' => 'https://images.example.com/cover.jpg', 'sort_order' => 9]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 10]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'ftp://images.example.com/junk.jpg', 'sort_order' => 0]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'not-a-url', 'sort_order' => 0]);
+
+    // FR-019/020: cover first, remaining order kept, each URL once, no
+    // unusable schemes; envelope and guide codes stay independent.
+    getJson('/api/public/tours/us4-mixed-gallery?locale=en')->assertOk()
+        ->assertJsonPath('data.slug', 'us4-mixed-gallery')
+        ->assertJsonPath('data.difficulty_level', 'moderate')
+        ->assertJsonPath('data.languages', ['de', 'en'])
+        ->assertJsonPath('data.guide_languages', ['de', 'en'])
+        ->assertJsonPath('data.images', [
+            ['url' => 'https://images.example.com/cover.jpg', 'is_cover' => true, 'alt' => 'English title', 'alt_locale' => 'en'],
+            ['url' => 'https://images.example.com/a.jpg', 'is_cover' => false, 'alt' => 'English title', 'alt_locale' => 'en'],
+            ['url' => 'https://images.example.com/b.jpg', 'is_cover' => false, 'alt' => 'English title', 'alt_locale' => 'en'],
+            ['url' => 'https://images.example.com/legacy.jpg', 'is_cover' => false, 'alt' => 'English title', 'alt_locale' => 'en'],
+        ]);
+});
+
+it('surfaces an HTTP-authored specific English alt with an English locale mark on the public page (US4 T047)', function () {
+    // RED until T051/T052: the old writer drops alt_text and the public
+    // projection has no alt_locale, so alt falls back to the tour title.
+    Queue::fake();
+    Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
+    $partnerUser = User::factory()->partner()->create();
+    $partner = Partner::create([
+        'user_id' => $partnerUser->id,
+        'role' => 'partner',
+        'onboarding_status' => 'complete',
+        'is_active' => true,
+    ]);
+    $token = $partnerUser->createToken('test', ['partner'])->plainTextToken;
+
+    $created = postJson('/api/partner/tours', [
+        'title' => 'US4 Specific Alt Gallery Tour',
+        'description' => str_repeat('A guided vineyard walk in Florence. ', 5),
+        'category' => 'wine-food',
+        'destination' => 'Florence, Italy',
+        'duration_value' => 3,
+        'duration_unit' => 'hour',
+        'difficulty_level' => 'easy',
+        'guide_languages' => ['en', 'de'],
+        'media' => [
+            ['url' => 'https://images.example.com/vineyard-cover.jpg', 'is_cover' => true, 'alt_text' => 'Sunset over the vineyard rows'],
+            ['url' => 'https://images.example.com/cellar.jpg'],
+        ],
+    ], ['Authorization' => 'Bearer ' . $token])->assertCreated();
+
+    $tour = Tour::findOrFail($created->json('data.id'));
+    // Publish the owned draft for the public read (same direct-update
+    // precedent as the published-source tests above; not a moderation claim).
+    $tour->update(['status' => 'published']);
+
+    // FR-021: the specific description is English even on the page read.
+    TourContentFixtures::seedDerivative($tour, 'es', 'current');
+    TourContentFixtures::seedDerivative($tour, 'it', 'current');
+    foreach (['en', 'es', 'it'] as $locale) {
+        getJson("/api/public/tours/{$tour->slug}?locale={$locale}")->assertOk()
+            ->assertJsonPath('data.slug', $tour->slug)
+            ->assertJsonPath('data.guide_languages', ['en', 'de'])
+            ->assertJsonPath('data.languages', ['en', 'de'])
+            ->assertJsonPath('data.images.0.url', 'https://images.example.com/vineyard-cover.jpg')
+            ->assertJsonPath('data.images.0.is_cover', true)
+            ->assertJsonPath('data.images.0.alt', 'Sunset over the vineyard rows')
+            ->assertJsonPath('data.images.0.alt_locale', 'en');
+    }
+});
+
+it('falls back to the current Spanish title and content locale for image alt without specific text (US4 T047)', function () {
+    // RED until T052 on alt_locale only; the selected-title fallback itself
+    // already holds, so the locale mark is the genuine contract gap.
+    $tour = spec019Us2MakeTour('us4-alt-current-es', ['difficulty_level' => 'easy']);
+    spec019Us2English($tour);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 0]);
+    TourContentFixtures::seedDerivative($tour, 'es', 'current');
+
+    getJson('/api/public/tours/us4-alt-current-es?locale=es')->assertOk()
+        ->assertJsonPath('data.content_locale', 'es')
+        ->assertJsonPath('data.title', 'Title es')
+        ->assertJsonPath('data.images.0.alt', 'Title es')
+        ->assertJsonPath('data.images.0.alt_locale', 'es');
+});
+
+it('falls back to the English title for image alt when the derivative is stale (US4 T047)', function () {
+    // RED until T052 on alt_locale only; stale English fallback itself holds.
+    $tour = spec019Us2MakeTour('us4-alt-stale-es');
+    spec019Us2English($tour);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 0]);
+    TourContentFixtures::seedDerivative($tour, 'es', 'stale');
+
+    getJson('/api/public/tours/us4-alt-stale-es?locale=es')->assertOk()
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.images.0.alt', 'English title')
+        ->assertJsonPath('data.images.0.alt_locale', 'en');
+});
+
+it('serves the nonblank legacy cover only without usable media and empty images when there is no photo (US4 T047)', function () {
+    // FR-020: a real legacy cover survives with no gallery; no photo means
+    // [] rather than an invented placeholder.
+    $covered = spec019Us2MakeTour('us4-legacy-only', [
+        'cover_image_url' => 'https://images.example.com/real-legacy.jpg',
+    ]);
+    spec019Us2English($covered);
+    TourMedia::create(['tour_id' => $covered->id, 'type' => 'gallery', 'url' => 'ftp://images.example.com/junk.jpg', 'sort_order' => 0]);
+
+    getJson('/api/public/tours/us4-legacy-only?locale=en')->assertOk()
+        ->assertJsonCount(1, 'data.images')
+        ->assertJsonPath('data.images.0.url', 'https://images.example.com/real-legacy.jpg')
+        ->assertJsonPath('data.images.0.is_cover', true);
+
+    $bare = spec019Us2MakeTour('us4-no-photo', ['cover_image_url' => '   ']);
+    spec019Us2English($bare);
+
+    getJson('/api/public/tours/us4-no-photo?locale=en')->assertOk()
+        ->assertJsonPath('data.images', []);
+});
+
+it('projects genuine primary review facts even when cached legacy aggregates are stale', function () {
+    Queue::fake();
+    $tour = Tour::create([
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'slug' => 'us6-genuine-primary-review-facts',
+        'location' => 'Rome, Italy', 'location_slug' => 'rome',
+        'duration_minutes' => 180, 'duration_label' => '3 hours',
+        'group_size_min' => 1, 'group_size_max' => 8,
+        'status' => 'published', 'price_amount' => 5000,
+    ]);
+    $tour->translations()->create(['locale' => 'en', 'title' => 'Actual review facts', 'description' => 'An authored tour.']);
+    DB::table('tours')->where('id', $tour->id)->update(['average_rating' => 5.0, 'review_count' => 50]);
+    expect($tour->fresh()->averageRating())->toBe(5.0);
+    expect($tour->fresh()->reviewCount())->toBe(50);
+
+    getJson('/api/public/tours/us6-genuine-primary-review-facts?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.rating.count', 0)
+        ->assertJsonPath('data.rating.average', 0)
+        ->assertJsonPath('data.reviews.count', 0)
+        ->assertJsonPath('data.reviews.average_rating', 0);
+
+    $traveler = User::factory()->create();
+    foreach ([[5, 'visible'], [3, 'flagged'], [1, 'hidden']] as [$rating, $status]) {
+        $booking = Booking::create([
+            'reference' => Booking::generateReference(), 'traveler_id' => $traveler->id,
+            'tour_id' => $tour->id, 'tour_date' => now()->subDay(),
+            'participant_count' => 1, 'price_per_person' => 5000, 'total_price' => 5000,
+            'currency' => 'EUR', 'status' => Booking::STATUS_COMPLETED,
+        ]);
+        Review::create([
+            'booking_id' => $booking->id, 'tour_id' => $tour->id, 'traveler_id' => $traveler->id,
+            'rating' => $rating, 'status' => $status, 'locale' => 'en',
+        ]);
+    }
+    getJson('/api/public/tours/us6-genuine-primary-review-facts?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.rating.count', 2)
+        ->assertJsonPath('data.rating.average', 4)
+        ->assertJsonPath('data.reviews.count', 2)
+        ->assertJsonPath('data.reviews.average_rating', 4)
+        ->assertJsonPath('data.reviews.distribution', ['5' => 1, '4' => 0, '3' => 1, '2' => 0, '1' => 0]);
+    // A public read does not silently rewrite the old stored cache.
+    expect($tour->fresh()->averageRating())->toBe(5.0);
+    expect($tour->fresh()->reviewCount())->toBe(50);
+})->group('spec019-us6');

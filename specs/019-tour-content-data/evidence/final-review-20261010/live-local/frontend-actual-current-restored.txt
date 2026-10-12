@@ -1,0 +1,2 @@
+{"phase":"current","actual_ssr_pages":6,"assertions":"actual API -> HTML title/language/itinerary/media/canonical/hreflang/money; current also compares retained rollback facts","passed":true}
+NUMERIC_EXIT=0

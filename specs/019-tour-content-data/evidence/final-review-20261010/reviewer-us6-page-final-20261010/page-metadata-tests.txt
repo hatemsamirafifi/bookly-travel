@@ -1,0 +1,17 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+
+PASS src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+  ✓ uses the actual fallback content locale and complete gallery in tour metadata (7 ms)
+  ✓ uses the selected current derivative language for metadata while canonical follows the requested locale (4 ms)
+  ✓ passes through actual hreflang links for the requested slug without inventing locales (3 ms)
+  ✓ exposes only safe absolute gallery URLs and invents no photo when the gallery is empty (6 ms)
+  ✓ returns a noindex Tour Not Found title when the backend detail 404s or fails (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        5.528 s
+Ran all test suites within paths "src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx".
+NUMERIC_EXIT=0

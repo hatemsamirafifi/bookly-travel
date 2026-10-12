@@ -325,4 +325,92 @@ describe('TourDetail', () => {
     expect(screen.getByText('Other tour')).toBeInTheDocument();
     expect(screen.getByText('Local guides.')).toBeInTheDocument();
   });
+
+  describe('operator and related (Spec 019 US5)', () => {
+    const verifiedOperator = {
+      name: 'Tuscan Walks',
+      description: 'Local guides.',
+      logo_url: null as string | null,
+      verified: true,
+      tour_count: 3,
+      review_count: 8,
+      average_rating: 4.5,
+    };
+
+    it('renders the verification badge only for verified operators', () => {
+      // RED-first (T060): T063 wires the localized verified label through
+      // OperatorSummary; the badge is asserted by test id so the test stays
+      // green regardless of the final localized copy.
+      const { container, unmount } = renderTour('en', { ...tour, operator: verifiedOperator, related_tours: [] });
+      expect(container.querySelector('#operator')).not.toBeNull();
+      expect(screen.getByTestId('operator-verified')).toBeInTheDocument();
+      unmount();
+
+      renderTour('en', {
+        ...tour,
+        operator: { ...verifiedOperator, verified: false },
+        related_tours: [],
+      });
+      expect(screen.queryByTestId('operator-verified')).not.toBeInTheDocument();
+    });
+
+    it('omits the operator section safely when the summary is absent', () => {
+      const { container } = renderTour('en', {
+        ...tour,
+        related_tours: [{
+          id: 43, slug: 'other-tour', title: 'Other tour', location: 'Florence, Italy',
+          category: 'Food & Wine', duration_label: '2 hours',
+          price: { amount: 5000, currency: 'EUR', formatted: '€50.00' },
+          rating: { average: 0, count: 0 }, cover_image_url: '',
+          group_size: { min: 1, max: 8 }, next_available_date: null,
+        }],
+      });
+
+      expect(container.querySelector('#operator')).toBeNull();
+      expect(screen.queryByRole('heading', { name: enMessages.tour.operator })).not.toBeInTheDocument();
+      // Related existing cards still render unchanged.
+      expect(screen.getByText('Other tour')).toBeInTheDocument();
+    });
+
+    it('shows a zero-review operator without invented rating claims', () => {
+      const { container } = renderTour('en', {
+        ...tour,
+        operator: { ...verifiedOperator, review_count: 0, average_rating: null },
+        related_tours: [],
+      });
+
+      expect(container.querySelector('#operator')).not.toBeNull();
+      expect(screen.getByText('Tuscan Walks')).toBeInTheDocument();
+      expect(container.querySelector('#operator')?.textContent).not.toMatch(/null|NaN|undefined/);
+    });
+
+    it('renders existing related cards without inventing aggregate claims', () => {
+      renderTour('en', {
+        ...tour,
+        operator: undefined,
+        related_tours: [
+          {
+            id: 43, slug: 'rated-tour', title: 'Rated tour', location: 'Florence, Italy',
+            category: 'Food & Wine', duration_label: '2 hours',
+            price: { amount: 5000, currency: 'EUR', formatted: '€50.00' },
+            rating: { average: 4.5, count: 8 }, cover_image_url: '',
+            group_size: { min: 1, max: 8 }, next_available_date: '2026-07-15',
+          },
+          {
+            id: 44, slug: 'unrated-tour', title: 'Unrated tour', location: 'Rome, Italy',
+            category: 'Food & Wine', duration_label: '3 hours',
+            price: { amount: 8900, currency: 'EUR', formatted: '€89.00' },
+            rating: { average: 0, count: 0 }, cover_image_url: '',
+            group_size: { min: 1, max: 8 }, next_available_date: null,
+          },
+        ],
+      });
+
+      // The composed related list renders existing card titles as-is; no
+      // aggregate text is fabricated at the detail level.
+      expect(screen.getByText('Rated tour')).toBeInTheDocument();
+      expect(screen.getByText('Unrated tour')).toBeInTheDocument();
+      expect(screen.queryByText(/\(0 reviews\)/)).not.toBeInTheDocument();
+    });
+  });
 });

@@ -67,6 +67,9 @@ export function TourWizard() {
   // Successfully materialized draft id: retries update THIS tour instead of
   // creating duplicates after a partial success (created, submit failed).
   const [createdDraftId, setCreatedDraftId] = useState<number | null>(null);
+  // FR021/US4: a pending over-long English alt draft stays local inside the
+  // media step and must block Next/save until fixed or discarded.
+  const [mediaAltValid, setMediaAltValid] = useState(true);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const currentStepIdx = steps.findIndex((s) => s.id === currentStep);
@@ -132,7 +135,17 @@ export function TourWizard() {
   };
 
   const handleNext = () => {
+    // A pending invalid alt draft never reaches formData; hold Next so it
+    // cannot be silently discarded by navigating away.
+    if (currentStep === 'media' && !mediaAltValid) {
+      setValidationErrors({ media: 'partner.tours.errors.altTextMax' });
+      return;
+    }
     if (validateStep(currentStep)) {
+      // Leaving the media step unmounts its uploader, discarding any drafts.
+      if (currentStep === 'media') {
+        setMediaAltValid(true);
+      }
       if (currentStepIdx < steps.length - 1) {
         setStep(steps[currentStepIdx + 1].id);
       }
@@ -141,6 +154,10 @@ export function TourWizard() {
 
   const handleBack = () => {
     if (currentStepIdx > 0) {
+      // Going back unmounts the media uploader, discarding its drafts.
+      if (currentStep === 'media') {
+        setMediaAltValid(true);
+      }
       setStep(steps[currentStepIdx - 1].id);
     }
   };
@@ -148,6 +165,11 @@ export function TourWizard() {
   // Canonical English source: nested translations.en wins per field on the
   // server; shorthand basics travel alongside for compatibility. Pricing,
   // availability, group size and media are preserved in every submission.
+  // US4 truthful facts: an untouched unknown difficulty (restored null /
+  // missing) is omitted — never invented as easy, never sent as null —
+  // while a newly selected supported code travels as its code. Media carry
+  // alt_text presence exactly (omitted stays absent, explicit null clears),
+  // preserving URL identity, order, and cover flags.
   const buildPayload = (): PartnerTourWritePayload => ({
     title: formData.title,
     description: formData.description,
@@ -155,9 +177,9 @@ export function TourWizard() {
     destination: formData.destination,
     duration_value: Number(formData.duration_value) || 0,
     duration_unit: formData.duration_unit,
-    difficulty_level: formData.difficulty_level,
+    ...(formData.difficulty_level ? { difficulty_level: formData.difficulty_level } : {}),
     meeting_point: formData.meeting_point || null,
-    guide_languages: formData.languages.filter(Boolean),
+    guide_languages: [...new Set(formData.languages.map((code) => code.trim().toLowerCase()).filter(Boolean))],
     cancellation_policy: formData.cancellation_policy || null,
     itinerary: formData.itinerary,
     translations: {
@@ -173,7 +195,11 @@ export function TourWizard() {
         important_information: formData.important_information,
       },
     },
-    media: formData.media,
+    media: formData.media.map((item) => ({
+      url: item.url,
+      is_cover: item.is_cover,
+      ...('alt_text' in item ? { alt_text: item.alt_text } : {}),
+    })),
     pricing_tiers: formData.pricing_tiers.map((t) => ({
       name: t.name,
       price: parseFloat(t.price) || 0,
@@ -215,6 +241,12 @@ export function TourWizard() {
   };
 
   const handleSaveDraft = async () => {
+    // Never partially save while a bad alt draft is pending: it was never
+    // emitted into the payload and would be silently discarded.
+    if (!mediaAltValid) {
+      setValidationErrors({ media: 'partner.tours.errors.altTextMax' });
+      return;
+    }
     setIsSubmitting(true);
     setErrorMsg('');
     setNotice('');
@@ -233,6 +265,10 @@ export function TourWizard() {
   };
 
   const handleSubmitReview = async () => {
+    if (!mediaAltValid) {
+      setValidationErrors({ media: 'partner.tours.errors.altTextMax' });
+      return;
+    }
     if (
       !validateStep('details') ||
       !validateStep('media') ||
@@ -314,7 +350,7 @@ export function TourWizard() {
 
   const renderControlErrors = (base: string) =>
     controlErrors(base).map((message, index) => (
-      <p key={`${base}-${index}`} className="text-xs text-red-500 mt-1" role="alert">
+      <p key={`${base}-${index}`} className="text-xs text-red-600 mt-1" role="alert">
         {message}
       </p>
     ));
@@ -424,7 +460,7 @@ export function TourWizard() {
                   </SelectContent>
                 </Select>
                 {validationErrors['category'] && (
-                  <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['category'])}</p>
+                  <p className="text-xs text-red-600 mt-1" role="alert">{formatError(validationErrors['category'])}</p>
                 )}
               </div>
               <div className="space-y-1">
@@ -437,7 +473,7 @@ export function TourWizard() {
                   disabled={isSubmitting}
                 />
                 {validationErrors['destination'] && (
-                  <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['destination'])}</p>
+                  <p className="text-xs text-red-600 mt-1" role="alert">{formatError(validationErrors['destination'])}</p>
                 )}
               </div>
             </div>
@@ -452,7 +488,7 @@ export function TourWizard() {
                   disabled={isSubmitting}
                 />
                 {validationErrors['duration_value'] && (
-                  <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['duration_value'])}</p>
+                  <p className="text-xs text-red-600 mt-1" role="alert">{formatError(validationErrors['duration_value'])}</p>
                 )}
               </div>
               <div className="space-y-1">
@@ -526,9 +562,15 @@ export function TourWizard() {
       case 'media':
         return (
           <div className="space-y-4">
-            <ImageUploader media={formData.media} onChange={setMedia} disabled={isSubmitting} />
+            <ImageUploader
+              media={formData.media}
+              onChange={setMedia}
+              disabled={isSubmitting}
+              title={formData.title}
+              onValidityChange={setMediaAltValid}
+            />
             {validationErrors['media'] && (
-              <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['media'])}</p>
+              <p className="text-xs text-red-600 mt-1" role="alert">{formatError(validationErrors['media'])}</p>
             )}
           </div>
         );
@@ -537,7 +579,7 @@ export function TourWizard() {
           <div className="space-y-4">
             <PricingTierForm disabled={isSubmitting} />
             {validationErrors['pricing_tiers'] && (
-              <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['pricing_tiers'])}</p>
+              <p className="text-xs text-red-600 mt-1" role="alert">{formatError(validationErrors['pricing_tiers'])}</p>
             )}
           </div>
         );
@@ -546,7 +588,7 @@ export function TourWizard() {
           <div className="space-y-4">
             <AvailabilityCalendar disabled={isSubmitting} />
             {validationErrors['availability_rules'] && (
-              <p className="text-xs text-red-500 mt-1" role="alert">{formatError(validationErrors['availability_rules'])}</p>
+              <p className="text-xs text-red-600 mt-1" role="alert">{formatError(validationErrors['availability_rules'])}</p>
             )}
           </div>
         );
@@ -593,13 +635,14 @@ export function TourWizard() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <h1 className="mb-6 text-2xl font-semibold text-bookly-navy">{t('createTour')}</h1>
       {/* Progress bar */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           {steps.map((step, idx) => (
-            <div key={step.id} className="flex items-center gap-2 flex-1">
+            <div key={step.id} className="flex min-w-0 items-center gap-2 flex-1">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-xs font-semibold ${
                   idx <= currentStepIdx
                     ? 'bg-[#FFB800] text-[#0A2540]'
                     : 'bg-gray-100 text-gray-400'
@@ -607,7 +650,7 @@ export function TourWizard() {
               >
                 {idx + 1}
               </div>
-              <span className="hidden sm:inline text-xs font-medium text-gray-600">{t(step.labelKey)}</span>
+              <span title={t(step.labelKey)} className="hidden truncate sm:inline text-xs font-medium text-gray-600">{t(step.labelKey)}</span>
               {idx < steps.length - 1 && (
                 <div className="flex-1 h-px bg-gray-200 mx-2" />
               )}
@@ -637,6 +680,7 @@ export function TourWizard() {
 
       {/* Step content */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h2 className="mb-4 text-xl font-semibold text-bookly-navy">{t(steps[currentStepIdx].labelKey)}</h2>
         {stepContent()}
       </div>
 
@@ -656,7 +700,7 @@ export function TourWizard() {
             variant="ghost"
             size="sm"
             onClick={handleSaveDraft}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !mediaAltValid}
           >
             <Save className="w-4 h-4 mr-1" />
             {isSubmitting ? t('wizard.saving') : t('wizard.saveDraft')}
@@ -664,7 +708,7 @@ export function TourWizard() {
           {currentStep === 'review' ? (
             <Button
               onClick={handleSubmitReview}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !mediaAltValid}
               className="bg-[#FFB800] hover:bg-[#e6a600] text-[#0A2540] font-semibold"
             >
               {isSubmitting ? t('wizard.submitting') : t('wizard.submit')}
@@ -673,7 +717,7 @@ export function TourWizard() {
           ) : (
             <Button
               onClick={handleNext}
-              disabled={isSubmitting}
+              disabled={isSubmitting || (currentStep === 'media' && !mediaAltValid)}
               className="bg-[#FFB800] hover:bg-[#e6a600] text-[#0A2540] font-semibold"
             >
               {t('wizard.nextStep')}

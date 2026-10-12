@@ -1,0 +1,30 @@
+
+   PASS  Tests\Feature\Partner\TourItineraryAdoptionTest
+  ✓ it adopts positional valid legacy strings to a day sequence and ret… 6.27s
+  ✓ it preserves populated EN arrays including intentional [] across ap… 0.29s
+  ✓ it reports missing EN without creating rows                          0.24s
+  ✓ it normalizes malformed, partially invalid, and empty legacy record… 0.40s
+  ✓ it rejects invalid structured days as a whole while allowing omitte… 0.79s
+  ✓ it adopts exact boundary values: day 30, title 160, description 200… 0.46s
+  ✓ it dry-run writes absolutely nothing: no content, state, or queue c… 0.62s
+  ✓ it rejects non-strict resume cursors with ('-1')                     1.11s
+  ✓ it rejects non-strict resume cursors with ('abc')                    0.39s
+  ✓ it rejects non-strict resume cursors with ('1.5')                    0.37s
+  ✓ it rejects non-strict resume cursors with ('')                       0.22s
+  ✓ it rejects non-strict resume cursors with ('99999999999999999999999… 0.26s
+  ✓ it rejects non-strict resume cursors with ('9223372036854775808')    0.30s
+  ✓ it rejects limits outside the strict 1-500 range with ('0')          0.22s
+  ✓ it rejects limits outside the strict 1-500 range with ('501')        0.34s
+  ✓ it rejects limits outside the strict 1-500 range with ('abc')        0.37s
+  ✓ it rejects limits outside the strict 1-500 range with ('-5')         0.19s
+  ✓ it rejects limits outside the strict 1-500 range with ('10.5')       0.23s
+  ✓ it rejects limits outside the strict 1-500 range with ('')           0.17s
+  ✓ it pages ID-ordered bounded runs with counts and a resume cursor     0.42s
+  ✓ it adoption inside a holding transaction composes with a blocked so… 4.15s
+  ✓ it an adopted source stays committed when translation dispatch fail… 0.98s
+  ✓ it a waiting adoption preserves an already populated itinerary: pop… 5.52s
+
+  Tests:    23 passed (163 assertions)
+  Duration: 24.66s
+
+NUMERIC_EXIT=0

@@ -1,0 +1,64 @@
+Sat, 10 Oct 2026 21:58:06 GMT ChromeLauncher Waiting for browser.
+Sat, 10 Oct 2026 21:58:06 GMT ChromeLauncher Waiting for browser...
+Sat, 10 Oct 2026 21:58:07 GMT ChromeLauncher Waiting for browser.....
+Sat, 10 Oct 2026 21:58:07 GMT ChromeLauncher Waiting for browser.......
+Sat, 10 Oct 2026 21:58:08 GMT ChromeLauncher Waiting for browser.........
+Sat, 10 Oct 2026 21:58:08 GMT ChromeLauncher Waiting for browser.........✓
+HTTP version 200
+Puppeteer version Chrome/148.0.7778.96
+Puppeteer disconnected
+New page created
+Error: Attempted to use detached Frame 'FD81CAA5F55D323D626694727AD913D0'.
+    at CdpFrame.<anonymous> (/app/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:107:23)
+    at CdpPage.goto (/app/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:580:43)
+    at main (/tmp/spec019-lighthouse-session-diagnostic.cjs:15:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+{"chrome_exit":null,"signal":null}
+chrome-err.log iled to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[12628:12648:1010/215807.672961:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[12628:12648:1010/215807.706392:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12648:1010/215807.827449:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12648:1010/215807.922454:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12628:1010/215807.928770:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12648:1010/215807.928964:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12628:1010/215807.929795:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+DevTools listening on ws://127.0.0.1:43373/devtools/browser/d01ba15b-4ef0-447a-8e98-1bf743760cb5
+[12628:12628:1010/215807.942102:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12628:1010/215807.946861:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12648:1010/215807.946999:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12648:1010/215807.947688:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[12628:12628:1010/215807.947695:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12648:1010/215807.947752:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+
+(process:12628): GLib-GIO-CRITICAL **: 21:58:08.003: g_settings_schema_source_lookup: assertion 'source != NULL' failed
+[12628:12628:1010/215808.640211:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12628:1010/215808.640472:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type:
+[12628:12648:1010/215808.698226:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12628:1010/215809.122450:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12648:1010/215809.122610:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12628:1010/215809.185066:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12628:12648:1010/215809.189550:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[12628:12628:1010/215809.194527:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[12732:12741:1010/215809.499623:ERROR:gpu/ipc/client/command_buffer_proxy_impl.cc:285] ContextResult::kTransientFailure: Failed to send GpuControl.CreateCommandBuffer.
+[12628:12647:1010/215810.320465:ERROR:crypto/nss_util.cc:256] Error initializing NSS with a persistent database (sql:/root/.local/share/pki/nssdb): libsoftokn3.so: cannot open shared object file: No such file or directory
+[12628:12647:1010/215810.320590:ERROR:crypto/nss_util.cc:144] Error initializing NSS without a persistent database: NSS error code: -5925
+[12628:12647:1010/215810.320628:FATAL:crypto/nss_util.cc:146] nss_error=-5925, os_error=0
+[1010/215810.388135:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq: No such file or directory (2)
+[1010/215810.388291:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq: No such file or directory (2)
+Received signal 6
+#0 0x5fa1281234d3 (/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome+0x64044d2)
+#1 0x5fa12c6f77d4 (/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome+0xa9d87d3)
+#2 0x701140825050 (/usr/lib/x86_64-linux-gnu/libc.so.6+0x3c04f)
+#3 0x1268000b9c10 <unknown>
+  r8: 0000126c0241fc49  r9: 0000000000000001 r10: 0000000000000008 r11: 0000000000000246
+ r12: 0000000000000006 r13: 000000000000005a r14: 0000000000000059 r15: 000070113a15bf20
+  di: 0000000000003154  si: 0000000000003167  bp: 000070113a15f6c0  bx: 0000000000003167
+  dx: 0000000000000006  ax: 0000000000000000  cx: 0000701140873eec  sp: 000070113a15b870
+  ip: 0000701140873eec efl: 0000000000000246 cgf: 002b000000000033 erf: 0000000000000000
+ trp: 0000000000000000 msk: 0000000000000000 cr2: 0000000000000000
+[end of stack trace]
+
+chrome-out.log
+Sat, 10 Oct 2026 21:58:14 GMT ChromeLauncher Killing Chrome instance 12628
+{"chrome_exit":null,"signal":"SIGABRT"}

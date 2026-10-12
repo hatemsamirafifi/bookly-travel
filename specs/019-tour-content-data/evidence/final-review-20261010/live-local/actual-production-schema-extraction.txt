@@ -1,0 +1,2 @@
+{"http":200,"actual_type":["TouristTrip","Service"],"actual_content_language":"es","actual_itinerary_language":"es","images":1,"days":2,"aggregate_rating_present":false}
+NUMERIC_EXIT=0

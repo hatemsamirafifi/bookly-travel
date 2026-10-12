@@ -1,0 +1,235 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/ImageGallery.test.tsx src/components/tour/__tests__/TourDetail.test.tsx
+
+FAIL src/components/tour/__tests__/ImageGallery.test.tsx (13.375 s)
+  ● ImageGallery truthful media (Spec 019 US4) › uses the authored English alt in its actual locale while action labels stay page-localized
+
+    TestingLibraryElementError: Found multiple elements with the role "button" and name "Previous image"
+
+    Here are the matching elements:
+
+    Ignored nodes: comments, script, style
+    <button
+      aria-label="Previous image"
+      class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
+    >
+      <svg
+        aria-hidden="true"
+        class="h-5 w-5 text-gray-700"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M15 19l-7-7 7-7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        />
+      </svg>
+    </button>
+
+    Ignored nodes: comments, script, style
+    <button
+      aria-label="Previous image"
+      class="absolute left-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white"
+      type="button"
+    >
+      ‹
+    </button>
+
+    (If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="relative overflow-hidden rounded-xl bg-surface-alt"
+        >
+          <div
+            class="relative aspect-[16/10]"
+          >
+            <button
+              aria-label="Open image gallery"
+              class="relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"
+              type="button"
+            >
+              <img
+                alt="Sunrise over the harbor"
+                class="object-cover"
+                data-fill="true"
+                data-priority="true"
+                lang="en"
+                sizes="(min-width: 1024px) 66vw, 100vw"
+                src="https://images.example.com/harbor.jpg"
+              />
+            </button>
+            <button
+              aria-label="Previous image"
+              class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
+            >
+              <svg
+                aria-hidden="true"
+                class="h-5 w-5 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15 19l-7-7 7-7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </button>
+            <button
+              aria-label="Next image"
+              class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
+            >
+              <svg
+                aria-hidden="true"
+                class="h-5 w-5 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 5l7 7-7 7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            aria-label="Thumbnail navigation"
+            class="flex gap-2 overflow-x-auto p-3"
+            role="list"
+          >
+            <div
+              role="listitem"
+            >
+              <button
+                aria-current="true"
+                aria-label="View image 1"
+                class="relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"
+                type="button"
+              >
+                <img
+                  alt="Sunrise over the harbor"
+                  class="object-cover"
+                  data-fill="true"
+                  lang="en"
+                  sizes="96px"
+                  src="https://images.example.com/harbor.jpg"
+                />
+              </button>
+            </div>
+            <div
+              role="listitem"
+            >
+              <button
+                aria-label="View image 2"
+                class="relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"
+                type="button"
+              >
+                <img
+                  alt="Old street"
+                  class="object-cover"
+                  data-fill="true"
+                  lang="en"
+                  sizes="96px"
+                  src="https://images.example.com/street.jpg"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-label="Image lightbox"
+          aria-modal="true"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+          role="dialog"
+        >
+          <button
+            aria-label="Close lightbox"
+            class="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M6 18L18 6M6 6l12 12"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Previous image"
+            class="absolute left-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white"
+            type="button"
+          >
+            ‹
+          </button>
+          <button
+            aria-label="Next image"
+            class="absolute right-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white"
+            type="button"
+          >
+            ›
+          </button>
+          <div
+            class="relative aspect-[16/10] w-[min(90vw,1100px)] max-h-[85vh]"
+          >
+            <img
+              alt="Sunrise over the harbor"
+              class="object-contain"
+              data-fill="true"
+              lang="en"
+              sizes="90vw"
+              src="https://images.example.com/harbor.jpg"
+            />
+          </div>
+          <p
+            class="absolute bottom-4 max-w-[80vw] text-center text-sm text-white"
+            lang="en"
+          >
+            Sunrise over the harbor
+          </p>
+        </div>
+      </div>
+    </body>
+
+      75 |     expect(screen.getByRole('button', { name: 'Close lightbox' })).toBeInTheDocument();
+      76 |     expect(screen.getByRole('button', { name: 'Close lightbox' }).closest('[lang="en"]')).toBeNull();
+    > 77 |     expect(screen.getByRole('button', { name: 'Previous image' })).toBeInTheDocument();
+         |                   ^
+      78 |     expect(screen.getByRole('button', { name: 'Next image' })).toBeInTheDocument();
+      79 |   });
+      80 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getElementError (node_modules/@testing-library/dom/dist/query-helpers.js:20:35)
+      at getMultipleElementsFoundError (node_modules/@testing-library/dom/dist/query-helpers.js:23:10)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (src/components/tour/__tests__/ImageGallery.test.tsx:77:19)
+
+PASS src/components/tour/__tests__/TourDetail.test.tsx
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 31 passed, 32 total
+Snapshots:   0 total
+Time:        28.8 s
+Ran all test suites within paths "src/components/tour/__tests__/ImageGallery.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx".
+NUMERIC_EXIT=1

@@ -1,0 +1,1 @@
+{"name":"frontend-production-build","started_at":"2026-10-10T16:00:34.4232706+00:00","finished_at":"2026-10-10T16:04:52.0226382+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","run","build"],"exit_code":0}

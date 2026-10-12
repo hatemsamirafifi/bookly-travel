@@ -1,0 +1,1 @@
+{"name":"schema-semantic-green","started_at":"2026-10-10T19:28:50.3245638+00:00","finished_at":"2026-10-10T19:30:02.0847966+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","test","--","--runInBand","--runTestsByPath","src/components/seo/__tests__/StructuredData.test.tsx"],"exit_code":0}

@@ -58,14 +58,7 @@ class UpdateTourRequest extends FormRequest
                 'duration_value' => 'sometimes|integer|min:1',
                 'duration_unit' => 'sometimes|string|in:hour,day',
                 'difficulty_level' => 'sometimes|string|in:easy,moderate,challenging',
-                'guide_languages' => 'sometimes|array|max:20',
-                'guide_languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
-                'languages' => 'sometimes|array|max:20',
-                'languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
                 'cover_image_url' => 'nullable|string|url|max:2048',
-                'media' => 'sometimes|array|max:20',
-                'media.*.url' => 'required|url|max:2048|distinct',
-                'media.*.is_cover' => 'sometimes|boolean',
                 'price_from' => 'nullable|numeric|min:0',
                 'currency' => 'nullable|string|size:3',
                 'pricing_tiers' => 'nullable|array',
@@ -73,6 +66,8 @@ class UpdateTourRequest extends FormRequest
                 'availability_exceptions' => 'nullable|array',
                 'status' => 'prohibited',
             ],
+            TourContentRules::guideLanguageRules(),
+            TourContentRules::mediaRules(),
             TourContentRules::itineraryRules('itinerary'),
             TourContentRules::itineraryRules('translations.en.itinerary')
         );

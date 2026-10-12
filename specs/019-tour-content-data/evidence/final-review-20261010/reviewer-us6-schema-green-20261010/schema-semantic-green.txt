@@ -1,0 +1,20 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/seo/__tests__/StructuredData.test.tsx
+
+PASS src/components/seo/__tests__/StructuredData.test.tsx (5.767 s)
+  ✓ marks English fallback content and itinerary as English on a Spanish page (88 ms)
+  ✓ uses the localized content language without changing guide metadata (16 ms)
+  ✓ preserves itinerary order, all safe absolute gallery URLs and a truthful meeting point (21 ms)
+  ✓ omits unearned review and availability claims when the tour is unavailable (13 ms)
+  ✓ does not allow traveler-facing content to break out of the JSON-LD script (14 ms)
+  ✓ represents the actual booked tour as a trip and service without unsupported duration or invented places (21 ms)
+  ✓ retains repeated authored day numbers and every ordered stop with the actual itinerary language (11 ms)
+  ✓ keeps unknown photos, itinerary, meeting point and genuine ratings absent (7 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        16.615 s
+Ran all test suites within paths "src/components/seo/__tests__/StructuredData.test.tsx".
+NUMERIC_EXIT=0

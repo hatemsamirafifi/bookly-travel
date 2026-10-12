@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import type { PartnerTourMediaInput } from '@/lib/api/types';
 
 /**
  * Bounded Spec 019 US1 real-API helpers for partner browser tests.
@@ -102,6 +103,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+/** Resolve the actual seeded owned tour; sequences need not start at one.
+ * Call after loading a partner page so the bearer token has its real origin.
+ */
+export async function seededOwnedTourId(page: Page): Promise<number> {
+  const response = await page.request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
+  const body: unknown = await response.json();
+  if (response.status() !== 200 || !isRecord(body) || !isRecord(body.data)
+    || typeof body.data.id !== 'number' || body.data.id <= 0) {
+    throw new Error('Missing real seeded tour identity');
+  }
+  const owned = await apiGet(page, `/api/partner/tours/${body.data.id}`);
+  if (owned.status !== 200) throw new Error('Seeded tour is not owned by the authenticated partner');
+  return body.data.id;
+}
+
 /** Extract the owned EN translation row from a partner detail GET body. */
 export function ownedEnRow(detailJson: unknown): Record<string, unknown> {
   const data = isRecord(detailJson) && isRecord(detailJson.data) ? detailJson.data : null;
@@ -119,4 +135,85 @@ export function ownedEnglishSource(detailJson: unknown): Record<string, unknown>
     'title', 'description', 'highlights', 'inclusions', 'exclusions',
     'meeting_point', 'cancellation_policy', 'itinerary', 'important_information',
   ].map((field) => [field, en[field]]));
+}
+
+/** Bounded Spec 019 US4 typed guards (no any/ts-ignore). */
+
+export interface OwnedMediaRow {
+  url: string;
+  is_cover: boolean;
+  sort_order: number;
+  alt_text?: string | null;
+  alt_locale?: string | null;
+}
+
+interface StoredMediaRow {
+  url: string;
+  type: string;
+  sort_order: number;
+  alt_text?: string | null;
+}
+
+function isStoredMediaRow(value: unknown): value is StoredMediaRow {
+  return (
+    isRecord(value) &&
+    typeof value.url === 'string' &&
+    typeof value.type === 'string' &&
+    typeof value.sort_order === 'number' &&
+    (value.alt_text === undefined || value.alt_text === null || typeof value.alt_text === 'string')
+  );
+}
+
+/** Ordered partner media rows from a partner detail GET body. */
+export function ownedMedia(detailJson: unknown): OwnedMediaRow[] {
+  const data = isRecord(detailJson) && isRecord(detailJson.data) ? detailJson.data : null;
+  if (!data || !Array.isArray(data.media)) throw new Error('Missing tour media in GET body');
+  return data.media.map((row: unknown) => {
+    if (!isStoredMediaRow(row)) throw new Error('Unexpected stored tour media shape');
+    return {
+      ...row,
+      is_cover: row.type === 'cover' || (row.type === 'image' && row.url === data.cover_image_url),
+    };
+  });
+}
+
+/** Media URLs in stored order. */
+export function ownedMediaUrls(detailJson: unknown): string[] {
+  return ownedMedia(detailJson).map((row) => row.url);
+}
+
+/** Cover URL from a partner detail GET body (null when absent). */
+export function ownedCoverUrl(detailJson: unknown): string | null {
+  const data = isRecord(detailJson) && isRecord(detailJson.data) ? detailJson.data : null;
+  if (!data) throw new Error('Missing tour data in GET body');
+  return typeof data.cover_image_url === 'string' ? data.cover_image_url : null;
+}
+
+/** Nullable authoritative difficulty (never invented by these helpers). */
+export function ownedDifficulty(detailJson: unknown): string | null {
+  const data = isRecord(detailJson) && isRecord(detailJson.data) ? detailJson.data : null;
+  if (!data) throw new Error('Missing tour data in GET body');
+  return typeof data.difficulty_level === 'string' ? data.difficulty_level : null;
+}
+
+/** Spoken guide codes from a partner detail GET body (empty when absent). */
+export function ownedGuideLanguages(detailJson: unknown): string[] {
+  const data = isRecord(detailJson) && isRecord(detailJson.data) ? detailJson.data : null;
+  if (!data) throw new Error('Missing tour data in GET body');
+  const codes = data.guide_languages;
+  if (!Array.isArray(codes)) return [];
+  return codes.filter((code): code is string => typeof code === 'string');
+}
+
+/** Build an ordered media write payload (cover first by default). */
+export function buildOrderedMedia(
+  count: number,
+  prefix: string,
+  opts?: { altText?: (index: number) => string | null }
+): PartnerTourMediaInput[] {
+  return Array.from({ length: count }, (_, index) => ({
+    url: `https://cdn.example.com/${prefix}-${index}.jpg`,
+    is_cover: index === 0,
+    ...(opts ? { alt_text: opts.altText ? opts.altText(index) : null } : {}),
+  }));
 }

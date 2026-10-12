@@ -1,0 +1,3 @@
+Setting storage permissions...
+{"mode":"upgrade","additive_rows_unchanged":true,"legacy_alt_null":true,"disposable_down_up":true,"old_application_reader":"4613fe8","compatible_gallery":true,"application_rollback_retains_column_and_alt":true,"migration_records":1}
+NATIVE_EXIT=0

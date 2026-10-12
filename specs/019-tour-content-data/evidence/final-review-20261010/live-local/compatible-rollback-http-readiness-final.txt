@@ -1,0 +1,4 @@
+{"locale":"en","old_http":200,"current_http":200,"public_contract_equal":true,"actual_content_locale":"en","price":7500,"images":1}
+{"locale":"es","old_http":200,"current_http":200,"public_contract_equal":true,"actual_content_locale":"es","price":7500,"images":1}
+{"locale":"it","old_http":200,"current_http":200,"public_contract_equal":true,"actual_content_locale":"it","price":7500,"images":1}
+NUMERIC_EXIT=0

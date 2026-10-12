@@ -24,6 +24,7 @@ interface TouristTripSchemaProps {
 
 export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bookly.com';
+  const pageUrl = `${baseUrl}/${locale}/tours/${tour.slug}`;
   const imageUrls = getSafeAbsoluteImageUrls(tour.images, baseUrl);
   const meetingPointLabel = { en: 'Meeting point', es: 'Punto de encuentro', it: 'Punto di incontro' }[tour.content_locale];
   const description = [
@@ -34,15 +35,24 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
     && !!tour.availability.next_available_date
     && tour.availability.available_dates.includes(tour.availability.next_available_date)
     && tour.pricing.base_price.amount > 0;
+  const meetingPoint = tour.meeting_point?.trim() ? tour.meeting_point.trim() : '';
 
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'TouristTrip',
-    inLanguage: tour.content_locale,
+    '@context': {
+      '@vocab': 'https://schema.org/',
+      name: { '@id': 'https://schema.org/name', '@language': tour.content_locale },
+      description: { '@id': 'https://schema.org/description', '@language': tour.content_locale },
+    },
+    '@type': ['TouristTrip', 'Service'],
     name: tour.title,
     description,
     touristType: tour.category?.name || '',
-    duration: `PT${tour.duration.minutes}M`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+      inLanguage: tour.content_locale,
+    },
+    ...(meetingPoint ? { tripOrigin: { '@type': 'Place', name: meetingPoint } } : {}),
     ...(tour.pricing.base_price.amount > 0 ? { offers: {
       '@type': 'Offer',
       price: (tour.pricing.base_price.amount / 100).toFixed(2),
@@ -61,17 +71,32 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
     } } : {}),
     ...(tour.itinerary.length > 0 ? { itinerary: {
       '@type': 'ItemList',
-      inLanguage: tour.itinerary_locale,
+      '@context': {
+        name: { '@id': 'https://schema.org/name', '@language': tour.itinerary_locale },
+        description: { '@id': 'https://schema.org/description', '@language': tour.itinerary_locale },
+      },
       itemListElement: tour.itinerary.map((day, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         identifier: day.day,
         name: day.title,
-        description: day.description || undefined,
+        ...(day.description ? { description: day.description } : {}),
+        ...(Array.isArray(day.stops) && day.stops.length > 0 ? { item: {
+          '@type': 'ItemList',
+          itemListElement: day.stops.map((stop, stopIndex) => ({
+            '@type': 'ListItem',
+            position: stopIndex + 1,
+            item: {
+              '@type': 'Thing',
+              name: stop.title,
+              ...(stop.description ? { description: stop.description } : {}),
+            },
+          })),
+        } } : {}),
       })),
     } } : {}),
     ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
-    url: `${baseUrl}/${locale}/tours/${tour.slug}`,
+    url: pageUrl,
   };
 
   return (

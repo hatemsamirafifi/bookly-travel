@@ -1,0 +1,3 @@
+Setting storage permissions...
+{"mode":"baseline","baseline":"4613fe8","database":"bookly","user":"bookly","has_alt_column":false,"legacy_media_count":2,"difficulty":null,"fixture_id":1}
+NATIVE_EXIT=0

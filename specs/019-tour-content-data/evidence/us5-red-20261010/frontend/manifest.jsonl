@@ -1,0 +1,1 @@
+{"name":"us5-frontend-red","started_at":"2026-10-10T16:17:18.5730107+00:00","finished_at":"2026-10-10T16:18:02.7882382+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","test","--","--runInBand","--runTestsByPath","src/components/tour/__tests__/OperatorSummary.test.tsx","src/components/tour/__tests__/TourDetail.test.tsx"],"exit_code":1}

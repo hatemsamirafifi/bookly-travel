@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Schema;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\getJson;
@@ -851,7 +852,7 @@ it('rolls back fully persisted source and media when a late write fails', functi
     $beforeTour = Tour::findOrFail($id)->getAttributes();
     $beforeEn = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
     $beforeMedia = Tour::findOrFail($id)->media()->orderBy('sort_order')->get()->map(
-        fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order'])
+        fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text'])
     )->all();
     $beforeStates = DB::table('tour_translation_states')->where('tour_id', $id)->orderBy('locale')->get()->map(fn ($row) => (array) $row)->all();
 
@@ -897,7 +898,7 @@ it('rolls back fully persisted source and media when a late write fails', functi
     expect(Tour::findOrFail($id)->getAttributes())->toBe($beforeTour);
     expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes())->toBe($beforeEn);
     expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->get()->map(
-        fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order'])
+        fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text'])
     )->all())->toBe($beforeMedia);
     expect(Tour::findOrFail($id)->cover_image_url)->toBe('https://images.example.com/old-cover.jpg');
     expect(DB::table('tour_translation_states')->where('tour_id', $id)->orderBy('locale')->get()->map(fn ($row) => (array) $row)->all())->toBe($beforeStates);
@@ -1015,3 +1016,287 @@ it('refuses to clear required English on published tours', function () {
     expect($en->title)->toBe('Morning walking tour');
     expect($en->description)->not->toBeNull();
 });
+
+// ---------------------------------------------------------------------------
+// Spec 019 US4 (T047): truthful difficulty, guide languages and photos.
+// Authoring-only red-first regressions; root must run red before production
+// (T050-T052 implement validation/normalization/writers). Queue stays faked
+// via the file beforeEach; provider key stays blank via the shared test env.
+// ---------------------------------------------------------------------------
+
+it('retains a null legacy difficulty through an unrelated English save without inferring a default (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    // Legacy nullable state: older tours carry no difficulty at all.
+    Tour::whereKey($id)->update(['difficulty_level' => null]);
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Unrelated title change']],
+    ], $headers)->assertOk();
+
+    // FR-018: no invented value; the new-tour easy default must not leak in.
+    expect(Tour::findOrFail($id)->difficulty_level)->toBeNull();
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.difficulty_level', null)
+        ->assertJsonPath('data.translations.0.title', 'Unrelated title change');
+});
+
+it('round-trips a supported difficulty and rejects an unsupported value atomically (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'difficulty_level' => 'moderate',
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    expect(Tour::findOrFail($id)->difficulty_level)->toBe('moderate');
+
+    putJson("/api/partner/tours/{$id}", ['difficulty_level' => 'challenging'], $headers)->assertOk();
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.difficulty_level', 'challenging');
+
+    putJson("/api/partner/tours/{$id}", [
+        'difficulty_level' => 'brutal',
+        'translations' => ['en' => ['title' => 'Changed with bad difficulty']],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['difficulty_level']);
+
+    expect(Tour::findOrFail($id)->difficulty_level)->toBe('challenging');
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+});
+
+it('gives explicit guide_languages precedence over the languages alias, including empty and null (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+
+    // Explicit [] wins over the compatibility alias.
+    $empty = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => [],
+        'languages' => ['de'],
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($empty->json('data.id'))->guideLanguages())->toBe([]);
+
+    // RED until T050: explicit null is the nullable winner, not a missing key.
+    // Today the nullable winner either 422s (not nullable) or falls through
+    // to the alias via `??`; both are wrong per the contract.
+    $nulled = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => null,
+        'languages' => ['de'],
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($nulled->json('data.id'))->guideLanguages())->toBe([]);
+});
+
+it('accepts the languages alias when canonical guide_languages is omitted and normalizes codes (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'languages' => ['EN', 'de', 'es-MX', 'en'],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    // FR-017: case/subtag normalization, stable first-seen order, dedupe.
+    expect(Tour::findOrFail($id)->guideLanguages())->toBe(['en', 'de', 'es-mx']);
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.guide_languages', ['en', 'de', 'es-mx'])
+        ->assertJsonPath('data.languages', ['en', 'de', 'es-mx']);
+
+    // Spoken codes never infer content derivatives.
+    expect(Tour::findOrFail($id)->translations()->pluck('locale')->all())->toBe(['en']);
+
+    // Unsupported code shapes still fail with field-specific paths.
+    putJson("/api/partner/tours/{$id}", ['guide_languages' => ['e']], $headers)
+        ->assertUnprocessable()->assertJsonValidationErrors(['guide_languages.0']);
+    putJson("/api/partner/tours/{$id}", ['guide_languages' => ['engl']], $headers)
+        ->assertUnprocessable()->assertJsonValidationErrors(['guide_languages.0']);
+    expect(Tour::findOrFail($id)->guideLanguages())->toBe(['en', 'de', 'es-mx']);
+});
+
+it('enforces the twenty-code bound for guide languages (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $twenty = array_map(fn ($i) => 'a' . chr(98 + $i), range(0, 19)); // ab..au
+
+    $ok = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => $twenty,
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($ok->json('data.id'))->guideLanguages())->toBe($twenty);
+
+    postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => [...$twenty, 'av'],
+    ]), $headers)->assertUnprocessable()->assertJsonValidationErrors(['guide_languages']);
+});
+
+it('accepts twenty distinct gallery URLs and rejects the twenty-first (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $urls = fn (int $n) => array_map(
+        fn ($i) => "https://images.example.com/photo-{$i}.jpg",
+        range(0, $n - 1)
+    );
+    $media = fn (int $n) => array_map(
+        fn ($url) => ['url' => $url],
+        $urls($n)
+    );
+
+    $ok = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => $media(20),
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($ok->json('data.id'))->media()->count())->toBe(20);
+
+    postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => $media(21),
+    ]), $headers)->assertUnprocessable()->assertJsonValidationErrors(['media']);
+});
+
+it('rejects an over-limit alt description atomically without partial source or media writes (US4 T047)', function () {
+    // RED until T050: media.*.alt_text has no max:500 rule, so the 501-codepoint
+    // write is silently ignored (200) instead of failing with 422.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'is_cover' => true]],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Changed with bad alt']],
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'alt_text' => str_repeat("\u{00E9}", 501)]],
+    ], $headers)->assertUnprocessable()->assertJsonValidationErrors(['media.0.alt_text']);
+
+    // FR-019: the invalid write changes neither source nor media.
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('url')->all())->toBe(['https://images.example.com/a.jpg']);
+});
+
+it('accepts a 500-codepoint alt and declares the pending alt storage contract (US4 T047)', function () {
+    // The 500-codepoint bound is accepted; the single hasColumn assertion is
+    // the explicit T049 contract red (column not yet migrated). No invalid
+    // column is seeded, so no SQL exception is involved.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $alt = str_repeat("\u{1F30D}", 500);
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'alt_text' => $alt]],
+    ]), $headers)->assertCreated();
+
+    expect(Schema::hasColumn('tour_media', 'alt_text'))->toBeTrue();
+    expect(Tour::findOrFail($created->json('data.id'))->media()->firstOrFail()->alt_text)->toBe($alt);
+});
+
+it('writes cover/gallery types with the flagged cover synchronized to the legacy column (US4 T047)', function () {
+    // RED until T051: the old writer stores every row as type image and drops
+    // alt_text, so the type assertions below fail while order/cover sync pass.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $cover = 'https://images.example.com/flagged-cover.jpg';
+    $second = 'https://images.example.com/side.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => $second, 'is_cover' => false],
+            ['url' => $cover, 'is_cover' => true, 'alt_text' => 'Sunset over the vineyard rows'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    $rows = Tour::findOrFail($id)->media()->orderBy('sort_order')->get();
+    expect($rows->pluck('url')->all())->toBe([$second, $cover]);
+    expect($rows->pluck('type')->all())->toBe(['gallery', 'cover']);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe($cover);
+
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.cover_image_url', $cover)
+        ->assertJsonPath('data.media.0.url', $second)
+        ->assertJsonPath('data.media.1.url', $cover);
+});
+
+it('defaults the cover to the first valid image when none is flagged (US4 T047)', function () {
+    // RED until T051 on row types; cover fallback itself already holds.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $first = 'https://images.example.com/first.jpg';
+    $next = 'https://images.example.com/next.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => $first], ['url' => $next]],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('type')->all())->toBe(['cover', 'gallery']);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe($first);
+});
+
+it('keeps exact media rows, ids and cover when media is omitted from an update (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => 'https://images.example.com/keep-a.jpg', 'is_cover' => true, 'alt_text' => 'Sunlight on the old town'],
+            ['url' => 'https://images.example.com/keep-b.jpg'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    $before = Tour::findOrFail($id)->media()->orderBy('sort_order')->get()
+        ->map(fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text']))->all();
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Unrelated title change']],
+    ], $headers)->assertOk();
+
+    $after = Tour::findOrFail($id)->media()->orderBy('sort_order')->get()
+        ->map(fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text']))->all();
+    expect($after)->toBe($before);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe('https://images.example.com/keep-a.jpg');
+});
+
+it('retains prior specific alt when a current URL is resent without alt (US4 T047)', function () {
+    // RED until T051 write-through: the old writer ignores alt_text, so the
+    // resent URL carries no retained description.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $url = 'https://images.example.com/terrace.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => $url, 'is_cover' => true, 'alt_text' => 'Terrace view over Florence'],
+            ['url' => 'https://images.example.com/other.jpg'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'media' => [
+            ['url' => 'https://images.example.com/other.jpg'],
+            ['url' => $url],
+        ],
+    ], $headers)->assertOk();
+
+    $media = getJson("/api/partner/tours/{$id}", $headers)->assertOk()->json('data.media');
+    $byUrl = array_column($media, null, 'url');
+    expect(array_key_exists('alt_text', $byUrl[$url]))->toBeTrue();
+    expect($byUrl[$url]['alt_text'])->toBe('Terrace view over Florence');
+});
+
+it('clears specific alt on explicit null while keeping the row (US4 T047)', function () {
+    // RED until T051: with no stored alt, the cleared key cannot surface.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $url = 'https://images.example.com/terrace.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => $url, 'is_cover' => true, 'alt_text' => 'Terrace view over Florence']],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'media' => [['url' => $url, 'is_cover' => true, 'alt_text' => null]],
+    ], $headers)->assertOk();
+
+    $media = getJson("/api/partner/tours/{$id}", $headers)->assertOk()->json('data.media');
+    $byUrl = array_column($media, null, 'url');
+    expect($byUrl[$url])->toHaveKey('alt_text');
+    expect($byUrl[$url]['alt_text'])->toBeNull();
+    expect(Tour::findOrFail($id)->media()->count())->toBe(1);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe($url);
+});
+
+it('rejects an unusable media URL together with a source change atomically (US4 T047)', function (string $invalidUrl) {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'is_cover' => true]],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Changed with bad URL']],
+        'media' => [['url' => $invalidUrl]],
+    ], $headers)->assertUnprocessable()->assertJsonValidationErrors(['media.0.url']);
+
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('url')->all())->toBe(['https://images.example.com/a.jpg']);
+})->with(['malformed' => 'not-a-url', 'non-HTTP scheme' => 'ftp://images.example.com/a.jpg']);

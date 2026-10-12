@@ -1,0 +1,4 @@
+{"name":"frontend-lint","started_at":"2026-10-10T20:25:13.6174792+00:00","finished_at":"2026-10-10T20:27:49.1498439+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","run","lint"],"exit_code":0}
+{"name":"frontend-typecheck","started_at":"2026-10-10T20:27:49.1818673+00:00","finished_at":"2026-10-10T20:28:25.2798828+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","run","typecheck"],"exit_code":0}
+{"name":"frontend-full-jest","started_at":"2026-10-10T20:28:25.2826286+00:00","finished_at":"2026-10-10T20:31:07.3846941+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","test","--","--runInBand"],"exit_code":0}
+{"name":"frontend-production-build","started_at":"2026-10-10T20:31:07.3923107+00:00","finished_at":"2026-10-10T20:45:17.3558442+00:00","command":["docker","exec","bookly-spec019-browser-nextjs-1","npm","run","build"],"exit_code":0}

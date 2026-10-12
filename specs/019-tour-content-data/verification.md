@@ -1577,3 +1577,185 @@ all expected keys, values and strict assertions. Production code is unchanged.
 The affected complete suite passes locally on PHP 8.3: 23 tests, 241 assertions,
 exit 0, with Pint PASS. PHP 8.5 and the complete matrix still require exact-head
 CI after this correction. Retained logs are under evidence/us3-ci-order-20261009.
+
+## 26. Independent US4/US5 and US6 source acceptance, 2026-10-10/11
+
+This section supersedes earlier pending statements only for the specifically
+accepted tasks: T047-T070 and T074. T071-T073 and T075-T078 remain pending until
+their separate actual browser, manual, performance and rollout results exist.
+The current accepted count is 71/78; no Phase 2 completion is claimed.
+
+### Truthful media and supported facts: SC-006 / T047-T057
+
+Root reviewed the actual OpenCode diff and independently reproduced the test-first
+failures and ensuing acceptance. The new forward-only alt migration preserves
+existing media and applied migrations. Difficulty remains nullable, including
+old unknown values on unrelated edits. Guide codes are normalized and deduplicated
+with canonical input precedence. Atomic source/media replacement uses a real
+cover first, preserves remaining order and omitted captions, and clears explicit
+null captions. Authored duplicate URLs are rejected; legacy duplicates are
+deduplicated when read. No-photo tours emit an empty gallery, and image-specific
+English captions retain `lang=en` on Spanish/Italian pages.
+
+The uploader keeps invalid 501-character drafts visible while preventing native
+save, wizard draft/submit and Next; correcting to 500 recovers normally. Keyboard
+upload and actual preview captions were checked. Root corrected an author-added
+temporal-dead-zone callback and render/effect state issues before acceptance.
+The corresponding affected frontend gate passed 11 suites/177 tests, lint,
+typecheck and production build. The combined source/detail/media backend passed
+120 tests/1718 assertions, Pint and PHPStan. Integrated production browser
+scenarios passed 86 tests before US6. Additive schema/compatible-reader proof and
+the original failing US4 outputs remain under [US4 evidence](evidence/us4-20261010/README.md).
+Final independently rerun logs are in the [review bundle](evidence/final-review-20261010/README.md).
+
+### Operator privacy and deterministic alternatives: SC-007 / T058-T063
+
+Approved, active profiles with real public names expose only the explicit seven
+public fields. Verified means approved-active eligibility, rather than a
+fabricated badge. Counts use published, exactly future-bookable tours, and ratings
+use only genuine visible/flagged reviews allowed by the contract; no reviews
+means a null average.
+Related ranking runs before bounded candidate pages and continues beyond the
+first 32 ineligible records until sufficient eligible results or exhaustion.
+Four is the default and eight the absolute internal ceiling, without adding a
+public query parameter. Root's additional regression first failed because the
+unchanged card transformer received stale cached aggregate values; projecting the
+genuine SQL aggregates into the in-memory eligible card fixes that behavior
+without rewriting cached database facts or changing card fields. The 120-test
+backend gate and actual frontend/browser acceptance above cover these cases.
+
+### Legacy adoption and consistent SEO: T064-T070
+
+Adoption inspects IDs in bounded order, permits limits 1-500, and rechecks only
+null English itinerary under the shared Tour-first lock. Populated arrays,
+including deliberate empty arrays, are retained. Missing English rows are
+reported, not invented. Valid string or structured legacy days preserve order;
+malformed, partially invalid or empty whole records map to empty arrays. Raw
+legacy source is retained. Dry-run performs no writes/jobs; changed apply uses
+the accepted source/hash/state service after commit. Two real blocked PostgreSQL
+source-edit races and resume/count behavior are among 23 tests/163 assertions.
+
+Actual public primary rating/count now agree with eligible review distribution,
+including zero despite stale legacy cached ratings. Public detail/index
+compatibility, delayed derivatives and unbookable consumers pass 51 tests/1153
+assertions. Structured-data tests pass eight cases; metadata/page tests pass five.
+The original failing adoption/SEO tests are retained separately from passing
+reruns. JSONB associative key canonicalization preserves all keys and values and
+does not reorder lists or weaken native-type/day-order assertions.
+
+The emitted JSON-LD uses legal `TouristTrip`/`Service` types and scoped JSON-LD
+languages, ordered ListItems and real stop descriptions. Actual meeting text
+alone supplies tripOrigin; activities remain Things rather than fabricated
+Places. Safe real gallery URLs are retained. Missing photos/reviews/meeting data
+produce no invented claims. Metadata uses the same selected actual content,
+preserving requested-locale canonical/hreflang and the established URL contract.
+Installed Next.js 16.2.3 metadata types were checked against the
+[official metadata guide](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
+and [next-intl server guide](https://next-intl.dev/docs/environments/server-client-components).
+
+Actual ES JSON-LD from a production SSR HTTP 200 response of the configured-model
+synthetic fixture was checked at the official Schema.org validator: **zero errors,
+zero warnings**. The [exact emitted JSON](evidence/final-review-20261010/live-local/actual-production-tour-schema-es.json),
+[visible result](evidence/final-review-20261010/live-local/actual-schema-validator.txt)
+and [screenshot](evidence/final-review-20261010/live-local/actual-schema-validator.jpg)
+are retained. This establishes T069 schema acceptance; it does not stand in for
+pending integrated browser scenarios T071/T072.
+
+### Full backend regression: T074
+
+The complete independently run PostgreSQL suite passes **1023 tests/5287
+assertions**, native exit zero; full Pint passes **593 files**, and PHPStan reports
+zero errors, both native zero. This includes ownership, authorization, publishing,
+booking, payments and existing feature regressions. All automated translation
+gates use a blank Gemini key/fakes. [Commands, timestamps and exits](evidence/final-review-20261010/reviewer-full-backend-final-20261010/manifest.jsonl)
+and [complete suite output](evidence/final-review-20261010/reviewer-full-backend-final-20261010/full-pgsql-tests.txt)
+are retained. The first full Pint gate found formatting in three new test files;
+root formatted only those files, then ran the full successful gate above.
+
+### Frontend and configured-model rehearsal: actual progress, not acceptance
+
+Full frontend lint/typecheck/build passed, and 55 Jest suites/414 tests passed
+before the final create-wizard H1 correction. Accessibility initially failed on
+title/labels/contrast, then the fresh rerun passed 27/30 with only missing H1
+remaining. Those failures remain recorded. Root added a localized H1 and reran
+lint/typecheck, 31 wizard tests and a fresh production build successfully. Final
+accessibility/full browser, manual screenshots and performance remain separate.
+
+The user's approved isolated local configured-model rehearsal generated actual
+current ES/IT with `gemini-3.5-flash-lite`; source HTTP 201 took approximately
+3.409 seconds, actual daemon processing approximately 26.599 seconds, followed
+by an approximately 2.115-second idempotent drain to queue depth zero. Bounded
+recovery and actual dry-run/apply/repeat adoption retained original source/data.
+Compatible old backend HTTP returned identical EN/ES/IT public DTOs and a real
+compatible worker skipped two already-ready jobs without calling the provider.
+The retained-data fingerprint did not change. These results, harness corrections
+and sanitized reproduction scripts are in [the live-local evidence](evidence/final-review-20261010/README.md#configured-model-local-rehearsal).
+An old frontend build has been saved, but a running frontend rollback has not
+yet been verified. T077 remains pending; no staging deployment is claimed.
+
+CI green at 4613fe8 applies only to that commit. These source changes remain
+uncommitted, so new-head CI, PR readiness, merge and release are separate pending
+states. PR29 remains draft. Spec 018, Constitution, applied migrations and the
+TODO store are preserved.
+
+## 27. Final manual/accessibility and compatible rollback acceptance (2026-10-11)
+
+T073 and T077 are independently accepted. The current ledger is 73/78:
+T001-T070, T073-T074 and T077. Integrated US6 browser, full frontend,
+Lighthouse and final reconciliation remain pending; implementation completion,
+new-head CI, PR readiness, merge and release are separate states.
+
+Final production build `1h7I7N6dpRg2PtBQVfPBL` passed full lint/typecheck,
+31 wizard Jest tests and a fresh build. Affected Axe passed 30/30 with unchanged
+rules. The manual matrix passed 12 locale/width combinations (EN/ES/IT at
+390/768/1024/1440), retaining 84 screenshots and its reproducible runtime
+assertions. Root inspected representative final screenshots for every combination.
+Evidence: [manual matrix](evidence/final-review-20261010/reviewer-manual-progress-final-20261011/manifest.json),
+[manual reproduction](evidence/final-review-20261010/reviewer-manual-progress-final-20261011/reproduce.cjs),
+and [acceptance details](evidence/final-review-20261010/README.md#final-accessibility-and-manual-interface-acceptance).
+Controlled 422/403/201 UI responses do not claim actual database writes.
+
+T077 includes actual configured-model generation, bounded recovery/adoption,
+compatible backend/worker rollback and now an actual running frontend rollback.
+The earlier build `RuGVVMvrRQc-BJGPcwMvv` served six real fixture pages;
+restored current build served the same six. Visible facts, selected language,
+ordered itinerary, canonical/hreflang and EUR 7500 price stayed identical.
+The retained-data SHA-256 remained
+`15ab683d0950f420187c214d55c2dd6219216e9191811e1f6182714bbbde84e8`.
+After this comparison only the two owned synthetic fixtures were archived;
+all their content and derived rows remained and public responses became 410.
+Evidence: [rollback result](evidence/final-review-20261010/live-local/frontend-rollback-result.json),
+[current restoration](evidence/final-review-20261010/live-local/frontend-current-result.json),
+[cleanup](evidence/final-review-20261010/live-local/archived-rehearsal-fixtures.json).
+No destructive migration rollback, staging deployment or production release is claimed.
+
+The first full-browser run has uncovered a hardcoded `/livewire/livewire.js`
+request although production debug=false correctly registers `livewire.min.js`.
+This failing test is being investigated and is not reported as passing.
+Lighthouse has no accepted score yet: initial runs failed the host-memory guard
+or browser startup. Actual browser stderr established missing NSS library
+`libsoftokn3.so`; official signed Debian NSS packages were installed only in the
+owned test container. The unchanged performance gate still requires eight actual
+successful reports with Performance >=90 after full browser execution finishes.
+## 28. Interrupted runtime and accepted checkpoint (2026-10-12)
+
+The corrected full Playwright run started all 879 planned cases with one worker
+and no retries. Its final retained line starts case 570/879. All six exclusively
+owned browser-stack containers subsequently exited with code 255. The shell
+session and complete-suite numeric exit/manifest are unavailable. This is an
+interrupted runtime observation, not full frontend acceptance and not evidence
+that every unexecuted case would pass. The cause of the runtime termination is
+not established. T071/T072/T075 remain unchecked pending complete reruns.
+
+After the interruption the host had approximately 714MB physical memory available,
+below the unchanged 2048MB performance preflight guard. No fresh Lighthouse
+acceptance is inferred. T076 and final reconciliation T078 remain unchecked.
+The ledger remains 73/78 (T001-T070, T073-T074 and T077), with the actual
+configured-model and compatible application/worker rollback proofs retained.
+
+The latest fresh production build `LMXlxfuWfJMqHaFcFVRtz` passed full lint,
+typecheck, all 55 Jest suites/414 tests and build. The corrected actual-rendered
+Livewire asset and restored synthetic admin fixture passed seven independent
+browser cases, native exit zero. The new source/evidence checkpoint remains a
+draft PR increment while remaining browser/performance gates are completed.
+No merge, deployment or Phase 2 completion is claimed.

@@ -176,6 +176,7 @@
     "difficulty_moderate": "Moderate",
     "difficulty_challenging": "Challenging",
     "operator": "Tour operator",
+    "operatorVerified": "Verified operator",
     "operatorTourCount": "{count} tours",
     "operatorReviewCount": "{count} reviews",
     "relatedTours": "More experiences to explore",
@@ -715,6 +716,12 @@
         "destinationPlaceholder": "e.g., Rome, Italy",
         "durationValue": "Duration",
         "durationUnit": "Duration Unit",
+        "backToDashboard": "Back to dashboard",
+        "tourSettings": "Tour settings",
+        "locationName": "Location Name",
+        "coverImageUrl": "Cover Image URL",
+        "minGuests": "Min Guests",
+        "maxGuests": "Max Guests",
         "difficultyLevel": "Difficulty Level",
         "meetingPoint": "Meeting Point",
         "guideLanguageCodes": "Live-guide language codes",
@@ -783,6 +790,7 @@
         "imagesCount": "{current} / {max} images",
         "coverBadge": "Cover",
         "galleryImageAlt": "Gallery image",
+        "altText": "Alt text (English, optional)",
         "pricingTiers": "Pricing Tiers",
         "addTier": "Add Tier",
         "removeTier": "Remove",
@@ -823,7 +831,8 @@
         "days": "Days",
         "easy": "Easy",
         "moderate": "Moderate",
-        "challenging": "Challenging"
+        "challenging": "Challenging",
+        "difficultyUnspecified": "Not specified"
       },
       "errors": {
         "titleRequired": "Title is required.",
@@ -868,7 +877,13 @@
         "invalidUrl": "Invalid URL format.",
         "unsupportedType": "Unsupported file type. Please use JPEG, PNG, or WebP.",
         "fileTooLarge": "File is too large. Maximum size is {mb} MB.",
-        "maxImagesReached": "You can upload a maximum of {max} images."
+        "maxImagesReached": "You can upload a maximum of {max} images.",
+        "mediaMax": "No more than 20 images.",
+        "altTextMax": "Alt text must be 500 characters or fewer.",
+        "guideLanguageInvalid": "Each guide language must be a 2- or 3-letter code with optional subtags (e.g. en, pt-BR).",
+        "guideLanguagesMax": "No more than 20 guide languages.",
+        "duplicateGuideLanguage": "Duplicate guide language.",
+        "difficultyInvalid": "Difficulty must be easy, moderate, or challenging."
       },
       "noCoverImage": "No cover image",
       "untitled": "Untitled Tour",

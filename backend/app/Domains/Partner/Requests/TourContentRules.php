@@ -189,6 +189,49 @@ class TourContentRules
     }
 
     /**
+     * Shared spoken guide-language boundary (Spec 019 US4 T050).
+     *
+     * Both the canonical `guide_languages` and the compatibility `languages`
+     * alias accept the same shape: nullable code list, at most 20 entries,
+     * stable case-insensitive 2/3-letter codes with supported subtags.
+     * Canonical presence wins (even [] or null); omitted canonical accepts
+     * the alias. Normalization (lowercase, distinct preserving order) lives
+     * in the domain service; `distinct` here rejects exact authored
+     * duplicates while normalized duplicates dedupe on write.
+     *
+     * @return array<string, mixed>
+     */
+    public static function guideLanguageRules(): array
+    {
+        return [
+            'guide_languages' => 'sometimes|nullable|array|max:20',
+            'guide_languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
+            'languages' => 'sometimes|nullable|array|max:20',
+            'languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
+        ];
+    }
+
+    /**
+     * Shared ordered media boundary (Spec 019 US4 T050).
+     *
+     * At most 20 ordered objects with distinct authored valid HTTP(S) URLs
+     * (max 2048), optional nullable alt_text (max 500 Unicode characters)
+     * and boolean is_cover. Source and media validate atomically at the
+     * Request boundary so no partial mutation reaches the service.
+     *
+     * @return array<string, mixed>
+     */
+    public static function mediaRules(): array
+    {
+        return [
+            'media' => 'sometimes|array|max:20',
+            'media.*.url' => 'required|url|max:2048|distinct|regex:/^https?:\/\//i',
+            'media.*.is_cover' => 'sometimes|boolean',
+            'media.*.alt_text' => 'sometimes|nullable|string|max:500',
+        ];
+    }
+
+    /**
      * Cast validated numeric-string day and duration values to JSON integers.
      *
      * Laravel's `integer` rule accepts digit strings for compatibility; this
