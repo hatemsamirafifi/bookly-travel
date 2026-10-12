@@ -1,0 +1,5 @@
+{"sample":1,"benchmarkIndex":1998,"page":"about:blank","appVisited":false}
+{"sample":2,"benchmarkIndex":1947,"page":"about:blank","appVisited":false}
+{"sample":3,"benchmarkIndex":2037.5,"page":"about:blank","appVisited":false}
+{"sample":4,"benchmarkIndex":2117.5,"page":"about:blank","appVisited":false}
+{"sample":5,"benchmarkIndex":2059,"page":"about:blank","appVisited":false}

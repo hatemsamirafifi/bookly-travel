@@ -29,6 +29,12 @@ jobs:
       - name: Prepare application
         uses: ./.github/actions/prepare-browser-ci
         
+      - name: Verify browser CPU readiness without visiting the application
+        working-directory: ./frontend
+        run: |
+          node --test scripts/lighthouse-runtime-preflight.test.mjs
+          node scripts/lighthouse-runtime-preflight.mjs
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         with:

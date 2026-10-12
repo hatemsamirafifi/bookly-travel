@@ -1786,3 +1786,46 @@ All other thresholds and browser throttling settings are preserved. T076 remains
 pending until the complete new CI audit and retained reports actually pass.
 The task ledger remains 73/78 while complete browser/performance acceptance is
 outstanding; PR29 stays draft, and merge/release remain separately pending.
+## 30. Complete browser acceptance and performance follow-up (2026-10-12)
+
+T071/T072 are accepted against the complete source checkpoint a6c24b5.
+Local full Playwright completed all 879 configured cases: 825 passed and 54
+existing redundant mobile-width instances skipped, native zero, no retries,
+20.2 minutes. The only skip declarations are in shared-shell.spec.ts and
+visual-acceptance.spec.ts, whose explicit width matrices execute on Chromium.
+No new skip was added and no Spec 019 scenario was skipped.
+CI run 38250428936 passed every job, including all three E2E shards. Their
+295/240/294 passing counts plus 54 skips include four extra authentication setup
+executions across independent shards; this is the same complete logical suite.
+See [accepted source facts](evidence/final-review-20261010/accepted-source-ci-a6-20261012.json).
+The ledger is now 75/78: T001-T074 and T077. T075 remains pending final full
+validation after the subsequent performance change; T076/T078 remain pending.
+
+The expanded pessimistic Lighthouse CI run 38250428910 retained 12 reports:
+home 62/96/99, search 92/93/93, tour 95/98/98, blog 94/94/94. The first home
+result had CPU benchmark 1176.5 versus 2289/2420 later, and 1665.75ms blocking
+versus 71.5/45ms. It failed the unchanged 90 threshold and is not discarded.
+This variation alone does not establish an application-code cause.
+
+Root removed unnecessary client boundaries from static tour cards and blog
+related cards; WishlistButton remains a client component. Installed next-intl
+4.9.1 provides the server useTranslations implementation. After the change,
+full lint/typecheck, all 55 Jest suites/414 tests and fresh production build
+CBdGR95o7ksvay8ozJBbZ passed, followed by 148 public/wishlist browser cases
+and four affected home/blog Axe cases, all native zero. Presentation, actual
+language selection, image loading and interactive wishlist behavior are retained.
+
+The first local new-build audit still failed with first-home CPU benchmark 420.
+A separate neutral-page experiment ran Lighthouse's own CPU benchmark on
+about:blank, visiting no application page. Subsequent whole-group results were
+home 96/98, search 89/82, tour 97/96, blog 93/94, still native one because
+search remained below 90. All results remain retained; no performance acceptance
+or isolated causal claim follows from this experiment.
+
+A bounded CPU readiness script now checks two consecutive stable desktop-class
+samples on about:blank before CI collection, without visiting the application,
+changing the 4x slowdown, warming application caches or ignoring any page score.
+It blocks slow/unstable/missing measurements. Four policy tests pass, and actual
+neutral samples 1876.5/1950 passed readiness. The existing pessimistic 12-report
+CI audit must still establish T076 against the new source head.
+Reference: https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md
