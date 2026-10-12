@@ -1,3 +1,7 @@
+// LHCI joins the hook path to its working directory, even for absolute paths.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('node:path');
+
 module.exports = {
   ci: {
     collect: {
@@ -9,7 +13,7 @@ module.exports = {
       ].map((path) => `${process.env.LIGHTHOUSE_BASE_URL || 'http://localhost:3000'}${path}`),
       numberOfRuns: 3,
       chromePath: process.env.CHROME_PATH,
-      puppeteerScript: `${__dirname}/scripts/lighthouse-browser-ready.cjs`,
+      puppeteerScript: path.relative(process.cwd(), path.join(__dirname, 'scripts/lighthouse-browser-ready.cjs')),
       puppeteerLaunchOptions: {
         headless: true,
         args: ['--no-sandbox', '--disable-dev-shm-usage'],
