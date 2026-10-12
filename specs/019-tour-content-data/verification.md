@@ -2,11 +2,12 @@
 
 **Owner**: Spec 019 implementation workflow; independent acceptance by root reviewer.
 **Created**: 2026-10-02.
-**Current scope (2026-10-12)**: T001-T074 and T077 (75/78) independently accepted.
-Source, integrated browser, accessibility, backend regression and the live
-isolated model/compatible rollback rehearsal are verified. T075 final frontend
-validation, T076 performance and T078 final reconciliation remain pending.
-Earlier sections retain dated findings; merge and release are separate statuses.
+**Current scope (2026-10-12)**: T001-T078 (78/78) independently accepted.
+All six stories, backend/frontend/browser/accessibility regression, the live
+isolated model/compatible rollback rehearsal, pessimistic twelve-report
+Lighthouse CI and final FR/SC/Constitution reconciliation pass. Section 32 owns
+final acceptance; earlier sections retain dated findings and unsuccessful runs.
+Final documentation-head CI/readiness are tracked separately; merge/release are pending.
 
 **Traceability**:
 
@@ -1909,3 +1910,68 @@ Fresh build U8U2EGHrkcNnxZwVz6fdw passed full lint/typecheck and 55 Jest suites 
 414 tests, followed by all 148 affected public/wishlist/Axe browser cases,
 native zero, 3.0 minutes. This establishes behavior, not a performance gain.
 New-source full CI and the complete Lighthouse group remain required.
+
+## 32. Final Spec 019 acceptance (2026-10-12)
+
+All 78 implementation tasks are independently accepted on source commit
+ee24b454b3b50d0f960305fdaa19a524f7b11d3c. T075 passes complete Tests CI
+38263823843 (all eleven jobs): PHP 8.3/8.4/8.5, Pint, PHPStan, frontend
+TypeScript/ESLint/Jest and all three complete E2E shards plus aggregation.
+The preceding local production build U8U2EGHrkcNnxZwVz6fdw passed lint,
+typecheck, 55 Jest suites/414 tests and 148 affected browser/Axe cases. The
+full logical browser acceptance remains 825 passed / 54 existing redundant
+mobile-width skips, as explained in section 30; no Spec 019 scenario is skipped.
+
+T076 passes actual Lighthouse CI 38263823800 against the same source commit.
+All twelve raw reports and original assertions are retained in
+[the accepted CI archive](evidence/final-review-20261010/lighthouse-reports/ciee-lighthouse-artifacts/summary.json),
+with read-back-verified SHA256 manifests. Actual Performance scores:
+
+| Production route | Run 1 | Run 2 | Run 3 | Least |
+|---|---:|---:|---:|---:|
+| /en | 94 | 99 | 99 | 94 |
+| /en/search?q=rome | 93 | 97 | 93 | 93 |
+| /en/tours/hidden-gems-rome-walking-tour | 91 | 98 | 98 | 91 |
+| /en/blog/hidden-gems-florence | 94 | 94 | 94 | 94 |
+
+All twelve Accessibility/Best Practices/SEO scores are 100, with no runtime
+error. Conditions: fresh production application in the existing disposable
+GitHub ubuntu-latest Compose runner; http://localhost:8080; official LHCI
+action v12 / Lighthouse 12.6.1; three mobile runs per route; default simulated
+network and 4x CPU slowdown; default application-storage reset. The hook uses
+only about:blank and Lighthouse's CPU benchmark before each route, closing its
+temporary page without visiting the app. Pessimistic minScore=0.9 remains
+enforced; every score in this group passes. Exact browser, benchmark and
+throttling fields remain in the original raw reports.
+
+The separate local twelve-report group on the same source still failed
+(home 79/94/92, search 84/94/97; all reports retained), using local Chrome148 /
+Lighthouse12.1.0. T076 is accepted under the explicitly documented existing CI
+configuration and production environment; this does not claim every host is
+equally fast or establish one cause for the preceding fluctuations. Every
+earlier failed group remains retained. No threshold, throttling, score-selection
+or application-cache exception was introduced to obtain acceptance.
+
+A provisional below-fold content-visibility optimization was authored by
+OpenCode during the independent CI run, then fully discarded when the already
+committed source passed. Its three files match ee24b45 exactly. No provisional
+CSS or its acceptance claim is included. The local production artifact was
+rebuilt from the restored accepted source as UmUc_i46EPoR6ZNu2u9o_; its native
+build exit was zero. Browser behavior was already tested on the same source.
+
+T078 now accepts all FR-001 through FR-030 and SC-001 through SC-008 against
+the complete evidence mapping in section 31, with final T075/T076 acceptance
+above replacing the historical pending entries. Constitution I-VI remain
+satisfied as mapped there; VII now also passes actual complete regression and
+performance acceptance. Backend full 1023 tests / 5287 assertions, actual
+live model/rollback rehearsal, real PostgreSQL races, preserved legacy/source/
+derived content, responsive/manual/Axe evidence and actual Schema.org zero
+errors/warnings remain recorded in sections 26/27/30 and their portable proofs.
+
+Spec 018 and old applied migrations are preserved. PR27/PR28 were rechecked
+MERGED on 2026-10-12 (GitHub mergedAt 2026-10-02 18:17:25Z / 21:55:43Z).
+No predecessor duplication or unresolved stacked dependency remains.
+Implementation is complete. Final documentation-head CI and PR readiness are
+checked separately; no merge, deployment or production rollout is performed.
+
+The after_implement extension hook was invoked; per-project auto_commit is disabled, so the user-authorized manual commit follows with normal hooks and only the supported LiveReview skip. Prerequisites resolve this Spec019 directory; the requirements checklist remains 16/16 checked and unchanged.

@@ -1,5 +1,18 @@
 # Independent review evidence, 2026-10-10/11
 
+Final acceptance updated 2026-10-12: all 78 Spec019 tasks pass. Complete Tests
+CI38263823843 and Lighthouse CI38263823800 pass on source ee24b45. The accepted
+twelve raw Lighthouse reports (91-99 Performance, all other categories100)
+are retained in lighthouse-reports/ciee-lighthouse-artifacts as a hash-verified
+ZIP plus readable summary; all failed groups remain retained too. Local source
+Jest414, productionbuild and affected browser/Axe148 pass. Final source CI
+metadata is in accepted-final-source-ci-ee-20261012.json; Lighthouse metadata
+is in accepted-final-lighthouse-ci-ee-20261012.json. Verification section32
+owns final FR/SC/Constitution acceptance and documented CI/local differences.
+The earlier pending/failure descriptions below retain historical gate results.
+Final documentation-head CI/readiness are tracked separately; merge/release
+are pending. Spec018 is preserved. No provisional off-screen CSS is included.
+
 These logs record root reruns of the actual working tree after OpenCode authored
 the bounded US4, US5 and US6 changes. OpenCode used only
 `opencode/muse-spark-1.3-contributor-free`. Author reports are not acceptance.

@@ -18,7 +18,7 @@
 |---|---|---|---|---|
 | Phase 0 | `018` | `specs/018-bookly-ui-redesign/` | Spec Kit Bootstrap and Design Contracts | Existing baseline |
 | Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; PR #28 merged with successful checks; release pending |
-| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation in progress; 75/78 tasks accepted (T001-T074 and T077); US1-US5 and US6 source/adoption/SEO verified; integrated US6 browser accepted; final frontend/performance/reconciliation pending; PR #29 draft; source CI a6c24b5 passed; final-head CI/merge/release pending |
+| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation complete: 78/78 accepted; complete source Tests and twelve-report Lighthouse CI pass on ee24b45; PR #29; documentation-head CI/readiness tracked separately; merge/release pending |
 | Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Planned |
 | Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Planned |
 | Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
@@ -267,13 +267,13 @@ git commit -m "feat: establish Bookly UI design system"
 
 ## Phase 2 - Tour Content Data Model and API
 
-**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Tasks 2.1-2.4 and their new contracts are owned by Spec 019; Spec 018 remains the reference baseline. Design and task generation completed on 2026-10-02. As of 2026-10-12, 75/78 tasks (T001-T074 and T077) are independently accepted: US1-US5, US6 source/adoption/SEO, and the full backend regression. See [verification](../specs/019-tour-content-data/verification.md#26-independent-us4us5-and-us6-source-acceptance-2026-10-1011). Manual/accessibility and compatible application/worker rollback are verified. Integrated US6 browser scenarios are accepted; final frontend validation after the performance change, performance and final reconciliation remain pending. [PR #29](https://github.com/hatemsamirafifi/bookly-travel/pull/29) remains draft. Complete source CI on a6c24b5 passed; the uncommitted changes require new-head CI, merge and release verification.
+**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Phase 2 implementation is complete: 78/78 tasks independently accepted on 2026-10-12, covering Tasks 2.1-2.4, all FR/SC and Constitution checks. [Verification](../specs/019-tour-content-data/verification.md#32-final-spec-019-acceptance-2026-10-12) retains actual tests, live isolated model/rollback, responsive/accessibility and all performance results. Complete source Tests and twelve-report Lighthouse CI pass on ee24b45. [PR #29](https://github.com/hatemsamirafifi/bookly-travel/pull/29) carries this phase; documentation-head CI/readiness are tracked separately, while merge/release remain pending. Spec 018 is preserved and predecessor PR27/PR28 are merged.
 
 ### Task 2.1: Add localized structured itineraries
 
 **Files:**
 
-- Create: a timestamped migration adding `itinerary` to `tour_translations`.
+- Verify/reuse: `backend/database/migrations/2026_09_25_000001_add_guide_languages_and_localized_itinerary.php`; do not duplicate applied itinerary storage.
 - Modify: `backend/app/Models/TourTranslation.php`
 - Modify: partner tour Form Requests and `TourService.php`.
 - Test: `backend/tests/Feature/Search/TourDetailTest.php`
@@ -319,12 +319,12 @@ Migration behavior:
 - Select the actual current content locale for public display and SEO. A missing, outdated, or failed ES/IT translation uses the current English source with a visible notice; ready content replaces it automatically.
 - Gemini is the approved backend-only AI provider in the Spec Kit plan. Its model and key are configured through backend environment variables; the local key is ignored by Git and must be rotated before production use.
 
-- [ ] Write failing migration, validation, locale-selection, and fallback tests.
-- [ ] Add nullable JSONB `itinerary` to `tour_translations`.
-- [ ] Add fillable/cast configuration.
-- [ ] Update Form Requests, service synchronization, and draft serialization.
-- [ ] Add translation-state, retry, source-revision, stale-result, and English-only publishing tests, including frontend and browser-level fallback/ready transitions.
-- [ ] Run focused backend tests.
+- [x] Write failing migration, validation, locale-selection, and fallback tests.
+- [x] Verify and reuse applied nullable JSONB `itinerary` on `tour_translations`.
+- [x] Add fillable/cast configuration.
+- [x] Update Form Requests, service synchronization, and draft serialization.
+- [x] Add translation-state, retry, source-revision, stale-result, and English-only publishing tests, including frontend and browser-level fallback/ready transitions.
+- [x] Run focused backend tests.
 
 ### Task 2.2: Persist difficulty and gallery media correctly
 
@@ -337,13 +337,13 @@ Guide/spoken languages are persisted as a separate tour-level code list and expo
 - Modify: partner tour request validation.
 - Test: partner tour create/update tests and public tour detail tests.
 
-- [ ] Add tests for difficulty persistence, cover selection, media ordering, URL deduplication, and cover fallback.
-- [ ] Add `difficulty_level` to the authoritative Tour model fillable fields.
-- [ ] Map partner `is_cover` UI state to `tour_media.type = cover|gallery`.
-- [ ] Synchronize media transactionally during create/update.
-- [ ] Build public images from sorted `tour_media`, placing the cover first.
-- [ ] Use `cover_image_url` only as a backward-compatible fallback.
-- [ ] Generate localized alt text from the tour title when no specific alt text exists.
+- [x] Add tests for difficulty persistence, cover selection, media ordering, URL deduplication, and cover fallback.
+- [x] Add `difficulty_level` to the authoritative Tour model fillable fields.
+- [x] Map partner `is_cover` UI state to `tour_media.type = cover|gallery`.
+- [x] Synchronize media transactionally during create/update.
+- [x] Build public images from sorted `tour_media`, placing the cover first.
+- [x] Use `cover_image_url` only as a backward-compatible fallback.
+- [x] Generate localized alt text from the tour title when no specific alt text exists.
 
 ### Task 2.3: Add operator and related-tour actions
 
@@ -381,9 +381,9 @@ Rules:
 - Rank same destination first, then same category, then rating.
 - Preserve the existing default of four related tours; eight is the absolute ceiling, not a requirement to expand the response. Use the existing TourCard contract.
 
-- [ ] Write failing privacy, aggregation, ranking, exclusion, and query-count tests.
-- [ ] Implement both actions without controller or model business logic.
-- [ ] Verify eager loading prevents N+1 queries.
+- [x] Write failing privacy, aggregation, ranking, exclusion, and query-count tests.
+- [x] Implement both actions without controller or model business logic.
+- [x] Verify eager loading prevents N+1 queries.
 
 ### Task 2.4: Extend the public tour contract
 
@@ -408,13 +408,13 @@ interface TourDetail {
 }
 ```
 
-- [ ] Add contract tests for the exact response shape.
-- [ ] Eager-load translations, category, media, availability, and partner profile.
-- [ ] Preserve every current response field.
-- [ ] Keep the existing `languages` response field compatible with its documented spoken-language meaning; never populate it from available content translations.
-- [ ] Emit real itinerary data as an ordered JSON-LD `ItemList`.
-- [ ] Retain meeting point as a `Place` and include all gallery image URLs.
-- [ ] Omit empty aggregate-rating structured data when no reviews exist.
+- [x] Add contract tests for the exact response shape.
+- [x] Eager-load translations, category, media, availability, and partner profile.
+- [x] Preserve every current response field.
+- [x] Keep the existing `languages` response field compatible with its documented spoken-language meaning; never populate it from available content translations.
+- [x] Emit real itinerary data as an ordered JSON-LD `ItemList`.
+- [x] Retain meeting point as a `Place` and include all gallery image URLs.
+- [x] Omit empty aggregate-rating structured data when no reviews exist.
 
 **Phase commands:**
 
