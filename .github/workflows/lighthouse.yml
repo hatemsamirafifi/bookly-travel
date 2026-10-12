@@ -28,11 +28,42 @@ jobs:
         
       - name: Prepare application
         uses: ./.github/actions/prepare-browser-ci
+
+      - name: Reserve separate CPU cores for the browser and application
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Renderer wall time includes waits when the local server competes for
+          # CPU. Keep at least two cores for Chrome without warming page caches.
+          python3 - <<'PY' >> "$GITHUB_ENV"
+          import os
+          cores = sorted(os.sched_getaffinity(0))
+          if len(cores) < 4:
+              raise SystemExit('Lighthouse isolation requires at least four available CPU cores')
+          split = len(cores) // 2
+          print('APPLICATION_CPUS=' + ','.join(map(str, cores[:split])))
+          print('BROWSER_CPUS=' + ','.join(map(str, cores[split:])))
+          PY
+
+      - name: Apply CPU isolation and record resource allocation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t containers < <(docker compose -f docker-compose.ci.yml ps -q)
+          test "${#containers[@]}" -gt 0
+          docker update --cpuset-cpus "$APPLICATION_CPUS" "${containers[@]}"
+          chrome=$(command -v google-chrome)
+          wrapper="$RUNNER_TEMP/bookly-lighthouse-chrome"
+          printf '#!/usr/bin/env bash\nexec taskset -c %q %q "$@"\n' "$BROWSER_CPUS" "$chrome" > "$wrapper"
+          chmod +x "$wrapper"
+          echo "CHROME_PATH=$wrapper" >> "$GITHUB_ENV"
+          echo "Application CPUs: $APPLICATION_CPUS; browser CPUs: $BROWSER_CPUS"
+          docker stats --no-stream --format '{{.Name}}: CPU={{.CPUPerc}} memory={{.MemUsage}}'
+          free -m
         
       - name: Verify browser CPU readiness without visiting the application
         working-directory: ./frontend
         run: |
-          echo "CHROME_PATH=$(command -v google-chrome)" >> "$GITHUB_ENV"
           node --test scripts/lighthouse-runtime-preflight.test.mjs
           node scripts/lighthouse-runtime-preflight.mjs
 
