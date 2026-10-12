@@ -50,6 +50,8 @@ jobs:
         with:
           name: lighthouse-diagnostic-traces
           path: |
+            *.trace.json
+            *.devtoolslog.json
             frontend/*.trace.json
             frontend/*.devtoolslog.json
           if-no-files-found: ignore
