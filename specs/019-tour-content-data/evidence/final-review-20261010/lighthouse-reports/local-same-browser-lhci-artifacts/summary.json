@@ -1,0 +1,150 @@
+{
+  "reportCount": 12,
+  "allPerformanceAtLeast90": false,
+  "reports": [
+    {
+      "file": "lhr-1791814705488.json",
+      "url": "http://nginx/en",
+      "fetchTime": "2026-10-12T14:18:14.085Z",
+      "performance": 0.71,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 1,
+      "benchmarkIndex": 1971.5,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814719256.json",
+      "url": "http://nginx/en",
+      "fetchTime": "2026-10-12T14:18:29.517Z",
+      "performance": 0.93,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 1,
+      "benchmarkIndex": 1736.5,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814731227.json",
+      "url": "http://nginx/en",
+      "fetchTime": "2026-10-12T14:18:41.923Z",
+      "performance": 0.98,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 1,
+      "benchmarkIndex": 1771,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814744810.json",
+      "url": "http://nginx/en/search?q=rome",
+      "fetchTime": "2026-10-12T14:18:55.661Z",
+      "performance": 0.91,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 1,
+      "benchmarkIndex": 1736,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814756219.json",
+      "url": "http://nginx/en/search?q=rome",
+      "fetchTime": "2026-10-12T14:19:07.138Z",
+      "performance": 0.92,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 1,
+      "benchmarkIndex": 1600.5,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814767766.json",
+      "url": "http://nginx/en/search?q=rome",
+      "fetchTime": "2026-10-12T14:19:18.588Z",
+      "performance": 0.92,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 1,
+      "benchmarkIndex": 1758,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814784796.json",
+      "url": "http://nginx/en/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-12T14:19:34.494Z",
+      "performance": 0.96,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 0.92,
+      "benchmarkIndex": 1514,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814797471.json",
+      "url": "http://nginx/en/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-12T14:19:47.098Z",
+      "performance": 0.96,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 0.92,
+      "benchmarkIndex": 1785.5,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814810207.json",
+      "url": "http://nginx/en/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-12T14:19:59.809Z",
+      "performance": 0.9,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 0.92,
+      "benchmarkIndex": 1866,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814825042.json",
+      "url": "http://nginx/en/blog/hidden-gems-florence",
+      "fetchTime": "2026-10-12T14:20:15.651Z",
+      "performance": 0.92,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 0.92,
+      "benchmarkIndex": 1450,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814836995.json",
+      "url": "http://nginx/en/blog/hidden-gems-florence",
+      "fetchTime": "2026-10-12T14:20:27.626Z",
+      "performance": 0.93,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 0.92,
+      "benchmarkIndex": 1830.5,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    },
+    {
+      "file": "lhr-1791814848995.json",
+      "url": "http://nginx/en/blog/hidden-gems-florence",
+      "fetchTime": "2026-10-12T14:20:39.698Z",
+      "performance": 0.94,
+      "accessibility": 1,
+      "bestPractices": 0.79,
+      "seo": 0.92,
+      "benchmarkIndex": 1769,
+      "lighthouseVersion": "12.1.0",
+      "runtimeError": null
+    }
+  ]
+}

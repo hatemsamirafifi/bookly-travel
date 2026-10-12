@@ -2,10 +2,11 @@
 
 **Owner**: Spec 019 implementation workflow; independent acceptance by root reviewer.
 **Created**: 2026-10-02.
-**Current scope (2026-10-09)**: T001-T033 (33/78) independently accepted.
-Sections 20/24 record US1 authoring and US2 reader evidence. Earlier sections
-retain dated findings. US3-US6, whole-spec checks, live isolated model/rollback
-rehearsal and subsequent CI/merge/release acceptance remain pending.
+**Current scope (2026-10-12)**: T001-T074 and T077 (75/78) independently accepted.
+Source, integrated browser, accessibility, backend regression and the live
+isolated model/compatible rollback rehearsal are verified. T075 final frontend
+validation, T076 performance and T078 final reconciliation remain pending.
+Earlier sections retain dated findings; merge and release are separate statuses.
 
 **Traceability**:
 
@@ -1829,3 +1830,82 @@ It blocks slow/unstable/missing measurements. Four policy tests pass, and actual
 neutral samples 1876.5/1950 passed readiness. The existing pessimistic 12-report
 CI audit must still establish T076 against the new source head.
 Reference: https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md
+
+## 31. Final gate corrections and retained unsuccessful audits (2026-10-12)
+
+CI 38258271272 on 329cb2d failed its frontend test job because Jest attempted
+to parse the native Node CPU-policy test file. Native tooling tests now run
+explicitly through test:performance-tools; Jest ignores scripts/*.test.mjs.
+The actual local rerun passed 12 native tooling tests and all 55 Jest suites /
+414 feature tests. Full ESLint passed after the CommonJS config lint repair.
+No feature-test skip was introduced.
+
+CI Lighthouse 38258271280 failed with first-home Performance 72 and TBT
+887.13ms, despite successful separate neutral CPU readiness. Therefore that
+preflight is not performance acceptance. The same-browser LHCI hook uses only
+about:blank, closes its temporary tab and keeps default application-storage
+reset and default mobile throttling. The official LHCI lifecycle is documented
+at https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md#puppeteerscript.
+An actual local hook invocation recorded 1917.5/1942.5 and ended with only the
+original about:blank tab. LHCI's installed manager joins script paths with its
+working directory; the first collect attempt failed on /app/app/scripts, before
+collecting any reports. The config now computes the hook's relative path.
+
+Complete local same-browser collection on 58b05c7 retained all 12 reports:
+home 71/93/98, search 91/92/92, tour 96/96/90, with remaining blog results in
+the raw artifact. The assert command failed. Local http://nginx also fails
+Best Practices 79; this differs from the localhost CI origin. No score is
+discarded, and T076 remains unchecked. Stable CPU does not establish the
+cause of the first-home delay. Source diagnosis and final-head CI are ongoing.
+Superseded 83bd9d1 CI runs were cancelled after the concrete hook-path failure;
+58b05c7 has fresh complete CI runs 38261874575 and 38261874686.
+
+The two additional failed local eight-report groups and both previous failed
+CI twelve-report groups are retained under lighthouse-reports with raw-report
+SHA256 manifests and read-back-verified ZIPs. The CI archives also include the
+original assertions JSON. Earlier failures remain part of the acceptance record.
+
+### Requirement reconciliation in progress (T078 remains pending)
+
+| Requirements | Actual evidence and result |
+|---|---|
+| FR-001/003/005/006; SC-001 | Sections 20/24/30: English round trips, ordered days/stops, nullable descriptions and input boundaries pass. |
+| FR-002/004/007; SC-003 | Backend and integrated authoring scenarios pass ownership, atomic rejection and required-English publication without blocking eligible publication for unavailable derivatives. |
+| FR-008/009; SC-005 | Sections 26/27: corrective adoption and actual dry-run/apply/repeat preserve raw legacy data and populated structured English. |
+| FR-010/011/012/013; SC-004 | Current-revision jobs, unchanged saves, failure/retry, duplicates and real PostgreSQL races pass; section 27 additionally proves real model readiness and compatible worker behavior. |
+| FR-014/015/016; SC-002 | Sections 24/26/27/30: all three locales use current general/itinerary content independently and disclose non-empty English fallbacks. |
+| FR-017/018/019/020/021; SC-006 | Section 26 US4 fixtures and integrated browser cases prove guide codes, optional difficulty, actual ordered unique images, legacy/empty galleries and actual-language alternatives. |
+| FR-022/023/024/025/026; SC-007 | Section 26 US5 projections pass truthful eligible counts/ratings, zero private fields, deterministic destination/category/rating ranking and four-default/eight-ceiling limits. |
+| FR-027/028/029; SC-008 | Section 26 SEO/consumer checks, section 27 actual Schema.org validator (zero errors/warnings) and compatible application rollback agree with visible facts without invented claims. |
+| FR-030 | Sections 27/30: EN/ES/IT feedback, twelve viewport-locale combinations and actual affected Axe/browser cases pass. Final changed-source frontend acceptance remains tracked by T075. |
+
+| Constitution principle | Actual assessment |
+|---|---|
+| I. Marketplace integrity/tours scope | Changes remain tour content, images and eligible operator/recommendation facts. |
+| II. Booking/publishing/reviews | English publication rules and existing bookability/visible review eligibility pass actual backend/browser cases. |
+| III. Auditable commerce | Atomic content writes preserve accepted pricing and commercial settings; no payment/payout path changed. |
+| IV. API/authorization | Owned writes and public DTO negative-field tests pass; provider secrets remain backend-only. |
+| V. Bookly design | Existing controls/cards retain Bookly presentation; actual manual/responsive captures are retained. |
+| VI. Accessibility/localization | Three locale interfaces and responsive/focus/reduced-motion/error checks pass with native browser/Axe evidence. |
+| VII. Evidence/regression | Full backend and source browser suites pass; performance still fails. Final changed-source frontend gates and final reconciliation remain pending. |
+
+Spec 018 remains preserved. PR27/PR28 were verified merged as recorded in the
+master-plan baseline; PR29 remains draft. T078 cannot pass until T075/T076 pass;
+implementation acceptance does not authorize merge or release.
+
+Complete Tests CI 38261874575 on 58b05c7 passed every job, including all three
+E2E shards. Lighthouse CI 38261874686 separately failed: home 76/94/98,
+search 93/93/93, tour 96/97/97, blog 94/94/94. The twelve reports and original
+assertions are retained in ci58-lighthouse-artifacts; they do not accept T076.
+
+A read-only OpenCode diagnosis used the approved Muse Spark model and proposed
+removing static HeroSection/BlogCard client boundaries. Root independently
+checked the source and removed those two directives. SearchBar remains client;
+BlogCard imported by an existing client parent still follows that parent's
+boundary. The diagnosis incorrectly called useTranslations client-only:
+installed next-intl has a react-server export, so that claim is rejected.
+Root observed no state/event/browser dependency in either static component.
+Fresh build U8U2EGHrkcNnxZwVz6fdw passed full lint/typecheck and 55 Jest suites /
+414 tests, followed by all 148 affected public/wishlist/Axe browser cases,
+native zero, 3.0 minutes. This establishes behavior, not a performance gain.
+New-source full CI and the complete Lighthouse group remain required.
