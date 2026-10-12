@@ -1,7 +1,6 @@
 'use client';
 
 import { Component, ReactNode, ErrorInfo } from 'react';
-import * as Sentry from '@sentry/nextjs';
 
 interface Props {
   children: ReactNode;
@@ -24,8 +23,17 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const errorId = Sentry.captureException(error, { extra: { componentStack: errorInfo.componentStack } });
-    this.setState({ errorId });
+    const componentStack = errorInfo.componentStack;
+    // Reporting is needed only after a render error; keep the SDK out of
+    // every page's initial bundle and show the fallback without waiting for it.
+    void import('@sentry/nextjs')
+      .then(({ captureException }) => {
+        const errorId = captureException(error, { extra: { componentStack } });
+        this.setState({ errorId });
+      })
+      .catch((reportingError: unknown) => {
+        console.error('Unable to report rendering error', reportingError);
+      });
   }
 
   render() {

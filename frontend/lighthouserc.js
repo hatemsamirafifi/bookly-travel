@@ -12,6 +12,8 @@ module.exports = {
         '/en/blog/hidden-gems-florence',
       ].map((path) => `${process.env.LIGHTHOUSE_BASE_URL || 'http://localhost:3000'}${path}`),
       numberOfRuns: 3,
+      // Keep CPU/GC traces for diagnosing cold-navigation failures.
+      settings: { saveAssets: true },
       chromePath: process.env.CHROME_PATH,
       puppeteerScript: path.relative(process.cwd(), path.join(__dirname, 'scripts/lighthouse-browser-ready.cjs')),
       puppeteerLaunchOptions: {

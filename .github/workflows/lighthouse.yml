@@ -44,6 +44,17 @@ jobs:
           temporaryPublicStorage: true
           runs: 3
 
+      - name: Retain Lighthouse diagnostic traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-diagnostic-traces
+          path: |
+            frontend/*.trace.json
+            frontend/*.devtoolslog.json
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Application diagnostics
         if: failure()
         run: |
