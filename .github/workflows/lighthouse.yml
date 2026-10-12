@@ -75,6 +75,24 @@ jobs:
           temporaryPublicStorage: true
           runs: 3
 
+      - name: Profile cold browser tasks after a failed audit
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          # These extra profiles diagnose failures; they do not replace any of
+          # the twelve acceptance reports already uploaded by the audit action.
+          node - <<'JS'
+          const fs = require('node:fs');
+          const config = require('./frontend/lighthouserc.js');
+          config.ci.collect.url = [config.ci.collect.url[0], config.ci.collect.url[2]];
+          config.ci.collect.numberOfRuns = 1;
+          config.ci.collect.settings.additionalTraceCategories =
+            'disabled-by-default-v8.cpu_profiler,v8.gc,disabled-by-default-v8.gc';
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/bookly-profile.json`, JSON.stringify(config));
+          JS
+          ./frontend/node_modules/.bin/lhci collect --config="$RUNNER_TEMP/bookly-profile.json"
+
       - name: Retain Lighthouse diagnostic traces
         if: always()
         uses: actions/upload-artifact@v4
