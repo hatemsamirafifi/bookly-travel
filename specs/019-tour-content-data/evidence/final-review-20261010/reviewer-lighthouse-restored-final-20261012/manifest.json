@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-10-12T12:17:21.5502945+00:00",
+  "finished_at": "2026-10-12T12:19:20.8714787+00:00",
+  "command": [
+    "docker",
+    "exec",
+    "-e",
+    "BOOKLY_AUDIT_HOST_METRICS={\"availableMB\":3605.0,\"committedBytes\":18061340672.0,\"commitLimitBytes\":42314485760.0}",
+    "-e",
+    "BOOKLY_AUDIT_BASE_URL=http://nginx",
+    "bookly-spec019-browser-nextjs-1",
+    "node",
+    "scripts/lighthouse-audit.mjs"
+  ],
+  "exit_code": 1
+}

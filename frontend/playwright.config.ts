@@ -92,6 +92,7 @@ export default defineConfig({
     // projects below, and a11y specs which run in a11y project.
     {
       name: 'chromium',
+      dependencies: ['setup'],
       testIgnore: [ALL_A11Y, TRAVELER_AUTHED, PARTNER_AUTHED, /.*\.setup\.ts/],
       use: {
         ...devices['Desktop Chrome'],
@@ -102,6 +103,7 @@ export default defineConfig({
     },
     {
       name: 'mobile',
+      dependencies: ['setup'],
       testIgnore: [ALL_A11Y, TRAVELER_AUTHED, PARTNER_AUTHED, /.*\.setup\.ts/],
       use: {
         ...devices['Pixel 7'],

@@ -1,0 +1,6 @@
+{"path":"/en","status":200,"bytes":108571,"build_id":"LMXlxfuWfJMqHaFcFVRtz"}
+{"path":"/en/search?q=rome","status":200,"bytes":93568,"build_id":"LMXlxfuWfJMqHaFcFVRtz"}
+{"path":"/en/tours/hidden-gems-rome-walking-tour","status":200,"bytes":146169,"build_id":"LMXlxfuWfJMqHaFcFVRtz"}
+{"path":"/en/blog/hidden-gems-florence","status":200,"bytes":86812,"build_id":"LMXlxfuWfJMqHaFcFVRtz"}
+{"path":"/admin/login","status":200,"bytes":44625,"build_id":"LMXlxfuWfJMqHaFcFVRtz"}
+{"path":"/api/public/tours/hidden-gems-rome-walking-tour?locale=en","status":200,"bytes":3395,"build_id":"LMXlxfuWfJMqHaFcFVRtz"}

@@ -1759,3 +1759,30 @@ Livewire asset and restored synthetic admin fixture passed seven independent
 browser cases, native exit zero. The new source/evidence checkpoint remains a
 draft PR increment while remaining browser/performance gates are completed.
 No merge, deployment or Phase 2 completion is claimed.
+## 29. CI integration corrections and performance coverage (2026-10-12)
+
+On 857a31b, CI run 38247552443 passed PHP 8.3/8.4/8.5, Pint, PHPStan and
+frontend checks/tests; the three browser shards failed. The separate
+home-only Lighthouse CI run 38247552432 passed, which does not accept T076.
+The restored local four-route/two-round performance group also failed:
+65/92/92/93 then 95/93/95/92 for home/search/tour/blog, native exit one.
+Every raw report is retained in its hash-verified archive, including the 65.
+
+The browser corrections preserve genuine assertions: base Chromium/mobile
+projects explicitly depend on authentication setup; real source/media writes
+are read through the shipped production proxy/SSR server with private CDN
+access; US1 checks both truthful title alternatives and the actual labeled
+Location Name control. No JSON response or image-loading assertion is faked.
+The controlled legacy/fallback SSR harness remains explicitly controlled.
+The first focused rerun passed 70/72. Corrective desktop/mobile retention
+scenarios and setup then passed 4/4 (14.5 seconds, native zero).
+
+The existing frontend/lighthouserc.js now covers all four routes, with the
+existing three runs per route and Performance >=90 enforced pessimistically
+on the least score. This is a stricter gate, not selection of the highest run.
+Official configuration reference:
+https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md
+All other thresholds and browser throttling settings are preserved. T076 remains
+pending until the complete new CI audit and retained reports actually pass.
+The task ledger remains 73/78 while complete browser/performance acceptance is
+outstanding; PR29 stays draft, and merge/release remain separately pending.

@@ -1,0 +1,12 @@
+
+   INFO  Seeding database.
+
+  Database\Seeders\PartnerSeeder ..................................... RUNNING
+PartnerSeeder: Created partner user, profile, settings, tours, and notifications.
+  Database\Seeders\PartnerSeeder ................................. 956 ms DONE
+
+  Database\Seeders\BlogBrowserTestSeeder ............................. RUNNING
+  Database\Seeders\BlogBrowserTestSeeder ......................... 510 ms DONE
+
+  Database\Seeders\VoucherVerificationSeeder ......................... RUNNING
+  Database\Seeders\VoucherVerificationSeeder ..................... 216 ms DONE

@@ -76,45 +76,6 @@ async function readServedDetail(mockPort: number, slug: string, locale: string):
   return ((await response.json()).data) as TourDetail;
 }
 
-interface RealSsrHarness {
-  nextPort: number;
-  stop: () => Promise<void>;
-}
-
-// Spec 019 US4 real-backend SSR harness: unlike startSsrHarness above (which
-// serves fabricated fixture JSON), this isolated Next process server-fetches
-// the REAL backend through API_INTERNAL_URL, so every assertion proves an
-// actual backend response consumed by SSR. Browser route mocking cannot
-// intercept SSR, and no JSON is fabricated here. Root runs this against the
-// bookly-spec019-browser nginx network; native runs use the local proxy.
-function realBackendOrigin(): string {
-  const configured = process.env.API_INTERNAL_URL ?? process.env.PLAYWRIGHT_BASE_URL;
-  if (configured) return configured.replace(/\/$/, '');
-  return process.env.DOCKER_ENV === 'true' ? 'http://nginx' : 'http://localhost:8080';
-}
-
-async function startRealSsrHarness(): Promise<RealSsrHarness> {
-  const nextPort = await freePort();
-  const next = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', String(nextPort), '-H', '127.0.0.1'], {
-    cwd: process.cwd(),
-    env: { ...process.env, API_INTERNAL_URL: realBackendOrigin(), NEXT_TELEMETRY_DISABLED: '1' },
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  let startupOutput = '';
-  next.stdout.on('data', (chunk: Buffer) => { startupOutput += chunk.toString(); });
-  next.stderr.on('data', (chunk: Buffer) => { startupOutput += chunk.toString(); });
-  await expect.poll(async () => {
-    if (next.exitCode !== null) throw new Error(`Isolated Next server exited: ${startupOutput}`);
-    try { return (await fetch(`http://127.0.0.1:${nextPort}/favicon.ico`)).status; } catch { return 0; }
-  }, { timeout: 60000 }).not.toBe(0);
-  return {
-    nextPort,
-    stop: async () => {
-      next.kill('SIGTERM');
-    },
-  };
-}
-
 test.describe('Tour Detail Page', () => {
   test('controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims', async ({ page, request }) => {
     test.setTimeout(120000);
@@ -598,7 +559,6 @@ test.describe('Tour Detail Page', () => {
   }) => {
     test.setTimeout(180000);
     const slug = 'hidden-gems-rome-walking-tour';
-    const harness = await startRealSsrHarness();
     const authedContext = await browser.newContext({ baseURL, storageState: 'tests/.auth/partner.json' });
     const authedPage = await authedContext.newPage();
     let tourId = 0;
@@ -685,7 +645,7 @@ test.describe('Tour Detail Page', () => {
         expect(served.difficulty_level ?? null).toBe(snapshot.difficulty);
         expect(served.guide_languages).toEqual(['en', 'de']);
 
-        const url = `http://127.0.0.1:${harness.nextPort}/${scenario.locale}/tours/${slug}`;
+        const url = new URL(`/${scenario.locale}/tours/${slug}`, baseURL).href;
         await page.goto(url);
         expect(page.url()).toBe(url);
         const heading = page.getByRole('heading', { level: 1 });
@@ -745,7 +705,6 @@ test.describe('Tour Detail Page', () => {
         expect(restore.status).toBe(200);
       }
       await authedContext.close();
-      await harness.stop();
     }
   });
 
@@ -753,8 +712,8 @@ test.describe('Tour Detail Page', () => {
   // Resolves the real published seeded tour by public slug (never a hardcoded
   // id), snapshots the owned EN source (presence/null preserved via
   // ownedEnglishSource), writes a meaningful ordered itinerary with repeated
-  // day numbers through the real partner PUT, then proves the isolated Next
-  // SSR process serves the edited source with a disclosed stale-derivative EN
+  // day numbers through the real partner PUT, then proves the production Next
+  // server through the real proxy serves the edited source with a disclosed stale-derivative EN
   // fallback on the ES page. Server money/booking availability must not move
   // with a source edit. No provider call is made; a non-200 write is a seed
   // prerequisite failure, never a fabricated success. The snapshot is
@@ -767,7 +726,6 @@ test.describe('Tour Detail Page', () => {
   }) => {
     test.setTimeout(180000);
     const slug = 'hidden-gems-rome-walking-tour';
-    const harness = await startRealSsrHarness();
     const authedContext = await browser.newContext({ baseURL, storageState: 'tests/.auth/partner.json' });
     const authedPage = await authedContext.newPage();
     let tourId = 0;
@@ -844,7 +802,7 @@ test.describe('Tour Detail Page', () => {
       expect(served.pricing).toEqual(moneyBefore);
       expect(served.availability).toEqual(availabilityBefore);
 
-      const url = `http://127.0.0.1:${harness.nextPort}/es/tours/${slug}`;
+      const url = new URL(`/es/tours/${slug}`, baseURL).href;
       await page.goto(url);
       expect(page.url()).toBe(url);
       const heading = page.getByRole('heading', { level: 1 });
@@ -912,7 +870,6 @@ test.describe('Tour Detail Page', () => {
         expect(restore.status).toBe(200);
       }
       await authedContext.close();
-      await harness.stop();
     }
   });
 });

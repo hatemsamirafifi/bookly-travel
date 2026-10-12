@@ -226,7 +226,10 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     await expect(page.getByRole('textbox', { name: 'Day title' }).first()).toHaveValue('Arrival');
     await expect(page.getByRole('textbox', { name: 'Day title' }).nth(1)).toHaveValue('Explore');
     await expect(page.getByRole('textbox', { name: 'Stop title' }).first()).toHaveValue('Meet the guide');
-    await expect(page.getByRole('img', { name: 'Cover Image' })).toBeVisible();
+    const reopenedImages = page.getByRole('img', { name: title, exact: true });
+    await expect(reopenedImages).toHaveCount(2);
+    await expect(reopenedImages.first()).toBeVisible();
+    await expect(reopenedImages.nth(1)).toBeVisible();
 
     // Unrelated browser edit save: only the technical location changes.
     const unrelatedSavePromise = page.waitForResponse(
@@ -235,7 +238,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
         resp.request().method() === 'PUT' &&
         resp.status() === 200
     );
-    await page.getByPlaceholder('e.g. Rome, Italy').fill('Siena, Italy');
+    await page.getByRole('textbox', { name: 'Location Name', exact: true }).fill('Siena, Italy');
     await page.getByRole('button', { name: 'Save Tour Details' }).click();
     await unrelatedSavePromise;
     await expect(page.getByText('Tour details saved successfully.')).toBeVisible();
@@ -456,7 +459,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     await page.getByRole('button', { name: 'Next', exact: true }).click();
 
     // Seeded cover media travels with the Wizard draft.
-    await expect(page.getByRole('img', { name: 'Cover Image' })).toBeVisible();
+    await expect(page.getByRole('img', { name: title, exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Next', exact: true }).click();
 
     await page.getByRole('button', { name: 'Add Tier' }).click();

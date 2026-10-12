@@ -1,0 +1,120 @@
+{
+  "startedAt": "2026-10-12T12:17:22.143Z",
+  "finishedAt": "2026-10-12T12:19:20.679Z",
+  "host": {
+    "availableMB": 3605,
+    "committedBytes": 18061340672,
+    "commitLimitBytes": 42314485760
+  },
+  "baseURL": "http://nginx",
+  "conditions": "Production build; serial mobile audits; scheduler left running; no concurrent gates",
+  "passed": false,
+  "aborted": false,
+  "notRun": 0,
+  "results": [
+    {
+      "page": "home",
+      "round": 1,
+      "passed": false,
+      "scores": {
+        "performance": 0.65,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 1
+      },
+      "benchmarkIndex": 1869,
+      "runtimeError": null
+    },
+    {
+      "page": "search",
+      "round": 1,
+      "passed": true,
+      "scores": {
+        "performance": 0.92,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 1
+      },
+      "benchmarkIndex": 1881,
+      "runtimeError": null
+    },
+    {
+      "page": "tour",
+      "round": 1,
+      "passed": true,
+      "scores": {
+        "performance": 0.92,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 0.92
+      },
+      "benchmarkIndex": 1639.5,
+      "runtimeError": null
+    },
+    {
+      "page": "blog",
+      "round": 1,
+      "passed": true,
+      "scores": {
+        "performance": 0.93,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 0.92
+      },
+      "benchmarkIndex": 1268,
+      "runtimeError": null
+    },
+    {
+      "page": "home",
+      "round": 2,
+      "passed": true,
+      "scores": {
+        "performance": 0.95,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 1
+      },
+      "benchmarkIndex": 1688.5,
+      "runtimeError": null
+    },
+    {
+      "page": "search",
+      "round": 2,
+      "passed": true,
+      "scores": {
+        "performance": 0.93,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 1
+      },
+      "benchmarkIndex": 1667.5,
+      "runtimeError": null
+    },
+    {
+      "page": "tour",
+      "round": 2,
+      "passed": true,
+      "scores": {
+        "performance": 0.95,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 0.92
+      },
+      "benchmarkIndex": 1609,
+      "runtimeError": null
+    },
+    {
+      "page": "blog",
+      "round": 2,
+      "passed": true,
+      "scores": {
+        "performance": 0.92,
+        "accessibility": 1,
+        "best-practices": 0.79,
+        "seo": 0.92
+      },
+      "benchmarkIndex": 1666.5,
+      "runtimeError": null
+    }
+  ]
+}

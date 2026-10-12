@@ -1,0 +1,9 @@
+
+Running 4 tests using 1 worker
+
+[1/4] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/4] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/4] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+[4/4] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  4 passed (14.5s)
+NUMERIC_EXIT=0

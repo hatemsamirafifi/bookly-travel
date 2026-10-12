@@ -1,0 +1,6 @@
+{"name":"migrate-owned-fresh-schema","at":"2026-10-12T12:13:40.7770850+00:00","argv":["docker","exec","bookly-spec019-browser-laravel-1","php","artisan","migrate","--force"],"exit_code":0}
+{"name":"seed-owned-browser-fixtures","at":"2026-10-12T12:13:48.2674850+00:00","argv":["docker","exec","bookly-spec019-browser-laravel-1","php","artisan","db:seed","--force"],"exit_code":0}
+{"name":"seed-owned-admin-fixture","at":"2026-10-12T12:13:50.8718883+00:00","argv":["docker","exec","-e","ADMIN_PASSWORD=password","bookly-spec019-browser-laravel-1","php","artisan","db:seed","--class=AdminUserSeeder","--force"],"exit_code":0}
+{"name":"configure-owned-search","at":"2026-10-12T12:13:53.4073578+00:00","argv":["docker","exec","bookly-spec019-browser-laravel-1","php","artisan","tinker","--execute=app(\\App\\Domains\\Search\\Actions\\ConfigureSearchIndexAction::class)->execute();"],"exit_code":0}
+{"name":"flush-owned-tour-index","at":"2026-10-12T12:13:55.1892479+00:00","argv":["docker","exec","bookly-spec019-browser-laravel-1","php","artisan","scout:flush","App\\Models\\Tour"],"exit_code":0}
+{"name":"import-owned-tour-index","at":"2026-10-12T12:13:57.4163105+00:00","argv":["docker","exec","bookly-spec019-browser-laravel-1","php","artisan","scout:import","App\\Models\\Tour"],"exit_code":0}

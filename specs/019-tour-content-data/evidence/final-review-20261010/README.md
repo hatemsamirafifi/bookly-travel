@@ -174,3 +174,44 @@ owned container to the eight CPUs actually available to Docker. NanoCpus
 setting changed during the recorded audit, that run has mixed conditions and
 cannot establish acceptance. Its reports and explicit correction observation
 are retained. A new complete round under fixed conditions is required.
+
+Each recorded Lighthouse directory now retains its readable summary, an
+eight-report `raw-reports.zip` and `raw-report-sha256.json`. All 32 archived
+reports were read back and compared with the original SHA-256 before their
+verbose JSON copies were removed from the review diff. Nothing was omitted
+from the archives; original logs/reports also remain outside the tracked tree.
+
+## Runtime restoration and CI integration corrections (2026-10-12)
+
+The owned runtime exited before its corrected 879-case suite completed; the
+last recorded case was 570 and no complete-suite exit exists. All six owned
+container labels were checked before restarting. PostgreSQL's disposable
+schema was empty on restart, so only this isolated database was migrated and
+seeded; its isolated tour search index was flushed and reimported. Production
+build `LMXlxfuWfJMqHaFcFVRtz`, NSS and the eight-CPU setting were retained.
+Uniform HTTP readiness checks covered all four audit routes plus admin/detail.
+
+The resulting fixed-condition local eight-report audit gave home/search/tour/blog
+65/92/92/93 and 95/93/95/92. Its native exit is one: seven passing results do
+not accept the whole group. No low score is discarded or selectively retried.
+
+CI on source checkpoint 857a31b passed PHP 8.3/8.4/8.5, Pint, PHPStan, frontend
+checks/tests and the existing home-only Lighthouse job, but all browser shards
+failed. Root traced missing partner storage state to absent base-project setup
+dependencies, native-runner image loading to the additional SSR server outside
+the private CDN network, and US1 selectors to changed truthful image alternatives
+and the localized location input. Base browser projects now depend on setup;
+real source/media scenarios use the actual production proxy/SSR server; the
+controlled-response SSR harness remains separate. Actual image loading and
+full source/media/money preservation assertions remain required.
+
+The initial focused rerun passed 70/72 and exposed two US1 selector failures.
+After correcting the two-image expectation and labeled location control, both
+desktop/mobile retention scenarios plus authentication setup passed 4/4 with
+native exit zero. The full browser rerun still remains required.
+
+The existing Lighthouse CI configuration now audits the same four primary routes
+three times each, retaining its 90 threshold and requiring the least performance
+score with `aggregationMethod: pessimistic`. This strengthens the former
+home-only optimistic gate. CI acceptance requires actual successful reports;
+configuration syntax checks alone are not performance evidence.

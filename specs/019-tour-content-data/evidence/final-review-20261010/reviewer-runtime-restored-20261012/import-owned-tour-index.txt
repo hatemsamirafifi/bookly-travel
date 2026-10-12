@@ -1,0 +1,2 @@
+Imported [App\Models\Tour] models up to ID: 3
+All [App\Models\Tour] records have been imported.
