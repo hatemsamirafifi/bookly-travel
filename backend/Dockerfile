@@ -26,6 +26,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
+# Ship application code on the container's Linux filesystem. The primary
+# Compose stack runs this snapshot; rebuilding the image deploys source edits.
+COPY . .
+
 # Create www-data home and set permissions for storage/bootstrap
 RUN mkdir -p /var/www/html/storage/logs \
     /var/www/html/storage/framework/cache \
