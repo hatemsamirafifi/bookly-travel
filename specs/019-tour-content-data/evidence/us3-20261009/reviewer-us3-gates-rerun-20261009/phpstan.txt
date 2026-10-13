@@ -1,0 +1,37 @@
+Note: Using configuration file /var/www/html/phpstan.neon.
+ ------ -----------------------------------------------------------------------
+  Line   Domains/Partner/Controllers/TourController.php
+ ------ -----------------------------------------------------------------------
+  16     Property
+         App\Domains\Partner\Controllers\TourController::$translationService
+         is never read, only written.
+         🪪  property.onlyWritten
+         💡  See:
+         https://phpstan.org/developing-extensions/always-read-written-propert
+         ies
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   Domains/Partner/Services/TourService.php
+ ------ -----------------------------------------------------------------------
+  364    Call to function is_string() with string will always evaluate to
+         true.
+         🪪  function.alreadyNarrowedType
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   Domains/Partner/Services/TourTranslationService.php
+ ------ -----------------------------------------------------------------------
+  295    Ternary operator condition is always false.
+         🪪  ternary.alwaysFalse
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+ ------ -----------------------------------------------------------------------
+
+ [ERROR] Found 3 errors
+
+NUMERIC_EXIT=1

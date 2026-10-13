@@ -1,0 +1,6 @@
+{"name":"backend-focused","started_at":"2026-10-03T00:38:20.0768606+00:00","finished_at":"2026-10-03T00:38:55.9624394+00:00","exit_code":0}
+{"name":"pint","started_at":"2026-10-03T00:38:56.1224226+00:00","finished_at":"2026-10-03T00:38:58.7335632+00:00","exit_code":0}
+{"name":"phpstan","started_at":"2026-10-03T00:38:58.7349914+00:00","finished_at":"2026-10-03T00:39:23.3480627+00:00","exit_code":0}
+{"name":"frontend-lint","started_at":"2026-10-03T00:39:23.3522013+00:00","finished_at":"2026-10-03T00:39:55.7638601+00:00","exit_code":0}
+{"name":"frontend-typecheck","started_at":"2026-10-03T00:39:55.7659917+00:00","finished_at":"2026-10-03T00:40:06.2647262+00:00","exit_code":0}
+{"name":"frontend-focused-jest","started_at":"2026-10-03T00:40:06.2663764+00:00","finished_at":"2026-10-03T00:40:13.9823772+00:00","exit_code":0}

@@ -1,0 +1,207 @@
+
+Running 30 tests using 1 worker
+
+[1/30] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/30] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › en tour detail with loaded reviews should not have accessibility violations
+[4/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › es tour detail with loaded reviews should not have accessibility violations
+[5/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › it tour detail with loaded reviews should not have accessibility violations
+[6/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:27:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+[7/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:39:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+[8/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:48:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+[9/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:60:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+[10/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:98:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+[11/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:128:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+[12/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:6:7 › Partner Dashboard Accessibility › partner dashboard home should not have accessibility violations
+[13/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:15:7 › Partner Dashboard Accessibility › partner tours page should not have accessibility violations
+[14/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:22:7 › Partner Dashboard Accessibility › partner bookings page should not have accessibility violations
+[15/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:29:7 › Partner Dashboard Accessibility › partner reviews page should not have accessibility violations
+[16/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:36:7 › Partner Dashboard Accessibility › partner profile page should not have accessibility violations
+[17/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:45:7 › Partner Layout Accessibility › sidebar should have accessible navigation landmark
+[18/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:58:7 › Partner Layout Accessibility › sidebar links should have aria-current for active page
+[19/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:67:7 › Partner Layout Accessibility › mobile menu button should have aria-label
+[20/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:75:7 › Partner Layout Accessibility › mobile drawer should have proper ARIA attributes
+[21/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:100:7 › Partner Layout Accessibility › notification bell should have accessible label
+[22/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:107:7 › Partner Layout Accessibility › header should have main content landmark
+[23/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:115:7 › Partner Layout Accessibility › form inputs should have associated labels
+[24/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:133:7 › Partner Layout Accessibility › switch toggles should have accessible roles
+[25/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+  1) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 35
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the order of headings is semantically correct",
+    +     "help": "Heading levels should only increase by one",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=playwright",
+    +     "id": "heading-order",
+    +     "impact": "moderate",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "heading-order",
+    +             "impact": "moderate",
+    +             "message": "Heading order invalid",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Heading order invalid",
+    +         "html": "<h3 class=\"text-lg font-semibold text-bookly-navy\">Itinerary</h3>",
+    +         "impact": "moderate",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "h3",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "best-practice",
+    +     ],
+    +   },
+    + ]
+
+      169 |       await expect(page.locator('main#main-content')).toBeVisible();
+      170 |       const results = await new AxeBuilder({ page }).analyze();
+    > 171 |       expect(results.violations).toEqual([]);
+          |                                  ^
+      172 |     }
+      173 |   });
+      174 |
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:171:34
+
+    Error Context: test-results/a11y-partner-a11y-Partner--397cd-tributed-locales-and-widths-a11y-partner/error-context.md
+
+
+[26/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+  2) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 35
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the order of headings is semantically correct",
+    +     "help": "Heading levels should only increase by one",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=playwright",
+    +     "id": "heading-order",
+    +     "impact": "moderate",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "heading-order",
+    +             "impact": "moderate",
+    +             "message": "Heading order invalid",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Heading order invalid",
+    +         "html": "<h3 class=\"text-lg font-semibold text-bookly-navy\">Itinerary</h3>",
+    +         "impact": "moderate",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "h3",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "best-practice",
+    +     ],
+    +   },
+    + ]
+
+      178 |     await page.goto('/en/partner/tours/create');
+      179 |     await expect(page.locator('main#main-content')).toBeVisible();
+    > 180 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                   ^
+      181 |   });
+      182 |
+      183 |   test('difficulty and guide-language controls are labeled in each page language', async ({ page }) => {
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:180:67
+
+    Error Context: test-results/a11y-partner-a11y-Partner--38e48-width-has-no-axe-violations-a11y-partner/error-context.md
+
+
+[27/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:183:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › difficulty and guide-language controls are labeled in each page language
+[28/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:207:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › english-source notice stays visible and page-localized on details step
+[29/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+  3) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 35
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the order of headings is semantically correct",
+    +     "help": "Heading levels should only increase by one",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=playwright",
+    +     "id": "heading-order",
+    +     "impact": "moderate",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "heading-order",
+    +             "impact": "moderate",
+    +             "message": "Heading order invalid",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Heading order invalid",
+    +         "html": "<h3 class=\"text-lg font-semibold text-bookly-navy\">Itinerary</h3>",
+    +         "impact": "moderate",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "h3",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "best-practice",
+    +     ],
+    +   },
+    + ]
+
+      227 |     // Field-level announced error for the missing English title.
+      228 |     await expect(page.locator('p[role="alert"]', { hasText: /.+/ }).first()).toBeVisible();
+    > 229 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                   ^
+      230 |   });
+      231 |
+      232 |   test('uploader dropzone and alt-field contract on the edit page', async ({ page }) => {
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:229:67
+
+    Error Context: test-results/a11y-partner-a11y-Partner--09c5b--moves-focus-to-the-summary-a11y-partner/error-context.md
+
+
+[30/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:232:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › uploader dropzone and alt-field contract on the edit page
+  3 failed
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+  27 passed (4.0m)
+NUMERIC_EXIT=1

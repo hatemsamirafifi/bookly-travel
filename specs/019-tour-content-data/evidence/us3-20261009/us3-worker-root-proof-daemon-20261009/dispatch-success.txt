@@ -1,0 +1,2 @@
+{"mode":"dispatch","kind":"success","queued":2,"locales":["es","it"]}
+NUMERIC_EXIT=0 EXPECTED_EXIT=0

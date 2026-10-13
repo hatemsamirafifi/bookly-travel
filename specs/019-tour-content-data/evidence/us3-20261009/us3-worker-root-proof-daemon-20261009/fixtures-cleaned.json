@@ -1,0 +1,18 @@
+{
+    "user_id": 5,
+    "partner_id": 3,
+    "category_id": 7,
+    "tour_ids": {
+        "success": 6,
+        "timeout": 7
+    },
+    "queues": {
+        "index": "spec019-proof-index-20261009",
+        "success": "spec019-proof-success-6142c13b1a",
+        "timeout": "spec019-proof-timeout-1bc386cbb7"
+    },
+    "hashes": {
+        "success": "74d33da92ceb4b2b806cf132f0edb73b50ab3cb2aa0de7944c6cdf8d6c5d36a4",
+        "timeout": "74d33da92ceb4b2b806cf132f0edb73b50ab3cb2aa0de7944c6cdf8d6c5d36a4"
+    }
+}

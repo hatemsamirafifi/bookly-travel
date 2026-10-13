@@ -1,0 +1,20 @@
+2026-10-10T21:39:04.850Z LH:ChromeLauncher Waiting for browser.
+2026-10-10T21:39:04.851Z LH:ChromeLauncher Waiting for browser...
+2026-10-10T21:39:05.440Z LH:ChromeLauncher Waiting for browser.....
+2026-10-10T21:39:05.942Z LH:ChromeLauncher Waiting for browser.......
+2026-10-10T21:39:05.944Z LH:ChromeLauncher Waiting for browser.......✓
+2026-10-10T21:39:21.895Z LH:status Connecting to browser
+2026-10-10T21:39:21.896Z LH:ChromeLauncher Killing Chrome instance 10602
+Runtime error encountered: Connection closed.
+ConnectionClosedError: Connection closed.
+    at Connection._rawSend (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Connection.js:102:35)
+    at Connection.send (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Connection.js:95:21)
+    at Connection._createSession (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Connection.js:208:42)
+    at PageTarget.createSession (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Browser.js:153:37)
+    at PageTarget.createCDPSession (file:///app/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Target.js:94:36)
+    at Driver.connect (file:///app/node_modules/lighthouse/core/gather/driver.js:84:50)
+    at _setup (file:///app/node_modules/lighthouse/core/gather/navigation-runner.js:47:16)
+    at gatherFn (file:///app/node_modules/lighthouse/core/gather/navigation-runner.js:298:35)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Runner.gather (file:///app/node_modules/lighthouse/core/runner.js:211:25)
+NUMERIC_EXIT=1

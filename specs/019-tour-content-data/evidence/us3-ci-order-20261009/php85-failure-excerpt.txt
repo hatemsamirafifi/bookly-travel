@@ -1,0 +1,88 @@
+2026-10-09T20:39:32.0484649Z    FAILED  Tests\Feature\Partner\TourTranslationTest > it marks derived tran…
+2026-10-09T20:39:32.0497927Z   Failed asserting that two arrays are identical.
+2026-10-09T20:39:32.0498154Z    Array &0 [
+2026-10-09T20:39:32.0498338Z   +    'it' => 'pending',
+2026-10-09T20:39:32.0498532Z        'es' => 'pending',
+2026-10-09T20:39:32.0498712Z   -    'it' => 'pending',
+2026-10-09T20:39:32.0498838Z    ]
+2026-10-09T20:39:32.0498941Z
+2026-10-09T20:39:32.0503801Z
+2026-10-09T20:39:32.0504038Z   at tests/Feature/Partner/TourTranslationTest.php:111
+2026-10-09T20:39:32.0762265Z     107▕
+2026-10-09T20:39:32.0762767Z     108▕     $this->putJson("/api/partner/tours/{$tour->id}", ['title' => 'New English tour title'], $headers)->assertOk();
+2026-10-09T20:39:32.0763301Z     109▕     Queue::assertPushed(GenerateTourTranslationJob::class, 2);
+2026-10-09T20:39:32.0763687Z     110▕     expect($tour->fresh()->translationStates()->pluck('status', 'locale')->all())
+2026-10-09T20:39:32.0764273Z   ➜ 111▕         ->toBe(['es' => 'pending', 'it' => 'pending']);
+2026-10-09T20:39:32.0764500Z     112▕ });
+2026-10-09T20:39:32.0764617Z     113▕
+2026-10-09T20:39:32.0764958Z     114▕ it('requeues derived content when the English description changes without a title edit', function () {
+2026-10-09T20:39:32.0765429Z     115▕     $tour = createEnglishSourceTour();
+2026-10-09T20:39:32.0765600Z
+2026-10-09T20:39:32.0765736Z   1   tests/Feature/Partner/TourTranslationTest.php:111
+2026-10-09T20:39:32.0765919Z
+2026-10-09T20:39:32.0768483Z    FAILED  Tests\Feature\Partner\TourTranslationTest > it spec019 ignores me…
+2026-10-09T20:39:32.0769301Z   Failed asserting that two arrays are identical.
+2026-10-09T20:39:32.0769526Z    Array &0 [
+2026-10-09T20:39:32.0769689Z   +    'it' => 'pending',
+2026-10-09T20:39:32.0769867Z        'es' => 'pending',
+2026-10-09T20:39:32.0770050Z   -    'it' => 'pending',
+2026-10-09T20:39:32.0770266Z    ]
+2026-10-09T20:39:32.0770433Z
+2026-10-09T20:39:32.0770497Z
+2026-10-09T20:39:32.0770582Z   at tests/Feature/Partner/TourTranslationTest.php:402
+2026-10-09T20:39:32.0793079Z     398▕     ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+2026-10-09T20:39:32.0793464Z     399▕
+2026-10-09T20:39:32.0794105Z     400▕     expect($service->sourceHash($tour->fresh()->translations()->where('locale', 'en')->firstOrFail()))->toBe($hash);
+2026-10-09T20:39:32.0794735Z     401▕     expect($tour->fresh()->translationStates()->pluck('status', 'locale')->all())
+2026-10-09T20:39:32.0795690Z   ➜ 402▕         ->toBe(['es' => 'pending', 'it' => 'pending']);
+2026-10-09T20:39:32.0796176Z     403▕     Queue::assertNotPushed(GenerateTourTranslationJob::class);
+2026-10-09T20:39:32.0796512Z     404▕ });
+2026-10-09T20:39:32.0796698Z     405▕
+2026-10-09T20:39:32.0797132Z     406▕ it('spec019 stales both locales while retaining old derivatives on an English edit', function () {
+2026-10-09T20:39:32.0797490Z
+2026-10-09T20:39:32.0797626Z   1   tests/Feature/Partner/TourTranslationTest.php:402
+2026-10-09T20:39:32.0797838Z
+2026-10-09T20:39:32.0798903Z   Tests:    956 deprecated, 2 failed, 1 passed (4768 assertions)
+2026-10-09T20:39:32.0799175Z   Duration: 54.62s
+2026-10-09T20:39:32.0799277Z
+2026-10-09T20:39:32.1086447Z ##[error]Process completed with exit code 1.
+2026-10-09T20:39:32.1173353Z Post job cleanup.
+2026-10-09T20:39:32.1759205Z [command]/usr/bin/git version
+2026-10-09T20:39:32.1800277Z git version 2.55.0
+2026-10-09T20:39:32.1830799Z Temporarily overriding HOME='/home/runner/work/_temp/1f649634-e77d-4da2-adc4-1dbdfcd49c31' before making global git config changes
+2026-10-09T20:39:32.1831573Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T20:39:32.1834322Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bookly-travel/bookly-travel
+2026-10-09T20:39:32.1867101Z Removing SSH command configuration
+2026-10-09T20:39:32.1873391Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T20:39:32.1908761Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T20:39:32.2119351Z fatal: No url found for submodule path 'open-claude-code' in .gitmodules
+2026-10-09T20:39:32.2161143Z ##[warning]The process '/usr/bin/git' failed with exit code 128
+2026-10-09T20:39:32.2270849Z Print service container logs: 77a8391dab6849eeac2d7902fb12e5f0_postgres15alpine_db086c
+2026-10-09T20:39:32.2276208Z ##[command]/usr/bin/docker logs --details 8d7c2113e134d6c01aaf333c70ba07119d0fbdae9d10e59ea85d64c23266c33c
+2026-10-09T20:39:32.2388589Z  ********************************************************************************
+2026-10-09T20:39:32.2389068Z  The files belonging to this database system will be owned by user "postgres".
+2026-10-09T20:39:32.2389636Z  WARNING: POSTGRES_HOST_AUTH_METHOD has been set to "trust". This will allow
+2026-10-09T20:39:32.2389971Z  This user must also own the server process.
+2026-10-09T20:39:32.2400287Z           anyone with access to the Postgres port to access your database without
+2026-10-09T20:39:32.1086447Z ##[error]Process completed with exit code 1.
+2026-10-09T20:39:32.1173353Z Post job cleanup.
+2026-10-09T20:39:32.1759205Z [command]/usr/bin/git version
+2026-10-09T20:39:32.1800277Z git version 2.55.0
+2026-10-09T20:39:32.1830799Z Temporarily overriding HOME='/home/runner/work/_temp/1f649634-e77d-4da2-adc4-1dbdfcd49c31' before making global git config changes
+2026-10-09T20:39:32.1831573Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T20:39:32.1834322Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bookly-travel/bookly-travel
+2026-10-09T20:39:32.1867101Z Removing SSH command configuration
+2026-10-09T20:39:32.1873391Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T20:39:32.1908761Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T20:39:32.2119351Z fatal: No url found for submodule path 'open-claude-code' in .gitmodules
+2026-10-09T20:39:32.2161143Z ##[warning]The process '/usr/bin/git' failed with exit code 128
+2026-10-09T20:39:32.2270849Z Print service container logs: 77a8391dab6849eeac2d7902fb12e5f0_postgres15alpine_db086c
+2026-10-09T20:39:32.2276208Z ##[command]/usr/bin/docker logs --details 8d7c2113e134d6c01aaf333c70ba07119d0fbdae9d10e59ea85d64c23266c33c
+2026-10-09T20:39:32.2388589Z  ********************************************************************************
+2026-10-09T20:39:32.2389068Z  The files belonging to this database system will be owned by user "postgres".
+2026-10-09T20:39:32.2389636Z  WARNING: POSTGRES_HOST_AUTH_METHOD has been set to "trust". This will allow
+2026-10-09T20:39:32.2389971Z  This user must also own the server process.
+2026-10-09T20:39:32.2400287Z           anyone with access to the Postgres port to access your database without
+2026-10-09T20:39:32.2400681Z           a password, even if POSTGRES_PASSWORD is set. See PostgreSQL
+2026-10-09T20:39:32.2400989Z           documentation about "trust":
+2026-10-09T20:39:32.2401353Z           https://www.postgresql.org/docs/current/auth-trust.html

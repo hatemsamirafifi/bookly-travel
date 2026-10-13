@@ -1,0 +1,3 @@
+ Container bookly-spec019-browser-nextjs-1 Restarting
+ Container bookly-spec019-browser-nextjs-1 Started
+NUMERIC_EXIT=0

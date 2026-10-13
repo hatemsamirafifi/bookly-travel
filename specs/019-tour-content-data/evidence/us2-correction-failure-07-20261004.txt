@@ -1,0 +1,59 @@
+docker compose --env-file C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser.env -p bookly-spec019-browser --project-directory 'F:/Travel Website/bookly travel' -f docker-compose.ci.yml -f C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser-overrides.yml exec -T nextjs npm test -- --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t "actual text languages"
+
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t actual text languages
+
+FAIL src/components/tour/__tests__/TourDetail.test.tsx (6.955 s)
+  TourDetail
+    ✕ declares actual text languages while keeping page-locale labels (152 ms)
+    ○ skipped renders the category name, not the raw category object (F1 regression)
+    ○ skipped renders the title and location
+    ○ skipped renders the star rating from the rating object
+    ○ skipped renders guide metadata independently of en content locale
+    ○ skipped renders guide metadata independently of es content locale
+    ○ skipped renders guide metadata independently of it content locale
+    ○ skipped labels an English content fallback without changing guide languages
+    ○ skipped shows independent content/itinerary fallback notices in en
+    ○ skipped shows independent content/itinerary fallback notices in es
+    ○ skipped shows independent content/itinerary fallback notices in it
+    ○ skipped suppresses the itinerary section and notice for an empty itinerary
+    ○ skipped shows no fallback notice for empty sections in en even with the summary flag
+    ○ skipped shows no fallback notice for empty sections in es even with the summary flag
+    ○ skipped shows no fallback notice for empty sections in it even with the summary flag
+    ○ skipped shows no fallback notice for current requested content in en even with the summary flag
+    ○ skipped shows no fallback notice for current requested content in es even with the summary flag
+    ○ skipped shows no fallback notice for current requested content in it even with the summary flag
+    ○ skipped renders repeated valid day numbers with stable composite keys
+    ○ skipped renders translated important information in en
+    ○ skipped renders translated important information in es
+    ○ skipped renders translated important information in it
+    ○ skipped omits empty optional sections while retaining the booking action
+    ○ skipped navigates only to visible sections with a safe sticky offset and renders public operator and related tours
+
+  ● TourDetail › declares actual text languages while keeping page-locale labels
+
+    expect(element).toHaveAttribute("lang", "es") // element.getAttribute("lang") === "es"
+
+    Expected the element to have attribute:
+      lang="es"
+    Received:
+      null
+
+      241 |     // Root correction R3: the breadcrumb carries the same authored title,
+      242 |     // so its source span also declares the actual content language.
+    > 243 |     expect(screen.getByText('Tuscany Wine Tasting', { selector: 'span' })).toHaveAttribute('lang', 'es');
+          |                                                                            ^
+      244 |     const itineraryHeading = screen.getByRole('heading', { name: 'Día 1: Día español' });
+      245 |     expect(itineraryHeading.querySelector('span')).toHaveAttribute('lang', 'es');
+      246 |     // Page-locale section labels carry no content lang override.
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourDetail.test.tsx:243:76)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 23 skipped, 24 total
+Snapshots:   0 total
+Time:        7.816 s, estimated 13 s
+Ran all test suites within paths "src/components/tour/__tests__/TourDetail.test.tsx".
+
+NUMERIC_EXIT=1

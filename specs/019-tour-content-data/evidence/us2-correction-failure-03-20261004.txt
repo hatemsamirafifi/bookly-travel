@@ -1,0 +1,37 @@
+docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter="matrix|ENGLISH SOURCE|English-only"
+
+
+   FAIL  Tests\Feature\Search\TourDetailTest
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 8.02s
+  ⨯ it selects actual languages across the full es/it status matrix (US… 0.70s
+  ✓ it always serves English source irrespective of derived states (US2… 0.63s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourDetailTest > it selects actual languages…
+  Failed asserting that two arrays are identical.
+   Array &0 [
+       0 => Array &1 [
+           'day' => 2,
+  +        'stops' => Array &2 [],
+           'title' => 'ES day',
+  -        'stops' => Array &2 [],
+       ],
+   ]
+
+
+  at tests/Feature/Search/TourDetailTest.php:1114
+    1110▕                 ->assertJsonPath('data.exclusions', $expGeneral['exclusions'] ?? [])
+    1111▕                 ->assertJsonPath('data.meeting_point', $expGeneral['meeting_point'] ?? '')
+    1112▕                 ->assertJsonPath('data.cancellation_policy', $expGeneral['cancellation_policy'] ?? '')
+    1113▕                 ->assertJsonPath('data.important_information', $expGeneral['important_information'] ?? [])
+  ➜ 1114▕                 ->assertJsonPath('data.itinerary', $expItinerary)
+    1115▕                 ->assertJsonMissingPath('data.source_hash')
+    1116▕                 ->assertJsonMissingPath('data.translated_hash')
+    1117▕                 ->assertJsonMissingPath('data.last_error_code')
+    1118▕                 ->assertJsonMissingPath('data.provider_error')
+
+
+  Tests:    1 failed, 2 passed (32 assertions)
+  Duration: 10.26s
+
+
+NUMERIC_EXIT=1

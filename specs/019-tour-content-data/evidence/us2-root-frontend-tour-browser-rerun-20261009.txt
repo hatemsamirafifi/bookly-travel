@@ -1,0 +1,55 @@
+
+> frontend@0.1.0 test:e2e
+> playwright test tests/e2e/tour-detail.spec.ts --project=chromium --project=mobile --reporter=line
+
+
+Running 46 tests using 1 worker
+
+[1A[2K[1/46] [chromium] › tests/e2e/tour-detail.spec.ts:71:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[1A[2K[2/46] [chromium] › tests/e2e/tour-detail.spec.ts:165:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[1A[2K[3/46] [chromium] › tests/e2e/tour-detail.spec.ts:253:7 › Tour Detail Page › tour detail page loads with all sections
+[1A[2K[4/46] [chromium] › tests/e2e/tour-detail.spec.ts:263:7 › Tour Detail Page › image gallery is visible
+[1A[2K[5/46] [chromium] › tests/e2e/tour-detail.spec.ts:270:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[1A[2K[6/46] [chromium] › tests/e2e/tour-detail.spec.ts:286:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[1A[2K[7/46] [chromium] › tests/e2e/tour-detail.spec.ts:300:7 › Tour Detail Page › section navigation links only to rendered sections
+[1A[2K[8/46] [chromium] › tests/e2e/tour-detail.spec.ts:312:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K[9/46] [chromium] › tests/e2e/tour-detail.spec.ts:319:7 › Tour Detail Page › booking CTA is visible
+[1A[2K[10/46] [chromium] › tests/e2e/tour-detail.spec.ts:335:7 › Tour Detail Page › participant selector increments and decrements
+[1A[2K[11/46] [chromium] › tests/e2e/tour-detail.spec.ts:349:7 › Tour Detail Page › shows 404 page for non-existent tour
+[1A[2K[12/46] [chromium] › tests/e2e/tour-detail.spec.ts:356:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K[13/46] [chromium] › tests/e2e/tour-detail.spec.ts:373:7 › Tour Detail Page › about section displays description
+[1A[2K[14/46] [chromium] › tests/e2e/tour-detail.spec.ts:380:7 › Tour Detail Page › tour detail has proper SEO metadata
+[1A[2K[15/46] [chromium] › tests/e2e/tour-detail.spec.ts:402:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[1A[2K[16/46] [chromium] › tests/e2e/tour-detail.spec.ts:402:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[1A[2K[17/46] [chromium] › tests/e2e/tour-detail.spec.ts:402:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[1A[2K[18/46] [chromium] › tests/e2e/tour-detail.spec.ts:414:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[1A[2K[19/46] [chromium] › tests/e2e/tour-detail.spec.ts:426:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[1A[2K[20/46] [chromium] › tests/e2e/tour-detail.spec.ts:447:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K[21/46] [chromium] › tests/e2e/tour-detail.spec.ts:463:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K[22/46] [chromium] › tests/e2e/tour-detail.spec.ts:463:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[1A[2K[23/46] [chromium] › tests/e2e/tour-detail.spec.ts:463:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[1A[2K[24/46] [mobile] › tests/e2e/tour-detail.spec.ts:71:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[1A[2K[25/46] [mobile] › tests/e2e/tour-detail.spec.ts:165:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[1A[2K[26/46] [mobile] › tests/e2e/tour-detail.spec.ts:253:7 › Tour Detail Page › tour detail page loads with all sections
+[1A[2K[27/46] [mobile] › tests/e2e/tour-detail.spec.ts:263:7 › Tour Detail Page › image gallery is visible
+[1A[2K[28/46] [mobile] › tests/e2e/tour-detail.spec.ts:270:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[1A[2K[29/46] [mobile] › tests/e2e/tour-detail.spec.ts:286:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[1A[2K[30/46] [mobile] › tests/e2e/tour-detail.spec.ts:300:7 › Tour Detail Page › section navigation links only to rendered sections
+[1A[2K[31/46] [mobile] › tests/e2e/tour-detail.spec.ts:312:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K[32/46] [mobile] › tests/e2e/tour-detail.spec.ts:319:7 › Tour Detail Page › booking CTA is visible
+[1A[2K[33/46] [mobile] › tests/e2e/tour-detail.spec.ts:335:7 › Tour Detail Page › participant selector increments and decrements
+[1A[2K[34/46] [mobile] › tests/e2e/tour-detail.spec.ts:349:7 › Tour Detail Page › shows 404 page for non-existent tour
+[1A[2K[35/46] [mobile] › tests/e2e/tour-detail.spec.ts:356:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K[36/46] [mobile] › tests/e2e/tour-detail.spec.ts:373:7 › Tour Detail Page › about section displays description
+[1A[2K[37/46] [mobile] › tests/e2e/tour-detail.spec.ts:380:7 › Tour Detail Page › tour detail has proper SEO metadata
+[1A[2K[38/46] [mobile] › tests/e2e/tour-detail.spec.ts:402:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[1A[2K[39/46] [mobile] › tests/e2e/tour-detail.spec.ts:402:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[1A[2K[40/46] [mobile] › tests/e2e/tour-detail.spec.ts:402:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[1A[2K[41/46] [mobile] › tests/e2e/tour-detail.spec.ts:414:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[1A[2K[42/46] [mobile] › tests/e2e/tour-detail.spec.ts:426:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[1A[2K[43/46] [mobile] › tests/e2e/tour-detail.spec.ts:447:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K[44/46] [mobile] › tests/e2e/tour-detail.spec.ts:463:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K[45/46] [mobile] › tests/e2e/tour-detail.spec.ts:463:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[1A[2K[46/46] [mobile] › tests/e2e/tour-detail.spec.ts:463:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[1A[2K  46 passed (56.0s)
+NUMERIC_EXIT=0

@@ -1,0 +1,142 @@
+
+   FAIL  Tests\Feature\Search\PublicOperatorSummaryTest
+  ⨯ it returns the exact allowlisted summary with verified true for an…  5.41s
+  ⨯ it returns nullable description and logo facts without new mandator… 0.38s
+  ✓ it returns null summary for an inactive partner                      0.40s
+  ✓ it returns null summary for an unapproved partner                    0.39s
+  ⨯ it treats a whitespace-only public name as a missing name prerequis… 0.35s
+  ✓ it returns null summary when the partner has no profile              0.42s
+  ✓ it matches every eligibility fixture against the shared exact invar… 0.40s
+  ⨯ it counts only exact eligible tours and their visible/flagged revie… 0.61s
+  ⨯ it scopes ownership to the partner record id, not the user id        0.37s
+  ✓ it issues a bounded query count with eager-loaded availability coll… 0.49s
+
+   FAIL  Tests\Feature\Search\RelatedToursTest
+  ✓ it excludes the current, unpublished and unbookable tours while ran… 0.72s
+  ⨯ it finds valid recommendations beyond more than 32 leading ineligib… 1.79s
+  ⨯ it ranks genuine review stats ahead of stale cached aggregates       0.73s
+  ✓ it breaks rating ties deterministically by review count then stable… 0.71s
+  ✓ it returns the default four cards and fewer real cards without padd… 0.67s
+  ✓ it exposes no public limit parameter for related selection           0.64s
+  ✓ it preserves the TourCard contract with server minor-unit pricing a… 0.43s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest > it returns the e…
+  Failed asserting that null is identical to true.
+
+  at tests/Feature/Search/PublicOperatorSummaryTest.php:122
+    118▕     $response = getJson('/api/public/tours/allowlisted-operator-tour?locale=en')->assertOk()
+    119▕         ->assertJsonPath('data.operator.name', 'Rome Walks')
+    120▕         ->assertJsonPath('data.operator.description', 'Locally operated walks.')
+    121▕         ->assertJsonPath('data.operator.logo_url', 'https://images.example.com/operator.jpg')
+  ➜ 122▕         ->assertJsonPath('data.operator.verified', true)
+    123▕         ->assertJsonPath('data.operator.tour_count', 1)
+    124▕         ->assertJsonPath('data.operator.review_count', 0)
+    125▕         ->assertJsonPath('data.operator.average_rating', null);
+    126▕
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest > it returns nulla…
+  Failed asserting that null is identical to true.
+
+  at tests/Feature/Search/PublicOperatorSummaryTest.php:153
+    149▕     getJson('/api/public/tours/minimal-operator-tour?locale=en')->assertOk()
+    150▕         ->assertJsonPath('data.operator.name', 'Minimal Operator')
+    151▕         ->assertJsonPath('data.operator.description', null)
+    152▕         ->assertJsonPath('data.operator.logo_url', null)
+  ➜ 153▕         ->assertJsonPath('data.operator.verified', true)
+    154▕         ->assertJsonPath('data.operator.tour_count', 1);
+    155▕ });
+    156▕
+    157▕ it('returns null summary for an inactive partner', function () {
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest > it treats a whit…
+  Failed asserting that Array &0 [
+    'name' => '   ',
+    'description' => null,
+    'logo_url' => null,
+    'tour_count' => 1,
+    'review_count' => 0,
+    'average_rating' => null,
+] is identical to null.
+
+  at tests/Feature/Search/PublicOperatorSummaryTest.php:197
+    193▕
+    194▕     // The summary prerequisite is a trimmed public name; whitespace-only
+    195▕     // must not produce a summary or a verification claim.
+    196▕     getJson('/api/public/tours/blank-name-operator-tour?locale=en')->assertOk()
+  ➜ 197▕         ->assertJsonPath('data.operator', null);
+    198▕ });
+    199▕
+    200▕ it('returns null summary when the partner has no profile', function () {
+    201▕     $partner = makePartner();
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest > it counts only e…
+  Failed asserting that null is identical to true.
+
+  at tests/Feature/Search/PublicOperatorSummaryTest.php:295
+    291▕     addOperatorReview($draft, $traveler, 5, 'visible');
+    292▕
+    293▕     // Exact eligible IDs are future + today-only: (5 + 4 + 4) / 3 = 4.33.
+    294▕     getJson('/api/public/tours/aggregate-future?locale=en')->assertOk()
+  ➜ 295▕         ->assertJsonPath('data.operator.verified', true)
+    296▕         ->assertJsonPath('data.operator.tour_count', 2)
+    297▕         ->assertJsonPath('data.operator.review_count', 3)
+    298▕         ->assertJsonPath('data.operator.average_rating', 4.33);
+    299▕
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\PublicOperatorSummaryTest > it scopes owners…
+  Failed asserting that null is identical to true.
+
+  at tests/Feature/Search/PublicOperatorSummaryTest.php:327
+    323▕     addSpecificDateRule($tour, now()->addWeek()->toDateString());
+    324▕
+    325▕     getJson('/api/public/tours/record-scoped-tour?locale=en')->assertOk()
+    326▕         ->assertJsonPath('data.operator.name', 'Record Scoped Operator')
+  ➜ 327▕         ->assertJsonPath('data.operator.verified', true)
+    328▕         ->assertJsonPath('data.operator.tour_count', 1);
+    329▕ });
+    330▕
+    331▕ it('issues a bounded query count with eager-loaded availability collections', function () {
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\RelatedToursTest > it finds valid recommenda…
+  Failed to assert that the response count matched the expected 4
+Failed asserting that actual size 0 matches expected size 4.
+
+  at tests/Feature/Search/RelatedToursTest.php:174
+    170▕         $expected[] = "related-paged-valid-{$i}";
+    171▕     }
+    172▕
+    173▕     $response = getJson('/api/public/tours/related-paged-current?locale=en')->assertOk()
+  ➜ 174▕         ->assertJsonCount(4, 'data.related_tours');
+    175▕
+    176▕     expect($response->json('data.related_tours.*.slug'))->toBe($expected);
+    177▕ });
+    178▕
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\RelatedToursTest > it ranks genuine review s…
+  Failed asserting that two strings are identical.
+  -'related-genuine'
+  +'related-stale-cached'
+
+
+  at tests/Feature/Search/RelatedToursTest.php:203
+    199▕     addGenuineReview($genuine, $traveler, 4);
+    200▕
+    201▕     getJson('/api/public/tours/related-stale-current?locale=en')->assertOk()
+    202▕         ->assertJsonCount(2, 'data.related_tours')
+  ➜ 203▕         ->assertJsonPath('data.related_tours.0.slug', 'related-genuine')
+    204▕         ->assertJsonPath('data.related_tours.0.rating.average', 4.33)
+    205▕         ->assertJsonPath('data.related_tours.0.rating.count', 3)
+    206▕         ->assertJsonPath('data.related_tours.1.slug', 'related-stale-cached');
+    207▕ });
+
+
+  Tests:    7 failed, 10 passed (110 assertions)
+  Duration: 16.83s
+
+NUMERIC_EXIT=1

@@ -1,0 +1,25 @@
+Note: Using configuration file /var/www/html/phpstan.neon.
+ ------ -----------------------------------------------------------------------
+  Line   Partner/Services/TourService.php
+ ------ -----------------------------------------------------------------------
+  334    Call to function is_array() with array<int, string> will always evalu
+         ate to true.
+         🪪  function.alreadyNarrowedType
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+  340    Call to function is_string() with string will always evaluate to
+         true.
+         🪪  function.alreadyNarrowedType
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+  350    Parameter #1 $array (list<non-empty-string>) of array_values is alrea
+         dy a list, call has no effect.
+         🪪  arrayValues.list
+ ------ -----------------------------------------------------------------------
+
+
+ [ERROR] Found 3 errors
+
+NUMERIC_EXIT=1

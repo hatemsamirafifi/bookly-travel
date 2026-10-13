@@ -1,0 +1,19 @@
+
+> frontend@0.1.0 test:e2e
+> playwright test tests/e2e/payment.spec.ts --project=chromium-authed --project=mobile-authed --reporter=line
+
+
+Running 10 tests using 1 worker
+
+[1A[2K[1/10] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/10] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[1A[2K[3/10] [chromium-authed] › tests/e2e/payment.spec.ts:4:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+[1A[2K[4/10] [chromium-authed] › tests/e2e/payment.spec.ts:51:7 › Payment Flow › booking page shows payment section after confirming booking
+[1A[2K[5/10] [chromium-authed] › tests/e2e/payment.spec.ts:59:7 › Payment Flow › participant selector updates price breakdown
+[1A[2K[6/10] [chromium-authed] › tests/e2e/payment.spec.ts:65:7 › Payment Flow › responsive layout at 390px
+[1A[2K[7/10] [mobile-authed] › tests/e2e/payment.spec.ts:4:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+[1A[2K[8/10] [mobile-authed] › tests/e2e/payment.spec.ts:51:7 › Payment Flow › booking page shows payment section after confirming booking
+[1A[2K[9/10] [mobile-authed] › tests/e2e/payment.spec.ts:59:7 › Payment Flow › participant selector updates price breakdown
+[1A[2K[10/10] [mobile-authed] › tests/e2e/payment.spec.ts:65:7 › Payment Flow › responsive layout at 390px
+[1A[2K  10 passed (15.2s)
+NUMERIC_EXIT=0

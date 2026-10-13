@@ -13,8 +13,9 @@ RUN apk add --no-cache \
     sqlite-dev \
     $PHPIZE_DEPS
 
-# Install PHP extensions (added pdo_sqlite for testing)
-RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite bcmath gd zip intl
+# Install PHP extensions (added pdo_sqlite for testing; pcntl so the
+# async Redis queue worker actually enforces the job --timeout=60 via SIGALRM)
+RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite bcmath gd zip intl pcntl
 
 # Install Redis extension
 RUN pecl install redis && docker-php-ext-enable redis
@@ -24,6 +25,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
+
+# Ship application code on the container's Linux filesystem. The primary
+# Compose stack runs this snapshot; rebuilding the image deploys source edits.
+COPY . .
 
 # Create www-data home and set permissions for storage/bootstrap
 RUN mkdir -p /var/www/html/storage/logs \

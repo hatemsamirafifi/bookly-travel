@@ -1,0 +1,12 @@
+
+Running 7 tests using 1 worker
+
+[1/7] [chromium] › tests/e2e/filament-admin.spec.ts:17:7 › Filament Admin Panel › the rendered Livewire script is served by Laravel through the proxy
+[2/7] [chromium] › tests/e2e/filament-admin.spec.ts:29:7 › Filament Admin Panel › unauthenticated /admin redirects to the login page
+[3/7] [chromium] › tests/e2e/filament-admin.spec.ts:35:7 › Filament Admin Panel › unauthenticated tour moderation redirects to the admin login page
+[4/7] [chromium] › tests/e2e/filament-admin.spec.ts:41:7 › Filament Admin Panel › partner credentials cannot enter the admin moderation panel
+[5/7] [chromium] › tests/e2e/filament-admin.spec.ts:51:7 › Filament Admin Panel › admin can sign in and see the dashboard
+[6/7] [chromium] › tests/e2e/filament-admin.spec.ts:69:7 › Filament Admin Panel › wrong password stays on the login page
+[7/7] [chromium] › tests/e2e/filament-admin.spec.ts:79:7 › Filament Admin Panel › admin resources load after login
+  7 passed (31.0s)
+NUMERIC_EXIT=0

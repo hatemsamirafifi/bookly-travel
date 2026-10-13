@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-03",
+  "environment": "Isolated browser Laravel application, read-only Validator probe during foundation rework",
+  "procedure": "Combine sourceRules(false) and nested itineraryRules, attach forbiddenPresentPaths after-validation checks, then validate each input independently",
+  "exit_code": 0,
+  "observed": {
+    "null_title": { "accepted": false, "errors": ["title"] },
+    "null_non_en": { "accepted": false, "errors": ["translations.fr"] },
+    "null_hash": { "accepted": false, "errors": ["source_hash"] },
+    "null_stops": { "accepted": true, "errors": [] },
+    "nested_provider": { "accepted": true, "errors": [] },
+    "top_job": { "accepted": true, "errors": [] }
+  },
+  "inputs": {
+    "null_title": { "title": null },
+    "null_non_en": { "translations": { "fr": null } },
+    "null_hash": { "source_hash": null },
+    "null_stops": { "translations": { "en": { "itinerary": [{ "day": 1, "title": "Day", "stops": null }] } } },
+    "nested_provider": { "translations": { "en": { "provider_body": null } } },
+    "top_job": { "job_state": [] }
+  },
+  "conclusion": "Title, non-EN and hash presence defects corrected in the observed rules; explicit null stops and provider/job state still require contract corrections. These rules remain unwired to the controller until US1."
+}

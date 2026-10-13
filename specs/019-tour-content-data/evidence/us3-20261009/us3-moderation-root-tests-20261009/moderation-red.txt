@@ -1,0 +1,271 @@
+
+   FAIL  Tests\Feature\Admin\TourModerationTest
+  ✓ it publishes a pending tour for an approved partner and writes aud… 60.22s
+  ✓ it blocks publishing when the owning partner is not approved (FR-00… 1.68s
+  ✓ it requires English source at approval but not Spanish or Italian    0.40s
+  ✓ it rejects a pending tour with a reason and writes audit             0.75s
+  ✓ it unpublishes a published tour and writes audit                     0.35s
+  ✓ it prevents rejecting a tour that is not in a rejectable state       0.70s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 4.60s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.80s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.31s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.62s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.42s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.34s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.57s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.52s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.41s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.40s
+  ✓ it T036 submits via the scoped TourService when the English source…  0.50s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 1.50s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.48s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.38s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.38s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.56s
+  ⨯ it T036 requires English in the scoped TourService submit path with… 0.29s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.34s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.27s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.25s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.40s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.31s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.24s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.27s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.26s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.29s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.27s
+  ✓ it T036 keeps submit owner scoping with cross-partner and unknown i… 0.34s
+
+   FAIL  Tests\Feature\Admin\Filament\TourResourceTest
+  ✓ it lists tour records in the Filament table                         42.20s
+  ✓ it shows the English source and derived statuses separately on the…  6.05s
+  ✓ it denies a traveler and an admin without manage-tours access to mo… 2.04s
+  ✓ it publishes a tour via the Filament publish action and writes audi… 2.37s
+  ✓ it rejects a tour via the Filament reject action with a reason       1.80s
+  ✓ it bulk-publishes selected tours and writes an audit per item        1.39s
+  ✓ it bulk-rejects selected tours with a shared reason and writes an a… 1.29s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.99s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 1.42s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 1.04s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 1.12s
+  ⨯ it T036 refuses the Filament publish action when the English source… 2.27s
+  ⨯ it T036 refuses the Filament publish action when the English source… 1.01s
+  ⨯ it T036 refuses the Filament publish action when the English source… 0.73s
+  ⨯ it T036 refuses the Filament publish action when the English source… 0.83s
+  ⨯ it T036 refuses the Filament publish action when the English source… 0.81s
+  ⨯ it T036 refuses the Filament publish action when the English source… 0.75s
+  ✓ it T036 keeps publish authorization tied to manage-tours on the rea… 0.30s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\TourModerationTest > it T036 requires English…
+  Exception "Symfony\Component\HttpKernel\Exception\HttpException" not thrown.
+
+  at tests/Feature/Admin/TourModerationTest.php:306
+    302▕     $partner = makePartner('approved');
+    303▕     $tour = t036ModSeedTour($partner, 'draft');
+    304▕     t036ModEnglishCase($tour, $case);
+    305▕
+  ➜ 306▕     expect(fn () => app(TourService::class)->submitForReview($tour->fresh()))->toThrow(HttpException::class);
+    307▕
+    308▕     expect(Tour::findOrFail($tour->id)->status)->toBe('draft')
+    309▕         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
+    310▕ })->with([
+
+  1   tests/Feature/Admin/TourModerationTest.php:306
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\Filament\TourResourceTest > i…  ErrorException
+  Attempt to read property "mountedTableActions" on null
+
+  at vendor/filament/tables/src/Testing/TestsActions.php:142
+    138▕             if (store($this->instance())->has('redirect')) {
+    139▕                 return $this;
+    140▕             }
+    141▕
+  ➜ 142▕             if (! count($this->instance()->mountedTableActions)) {
+    143▕                 $this->assertDispatched('close-modal', id: "{$this->instance()->getId()}-table-action");
+    144▕             }
+    145▕
+    146▕             return $this;
+
+      [2m+5 vendor frames [22m
+  6   tests/Feature/Admin/Filament/TourResourceTest.php:275
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\Filament\TourResourceTest > i…  ErrorException
+  Attempt to read property "mountedTableActions" on null
+
+  at vendor/filament/tables/src/Testing/TestsActions.php:142
+    138▕             if (store($this->instance())->has('redirect')) {
+    139▕                 return $this;
+    140▕             }
+    141▕
+  ➜ 142▕             if (! count($this->instance()->mountedTableActions)) {
+    143▕                 $this->assertDispatched('close-modal', id: "{$this->instance()->getId()}-table-action");
+    144▕             }
+    145▕
+    146▕             return $this;
+
+      [2m+5 vendor frames [22m
+  6   tests/Feature/Admin/Filament/TourResourceTest.php:275
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\Filament\TourResourceTest > i…  ErrorException
+  Attempt to read property "mountedTableActions" on null
+
+  at vendor/filament/tables/src/Testing/TestsActions.php:142
+    138▕             if (store($this->instance())->has('redirect')) {
+    139▕                 return $this;
+    140▕             }
+    141▕
+  ➜ 142▕             if (! count($this->instance()->mountedTableActions)) {
+    143▕                 $this->assertDispatched('close-modal', id: "{$this->instance()->getId()}-table-action");
+    144▕             }
+    145▕
+    146▕             return $this;
+
+      [2m+5 vendor frames [22m
+  6   tests/Feature/Admin/Filament/TourResourceTest.php:275
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\Filament\TourResourceTest > i…  ErrorException
+  Attempt to read property "mountedTableActions" on null
+
+  at vendor/filament/tables/src/Testing/TestsActions.php:142
+    138▕             if (store($this->instance())->has('redirect')) {
+    139▕                 return $this;
+    140▕             }
+    141▕
+  ➜ 142▕             if (! count($this->instance()->mountedTableActions)) {
+    143▕                 $this->assertDispatched('close-modal', id: "{$this->instance()->getId()}-table-action");
+    144▕             }
+    145▕
+    146▕             return $this;
+
+      [2m+5 vendor frames [22m
+  6   tests/Feature/Admin/Filament/TourResourceTest.php:275
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\Filament\TourResourceTest > i…  ErrorException
+  Attempt to read property "mountedTableActions" on null
+
+  at vendor/filament/tables/src/Testing/TestsActions.php:142
+    138▕             if (store($this->instance())->has('redirect')) {
+    139▕                 return $this;
+    140▕             }
+    141▕
+  ➜ 142▕             if (! count($this->instance()->mountedTableActions)) {
+    143▕                 $this->assertDispatched('close-modal', id: "{$this->instance()->getId()}-table-action");
+    144▕             }
+    145▕
+    146▕             return $this;
+
+      [2m+5 vendor frames [22m
+  6   tests/Feature/Admin/Filament/TourResourceTest.php:275
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Admin\Filament\TourResourceTest > i…  ErrorException
+  Attempt to read property "mountedTableActions" on null
+
+  at vendor/filament/tables/src/Testing/TestsActions.php:142
+    138▕             if (store($this->instance())->has('redirect')) {
+    139▕                 return $this;
+    140▕             }
+    141▕
+  ➜ 142▕             if (! count($this->instance()->mountedTableActions)) {
+    143▕                 $this->assertDispatched('close-modal', id: "{$this->instance()->getId()}-table-action");
+    144▕             }
+    145▕
+    146▕             return $this;
+
+      [2m+5 vendor frames [22m
+  6   tests/Feature/Admin/Filament/TourResourceTest.php:275
+
+
+  Tests:    12 failed, 40 passed (233 assertions)
+  Duration: 153.37s
+
+NUMERIC_EXIT=2

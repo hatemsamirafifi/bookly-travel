@@ -1,0 +1,425 @@
+
+   FAIL  Tests\Feature\Partner\TourItineraryAdoptionTest
+  ⨯ it adopts positional valid legacy strings to a day sequence and re… 14.97s
+  ⨯ it preserves populated EN arrays including intentional [] across ap… 0.96s
+  ⨯ it reports missing EN without creating rows                          0.50s
+  ⨯ it normalizes malformed, partially invalid, and empty legacy record… 0.28s
+  ⨯ it rejects invalid structured days as a whole while allowing omitte… 0.45s
+  ⨯ it adopts exact boundary values: day 30, title 160, description 200… 0.28s
+  ⨯ it dry-run writes absolutely nothing: no content, state, or queue c… 0.61s
+  ⨯ it rejects non-strict resume cursors with ('-1')                     0.42s
+  ⨯ it rejects non-strict resume cursors with ('abc')                    0.71s
+  ⨯ it rejects non-strict resume cursors with ('1.5')                    0.98s
+  ⨯ it rejects non-strict resume cursors with ('')                       0.21s
+  ⨯ it rejects non-strict resume cursors with ('99999999999999999999999… 0.75s
+  ⨯ it rejects non-strict resume cursors with ('9223372036854775808')    0.34s
+  ⨯ it rejects limits outside the strict 1-500 range with ('0')          0.18s
+  ⨯ it rejects limits outside the strict 1-500 range with ('501')        3.30s
+  ⨯ it rejects limits outside the strict 1-500 range with ('abc')        0.72s
+  ⨯ it rejects limits outside the strict 1-500 range with ('-5')         0.18s
+  ⨯ it rejects limits outside the strict 1-500 range with ('10.5')       0.18s
+  ⨯ it rejects limits outside the strict 1-500 range with ('')           0.16s
+  ⨯ it pages ID-ordered bounded runs with counts and a resume cursor     1.12s
+  ⨯ it a concurrent source edit wins over adoption while adopted days s… 5.48s
+  ⨯ it an adopted source stays committed when translation dispatch fail… 0.57s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:139
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:179
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:206
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:241
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:273
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:304
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:329
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:353
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:353
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:353
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:353
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:353
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:353
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:376
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:376
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:376
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:376
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:376
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:376
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:398
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:462
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourItineraryAdop…  CommandNotFoundException
+  The command "tours:adopt-itineraries" does not exist.
+
+  at vendor/laravel/framework/src/Illuminate/Console/Application.php:163
+    159▕     {
+    160▕         [$command, $input] = $this->parseCommand($command, $parameters);
+    161▕
+    162▕         if (! $this->has($command)) {
+  ➜ 163▕             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
+    164▕         }
+    165▕
+    166▕         return $this->run(
+    167▕             $input, $this->lastOutput = $outputBuffer ?: new BufferedOutput
+
+      +3 vendor frames
+  4   tests/Feature/Partner/TourItineraryAdoptionTest.php:515
+
+
+  Tests:    22 failed (51 assertions)
+  Duration: 35.74s
+
+NUMERIC_EXIT=2

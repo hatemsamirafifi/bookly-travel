@@ -1,0 +1,5 @@
+docker exec -w /app bookly-spec019-browser-nextjs-1 npm test -- --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t "summary flag"
+
+Error response from daemon: container e5e398b0524cb46f3423948885e2c833157fed3dc6489fd9fede25ce64d5bd8a is not running
+
+NUMERIC_EXIT=1

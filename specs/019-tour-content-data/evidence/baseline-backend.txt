@@ -1,0 +1,74 @@
+
+   PASS  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates a tour with valid data                                   33.38s  
+  ✓ it persists difficulty and ordered media with the selected cover on… 2.58s  
+  ✓ it persists the structured English itinerary from partner creation   1.42s  
+  ✓ it rejects malformed structured itinerary on create and update       1.97s  
+  ✓ it round-trips media reordering and cover changes on partner update  1.47s  
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 3.20s  
+  ✓ it stores guide-language codes independently of content translation… 0.78s  
+  ✓ it keeps the partner content read contract while exposing safe deri… 0.71s  
+  ✓ it rejects language names where stable guide-language codes are req… 4.57s  
+  ✓ it updates guide metadata and English itinerary without conflating…  1.71s  
+  ✓ it returns 422 for invalid data with missing required fields         0.62s  
+  ✓ it returns 401 for unauthenticated requests                          0.78s  
+  ✓ it returns 404 for non-partner users                                 0.96s  
+  ✓ it scopes tour to the authenticated partner                          1.47s  
+
+   PASS  Tests\Feature\Partner\TourDraftTest
+  ✓ it creates a draft via save endpoint                                 2.60s  
+  ✓ it returns the most recent draft via latest endpoint                 0.96s  
+  ✓ it persists draft data correctly via auto-save                       0.90s  
+  ✓ it returns 404 for non-existent draft on latest endpoint             0.75s  
+  ✓ it returns 404 for tour belonging to another partner                 0.85s  
+
+   PASS  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide c… 0.81s  
+  ✓ it marks derived translations stale only when English source change… 1.26s  
+  ✓ it requeues derived content when the English description changes wi… 0.71s  
+  ✓ it clears optional English content and requeues derived translation… 0.73s  
+  ✓ it translates traveler-facing itinerary and information while retai… 0.98s  
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 1.81s  
+  ✓ it accepts only the latest English revision when an older translati… 1.21s  
+  ✓ it schedules a fresh search projection after a derived translation…  0.65s  
+  ✓ it serves a visible English fallback until generated content is rea… 1.30s  
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.84s  
+  ✓ it uses backend-only Gemini structured output and rejects transient… 2.89s  
+  ✓ it retries only transient Gemini failures                            0.61s  
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   0.84s  
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.75s  
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 1.08s  
+  ✓ it returns only approved public operator fields and visible-review…  1.83s  
+  ✓ it omits operator identity when its partner is not approved          1.35s  
+  ✓ it ranks only published bookable related tours by destination then…  2.16s  
+  ✓ it returns 404 for non-existent slug                                 1.67s  
+  ✓ it returns 404 for draft tour                                        0.59s  
+  ✓ it returns 404 for rejected tour                                     0.79s  
+  ✓ it returns 410 for an archived tour that was previously published    0.58s  
+  ✓ it returns 404 for an archived tour that was never published         0.72s  
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.78s  
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.73s  
+  ✓ it serves a fully bookable published tour as available (F2)          0.62s  
+  ✓ it returns content in the requested locale                           0.76s  
+  ✓ it keeps guide languages separate from localized content and itiner… 1.35s  
+  ✓ it marks an English itinerary fallback when only that field lacks l… 1.54s  
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.75s  
+  ✓ it falls back to English when requested locale is unavailable        0.81s  
+  ✓ it validates locale parameter is required                            0.57s  
+  ✓ it includes SEO metadata in response                                 2.24s  
+  ✓ it computes the review distribution from visible reviews (L4)        1.70s  
+  ✓ it excludes hidden reviews from the distribution (L4)                1.05s  
+
+   PASS  Tests\Feature\Admin\TourModerationTest
+  ✓ it publishes a pending tour for an approved partner and writes audi… 3.39s  
+  ✓ it blocks publishing when the owning partner is not approved (FR-00… 0.65s  
+  ✓ it requires English source at approval but not Spanish or Italian    0.74s  
+  ✓ it rejects a pending tour with a reason and writes audit             0.85s  
+  ✓ it unpublishes a published tour and writes audit                     1.13s  
+  ✓ it prevents rejecting a tour that is not in a rejectable state       0.68s  
+
+  Tests:    60 passed (332 assertions)
+  Duration: 114.69s
+

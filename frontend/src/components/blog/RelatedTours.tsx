@@ -1,5 +1,3 @@
-'use client';
-
 import type { TourCard as TourCardType } from '@/lib/api/types';
 import TourCard from '@/components/search/TourCard';
 import { useTranslations } from 'next-intl';

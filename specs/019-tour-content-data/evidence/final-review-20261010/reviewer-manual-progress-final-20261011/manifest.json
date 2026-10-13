@@ -1,0 +1,332 @@
+{
+  "observed_at": "2026-10-10T21:52:01.056Z",
+  "production": true,
+  "base_url": "http://nginx",
+  "observations": [
+    {
+      "locale": "en",
+      "width": 390,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "en",
+      "width": 1024,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "es",
+      "width": 390,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "es",
+      "width": 768,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "es",
+      "width": 1024,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "es",
+      "width": 1440,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "it",
+      "width": 390,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "it",
+      "width": 768,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "it",
+      "width": 1024,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    },
+    {
+      "locale": "it",
+      "width": 1440,
+      "actual_partner_page": true,
+      "validation_announcement_and_focus": true,
+      "reduced_motion": {
+        "scroll": "auto",
+        "matched": true,
+        "overflow": false,
+        "animation": "1e-05s",
+        "transition": "1e-05s",
+        "progress_circles_visible": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "controlled_write_states": [
+        422,
+        403,
+        201
+      ],
+      "actual_adopted_ssr": true,
+      "actual_database_write": false
+    }
+  ],
+  "scope": "Read-only real SSR plus explicitly controlled browser POST responses; no API/database write, no live provider"
+}

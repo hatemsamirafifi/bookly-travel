@@ -1,0 +1,9 @@
+
+  .......✓✓
+
+  ──────────────────────────────────────────────────────────────────── Laravel
+    FIXED   .................................... 9 files, 2 style issues fixed
+  ✓ tests/Feature/Partner/TourCreateTest.php line_ending, no_extra_blank_line…
+  ✓ tests/Feature/Search/TourDetailTest.php method_chaining_indentation, no_e…
+
+NUMERIC_EXIT=0

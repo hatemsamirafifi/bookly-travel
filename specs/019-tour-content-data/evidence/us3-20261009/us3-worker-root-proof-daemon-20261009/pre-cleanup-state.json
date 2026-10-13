@@ -1,0 +1,20 @@
+{
+    "success": {
+        "states": {
+            "es": "ready",
+            "it": "ready"
+        },
+        "current_es": true,
+        "current_it": true,
+        "queue_size": 0
+    },
+    "timeout": {
+        "states": {
+            "es": "pending",
+            "it": "pending"
+        },
+        "current_es": false,
+        "current_it": false,
+        "queue_size": 1
+    }
+}

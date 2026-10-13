@@ -1,0 +1,22 @@
+{
+  "started_at": "2026-10-09T15:52:19.1513975+00:00",
+  "finished_at": "2026-10-09T15:52:52.8256846+00:00",
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Partner/TourTranslationProviderTest.php"
+  ],
+  "exit_code": 1,
+  "scope": "Independent tests-first red before production changes; root added missing list/type/Unicode/boundary cases",
+  "accepted": false
+}

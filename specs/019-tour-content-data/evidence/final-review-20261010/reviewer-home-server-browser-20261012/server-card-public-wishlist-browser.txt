@@ -1,0 +1,153 @@
+
+Running 148 tests using 1 worker
+
+[1/148] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/148] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/148] [a11y] › tests/e2e/a11y/search-a11y.spec.ts:4:5 › search page should not have accessibility violations
+[4/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › en tour detail with loaded reviews should not have accessibility violations
+[5/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › es tour detail with loaded reviews should not have accessibility violations
+[6/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › it tour detail with loaded reviews should not have accessibility violations
+[7/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:27:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+[8/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:39:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+[9/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:48:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+[10/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:60:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+[11/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:98:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+[12/148] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:128:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+[13/148] [chromium] › tests/e2e/homepage.spec.ts:12:7 › Homepage › hero renders with search fields
+[14/148] [chromium] › tests/e2e/homepage.spec.ts:19:7 › Homepage › categories are visible
+[15/148] [chromium] › tests/e2e/homepage.spec.ts:27:7 › Homepage › featured tours are visible
+[16/148] [chromium] › tests/e2e/homepage.spec.ts:36:7 › Homepage › locale switching works
+[17/148] [chromium] › tests/e2e/homepage.spec.ts:43:7 › Homepage › responsive layout at 390px
+[18/148] [chromium] › tests/e2e/homepage.spec.ts:50:7 › Homepage › homepage search reaches results and browser Back restores discovery
+[19/148] [chromium] › tests/e2e/homepage.spec.ts:62:7 › Homepage › Spanish and Italian discovery headings use their locale
+[20/148] [chromium] › tests/e2e/homepage.spec.ts:74:7 › Homepage › partner invitation stays secondary and links to the public registration route
+[21/148] [chromium] › tests/e2e/search.spec.ts:17:7 › Search Page › search bar navigates to results page
+[22/148] [chromium] › tests/e2e/search.spec.ts:29:7 › Search Page › displays search results with tour cards
+[23/148] [chromium] › tests/e2e/search.spec.ts:43:7 › Search Page › shows empty state when no results
+[24/148] [chromium] › tests/e2e/search.spec.ts:52:7 › Search Page › invalid search criteria show a recoverable error without a fabricated result count
+[25/148] [chromium] › tests/e2e/search.spec.ts:59:7 › Search Page › announces loading while a client-side search navigation is pending
+[26/148] [chromium] › tests/e2e/search.spec.ts:72:7 › Search Page › pagination controls are visible when multiple pages exist
+[27/148] [chromium] › tests/e2e/search.spec.ts:85:7 › Search Page › previous button is disabled on first page
+[28/148] [chromium] › tests/e2e/search.spec.ts:94:7 › Search Page › clicking a tour card navigates to tour detail
+[29/148] [chromium] › tests/e2e/search.spec.ts:104:7 › Search Page › search page has proper page title
+[30/148] [chromium] › tests/e2e/search.spec.ts:109:7 › Search Page › search works in Spanish locale
+[31/148] [chromium] › tests/e2e/search.spec.ts:120:7 › Search Page › search works in Italian locale
+[32/148] [chromium] › tests/e2e/search.spec.ts:133:7 › Search Page › filter panel is visible on search page
+[33/148] [chromium] › tests/e2e/search.spec.ts:144:7 › Search Page › sort dropdown is visible on search page
+[34/148] [chromium] › tests/e2e/search.spec.ts:149:7 › Search Page › selecting sort option updates URL
+[35/148] [chromium] › tests/e2e/search.spec.ts:155:7 › Search Page › sort preserves query and browser Back restores the previous criteria
+[36/148] [chromium] › tests/e2e/search.spec.ts:164:7 › Search Page › clearing filters retains the search term
+[37/148] [chromium] › tests/e2e/search.spec.ts:171:7 › Search Page › applying category filter updates URL and results
+[38/148] [chromium] › tests/e2e/search.spec.ts:181:7 › Search Page › entering price range filter updates URL
+[39/148] [chromium] › tests/e2e/search.spec.ts:203:7 › Search Page › clear all link appears when filters are active
+[40/148] [chromium] › tests/e2e/search.spec.ts:214:7 › Search Page › filter sections are collapsible
+[41/148] [chromium] › tests/e2e/search.spec.ts:226:7 › Search Page › duration filter options are selectable
+[42/148] [chromium] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to mobile viewport (375px) without horizontal scroll
+[43/148] [chromium] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on mobile viewport
+[44/148] [chromium] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to tablet viewport (768px) without horizontal scroll
+[45/148] [chromium] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on tablet viewport
+[46/148] [chromium] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to desktop viewport (1280px) without horizontal scroll
+[47/148] [chromium] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on desktop viewport
+[48/148] [chromium] › tests/e2e/search.spec.ts:274:7 › Search Page › filter panel collapses on mobile viewport
+[49/148] [chromium] › tests/e2e/search.spec.ts:295:7 › Search Page › navigation switches to hamburger menu on mobile
+[50/148] [chromium] › tests/e2e/tour-detail.spec.ts:80:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[51/148] [chromium] › tests/e2e/tour-detail.spec.ts:131:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[52/148] [chromium] › tests/e2e/tour-detail.spec.ts:228:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[53/148] [chromium] › tests/e2e/tour-detail.spec.ts:319:7 › Tour Detail Page › tour detail page loads with all sections
+[54/148] [chromium] › tests/e2e/tour-detail.spec.ts:329:7 › Tour Detail Page › image gallery is visible
+[55/148] [chromium] › tests/e2e/tour-detail.spec.ts:336:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[56/148] [chromium] › tests/e2e/tour-detail.spec.ts:352:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[57/148] [chromium] › tests/e2e/tour-detail.spec.ts:366:7 › Tour Detail Page › section navigation links only to rendered sections
+[58/148] [chromium] › tests/e2e/tour-detail.spec.ts:378:7 › Tour Detail Page › availability calendar shows available dates
+[59/148] [chromium] › tests/e2e/tour-detail.spec.ts:385:7 › Tour Detail Page › booking CTA is visible
+[60/148] [chromium] › tests/e2e/tour-detail.spec.ts:401:7 › Tour Detail Page › participant selector increments and decrements
+[61/148] [chromium] › tests/e2e/tour-detail.spec.ts:415:7 › Tour Detail Page › shows 404 page for non-existent tour
+[62/148] [chromium] › tests/e2e/tour-detail.spec.ts:422:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[63/148] [chromium] › tests/e2e/tour-detail.spec.ts:439:7 › Tour Detail Page › about section displays description
+[64/148] [chromium] › tests/e2e/tour-detail.spec.ts:446:7 › Tour Detail Page › tour detail has proper SEO metadata
+[65/148] [chromium] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[66/148] [chromium] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[67/148] [chromium] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[68/148] [chromium] › tests/e2e/tour-detail.spec.ts:480:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[69/148] [chromium] › tests/e2e/tour-detail.spec.ts:492:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[70/148] [chromium] › tests/e2e/tour-detail.spec.ts:516:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[71/148] [chromium] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[72/148] [chromium] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[73/148] [chromium] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[74/148] [chromium] › tests/e2e/tour-detail.spec.ts:554:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[75/148] [chromium] › tests/e2e/tour-detail.spec.ts:721:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[76/148] [mobile] › tests/e2e/homepage.spec.ts:12:7 › Homepage › hero renders with search fields
+[77/148] [mobile] › tests/e2e/homepage.spec.ts:19:7 › Homepage › categories are visible
+[78/148] [mobile] › tests/e2e/homepage.spec.ts:27:7 › Homepage › featured tours are visible
+[79/148] [mobile] › tests/e2e/homepage.spec.ts:36:7 › Homepage › locale switching works
+[80/148] [mobile] › tests/e2e/homepage.spec.ts:43:7 › Homepage › responsive layout at 390px
+[81/148] [mobile] › tests/e2e/homepage.spec.ts:50:7 › Homepage › homepage search reaches results and browser Back restores discovery
+[82/148] [mobile] › tests/e2e/homepage.spec.ts:62:7 › Homepage › Spanish and Italian discovery headings use their locale
+[83/148] [mobile] › tests/e2e/homepage.spec.ts:74:7 › Homepage › partner invitation stays secondary and links to the public registration route
+[84/148] [mobile] › tests/e2e/search.spec.ts:17:7 › Search Page › search bar navigates to results page
+[85/148] [mobile] › tests/e2e/search.spec.ts:29:7 › Search Page › displays search results with tour cards
+[86/148] [mobile] › tests/e2e/search.spec.ts:43:7 › Search Page › shows empty state when no results
+[87/148] [mobile] › tests/e2e/search.spec.ts:52:7 › Search Page › invalid search criteria show a recoverable error without a fabricated result count
+[88/148] [mobile] › tests/e2e/search.spec.ts:59:7 › Search Page › announces loading while a client-side search navigation is pending
+[89/148] [mobile] › tests/e2e/search.spec.ts:72:7 › Search Page › pagination controls are visible when multiple pages exist
+[90/148] [mobile] › tests/e2e/search.spec.ts:85:7 › Search Page › previous button is disabled on first page
+[91/148] [mobile] › tests/e2e/search.spec.ts:94:7 › Search Page › clicking a tour card navigates to tour detail
+[92/148] [mobile] › tests/e2e/search.spec.ts:104:7 › Search Page › search page has proper page title
+[93/148] [mobile] › tests/e2e/search.spec.ts:109:7 › Search Page › search works in Spanish locale
+[94/148] [mobile] › tests/e2e/search.spec.ts:120:7 › Search Page › search works in Italian locale
+[95/148] [mobile] › tests/e2e/search.spec.ts:133:7 › Search Page › filter panel is visible on search page
+[96/148] [mobile] › tests/e2e/search.spec.ts:144:7 › Search Page › sort dropdown is visible on search page
+[97/148] [mobile] › tests/e2e/search.spec.ts:149:7 › Search Page › selecting sort option updates URL
+[98/148] [mobile] › tests/e2e/search.spec.ts:155:7 › Search Page › sort preserves query and browser Back restores the previous criteria
+[99/148] [mobile] › tests/e2e/search.spec.ts:164:7 › Search Page › clearing filters retains the search term
+[100/148] [mobile] › tests/e2e/search.spec.ts:171:7 › Search Page › applying category filter updates URL and results
+[101/148] [mobile] › tests/e2e/search.spec.ts:181:7 › Search Page › entering price range filter updates URL
+[102/148] [mobile] › tests/e2e/search.spec.ts:203:7 › Search Page › clear all link appears when filters are active
+[103/148] [mobile] › tests/e2e/search.spec.ts:214:7 › Search Page › filter sections are collapsible
+[104/148] [mobile] › tests/e2e/search.spec.ts:226:7 › Search Page › duration filter options are selectable
+[105/148] [mobile] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to mobile viewport (375px) without horizontal scroll
+[106/148] [mobile] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on mobile viewport
+[107/148] [mobile] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to tablet viewport (768px) without horizontal scroll
+[108/148] [mobile] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on tablet viewport
+[109/148] [mobile] › tests/e2e/search.spec.ts:246:9 › Search Page › search page adapts to desktop viewport (1280px) without horizontal scroll
+[110/148] [mobile] › tests/e2e/search.spec.ts:258:9 › Search Page › tour cards reflow correctly on desktop viewport
+[111/148] [mobile] › tests/e2e/search.spec.ts:274:7 › Search Page › filter panel collapses on mobile viewport
+[112/148] [mobile] › tests/e2e/search.spec.ts:295:7 › Search Page › navigation switches to hamburger menu on mobile
+[113/148] [mobile] › tests/e2e/tour-detail.spec.ts:80:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[114/148] [mobile] › tests/e2e/tour-detail.spec.ts:131:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[115/148] [mobile] › tests/e2e/tour-detail.spec.ts:228:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[116/148] [mobile] › tests/e2e/tour-detail.spec.ts:319:7 › Tour Detail Page › tour detail page loads with all sections
+[117/148] [mobile] › tests/e2e/tour-detail.spec.ts:329:7 › Tour Detail Page › image gallery is visible
+[118/148] [mobile] › tests/e2e/tour-detail.spec.ts:336:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[119/148] [mobile] › tests/e2e/tour-detail.spec.ts:352:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[120/148] [mobile] › tests/e2e/tour-detail.spec.ts:366:7 › Tour Detail Page › section navigation links only to rendered sections
+[121/148] [mobile] › tests/e2e/tour-detail.spec.ts:378:7 › Tour Detail Page › availability calendar shows available dates
+[122/148] [mobile] › tests/e2e/tour-detail.spec.ts:385:7 › Tour Detail Page › booking CTA is visible
+[123/148] [mobile] › tests/e2e/tour-detail.spec.ts:401:7 › Tour Detail Page › participant selector increments and decrements
+[124/148] [mobile] › tests/e2e/tour-detail.spec.ts:415:7 › Tour Detail Page › shows 404 page for non-existent tour
+[125/148] [mobile] › tests/e2e/tour-detail.spec.ts:422:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[126/148] [mobile] › tests/e2e/tour-detail.spec.ts:439:7 › Tour Detail Page › about section displays description
+[127/148] [mobile] › tests/e2e/tour-detail.spec.ts:446:7 › Tour Detail Page › tour detail has proper SEO metadata
+[128/148] [mobile] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[129/148] [mobile] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[130/148] [mobile] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[131/148] [mobile] › tests/e2e/tour-detail.spec.ts:480:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[132/148] [mobile] › tests/e2e/tour-detail.spec.ts:492:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[133/148] [mobile] › tests/e2e/tour-detail.spec.ts:516:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[134/148] [mobile] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[135/148] [mobile] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[136/148] [mobile] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[137/148] [mobile] › tests/e2e/tour-detail.spec.ts:554:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[138/148] [mobile] › tests/e2e/tour-detail.spec.ts:721:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[139/148] [chromium-authed] › tests/e2e/wishlist.spec.ts:9:7 › Wishlist › wishlist page renders
+[140/148] [chromium-authed] › tests/e2e/wishlist.spec.ts:15:7 › Wishlist › wishlist shows empty state or grid
+[141/148] [chromium-authed] › tests/e2e/wishlist.spec.ts:25:7 › Wishlist › tour card wishlist button toggles saved state
+[142/148] [chromium-authed] › tests/e2e/wishlist.spec.ts:46:7 › Wishlist › removing item from wishlist updates grid
+[143/148] [chromium-authed] › tests/e2e/wishlist.spec.ts:82:7 › Wishlist › wishlist item links to tour detail
+[144/148] [mobile-authed] › tests/e2e/wishlist.spec.ts:9:7 › Wishlist › wishlist page renders
+[145/148] [mobile-authed] › tests/e2e/wishlist.spec.ts:15:7 › Wishlist › wishlist shows empty state or grid
+[146/148] [mobile-authed] › tests/e2e/wishlist.spec.ts:25:7 › Wishlist › tour card wishlist button toggles saved state
+[147/148] [mobile-authed] › tests/e2e/wishlist.spec.ts:46:7 › Wishlist › removing item from wishlist updates grid
+[148/148] [mobile-authed] › tests/e2e/wishlist.spec.ts:82:7 › Wishlist › wishlist item links to tour detail
+  148 passed (3.0m)
+NUMERIC_EXIT=0

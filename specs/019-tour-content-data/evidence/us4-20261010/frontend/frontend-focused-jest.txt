@@ -1,0 +1,21 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/lib/validators/__tests__/partner.test.ts src/components/partner/tours/__tests__/ImageUploader.test.tsx src/components/partner/tours/__tests__/TourWizard.test.tsx src/components/partner/tours/__tests__/TourWizard.locale.test.tsx src/components/partner/tours/__tests__/TourContentPreview.test.tsx src/components/tour/__tests__/ImageGallery.test.tsx src/components/tour/__tests__/TourDetail.test.tsx src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx src/lib/api/__tests__/client.test.ts
+
+PASS src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx (61.265 s)
+PASS src/components/partner/tours/__tests__/TourWizard.test.tsx (11.177 s)
+PASS src/lib/validators/__tests__/partner.test.ts (6.296 s)
+PASS src/components/partner/tours/__tests__/ImageUploader.test.tsx
+PASS src/components/tour/__tests__/ImageGallery.test.tsx
+PASS src/components/partner/tours/__tests__/TourWizard.locale.test.tsx
+PASS src/components/tour/__tests__/TourDetail.test.tsx (6.224 s)
+PASS src/components/partner/tours/__tests__/TourContentPreview.test.tsx
+PASS src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx (21.872 s)
+PASS src/lib/api/__tests__/client.test.ts
+
+Test Suites: 10 passed, 10 total
+Tests:       163 passed, 163 total
+Snapshots:   0 total
+Time:        111.527 s
+Ran all test suites within paths "src/lib/validators/__tests__/partner.test.ts", "src/components/partner/tours/__tests__/ImageUploader.test.tsx", "src/components/partner/tours/__tests__/TourWizard.test.tsx", "src/components/partner/tours/__tests__/TourWizard.locale.test.tsx", "src/components/partner/tours/__tests__/TourContentPreview.test.tsx", "src/components/tour/__tests__/ImageGallery.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx", "src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx", "src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx", "src/lib/api/__tests__/client.test.ts".
+NUMERIC_EXIT=0

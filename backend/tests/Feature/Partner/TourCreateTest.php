@@ -1,11 +1,16 @@
 <?php
 
+use App\Domains\Partner\Jobs\GenerateTourTranslationJob;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Schema;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\getJson;
@@ -28,6 +33,36 @@ beforeEach(function () {
 
     $this->token = $this->partnerUser->createToken('test', ['partner'])->plainTextToken;
 });
+
+it('creates distinct stable nonempty links for repeated valid source titles', function (string $title) {
+    $ids = [];
+    $slugs = [];
+    for ($attempt = 0; $attempt < 2; $attempt++) {
+        $created = postJson('/api/partner/tours', [
+            'title' => $title,
+            'description' => str_repeat('A guided visit through historic Florence. ', 4),
+            'category' => 'wine-food',
+            'destination' => 'Florence, Italy',
+            'duration_value' => 3,
+            'duration_unit' => 'hour',
+            'difficulty_level' => 'easy',
+        ], ['Authorization' => 'Bearer ' . $this->token])->assertCreated();
+        $id = $created->json('data.id');
+        $detail = getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+        $slug = $detail->json('data.slug');
+        expect($slug)->toBeString()->not->toBe('');
+        expect($detail->json('data.translations.0.title'))->toBe($title);
+        putJson('/api/partner/tours/' . $id, ['destination' => 'Rome, Italy'], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+        getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk()->assertJsonPath('data.slug', $slug);
+        $ids[] = $id;
+        $slugs[] = $slug;
+    }
+    expect($ids[0])->not->toBe($ids[1]);
+    expect($slugs[0])->not->toBe($slugs[1]);
+})->with([
+    'emoji-only boundary' => [str_repeat("\u{1F30D}", 120)],
+    'repeated readable title' => ['Repeated Florence source tour'],
+]);
 
 it('creates a tour with valid data', function () {
     $response = postJson('/api/partner/tours', [
@@ -326,3 +361,942 @@ it('scopes tour to the authenticated partner', function () {
     expect($tour->partner_id)->toBe($this->partner->id);
     expect($tour->partner_id)->not->toBe($otherPartner->id);
 });
+
+// ---------------------------------------------------------------------------
+// Spec 019 US1 (T010): owned English source round trips, precedence,
+// omission/null/[] semantics, exact boundaries, IDOR, forgery and atomicity.
+// ---------------------------------------------------------------------------
+
+function spec019SourceCreatePayload(array $overrides = []): array
+{
+    $base = [
+        'title' => 'Morning walking tour',
+        'description' => str_repeat('A wonderful tour through Florence. ', 5),
+        'category' => 'wine-food',
+        'destination' => 'Florence, Italy',
+        'duration_value' => 3,
+        'duration_unit' => 'hour',
+        'difficulty_level' => 'easy',
+        'translations' => ['en' => [
+            'title' => 'Morning walking tour',
+            'description' => str_repeat('A wonderful tour through Florence. ', 5),
+            'highlights' => ['Old-town route', 'Local guide'],
+            'inclusions' => ['Live guide', 'Entry tickets'],
+            'exclusions' => ['Lunch'],
+            'meeting_point' => 'In front of the metro exit',
+            'cancellation_policy' => 'Cancel up to 24 hours in advance for a full refund.',
+            'itinerary' => [
+                ['day' => 1, 'title' => 'Old town', 'description' => null, 'stops' => [
+                    ['title' => 'Main square', 'description' => null, 'duration_minutes' => 30],
+                ]],
+                ['day' => 2, 'title' => 'Museums', 'description' => 'Gallery day', 'stops' => []],
+            ],
+            'important_information' => ['Comfortable walking shoes recommended'],
+        ]],
+    ];
+
+    return array_merge($base, $overrides);
+}
+
+it('round-trips all nine English source fields on create and read', function () {
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertCreated();
+
+    $tour = Tour::findOrFail($created->json('data.id'));
+    $en = $tour->translations()->where('locale', 'en')->firstOrFail();
+
+    expect($en->title)->toBe('Morning walking tour');
+    // The global TrimStrings middleware trims stored input; the payload's
+    // trailing space is not preserved.
+    expect($en->description)->toBe(trim(str_repeat('A wonderful tour through Florence. ', 5)));
+    expect($en->highlights)->toBe(['Old-town route', 'Local guide']);
+    expect($en->inclusions)->toBe(['Live guide', 'Entry tickets']);
+    expect($en->exclusions)->toBe(['Lunch']);
+    expect($en->meeting_point)->toBe('In front of the metro exit');
+    expect($en->cancellation_policy)->toBe('Cancel up to 24 hours in advance for a full refund.');
+    expect($en->itinerary)->toEqual([
+        ['day' => 1, 'title' => 'Old town', 'description' => null, 'stops' => [
+            ['title' => 'Main square', 'description' => null, 'duration_minutes' => 30],
+        ]],
+        ['day' => 2, 'title' => 'Museums', 'description' => 'Gallery day', 'stops' => []],
+    ]);
+    expect($en->important_information)->toBe(['Comfortable walking shoes recommended']);
+
+    // Partner read returns the owned translations array including the EN row.
+    getJson('/api/partner/tours/' . $tour->id, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertOk()
+        ->assertJsonPath('data.translations.0.locale', 'en')
+        ->assertJsonPath('data.translations.0.title', 'Morning walking tour')
+        ->assertJsonPath('data.translations.0.meeting_point', 'In front of the metro exit')
+        ->assertJsonPath('data.translations.0.highlights', ['Old-town route', 'Local guide'])
+        ->assertJsonPath('data.translations.0.important_information', ['Comfortable walking shoes recommended']);
+});
+
+it('round-trips a nested English update while preserving omitted fields', function () {
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['meeting_point' => 'New meeting point']],
+    ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->meeting_point)->toBe('New meeting point');
+    expect($en->title)->toBe('Morning walking tour');
+    expect($en->highlights)->toBe(['Old-town route', 'Local guide']);
+    expect($en->itinerary[0]['title'])->toBe('Old town');
+});
+
+it('prefers explicit nested English keys over top-level shorthand', function () {
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload([
+        'title' => 'Shorthand title',
+        'translations' => ['en' => [
+            'title' => 'Nested title',
+            'description' => str_repeat('Nested description wins. ', 5),
+        ]],
+    ]), ['Authorization' => 'Bearer ' . $this->token])->assertCreated();
+
+    $en = Tour::findOrFail($created->json('data.id'))->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->title)->toBe('Nested title');
+
+    // Shorthand fills absent nested keys.
+    $created2 = postJson('/api/partner/tours', [
+        'title' => 'Shorthand only title',
+        'description' => str_repeat('Shorthand only description. ', 5),
+        'category' => 'wine-food',
+        'destination' => 'Florence, Italy',
+        'duration_value' => 3,
+        'duration_unit' => 'hour',
+        'difficulty_level' => 'easy',
+    ], ['Authorization' => 'Bearer ' . $this->token])->assertCreated();
+    $en2 = Tour::findOrFail($created2->json('data.id'))->translations()->where('locale', 'en')->firstOrFail();
+    expect($en2->title)->toBe('Shorthand only title');
+});
+
+it('treats null as clear and empty array as clear while omitted keys preserve values', function () {
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['meeting_point' => null, 'highlights' => []]],
+    ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->meeting_point)->toBeNull();
+    expect($en->highlights)->toBe([]);
+    // Omitted keys preserve their stored values.
+    expect($en->title)->toBe('Morning walking tour');
+    expect($en->inclusions)->toBe(['Live guide', 'Entry tickets']);
+    expect($en->cancellation_policy)->toBe('Cancel up to 24 hours in advance for a full refund.');
+});
+
+it('rejects null titles and over-limit source fields with exact paths', function () {
+    postJson('/api/partner/tours', spec019SourceCreatePayload([
+        'translations' => ['en' => ['title' => null]],
+    ]), ['Authorization' => 'Bearer ' . $this->token])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.title']);
+
+    postJson('/api/partner/tours', spec019SourceCreatePayload([
+        'translations' => ['en' => [
+            'title' => str_repeat('x', 121),
+            'highlights' => array_fill(0, 31, 'ok'),
+            'inclusions' => [str_repeat('x', 501)],
+            'meeting_point' => str_repeat('x', 501),
+            'cancellation_policy' => str_repeat('x', 2001),
+            'important_information' => array_fill(0, 31, 'ok'),
+        ]],
+    ]), ['Authorization' => 'Bearer ' . $this->token])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'translations.en.title',
+            'translations.en.highlights',
+            'translations.en.inclusions.0',
+            'translations.en.meeting_point',
+            'translations.en.cancellation_policy',
+            'translations.en.important_information',
+        ]);
+
+    // Top-level create description minimum is preserved.
+    postJson('/api/partner/tours', [
+        'title' => 'Short description tour',
+        'description' => 'Too short.',
+        'category' => 'wine-food',
+        'destination' => 'Florence, Italy',
+        'duration_value' => 3,
+        'duration_unit' => 'hour',
+        'difficulty_level' => 'easy',
+    ], ['Authorization' => 'Bearer ' . $this->token])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['description']);
+});
+
+it('rejects invalid itinerary boundaries with exact nested paths', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    // 31 days exceeds the 30-day maximum.
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['itinerary' => array_map(
+            fn ($day) => ['day' => $day, 'title' => "Day {$day}", 'stops' => []],
+            range(1, 31)
+        )]],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.itinerary']);
+
+    // 21 stops exceeds the 20-stop maximum.
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['itinerary' => [[
+            'day' => 1, 'title' => 'Crowded day',
+            'stops' => array_map(fn ($i) => ['title' => "Stop {$i}"], range(1, 21)),
+        ]]]],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.itinerary.0.stops']);
+
+    // Out-of-range, fractional, blank and null-stop values fail atomically.
+    $before = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->itinerary;
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['itinerary' => [
+            ['day' => 0, 'title' => 'Day zero', 'stops' => []],
+            ['day' => 31, 'title' => 'Day thirty-one', 'stops' => []],
+            ['day' => 1.5, 'title' => 'Fractional day', 'stops' => []],
+            ['day' => 1, 'title' => '   ', 'stops' => []],
+            ['day' => 2, 'title' => 'Bad stops', 'stops' => [
+                ['title' => ''],
+                ['title' => 'Timed stop', 'duration_minutes' => 0],
+                ['title' => 'Long stop', 'duration_minutes' => 1441],
+                ['title' => 'Fractional stop', 'duration_minutes' => 1.5],
+            ]],
+            ['day' => 3, 'title' => 'Null stops rejected', 'stops' => null],
+        ]]],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'translations.en.itinerary.0.day',
+            'translations.en.itinerary.1.day',
+            'translations.en.itinerary.2.day',
+            'translations.en.itinerary.3.title',
+            'translations.en.itinerary.4.stops.0.title',
+            'translations.en.itinerary.4.stops.1.duration_minutes',
+            'translations.en.itinerary.4.stops.2.duration_minutes',
+            'translations.en.itinerary.4.stops.3.duration_minutes',
+            'translations.en.itinerary.5.stops',
+        ]);
+
+    // No partial itinerary change was accepted.
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->itinerary)->toEqual($before);
+});
+
+it('accepts boundary-valid itineraries with canonical integer day and duration types', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['itinerary' => [
+            ['day' => '1', 'title' => 'Zero stops valid', 'description' => null, 'stops' => []],
+            ['day' => '30', 'title' => str_repeat('x', 160), 'description' => str_repeat('x', 2000), 'stops' => [
+                ['title' => str_repeat('y', 160), 'description' => null, 'duration_minutes' => '1'],
+                ['title' => 'Max duration', 'duration_minutes' => '1440'],
+                ['title' => 'Null duration kept', 'duration_minutes' => null],
+            ]],
+            ['day' => 2, 'title' => 'Repeated day number stays valid', 'stops' => [['title' => 'Stop']]],
+            ['day' => 2, 'title' => 'Second day two keeps order', 'stops' => [['title' => 'Other stop']]],
+        ]]],
+    ], $headers)->assertOk();
+
+    $itinerary = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->itinerary;
+    expect(array_column($itinerary, 'day'))->toBe([1, 30, 2, 2]);
+    // Materialized day/duration values persist as JSON numbers, never digit strings.
+    expect($itinerary[0]['day'])->toBeInt();
+    expect($itinerary[1]['stops'][0]['duration_minutes'])->toBe(1);
+    expect($itinerary[1]['stops'][1]['duration_minutes'])->toBe(1440);
+    expect($itinerary[1]['stops'][2]['duration_minutes'])->toBeNull();
+    // Reopening preserves the accepted order and values.
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.translations.0.itinerary.2.title', 'Repeated day number stays valid')
+        ->assertJsonPath('data.translations.0.itinerary.3.title', 'Second day two keeps order');
+});
+
+it('denies cross-partner updates with 404 and leaves the tour unchanged', function () {
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertCreated();
+    $id = $created->json('data.id');
+
+    $otherUser = User::factory()->partner()->create();
+    $otherPartner = Partner::create([
+        'user_id' => $otherUser->id,
+        'role' => 'partner',
+        'onboarding_status' => 'complete',
+        'is_active' => true,
+    ]);
+    // Partner-record scoping must not compare tour.partner_id to the user id.
+    expect($otherPartner->id)->not->toBe($this->partner->id);
+    expect($otherPartner->user_id)->toBe($otherUser->id);
+    $otherToken = $otherUser->createToken('test', ['partner'])->plainTextToken;
+
+    // The test-process auth guard caches its user across HTTP-helper calls;
+    // reset it so the second Bearer token resolves to the second principal
+    // (in-test artifact only; production resolves per request).
+    auth()->forgetGuards();
+
+    // Principal proof: the second token acts as the second user and maps to
+    // the distinct partner record on writes.
+    $owned = postJson('/api/partner/tours', [
+        'title' => 'Second owner tour',
+        'description' => str_repeat('A second owner tour. ', 5),
+        'category' => 'wine-food',
+        'destination' => 'Siena, Italy',
+        'duration_value' => 2,
+        'duration_unit' => 'hour',
+        'difficulty_level' => 'easy',
+    ], ['Authorization' => 'Bearer ' . $otherToken])->assertCreated();
+    expect(Tour::findOrFail($owned->json('data.id'))->partner_id)->toBe($otherPartner->id);
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Hijacked title']],
+    ], ['Authorization' => 'Bearer ' . $otherToken])->assertNotFound();
+
+    getJson("/api/partner/tours/{$id}", ['Authorization' => 'Bearer ' . $otherToken])->assertNotFound();
+
+    // Cross-owner malformed payloads stay 404, never 422: scoped lookup wins.
+    putJson("/api/partner/tours/{$id}", [
+        'title' => ['not', 'a', 'string'],
+        'translations' => ['en' => ['itinerary' => 'not-an-array', 'source_hash' => 'forged']],
+    ], ['Authorization' => 'Bearer ' . $otherToken])->assertNotFound();
+
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->title)->toBe('Morning walking tour');
+});
+
+it('returns 404 for unknown tours before validating malformed payloads', function () {
+    putJson('/api/partner/tours/987654321', [
+        'title' => ['not', 'a', 'string'],
+        'translations' => ['en' => ['itinerary' => 'not-an-array', 'source_hash' => 'forged']],
+    ], ['Authorization' => 'Bearer ' . $this->token])->assertNotFound();
+
+    expect(Tour::where('id', 987654321)->exists())->toBeFalse();
+});
+
+it('rejects authored locales and platform-owned state with 422 and no writes', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $tourCount = Tour::count();
+
+    postJson('/api/partner/tours', spec019SourceCreatePayload([
+        'translations' => ['es' => ['title' => 'Authored Spanish']],
+    ]), $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.es']);
+    expect(Tour::count())->toBe($tourCount);
+
+    postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'source_hash' => str_repeat('a', 64),
+        'provider_error' => null,
+    ]), $headers)->assertUnprocessable();
+    expect(Tour::count())->toBe($tourCount);
+
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    $before = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Changed', 'provider_body' => null]],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.provider_body']);
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['it' => ['title' => 'Authored Italian']],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.it']);
+
+    $after = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
+    expect($after['title'])->toBe($before['title']);
+    expect($after['updated_at'])->toBe($before['updated_at']);
+});
+
+it('rejects invalid media atomically without partial content changes', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $tourCount = Tour::count();
+
+    postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => 'https://images.example.com/a.jpg', 'is_cover' => true],
+            ['url' => 'https://images.example.com/a.jpg'],
+        ],
+    ]), $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['media.0.url', 'media.1.url']);
+    expect(Tour::count())->toBe($tourCount);
+
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Changed with bad media']],
+        'media' => [
+            ['url' => 'https://images.example.com/a.jpg', 'is_cover' => true],
+            ['url' => 'https://images.example.com/a.jpg'],
+        ],
+    ], $headers)->assertUnprocessable();
+
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->title)->toBe('Morning walking tour');
+    expect(Tour::findOrFail($id)->media()->count())->toBe(0);
+});
+
+it('rejects associative objects for source lists, days and stops with exact paths', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $tourCount = Tour::count();
+
+    // Create: authored JSON objects are not JSON lists.
+    $payload = spec019SourceCreatePayload();
+    $payload['translations'] = ['en' => [
+        'title' => 'Object tour',
+        'description' => str_repeat('An object-shaped tour payload. ', 5),
+        'highlights' => ['primary' => 'Old-town route'],
+    ]];
+    postJson('/api/partner/tours', $payload, $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.highlights']);
+    expect(Tour::count())->toBe($tourCount);
+
+    $payload = spec019SourceCreatePayload();
+    $payload['translations'] = ['en' => [
+        'title' => 'Object tour',
+        'description' => str_repeat('An object-shaped tour payload. ', 5),
+        'itinerary' => ['first' => ['day' => 1, 'title' => 'Day', 'stops' => []]],
+    ]];
+    postJson('/api/partner/tours', $payload, $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.itinerary']);
+    expect(Tour::count())->toBe($tourCount);
+
+    // Shorthand top-level lists obey the same canonical shape.
+    $payload = spec019SourceCreatePayload();
+    $payload['highlights'] = ['primary' => 'Old-town route'];
+    unset($payload['translations']);
+    postJson('/api/partner/tours', $payload, $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['highlights']);
+    expect(Tour::count())->toBe($tourCount);
+
+    // Update: object-shaped stops fail atomically; stored source is untouched.
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    $before = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['itinerary' => [
+            ['day' => 1, 'title' => 'Old town', 'stops' => ['main' => ['title' => 'Stop']]],
+        ]]],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['translations.en.itinerary.0.stops']);
+
+    putJson("/api/partner/tours/{$id}", [
+        'itinerary' => ['first' => ['day' => 1, 'title' => 'Day', 'stops' => []]],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['itinerary']);
+
+    $after = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
+    expect($after)->toEqual($before);
+
+    // Empty lists and zero-stop days remain valid canonical input.
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['highlights' => [], 'itinerary' => [
+            ['day' => 1, 'title' => 'Old town', 'stops' => []],
+        ]]],
+    ], $headers)->assertOk();
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->highlights)->toBe([]);
+    expect($en->itinerary[0]['stops'])->toBe([]);
+});
+
+it('round-trips custom group sizes on create, read and reopen', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'group_size_min' => 2,
+        'group_size_max' => 7,
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.group_size_min', 2)
+        ->assertJsonPath('data.group_size_max', 7);
+
+    // An unrelated source edit reopens with the group sizes intact.
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Unrelated title change']],
+    ], $headers)->assertOk();
+
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.group_size_min', 2)
+        ->assertJsonPath('data.group_size_max', 7)
+        ->assertJsonPath('data.translations.0.title', 'Unrelated title change');
+});
+
+it('rolls back fully persisted source and media when a late write fails', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'group_size_min' => 2,
+        'group_size_max' => 7,
+        'media' => [
+            ['url' => 'https://images.example.com/old-cover.jpg', 'is_cover' => true],
+            ['url' => 'https://images.example.com/old-second.jpg'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    $beforeTour = Tour::findOrFail($id)->getAttributes();
+    $beforeEn = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
+    $beforeMedia = Tour::findOrFail($id)->media()->orderBy('sort_order')->get()->map(
+        fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text'])
+    )->all();
+    $beforeStates = DB::table('tour_translation_states')->where('tour_id', $id)->orderBy('locale')->get()->map(fn ($row) => (array) $row)->all();
+
+    // Reset the queue fake so only dispatches from the failing write count.
+    Queue::fake();
+
+    // Controlled LATE persistence failure: TourService::updateTour writes in
+    // basic -> media -> EN -> states order, all inside the Tour-first lock
+    // transaction. The scoped EN `saved` observer below fires only AFTER the
+    // changed EN row (and the replacement media) are persisted, then throws;
+    // the transaction must undo all of it. TourTranslation defines no other
+    // model listeners, so flushing in `finally` only removes this injection.
+    $arrivals = [];
+    TourTranslation::saved(function (TourTranslation $model) use ($id, &$arrivals) {
+        if ($model->tour_id === $id && $model->locale === 'en') {
+            $arrivals[] = $model->title;
+            throw new RuntimeException('spec019-injected-late-persistence-failure');
+        }
+    });
+
+    $this->withoutExceptionHandling();
+    try {
+        putJson("/api/partner/tours/{$id}", [
+            'destination' => 'Siena, Italy',
+            'group_size_min' => 4,
+            'translations' => ['en' => ['title' => 'Changed late']],
+            'media' => [
+                ['url' => 'https://images.example.com/new-cover.jpg', 'is_cover' => true],
+            ],
+        ]);
+        $this->fail('Expected the injected late persistence failure.');
+    } catch (RuntimeException $e) {
+        expect($e->getMessage())->toBe('spec019-injected-late-persistence-failure');
+    } finally {
+        TourTranslation::flushEventListeners();
+    }
+
+    // The injection arrived exactly once, on the changed EN save.
+    expect($arrivals)->toBe(['Changed late']);
+
+    // Everything is restored: basic fields, EN source, ordered media with
+    // ids/order/cover, and derivative states.
+    expect(Tour::findOrFail($id)->getAttributes())->toBe($beforeTour);
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->getAttributes())->toBe($beforeEn);
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->get()->map(
+        fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text'])
+    )->all())->toBe($beforeMedia);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe('https://images.example.com/old-cover.jpg');
+    expect(DB::table('tour_translation_states')->where('tour_id', $id)->orderBy('locale')->get()->map(fn ($row) => (array) $row)->all())->toBe($beforeStates);
+    // No generation dispatch survives the failed write. (The Queue fake also
+    // records the pre-existing synchronous Tour::saved search-index dispatch
+    // from EventServiceProvider; moving index dispatch after commit is US3
+    // T042 scope, not asserted here.)
+    Queue::assertNotPushed(GenerateTourTranslationJob::class);
+});
+
+it('applies destination, duration, group and category aliases on update and read', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    Category::firstOrCreate(['slug' => 'adventure'], ['name' => 'Adventure']);
+
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'group_size_min' => 2,
+        'group_size_max' => 7,
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'destination' => 'Siena, Italy',
+        'duration_value' => 2,
+        'duration_unit' => 'day',
+        'group_size_min' => 4,
+        'group_size_max' => 8,
+        'category' => 'adventure',
+    ], $headers)->assertOk();
+
+    $tour = Tour::findOrFail($id);
+    expect($tour->location)->toBe('Siena, Italy');
+    expect($tour->duration_minutes)->toBe(2880);
+    expect($tour->group_size_min)->toBe(4);
+    expect($tour->group_size_max)->toBe(8);
+    expect($tour->category_id)->toBe(Category::where('slug', 'adventure')->firstOrFail()->id);
+
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.location', 'Siena, Italy')
+        ->assertJsonPath('data.group_size_min', 4)
+        ->assertJsonPath('data.group_size_max', 8);
+});
+
+it('preserves existing null source fields through unrelated basic saves', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+
+    $payload = spec019SourceCreatePayload();
+    $payload['translations'] = ['en' => [
+        'title' => 'Nulls tour',
+        'description' => str_repeat('A tour with null source fields. ', 5),
+        'meeting_point' => null,
+        'highlights' => null,
+        'itinerary' => null,
+    ]];
+    $created = postJson('/api/partner/tours', $payload, $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->meeting_point)->toBeNull();
+    expect($en->highlights)->toBeNull();
+    expect($en->itinerary)->toBeNull();
+
+    $hash = app(TourTranslationService::class)->sourceHash($en->fresh());
+    $states = DB::table('tour_translation_states')->where('tour_id', $id)->orderBy('locale')->get()->map(fn ($row) => (array) $row)->all();
+
+    // Unrelated basic save carries no source keys at all.
+    putJson("/api/partner/tours/{$id}", ['location' => 'Elsewhere, Italy'], $headers)->assertOk();
+
+    $fresh = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($fresh->meeting_point)->toBeNull();
+    expect($fresh->highlights)->toBeNull();
+    expect($fresh->itinerary)->toBeNull();
+    expect($fresh->title)->toBe('Nulls tour');
+    expect(app(TourTranslationService::class)->sourceHash($fresh))->toBe($hash);
+    expect(DB::table('tour_translation_states')->where('tour_id', $id)->orderBy('locale')->get()->map(fn ($row) => (array) $row)->all())->toEqual($states);
+
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.translations.0.meeting_point', null)
+        ->assertJsonPath('data.location', 'Elsewhere, Italy');
+});
+
+it('keeps a single draft across failed submit and update retries', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    // Missing pricing tiers and cover image: submission refused, no state change.
+    postJson("/api/partner/tours/{$id}/submit", [], $headers)->assertUnprocessable();
+
+    // An update retry touches the SAME tour; resubmission still refused.
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Retried title']],
+    ], $headers)->assertOk();
+    postJson("/api/partner/tours/{$id}/submit", [], $headers)->assertUnprocessable();
+
+    expect(Tour::where('partner_id', $this->partner->id)->count())->toBe(1);
+    expect(Tour::findOrFail($id)->status)->toBe('draft');
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Retried title');
+});
+
+it('refuses to clear required English on published tours', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    Tour::findOrFail($id)->update(['status' => 'published']);
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['description' => null]],
+    ], $headers)->assertUnprocessable();
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => '   ']],
+    ], $headers)->assertUnprocessable();
+
+    $en = Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail();
+    expect($en->title)->toBe('Morning walking tour');
+    expect($en->description)->not->toBeNull();
+});
+
+// ---------------------------------------------------------------------------
+// Spec 019 US4 (T047): truthful difficulty, guide languages and photos.
+// Authoring-only red-first regressions; root must run red before production
+// (T050-T052 implement validation/normalization/writers). Queue stays faked
+// via the file beforeEach; provider key stays blank via the shared test env.
+// ---------------------------------------------------------------------------
+
+it('retains a null legacy difficulty through an unrelated English save without inferring a default (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', spec019SourceCreatePayload(), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    // Legacy nullable state: older tours carry no difficulty at all.
+    Tour::whereKey($id)->update(['difficulty_level' => null]);
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Unrelated title change']],
+    ], $headers)->assertOk();
+
+    // FR-018: no invented value; the new-tour easy default must not leak in.
+    expect(Tour::findOrFail($id)->difficulty_level)->toBeNull();
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.difficulty_level', null)
+        ->assertJsonPath('data.translations.0.title', 'Unrelated title change');
+});
+
+it('round-trips a supported difficulty and rejects an unsupported value atomically (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'difficulty_level' => 'moderate',
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    expect(Tour::findOrFail($id)->difficulty_level)->toBe('moderate');
+
+    putJson("/api/partner/tours/{$id}", ['difficulty_level' => 'challenging'], $headers)->assertOk();
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.difficulty_level', 'challenging');
+
+    putJson("/api/partner/tours/{$id}", [
+        'difficulty_level' => 'brutal',
+        'translations' => ['en' => ['title' => 'Changed with bad difficulty']],
+    ], $headers)->assertUnprocessable()
+        ->assertJsonValidationErrors(['difficulty_level']);
+
+    expect(Tour::findOrFail($id)->difficulty_level)->toBe('challenging');
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+});
+
+it('gives explicit guide_languages precedence over the languages alias, including empty and null (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+
+    // Explicit [] wins over the compatibility alias.
+    $empty = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => [],
+        'languages' => ['de'],
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($empty->json('data.id'))->guideLanguages())->toBe([]);
+
+    // RED until T050: explicit null is the nullable winner, not a missing key.
+    // Today the nullable winner either 422s (not nullable) or falls through
+    // to the alias via `??`; both are wrong per the contract.
+    $nulled = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => null,
+        'languages' => ['de'],
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($nulled->json('data.id'))->guideLanguages())->toBe([]);
+});
+
+it('accepts the languages alias when canonical guide_languages is omitted and normalizes codes (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'languages' => ['EN', 'de', 'es-MX', 'en'],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    // FR-017: case/subtag normalization, stable first-seen order, dedupe.
+    expect(Tour::findOrFail($id)->guideLanguages())->toBe(['en', 'de', 'es-mx']);
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.guide_languages', ['en', 'de', 'es-mx'])
+        ->assertJsonPath('data.languages', ['en', 'de', 'es-mx']);
+
+    // Spoken codes never infer content derivatives.
+    expect(Tour::findOrFail($id)->translations()->pluck('locale')->all())->toBe(['en']);
+
+    // Unsupported code shapes still fail with field-specific paths.
+    putJson("/api/partner/tours/{$id}", ['guide_languages' => ['e']], $headers)
+        ->assertUnprocessable()->assertJsonValidationErrors(['guide_languages.0']);
+    putJson("/api/partner/tours/{$id}", ['guide_languages' => ['engl']], $headers)
+        ->assertUnprocessable()->assertJsonValidationErrors(['guide_languages.0']);
+    expect(Tour::findOrFail($id)->guideLanguages())->toBe(['en', 'de', 'es-mx']);
+});
+
+it('enforces the twenty-code bound for guide languages (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $twenty = array_map(fn ($i) => 'a' . chr(98 + $i), range(0, 19)); // ab..au
+
+    $ok = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => $twenty,
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($ok->json('data.id'))->guideLanguages())->toBe($twenty);
+
+    postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'guide_languages' => [...$twenty, 'av'],
+    ]), $headers)->assertUnprocessable()->assertJsonValidationErrors(['guide_languages']);
+});
+
+it('accepts twenty distinct gallery URLs and rejects the twenty-first (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $urls = fn (int $n) => array_map(
+        fn ($i) => "https://images.example.com/photo-{$i}.jpg",
+        range(0, $n - 1)
+    );
+    $media = fn (int $n) => array_map(
+        fn ($url) => ['url' => $url],
+        $urls($n)
+    );
+
+    $ok = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => $media(20),
+    ]), $headers)->assertCreated();
+    expect(Tour::findOrFail($ok->json('data.id'))->media()->count())->toBe(20);
+
+    postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => $media(21),
+    ]), $headers)->assertUnprocessable()->assertJsonValidationErrors(['media']);
+});
+
+it('rejects an over-limit alt description atomically without partial source or media writes (US4 T047)', function () {
+    // RED until T050: media.*.alt_text has no max:500 rule, so the 501-codepoint
+    // write is silently ignored (200) instead of failing with 422.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'is_cover' => true]],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Changed with bad alt']],
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'alt_text' => str_repeat("\u{00E9}", 501)]],
+    ], $headers)->assertUnprocessable()->assertJsonValidationErrors(['media.0.alt_text']);
+
+    // FR-019: the invalid write changes neither source nor media.
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('url')->all())->toBe(['https://images.example.com/a.jpg']);
+});
+
+it('accepts a 500-codepoint alt and declares the pending alt storage contract (US4 T047)', function () {
+    // The 500-codepoint bound is accepted; the single hasColumn assertion is
+    // the explicit T049 contract red (column not yet migrated). No invalid
+    // column is seeded, so no SQL exception is involved.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $alt = str_repeat("\u{1F30D}", 500);
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'alt_text' => $alt]],
+    ]), $headers)->assertCreated();
+
+    expect(Schema::hasColumn('tour_media', 'alt_text'))->toBeTrue();
+    expect(Tour::findOrFail($created->json('data.id'))->media()->firstOrFail()->alt_text)->toBe($alt);
+});
+
+it('writes cover/gallery types with the flagged cover synchronized to the legacy column (US4 T047)', function () {
+    // RED until T051: the old writer stores every row as type image and drops
+    // alt_text, so the type assertions below fail while order/cover sync pass.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $cover = 'https://images.example.com/flagged-cover.jpg';
+    $second = 'https://images.example.com/side.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => $second, 'is_cover' => false],
+            ['url' => $cover, 'is_cover' => true, 'alt_text' => 'Sunset over the vineyard rows'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    $rows = Tour::findOrFail($id)->media()->orderBy('sort_order')->get();
+    expect($rows->pluck('url')->all())->toBe([$second, $cover]);
+    expect($rows->pluck('type')->all())->toBe(['gallery', 'cover']);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe($cover);
+
+    getJson("/api/partner/tours/{$id}", $headers)->assertOk()
+        ->assertJsonPath('data.cover_image_url', $cover)
+        ->assertJsonPath('data.media.0.url', $second)
+        ->assertJsonPath('data.media.1.url', $cover);
+});
+
+it('defaults the cover to the first valid image when none is flagged (US4 T047)', function () {
+    // RED until T051 on row types; cover fallback itself already holds.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $first = 'https://images.example.com/first.jpg';
+    $next = 'https://images.example.com/next.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => $first], ['url' => $next]],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('type')->all())->toBe(['cover', 'gallery']);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe($first);
+});
+
+it('keeps exact media rows, ids and cover when media is omitted from an update (US4 T047)', function () {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => 'https://images.example.com/keep-a.jpg', 'is_cover' => true, 'alt_text' => 'Sunlight on the old town'],
+            ['url' => 'https://images.example.com/keep-b.jpg'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+    $before = Tour::findOrFail($id)->media()->orderBy('sort_order')->get()
+        ->map(fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text']))->all();
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Unrelated title change']],
+    ], $headers)->assertOk();
+
+    $after = Tour::findOrFail($id)->media()->orderBy('sort_order')->get()
+        ->map(fn ($item) => $item->only(['id', 'tour_id', 'type', 'url', 'sort_order', 'alt_text']))->all();
+    expect($after)->toBe($before);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe('https://images.example.com/keep-a.jpg');
+});
+
+it('retains prior specific alt when a current URL is resent without alt (US4 T047)', function () {
+    // RED until T051 write-through: the old writer ignores alt_text, so the
+    // resent URL carries no retained description.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $url = 'https://images.example.com/terrace.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [
+            ['url' => $url, 'is_cover' => true, 'alt_text' => 'Terrace view over Florence'],
+            ['url' => 'https://images.example.com/other.jpg'],
+        ],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'media' => [
+            ['url' => 'https://images.example.com/other.jpg'],
+            ['url' => $url],
+        ],
+    ], $headers)->assertOk();
+
+    $media = getJson("/api/partner/tours/{$id}", $headers)->assertOk()->json('data.media');
+    $byUrl = array_column($media, null, 'url');
+    expect(array_key_exists('alt_text', $byUrl[$url]))->toBeTrue();
+    expect($byUrl[$url]['alt_text'])->toBe('Terrace view over Florence');
+});
+
+it('clears specific alt on explicit null while keeping the row (US4 T047)', function () {
+    // RED until T051: with no stored alt, the cleared key cannot surface.
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $url = 'https://images.example.com/terrace.jpg';
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => $url, 'is_cover' => true, 'alt_text' => 'Terrace view over Florence']],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'media' => [['url' => $url, 'is_cover' => true, 'alt_text' => null]],
+    ], $headers)->assertOk();
+
+    $media = getJson("/api/partner/tours/{$id}", $headers)->assertOk()->json('data.media');
+    $byUrl = array_column($media, null, 'url');
+    expect($byUrl[$url])->toHaveKey('alt_text');
+    expect($byUrl[$url]['alt_text'])->toBeNull();
+    expect(Tour::findOrFail($id)->media()->count())->toBe(1);
+    expect(Tour::findOrFail($id)->cover_image_url)->toBe($url);
+});
+
+it('rejects an unusable media URL together with a source change atomically (US4 T047)', function (string $invalidUrl) {
+    $headers = ['Authorization' => 'Bearer ' . $this->token];
+    $created = postJson('/api/partner/tours', array_merge(spec019SourceCreatePayload(), [
+        'media' => [['url' => 'https://images.example.com/a.jpg', 'is_cover' => true]],
+    ]), $headers)->assertCreated();
+    $id = $created->json('data.id');
+
+    putJson("/api/partner/tours/{$id}", [
+        'translations' => ['en' => ['title' => 'Changed with bad URL']],
+        'media' => [['url' => $invalidUrl]],
+    ], $headers)->assertUnprocessable()->assertJsonValidationErrors(['media.0.url']);
+
+    expect(Tour::findOrFail($id)->translations()->where('locale', 'en')->firstOrFail()->title)->toBe('Morning walking tour');
+    expect(Tour::findOrFail($id)->media()->orderBy('sort_order')->pluck('url')->all())->toBe(['https://images.example.com/a.jpg']);
+})->with(['malformed' => 'not-a-url', 'non-HTTP scheme' => 'ftp://images.example.com/a.jpg']);

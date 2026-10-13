@@ -1,0 +1,4 @@
+{"at":"2026-10-09T18:33:29+00:00","pid":1,"connection":"redis","attempts":1,"timeout":60,"name":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob"}
+{"at":"2026-10-09T18:33:31+00:00","pid":1,"connection":"sync","attempts":1,"timeout":null,"name":"Laravel\\Scout\\Jobs\\RemoveFromSearch"}
+{"at":"2026-10-09T18:33:31+00:00","pid":1,"connection":"redis","attempts":1,"timeout":60,"name":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob"}
+{"at":"2026-10-09T18:33:31+00:00","pid":1,"connection":"sync","attempts":1,"timeout":null,"name":"Laravel\\Scout\\Jobs\\RemoveFromSearch"}

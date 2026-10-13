@@ -1,0 +1,1 @@
+{"name":"full-pint","started_at":"2026-10-10T19:36:43.3041814+00:00","finished_at":"2026-10-10T19:37:48.3046040+00:00","command":["docker","compose","exec","-T","laravel","vendor/bin/pint","--test"],"exit_code":1}

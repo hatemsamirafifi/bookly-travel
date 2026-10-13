@@ -1,0 +1,3 @@
+{"kind":"success","states":{"es":"ready","it":"ready"},"current_es":true,"current_it":true,"queue_size":0}
+{"kind":"timeout","states":{"es":"pending","it":"pending"},"current_es":false,"current_it":false,"queue_size":0}
+NUMERIC_EXIT=0 EXPECTED_EXIT=0

@@ -1,0 +1,134 @@
+
+Running 72 tests using 1 worker
+
+[1/72] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/72] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/72] [chromium] › tests/e2e/tour-detail.spec.ts:80:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[4/72] [chromium] › tests/e2e/tour-detail.spec.ts:131:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[5/72] [chromium] › tests/e2e/tour-detail.spec.ts:228:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[6/72] [chromium] › tests/e2e/tour-detail.spec.ts:319:7 › Tour Detail Page › tour detail page loads with all sections
+[7/72] [chromium] › tests/e2e/tour-detail.spec.ts:329:7 › Tour Detail Page › image gallery is visible
+[8/72] [chromium] › tests/e2e/tour-detail.spec.ts:336:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[9/72] [chromium] › tests/e2e/tour-detail.spec.ts:352:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[10/72] [chromium] › tests/e2e/tour-detail.spec.ts:366:7 › Tour Detail Page › section navigation links only to rendered sections
+[11/72] [chromium] › tests/e2e/tour-detail.spec.ts:378:7 › Tour Detail Page › availability calendar shows available dates
+[12/72] [chromium] › tests/e2e/tour-detail.spec.ts:385:7 › Tour Detail Page › booking CTA is visible
+[13/72] [chromium] › tests/e2e/tour-detail.spec.ts:401:7 › Tour Detail Page › participant selector increments and decrements
+[14/72] [chromium] › tests/e2e/tour-detail.spec.ts:415:7 › Tour Detail Page › shows 404 page for non-existent tour
+[15/72] [chromium] › tests/e2e/tour-detail.spec.ts:422:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[16/72] [chromium] › tests/e2e/tour-detail.spec.ts:439:7 › Tour Detail Page › about section displays description
+[17/72] [chromium] › tests/e2e/tour-detail.spec.ts:446:7 › Tour Detail Page › tour detail has proper SEO metadata
+[18/72] [chromium] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[19/72] [chromium] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[20/72] [chromium] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[21/72] [chromium] › tests/e2e/tour-detail.spec.ts:480:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[22/72] [chromium] › tests/e2e/tour-detail.spec.ts:492:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[23/72] [chromium] › tests/e2e/tour-detail.spec.ts:516:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[24/72] [chromium] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[25/72] [chromium] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[26/72] [chromium] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[27/72] [chromium] › tests/e2e/tour-detail.spec.ts:554:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[28/72] [chromium] › tests/e2e/tour-detail.spec.ts:721:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[29/72] [mobile] › tests/e2e/tour-detail.spec.ts:80:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[30/72] [mobile] › tests/e2e/tour-detail.spec.ts:131:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[31/72] [mobile] › tests/e2e/tour-detail.spec.ts:228:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[32/72] [mobile] › tests/e2e/tour-detail.spec.ts:319:7 › Tour Detail Page › tour detail page loads with all sections
+[33/72] [mobile] › tests/e2e/tour-detail.spec.ts:329:7 › Tour Detail Page › image gallery is visible
+[34/72] [mobile] › tests/e2e/tour-detail.spec.ts:336:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[35/72] [mobile] › tests/e2e/tour-detail.spec.ts:352:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[36/72] [mobile] › tests/e2e/tour-detail.spec.ts:366:7 › Tour Detail Page › section navigation links only to rendered sections
+[37/72] [mobile] › tests/e2e/tour-detail.spec.ts:378:7 › Tour Detail Page › availability calendar shows available dates
+[38/72] [mobile] › tests/e2e/tour-detail.spec.ts:385:7 › Tour Detail Page › booking CTA is visible
+[39/72] [mobile] › tests/e2e/tour-detail.spec.ts:401:7 › Tour Detail Page › participant selector increments and decrements
+[40/72] [mobile] › tests/e2e/tour-detail.spec.ts:415:7 › Tour Detail Page › shows 404 page for non-existent tour
+[41/72] [mobile] › tests/e2e/tour-detail.spec.ts:422:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[42/72] [mobile] › tests/e2e/tour-detail.spec.ts:439:7 › Tour Detail Page › about section displays description
+[43/72] [mobile] › tests/e2e/tour-detail.spec.ts:446:7 › Tour Detail Page › tour detail has proper SEO metadata
+[44/72] [mobile] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[45/72] [mobile] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[46/72] [mobile] › tests/e2e/tour-detail.spec.ts:468:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[47/72] [mobile] › tests/e2e/tour-detail.spec.ts:480:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[48/72] [mobile] › tests/e2e/tour-detail.spec.ts:492:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[49/72] [mobile] › tests/e2e/tour-detail.spec.ts:516:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[50/72] [mobile] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[51/72] [mobile] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[52/72] [mobile] › tests/e2e/tour-detail.spec.ts:532:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[53/72] [mobile] › tests/e2e/tour-detail.spec.ts:554:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[54/72] [mobile] › tests/e2e/tour-detail.spec.ts:721:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[55/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+[56/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+[57/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+[58/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  1) [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('img', { name: 'US1 full source mv58d9xj', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('img', { name: 'US1 full source mv58d9xj', exact: true }) resolved to 2 elements:
+        1) <img lang="en" width="192" height="128" data-nimg="1" loading="lazy" decoding="async" alt="US1 full source mv58d9xj" class="object-cover rounded-lg border border-gray-200" src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-cover.jpg&w=384&q=75" srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-cover.jpg&w=256&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-cover.jpg&w=384&q=75 2x"/> aka getByRole('img', { name: 'US1 full source mv58d9xj' }).first()
+        2) <img lang="en" width="96" height="80" data-nimg="1" loading="lazy" decoding="async" alt="US1 full source mv58d9xj" class="object-cover rounded-lg border border-gray-200" src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-second.jpg&w=256&q=75" srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-second.jpg&w=96&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-second.jpg&w=256&q=75 2x"/> aka getByRole('img', { name: 'US1 full source mv58d9xj' }).nth(1)
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByRole('img', { name: 'US1 full source mv58d9xj', exact: true })
+
+
+      227 |     await expect(page.getByRole('textbox', { name: 'Day title' }).nth(1)).toHaveValue('Explore');
+      228 |     await expect(page.getByRole('textbox', { name: 'Stop title' }).first()).toHaveValue('Meet the guide');
+    > 229 |     await expect(page.getByRole('img', { name: title, exact: true })).toBeVisible();
+          |                                                                       ^
+      230 |
+      231 |     // Unrelated browser edit save: only the technical location changes.
+      232 |     const unrelatedSavePromise = page.waitForResponse(
+        at /app/tests/e2e/partner/tour-create.spec.ts:229:71
+
+    Error Context: test-results/partner-tour-create-Partne-86630-nd-reopens-persisted-values-chromium-partner/error-context.md
+
+
+[59/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:285:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+[60/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:353:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+[61/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:543:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[62/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:570:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+[63/72] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:580:7 › Partner Tour Edit › should navigate to edit page from tour card
+[64/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+[65/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+[66/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+[67/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  2) [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('img', { name: 'US1 full source mv58dufo', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('img', { name: 'US1 full source mv58dufo', exact: true }) resolved to 2 elements:
+        1) <img lang="en" width="192" height="128" data-nimg="1" loading="lazy" decoding="async" alt="US1 full source mv58dufo" class="object-cover rounded-lg border border-gray-200" src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-cover.jpg&w=384&q=75" srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-cover.jpg&w=256&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-cover.jpg&w=384&q=75 2x"/> aka getByRole('img', { name: 'US1 full source mv58dufo' }).first()
+        2) <img lang="en" width="96" height="80" data-nimg="1" loading="lazy" decoding="async" alt="US1 full source mv58dufo" class="object-cover rounded-lg border border-gray-200" src="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-second.jpg&w=256&q=75" srcset="/_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-second.jpg&w=96&q=75 1x, /_next/image?url=https%3A%2F%2Fcdn.example.com%2Fus1-second.jpg&w=256&q=75 2x"/> aka getByRole('img', { name: 'US1 full source mv58dufo' }).nth(1)
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByRole('img', { name: 'US1 full source mv58dufo', exact: true })
+
+
+      227 |     await expect(page.getByRole('textbox', { name: 'Day title' }).nth(1)).toHaveValue('Explore');
+      228 |     await expect(page.getByRole('textbox', { name: 'Stop title' }).first()).toHaveValue('Meet the guide');
+    > 229 |     await expect(page.getByRole('img', { name: title, exact: true })).toBeVisible();
+          |                                                                       ^
+      230 |
+      231 |     // Unrelated browser edit save: only the technical location changes.
+      232 |     const unrelatedSavePromise = page.waitForResponse(
+        at /app/tests/e2e/partner/tour-create.spec.ts:229:71
+
+    Error Context: test-results/partner-tour-create-Partne-86630-nd-reopens-persisted-values-mobile-partner/error-context.md
+
+
+[68/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:285:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+[69/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:353:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+[70/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:543:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[71/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:570:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+[72/72] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:580:7 › Partner Tour Edit › should navigate to edit page from tour card
+  2 failed
+    [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+    [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  70 passed (2.0m)
+NUMERIC_EXIT=1

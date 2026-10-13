@@ -182,11 +182,20 @@ test.describe('Search Page', () => {
     await page.goto('/en/search');
     await showFilters(page);
 
-    const minInput = page.getByLabel('Minimum price');
+    // Scope the price inputs to the settled, visible filter panel: the modal
+    // dialog on narrow viewports, the complementary sidebar on desktop. An
+    // unscoped page-level getByLabel failed strict mode in CI when a second
+    // matching input was present in the tree (PR29 source run 37161504610).
+    const dialog = page.getByRole('dialog', { name: 'Search filters' });
+    const sidebar = page.getByRole('complementary', { name: 'Search filters' });
+    const panel = (await dialog.isVisible()) ? dialog : sidebar;
+    await expect(panel).toBeVisible();
+
+    const minInput = panel.getByLabel('Minimum price');
     await minInput.fill('1000');
     await expect(page).toHaveURL(/price_min=1000/);
 
-    const maxInput = page.getByLabel('Maximum price');
+    const maxInput = panel.getByLabel('Maximum price');
     await maxInput.fill('5000');
     await expect(page).toHaveURL(/price_max=5000/);
   });

@@ -2,60 +2,17 @@
 
 namespace App\Domains\Partner\Controllers;
 
+use App\Domains\Partner\Requests\StoreTourRequest;
+use App\Domains\Partner\Requests\UpdateTourRequest;
 use App\Domains\Partner\Services\TourService;
-use App\Domains\Partner\Services\TourTranslationService;
-use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TourController
 {
     public function __construct(
         private readonly TourService $service,
-        private readonly TourTranslationService $translationService,
     ) {}
-
-    private function requireEnglishSourceOnly(Request $request): void
-    {
-        $translations = $request->input('translations');
-        if (! is_array($translations)) {
-            return;
-        }
-
-        foreach (array_keys($translations) as $locale) {
-            if ($locale !== 'en') {
-                throw ValidationException::withMessages([
-                    "translations.{$locale}" => 'Partners may edit English source content only.',
-                ]);
-            }
-        }
-    }
-
-    /**
-     * Resolve the category slug from the request payload to a category_id.
-     * Adds the resolved id to the data array under the 'category_id' key.
-     */
-    private function resolveCategoryId(array $data, bool $required): array
-    {
-        if (! array_key_exists('category', $data)) {
-            if ($required && empty($data['category_id'])) {
-                throw new UnprocessableEntityHttpException('The category field is required.');
-            }
-
-            return $data;
-        }
-
-        $category = Category::where('slug', $data['category'])->first();
-        if (! $category) {
-            throw new UnprocessableEntityHttpException('Unknown category: ' . $data['category']);
-        }
-
-        $data['category_id'] = $category->id;
-
-        return $data;
-    }
 
     public function index(Request $request): JsonResponse
     {
@@ -81,147 +38,33 @@ class TourController
     public function show(Request $request, string $id): JsonResponse
     {
         $partnerId = $request->attributes->get('partner_id');
-        $tour = $this->service->getForPartner((int) $id, $partnerId);
 
-        if (! $tour) {
-            abort(404);
-        }
-
-        $data = $tour->load(['translations', 'media', 'pricingTiers', 'availabilityRules', 'availabilityExceptions'])->toArray();
-        $data['translation_statuses'] = [
-            'es' => $this->translationService->publicStatus($tour, 'es'),
-            'it' => $this->translationService->publicStatus($tour, 'it'),
-        ];
-
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $this->service->getOwnedTourDetail((int) $id, $partnerId)]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreTourRequest $request): JsonResponse
     {
-        $this->requireEnglishSourceOnly($request);
         $partnerId = $request->attributes->get('partner_id');
-        $data = $request->validate([
-            'title' => 'required|string|max:120',
-            'description' => 'required|string|min:100|max:5000',
-            'category' => 'required|string|max:50',
-            'destination' => 'required|string|max:255',
-            'duration_value' => 'required|integer|min:1',
-            'duration_unit' => 'required|string|in:hour,day',
-            'difficulty_level' => 'required|string|in:easy,moderate,challenging',
-            'guide_languages' => 'sometimes|array|max:20',
-            'guide_languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
-            'languages' => 'sometimes|array|max:20',
-            'languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
-            'translations' => 'sometimes|array',
-            'translations.*.title' => 'nullable|string|max:120',
-            'translations.*.description' => 'nullable|string|max:5000',
-            'translations.*.itinerary' => 'nullable|array|max:30',
-            'translations.*.itinerary.*.day' => 'required|integer|min:1|max:30',
-            'translations.*.itinerary.*.title' => 'required|string|max:160',
-            'translations.*.itinerary.*.description' => 'nullable|string|max:2000',
-            'translations.*.itinerary.*.stops' => 'nullable|array|max:20',
-            'translations.*.itinerary.*.stops.*.title' => 'required|string|max:160',
-            'translations.*.itinerary.*.stops.*.description' => 'nullable|string|max:2000',
-            'translations.*.itinerary.*.stops.*.duration_minutes' => 'nullable|integer|min:1|max:1440',
-            'itinerary' => 'nullable|array|max:30',
-            'itinerary.*.day' => 'required|integer|min:1|max:30',
-            'itinerary.*.title' => 'required|string|max:160',
-            'itinerary.*.description' => 'nullable|string|max:2000',
-            'itinerary.*.stops' => 'nullable|array|max:20',
-            'itinerary.*.stops.*.title' => 'required|string|max:160',
-            'itinerary.*.stops.*.description' => 'nullable|string|max:2000',
-            'itinerary.*.stops.*.duration_minutes' => 'nullable|integer|min:1|max:1440',
-            'important_information' => 'nullable|array|max:30',
-            'important_information.*' => 'string|max:500',
-            'inclusions' => 'nullable|array',
-            'meeting_point' => 'nullable|string|max:500',
-            'cover_image_url' => 'nullable|string|url|max:2048',
-            'media' => 'sometimes|array|max:20',
-            'media.*.url' => 'required|url|max:2048|distinct',
-            'media.*.is_cover' => 'sometimes|boolean',
-            'price_from' => 'nullable|numeric|min:0',
-            'currency' => 'nullable|string|size:3',
-            'pricing_tiers' => 'nullable|array',
-            'availability_rules' => 'nullable|array',
-            'availability_exceptions' => 'nullable|array',
-        ]);
+        $data = $request->validated();
 
-        $data = $this->resolveCategoryId($data, required: true);
+        $data = $this->service->resolveCategoryId($data, required: true);
 
         $tour = $this->service->createTour($partnerId, $data);
 
         return response()->json(['data' => $tour], 201);
     }
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(UpdateTourRequest $request, string $id): JsonResponse
     {
-        $partnerId = $request->attributes->get('partner_id');
-        $tour = $this->service->getForPartner((int) $id, $partnerId);
+        $tour = $this->service->requireOwnedTour(
+            (int) $id,
+            (int) $request->attributes->get('partner_id')
+        );
 
-        if (! $tour) {
-            abort(404);
-        }
-
-        $this->requireEnglishSourceOnly($request);
-
-        $data = $request->validate([
-            'title' => 'sometimes|string|max:120',
-            'description' => 'sometimes|string|min:100|max:5000',
-            'translations' => 'nullable|array',
-            'translations.*.title' => 'nullable|string|max:120',
-            'translations.*.description' => 'nullable|string|max:5000',
-            'translations.*.highlights' => 'nullable|array',
-            'translations.*.inclusions' => 'nullable|array',
-            'translations.*.exclusions' => 'nullable|array',
-            'translations.*.meeting_point' => 'nullable|string|max:500',
-            'translations.*.cancellation_policy' => 'nullable|string|max:2000',
-            'translations.*.itinerary' => 'nullable|array|max:30',
-            'translations.*.itinerary.*.day' => 'required|integer|min:1|max:30',
-            'translations.*.itinerary.*.title' => 'required|string|max:160',
-            'translations.*.itinerary.*.description' => 'nullable|string|max:2000',
-            'translations.*.itinerary.*.stops' => 'nullable|array|max:20',
-            'translations.*.itinerary.*.stops.*.title' => 'required|string|max:160',
-            'translations.*.itinerary.*.stops.*.description' => 'nullable|string|max:2000',
-            'translations.*.itinerary.*.stops.*.duration_minutes' => 'nullable|integer|min:1|max:1440',
-            'translations.*.important_information' => 'nullable|array|max:30',
-            'translations.*.important_information.*' => 'string|max:500',
-            'guide_languages' => 'sometimes|array|max:20',
-            'guide_languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
-            'languages' => 'sometimes|array|max:20',
-            'languages.*' => 'string|distinct|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
-            'category' => 'sometimes|string|max:50',
-            'destination' => 'sometimes|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'group_size_min' => 'nullable|integer|min:1',
-            'group_size_max' => 'nullable|integer|min:1',
-            'duration_value' => 'sometimes|integer|min:1',
-            'duration_unit' => 'sometimes|string|in:hour,day',
-            'difficulty_level' => 'sometimes|string|in:easy,moderate,challenging',
-            'itinerary' => 'nullable|array|max:30',
-            'itinerary.*.day' => 'required|integer|min:1|max:30',
-            'itinerary.*.title' => 'required|string|max:160',
-            'itinerary.*.description' => 'nullable|string|max:2000',
-            'itinerary.*.stops' => 'nullable|array|max:20',
-            'itinerary.*.stops.*.title' => 'required|string|max:160',
-            'itinerary.*.stops.*.description' => 'nullable|string|max:2000',
-            'itinerary.*.stops.*.duration_minutes' => 'nullable|integer|min:1|max:1440',
-            'important_information' => 'nullable|array|max:30',
-            'important_information.*' => 'string|max:500',
-            'inclusions' => 'nullable|array',
-            'meeting_point' => 'nullable|string|max:500',
-            'cover_image_url' => 'nullable|string|url|max:2048',
-            'media' => 'sometimes|array|max:20',
-            'media.*.url' => 'required|url|max:2048|distinct',
-            'media.*.is_cover' => 'sometimes|boolean',
-            'price_from' => 'nullable|numeric|min:0',
-            'currency' => 'nullable|string|size:3',
-            'pricing_tiers' => 'nullable|array',
-            'availability_rules' => 'nullable|array',
-            'availability_exceptions' => 'nullable|array',
-        ]);
+        $data = $request->validated();
 
         if (array_key_exists('category', $data)) {
-            $data = $this->resolveCategoryId($data, required: false);
+            $data = $this->service->resolveCategoryId($data, required: false);
         }
 
         $tour = $this->service->updateTour($tour, $data);
@@ -289,7 +132,7 @@ class TourController
         }
 
         $enTranslation = $tour->translations()->where('locale', 'en')->first();
-        if (! $enTranslation || empty($enTranslation->title) || empty($enTranslation->description)) {
+        if (! $enTranslation || trim((string) $enTranslation->title) === '' || trim((string) ($enTranslation->description ?? '')) === '') {
             return response()->json([
                 'message' => 'Validation failed: Tour must have at least an English title and description.',
             ], 422);

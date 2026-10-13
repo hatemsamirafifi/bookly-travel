@@ -1,0 +1,11 @@
+{"mode":"success","start":"2026-10-09T19:05:38+00:00","pid":1,"pcntl":true,"worker_timeout":60,"retry_after":90,"provider":"fake; no live key"}
+  2026-10-09 19:05:39 App\Domains\Partner\Jobs\GenerateTourTranslationJob  RUNNING
+  2026-10-09 19:05:39 Laravel\Scout\Jobs\RemoveFromSearch ............ RUNNING
+  2026-10-09 19:05:39 Laravel\Scout\Jobs\RemoveFromSearch ........ 3.64ms DONE
+  2026-10-09 19:05:39 App\Domains\Partner\Jobs\GenerateTourTranslationJob  13.62ms DONE
+  2026-10-09 19:05:39 App\Domains\Partner\Jobs\GenerateTourTranslationJob  RUNNING
+  2026-10-09 19:05:39 Laravel\Scout\Jobs\RemoveFromSearch ............ RUNNING
+  2026-10-09 19:05:39 Laravel\Scout\Jobs\RemoveFromSearch ........ 0.45ms DONE
+  2026-10-09 19:05:39 App\Domains\Partner\Jobs\GenerateTourTranslationJob  1.44ms DONE
+WORKER_EXIT=0
+NUMERIC_EXIT=0 EXPECTED_EXIT=0

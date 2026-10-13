@@ -1,0 +1,61 @@
+{
+  "tour_id": 48,
+  "locale": "it",
+  "http_status": 200,
+  "title": "Spec019 local real generation 20261010193622",
+  "content_locale": "it",
+  "itinerary_locale": "it",
+  "itinerary": [
+    {
+      "day": 7,
+      "stops": [
+        {
+          "title": "Incontra la guida",
+          "description": null,
+          "duration_minutes": 30
+        },
+        {
+          "title": "Passeggiata nel centro storico",
+          "description": "Esplora le strade storiche.",
+          "duration_minutes": null
+        }
+      ],
+      "title": "Arrivo",
+      "description": null
+    },
+    {
+      "day": 7,
+      "stops": [],
+      "title": "Esplora",
+      "description": null
+    }
+  ],
+  "price": {
+    "amount": 7500,
+    "currency": "EUR",
+    "formatted": "€75.00"
+  },
+  "images": [
+    {
+      "url": "https://cdn.bookly.test/tours/rome-cover.jpg",
+      "is_cover": true,
+      "alt": "Historic Rome walking route",
+      "alt_locale": "en"
+    }
+  ],
+  "canonical": "http://localhost:8189/it/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y",
+  "hreflang": [
+    [
+      "en",
+      "http://localhost:8189/en/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y"
+    ],
+    [
+      "es",
+      "http://localhost:8189/es/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y"
+    ],
+    [
+      "it",
+      "http://localhost:8189/it/tours/spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y"
+    ]
+  ]
+}

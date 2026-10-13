@@ -1,6 +1,9 @@
 # Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Spec ID / Master-plan phase**: [repository-wide spec ID; mapped phase or standalone feature]
+**Governing Constitution**: [current version and link]
+**Baseline / Dependencies**: [verified base branch and commit; pending predecessor PRs or none]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
 **Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.

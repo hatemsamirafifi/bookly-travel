@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { apiGet, ownedMedia, seededOwnedTourId } from '../partner/tour-content-helpers';
 
 test.describe('Partner Dashboard Accessibility', () => {
   test('partner dashboard home should not have accessibility violations', async ({ page }) => {
@@ -145,5 +146,118 @@ test.describe('Partner Layout Accessibility', () => {
       const ariaChecked = await sw.getAttribute('aria-checked');
       expect(ariaChecked).toBeTruthy();
     }
+  });
+});
+
+// Spec019 T073 / FR-030 additions (author-only): affected TourWizard /
+// ImageUploader / edit-page facts only. No route mocks, no backend writes, no
+// Axe exclusions. Widths/locales are distributed (not full cartesian) to avoid
+// duplicated exhaustive loops; full coverage is left for ROOT manual.
+test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
+  test('wizard create page has no axe violations across distributed locales and widths', async ({
+    page,
+  }) => {
+    const cases = [
+      { locale: 'en', width: 390 },
+      { locale: 'es', width: 768 },
+      { locale: 'it', width: 1024 },
+      { locale: 'en', width: 1440 },
+    ] as const;
+    for (const { locale, width } of cases) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/${locale}/partner/tours/create`);
+      await expect(page.locator('main#main-content')).toBeVisible();
+      const results = await new AxeBuilder({ page }).analyze();
+      expect(results.violations).toEqual([]);
+    }
+  });
+
+  test('wizard create layout width has no axe violations', async ({ page }) => {
+    // 320 is layout-relevant for the wizard grids and uploader thumbnails.
+    await page.setViewportSize({ width: 320, height: 900 });
+    await page.goto('/en/partner/tours/create');
+    await expect(page.locator('main#main-content')).toBeVisible();
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  });
+
+  test('difficulty and guide-language controls are labeled in each page language', async ({ page }) => {
+    const expectations = [
+      { locale: 'en', difficulty: 'Difficulty Level', guide: 'Live-guide language codes' },
+      { locale: 'es', difficulty: 'Nivel de Dificultad', guide: 'en vivo' },
+      { locale: 'it', difficulty: 'Livello di Difficolt', guide: 'guida dal vivo' },
+    ] as const;
+    for (const { locale, difficulty, guide } of expectations) {
+      await page.goto(`/${locale}/partner/tours/create`);
+      await expect(page.locator('main#main-content')).toBeVisible();
+      // Difficulty select keeps a stable accessible name per page language and
+      // starts blank: unknown difficulty is never invented as easy.
+      const difficultyTrigger = page.locator(
+        'button[aria-labelledby="difficulty_level-label"], [aria-labelledby="difficulty_level-label"]',
+      ).first();
+      await expect(page.locator('#difficulty_level-label', { hasText: difficulty }).first()).toBeVisible();
+      await expect(difficultyTrigger).toBeVisible();
+      // Guide codes: labeled input, hint association, page-translation scope.
+      const guideInput = page.locator('#guide_languages');
+      await expect(page.locator('label[for="guide_languages"]', { hasText: guide }).first()).toBeVisible();
+      await expect(guideInput).toHaveAttribute('aria-describedby', 'guide-languages-hint');
+      await expect(page.locator('#guide-languages-hint')).toBeVisible();
+    }
+  });
+
+  test('english-source notice stays visible and page-localized on details step', async ({ page }) => {
+    await page.goto('/es/partner/tours/create');
+    await expect(page.locator('main#main-content')).toBeVisible();
+    // Spanish page notice: authors edit English source; derivatives never block.
+    await expect(page.getByText(/traducci/i).first()).toBeVisible();
+    await page.goto('/it/partner/tours/create');
+    await expect(page.getByText(/inglese/i).first()).toBeVisible();
+  });
+
+  test('empty wizard next announces validation errors and moves focus to the summary', async ({
+    page,
+  }) => {
+    // Client-side validation only: no backend write, no route mock.
+    await page.goto('/en/partner/tours/create');
+    await expect(page.locator('main#main-content')).toBeVisible();
+    await page.getByRole('button', { name: /Next/i }).click();
+    const summary = page.getByRole('alert').first();
+    await expect(summary).toBeVisible();
+    expect(await summary.getAttribute('aria-live')).toBe('assertive');
+    await expect(summary).toBeFocused();
+    // Field-level announced error for the missing English title.
+    await expect(page.locator('p[role="alert"]', { hasText: /.+/ }).first()).toBeVisible();
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  });
+
+  test('uploader dropzone and alt-field contract on the edit page', async ({ page }) => {
+    // Existing tour edit surface; reads only, no writes, no mocks.
+    await page.goto('/en/partner/tours');
+    const tourId = await seededOwnedTourId(page);
+    const stored = await apiGet(page, `/api/partner/tours/${tourId}`);
+    expect(stored.status).toBe(200);
+    const storedMedia = ownedMedia(stored.json);
+    expect(storedMedia.length).toBeGreaterThan(0);
+    await page.goto(`/en/partner/tours/${tourId}/edit`);
+    await expect(page.locator('main#main-content')).toBeVisible();
+    // Dropzone file input and image-count status stay exposed to AT.
+    await expect(page.locator('input[type="file"][accept*="image"]')).toHaveCount(1);
+    await expect(page.getByText(/images?/i).first()).toBeVisible();
+
+    const altInputs = page.locator('input[id^="tour-image-alt-"]');
+    await expect(altInputs).toHaveCount(storedMedia.length);
+    const altCount = await altInputs.count();
+    for (let i = 0; i < altCount; i++) {
+      const input = altInputs.nth(i);
+      const id = (await input.getAttribute('id')) ?? '';
+      await expect(input).toHaveAttribute('lang', 'en');
+      // Stable label/id with optional-English meaning; never a page-translation field.
+      await expect(page.locator(`label[for="${id}"]`, { hasText: /English/i })).toBeVisible();
+      const describedBy = await input.getAttribute('aria-describedby');
+      if (describedBy) {
+        const alert = page.locator(`#${describedBy}`);
+        await expect(alert).toHaveAttribute('role', 'alert');
+      }
+    }
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   });
 });

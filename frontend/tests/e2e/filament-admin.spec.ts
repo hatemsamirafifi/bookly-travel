@@ -14,8 +14,13 @@ const ADMIN_EMAIL = 'admin@bookly.test';
 const ADMIN_PASSWORD = 'password';
 
 test.describe('Filament Admin Panel', () => {
-  test('livewire.js is served by Laravel through the proxy', async ({ request }) => {
-    const res = await request.get('/livewire/livewire.js');
+  test('the rendered Livewire script is served by Laravel through the proxy', async ({ page, request }) => {
+    await page.goto('/admin/login');
+    const script = page.locator('script[src*="/livewire/livewire"]');
+    await expect(script).toHaveCount(1);
+    const src = await script.getAttribute('src');
+    expect(src).toMatch(/\/livewire\/livewire(?:\.min)?\.js(?:\?|$)/);
+    const res = await request.get(src!);
     expect(res.status()).toBe(200);
     const body = await res.text();
     expect(body.length).toBeGreaterThan(10000);

@@ -1,0 +1,2 @@
+{"step":"actual-worker","exit":0,"elapsed_seconds":2.1149959564208984,"events":[{"event":"processing","job":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob","attempt":2,"at":"2026-10-10T19:41:49+00:00"},{"event":"processed","job":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob","at":"2026-10-10T19:41:49+00:00"}],"remaining_queue":0}
+NUMERIC_EXIT=0

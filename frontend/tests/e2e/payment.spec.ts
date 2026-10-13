@@ -28,7 +28,19 @@ test.describe('Payment Flow', () => {
     });
     await page.goto(`/en/booking?tour=hidden-gems-rome-walking-tour&date=${date}&participants=2`);
     await page.getByRole('button', { name: 'Confirm & Pay' }).click();
-    await expect(page.getByRole('main').getByText('€90.00', { exact: true })).toBeVisible();
+    // Wait for the payment step to replace the booking form before asserting
+    // the amount: the pre-payment PriceBreakdown renders the tour total twice,
+    // so an unscoped assertion can hit strict mode while the old view is still
+    // mounted (PR29 source run 37161504610). The dl below carries the
+    // server-returned total for this booking.
+    await expect(page.getByRole('heading', { name: 'Payment' })).toBeVisible();
+    const paymentSummary = page.getByRole('main').locator('dl');
+    await expect(paymentSummary.locator('dt', { hasText: 'Total' })).toBeVisible();
+    const serverTotal = paymentSummary
+      .locator('div')
+      .filter({ hasText: 'Total' })
+      .getByText('€90.00', { exact: true });
+    await expect(serverTotal).toBeVisible();
     await page.getByRole('button', { name: 'Complete test payment' }).click();
     await expect(page.getByRole('alert').filter({ hasText: 'could not be completed' })).toBeVisible();
     await page.getByRole('button', { name: 'Complete test payment' }).click();

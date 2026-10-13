@@ -1,0 +1,4 @@
+{"at":"2026-10-09T19:05:39+00:00","pid":1,"connection":"redis","attempts":1,"monotonic":25125934100620,"max_tries":4,"backoff":"5,15,60","timeout":60,"name":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob"}
+{"at":"2026-10-09T19:05:39+00:00","pid":1,"connection":"sync","attempts":1,"monotonic":25126422118705,"max_tries":null,"backoff":null,"timeout":null,"name":"Laravel\\Scout\\Jobs\\RemoveFromSearch"}
+{"at":"2026-10-09T19:05:39+00:00","pid":1,"connection":"redis","attempts":1,"monotonic":25126441809824,"max_tries":4,"backoff":"5,15,60","timeout":60,"name":"App\\Domains\\Partner\\Jobs\\GenerateTourTranslationJob"}
+{"at":"2026-10-09T19:05:39+00:00","pid":1,"connection":"sync","attempts":1,"monotonic":25126476925664,"max_tries":null,"backoff":null,"timeout":null,"name":"Laravel\\Scout\\Jobs\\RemoveFromSearch"}

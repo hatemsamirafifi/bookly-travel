@@ -1,0 +1,1280 @@
+
+   PASS  Tests\Unit\Auth\AuthServiceTest
+  ✓ it creates a new guest identity when none exists                     5.63s
+  ✓ it returns existing guest identity when one exists for the same ema… 0.21s
+  ✓ it creates a new identity when existing one is already converted     0.29s
+  ✓ it creates a new identity when existing one is anonymized            0.22s
+  ✓ it checks for existing registered account by email                   0.28s
+
+   PASS  Tests\Unit\Auth\LinkGuestBookingsActionTest
+  ✓ it links no bookings when no guest identities match                  0.22s
+  ✓ it marks guest identities as converted even without bookings table   0.26s
+  ✓ it links bookings to user when bookings table exists                 0.35s
+  ✓ it creates an audit log entry when linking guest bookings            0.96s
+  ✓ it does not re-link already converted guest identities               0.19s
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                    0.01s
+
+   PASS  Tests\Unit\Partner\PartnerCanTransitionToTest
+  ✓ it allows valid onboarding status transitions                        0.20s
+  ✓ it rejects invalid onboarding status transitions                     0.22s
+  ✓ it normalizes legacy incomplete status to pending                    0.17s
+  ✓ it instance canTransitionTo delegates properly                       0.15s
+
+   PASS  Tests\Unit\Partner\PartnerInvitationModelTest
+  ✓ isExpired returns true when expires_at is in the past and false whe… 0.17s
+  ✓ isConsumed returns true when status is consumed                      0.16s
+  ✓ isValid returns true only when status is pending and not expired     0.16s
+  ✓ scopes filter invitations accurately                                 0.19s
+
+   PASS  Tests\Unit\Payment\ApplicationFeeCalculatorTest
+  ✓ it calculates application fees using integer minor units with datas… 0.17s
+  ✓ it calculates application fees using integer minor units with datas… 0.17s
+  ✓ it calculates application fees using integer minor units with datas… 0.17s
+  ✓ it calculates application fees using integer minor units with datas… 0.15s
+  ✓ it rejects invalid commission percentages with ('100.01')            0.17s
+  ✓ it rejects invalid commission percentages with ('-1')                0.15s
+  ✓ it rejects invalid commission percentages with ('15.001')            0.15s
+  ✓ it rejects invalid commission percentages with ('not-a-number')      0.16s
+  ✓ it rejects negative minor-unit amounts                               0.15s
+
+   PASS  Tests\Feature\Admin\AdminPermissionsTest
+  ✓ it denies non-admin users access to the Filament admin panel         1.59s
+  ✓ it lets a permissioned admin reach the Filament admin panel         23.16s
+  ✓ it denies non-admin users access to admin API routes (role:admin gu… 0.30s
+  ✓ it denies unauthenticated access to admin API routes                 0.52s
+  ✓ it hides governance actions for an admin lacking the required flag   0.20s
+  ✓ it grants governance actions for an admin with the required flags    0.20s
+  ✓ it resolves per-action flags independently                           0.19s
+
+   PASS  Tests\Feature\Admin\AvailabilityReadonlyTest
+  ✓ it lets a manage_bookings admin list availability (FR-014)          22.36s
+  ✓ it renders the read-only slots table with booking states on the vie… 3.57s
+  ✓ it computes an empty slot when no bookings exist                     0.23s
+  ✓ it computes a partially-booked slot when bookings are below capacit… 0.23s
+  ✓ it computes a full slot when bookings meet capacity                  0.21s
+  ✓ it computes an unavailable slot when the date is blocked by an exce… 0.19s
+  ✓ it exposes no mutation actions on the availability resource (read-o… 0.76s
+  ✓ it denies availability oversight to an admin lacking manage_booking… 1.77s
+
+   PASS  Tests\Feature\Admin\BookingStatusTransitionTest
+  ✓ it transitions a confirmed booking to completed and writes audit (n… 1.10s
+  ✓ it transitions a confirmed booking to no_show                        1.33s
+  ✓ it transitions a pending_payment booking to expired                  0.60s
+  ✓ it logs a cancellation request as financial without executing the r… 0.36s
+  ✓ it sets cancelled_at when cancelling a confirmed booking (financial… 0.85s
+  ✓ it blocks disallowed transitions                                     1.95s
+  ✓ it blocks transitioning from a terminal status (completed)           0.68s
+  ✓ it denies the transition gate for non-admin users and grants it for… 1.02s
+
+   PASS  Tests\Feature\Admin\ConcurrentGovernanceTest
+  ✓ it prevents a contradictory double transition when two admins act o… 0.97s
+  ✓ it records each successful transition and rejects a second terminal… 1.51s
+  ✓ it keeps governance_audit_logs append-only under concurrent edits    1.01s
+
+   PASS  Tests\Feature\Admin\Filament\DashboardTest
+  ✓ it reflects live pending counts from the database (FR-013)           0.78s
+  ✓ it renders queue-shortcut tiles that deep-link into filtered queues  1.95s
+  ✓ it renders the recent-bookings widget for an analytics admin         1.27s
+  ✓ it hides the dashboard widgets for an admin lacking view_all_analyt… 0.21s
+  ✓ it renders the dashboard page for a permissioned admin               1.05s
+
+   PASS  Tests\Feature\Admin\Filament\PartnerResourceTest
+  ✓ it lists partners for a manage_partners admin                        3.24s
+  ✓ it approves a pending partner via the Filament table action and aud… 1.03s
+  ✓ it rejects a pending partner with a reason via the Filament table a… 1.14s
+  ✓ it suspends an approved active partner via the Filament table actio… 0.79s
+  ✓ it reactivates a suspended partner via the Filament table action     1.08s
+  ✓ it registers no bulk actions on the partner resource (FR-016)        0.49s
+  ✓ it denies partner governance to an admin lacking manage_partners     0.22s
+
+   PASS  Tests\Feature\Admin\Filament\ReviewModerationFilamentTest
+  ✓ it lists review records in the Filament table                        1.94s
+  ✓ it hides a review via the Filament hide action and writes governanc… 0.77s
+  ✓ it reinstates a hidden review via the Filament reinstate action and… 0.70s
+  ✓ it hiding a review recomputes the tour aggregate rating              0.88s
+  ✓ it bulk-hides selected reviews with a shared reason                  0.83s
+  ✓ it bulk-reinstates selected hidden reviews                           0.89s
+  ✓ it reinstates a flagged review (flagged → visible)                   0.84s
+  ✓ it denies the moderation gate for an admin lacking the moderate_rev… 0.21s
+
+   PASS  Tests\Feature\Admin\Filament\SettingsPageTest
+  ✓ it renders the platform settings page for a manage_settings admin    3.56s
+  ✓ it saves general settings through the Filament form and audits the…  0.98s
+  ✓ it denies the settings page to an admin lacking manage_settings      0.18s
+
+   PASS  Tests\Feature\Admin\Filament\TourResourceTest
+  ✓ it lists tour records in the Filament table                          0.49s
+  ✓ it shows the English source and derived statuses separately on the…  0.37s
+  ✓ it denies a traveler and an admin without manage-tours access to mo… 0.23s
+  ✓ it publishes a tour via the Filament publish action and writes audi… 0.66s
+  ✓ it rejects a tour via the Filament reject action with a reason       0.75s
+  ✓ it bulk-publishes selected tours and writes an audit per item        0.75s
+  ✓ it bulk-rejects selected tours with a shared reason and writes an a… 0.96s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.65s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.66s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 1.49s
+  ✓ it T036 publishes via the Filament publish action despite pending/f… 0.64s
+  ✓ it T036 refuses the Filament publish action when the English source… 1.78s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.69s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.69s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.58s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.57s
+  ✓ it T036 refuses the Filament publish action when the English source… 0.57s
+  ✓ it T036 keeps publish authorization tied to manage-tours on the rea… 0.25s
+
+   PASS  Tests\Feature\Admin\GovernanceAuditTest
+  ✓ it writes a governance audit entry when a tour is published          0.24s
+  ✓ it writes a governance audit entry when a partner is approved        0.47s
+  ✓ it writes a governance audit entry when a review is hidden           0.23s
+  ✓ it writes a governance audit entry when a booking transitions        0.22s
+  ✓ it is append-only: updates are blocked (FR-012)                      0.23s
+  ✓ it is append-only: deletes are blocked (FR-012)                      0.28s
+  ✓ it filters governance entries by action in the Filament table        1.04s
+  ✓ it backfills legacy booking_audit_logs and review_audit_trails into… 0.38s
+
+   PASS  Tests\Feature\Admin\PartnerModerationTest
+  ✓ it approves a pending partner, sends mail, and writes audit          0.25s
+  ✓ it rejects a pending partner with a reason, sends mail, and writes…  0.23s
+  ✓ it suspends an approved partner and removes its published tours fro… 0.28s
+  ✓ it reinstate reactivates a suspended partner without republishing t… 0.29s
+  ✓ it blocks approving a partner that is not in a pending state         0.17s
+  ✓ it normalizes the legacy incomplete status to pending for governanc… 0.16s
+
+   PASS  Tests\Feature\Admin\StaticPageTest
+  ✓ it lets a manage_cms admin list static pages                         0.61s
+  ✓ it publishes a static page and writes a cms.publish audit entry      0.24s
+  ✓ it updates a draft page without publishing and writes a cms.update…  0.18s
+  ✓ it renders the updated localized content for the public site         0.18s
+  ✓ it audits a settings change with target_type=setting and the change… 0.18s
+  ✓ it does not audit a no-op settings save                              0.17s
+  ✓ it denies static-page management to an admin lacking manage_cms      0.18s
+  ✓ it persists an edited page through the Filament edit form            1.71s
+  ✓ it blocks an unknown settings group                                  0.16s
+  ✓ it registers the static_page morph map on the audit trail            0.20s
+
+   PASS  Tests\Feature\Admin\TourModerationTest
+  ✓ it publishes a pending tour for an approved partner and writes audi… 0.21s
+  ✓ it blocks publishing when the owning partner is not approved (FR-00… 0.19s
+  ✓ it requires English source at approval but not Spanish or Italian    0.22s
+  ✓ it rejects a pending tour with a reason and writes audit             0.20s
+  ✓ it unpublishes a published tour and writes audit                     0.22s
+  ✓ it prevents rejecting a tour that is not in a rejectable state       0.18s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.29s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.27s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.25s
+  ✓ it T036 submits a draft via the real endpoint when EN/pricing/cover… 0.25s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.24s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.23s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.26s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.23s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.22s
+  ✓ it T036 refuses endpoint submit when the English source is missing…  0.22s
+  ✓ it T036 submits via the scoped TourService when the English source…  0.21s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.18s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.19s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.20s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.21s
+  ✓ it T036 requires English in the scoped TourService submit path with… 0.20s
+  ✓ it T036 requires English in the scoped TourService submit path with… 2.39s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.24s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.25s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.26s
+  ✓ it T036 approves a pending tour despite pending/failed ES/IT deriva… 0.24s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.25s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.27s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.23s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.20s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.37s
+  ✓ it T036 refuses approval when the English source is missing or blan… 0.27s
+  ✓ it T036 keeps submit owner scoping with cross-partner and unknown i… 0.45s
+
+   PASS  Tests\Feature\Auth\BrowserReadRateLimitTest
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.36s
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.23s
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.21s
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.20s
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.22s
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.24s
+
+   PASS  Tests\Feature\Auth\ChangePasswordTest
+  ✓ it changes password with correct current password                    0.88s
+  ✓ it fails with incorrect current password                             3.16s
+  ✓ it fails with weak new password                                      2.02s
+  ✓ it requires authentication for change password                       1.83s
+
+   PASS  Tests\Feature\Auth\EmailVerificationTest
+  ✓ it verifies email with a valid signed url                            0.26s
+  ✓ it returns already verified for previously verified email            0.18s
+  ✓ it returns 403 for invalid signature                                 0.18s
+  ✓ it returns 404 for non-existent user                                 0.19s
+  ✓ it resends verification email when authenticated and not verified    2.39s
+  ✓ it returns 400 when resending for already verified user              1.16s
+  ✓ it rate limits resend verification to 3 per hour                     0.29s
+
+   PASS  Tests\Feature\Auth\GuestConversionTest
+  ✓ it converts a guest to an account with valid data                    0.57s
+  ✓ it links all guest bookings with the same email on conversion        0.41s
+  ✓ it returns 422 for duplicate email conversion                        0.42s
+
+   PASS  Tests\Feature\Auth\GuestIdentityTest
+  ✓ it creates a guest identity when none exists                         4.46s
+  ✓ it detects an existing account by email                              0.68s
+  ✓ it creates multiple guest bookings with the same email               3.19s
+
+   PASS  Tests\Feature\Auth\LoginTest
+  ✓ it signs in a traveler with valid credentials                        6.35s
+  ✓ it fails with generic error for non-existent email                   0.22s
+  ✓ it fails with generic error for wrong password                       0.26s
+  ✓ it fails validation with empty fields                                0.22s
+  ✓ it normalizes email with whitespace and uppercase                    0.23s
+  ✓ it fails for account with no password                                0.25s
+  ✓ it returns structured error codes                                    0.27s
+  ✓ it locks account after 5 failed attempts with 1 minute tier          0.51s
+  ✓ it dispatches AccountLockedOut event when lockout triggers           0.28s
+  ✓ it rejects login while account is locked even with correct password  0.29s
+  ✓ it resets counter and tier on successful login after lockout expire… 0.40s
+  ✓ it escalates to 30 minute tier on third lockout                      0.58s
+  ✓ it resets failed count on successful login before reaching 5         0.26s
+  ✓ it handles concurrent failed login requests safely                   0.20s
+  ✓ it survives redis cache flush during lockout                         0.18s
+  ✓ it rate limits the login endpoint after 10 requests                  0.45s
+  ✓ it responds within 3 seconds                                         0.27s
+  ✓ it does not send duplicate email for the same lockout event          0.28s
+  ✓ it queues an email notification when account is locked out           0.26s
+
+   PASS  Tests\Feature\Auth\LogoutTest
+  ✓ it revokes the current token on logout                               0.24s
+  ✓ it returns 401 for revoked token                                     0.21s
+  ✓ it keeps other sessions active after logout                          0.19s
+  ✓ it returns 401 without token                                         0.17s
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ it sends a reset email for a verified email                          0.22s
+  ✓ it sends a verification email for an unverified email instead of re… 0.18s
+  ✓ it returns the same response for non-existent email to prevent enum… 0.17s
+  ✓ it resets password with a valid token                                0.47s
+  ✓ it fails with an invalid token                                       0.24s
+  ✓ it fails with expired token                                          0.47s
+  ✓ it validates reset password request fields                           0.26s
+  ✓ it dispatches a password reset email containing a valid reset URL a… 0.51s
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  ✓ it registers a new traveler successfully                             0.26s
+  ✓ it fails with a duplicate email                                      0.24s
+  ✓ it fails with a weak password                                        0.24s
+  ✓ it fails when fields are missing                                     2.98s
+  ✓ it links guest bookings on registration                              0.28s
+  ✓ it sets the locale correctly or defaults to en                       0.29s
+  ✓ it normalizes the email address                                      0.27s
+  ✓ it is protected by rate limiting                                     0.39s
+
+   PASS  Tests\Feature\Auth\SessionManagementTest
+  ✓ it lists active sessions for authenticated user                      0.25s
+  ✓ it never exposes token values in session list                        0.24s
+  ✓ it returns 401 for unauthenticated session list request              0.45s
+  ✓ it token expires after 7 days of inactivity                          0.22s
+  ✓ it supports multiple concurrent sessions                             0.24s
+
+   PASS  Tests\Feature\Blog\BlogAuthorizationTest
+  ✓ admin can create and publish blog post                               2.93s
+  ✓ guest cannot access filament blog resources                          0.45s
+
+   PASS  Tests\Feature\Blog\BlogCacheInvalidationTest
+  ✓ InvalidateBlogCacheJob flushes the tagged blog list cache so stale…  0.35s
+  ✓ InvalidateBlogCacheJob flushes the tagged category cache             0.27s
+
+   PASS  Tests\Feature\Blog\BlogCategoryTest
+  ✓ returns 200 with category details and paginated posts                0.35s
+  ✓ returns 404 for non-existent category slug                           0.18s
+  ✓ returns 422 for invalid locale on category endpoint                  0.19s
+
+   PASS  Tests\Feature\Blog\BlogListTest
+  ✓ returns 200 with paginated blog posts and metadata                   1.42s
+  ✓ filters posts by category slug                                       0.22s
+  ✓ includes is_featured flag on featured posts                          0.28s
+  ✓ returns empty data array when no published posts exist               0.21s
+  ✓ returns 422 for invalid locale                                       0.22s
+  ✓ returns 422 for invalid per_page parameter                           0.22s
+  ✓ orders posts newest-first by published_at DESC                       0.25s
+  ✓ serves response from cache on second identical request               0.23s
+
+   PASS  Tests\Feature\Blog\BlogPostTest
+  ✓ detail 200 for published post with valid locale                      0.27s
+  ✓ detail 404 for draft post                                            0.22s
+  ✓ detail 404 for scheduled-future post                                 0.22s
+  ✓ detail 404 for non-existent post                                     0.17s
+  ✓ detail 410 for archived post that was previously published           0.21s
+  ✓ detail 404 for archived post that was never published                0.21s
+  ✓ detail 422 for invalid locale                                        0.21s
+  ✓ detail returns translation_warning when requested locale content is… 0.22s
+  ✓ detail includes only published related tours                         0.33s
+  ✓ detail calculates reading_time correctly                             0.37s
+
+   PASS  Tests\Feature\Blog\BlogPreviewTest
+  ✓ draft article accessible with valid hmac preview token               0.31s
+  ✓ preview rejected with expired token                                  0.74s
+  ✓ preview rejected with tampered signature or slug                     0.25s
+  ✓ preview rejected without token                                       0.21s
+
+   PASS  Tests\Feature\Blog\BlogRemediationTest
+  ✓ related-tour options resolve titles from translations instead of th… 0.23s
+  ✓ preview table action generates a frontend-hosted preview link, not…  4.24s
+  ✓ list query eager-loads author so the transformer fallback adds no p… 0.17s
+
+   PASS  Tests\Feature\Blog\BlogSitemapTest
+  ✓ sitemap includes blog index posts and categories                     0.21s
+
+   PASS  Tests\Feature\Blog\BlogThrottleTest
+  ✓ blog list endpoint enforces the throttle:blog rate limiter           0.28s
+
+   PASS  Tests\Feature\Booking\AdminDeliveryFailureAlertTest
+  ✓ it logs an ERROR when the delivery-failure event fires               2.37s
+  ✓ it posts to the Slack webhook when one is configured                 0.55s
+  ✓ it does not post to Slack when no webhook is configured              0.18s
+  ✓ it survives a Slack webhook failure without crashing the listener    0.18s
+  ✓ it logs a warning when the Slack webhook returns HTTP 500            0.20s
+  ✓ it does not alter the booking status on a delivery failure (FR-028)  0.26s
+  ✓ it does not introduce a forbidden admin-notification surface (FR-01… 0.48s
+
+   PASS  Tests\Feature\Booking\AuditTrailTest
+  ✓ it returns full chronological audit trail for a booking              0.59s
+  ✓ it filters audit entries by actor type                               0.22s
+  ✓ it filters audit entries by action                                   0.23s
+  ✓ it returns 403 for non-admin access                                  0.21s
+  ✓ it returns 404 for nonexistent booking reference                     0.23s
+  ✓ it exposes charge and refund payments as linked financial events     0.22s
+  ✓ it returns an empty linked_financial_events list when no payments e… 0.22s
+
+   PASS  Tests\Feature\Booking\BookingConfirmationEmailTest
+  ✓ it sends a localized confirmation email and the voucher PDF to the…  2.00s
+  ✓ it falls back to EN subject when the booking locale is unsupported   0.44s
+  ✓ it is idempotent: dispatching twice sends each email exactly once (… 0.69s
+  ✓ it fires BookingEmailDeliveryFailed on terminal failure without alt… 0.28s
+
+   PASS  Tests\Feature\Booking\ConcurrencyTest
+  ✓ it prevents overbooking when concurrent requests compete for last s… 0.43s
+  ✓ it prevents overbooking when both concurrent requests exceed remain… 0.25s
+  ✓ it returns the existing booking when the same idempotency key is re… 0.23s
+
+   PASS  Tests\Feature\Booking\CreateBookingTest
+  ✓ it creates a booking successfully                                    0.30s
+  ✓ it returns existing booking on idempotent retry                      0.27s
+  ✓ it returns 404 for nonexistent tour                                  0.26s
+  ✓ it returns 404 for draft tour                                        0.23s
+  ✓ it returns 422 for past date                                         0.24s
+  ✓ it returns 422 for participant count below minimum                   0.25s
+  ✓ it returns 401 for unauthenticated request                           0.33s
+  ✓ it returns 422 when idempotency key header is missing                0.23s
+  ✓ it returns 422 when locale is missing                                0.25s
+  ✓ it returns 422 for a non-operating date                              0.23s
+  ✓ it snapshots the rule start time onto the booking                    0.29s
+
+   PASS  Tests\Feature\Booking\PartnerBookingsTest
+  ✓ it partner sees only own tour bookings                               0.30s
+  ✓ it includes aggregates in response                                   0.26s
+  ✓ it transitions booking to completed on past date                     0.25s
+  ✓ it returns 409 for future date transition                            0.23s
+  ✓ it returns 403 for another partner tour                              0.23s
+  ✓ it creates audit entry on status transition                          0.26s
+  ✓ it returns 409 for no_show on the day of the tour                    0.21s
+  ✓ it transitions booking to no_show after the tour date has passed     0.28s
+  ✓ it resolves the tour title in the partner booking list               0.24s
+
+   PASS  Tests\Feature\Booking\RateLimitTest
+  ✓ it returns 429 after exceeding booking creation rate limit           0.24s
+  ✓ it rate limit window resets after the expiry period                  0.22s
+
+   PASS  Tests\Feature\Booking\TravelerBookingsTest
+  ✓ it lists own bookings ordered by tour_date desc                      0.23s
+  ✓ it returns 403 when accessing another traveler booking               0.20s
+  ✓ it lists translated tour titles using the booking locale with Engli… 0.26s
+  ✓ it lists translated tour titles using the booking locale with Engli… 0.31s
+  ✓ it lists translated tour titles using the booking locale with Engli… 0.39s
+  ✓ it lists translated tour titles using the booking locale with Engli… 0.35s
+  ✓ it shows booking detail with can_cancel computed                     0.34s
+  ✓ it cancels an eligible booking                                       1.29s
+  ✓ it returns summary counts grouped by status                          0.39s
+  ✓ it returns 422 for already cancelled booking                         0.28s
+
+   PASS  Tests\Feature\Booking\VerificationTest
+  ✓ it returns 200 + VALID for a confirmed booking without auth          0.39s
+  ✓ it maps each booking lifecycle status to the public verification st… 0.33s
+  ✓ it never exposes PII or sensitive fields (FR-022, SC-010)            1.32s
+  ✓ it returns an identical 404 body for malformed and unknown referenc… 0.27s
+  ✓ it short-circuits malformed references before any DB hit (regex gua… 0.25s
+  ✓ it does not require authentication, a token, or a session            4.34s
+  ✓ it writes nothing to the DB on a verification lookup (FR-025, SC-01… 0.23s
+
+   PASS  Tests\Feature\Booking\VoucherDownloadTest
+  ✓ it downloads a PDF for a confirmed booking owned by the traveler     4.20s
+  ✓ it downloads a PDF for a completed booking (FR-008 widened guard)    8.30s
+  ✓ it returns 404 for a cancelled booking (no enumeration signal)       0.42s
+  ✓ it returns 404 for pending_payment, expired, and no_show bookings    0.31s
+  ✓ it returns 404 when the booking belongs to a different traveler (ow… 5.70s
+  ✓ it returns 401 when unauthenticated                                  0.27s
+  ✓ it returns 404 for an unknown reference                              0.32s
+
+   PASS  Tests\Feature\Booking\VoucherFreshnessTest
+  ✓ it generates a PDF and records the freshness hash on the booking     0.54s
+  ✓ it reuses the cached PDF when the content hash is unchanged          0.68s
+  ✓ it regenerates when a voucher-relevant field changes (tour_date)     0.60s
+  ✓ it regenerates when participant_count changes                        0.60s
+  ✓ it does NOT regenerate on a status-only change (confirmed → complet… 0.46s
+  ✓ it regenerates when the cached PDF file is missing but the hash is…  0.59s
+  ✓ it regenerates when the stored hash is null                          0.56s
+
+   PASS  Tests\Feature\DatabaseIntegrityTest
+  ✓ it seeds a complete fixture graph so the checks run against real ro… 0.55s
+  ✓ it check 1: reports 0 bookings without a traveler or guest identity  0.23s
+  ✓ it check 2: reports 0 bookings without a valid tour                  0.23s
+  ✓ it check 3: reports 0 duplicate payment intents                      0.24s
+  ✓ it check 4: reports 0 duplicate charge rows per booking              0.31s
+  ✓ it check 5: reports 0 duplicate idempotency keys                     0.22s
+  ✓ it check 6: reports 0 duplicate ledger entries per booking and entr… 0.24s
+  ✓ it check 7: reports 0 bookings with an invalid status                0.30s
+  ✓ it check 8: reports 0 payments with an invalid status                0.28s
+  ✓ it check 9: reports 0 reviews on non-completed bookings              0.62s
+  ✓ it check 10: reports 0 duplicate reviews per traveler and tour       0.39s
+  ✓ it check 11: reports 0 review responses from the wrong partner       0.40s
+  ✓ it check 12: reports 0 tours without an owning partner               0.37s
+  ✓ it check 13: reports 0 confirmed bookings missing the payment_confi… 0.36s
+  ✓ it check 14: reports 0 paid bookings missing a ledger debit          0.26s
+  ✓ it check 15: reports 0 published tours without availability rules    0.31s
+  ✓ it check 16: reports 0 duplicate blog slugs                          0.30s
+  ✓ it check 17: reports 0 orphan tour translations                      0.38s
+  ✓ it check 18: reports 0 published tours without a category            0.31s
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ the application returns a successful response                        0.27s
+
+   PASS  Tests\Feature\Partner\AnalyticsTest
+  ✓ it returns the nested analytics payload without date filters         0.30s
+  ✓ it filters from the from date onward when only from is provided      0.23s
+  ✓ it filters up to the to date when only to is provided                0.24s
+  ✓ it returns only records inside the range when both from and to are…  0.23s
+  ✓ it rejects an invalid date filter with a validation error            0.32s
+  ✓ it can filter analytics by tour_id                                   0.27s
+  ✓ it returns 401 for unauthenticated request                           0.21s
+  ✓ it conceals analytics with 404 for a non-partner role                0.21s
+
+   PASS  Tests\Feature\Partner\BookingListTest
+  ✓ it returns paginated booking list                                    0.27s
+  ✓ it can filter by status                                              0.25s
+  ✓ it partner cannot see another partner bookings                       0.24s
+  ✓ it returns 401 for unauthenticated request                           0.21s
+  ✓ it returns 404 for non-partner role                                  0.21s
+  ✓ it returns a partner-scoped booking detail                           0.29s
+  ✓ it does not disclose another partners booking detail                 0.22s
+  ✓ it returns 404 for an unknown partner booking reference              0.22s
+  ✓ it requires authentication for partner booking detail                0.25s
+
+   PASS  Tests\Feature\Partner\BookingStatusTest
+  ✓ it marks booking as completed for past date                          0.22s
+  ✓ it cannot mark future bookings as completed                          0.22s
+  ✓ it requests cancellation for a confirmed booking                     0.22s
+  ✓ it cannot request cancellation for already cancelled booking         0.21s
+  ✓ it returns 403 for booking belonging to another partner tour         0.24s
+  ✓ it returns 401 for unauthenticated request                           0.68s
+
+   PASS  Tests\Feature\Partner\EmailOutputEscapingTest
+  ✓ it escapes html entities in PartnerRejectedMail for all locales wit… 1.77s
+  ✓ it escapes html entities in PartnerRejectedMail for all locales wit… 0.39s
+  ✓ it escapes html entities in PartnerRejectedMail for all locales wit… 0.35s
+  ✓ it escapes html entities in PartnerSuspendedMail for all locales wi… 0.24s
+  ✓ it escapes html entities in PartnerSuspendedMail for all locales wi… 0.29s
+  ✓ it escapes html entities in PartnerSuspendedMail for all locales wi… 1.40s
+
+   PASS  Tests\Feature\Partner\ExpirePartnerInvitationsCommandTest
+  ✓ expire invitations command expires pending invitations older than e… 0.22s
+
+   PASS  Tests\Feature\Partner\NotificationTest
+  ✓ it returns notifications for partner                                 0.23s
+  ✓ it can filter unread_only notifications                              0.20s
+  ✓ it marks a notification as read                                      0.21s
+  ✓ it marks all notifications as read                                   0.24s
+  ✓ it partner cannot read another partner notifications                 0.23s
+  ✓ it returns 401 for unauthenticated request                           0.20s
+  ✓ it returns 404 for non-partner role                                  0.22s
+
+   PASS  Tests\Feature\Partner\PartnerBookingShowTest
+  ✓ it returns the own booking as a PartnerBookingResource for the auth… 0.31s
+  ✓ it returns 404 when the partner accesses another partner booking     0.24s
+  ✓ it rejects unauthenticated requests with 401                         0.22s
+  ✓ it does not disclose the endpoint to non-partner roles with 404      0.27s
+  ✓ it returns 404 for a nonexistent booking reference                   0.28s
+
+   PASS  Tests\Feature\Partner\PartnerInvitationTest
+  ✓ admin can invite a partner and dispatch queued email                 0.22s
+  ✓ public endpoint can retrieve valid invitation details                0.19s
+  ✓ public endpoint returns 404 for invalid or expired invitation token  0.19s
+  ✓ partner can complete invitation and receive approved partner accoun… 0.26s
+  ✓ cannot complete invitation with expired or already consumed token    0.23s
+  ✓ invite action rejects an email that is already a registered user     0.25s
+  ✓ invite action rejects a duplicate pending invitation for the same e… 0.19s
+  ✓ invite action logs partner.invite audit action                       0.18s
+
+   PASS  Tests\Feature\Partner\PartnerLifecycleEmailTest
+  ✓ it localizes PartnerApprovedMail subject and body to the partner lo… 0.94s
+  ✓ it falls back to EN for PartnerApprovedMail when the partner locale… 0.20s
+  ✓ it localizes PartnerRejectedMail subject and renders the reason ver… 0.64s
+  ✓ it falls back to EN for PartnerRejectedMail when the partner locale… 0.29s
+  ✓ it localizes PartnerNewBookingMail subject to the owning partner lo… 0.50s
+  ✓ it falls back to EN for PartnerNewBookingMail when the owning partn… 0.19s
+  ✓ it localizes PartnerBookingCancelledMail subject to the owning part… 0.23s
+  ✓ it does not leak traveler PII into the rendered partner emails       3.59s
+
+   PASS  Tests\Feature\Partner\PartnerLifecycleTest
+  ✓ it approves a pending partner, sets active true, audits, and queues… 0.21s
+  ✓ it rejects a pending partner with reason, sets active false, record… 0.42s
+  ✓ it suspends an approved partner with reason, unpublishes tours, and… 0.24s
+  ✓ it reinstates a suspended partner, restores tours to draft, and que… 0.24s
+  ✓ it rejects invalid state transitions with 422                        0.26s
+
+   PASS  Tests\Feature\Partner\PartnerOnboardingGateTest
+  ✓ it blocks non-approved partner accessing protected partner routes w… 0.21s
+  ✓ it blocks non-approved partner accessing protected partner routes w… 0.19s
+  ✓ it blocks non-approved partner accessing protected partner routes w… 0.23s
+  ✓ it allows approved partner to access protected partner routes        0.30s
+  ✓ it allows non-approved partner to access onboarding status endpoint… 0.22s
+  ✓ it allows non-approved partner to access onboarding status endpoint… 0.20s
+  ✓ it allows non-approved partner to access onboarding status endpoint… 0.24s
+
+   PASS  Tests\Feature\Partner\PartnerProfileUpdateTest
+  ✓ it returns partner profile data with show endpoint                   0.27s
+  ✓ it updates partner profile successfully with valid data              0.32s
+  ✓ it validates mandatory fields on profile update                      0.29s
+
+   PASS  Tests\Feature\Partner\PartnerRegistrationTest
+  ✓ successful partner self-registration creates pending partner, user,… 0.84s
+  ✓ validation errors for missing required fields                        0.27s
+  ✓ validation error for invalid email format                            0.23s
+  ✓ validation error for duplicate user email                            0.22s
+
+   PASS  Tests\Feature\Partner\PartnerReinstatementTest
+  ✓ admin can reinstate suspended partner                                0.19s
+  ✓ reinstated partner tours remain draft                                0.31s
+  ✓ cannot reinstate non suspended partner                               0.17s
+  ✓ reinstated partner can create new tours                              0.33s
+  ✓ reinstated partner old tours not in search                           0.24s
+
+   PASS  Tests\Feature\Partner\PartnerResubmissionTest
+  ✓ it allows rejected partner to resubmit application with updated pro… 0.27s
+  ✓ it rejects resubmission when partner status is not rejected          0.22s
+  ✓ it validates required fields on resubmission                         0.20s
+
+   PASS  Tests\Feature\Partner\PartnerSuspendedAccessTest
+  ✓ suspended partner post tours returns 403 blocked                     0.21s
+  ✓ suspended partner get profile returns 200                            0.19s
+  ✓ suspended partner get onboarding status returns 200 with reason      0.23s
+  ✓ suspended partner get notifications returns 200                      0.22s
+  ✓ suspended partner get tours returns 200 read access                  0.20s
+
+   PASS  Tests\Feature\Partner\PartnerSuspensionTest
+  ✓ admin can suspend approved partner with reason                       0.21s
+  ✓ suspension requires reason                                           0.21s
+  ✓ cannot suspend already suspended partner                             0.18s
+  ✓ cannot suspend pending partner                                       0.17s
+  ✓ non admin cannot suspend partner                                     0.16s
+  ✓ existing token rejection after suspension                            0.25s
+
+   PASS  Tests\Feature\Partner\PayoutValidationTest
+  ✓ it rejects invalid IBAN on profile update                            0.20s
+  ✓ it accepts valid IBAN on profile update                              0.22s
+  ✓ it accepts null IBAN on profile update                               0.19s
+  ✓ it encrypts payout fields at rest                                    0.19s
+  ✓ it masks payout fields when reading via API                          0.20s
+  ✓ it rejects IBAN failing MOD 97 checksum                              0.21s
+
+   PASS  Tests\Feature\Partner\ProfileTest
+  ✓ it returns profile for authenticated partner                         0.22s
+  ✓ it updates profile with valid data                                   0.20s
+  ✓ it validates required fields on profile update                       0.20s
+  ✓ it validates email format on profile update                          0.20s
+  ✓ it returns 401 for unauthenticated request                           0.19s
+  ✓ it returns 404 for non-partner role                                  0.19s
+
+   PASS  Tests\Feature\Partner\ReviewListTest
+  ✓ it returns reviews for partner tours                                 0.27s
+  ✓ it can filter by has_response                                        0.25s
+  ✓ it returns 401 for unauthenticated request                           0.20s
+  ✓ it returns 404 for non-partner role                                  0.26s
+
+   PASS  Tests\Feature\Partner\ReviewResponseTest
+  ✓ it creates a response to a review                                    0.25s
+  ✓ it updates an existing response                                      0.23s
+  ✓ it cannot create duplicate response for same review                  0.21s
+  ✓ it returns 404 for review not belonging to partner tours             0.22s
+  ✓ it returns 401 for unauthenticated request                           0.21s
+  ✓ it returns 422 for empty response text                               0.23s
+
+   PASS  Tests\Feature\Partner\TourAfterCommitContainmentTest
+  ✓ it contains real generation failures when the enclosing transaction… 0.28s
+  ✓ it contains real generation failures when the enclosing transaction… 0.28s
+  ✓ it contains a real search projection dispatch failure after commit…  0.30s
+  ✓ it contains a real search projection dispatch failure after commit…  0.35s
+  ✓ it contains a real search projection dispatch failure after commit…  0.28s
+  ✓ it keeps a committed public source write successful when Scouts que… 0.27s
+  ✓ it keeps a committed public source write successful when Scouts que… 0.26s
+  ✓ it propagates synchronous Scout engine failures so a projection wor… 0.25s
+  ✓ it propagates synchronous Scout engine failures so a projection wor… 0.25s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.24s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.20s
+  ✓ it rejects reconcile cursors outside the native integer range with…  0.19s
+
+   PASS  Tests\Feature\Partner\TourArchiveTest
+  ✓ it archives a tour                                                   0.22s
+  ✓ it archived tours do not appear in default listing                   0.22s
+  ✓ it archive tour with active bookings returns appropriate response    0.23s
+  ✓ it partner cannot archive another partner tour returning 404         0.22s
+
+   PASS  Tests\Feature\Partner\TourContentInputTest
+  ✓ it prefers explicit nested English keys while shorthand fills absen… 0.16s
+  ✓ it preserves omitted keys and keeps null and empty-array meanings d… 0.15s
+  ✓ it normalizes absent stops to empty arrays while passing malformed…  0.16s
+  ✓ it rejects over-limit source text and lists with exact field paths   0.19s
+  ✓ it rejects null titles while accepting nullable draft descriptions   0.18s
+  ✓ it rejects out-of-range itinerary values with exact nested paths     0.28s
+  ✓ it accepts boundary-valid itineraries including empty lists and zer… 0.15s
+  ✓ it rejects explicit null stops instead of treating null as empty     0.17s
+  ✓ it rejects every authored non-English locale with its precise path   0.16s
+  ✓ it rejects platform-owned keys top-level and nested, even when null… 0.18s
+  ✓ it rejects nested provider state and top-level provider/job/error s… 0.16s
+  ✓ it rejects unexpected English source keys while keeping valid non-s… 0.16s
+  ✓ it wires the shared boundary into both partner requests with field-… 0.20s
+
+   PASS  Tests\Feature\Partner\TourContentRevisionTest
+  ✓ it hashes fixed outer source field order regardless of input key or… 0.24s
+  ✓ it ignores nested day/stop object key order but preserves array ord… 0.36s
+  ✓ it keeps malformed persisted source explicit instead of hashing it…  0.21s
+  ✓ it locks Tour then EN then states in es/it order inside the shared…  0.18s
+  ✓ it rolls back partial writes when the boundary callback fails        0.19s
+  ✓ it observes fresh source written inside the boundary on completion   0.19s
+  ✓ it reaches the disposable database on an independent connection      0.17s
+  ✓ it pauses the fake provider mid-call and resumes to completed outpu… 0.19s
+  ✓ it holds real Tour/EN/state row locks across separate connections u… 0.38s
+  ✓ it guarantees partner record IDs distinct from user IDs for owner s… 0.20s
+  ✓ it coordinates fake provider arrivals without network calls          0.21s
+  ✓ it reports current/ready only for matching translated hash via publ… 0.22s
+
+   PASS  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.35s
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.33s
+  ✓ it creates a tour with valid data                                    0.22s
+  ✓ it persists difficulty and ordered media with the selected cover on… 0.28s
+  ✓ it persists the structured English itinerary from partner creation   0.21s
+  ✓ it rejects malformed structured itinerary on create and update       0.23s
+  ✓ it round-trips media reordering and cover changes on partner update  0.29s
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 0.23s
+  ✓ it stores guide-language codes independently of content translation… 0.42s
+  ✓ it keeps the partner content read contract while exposing safe deri… 0.29s
+  ✓ it rejects language names where stable guide-language codes are req… 0.24s
+  ✓ it updates guide metadata and English itinerary without conflating…  0.25s
+  ✓ it returns 422 for invalid data with missing required fields         0.21s
+  ✓ it returns 401 for unauthenticated requests                          0.20s
+  ✓ it returns 404 for non-partner users                                 0.27s
+  ✓ it scopes tour to the authenticated partner                          0.20s
+  ✓ it round-trips all nine English source fields on create and read     0.23s
+  ✓ it round-trips a nested English update while preserving omitted fie… 0.24s
+  ✓ it prefers explicit nested English keys over top-level shorthand     0.24s
+  ✓ it treats null as clear and empty array as clear while omitted keys… 0.24s
+  ✓ it rejects null titles and over-limit source fields with exact path… 0.22s
+  ✓ it rejects invalid itinerary boundaries with exact nested paths      0.26s
+  ✓ it accepts boundary-valid itineraries with canonical integer day an… 0.27s
+  ✓ it denies cross-partner updates with 404 and leaves the tour unchan… 0.29s
+  ✓ it returns 404 for unknown tours before validating malformed payloa… 0.20s
+  ✓ it rejects authored locales and platform-owned state with 422 and n… 0.25s
+  ✓ it rejects invalid media atomically without partial content changes  0.24s
+  ✓ it rejects associative objects for source lists, days and stops wit… 0.29s
+  ✓ it round-trips custom group sizes on create, read and reopen         0.27s
+  ✓ it rolls back fully persisted source and media when a late write fa… 0.25s
+  ✓ it applies destination, duration, group and category aliases on upd… 0.30s
+  ✓ it preserves existing null source fields through unrelated basic sa… 0.27s
+  ✓ it keeps a single draft across failed submit and update retries      0.26s
+  ✓ it refuses to clear required English on published tours              0.25s
+  ✓ it retains a null legacy difficulty through an unrelated English sa… 0.26s
+  ✓ it round-trips a supported difficulty and rejects an unsupported va… 0.26s
+  ✓ it gives explicit guide_languages precedence over the languages ali… 0.24s
+  ✓ it accepts the languages alias when canonical guide_languages is om… 0.28s
+  ✓ it enforces the twenty-code bound for guide languages (US4 T047)     0.27s
+  ✓ it accepts twenty distinct gallery URLs and rejects the twenty-firs… 0.27s
+  ✓ it rejects an over-limit alt description atomically without partial… 0.23s
+  ✓ it accepts a 500-codepoint alt and declares the pending alt storage… 0.24s
+  ✓ it writes cover/gallery types with the flagged cover synchronized t… 0.24s
+  ✓ it defaults the cover to the first valid image when none is flagged… 0.23s
+  ✓ it keeps exact media rows, ids and cover when media is omitted from… 0.27s
+  ✓ it retains prior specific alt when a current URL is resent without…  0.26s
+  ✓ it clears specific alt on explicit null while keeping the row (US4…  0.35s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.25s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.29s
+
+   PASS  Tests\Feature\Partner\TourDraftTest
+  ✓ it creates a draft via save endpoint                                 0.30s
+  ✓ it returns the most recent draft via latest endpoint                 0.21s
+  ✓ it persists draft data correctly via auto-save                       0.24s
+  ✓ it returns 404 for non-existent draft on latest endpoint             0.30s
+  ✓ it returns 404 for tour belonging to another partner                 0.22s
+  ✓ it preserves opaque payload values, types and list order through js… 0.25s
+  ✓ it preserves padded and empty opaque strings exactly through save a… 0.26s
+  ✓ it keeps trimming canonical source input on create and update        0.68s
+  ✓ it round-trips incomplete and legacy string-array itinerary snapsho… 0.30s
+  ✓ it isolates draft saves by owner and never writes source from autos… 0.23s
+
+   PASS  Tests\Feature\Partner\TourItineraryAdoptionTest
+  ✓ it adopts positional valid legacy strings to a day sequence and ret… 0.34s
+  ✓ it preserves populated EN arrays including intentional [] across ap… 0.33s
+  ✓ it reports missing EN without creating rows                          0.31s
+  ✓ it normalizes malformed, partially invalid, and empty legacy record… 0.44s
+  ✓ it rejects invalid structured days as a whole while allowing omitte… 0.56s
+  ✓ it adopts exact boundary values: day 30, title 160, description 200… 0.26s
+  ✓ it dry-run writes absolutely nothing: no content, state, or queue c… 0.29s
+  ✓ it rejects non-strict resume cursors with ('-1')                     0.20s
+  ✓ it rejects non-strict resume cursors with ('abc')                    0.17s
+  ✓ it rejects non-strict resume cursors with ('1.5')                    0.17s
+  ✓ it rejects non-strict resume cursors with ('')                       0.17s
+  ✓ it rejects non-strict resume cursors with ('99999999999999999999999… 0.18s
+  ✓ it rejects non-strict resume cursors with ('9223372036854775808')    0.18s
+  ✓ it rejects limits outside the strict 1-500 range with ('0')          0.17s
+  ✓ it rejects limits outside the strict 1-500 range with ('501')        0.17s
+  ✓ it rejects limits outside the strict 1-500 range with ('abc')        0.20s
+  ✓ it rejects limits outside the strict 1-500 range with ('-5')         0.17s
+  ✓ it rejects limits outside the strict 1-500 range with ('10.5')       0.21s
+  ✓ it rejects limits outside the strict 1-500 range with ('')           0.21s
+  ✓ it pages ID-ordered bounded runs with counts and a resume cursor     0.31s
+  ✓ it adoption inside a holding transaction composes with a blocked so… 1.97s
+  ✓ it an adopted source stays committed when translation dispatch fail… 0.50s
+  ✓ it a waiting adoption preserves an already populated itinerary: pop… 2.09s
+
+   PASS  Tests\Feature\Partner\TourListTest
+  ✓ it returns paginated tour list for authenticated partner             0.49s
+  ✓ it can filter by status                                              0.28s
+  ✓ it returns empty list for partner with no tours                      0.31s
+  ✓ it partner cannot see another partner tours                          0.37s
+
+   PASS  Tests\Feature\Partner\TourTranslationConcurrencyTest
+  ✓ it old translation completion never writes after a newer source edi… 1.80s
+  ✓ it first same-hash completion wins when two jobs overlap in real pr… 1.74s
+  ✓ it terminal provider failure never clobbers a genuine ready complet… 1.76s
+  ✓ it terminal provider failure stays scoped to its stale hash after a… 2.07s
+  ✓ it overlapping source edits through TourService retain both disjoin… 1.64s
+
+   PASS  Tests\Feature\Partner\TourTranslationJobStateTest
+  ✓ it skips provider and derivative rewrites for an already current re… 0.30s
+  ✓ it repairs a matching ready state whose derivative row is missing    0.22s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.20s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.21s
+  ✓ it checks fresh English before recording terminal failure even when… 0.24s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.19s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.18s
+  ✓ it persists a fixed safe category for unrecognized permanent except… 0.17s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.18s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.22s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.24s
+  ✓ it does not serialize internal revision hashes or error categories…  0.24s
+  ✓ it does not turn malformed persisted day or stop objects into a val… 0.22s
+  ✓ it does not turn malformed persisted day or stop objects into a val… 0.23s
+
+   PASS  Tests\Feature\Partner\TourTranslationProviderTest
+  ✓ it sends backend header with configured model and structured json p… 0.23s
+  ✓ it uses a forty second provider timeout                              0.15s
+  ✓ it reconstructs out of order provider items into source path order   0.20s
+  ✓ it rejects duplicate provider keys as permanent output invalid       0.19s
+  ✓ it rejects missing provider keys as permanent output invalid         0.18s
+  ✓ it rejects unknown provider keys as permanent output invalid         0.18s
+  ✓ it rejects non string provider text as permanent output invalid      0.17s
+  ✓ it rejects blank provider text as permanent output invalid           0.16s
+  ✓ it rejects malformed provider body as permanent output invalid       0.18s
+  ✓ it rejects blocked provider finish reasons as permanent blocked      0.19s
+  ✓ it rejects client errors as permanent provider rejected              0.16s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.28s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.15s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.16s
+  ✓ it treats rate limit and server errors as transient provider tempor… 0.17s
+  ✓ it treats connection failures as transient network errors            0.16s
+  ✓ it rejects unsupported locales and empty input as invalid requests   0.16s
+  ✓ it rejects missing provider configuration without leaking secrets    0.17s
+  ✓ it emits only fixed sanitized transient categories                   0.15s
+  ✓ it emits only fixed sanitized permanent categories                   0.17s
+  ✓ it makes exactly one http attempt for a transient failure without n… 0.15s
+  ✓ it extracts only non blank strings while skipping structural intege… 0.17s
+  ✓ it reconstructs translated strings retaining integers nulls order a… 0.23s
+  ✓ it allows valid empty itinerary and zero stop days                   0.23s
+  ✓ it accepts boundary valid shared limits                              0.23s
+  ✓ it rejects overbound shared limits with dataset "title over 120"     0.23s
+  ✓ it rejects overbound shared limits with dataset "description over 5… 0.18s
+  ✓ it rejects overbound shared limits with dataset "highlights over 30… 0.28s
+  ✓ it rejects overbound shared limits with dataset "highlight item ove… 0.19s
+  ✓ it rejects overbound shared limits with dataset "inclusions over 30… 0.17s
+  ✓ it rejects overbound shared limits with dataset "inclusion item ove… 0.17s
+  ✓ it rejects overbound shared limits with dataset "exclusions over 30… 0.16s
+  ✓ it rejects overbound shared limits with dataset "exclusion item ove… 0.17s
+  ✓ it rejects overbound shared limits with dataset "information over 3… 0.21s
+  ✓ it rejects overbound shared limits with dataset "information item o… 0.17s
+  ✓ it rejects overbound shared limits with dataset "meeting point over… 0.17s
+  ✓ it rejects overbound shared limits with dataset "cancellation over…  0.16s
+  ✓ it rejects overbound shared limits with dataset "itinerary over 30…  0.17s
+  ✓ it rejects overbound shared limits with dataset "day number zero"    0.16s
+  ✓ it rejects overbound shared limits with dataset "day number over 30… 0.17s
+  ✓ it rejects overbound shared limits with dataset "day title over 160… 0.16s
+  ✓ it rejects overbound shared limits with dataset "day description ov… 0.16s
+  ✓ it rejects overbound shared limits with dataset "stops over 20"      0.17s
+  ✓ it rejects overbound shared limits with dataset "stop title over 16… 0.16s
+  ✓ it rejects overbound shared limits with dataset "stop description o… 0.16s
+  ✓ it rejects overbound shared limits with dataset "duration zero"      0.20s
+  ✓ it rejects overbound shared limits with dataset "duration over 1440… 0.18s
+  ✓ it rejects overbound shared limits with dataset "explicit null stop… 0.18s
+  ✓ it rejects overbound shared limits with dataset "blank day title re… 0.17s
+  ✓ it rejects overbound shared limits with dataset "blank stop title r… 0.16s
+  ✓ it rejects objects in place of translated source lists with ('highl… 0.16s
+  ✓ it rejects objects in place of translated source lists with ('inclu… 0.16s
+  ✓ it rejects objects in place of translated source lists with ('exclu… 0.18s
+  ✓ it rejects objects in place of translated source lists with ('impor… 0.16s
+  ✓ it rejects objects in place of translated day and stop lists with (… 0.16s
+  ✓ it rejects objects in place of translated day and stop lists with (… 0.16s
+  ✓ it rejects persisted digit strings instead of translating or coerci… 0.16s
+  ✓ it rejects persisted digit strings instead of translating or coerci… 0.45s
+  ✓ it measures translated text bounds in Unicode characters             0.18s
+  ✓ it never emits malformed persisted day strings as translated prose   0.17s
+  ✓ it never emits malformed persisted duration strings as translated p… 0.16s
+  ✓ it retries translation jobs four times with five fifteen sixty back… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.18s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.17s
+  ✓ it rejects overlong generated text even when the complete English s… 0.16s
+  ✓ it rejects overlong generated text even when the complete English s… 0.50s
+
+   PASS  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide c… 0.51s
+  ✓ it marks derived translations stale only when English source change… 0.37s
+  ✓ it requeues derived content when the English description changes wi… 0.37s
+  ✓ it clears optional English content and requeues derived translation… 0.61s
+  ✓ it translates traveler-facing itinerary and information while retai… 0.36s
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 0.30s
+  ✓ it accepts only the latest English revision when an older translati… 0.34s
+  ✓ it schedules a fresh search projection after a derived translation…  0.50s
+  ✓ it serves a visible English fallback until generated content is rea… 0.46s
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.33s
+  ✓ it uses backend-only Gemini structured output and rejects transient… 0.23s
+  ✓ it retries only transient Gemini failures                            0.25s
+  ✓ it spec019 ignores reordered English object keys without content ch… 0.35s
+  ✓ it spec019 ignores media and guide-language saves without English c… 0.32s
+  ✓ it spec019 stales both locales while retaining old derivatives on a… 0.32s
+  ✓ it spec019 commits the English source when generation dispatch fail… 0.29s
+  ✓ it spec019 commits the English update when regeneration dispatch fa… 0.29s
+  ✓ it spec019 schedules no generation when the source transaction roll… 0.21s
+  ✓ it spec019 rejects non-bounded reconcile cursors and limits          0.19s
+  ✓ it spec019 resumes bounded reconcile runs in ID order with a reusab… 0.31s
+  ✓ it spec019 requeues orphaned, stale, failed, and projection-less tr… 0.48s
+  ✓ it spec019 bounded reruns never rewrite current derivatives or sour… 0.70s
+  ✓ it spec019 refresh-ready requeues only the search projection for cu… 0.33s
+
+   PASS  Tests\Feature\Partner\UploadTest
+  ✓ it returns a signed upload URL with a server-generated UUID filenam… 0.65s
+  ✓ it maps image/png to a .png extension                                0.21s
+  ✓ it rejects unauthenticated requests with 401                         0.18s
+  ✓ it does not disclose the endpoint to non-partners with 404           0.19s
+  ✓ it rejects files exceeding 5,242,880 bytes with 422                  0.63s
+  ✓ it rejects disallowed MIME types with 422 with dataset "php script"  0.49s
+  ✓ it rejects disallowed MIME types with 422 with dataset "php applica… 0.21s
+  ✓ it rejects disallowed MIME types with 422 with dataset "svg with sc… 0.19s
+  ✓ it rejects disallowed MIME types with 422 with dataset "html"        0.20s
+  ✓ it rejects disallowed MIME types with 422 with dataset "octet-strea… 0.19s
+  ✓ it ignores client-supplied paths and filenames when generating the…  0.19s
+
+   PASS  Tests\Feature\Payment\AnonymizationTest
+  ✓ it anonymizes a stale booking: severs traveler/guest links, redacts… 0.26s
+  ✓ it skips already-anonymized bookings on re-run (idempotent — no sec… 0.20s
+
+   PASS  Tests\Feature\Payment\ConfirmBookingOnPaymentTest
+  ✓ it confirms a pending_payment booking, writes a debit ledger entry…  0.33s
+  ✓ it does not resurrect an expired booking from a late payment_succee… 0.21s
+  ✓ it is idempotent across duplicate payment_succeeded dispatches       0.20s
+
+   PASS  Tests\Feature\Payment\DeterministicPaymentGatewayTest
+  ✓ it completes the authenticated booking payment path exactly once     0.48s
+  ✓ it keeps payment confirmation owner scoped and secret bound          0.24s
+  ✓ it derives stable intent references without hardcoded credentials    0.16s
+  ✓ it does not expose the confirmation adapter unless explicitly confi… 1.60s
+
+   PASS  Tests\Feature\Payment\ExpireBookingOnPaymentFailureTest
+  ✓ it expires a pending_payment booking on payment failure with a syst… 0.27s
+  ✓ it does not overwrite a confirmed booking from a late payment_faile… 0.21s
+  ✓ it does not write a second audit when the booking is already expire… 0.22s
+
+   PASS  Tests\Feature\Payment\LedgerImmutabilityTest
+  ✓ it has UPDATED_AT set to null on FinancialLedgerEntry                0.19s
+  ✓ it prevents updates on financial ledger entries                      0.42s
+  ✓ it prevents deletion of financial ledger entries                     0.29s
+  ✓ it can append new entries but not alter old ones                     0.29s
+
+   PASS  Tests\Feature\Payment\PartnerFinancialSummaryTest
+  ✓ it returns financial summary for partner tours                       1.40s
+  ✓ it does not expose raw stripe identifiers in partner response        0.36s
+  ✓ it filters by tour_slug and date range                               0.32s
+  ✓ it returns 401 for unauthenticated requests                          0.23s
+
+   PASS  Tests\Feature\Payment\PaymentCaptureTest
+  ✓ it creates booking in pending_payment status with client_secret      0.33s
+  ✓ it returns 409 when tour is sold out                                 0.25s
+  ✓ it returns existing booking for duplicate idempotency key            0.24s
+  ✓ it maintains price at booking time when partner changes tour price   0.26s
+
+   PASS  Tests\Feature\Payment\PendingExpiryTest
+  ✓ it expires pending payment bookings older than 15 minutes and cance… 0.22s
+  ✓ it keeps expiry durable when Stripe PaymentIntent cancel fails       0.22s
+  ✓ it does not expire bookings that are still within the 15-minute win… 0.19s
+  ✓ it does not cancel a PaymentIntent for bookings without one          0.21s
+
+   PASS  Tests\Feature\Payment\RefundTest
+  ✓ it can cancel a booking within cancellation window and trigger refu… 0.30s
+  ✓ it double cancellation is idempotent                                 0.43s
+  ✓ it does not auto-refund when cancelling outside cancellation window  0.23s
+
+   PASS  Tests\Feature\Payment\StripeConnectAndInvoicingTest
+  ✓ it routes destination charge and retains platform commission when p… 0.23s
+  ✓ it updates and governance-audits partner status via account.updated… 0.94s
+  ✓ it governance-audits Stripe account creation by a partner            0.26s
+  ✓ it reuses the same Stripe invoice when invoice creation is retried   0.61s
+  ✓ it rejects unauthenticated access to Stripe partner endpoints with…  0.35s
+  ✓ it rejects unauthenticated access to Stripe partner endpoints with…  0.33s
+  ✓ it rejects unauthenticated access to Stripe partner endpoints with…  0.24s
+  ✓ it conceals Stripe partner endpoints from authenticated travelers w… 0.40s
+  ✓ it conceals Stripe partner endpoints from authenticated travelers w… 0.21s
+  ✓ it conceals Stripe partner endpoints from authenticated travelers w… 0.23s
+  ✓ it confirms booking and creates ledger charge on invoice.paid webho… 0.24s
+  ✓ it provides partner Stripe status via API                            0.21s
+  ✓ it generates an onboarding link for a partner via API                0.24s
+  ✓ it generates a dashboard login link for a partner with connected ac… 0.21s
+
+   PASS  Tests\Feature\Payment\StripeDowntimeTest
+  ✓ it returns 503 and marks the booking expired when PaymentIntent cre… 0.46s
+  ✓ it idempotency retry returns existing booking with stored client_se… 0.24s
+  ✓ it compensates an orphan PaymentIntent when the local Payment write… 0.27s
+
+   PASS  Tests\Feature\Payment\WebhookTest
+  ✓ it rejects webhook with missing signature                            0.22s
+  ✓ it stores webhook event and skips duplicates                         0.22s
+
+   PASS  Tests\Feature\Reviews\AdminModerationTest
+  ✓ it admin sees all reviews across all tours                           0.41s
+  ✓ it filters reviews by status                                         0.24s
+  ✓ it filters reviews by tour                                           0.22s
+  ✓ it hide action sets status to hidden                                 0.26s
+  ✓ it reinstate action sets status to visible                           0.24s
+  ✓ it audit trail records moderation actions                            0.24s
+  ✓ it returns 403 for non-admin role                                    0.22s
+  ✓ it hide recalculates aggregate rating                                0.27s
+
+   PASS  Tests\Feature\Reviews\EditReviewTest
+  ✓ it allows edit within 48 hours of creation                           0.48s
+  ✓ it shows edited flag after edit                                      0.23s
+  ✓ it creates audit trail entry on edit                                 0.23s
+  ✓ it returns 403 for edit after 48 hours                               0.23s
+  ✓ it returns 403 when non-owner tries to edit                          0.28s
+  ✓ it recalculates aggregate rating on edit                             0.25s
+  ✓ it does not reset the 48h edit window on edit (FR-011 regression)    0.24s
+  ✓ it flags an edited review whose new comment contains profanity       0.30s
+  ✓ it clears the flag when an edit removes the profanity                0.24s
+  ✓ it does not un-hide an admin-suppressed review via edit              0.24s
+  ✓ it rolls back the review update if the audit-trail write fails       0.36s
+
+   PASS  Tests\Feature\Reviews\PartnerReviewsTest
+  ✓ it partner sees only their tours reviews                             0.27s
+  ✓ it returns aggregate values per tour                                 0.27s
+  ✓ it filters by tour_id                                                0.25s
+  ✓ it returns 401 for unauthenticated                                   0.20s
+  ✓ it returns 404 for non-partner role                                  0.28s
+  ✓ it exposes the contract shape and omits internal ids (no PII leak)   0.26s
+  ✓ it includes tour_summaries with slug, title and aggregates           0.36s
+  ✓ it includes the response when present and omits it when absent       0.27s
+
+   PASS  Tests\Feature\Reviews\ProfanityFilterTest
+  ✓ it flags review containing profanity keyword                         0.27s
+  ✓ it does not flag clean review                                        0.16s
+  ✓ it matches case-insensitively                                        0.19s
+  ✓ it matches word boundaries only                                      0.18s
+  ✓ it handles null and empty input                                      0.28s
+  ✓ it loads the tracked default keyword list with no runtime file (FR-… 0.20s
+  ✓ it fully replaces the default list when an override file is present  0.18s
+  ✓ it logs a warning when no keywords are loaded (observable, not sile… 0.29s
+  ✓ it ships a tracked, non-empty profanity keyword list (CI guard)      0.20s
+
+   PASS  Tests\Feature\Reviews\SubmitReviewTest
+  ✓ it returns 201 when traveler submits a valid review for a completed… 0.62s
+  ✓ it succeeds with rating-only review (no comment)                     0.26s
+  ✓ it returns 403 when booking is not completed                         0.27s
+  ✓ it returns 403 when booking does not belong to traveler              0.40s
+  ✓ it returns 403 for duplicate review                                  0.26s
+  ✓ it returns 403 for booking outside 30-day window                     0.24s
+  ✓ it returns 403 when booking has no payment record                    0.29s
+  ✓ it returns 422 for rating outside 1-5                                0.24s
+  ✓ it returns 422 for comment exceeding 2000 chars                      0.37s
+  ✓ it returns 429 when rate limit exceeded                              0.38s
+
+   PASS  Tests\Feature\Reviews\ViewReviewsTest
+  ✓ it returns paginated visible reviews for a tour                      0.32s
+  ✓ it does not include hidden reviews in listing                        0.27s
+  ✓ it includes flagged reviews in public listing                        0.27s
+  ✓ it returns empty list for tour with no reviews                       0.27s
+  ✓ it shows aggregate rating correctly                                  0.27s
+  ✓ it shows first name only as reviewer name                            0.24s
+  ✓ it shows "Anonymous Traveler" when traveler deleted                  0.26s
+  ✓ it respects per_page parameter for pagination                        0.34s
+
+   PASS  Tests\Feature\Search\AvailabilityResolutionRegressionTest
+  ✓ it resolves recurring + specific_date + block precedence with dedup… 0.24s
+  ✓ it returns an empty list and is not searchable when every produced…  0.24s
+
+   PASS  Tests\Feature\Search\CategoryTest
+  ✓ it lists all active categories                                       0.47s
+  ✓ it returns tours for a valid category slug                           0.52s
+  ✓ it returns 404 for invalid category slug                             0.25s
+  ✓ it paginates tours within a category                                 0.25s
+  ✓ it supports sorting within category tours                            0.26s
+  ✓ it validates locale parameter for category tours                     0.39s
+
+   PASS  Tests\Feature\Search\ConcurrencyTest
+  ✓ it handles 500 concurrent search requests without errors             0.54s
+
+   PASS  Tests\Feature\Search\HomepageTest
+  ✓ it returns homepage data wrapped in the data envelope (L3)           0.34s
+  ✓ it returns only bookable featured tours (F9)                         0.30s
+  ✓ it excludes unbookable tours from featured (published but no pricin… 0.24s
+  ✓ it falls back to latest bookable tours when none are featured        0.36s
+  ✓ it returns categories with bookable tour counts                      0.32s
+  ✓ it sets country to null when the location has no comma (F8)          0.23s
+  ✓ it parses country from a "City, Country" location (F8)               0.25s
+  ✓ it validates locale parameter for homepage                           0.19s
+  ✓ it returns translated homepage metadata in all three locales with d… 0.21s
+  ✓ it returns translated homepage metadata in all three locales with d… 0.26s
+  ✓ it returns translated homepage metadata in all three locales with d… 0.23s
+
+   PASS  Tests\Feature\Search\NextAvailableDateTest
+  ✓ it exposes a strictly-future next_available_date on the tour detail… 0.27s
+  ✓ it returns a null next_available_date when only today is available   0.23s
+
+   PASS  Tests\Feature\Search\PublicOperatorSummaryTest
+  ✓ it returns the exact allowlisted summary with verified true for an…  0.29s
+  ✓ it returns nullable description and logo facts without new mandator… 0.26s
+  ✓ it returns null summary for an inactive partner                      0.27s
+  ✓ it returns null summary for an unapproved partner                    0.44s
+  ✓ it treats a whitespace-only public name as a missing name prerequis… 0.31s
+  ✓ it returns null summary when the partner has no profile              0.31s
+  ✓ it matches every eligibility fixture against the shared exact invar… 0.31s
+  ✓ it counts only exact eligible tours and their visible/flagged revie… 0.41s
+  ✓ it scopes ownership to the partner record id, not the user id        0.25s
+  ✓ it issues a bounded query count with eager-loaded availability coll… 0.54s
+
+   PASS  Tests\Feature\Search\RateLimitTest
+  ✓ it returns 429 when search rate limit is exceeded                    0.99s
+  ✓ it returns 429 with the contract JSON body when rate limited         0.78s
+  ✓ it includes Retry-After and X-RateLimit headers in the rate limit r… 0.75s
+  ✓ it exposes X-RateLimit headers on successful responses               0.25s
+  ✓ it localizes the rate limit message for the requested locale         0.86s
+  ✓ it different endpoints have separate rate limits                     0.91s
+
+   PASS  Tests\Feature\Search\RelatedToursTest
+  ✓ it clamps an internally requested recommendation count to eight      0.49s
+  ✓ it excludes the current, unpublished and unbookable tours while ran… 0.39s
+  ✓ it finds valid recommendations beyond more than 32 leading ineligib… 0.82s
+  ✓ it ranks genuine review stats ahead of stale cached aggregates       0.27s
+  ✓ it breaks rating ties deterministically by review count then stable… 0.81s
+  ✓ it returns the default four cards and fewer real cards without padd… 0.40s
+  ✓ it exposes no public limit parameter for related selection           0.51s
+  ✓ it preserves the TourCard contract with server minor-unit pricing a… 0.29s
+
+   PASS  Tests\Feature\Search\ScaleTest
+  ✓ it searches 10,000 tours with p95 latency under 2 seconds           38.58s
+  ✓ it filters and sorts 10,000 tours with p95 latency under 1.5 secon… 29.03s
+  ✓ it paginates deep offsets without performance degradation           20.57s
+
+   PASS  Tests\Feature\Search\SearchToursActionTest
+  ✓ it includes a price_amount <= 0 bound for price_max=0 (F7 free-tour… 0.17s
+  ✓ it omits price bounds when none are provided (F7)                    0.21s
+  ✓ it includes both bounds when price_min and price_max are provided (… 0.16s
+  ✓ it maps each locale to its own searchable attributes + shared field… 0.26s
+  ✓ it uses the shared DurationBucket thresholds in the filter expressi… 0.16s
+  ✓ it scopes facet counts to bookable tours only (F5)                   0.19s
+
+   PASS  Tests\Feature\Search\SearchToursTest
+  ✓ it returns validation error when locale is missing                   0.21s
+  ✓ it returns validation error for invalid locale                       0.23s
+  ✓ it returns successful response with valid locale and expected JSON…  0.21s
+  ✓ it accepts optional search query parameter                           0.24s
+  ✓ it strips whitespace and special chars from query safely             0.32s
+  ✓ it accepts pagination parameter                                      0.21s
+  ✓ it rejects invalid page numbers                                      0.29s
+  ✓ it rejects query exceeding max length                                0.32s
+  ✓ it supports all three supported locales with ('en')                  0.28s
+  ✓ it supports all three supported locales with ('es')                  0.23s
+  ✓ it supports all three supported locales with ('it')                  0.22s
+  ✓ it handles empty query returning all available published tours       0.28s
+  ✓ it respects per_page default of 12                                   0.25s
+  ✓ it accepts category filter parameter                                 0.33s
+  ✓ it accepts location filter parameter                                 0.21s
+  ✓ it accepts price range filter parameters                             0.21s
+  ✓ it accepts duration filter parameter                                 0.24s
+  ✓ it rejects invalid duration values                                   0.22s
+  ✓ it accepts date filter parameter                                     0.21s
+  ✓ it rejects past dates (F4 boundary)                                  0.18s
+  ✓ it rejects dates more than one year ahead (F4 boundary)              0.18s
+  ✓ it rejects invalid date format                                       0.20s
+  ✓ it accepts sort parameters with ('price_asc')                        0.24s
+  ✓ it accepts sort parameters with ('price_desc')                       0.26s
+  ✓ it accepts sort parameters with ('rating')                           0.23s
+  ✓ it accepts sort parameters with ('newest')                           0.22s
+  ✓ it accepts sort parameters with ('relevance')                        0.20s
+  ✓ it rejects invalid sort value                                        0.40s
+  ✓ it rejects page beyond the deep-offset cap (F4 boundary)             0.21s
+  ✓ it rejects inverted price ranges where max < min (F4 boundary)       0.22s
+  ✓ it rejects prices exceeding the maximum (F4 boundary)                0.23s
+  ✓ it rejects category slugs with invalid characters (F4 boundary)      0.21s
+  ✓ it accepts price_max=0 for free-tour filtering (F4/F7)               0.33s
+  ✓ it applies combined filters successfully                             0.24s
+  ✓ it returns filter metadata with categories in response               0.22s
+
+   PASS  Tests\Feature\Search\SitemapTest
+  ✓ it returns valid XML sitemap                                         0.27s
+  ✓ it includes hreflang alternates for URLs                             0.19s
+  ✓ it includes homepage URL with highest priority                       0.39s
+  ✓ it has valid cache control headers                                   0.23s
+  ✓ it only includes published tours in sitemap                          0.90s
+
+   PASS  Tests\Feature\Search\TourAvailabilityLogicTest
+  ✓ it derives upcoming available dates from a recurring daily rule      0.21s
+  ✓ it returns no dates when there are no availability rules             0.22s
+  ✓ it respects the recurring rule day-of-week filter                    0.19s
+  ✓ it shouldBeSearchable is true only for published + priced + availab… 0.19s
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   0.34s
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.28s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.24s
+  ✓ it returns only approved public operator fields and visible-review…  0.53s
+  ✓ it omits operator identity when its partner is not approved          0.41s
+  ✓ it ranks only published bookable related tours by destination then…  0.56s
+  ✓ it returns 404 for non-existent slug                                 0.25s
+  ✓ it returns 404 for draft tour                                        0.23s
+  ✓ it returns 404 for rejected tour                                     0.22s
+  ✓ it returns 410 for an archived tour that was previously published    0.27s
+  ✓ it returns 404 for an archived tour that was never published         0.25s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.24s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.27s
+  ✓ it serves a fully bookable published tour as available (F2)          0.31s
+  ✓ it returns content in the requested locale                           0.32s
+  ✓ it keeps guide languages separate from localized content and itiner… 0.36s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.33s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.39s
+  ✓ it falls back to English when requested locale is unavailable        0.36s
+  ✓ it validates locale parameter is required                            0.23s
+  ✓ it includes SEO metadata in response                                 0.25s
+  ✓ it computes the review distribution from visible reviews (L4)        0.33s
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.29s
+  ✓ it falls back to current English for missing row+state, pending, st… 0.34s
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 0.24s
+  ✓ it keeps requested general content while a null itinerary independe… 0.24s
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.31s
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.24s
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.24s
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.33s
+  ✓ it selects actual languages across the full es/it status matrix (US… 1.22s
+  ✓ it always serves English source irrespective of derived states (US2… 0.35s
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.27s
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.29s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.23s
+  ✓ it dedupes mixed legacy and typed gallery rows into sorted unique H… 0.24s
+  ✓ it surfaces an HTTP-authored specific English alt with an English l… 0.29s
+  ✓ it falls back to the current Spanish title and content locale for i… 0.26s
+  ✓ it falls back to the English title for image alt when the derivativ… 0.25s
+  ✓ it serves the nonblank legacy cover only without usable media and e… 0.28s
+  ✓ it projects genuine primary review facts even when cached legacy ag… 0.28s
+
+   PASS  Tests\Feature\Search\TourMediaReaderTest
+  ✓ it reads new cover/gallery typed rows with cover-first deterministi… 0.25s
+  ✓ it prioritizes the first usable cover-typed row even at a later sor… 0.18s
+  ✓ it prefers the cover-typed row over a stale legacy cover and never…  0.18s
+  ✓ it reads identically through loaded and unloaded media relations     0.18s
+  ✓ it deduplicates legacy repeated URLs preserving order and cover sel… 0.18s
+  ✓ it uses the legacy cover only when no usable media exists and never… 0.20s
+  ✓ it ignores non-HTTP(S) and invalid media URLs                        0.30s
+
+   PASS  Tests\Feature\Search\TourProjectionRecoveryTest
+  ✓ it repairs an actually stale recorded search document through refre… 0.40s
+
+   PASS  Tests\Feature\Search\TourSearchIndexTest
+  ✓ it derives upcoming available dates from a specific_date rule        0.19s
+  ✓ it excludes blocked exception dates from upcoming availability       0.20s
+  ✓ it indexes a published tour with pricing and availability in Scout   0.22s
+  ✓ it does not consider a draft tour searchable even with rules and pr… 0.18s
+  ✓ it spec019 defers the search projection until after the source tran… 0.19s
+  ✓ it spec019 refreshes the latest English and current derivatives aft… 0.33s
+  ✓ it spec019 delayed translation jobs load fresh source and state      0.24s
+  ✓ it exposes the rating contract on the tour detail endpoint           0.36s
+  ✓ it spec019 delayed index refresh never presents a stale derivative…  0.34s
+  ✓ it spec019 delayed index keeps an unbookable tour out of search whi… 0.32s
+
+   PASS  Tests\Feature\Security\ApiErrorConsistencyTest
+  ✓ it returns 401 json for unauthenticated public booking request with… 0.24s
+  ✓ it returns 401 json for unauthenticated public booking request with… 0.20s
+  ✓ it returns 401 json for unauthenticated partner tours request with…  0.22s
+  ✓ it returns 401 json for unauthenticated partner tours request witho… 0.20s
+  ✓ it returns 401 json for unauthenticated admin audit request with ac… 0.19s
+  ✓ it returns 401 json for unauthenticated admin audit request without… 0.18s
+
+   PASS  Tests\Feature\Security\SanitizedApiErrorsTest
+  ✓ it never exposes exception details in an API 500 response            0.22s
+  ✓ it disables debug mode outside the local environment                 0.41s
+
+   PASS  Tests\Feature\Security\TestDatabaseIsolationTest
+  ✓ it runs only against a disposable test database identity             0.23s
+
+   PASS  Tests\Feature\Security\UploadSecurityTest
+  ✓ it rejects unauthenticated request with 401                          0.17s
+  ✓ it denies traveler user access to partner upload endpoint            0.19s
+  ✓ it denies pending or unapproved partner access to upload endpoint    0.18s
+  ✓ it generates signed url for valid jpeg upload                        0.20s
+  ✓ it generates signed url for valid png upload                         0.31s
+  ✓ it rejects disallowed mime types with ('application/pdf')            0.20s
+  ✓ it rejects disallowed mime types with ('text/html')                  0.22s
+  ✓ it rejects disallowed mime types with ('image/gif')                  0.19s
+  ✓ it rejects disallowed mime types with ('image/webp')                 0.19s
+  ✓ it rejects disallowed mime types with ('application/x-php')          0.23s
+  ✓ it rejects disallowed mime types with ('application/x-executable')   0.19s
+  ✓ it rejects disallowed mime types with ('image/jpeg; php')            0.21s
+  ✓ it rejects oversized file exceeding 5MB limit                        0.23s
+  ✓ it neutralizes path traversal attempts by enforcing server-side UUI… 0.20s
+  ✓ it sets expiration within 15 minutes                                 0.22s
+
+   PASS  Tests\Feature\Traveler\ProfileTest
+  ✓ it returns traveler profile                                          0.35s
+  ✓ it returns 401 without authentication                                0.21s
+  ✓ it updates traveler profile                                          0.22s
+  ✓ it fails profile update with missing required fields                 0.18s
+  ✓ it fails profile update with invalid language                        0.24s
+  ✓ it changes password with valid current password                      0.22s
+  ✓ it fails password change with incorrect current password             0.19s
+  ✓ it fails password change with mismatched confirmation                0.19s
+  ✓ it fails password change with short new password                     0.21s
+
+   PASS  Tests\Feature\Traveler\WishlistTest
+  ✓ it lists traveler wishlist                                           1.00s
+  ✓ it returns empty wishlist for new traveler                           0.22s
+  ✓ it adds a tour to wishlist                                           0.30s
+  ✓ it returns 409 when adding duplicate tour to wishlist                0.25s
+  ✓ it returns 404 when adding non-existent tour to wishlist             0.20s
+  ✓ it removes a tour from wishlist                                      0.23s
+  ✓ it returns 404 when removing non-existent wishlist item              0.29s
+  ✓ it returns 401 for unauthenticated wishlist requests                 0.20s
+
+  Tests:    1023 passed (5287 assertions)
+  Duration: 563.33s
+
+NUMERIC_EXIT=0

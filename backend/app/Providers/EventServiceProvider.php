@@ -26,6 +26,9 @@ use App\Events\BookingEmailDeliveryFailed;
 use App\Listeners\NotifyAdminOnEmailDeliveryFailure;
 use App\Models\Tour;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -85,16 +88,50 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Search projection dispatches are deferred until after the source
+        // transaction commits via DB::afterCommit on the current default
+        // connection: a rolled-back source schedules nothing, and a lost
+        // projection push is contained inside the callback so it can never
+        // fail the source HTTP write (recovery via
+        // tours:queue-translations --refresh-ready). Eligibility is reloaded
+        // fresh inside the callback so the commit-time state decides; the
+        // actual Index/Remove push runs (PendingDispatch destructor) inside
+        // the try. The queued handlers reload fresh source/state/eligibility
+        // on execution and stay retry-safe; Scout's own after_commit observer
+        // is preserved untouched. Only the push is guarded; source
+        // SQL/validation failures propagate from the source write itself and
+        // are never swallowed.
         Tour::saved(function (Tour $tour) {
-            if ($tour->shouldBeSearchable()) {
-                IndexTourAction::dispatch($tour->id);
-            } else {
-                RemoveFromIndexAction::dispatch($tour->id);
-            }
+            $tourId = $tour->id;
+
+            DB::afterCommit(function () use ($tourId) {
+                try {
+                    $fresh = Tour::find($tourId);
+                    if ($fresh === null) {
+                        return;
+                    }
+
+                    $pending = $fresh->shouldBeSearchable()
+                        ? IndexTourAction::dispatch($tourId)
+                        : RemoveFromIndexAction::dispatch($tourId);
+                    unset($pending);
+                } catch (Throwable) {
+                    Log::warning('tour_projection.dispatch_failed', ['tour_id' => $tourId]);
+                }
+            });
         });
 
         Tour::deleted(function (Tour $tour) {
-            RemoveFromIndexAction::dispatch($tour->id);
+            $tourId = $tour->id;
+
+            DB::afterCommit(function () use ($tourId) {
+                try {
+                    $pending = RemoveFromIndexAction::dispatch($tourId);
+                    unset($pending);
+                } catch (Throwable) {
+                    Log::warning('tour_projection.dispatch_failed', ['tour_id' => $tourId]);
+                }
+            });
         });
     }
 

@@ -1,0 +1,12 @@
+{
+  "ready": true,
+  "runtime": "Existing own Node22 container retained; exact Chromium1223 plus missing Debian12 libraries/fonts copied read-only from existing matching frontend runtime",
+  "container": "bookly-spec019-browser-nextjs-1",
+  "image_replacement": false,
+  "source_tar_exit": 0,
+  "target_tar_exit": 0,
+  "smoke_exit": 0,
+  "scope": "No source/Node/base-library changes; no personal service restart; no image recreation",
+  "evidence": "root-chromium-runtime-smoke-20261009.log",
+  "note": "Root cancelled incomplete image build and slow installer. Delegate now exclusively owns browser and app gates; use existing container restart only."
+}

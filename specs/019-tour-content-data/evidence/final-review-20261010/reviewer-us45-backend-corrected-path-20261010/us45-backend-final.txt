@@ -1,0 +1,135 @@
+
+   PASS  Tests\Feature\Search\PublicOperatorSummaryTest
+  ✓ it returns the exact allowlisted summary with verified true for an… 62.42s
+  ✓ it returns nullable description and logo facts without new mandator… 1.67s
+  ✓ it returns null summary for an inactive partner                      2.40s
+  ✓ it returns null summary for an unapproved partner                    2.89s
+  ✓ it treats a whitespace-only public name as a missing name prerequis… 0.54s
+  ✓ it returns null summary when the partner has no profile              0.37s
+  ✓ it matches every eligibility fixture against the shared exact invar… 0.33s
+  ✓ it counts only exact eligible tours and their visible/flagged revie… 4.73s
+  ✓ it scopes ownership to the partner record id, not the user id        0.84s
+  ✓ it issues a bounded query count with eager-loaded availability coll… 0.68s
+
+   PASS  Tests\Feature\Search\RelatedToursTest
+  ✓ it clamps an internally requested recommendation count to eight      2.24s
+  ✓ it excludes the current, unpublished and unbookable tours while ran… 0.72s
+  ✓ it finds valid recommendations beyond more than 32 leading ineligib… 1.01s
+  ✓ it ranks genuine review stats ahead of stale cached aggregates       0.39s
+  ✓ it breaks rating ties deterministically by review count then stable… 0.42s
+  ✓ it returns the default four cards and fewer real cards without padd… 0.62s
+  ✓ it exposes no public limit parameter for related selection           1.69s
+  ✓ it preserves the TourCard contract with server minor-unit pricing a… 1.92s
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   1.36s
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.69s
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.55s
+  ✓ it returns only approved public operator fields and visible-review…  0.50s
+  ✓ it omits operator identity when its partner is not approved          0.55s
+  ✓ it ranks only published bookable related tours by destination then…  0.79s
+  ✓ it returns 404 for non-existent slug                                 0.87s
+  ✓ it returns 404 for draft tour                                        1.16s
+  ✓ it returns 404 for rejected tour                                     0.44s
+  ✓ it returns 410 for an archived tour that was previously published    0.51s
+  ✓ it returns 404 for an archived tour that was never published         0.33s
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.78s
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.29s
+  ✓ it serves a fully bookable published tour as available (F2)          0.32s
+  ✓ it returns content in the requested locale                           0.75s
+  ✓ it keeps guide languages separate from localized content and itiner… 0.44s
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.65s
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.38s
+  ✓ it falls back to English when requested locale is unavailable        0.40s
+  ✓ it validates locale parameter is required                            0.63s
+  ✓ it includes SEO metadata in response                                 0.36s
+  ✓ it computes the review distribution from visible reviews (L4)        0.42s
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.37s
+  ✓ it falls back to current English for missing row+state, pending, st… 0.45s
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 0.46s
+  ✓ it keeps requested general content while a null itinerary independe… 0.49s
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.46s
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.38s
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.36s
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.35s
+  ✓ it selects actual languages across the full es/it status matrix (US… 2.89s
+  ✓ it always serves English source irrespective of derived states (US2… 0.51s
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.64s
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.71s
+  ✓ it excludes hidden reviews from the distribution (L4)                0.98s
+  ✓ it dedupes mixed legacy and typed gallery rows into sorted unique H… 0.60s
+  ✓ it surfaces an HTTP-authored specific English alt with an English l… 3.32s
+  ✓ it falls back to the current Spanish title and content locale for i… 0.34s
+  ✓ it falls back to the English title for image alt when the derivativ… 0.47s
+  ✓ it serves the nonblank legacy cover only without usable media and e… 0.34s
+
+   PASS  Tests\Feature\Partner\TourCreateTest
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.89s
+  ✓ it creates distinct stable nonempty links for repeated valid source… 0.38s
+  ✓ it creates a tour with valid data                                    0.31s
+  ✓ it persists difficulty and ordered media with the selected cover on… 0.33s
+  ✓ it persists the structured English itinerary from partner creation   0.36s
+  ✓ it rejects malformed structured itinerary on create and update       0.44s
+  ✓ it round-trips media reordering and cover changes on partner update  0.74s
+  ✓ it rejects duplicate gallery URLs instead of silently changing orde… 0.30s
+  ✓ it stores guide-language codes independently of content translation… 0.36s
+  ✓ it keeps the partner content read contract while exposing safe deri… 0.82s
+  ✓ it rejects language names where stable guide-language codes are req… 2.30s
+  ✓ it updates guide metadata and English itinerary without conflating…  0.61s
+  ✓ it returns 422 for invalid data with missing required fields         2.14s
+  ✓ it returns 401 for unauthenticated requests                          0.63s
+  ✓ it returns 404 for non-partner users                                 1.09s
+  ✓ it scopes tour to the authenticated partner                          1.07s
+  ✓ it round-trips all nine English source fields on create and read     0.51s
+  ✓ it round-trips a nested English update while preserving omitted fie… 1.29s
+  ✓ it prefers explicit nested English keys over top-level shorthand     0.72s
+  ✓ it treats null as clear and empty array as clear while omitted keys… 0.40s
+  ✓ it rejects null titles and over-limit source fields with exact path… 0.46s
+  ✓ it rejects invalid itinerary boundaries with exact nested paths      0.52s
+  ✓ it accepts boundary-valid itineraries with canonical integer day an… 0.46s
+  ✓ it denies cross-partner updates with 404 and leaves the tour unchan… 0.88s
+  ✓ it returns 404 for unknown tours before validating malformed payloa… 0.23s
+  ✓ it rejects authored locales and platform-owned state with 422 and n… 0.39s
+  ✓ it rejects invalid media atomically without partial content changes  0.43s
+  ✓ it rejects associative objects for source lists, days and stops wit… 0.60s
+  ✓ it round-trips custom group sizes on create, read and reopen         0.41s
+  ✓ it rolls back fully persisted source and media when a late write fa… 0.93s
+  ✓ it applies destination, duration, group and category aliases on upd… 1.01s
+  ✓ it preserves existing null source fields through unrelated basic sa… 1.67s
+  ✓ it keeps a single draft across failed submit and update retries      0.96s
+  ✓ it refuses to clear required English on published tours              0.94s
+  ✓ it retains a null legacy difficulty through an unrelated English sa… 0.68s
+  ✓ it round-trips a supported difficulty and rejects an unsupported va… 0.51s
+  ✓ it gives explicit guide_languages precedence over the languages ali… 0.28s
+  ✓ it accepts the languages alias when canonical guide_languages is om… 0.53s
+  ✓ it enforces the twenty-code bound for guide languages (US4 T047)     0.40s
+  ✓ it accepts twenty distinct gallery URLs and rejects the twenty-firs… 0.81s
+  ✓ it rejects an over-limit alt description atomically without partial… 0.43s
+  ✓ it accepts a 500-codepoint alt and declares the pending alt storage… 0.81s
+  ✓ it writes cover/gallery types with the flagged cover synchronized t… 0.68s
+  ✓ it defaults the cover to the first valid image when none is flagged… 0.49s
+  ✓ it keeps exact media rows, ids and cover when media is omitted from… 0.28s
+  ✓ it retains prior specific alt when a current URL is resent without…  0.30s
+  ✓ it clears specific alt on explicit null while keeping the row (US4…  0.47s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.34s
+  ✓ it rejects an unusable media URL together with a source change atom… 0.44s
+
+   PASS  Tests\Feature\Partner\TourContentInputTest
+  ✓ it prefers explicit nested English keys while shorthand fills absen… 0.36s
+  ✓ it preserves omitted keys and keeps null and empty-array meanings d… 0.64s
+  ✓ it normalizes absent stops to empty arrays while passing malformed…  0.46s
+  ✓ it rejects over-limit source text and lists with exact field paths   0.30s
+  ✓ it rejects null titles while accepting nullable draft descriptions   0.22s
+  ✓ it rejects out-of-range itinerary values with exact nested paths     0.30s
+  ✓ it accepts boundary-valid itineraries including empty lists and zer… 0.57s
+  ✓ it rejects explicit null stops instead of treating null as empty     0.24s
+  ✓ it rejects every authored non-English locale with its precise path   0.39s
+  ✓ it rejects platform-owned keys top-level and nested, even when null… 0.36s
+  ✓ it rejects nested provider state and top-level provider/job/error s… 0.27s
+  ✓ it rejects unexpected English source keys while keeping valid non-s… 0.21s
+  ✓ it wires the shared boundary into both partner requests with field-… 0.33s
+
+  Tests:    120 passed (1718 assertions)
+  Duration: 159.70s
+
+NUMERIC_EXIT=0

@@ -28,7 +28,45 @@ jobs:
         
       - name: Prepare application
         uses: ./.github/actions/prepare-browser-ci
+
+      - name: Reserve separate CPU cores for the browser and application
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Renderer wall time includes waits when the local server competes for
+          # CPU. Keep at least two cores for Chrome without warming page caches.
+          python3 - <<'PY' >> "$GITHUB_ENV"
+          import os
+          cores = sorted(os.sched_getaffinity(0))
+          if len(cores) < 4:
+              raise SystemExit('Lighthouse isolation requires at least four available CPU cores')
+          split = len(cores) // 2
+          print('APPLICATION_CPUS=' + ','.join(map(str, cores[:split])))
+          print('BROWSER_CPUS=' + ','.join(map(str, cores[split:])))
+          PY
+
+      - name: Apply CPU isolation and record resource allocation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t containers < <(docker compose -f docker-compose.ci.yml ps -q)
+          test "${#containers[@]}" -gt 0
+          docker update --cpuset-cpus "$APPLICATION_CPUS" "${containers[@]}"
+          chrome=$(command -v google-chrome)
+          wrapper="$RUNNER_TEMP/bookly-lighthouse-chrome"
+          printf '#!/usr/bin/env bash\nexec taskset -c %q %q "$@"\n' "$BROWSER_CPUS" "$chrome" > "$wrapper"
+          chmod +x "$wrapper"
+          echo "CHROME_PATH=$wrapper" >> "$GITHUB_ENV"
+          echo "Application CPUs: $APPLICATION_CPUS; browser CPUs: $BROWSER_CPUS"
+          docker stats --no-stream --format '{{.Name}}: CPU={{.CPUPerc}} memory={{.MemUsage}}'
+          free -m
         
+      - name: Verify browser CPU readiness without visiting the application
+        working-directory: ./frontend
+        run: |
+          node --test scripts/lighthouse-runtime-preflight.test.mjs
+          node scripts/lighthouse-runtime-preflight.mjs
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         with:
@@ -36,6 +74,37 @@ jobs:
           uploadArtifacts: true
           temporaryPublicStorage: true
           runs: 3
+
+      - name: Profile cold browser tasks after a failed audit
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          # These extra profiles diagnose failures; they do not replace any of
+          # the twelve acceptance reports already uploaded by the audit action.
+          node - <<'JS'
+          const fs = require('node:fs');
+          const config = require('./frontend/lighthouserc.js');
+          config.ci.collect.url = [config.ci.collect.url[0], config.ci.collect.url[2]];
+          config.ci.collect.numberOfRuns = 1;
+          config.ci.collect.settings.additionalTraceCategories =
+            'disabled-by-default-v8.cpu_profiler,v8.gc,disabled-by-default-v8.gc';
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/bookly-profile.json`, JSON.stringify(config));
+          JS
+          ./frontend/node_modules/.bin/lhci collect --config="$RUNNER_TEMP/bookly-profile.json"
+
+      - name: Retain Lighthouse diagnostic traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-diagnostic-traces
+          path: |
+            *.trace.json
+            *.devtoolslog.json
+            frontend/*.trace.json
+            frontend/*.devtoolslog.json
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Application diagnostics
         if: failure()

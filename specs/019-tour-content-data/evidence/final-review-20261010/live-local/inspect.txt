@@ -1,0 +1,2 @@
+{"step":"live-derivative-inspection","results":{"es":{"status":"ready","error_category":null,"matching_hash":true,"derivative_present":true,"public_http_status":200,"public_content_locale":"es","price_amount":7500},"it":{"status":"ready","error_category":null,"matching_hash":true,"derivative_present":true,"public_http_status":200,"public_content_locale":"it","price_amount":7500}},"english_preserved":true,"raw_legacy_preserved":true,"queue_size":0}
+NUMERIC_EXIT=0

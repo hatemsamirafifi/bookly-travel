@@ -1,0 +1,30 @@
+
+   PASS  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide…  20.90s
+  ✓ it marks derived translations stale only when English source change… 0.37s
+  ✓ it requeues derived content when the English description changes wi… 0.43s
+  ✓ it clears optional English content and requeues derived translation… 0.38s
+  ✓ it translates traveler-facing itinerary and information while retai… 0.53s
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 0.32s
+  ✓ it accepts only the latest English revision when an older translati… 0.37s
+  ✓ it schedules a fresh search projection after a derived translation…  1.39s
+  ✓ it serves a visible English fallback until generated content is rea… 0.95s
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.33s
+  ✓ it uses backend-only Gemini structured output and rejects transient… 0.38s
+  ✓ it retries only transient Gemini failures                            0.53s
+  ✓ it spec019 ignores reordered English object keys without content ch… 0.54s
+  ✓ it spec019 ignores media and guide-language saves without English c… 0.41s
+  ✓ it spec019 stales both locales while retaining old derivatives on a… 0.55s
+  ✓ it spec019 commits the English source when generation dispatch fail… 0.57s
+  ✓ it spec019 commits the English update when regeneration dispatch fa… 0.35s
+  ✓ it spec019 schedules no generation when the source transaction roll… 0.27s
+  ✓ it spec019 rejects non-bounded reconcile cursors and limits          0.26s
+  ✓ it spec019 resumes bounded reconcile runs in ID order with a reusab… 0.36s
+  ✓ it spec019 requeues orphaned, stale, failed, and projection-less tr… 0.39s
+  ✓ it spec019 bounded reruns never rewrite current derivatives or sour… 0.49s
+  ✓ it spec019 refresh-ready requeues only the search projection for cu… 0.40s
+
+  Tests:    23 passed (241 assertions)
+  Duration: 34.40s
+
+NUMERIC_EXIT=0

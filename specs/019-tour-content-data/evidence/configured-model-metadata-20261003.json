@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-03",
+  "authorization": "User authorized using the currently configured translation model for the later real generation rehearsal",
+  "environment": "Existing local backend, read-only provider model metadata request; no tour writes or generation",
+  "reference": "https://ai.google.dev/api/models",
+  "authentication": "Existing backend key used in a request header; key and headers excluded from output and evidence",
+  "exit_code": 0,
+  "observed": {
+    "configured_model": "gemini-3.5-flash-lite",
+    "http_status": 200,
+    "registered_model": "models/gemini-3.5-flash-lite",
+    "supports_generate_content": true,
+    "error_status": null
+  },
+  "limit": "Model registration and supported method verified; actual generation, quota, async job behavior, staging deployment and rollback remain unverified."
+}

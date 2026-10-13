@@ -1,0 +1,25 @@
+
+   FAIL  Tests\Feature\Partner\TourAfterCommitContainmentTest
+  ⨯ it keeps a committed public source save successful when Scouts queu… 6.56s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentTest > it keeps a…
+  Failed asserting that false is true.
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:159
+    155▕     $tour = spec019CreateOuterCommitTour($this);
+    156▕     Tour::withoutEvents(fn () => $tour->update(['status' => 'published']));
+    157▕     addAvailabilityRule($tour);
+    158▕     $tour = $tour->fresh();
+  ➜ 159▕     expect($tour->shouldBeSearchable())->toBeTrue();
+    160▕     spec019BindProjectionFailureQueue(true);
+    161▕     config()->set('scout.queue', ['connection' => 'spec019_projection_failure', 'queue' => 'scout']);
+    162▕
+    163▕     DB::beginTransaction();
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:159
+
+
+  Tests:    1 failed (5 assertions)
+  Duration: 6.87s
+
+NUMERIC_EXIT=1

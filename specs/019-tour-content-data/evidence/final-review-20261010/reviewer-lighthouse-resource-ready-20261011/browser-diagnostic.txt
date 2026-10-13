@@ -1,0 +1,37 @@
+Sat, 10 Oct 2026 21:37:57 GMT ChromeLauncher Waiting for browser.
+Sat, 10 Oct 2026 21:37:57 GMT ChromeLauncher Waiting for browser...
+Sat, 10 Oct 2026 21:37:58 GMT ChromeLauncher Waiting for browser.....
+Sat, 10 Oct 2026 21:37:58 GMT ChromeLauncher Waiting for browser.....✓
+{"port":42889,"pid":10482,"disable_gpu":false,"chrome_exit":null}
+{"http_status":200,"browser":"Chrome/148.0.7778.96","has_websocket_url":true}
+chrome-err.log [10482:10502:1010/213758.082619:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10482:10502:1010/213758.102612:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10502:1010/213758.102814:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10482:10502:1010/213758.103001:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10482:10502:1010/213758.116802:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10502:1010/213758.226642:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10502:1010/213758.312690:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+
+DevTools listening on ws://127.0.0.1:42889/devtools/browser/a4b5f39e-7cb6-488d-9c81-132f0c709343
+[10482:10482:1010/213758.320280:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10502:1010/213758.320520:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10482:1010/213758.320862:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10482:1010/213758.328039:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10482:1010/213758.604643:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10482:1010/213758.604880:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10502:1010/213758.611115:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10502:1010/213758.611246:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10482:10502:1010/213758.611314:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[10482:10482:1010/213759.132481:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10482:1010/213759.132589:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type:
+[10482:10502:1010/213759.202759:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10482:1010/213759.204134:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10502:1010/213759.204464:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10482:1010/213759.204504:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+[10482:10502:1010/213759.204556:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[10482:10482:1010/213759.204576:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+(process:10482): GLib-GIO-CRITICAL **: 21:37:59.310: g_settings_schema_source_lookup: assertion 'source != NULL' failed
+
+chrome-out.log
+Sat, 10 Oct 2026 21:37:59 GMT ChromeLauncher Killing Chrome instance 10482

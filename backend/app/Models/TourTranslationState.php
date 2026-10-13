@@ -14,6 +14,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class TourTranslationState extends Model
 {
+    /**
+     * Operational internals never leave the server: revision hashes and
+     * error categories stay queryable but are hidden from serialization.
+     */
+    protected $hidden = [
+        'source_hash',
+        'translated_hash',
+        'last_error_code',
+    ];
+
     protected $fillable = [
         'tour_id',
         'locale',

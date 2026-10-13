@@ -1,0 +1,1 @@
+All [App\Models\Tour] records have been flushed.

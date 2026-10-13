@@ -16,7 +16,6 @@ services:
         fi
         composer install --no-interaction --prefer-dist --no-progress --no-scripts
     volumes:
-      - ./backend:/var/www/html
       - ./backend/vendor:/seed-vendor:ro
       - backend_vendor:/var/www/html/vendor
     networks:
@@ -33,7 +32,9 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - ./frontend:/app
+      # Production code comes from the image; Windows source binds make cold
+      # requests slow. Rebuild this service after changing frontend source.
+      - ./frontend/.env.local:/app/.env.local:ro
       - /app/node_modules
       - /app/.next
     environment:
@@ -62,7 +63,8 @@ services:
     container_name: bookly-backend
     restart: unless-stopped
     volumes:
-      - ./backend:/var/www/html
+      - ./backend/.env:/var/www/html/.env:ro
+      - ./backend/storage:/var/www/html/storage
       # Keep locked PHP dependencies on Linux; Windows bind-mount stat/read
       # latency otherwise affects cold FPM requests and every scheduler boot.
       - backend_vendor:/var/www/html/vendor
@@ -74,6 +76,11 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_QUEUE_RETRY_AFTER=${REDIS_QUEUE_RETRY_AFTER:-90}
+      # Pass explicit host values; otherwise let Laravel read backend/.env.
+      - GEMINI_API_KEY
+      - GEMINI_TRANSLATION_MODEL
       - APP_URL=http://localhost
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
@@ -100,9 +107,10 @@ services:
     # Processes both the default queue and the `scout` queue (config/scout.php
     # queues Meilisearch index syncs on `scout`); without `scout` here, newly
     # created/updated tours never reach the search index.
-    command: php artisan queue:work --queue=default,booking_emails,scout
+    command: php artisan queue:work --queue=default,booking_emails,scout --timeout=60
     volumes:
-      - ./backend:/var/www/html
+      - ./backend/.env:/var/www/html/.env:ro
+      - ./backend/storage:/var/www/html/storage
       - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql
@@ -112,6 +120,11 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_QUEUE_RETRY_AFTER=${REDIS_QUEUE_RETRY_AFTER:-90}
+      # Use the same provider configuration as the backend.
+      - GEMINI_API_KEY
+      - GEMINI_TRANSLATION_MODEL
       - APP_URL=http://localhost
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
@@ -137,7 +150,8 @@ services:
     restart: unless-stopped
     command: php artisan schedule:work
     volumes:
-      - ./backend:/var/www/html
+      - ./backend/.env:/var/www/html/.env:ro
+      - ./backend/storage:/var/www/html/storage
       - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql

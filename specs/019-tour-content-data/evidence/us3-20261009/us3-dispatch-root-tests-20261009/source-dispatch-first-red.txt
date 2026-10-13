@@ -1,0 +1,360 @@
+
+   FAIL  Tests\Feature\Partner\TourTranslationTest
+  ✓ it queues Spanish and Italian from English without treating guide…  15.02s
+  ✓ it marks derived translations stale only when English source change… 0.54s
+  ✓ it requeues derived content when the English description changes wi… 0.46s
+  ✓ it clears optional English content and requeues derived translation… 0.54s
+  ✓ it translates traveler-facing itinerary and information while retai… 0.45s
+  ✓ it rejects partner-authored Spanish while keeping English source wr… 0.33s
+  ✓ it accepts only the latest English revision when an older translati… 0.39s
+  ✓ it schedules a fresh search projection after a derived translation…  0.65s
+  ✓ it serves a visible English fallback until generated content is rea… 0.95s
+  ✓ it marks a rejected provider result failed while keeping the publis… 0.35s
+  ✓ it uses backend-only Gemini structured output and rejects transient… 0.29s
+  ✓ it retries only transient Gemini failures                            0.21s
+  ✓ it spec019 ignores reordered English object keys without content ch… 0.31s
+  ✓ it spec019 ignores media and guide-language saves without English c… 0.29s
+  ✓ it spec019 stales both locales while retaining old derivatives on a… 0.48s
+  ⨯ it spec019 commits the English source when generation dispatch fail… 4.94s
+  ⨯ it spec019 commits the English update when regeneration dispatch fa… 0.38s
+  ⨯ it spec019 schedules no generation when the source transaction roll… 0.21s
+  ⨯ it spec019 rejects non-bounded reconcile cursors and limits          0.22s
+  ✓ it spec019 resumes bounded reconcile runs in ID order with a reusab… 1.13s
+  ⨯ it spec019 requeues orphaned, stale, failed, and projection-less tr… 0.35s
+  ✓ it spec019 bounded reruns never rewrite current derivatives or sour… 0.30s
+  ⨯ it spec019 refresh-ready requeues only the search projection for cu… 0.29s
+
+   FAIL  Tests\Feature\Search\TourSearchIndexTest
+  ✓ it derives upcoming available dates from a specific_date rule        0.26s
+  ✓ it excludes blocked exception dates from upcoming availability       0.34s
+  ✓ it indexes a published tour with pricing and availability in Scout   0.27s
+  ✓ it does not consider a draft tour searchable even with rules and pr… 0.22s
+  ⨯ it spec019 defers the search projection until after the source tran… 0.24s
+  ✓ it spec019 refreshes the latest English and current derivatives aft… 0.38s
+  ✓ it spec019 delayed translation jobs load fresh source and state      0.26s
+  ✓ it exposes the rating contract on the tour detail endpoint           0.24s
+
+   FAIL  Tests\Feature\Search\TourProjectionRecoveryTest
+  ⨯ it repairs an actually stale recorded search document through refre… 0.41s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationTest > it spec019 commits th…
+  Expected response status code [201] but received 500.
+Failed asserting that 500 is identical to 201.
+
+The following exception occurred during the last request:
+
+RuntimeException: spec019_dispatch_probe in /var/www/html/tests/Support/Spec019DispatchFailureQueue.php:61
+Stack trace:
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Queue/SyncQueue.php(52): Tests\Support\Spec019DispatchFailureQueue->executeJob(Object(App\Domains\Partner\Jobs\GenerateTourTranslationJob), '', NULL)
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseTransactionRecord.php(69): Illuminate\Queue\SyncQueue->Illuminate\Queue\{closure}()
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php(65): Illuminate\Database\DatabaseTransactionRecord->executeCallbacks()
+#3 [internal function]: Illuminate\Support\HigherOrderCollectionProxy->Illuminate\Support\{closure}(Object(Illuminate\Database\DatabaseTransactionRecord), 0)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Arr.php(609): array_map(Object(Closure), Array, Array)
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(799): Illuminate\Support\Arr::map(Array, Object(Closure))
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php(64): Illuminate\Support\Collection->map(Object(Closure))
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseTransactionsManager.php(96): Illuminate\Support\HigherOrderCollectionProxy->__call('executeCallback...', Array)
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php(63): Illuminate\Database\DatabaseTransactionsManager->commit('spec019_committ...', 1, 0)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(495): Illuminate\Database\Connection->transaction(Object(Closure))
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\Database\DatabaseManager->__call('transaction', Array)
+#11 /var/www/html/app/Domains/Partner/Services/TourService.php(92): Illuminate\Support\Facades\Facade::__callStatic('transaction', Array)
+#12 /var/www/html/app/Domains/Partner/Controllers/TourController.php(65): App\Domains\Partner\Services\TourService->createTour(17, Array)
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(47): App\Domains\Partner\Controllers\TourController->store(Object(App\Domains\Partner\Requests\StoreTourRequest))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\ControllerDispatcher->dispatch(Object(Illuminate\Routing\Route), Object(App\Domains\Partner\Controllers\TourController), 'store')
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(212): Illuminate\Routing\Route->runController()
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(808): Illuminate\Routing\Route->run()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Routing\Router->Illuminate\Routing\{closure}(Object(Illuminate\Http\Request))
+#18 /var/www/html/app/Domains/Partner/Middleware/PartnerRoleMiddleware.php(36): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\Domains\Partner\Middleware\PartnerRoleMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(51): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(161): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(127): Illuminate\Routing\Middleware\ThrottleRequests->handleRequest(Object(Illuminate\Http\Request), Object(Closure), Array)
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(89): Illuminate\Routing\Middleware\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\Http\Request), Object(Closure), 'booking.get', Object(Closure))
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\ThrottleRequests->handle(Object(Illuminate\Http\Request), Object(Closure), 'booking.get')
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(64): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Auth\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure), 'sanctum')
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(807): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(786): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(750): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#32 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(739): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(201): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#34 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#35 /var/www/html/vendor/livewire/livewire/src/Features/SupportDisablingBackButtonCache/DisableBackButtonCacheMiddleware.php(19): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#36 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Livewire\Features\SupportDisablingBackButtonCache\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#38 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#39 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#40 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#41 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#42 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#43 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#44 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#45 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(110): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#46 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#47 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(62): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#48 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#49 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#50 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#51 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#52 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#53 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#54 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(176): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#55 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#56 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#57 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('POST', '/api/partner/to...', Array, Array, Array, Array, '{"title":"Spec0...')
+#58 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(411): Illuminate\Foundation\Testing\TestCase->json('POST', '/api/partner/to...', Array, Array, 0)
+#59 /var/www/html/tests/Feature/Partner/TourTranslationTest.php(424): Illuminate\Foundation\Testing\TestCase->postJson('/api/partner/to...', Array, Array)
+#60 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseMethodFactory.php(171): P\Tests\Feature\Partner\TourTranslationTest->{closure}()
+#61 [internal function]: P\Tests\Feature\Partner\TourTranslationTest->Pest\Factories\{closure}()
+#62 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): call_user_func_array(Object(Closure), Array)
+#63 /var/www/html/vendor/pestphp/pest/src/Support/ExceptionTrace.php(26): P\Tests\Feature\Partner\TourTranslationTest->Pest\Concerns\{closure}()
+#64 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): Pest\Support\ExceptionTrace::ensure(Object(Closure))
+#65 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(321): P\Tests\Feature\Partner\TourTranslationTest->__callClosure(Object(Closure), Array)
+#66 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseFactory.php(170) : eval()'d code(152): P\Tests\Feature\Partner\TourTranslationTest->__runTest(Object(Closure))
+#67 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): P\Tests\Feature\Partner\TourTranslationTest->__pest_evaluable_it_spec019_commits_the_English_source_when_generation_dispatch_fails_after_commit_on_create()
+#68 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(519): PHPUnit\Framework\TestCase->runTest()
+#69 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#70 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(365): PHPUnit\Framework\TestRunner->run(Object(P\Tests\Feature\Partner\TourTranslationTest))
+#71 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#72 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#73 /var/www/html/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#74 /var/www/html/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#75 /var/www/html/vendor/pestphp/pest/src/Kernel.php(103): PHPUnit\TextUI\Application->run(Array)
+#76 /var/www/html/vendor/pestphp/pest/bin/pest(184): Pest\Kernel->handle(Array, Array)
+#77 /var/www/html/vendor/pestphp/pest/bin/pest(192): {closure}()
+#78 /var/www/html/vendor/bin/pest(119): include('/var/www/html/v...')
+#79 {main}
+
+----------------------------------------------------------------------------------
+
+spec019_dispatch_probe
+
+  at tests/Feature/Partner/TourTranslationTest.php:466
+    462▕
+    463▕         // Desired: source stays 201 with a sanitized recoverable state and no
+    464▕         // raw probe text in the response. Red until production catches the
+    465▕         // post-commit push failure per locale.
+  ➜ 466▕         $response->assertCreated();
+    467▕         expect(Spec019DispatchFailureQueue::translationAttempts())->toHaveCount(2);
+    468▕         expect((string) $response->getContent())->not->toContain(Spec019DispatchFailureQueue::MARKER);
+    469▕     } finally {
+    470▕         config()->set('database.default', $previousDefault);
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationTest > it spec019 commits th…
+  Expected response status code [200] but received 500.
+Failed asserting that 500 is identical to 200.
+
+The following exception occurred during the last request:
+
+RuntimeException: spec019_dispatch_probe in /var/www/html/tests/Support/Spec019DispatchFailureQueue.php:61
+Stack trace:
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Queue/SyncQueue.php(52): Tests\Support\Spec019DispatchFailureQueue->executeJob(Object(App\Domains\Partner\Jobs\GenerateTourTranslationJob), '', NULL)
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseTransactionRecord.php(69): Illuminate\Queue\SyncQueue->Illuminate\Queue\{closure}()
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php(65): Illuminate\Database\DatabaseTransactionRecord->executeCallbacks()
+#3 [internal function]: Illuminate\Support\HigherOrderCollectionProxy->Illuminate\Support\{closure}(Object(Illuminate\Database\DatabaseTransactionRecord), 0)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Arr.php(609): array_map(Object(Closure), Array, Array)
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(799): Illuminate\Support\Arr::map(Array, Object(Closure))
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/HigherOrderCollectionProxy.php(64): Illuminate\Support\Collection->map(Object(Closure))
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseTransactionsManager.php(96): Illuminate\Support\HigherOrderCollectionProxy->__call('executeCallback...', Array)
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php(63): Illuminate\Database\DatabaseTransactionsManager->commit('spec019_committ...', 1, 0)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(495): Illuminate\Database\Connection->transaction(Object(Closure))
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\Database\DatabaseManager->__call('transaction', Array)
+#11 /var/www/html/app/Domains/Partner/Services/TourTranslationService.php(139): Illuminate\Support\Facades\Facade::__callStatic('transaction', Array)
+#12 /var/www/html/app/Domains/Partner/Services/TourService.php(151): App\Domains\Partner\Services\TourTranslationService->withContentLock(15, Object(Closure))
+#13 /var/www/html/app/Domains/Partner/Controllers/TourController.php(83): App\Domains\Partner\Services\TourService->updateTour(Object(App\Models\Tour), Array)
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(47): App\Domains\Partner\Controllers\TourController->update(Object(App\Domains\Partner\Requests\UpdateTourRequest), '15')
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\ControllerDispatcher->dispatch(Object(Illuminate\Routing\Route), Object(App\Domains\Partner\Controllers\TourController), 'update')
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(212): Illuminate\Routing\Route->runController()
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(808): Illuminate\Routing\Route->run()
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Routing\Router->Illuminate\Routing\{closure}(Object(Illuminate\Http\Request))
+#19 /var/www/html/app/Domains/Partner/Middleware/PartnerRoleMiddleware.php(36): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\Domains\Partner\Middleware\PartnerRoleMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(51): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(161): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(127): Illuminate\Routing\Middleware\ThrottleRequests->handleRequest(Object(Illuminate\Http\Request), Object(Closure), Array)
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(89): Illuminate\Routing\Middleware\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\Http\Request), Object(Closure), 'booking.get', Object(Closure))
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\ThrottleRequests->handle(Object(Illuminate\Http\Request), Object(Closure), 'booking.get')
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(64): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Auth\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure), 'sanctum')
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(807): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(786): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#32 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(750): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(739): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#34 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(201): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#35 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#36 /var/www/html/vendor/livewire/livewire/src/Features/SupportDisablingBackButtonCache/DisableBackButtonCacheMiddleware.php(19): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Livewire\Features\SupportDisablingBackButtonCache\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#38 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#39 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#40 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#41 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#42 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#43 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#44 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#45 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#46 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(110): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#47 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#48 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(62): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#49 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#50 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#51 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#52 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#53 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#54 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#55 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(176): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#56 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#57 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#58 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('PUT', '/api/partner/to...', Array, Array, Array, Array, '{"title":"Spec0...')
+#59 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(441): Illuminate\Foundation\Testing\TestCase->json('PUT', '/api/partner/to...', Array, Array, 0)
+#60 /var/www/html/tests/Feature/Partner/TourTranslationTest.php(507): Illuminate\Foundation\Testing\TestCase->putJson('/api/partner/to...', Array, Array)
+#61 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseMethodFactory.php(171): P\Tests\Feature\Partner\TourTranslationTest->{closure}()
+#62 [internal function]: P\Tests\Feature\Partner\TourTranslationTest->Pest\Factories\{closure}()
+#63 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): call_user_func_array(Object(Closure), Array)
+#64 /var/www/html/vendor/pestphp/pest/src/Support/ExceptionTrace.php(26): P\Tests\Feature\Partner\TourTranslationTest->Pest\Concerns\{closure}()
+#65 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): Pest\Support\ExceptionTrace::ensure(Object(Closure))
+#66 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(321): P\Tests\Feature\Partner\TourTranslationTest->__callClosure(Object(Closure), Array)
+#67 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseFactory.php(170) : eval()'d code(161): P\Tests\Feature\Partner\TourTranslationTest->__runTest(Object(Closure))
+#68 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): P\Tests\Feature\Partner\TourTranslationTest->__pest_evaluable_it_spec019_commits_the_English_update_when_regeneration_dispatch_fails_after_commit()
+#69 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(519): PHPUnit\Framework\TestCase->runTest()
+#70 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#71 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(365): PHPUnit\Framework\TestRunner->run(Object(P\Tests\Feature\Partner\TourTranslationTest))
+#72 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#73 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#74 /var/www/html/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#75 /var/www/html/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#76 /var/www/html/vendor/pestphp/pest/src/Kernel.php(103): PHPUnit\TextUI\Application->run(Array)
+#77 /var/www/html/vendor/pestphp/pest/bin/pest(184): Pest\Kernel->handle(Array, Array)
+#78 /var/www/html/vendor/pestphp/pest/bin/pest(192): {closure}()
+#79 /var/www/html/vendor/bin/pest(119): include('/var/www/html/v...')
+#80 {main}
+
+----------------------------------------------------------------------------------
+
+spec019_dispatch_probe
+
+  at tests/Feature/Partner/TourTranslationTest.php:527
+    523▕         foreach (Spec019DispatchFailureQueue::translationAttempts() as $attempt) {
+    524▕             expect($attempt['level'])->toBe(0);
+    525▕         }
+    526▕
+  ➜ 527▕         $response->assertOk();
+    528▕         expect(Spec019DispatchFailureQueue::translationAttempts())->toHaveCount(2);
+    529▕         expect((string) $response->getContent())->not->toContain(Spec019DispatchFailureQueue::MARKER);
+    530▕     } finally {
+    531▕         config()->set('database.default', $previousDefault);
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationTest > it spec019 schedules…
+  Failed asserting that an array is empty.
+
+  at tests/Feature/Partner/TourTranslationTest.php:570
+    566▕     expect(Spec019DispatchFailureQueue::translationAttempts())->toBeEmpty();
+    567▕     // Desired: the rolled-back source schedules no search projection either.
+    568▕     // Red while Tour::saved dispatches IndexTourAction before commit.
+    569▕     expect(Spec019DispatchFailureQueue::attemptsForJob(IndexTourAction::class))->toBeEmpty();
+  ➜ 570▕     expect(Spec019DispatchFailureQueue::attemptsForJob(\App\Domains\Search\Actions\RemoveFromIndexAction::class))->toBeEmpty();
+    571▕
+    572▕     Spec019DispatchFailureQueue::restore();
+    573▕ });
+    574▕
+
+  1   tests/Feature/Partner/TourTranslationTest.php:570
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationTest > it spec019 rejects no…
+  Expecting 0 not to be 0.
+
+  at tests/Feature/Partner/TourTranslationTest.php:576
+    572▕     Spec019DispatchFailureQueue::restore();
+    573▕ });
+    574▕
+    575▕ it('spec019 rejects non-bounded reconcile cursors and limits', function () {
+  ➜ 576▕     expect(Artisan::call('tours:queue-translations', ['--after-id' => '-5']))->not->toBe(0);
+    577▕     expect(Artisan::call('tours:queue-translations', ['--after-id' => 'abc']))->not->toBe(0);
+    578▕     expect(Artisan::call('tours:queue-translations', ['--after-id' => '2.5']))->not->toBe(0);
+    579▕     expect(Artisan::call('tours:queue-translations', ['--limit' => '0']))->not->toBe(0);
+    580▕     expect(Artisan::call('tours:queue-translations', ['--limit' => '501']))->not->toBe(0);
+
+  1   tests/Feature/Partner/TourTranslationTest.php:576
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationTest > it spec019 requeues o…
+  The expected [App\Domains\Partner\Jobs\GenerateTourTranslationJob] job was pushed 1 times instead of 4 times.
+Failed asserting that 1 is identical to 4.
+
+  at vendor/laravel/framework/src/Illuminate/Support/Testing/Fakes/QueueFake.php:127
+    123▕     protected function assertPushedTimes($job, $times = 1)
+    124▕     {
+    125▕         $count = $this->pushed($job)->count();
+    126▕
+  ➜ 127▕         PHPUnit::assertSame(
+    128▕             $times, $count,
+    129▕             "The expected [{$job}] job was pushed {$count} times instead of {$times} times."
+    130▕         );
+    131▕     }
+
+      [2m+3 vendor frames [22m
+  4   tests/Feature/Partner/TourTranslationTest.php:637
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationTest…  InvalidOptionException
+  The "--refresh-ready" option does not exist.
+
+  at vendor/symfony/console/Input/ArrayInput.php:154
+    150▕     private function addLongOption(string $name, mixed $value): void
+    151▕     {
+    152▕         if (!$this->definition->hasOption($name)) {
+    153▕             if (!$this->definition->hasNegation($name)) {
+  ➜ 154▕                 throw new InvalidOptionException(\sprintf('The "--%s" option does not exist.', $name));
+    155▕             }
+    156▕
+    157▕             $optionName = $this->definition->negationToName($name);
+    158▕             $this->options[$optionName] = false;
+
+      [2m+11 vendor frames [22m
+  12  tests/Feature/Partner/TourTranslationTest.php:699
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourSearchIndexTest > it spec019 defers the…
+  Failed asserting that an array is empty.
+
+  at tests/Feature/Search/TourSearchIndexTest.php:121
+    117▕
+    118▕     // Desired: Tour::saved queues IndexTourAction after commit, so nothing
+    119▕     // executes inside the transaction. Red while the model event dispatches
+    120▕     // before commit; the spy records the real SyncQueue execution attempt.
+  ➜ 121▕     expect(Spec019DispatchFailureQueue::attemptsForJob(IndexTourAction::class))->toBeEmpty();
+    122▕
+    123▕     Spec019DispatchFailureQueue::restore();
+    124▕ });
+    125▕
+
+  1   tests/Feature/Search/TourSearchIndexTest.php:121
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourProjectionRecove…  InvalidOptionException
+  The "--refresh-ready" option does not exist.
+
+  at vendor/symfony/console/Input/ArrayInput.php:154
+    150▕     private function addLongOption(string $name, mixed $value): void
+    151▕     {
+    152▕         if (!$this->definition->hasOption($name)) {
+    153▕             if (!$this->definition->hasNegation($name)) {
+  ➜ 154▕                 throw new InvalidOptionException(\sprintf('The "--%s" option does not exist.', $name));
+    155▕             }
+    156▕
+    157▕             $optionName = $this->definition->negationToName($name);
+    158▕             $this->options[$optionName] = false;
+
+      [2m+11 vendor frames [22m
+  12  tests/Feature/Search/TourProjectionRecoveryTest.php:85
+
+
+  Tests:    8 failed, 24 passed (192 assertions)
+  Duration: 32.75s
+
+NUMERIC_EXIT=2

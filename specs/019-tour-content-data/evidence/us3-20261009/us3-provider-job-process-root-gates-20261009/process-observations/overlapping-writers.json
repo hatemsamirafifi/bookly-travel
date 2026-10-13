@@ -1,0 +1,29 @@
+{
+    "activity": [
+        {
+            "pid": 1965,
+            "application_name": "spec019-src-meeting_point",
+            "wait_event_type": "Lock",
+            "wait_event": "transactionid"
+        },
+        {
+            "pid": 1966,
+            "application_name": "spec019-src-title",
+            "wait_event_type": "Lock",
+            "wait_event": "tuple"
+        }
+    ],
+    "ungranted_locks": [
+        {
+            "pid": 1965,
+            "locktype": "transactionid",
+            "mode": "ShareLock"
+        },
+        {
+            "pid": 1966,
+            "locktype": "tuple",
+            "mode": "AccessExclusiveLock"
+        }
+    ],
+    "observed_at": 1791572482.770917
+}

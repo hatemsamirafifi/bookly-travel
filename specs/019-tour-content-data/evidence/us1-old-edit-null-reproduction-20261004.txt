@@ -1,0 +1,38 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --config /tmp/reviewer-pre-delta-edit-jest.config.mjs --runTestsByPath src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx -t untouched canonical nulls
+
+FAIL src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx (9.265 s)
+  PartnerTourEditPage snapshot restore (Spec 019)
+    ✕ sends untouched canonical nulls back as null on an unrelated save (262 ms)
+    ○ skipped merges a partial owned snapshot per field and retains omitted source and media
+    ○ skipped applies explicit null and empty-list clearing from the snapshot
+    ○ skipped persists an explicitly edited empty list while retaining other canonical nulls
+    ○ skipped renders source labels and focused field feedback from the en catalog
+    ○ skipped renders source labels and focused field feedback from the es catalog
+    ○ skipped renders source labels and focused field feedback from the it catalog
+    ○ skipped focuses an announced error summary when saving fails validation
+    ○ skipped reports no draft only on 404 and keeps the form on other failures
+
+  ● PartnerTourEditPage snapshot restore (Spec 019) › sends untouched canonical nulls back as null on an unrelated save
+
+    expect(received).toBeNull()
+
+    Received: ""
+
+      285 |     const body = lastPutBody(putBodies);
+      286 |     expect(body.location).toBe('Siena, Italy');
+    > 287 |     expect(body.translations.en.meeting_point).toBeNull();
+          |                                                ^
+      288 |     expect(body.translations.en.highlights).toBeNull();
+      289 |     expect(body.translations.en.important_information).toBeNull();
+      290 |     expect(body.translations.en.itinerary).toBeNull();
+
+      at Object.<anonymous> (/app/src/app/[locale]/(partner)../partner/tours/[id]/edit/__tests__/page.test.tsx:287:48)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 8 skipped, 9 total
+Snapshots:   0 total
+Time:        9.9 s
+Ran all test suites within paths "src/app/[locale]/(partner)/partner/tours/[id]/edit/__tests__/page.test.tsx".
+NUMERIC_EXIT=1

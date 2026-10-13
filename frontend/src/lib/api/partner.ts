@@ -1,8 +1,8 @@
 import { apiClient } from './client';
 import { getAuthToken } from '@/lib/auth/token';
+import type { PartnerTourWritePayload, TourDraftSnapshot } from '@/lib/api/types';
 import type {
   Tour,
-  TourDraft,
   PartnerBooking,
   PartnerReview,
   ReviewResponse,
@@ -46,7 +46,7 @@ export function getTour(id: string | number) {
   });
 }
 
-export function createTour(tour: Omit<Tour, 'id' | 'partner_id' | 'created_at' | 'updated_at' | 'published_at'>) {
+export function createTour(tour: PartnerTourWritePayload) {
   return apiClient<{ data: Tour }>('/api/partner/tours', {
     method: 'POST',
     requireCsrf: true,
@@ -55,12 +55,20 @@ export function createTour(tour: Omit<Tour, 'id' | 'partner_id' | 'created_at' |
   });
 }
 
-export function updateTour(id: string | number, tour: Partial<Tour>) {
+export function updateTour(id: string | number, tour: PartnerTourWritePayload) {
   return apiClient<{ data: Tour }>(`/api/partner/tours/${encodeURIComponent(String(id))}`, {
     method: 'PUT',
     requireCsrf: true,
     headers: authHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(tour),
+  });
+}
+
+export function submitTour(id: string | number) {
+  return apiClient<{ data: Tour; message?: string }>(`/api/partner/tours/${encodeURIComponent(String(id))}/submit`, {
+    method: 'POST',
+    requireCsrf: true,
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
   });
 }
 
@@ -83,7 +91,7 @@ export function archiveTour(id: string | number) {
 /* ─── Tour Drafts ───────────────────────────────────────────────────────── */
 
 export function saveTourDraft(tourId: string | number, payload: Record<string, unknown>) {
-  return apiClient<TourDraft>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/save`, {
+  return apiClient<TourDraftSnapshot>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/save`, {
     method: 'POST',
     requireCsrf: true,
     headers: authHeaders({ 'Content-Type': 'application/json' }),
@@ -92,7 +100,7 @@ export function saveTourDraft(tourId: string | number, payload: Record<string, u
 }
 
 export function getLatestTourDraft(tourId: string | number) {
-  return apiClient<TourDraft>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/latest`, {
+  return apiClient<TourDraftSnapshot>(`/api/partner/tours/${encodeURIComponent(String(tourId))}/drafts/latest`, {
     headers: authHeaders(),
   });
 }

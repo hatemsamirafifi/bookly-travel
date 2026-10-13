@@ -1,0 +1,882 @@
+Listing tests:
+  [setup] › auth.setup.ts:23:6 › authenticate as traveler
+  [setup] › partner.setup.ts:19:6 › authenticate as partner
+  [chromium] › auth-guards.spec.ts:5:9 › Auth Guards › en protected route preserves its return path at 390px
+  [chromium] › auth-guards.spec.ts:5:9 › Auth Guards › es protected route preserves its return path at 768px
+  [chromium] › auth-guards.spec.ts:5:9 › Auth Guards › it protected route preserves its return path at 1440px
+  [chromium] › auth-guards.spec.ts:15:7 › Auth Guards › login returns to the exact originally protected traveler route
+  [chromium] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › My Bookings redirects to login when unauthenticated
+  [chromium] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › Profile redirects to login when unauthenticated
+  [chromium] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › Wishlist redirects to login when unauthenticated
+  [chromium] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › Reviews redirects to login when unauthenticated
+  [chromium] › auth-guards.spec.ts:58:9 › Auth Guards › Authenticated user guards › login page redirects authenticated user to home
+  [chromium] › auth-guards.spec.ts:64:9 › Auth Guards › Authenticated user guards › register page redirects authenticated user to home
+  [chromium] › auth-guards.spec.ts:70:9 › Auth Guards › Authenticated user guards › my-bookings loads for authenticated user
+  [chromium] › auth-guards.spec.ts:75:9 › Auth Guards › Authenticated user guards › profile page loads for authenticated user
+  [chromium] › auth-guards.spec.ts:80:9 › Auth Guards › Authenticated user guards › wishlist page loads for authenticated user
+  [chromium] › auth-guards.spec.ts:85:9 › Auth Guards › Authenticated user guards › my-reviews page loads for authenticated user
+  [chromium] › auth-guards.spec.ts:92:9 › Auth Guards › Session expiry › sessionExpired banner shows and returnUrl preserved on re-login
+  [chromium] › auth-navigation.spec.ts:13:7 › Auth Navigation › header shows user menu after login
+  [chromium] › auth-navigation.spec.ts:18:7 › Auth Navigation › dropdown opens and navigates to dashboard
+  [chromium] › auth-navigation.spec.ts:29:7 › Auth Navigation › dropdown navigates to all traveler pages
+  [chromium] › auth-navigation.spec.ts:49:7 › Auth Navigation › logout redirects to homepage
+  [chromium] › auth-navigation.spec.ts:62:5 › guest mobile navigation traps focus, closes with Escape, and restores the trigger
+  [chromium] › auth-navigation.spec.ts:90:7 › auth shell keeps localized navigation and footer in en
+  [chromium] › auth-navigation.spec.ts:90:7 › auth shell keeps localized navigation and footer in es
+  [chromium] › auth-navigation.spec.ts:90:7 › auth shell keeps localized navigation and footer in it
+  [chromium] › auth-navigation.spec.ts:103:7 › en guest can reach recovery from login and keeps registration/recovery controls at mobile width
+  [chromium] › auth-navigation.spec.ts:103:7 › es guest can reach recovery from login and keeps registration/recovery controls at mobile width
+  [chromium] › auth-navigation.spec.ts:103:7 › it guest can reach recovery from login and keeps registration/recovery controls at mobile width
+  [chromium] › auth.spec.ts:4:7 › Auth › login page renders with form fields
+  [chromium] › auth.spec.ts:11:7 › Auth › register page renders with form fields
+  [chromium] › auth.spec.ts:19:7 › Auth › login page shows session expired banner
+  [chromium] › auth.spec.ts:24:7 › Auth › responsive layout at 390px
+  [chromium] › auth.spec.ts:30:7 › Auth › register page links to login
+  [chromium] › auth.spec.ts:37:7 › Auth › login page links to register
+  [chromium] › auth.spec.ts:44:7 › Auth › invalid credentials keep the form mounted and show server feedback
+  [chromium] › blog-detail.spec.ts:11:7 › Blog Detail Page › renders article title, author byline, and body content
+  [chromium] › blog-detail.spec.ts:22:7 › Blog Detail Page › displays 410 Gone page for archived published article
+  [chromium] › blog-detail.spec.ts:29:7 › Blog Detail Page › localized article remains readable at mobile width without exposing draft controls
+  [chromium] › blog-i18n.spec.ts:10:7 › Blog Multi-Language i18n Verification › renders Spanish locale content and canonical tags for blog post
+  [chromium] › blog-i18n.spec.ts:25:7 › Blog Multi-Language i18n Verification › renders Italian locale content and canonical tags for blog post
+  [chromium] › blog-i18n.spec.ts:36:7 › Blog Multi-Language i18n Verification › renders English locale content for blog post
+  [chromium] › blog-list.spec.ts:10:7 › Blog Index and Listing Page › renders blog index with featured hero, article grid, and pagination
+  [chromium] › blog-list.spec.ts:33:7 › Blog Index and Listing Page › renders category filtered page with breadcrumbs and posts
+  [chromium] › blog-list.spec.ts:52:7 › Blog Index and Listing Page › renders empty state when no articles match criteria
+  [chromium] › blog-list.spec.ts:62:9 › Blog Index and Listing Page › es blog index uses localized page copy
+  [chromium] › blog-list.spec.ts:62:9 › Blog Index and Listing Page › it blog index uses localized page copy
+  [chromium] › blog-preview.spec.ts:4:7 › Blog Authoring & Admin Previews (E2E / US3) › Draft article preview loads with valid token and sets noindex robots
+  [chromium] › blog-preview.spec.ts:41:7 › Blog Authoring & Admin Previews (E2E / US3) › Missing token redirects or renders not found
+  [chromium] › blog-seo.spec.ts:10:7 › Blog SEO and Metadata › includes correct meta title, description, canonical, and structured data ld+json
+  [chromium] › category-destination.spec.ts:4:7 › Category & Destination Pages › category page loads with tour grid
+  [chromium] › category-destination.spec.ts:10:7 › Category & Destination Pages › destination page loads with tour grid
+  [chromium] › category-destination.spec.ts:17:7 › Category & Destination Pages › category page has sort dropdown
+  [chromium] › category-destination.spec.ts:23:7 › Category & Destination Pages › destination page has sort dropdown
+  [chromium] › category-destination.spec.ts:29:7 › Category & Destination Pages › category pagination is visible when multiple pages exist
+  [chromium] › category-destination.spec.ts:37:7 › Category & Destination Pages › responsive layout at 390px
+  [chromium] › category-destination.spec.ts:48:9 › Category & Destination Pages › en listing headings and metadata use the selected UI locale
+  [chromium] › category-destination.spec.ts:48:9 › Category & Destination Pages › es listing headings and metadata use the selected UI locale
+  [chromium] › category-destination.spec.ts:48:9 › Category & Destination Pages › it listing headings and metadata use the selected UI locale
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/search?q=rome
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/tours/hidden-gems-rome-walking-tour
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/categories
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/destinations
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/blog
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/auth/login
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/auth/register
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/privacy
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/terms
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /es
+  [chromium] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /it
+  [chromium] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 390px
+  [chromium] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 768px
+  [chromium] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 1024px
+  [chromium] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 1440px
+  [chromium] › filament-admin.spec.ts:17:7 › Filament Admin Panel › livewire.js is served by Laravel through the proxy
+  [chromium] › filament-admin.spec.ts:24:7 › Filament Admin Panel › unauthenticated /admin redirects to the login page
+  [chromium] › filament-admin.spec.ts:30:7 › Filament Admin Panel › unauthenticated tour moderation redirects to the admin login page
+  [chromium] › filament-admin.spec.ts:36:7 › Filament Admin Panel › partner credentials cannot enter the admin moderation panel
+  [chromium] › filament-admin.spec.ts:46:7 › Filament Admin Panel › admin can sign in and see the dashboard
+  [chromium] › filament-admin.spec.ts:64:7 › Filament Admin Panel › wrong password stays on the login page
+  [chromium] › filament-admin.spec.ts:74:7 › Filament Admin Panel › admin resources load after login
+  [chromium] › homepage.spec.ts:12:7 › Homepage › hero renders with search fields
+  [chromium] › homepage.spec.ts:19:7 › Homepage › categories are visible
+  [chromium] › homepage.spec.ts:27:7 › Homepage › featured tours are visible
+  [chromium] › homepage.spec.ts:36:7 › Homepage › locale switching works
+  [chromium] › homepage.spec.ts:43:7 › Homepage › responsive layout at 390px
+  [chromium] › homepage.spec.ts:50:7 › Homepage › homepage search reaches results and browser Back restores discovery
+  [chromium] › homepage.spec.ts:62:7 › Homepage › Spanish and Italian discovery headings use their locale
+  [chromium] › homepage.spec.ts:74:7 › Homepage › partner invitation stays secondary and links to the public registration route
+  [chromium] › i18n.spec.ts:7:7 › Multi-Language (i18n) › English locale loads correctly
+  [chromium] › i18n.spec.ts:13:7 › Multi-Language (i18n) › Spanish locale loads correctly
+  [chromium] › i18n.spec.ts:19:7 › Multi-Language (i18n) › Italian locale loads correctly
+  [chromium] › i18n.spec.ts:25:7 › Multi-Language (i18n) › locale switcher navigates to same page in different language
+  [chromium] › i18n.spec.ts:45:7 › Multi-Language (i18n) › locale switcher preserves path and query params
+  [chromium] › i18n.spec.ts:62:7 › Multi-Language (i18n) › hreflang tags are present on tour detail page
+  [chromium] › i18n.spec.ts:77:7 › Multi-Language (i18n) › canonical URL is self-referencing on search page
+  [chromium] › i18n.spec.ts:87:7 › Multi-Language (i18n) › homepage is accessible in all three locales
+  [chromium] › i18n.spec.ts:95:7 › Multi-Language (i18n) › category page works in different locales
+  [chromium] › i18n.spec.ts:101:7 › Multi-Language (i18n) › destination page works in different locales
+  [chromium] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/tours/non-existent-tour-xyz returns 404 with localized 404 UI
+  [chromium] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/blog/non-existent-article returns 404 with localized 404 UI
+  [chromium] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/categories/non-existent-category returns 404 with localized 404 UI
+  [chromium] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/destinations/non-existent-destination returns 404 with localized 404 UI
+  [chromium] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/completely-invalid-page returns 404 with localized 404 UI
+  [chromium] › register-error-i18n.spec.ts:9:5 › register with duplicate email shows translated error (no raw i18n key)
+  [chromium] › search.spec.ts:17:7 › Search Page › search bar navigates to results page
+  [chromium] › search.spec.ts:29:7 › Search Page › displays search results with tour cards
+  [chromium] › search.spec.ts:43:7 › Search Page › shows empty state when no results
+  [chromium] › search.spec.ts:52:7 › Search Page › invalid search criteria show a recoverable error without a fabricated result count
+  [chromium] › search.spec.ts:59:7 › Search Page › announces loading while a client-side search navigation is pending
+  [chromium] › search.spec.ts:72:7 › Search Page › pagination controls are visible when multiple pages exist
+  [chromium] › search.spec.ts:85:7 › Search Page › previous button is disabled on first page
+  [chromium] › search.spec.ts:94:7 › Search Page › clicking a tour card navigates to tour detail
+  [chromium] › search.spec.ts:104:7 › Search Page › search page has proper page title
+  [chromium] › search.spec.ts:109:7 › Search Page › search works in Spanish locale
+  [chromium] › search.spec.ts:120:7 › Search Page › search works in Italian locale
+  [chromium] › search.spec.ts:133:7 › Search Page › filter panel is visible on search page
+  [chromium] › search.spec.ts:144:7 › Search Page › sort dropdown is visible on search page
+  [chromium] › search.spec.ts:149:7 › Search Page › selecting sort option updates URL
+  [chromium] › search.spec.ts:155:7 › Search Page › sort preserves query and browser Back restores the previous criteria
+  [chromium] › search.spec.ts:164:7 › Search Page › clearing filters retains the search term
+  [chromium] › search.spec.ts:171:7 › Search Page › applying category filter updates URL and results
+  [chromium] › search.spec.ts:181:7 › Search Page › entering price range filter updates URL
+  [chromium] › search.spec.ts:203:7 › Search Page › clear all link appears when filters are active
+  [chromium] › search.spec.ts:214:7 › Search Page › filter sections are collapsible
+  [chromium] › search.spec.ts:226:7 › Search Page › duration filter options are selectable
+  [chromium] › search.spec.ts:246:9 › Search Page › search page adapts to mobile viewport (375px) without horizontal scroll
+  [chromium] › search.spec.ts:258:9 › Search Page › tour cards reflow correctly on mobile viewport
+  [chromium] › search.spec.ts:246:9 › Search Page › search page adapts to tablet viewport (768px) without horizontal scroll
+  [chromium] › search.spec.ts:258:9 › Search Page › tour cards reflow correctly on tablet viewport
+  [chromium] › search.spec.ts:246:9 › Search Page › search page adapts to desktop viewport (1280px) without horizontal scroll
+  [chromium] › search.spec.ts:258:9 › Search Page › tour cards reflow correctly on desktop viewport
+  [chromium] › search.spec.ts:274:7 › Search Page › filter panel collapses on mobile viewport
+  [chromium] › search.spec.ts:295:7 › Search Page › navigation switches to hamburger menu on mobile
+  [chromium] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 390px
+  [chromium] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 768px
+  [chromium] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 1024px
+  [chromium] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 1440px
+  [chromium] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 390px
+  [chromium] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 768px
+  [chromium] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 1024px
+  [chromium] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 1440px
+  [chromium] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 390px
+  [chromium] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 768px
+  [chromium] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 1024px
+  [chromium] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 1440px
+  [chromium] › shared-shell.spec.ts:59:7 › traveler account menu supports keyboard navigation without changing destinations
+  [chromium] › shared-shell.spec.ts:59:7 › partner account menu supports keyboard navigation without changing destinations
+  [chromium] › smoke.spec.ts:4:7 › Smoke Test › homepage loads with hero and categories
+  [chromium] › smoke.spec.ts:12:7 › Smoke Test › search flow works end to end
+  [chromium] › smoke.spec.ts:17:7 › Smoke Test › tour detail page loads
+  [chromium] › smoke.spec.ts:22:7 › Smoke Test › category page loads
+  [chromium] › smoke.spec.ts:27:7 › Smoke Test › destination page loads
+  [chromium] › smoke.spec.ts:32:7 › Smoke Test › booking page loads
+  [chromium] › smoke.spec.ts:37:7 › Smoke Test › auth pages load
+  [chromium] › smoke.spec.ts:44:7 › Smoke Test › privacy and terms pages load
+  [chromium] › smoke.spec.ts:51:7 › Smoke Test › 404 page loads
+  [chromium] › supporting-pages.spec.ts:8:7 › en terms preserve localized legal content at mobile width
+  [chromium] › supporting-pages.spec.ts:8:7 › es terms preserve localized legal content at mobile width
+  [chromium] › supporting-pages.spec.ts:8:7 › it terms preserve localized legal content at mobile width
+  [chromium] › supporting-pages.spec.ts:24:7 › en privacy and missing-page recovery remain usable at mobile width
+  [chromium] › supporting-pages.spec.ts:24:7 › es privacy and missing-page recovery remain usable at mobile width
+  [chromium] › supporting-pages.spec.ts:24:7 › it privacy and missing-page recovery remain usable at mobile width
+  [chromium] › tour-detail.spec.ts:119:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+  [chromium] › tour-detail.spec.ts:170:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+  [chromium] › tour-detail.spec.ts:267:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+  [chromium] › tour-detail.spec.ts:358:7 › Tour Detail Page › tour detail page loads with all sections
+  [chromium] › tour-detail.spec.ts:368:7 › Tour Detail Page › image gallery is visible
+  [chromium] › tour-detail.spec.ts:375:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+  [chromium] › tour-detail.spec.ts:391:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+  [chromium] › tour-detail.spec.ts:405:7 › Tour Detail Page › section navigation links only to rendered sections
+  [chromium] › tour-detail.spec.ts:417:7 › Tour Detail Page › availability calendar shows available dates
+  [chromium] › tour-detail.spec.ts:424:7 › Tour Detail Page › booking CTA is visible
+  [chromium] › tour-detail.spec.ts:440:7 › Tour Detail Page › participant selector increments and decrements
+  [chromium] › tour-detail.spec.ts:454:7 › Tour Detail Page › shows 404 page for non-existent tour
+  [chromium] › tour-detail.spec.ts:461:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+  [chromium] › tour-detail.spec.ts:478:7 › Tour Detail Page › about section displays description
+  [chromium] › tour-detail.spec.ts:485:7 › Tour Detail Page › tour detail has proper SEO metadata
+  [chromium] › tour-detail.spec.ts:507:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:507:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:507:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:519:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+  [chromium] › tour-detail.spec.ts:531:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+  [chromium] › tour-detail.spec.ts:555:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+  [chromium] › tour-detail.spec.ts:571:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:571:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:571:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:593:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+  [chromium] › tour-detail.spec.ts:762:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+  [chromium] › traveler-dashboard.spec.ts:5:9 › Traveler Dashboard Smoke › account pages stay reachable without horizontal overflow at 390px
+  [chromium] › traveler-dashboard.spec.ts:5:9 › Traveler Dashboard Smoke › account pages stay reachable without horizontal overflow at 1440px
+  [chromium] › traveler-dashboard.spec.ts:22:7 › Traveler Dashboard Smoke › full authenticated journey
+  [chromium] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 1440px
+  [chromium] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 390px
+  [chromium] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 768px
+  [chromium] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 1024px
+  [chromium] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 1440px
+  [chromium] › voucher-verification.spec.ts:15:7 › Voucher Verification Page (/v/{reference}) › renders VALID status and allowed fields for a confirmed booking
+  [chromium] › voucher-verification.spec.ts:30:7 › Voucher Verification Page (/v/{reference}) › renders noindex meta and no navigation to private surfaces
+  [chromium] › voucher-verification.spec.ts:38:7 › Voucher Verification Page (/v/{reference}) › renders not-found state for an unknown reference
+  [chromium] › voucher-verification.spec.ts:43:7 › Voucher Verification Page (/v/{reference}) › renders CANCELLED status for a cancelled booking
+  [chromium] › voucher-verification.spec.ts:48:7 › Voucher Verification Page (/v/{reference}) › renders PENDING status for a pending-payment booking
+  [chromium] › voucher-verification.spec.ts:53:7 › Voucher Verification Page (/v/{reference}) › renders EXPIRED status for an expired booking
+  [chromium] › voucher-verification.spec.ts:59:9 › Voucher Verification Page (/v/{reference}) › root voucher honors es language without leaking private navigation
+  [chromium] › voucher-verification.spec.ts:59:9 › Voucher Verification Page (/v/{reference}) › root voucher honors it language without leaking private navigation
+  [mobile] › auth-guards.spec.ts:5:9 › Auth Guards › en protected route preserves its return path at 390px
+  [mobile] › auth-guards.spec.ts:5:9 › Auth Guards › es protected route preserves its return path at 768px
+  [mobile] › auth-guards.spec.ts:5:9 › Auth Guards › it protected route preserves its return path at 1440px
+  [mobile] › auth-guards.spec.ts:15:7 › Auth Guards › login returns to the exact originally protected traveler route
+  [mobile] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › My Bookings redirects to login when unauthenticated
+  [mobile] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › Profile redirects to login when unauthenticated
+  [mobile] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › Wishlist redirects to login when unauthenticated
+  [mobile] › auth-guards.spec.ts:34:11 › Auth Guards › Unauthenticated access redirects › Reviews redirects to login when unauthenticated
+  [mobile] › auth-guards.spec.ts:58:9 › Auth Guards › Authenticated user guards › login page redirects authenticated user to home
+  [mobile] › auth-guards.spec.ts:64:9 › Auth Guards › Authenticated user guards › register page redirects authenticated user to home
+  [mobile] › auth-guards.spec.ts:70:9 › Auth Guards › Authenticated user guards › my-bookings loads for authenticated user
+  [mobile] › auth-guards.spec.ts:75:9 › Auth Guards › Authenticated user guards › profile page loads for authenticated user
+  [mobile] › auth-guards.spec.ts:80:9 › Auth Guards › Authenticated user guards › wishlist page loads for authenticated user
+  [mobile] › auth-guards.spec.ts:85:9 › Auth Guards › Authenticated user guards › my-reviews page loads for authenticated user
+  [mobile] › auth-guards.spec.ts:92:9 › Auth Guards › Session expiry › sessionExpired banner shows and returnUrl preserved on re-login
+  [mobile] › auth-navigation.spec.ts:13:7 › Auth Navigation › header shows user menu after login
+  [mobile] › auth-navigation.spec.ts:18:7 › Auth Navigation › dropdown opens and navigates to dashboard
+  [mobile] › auth-navigation.spec.ts:29:7 › Auth Navigation › dropdown navigates to all traveler pages
+  [mobile] › auth-navigation.spec.ts:49:7 › Auth Navigation › logout redirects to homepage
+  [mobile] › auth-navigation.spec.ts:62:5 › guest mobile navigation traps focus, closes with Escape, and restores the trigger
+  [mobile] › auth-navigation.spec.ts:90:7 › auth shell keeps localized navigation and footer in en
+  [mobile] › auth-navigation.spec.ts:90:7 › auth shell keeps localized navigation and footer in es
+  [mobile] › auth-navigation.spec.ts:90:7 › auth shell keeps localized navigation and footer in it
+  [mobile] › auth-navigation.spec.ts:103:7 › en guest can reach recovery from login and keeps registration/recovery controls at mobile width
+  [mobile] › auth-navigation.spec.ts:103:7 › es guest can reach recovery from login and keeps registration/recovery controls at mobile width
+  [mobile] › auth-navigation.spec.ts:103:7 › it guest can reach recovery from login and keeps registration/recovery controls at mobile width
+  [mobile] › auth.spec.ts:4:7 › Auth › login page renders with form fields
+  [mobile] › auth.spec.ts:11:7 › Auth › register page renders with form fields
+  [mobile] › auth.spec.ts:19:7 › Auth › login page shows session expired banner
+  [mobile] › auth.spec.ts:24:7 › Auth › responsive layout at 390px
+  [mobile] › auth.spec.ts:30:7 › Auth › register page links to login
+  [mobile] › auth.spec.ts:37:7 › Auth › login page links to register
+  [mobile] › auth.spec.ts:44:7 › Auth › invalid credentials keep the form mounted and show server feedback
+  [mobile] › blog-detail.spec.ts:11:7 › Blog Detail Page › renders article title, author byline, and body content
+  [mobile] › blog-detail.spec.ts:22:7 › Blog Detail Page › displays 410 Gone page for archived published article
+  [mobile] › blog-detail.spec.ts:29:7 › Blog Detail Page › localized article remains readable at mobile width without exposing draft controls
+  [mobile] › blog-i18n.spec.ts:10:7 › Blog Multi-Language i18n Verification › renders Spanish locale content and canonical tags for blog post
+  [mobile] › blog-i18n.spec.ts:25:7 › Blog Multi-Language i18n Verification › renders Italian locale content and canonical tags for blog post
+  [mobile] › blog-i18n.spec.ts:36:7 › Blog Multi-Language i18n Verification › renders English locale content for blog post
+  [mobile] › blog-list.spec.ts:10:7 › Blog Index and Listing Page › renders blog index with featured hero, article grid, and pagination
+  [mobile] › blog-list.spec.ts:33:7 › Blog Index and Listing Page › renders category filtered page with breadcrumbs and posts
+  [mobile] › blog-list.spec.ts:52:7 › Blog Index and Listing Page › renders empty state when no articles match criteria
+  [mobile] › blog-list.spec.ts:62:9 › Blog Index and Listing Page › es blog index uses localized page copy
+  [mobile] › blog-list.spec.ts:62:9 › Blog Index and Listing Page › it blog index uses localized page copy
+  [mobile] › blog-preview.spec.ts:4:7 › Blog Authoring & Admin Previews (E2E / US3) › Draft article preview loads with valid token and sets noindex robots
+  [mobile] › blog-preview.spec.ts:41:7 › Blog Authoring & Admin Previews (E2E / US3) › Missing token redirects or renders not found
+  [mobile] › blog-seo.spec.ts:10:7 › Blog SEO and Metadata › includes correct meta title, description, canonical, and structured data ld+json
+  [mobile] › category-destination.spec.ts:4:7 › Category & Destination Pages › category page loads with tour grid
+  [mobile] › category-destination.spec.ts:10:7 › Category & Destination Pages › destination page loads with tour grid
+  [mobile] › category-destination.spec.ts:17:7 › Category & Destination Pages › category page has sort dropdown
+  [mobile] › category-destination.spec.ts:23:7 › Category & Destination Pages › destination page has sort dropdown
+  [mobile] › category-destination.spec.ts:29:7 › Category & Destination Pages › category pagination is visible when multiple pages exist
+  [mobile] › category-destination.spec.ts:37:7 › Category & Destination Pages › responsive layout at 390px
+  [mobile] › category-destination.spec.ts:48:9 › Category & Destination Pages › en listing headings and metadata use the selected UI locale
+  [mobile] › category-destination.spec.ts:48:9 › Category & Destination Pages › es listing headings and metadata use the selected UI locale
+  [mobile] › category-destination.spec.ts:48:9 › Category & Destination Pages › it listing headings and metadata use the selected UI locale
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/search?q=rome
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/tours/hidden-gems-rome-walking-tour
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/categories
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/destinations
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/blog
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/auth/login
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/auth/register
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/privacy
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /en/terms
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /es
+  [mobile] › console-health.spec.ts:20:9 › Browser console/network health › no unexpected console errors on /it
+  [mobile] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 390px
+  [mobile] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 768px
+  [mobile] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 1024px
+  [mobile] › cookie-consent.spec.ts:4:7 › cookie consent remains compact and keyboard-operable at 1440px
+  [mobile] › filament-admin.spec.ts:17:7 › Filament Admin Panel › livewire.js is served by Laravel through the proxy
+  [mobile] › filament-admin.spec.ts:24:7 › Filament Admin Panel › unauthenticated /admin redirects to the login page
+  [mobile] › filament-admin.spec.ts:30:7 › Filament Admin Panel › unauthenticated tour moderation redirects to the admin login page
+  [mobile] › filament-admin.spec.ts:36:7 › Filament Admin Panel › partner credentials cannot enter the admin moderation panel
+  [mobile] › filament-admin.spec.ts:46:7 › Filament Admin Panel › admin can sign in and see the dashboard
+  [mobile] › filament-admin.spec.ts:64:7 › Filament Admin Panel › wrong password stays on the login page
+  [mobile] › filament-admin.spec.ts:74:7 › Filament Admin Panel › admin resources load after login
+  [mobile] › homepage.spec.ts:12:7 › Homepage › hero renders with search fields
+  [mobile] › homepage.spec.ts:19:7 › Homepage › categories are visible
+  [mobile] › homepage.spec.ts:27:7 › Homepage › featured tours are visible
+  [mobile] › homepage.spec.ts:36:7 › Homepage › locale switching works
+  [mobile] › homepage.spec.ts:43:7 › Homepage › responsive layout at 390px
+  [mobile] › homepage.spec.ts:50:7 › Homepage › homepage search reaches results and browser Back restores discovery
+  [mobile] › homepage.spec.ts:62:7 › Homepage › Spanish and Italian discovery headings use their locale
+  [mobile] › homepage.spec.ts:74:7 › Homepage › partner invitation stays secondary and links to the public registration route
+  [mobile] › i18n.spec.ts:7:7 › Multi-Language (i18n) › English locale loads correctly
+  [mobile] › i18n.spec.ts:13:7 › Multi-Language (i18n) › Spanish locale loads correctly
+  [mobile] › i18n.spec.ts:19:7 › Multi-Language (i18n) › Italian locale loads correctly
+  [mobile] › i18n.spec.ts:25:7 › Multi-Language (i18n) › locale switcher navigates to same page in different language
+  [mobile] › i18n.spec.ts:45:7 › Multi-Language (i18n) › locale switcher preserves path and query params
+  [mobile] › i18n.spec.ts:62:7 › Multi-Language (i18n) › hreflang tags are present on tour detail page
+  [mobile] › i18n.spec.ts:77:7 › Multi-Language (i18n) › canonical URL is self-referencing on search page
+  [mobile] › i18n.spec.ts:87:7 › Multi-Language (i18n) › homepage is accessible in all three locales
+  [mobile] › i18n.spec.ts:95:7 › Multi-Language (i18n) › category page works in different locales
+  [mobile] › i18n.spec.ts:101:7 › Multi-Language (i18n) › destination page works in different locales
+  [mobile] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/tours/non-existent-tour-xyz returns 404 with localized 404 UI
+  [mobile] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/blog/non-existent-article returns 404 with localized 404 UI
+  [mobile] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/categories/non-existent-category returns 404 with localized 404 UI
+  [mobile] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/destinations/non-existent-destination returns 404 with localized 404 UI
+  [mobile] › invalid-slugs.spec.ts:18:9 › Invalid slugs render the localized 404 page › /en/completely-invalid-page returns 404 with localized 404 UI
+  [mobile] › register-error-i18n.spec.ts:9:5 › register with duplicate email shows translated error (no raw i18n key)
+  [mobile] › search.spec.ts:17:7 › Search Page › search bar navigates to results page
+  [mobile] › search.spec.ts:29:7 › Search Page › displays search results with tour cards
+  [mobile] › search.spec.ts:43:7 › Search Page › shows empty state when no results
+  [mobile] › search.spec.ts:52:7 › Search Page › invalid search criteria show a recoverable error without a fabricated result count
+  [mobile] › search.spec.ts:59:7 › Search Page › announces loading while a client-side search navigation is pending
+  [mobile] › search.spec.ts:72:7 › Search Page › pagination controls are visible when multiple pages exist
+  [mobile] › search.spec.ts:85:7 › Search Page › previous button is disabled on first page
+  [mobile] › search.spec.ts:94:7 › Search Page › clicking a tour card navigates to tour detail
+  [mobile] › search.spec.ts:104:7 › Search Page › search page has proper page title
+  [mobile] › search.spec.ts:109:7 › Search Page › search works in Spanish locale
+  [mobile] › search.spec.ts:120:7 › Search Page › search works in Italian locale
+  [mobile] › search.spec.ts:133:7 › Search Page › filter panel is visible on search page
+  [mobile] › search.spec.ts:144:7 › Search Page › sort dropdown is visible on search page
+  [mobile] › search.spec.ts:149:7 › Search Page › selecting sort option updates URL
+  [mobile] › search.spec.ts:155:7 › Search Page › sort preserves query and browser Back restores the previous criteria
+  [mobile] › search.spec.ts:164:7 › Search Page › clearing filters retains the search term
+  [mobile] › search.spec.ts:171:7 › Search Page › applying category filter updates URL and results
+  [mobile] › search.spec.ts:181:7 › Search Page › entering price range filter updates URL
+  [mobile] › search.spec.ts:203:7 › Search Page › clear all link appears when filters are active
+  [mobile] › search.spec.ts:214:7 › Search Page › filter sections are collapsible
+  [mobile] › search.spec.ts:226:7 › Search Page › duration filter options are selectable
+  [mobile] › search.spec.ts:246:9 › Search Page › search page adapts to mobile viewport (375px) without horizontal scroll
+  [mobile] › search.spec.ts:258:9 › Search Page › tour cards reflow correctly on mobile viewport
+  [mobile] › search.spec.ts:246:9 › Search Page › search page adapts to tablet viewport (768px) without horizontal scroll
+  [mobile] › search.spec.ts:258:9 › Search Page › tour cards reflow correctly on tablet viewport
+  [mobile] › search.spec.ts:246:9 › Search Page › search page adapts to desktop viewport (1280px) without horizontal scroll
+  [mobile] › search.spec.ts:258:9 › Search Page › tour cards reflow correctly on desktop viewport
+  [mobile] › search.spec.ts:274:7 › Search Page › filter panel collapses on mobile viewport
+  [mobile] › search.spec.ts:295:7 › Search Page › navigation switches to hamburger menu on mobile
+  [mobile] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 390px
+  [mobile] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 768px
+  [mobile] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 1024px
+  [mobile] › shared-shell.spec.ts:15:9 › en guest shell supports search, focus and layout at 1440px
+  [mobile] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 390px
+  [mobile] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 768px
+  [mobile] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 1024px
+  [mobile] › shared-shell.spec.ts:15:9 › es guest shell supports search, focus and layout at 1440px
+  [mobile] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 390px
+  [mobile] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 768px
+  [mobile] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 1024px
+  [mobile] › shared-shell.spec.ts:15:9 › it guest shell supports search, focus and layout at 1440px
+  [mobile] › shared-shell.spec.ts:59:7 › traveler account menu supports keyboard navigation without changing destinations
+  [mobile] › shared-shell.spec.ts:59:7 › partner account menu supports keyboard navigation without changing destinations
+  [mobile] › smoke.spec.ts:4:7 › Smoke Test › homepage loads with hero and categories
+  [mobile] › smoke.spec.ts:12:7 › Smoke Test › search flow works end to end
+  [mobile] › smoke.spec.ts:17:7 › Smoke Test › tour detail page loads
+  [mobile] › smoke.spec.ts:22:7 › Smoke Test › category page loads
+  [mobile] › smoke.spec.ts:27:7 › Smoke Test › destination page loads
+  [mobile] › smoke.spec.ts:32:7 › Smoke Test › booking page loads
+  [mobile] › smoke.spec.ts:37:7 › Smoke Test › auth pages load
+  [mobile] › smoke.spec.ts:44:7 › Smoke Test › privacy and terms pages load
+  [mobile] › smoke.spec.ts:51:7 › Smoke Test › 404 page loads
+  [mobile] › supporting-pages.spec.ts:8:7 › en terms preserve localized legal content at mobile width
+  [mobile] › supporting-pages.spec.ts:8:7 › es terms preserve localized legal content at mobile width
+  [mobile] › supporting-pages.spec.ts:8:7 › it terms preserve localized legal content at mobile width
+  [mobile] › supporting-pages.spec.ts:24:7 › en privacy and missing-page recovery remain usable at mobile width
+  [mobile] › supporting-pages.spec.ts:24:7 › es privacy and missing-page recovery remain usable at mobile width
+  [mobile] › supporting-pages.spec.ts:24:7 › it privacy and missing-page recovery remain usable at mobile width
+  [mobile] › tour-detail.spec.ts:119:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+  [mobile] › tour-detail.spec.ts:170:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+  [mobile] › tour-detail.spec.ts:267:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+  [mobile] › tour-detail.spec.ts:358:7 › Tour Detail Page › tour detail page loads with all sections
+  [mobile] › tour-detail.spec.ts:368:7 › Tour Detail Page › image gallery is visible
+  [mobile] › tour-detail.spec.ts:375:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+  [mobile] › tour-detail.spec.ts:391:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+  [mobile] › tour-detail.spec.ts:405:7 › Tour Detail Page › section navigation links only to rendered sections
+  [mobile] › tour-detail.spec.ts:417:7 › Tour Detail Page › availability calendar shows available dates
+  [mobile] › tour-detail.spec.ts:424:7 › Tour Detail Page › booking CTA is visible
+  [mobile] › tour-detail.spec.ts:440:7 › Tour Detail Page › participant selector increments and decrements
+  [mobile] › tour-detail.spec.ts:454:7 › Tour Detail Page › shows 404 page for non-existent tour
+  [mobile] › tour-detail.spec.ts:461:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+  [mobile] › tour-detail.spec.ts:478:7 › Tour Detail Page › about section displays description
+  [mobile] › tour-detail.spec.ts:485:7 › Tour Detail Page › tour detail has proper SEO metadata
+  [mobile] › tour-detail.spec.ts:507:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+  [mobile] › tour-detail.spec.ts:507:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+  [mobile] › tour-detail.spec.ts:507:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+  [mobile] › tour-detail.spec.ts:519:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+  [mobile] › tour-detail.spec.ts:531:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+  [mobile] › tour-detail.spec.ts:555:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+  [mobile] › tour-detail.spec.ts:571:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+  [mobile] › tour-detail.spec.ts:571:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+  [mobile] › tour-detail.spec.ts:571:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+  [mobile] › tour-detail.spec.ts:593:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+  [mobile] › tour-detail.spec.ts:762:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+  [mobile] › traveler-dashboard.spec.ts:5:9 › Traveler Dashboard Smoke › account pages stay reachable without horizontal overflow at 390px
+  [mobile] › traveler-dashboard.spec.ts:5:9 › Traveler Dashboard Smoke › account pages stay reachable without horizontal overflow at 1440px
+  [mobile] › traveler-dashboard.spec.ts:22:7 › Traveler Dashboard Smoke › full authenticated journey
+  [mobile] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:53:9 › en public keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:87:9 › en traveler/checkout keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:122:9 › en partner keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:53:9 › es public keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:87:9 › es traveler/checkout keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:122:9 › es partner keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:53:9 › it public keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:87:9 › it traveler/checkout keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:122:9 › it partner keyboard/layout matrix at 1440px
+  [mobile] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 390px
+  [mobile] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 768px
+  [mobile] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 1024px
+  [mobile] › visual-acceptance.spec.ts:144:7 › Filament keyboard/layout matrix at 1440px
+  [mobile] › voucher-verification.spec.ts:15:7 › Voucher Verification Page (/v/{reference}) › renders VALID status and allowed fields for a confirmed booking
+  [mobile] › voucher-verification.spec.ts:30:7 › Voucher Verification Page (/v/{reference}) › renders noindex meta and no navigation to private surfaces
+  [mobile] › voucher-verification.spec.ts:38:7 › Voucher Verification Page (/v/{reference}) › renders not-found state for an unknown reference
+  [mobile] › voucher-verification.spec.ts:43:7 › Voucher Verification Page (/v/{reference}) › renders CANCELLED status for a cancelled booking
+  [mobile] › voucher-verification.spec.ts:48:7 › Voucher Verification Page (/v/{reference}) › renders PENDING status for a pending-payment booking
+  [mobile] › voucher-verification.spec.ts:53:7 › Voucher Verification Page (/v/{reference}) › renders EXPIRED status for an expired booking
+  [mobile] › voucher-verification.spec.ts:59:9 › Voucher Verification Page (/v/{reference}) › root voucher honors es language without leaking private navigation
+  [mobile] › voucher-verification.spec.ts:59:9 › Voucher Verification Page (/v/{reference}) › root voucher honors it language without leaking private navigation
+  [a11y] › a11y/auth-a11y.spec.ts:5:7 › Auth Accessibility › login page should not have accessibility violations
+  [a11y] › a11y/auth-a11y.spec.ts:11:7 › Auth Accessibility › register page should not have accessibility violations
+  [a11y] › a11y/blog-detail-a11y.spec.ts:5:7 › Blog Accessibility (a11y) › blog detail page should not have automatically detectable accessibility violations
+  [a11y] › a11y/blog-list-a11y.spec.ts:5:7 › Blog Listing Accessibility (a11y) › blog index page should not have automatically detectable accessibility violations
+  [a11y] › a11y/blog-list-a11y.spec.ts:55:7 › Blog Listing Accessibility (a11y) › blog category page should not have automatically detectable accessibility violations
+  [a11y] › a11y/category-destination-a11y.spec.ts:4:5 › category page should not have accessibility violations
+  [a11y] › a11y/category-destination-a11y.spec.ts:10:5 › destination page should not have accessibility violations
+  [a11y] › a11y/homepage-a11y.spec.ts:4:5 › homepage should not have accessibility violations
+  [a11y] › a11y/search-a11y.spec.ts:4:5 › search page should not have accessibility violations
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 390px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 768px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 1024px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 1440px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 390px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 768px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 1024px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 1440px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 390px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 768px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 1024px
+  [a11y] › a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 1440px
+  [a11y] › a11y/tour-detail-a11y.spec.ts:5:7 › en tour detail with loaded reviews should not have accessibility violations
+  [a11y] › a11y/tour-detail-a11y.spec.ts:5:7 › es tour detail with loaded reviews should not have accessibility violations
+  [a11y] › a11y/tour-detail-a11y.spec.ts:5:7 › it tour detail with loaded reviews should not have accessibility violations
+  [a11y] › a11y/tour-detail-a11y.spec.ts:27:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+  [a11y] › a11y/tour-detail-a11y.spec.ts:39:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+  [a11y] › a11y/tour-detail-a11y.spec.ts:48:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+  [a11y] › a11y/tour-detail-a11y.spec.ts:60:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+  [a11y] › a11y/tour-detail-a11y.spec.ts:98:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+  [a11y] › a11y/tour-detail-a11y.spec.ts:128:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+  [chromium-authed] › booking-detail.spec.ts:17:7 › Booking Detail › detail page renders sections
+  [chromium-authed] › booking-detail.spec.ts:28:7 › Booking Detail › receipt display shows payment info
+  [chromium-authed] › booking-detail.spec.ts:37:7 › Booking Detail › cancel button visible for eligible booking
+  [chromium-authed] › booking-detail.spec.ts:46:7 › Booking Detail › 404 for invalid reference
+  [chromium-authed] › booking-detail.spec.ts:52:7 › Booking Detail › mobile layout renders single column
+  [chromium-authed] › booking.spec.ts:13:9 › Booking Flow › pending_payment confirmation never claims a completed booking
+  [chromium-authed] › booking.spec.ts:13:9 › Booking Flow › cancelled confirmation never claims a completed booking
+  [chromium-authed] › booking.spec.ts:13:9 › Booking Flow › expired confirmation never claims a completed booking
+  [chromium-authed] › booking.spec.ts:13:9 › Booking Flow › unexpected_status confirmation never claims a completed booking
+  [chromium-authed] › booking.spec.ts:35:7 › Booking Flow › confirmed booking alone displays the success title
+  [chromium-authed] › booking.spec.ts:75:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay
+  [chromium-authed] › booking.spec.ts:122:7 › Booking Flow › shows error for sold out tour
+  [chromium-authed] › booking.spec.ts:129:7 › Booking Flow › shows the localized rate limit message
+  [chromium-authed] › booking.spec.ts:147:7 › Booking Flow › clamps an invalid participant query value to the tour minimum
+  [chromium-authed] › cancel-booking.spec.ts:9:7 › Cancel Booking › opens cancellation modal
+  [chromium-authed] › cancel-booking.spec.ts:20:7 › Cancel Booking › confirm cancellation updates status
+  [chromium-authed] › cancel-booking.spec.ts:35:7 › Cancel Booking › keep booking closes modal
+  [chromium-authed] › cancel-booking.spec.ts:50:7 › Cancel Booking › error handling on cancellation failure
+  [chromium-authed] › checkout.spec.ts:11:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+  [chromium-authed] › checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+  [chromium-authed] › checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+  [chromium-authed] › checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+  [chromium-authed] › checkout.spec.ts:54:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+  [chromium-authed] › checkout.spec.ts:73:7 › Checkout › booking page loads with tour details
+  [chromium-authed] › checkout.spec.ts:82:7 › Checkout › participant selector respects min and max
+  [chromium-authed] › checkout.spec.ts:90:7 › Checkout › price breakdown updates with participants
+  [chromium-authed] › checkout.spec.ts:96:7 › Checkout › shows error when tour or date missing
+  [chromium-authed] › checkout.spec.ts:101:7 › Checkout › responsive layout at 390px
+  [chromium-authed] › my-bookings.spec.ts:13:7 › My Bookings › bookings list renders cards
+  [chromium-authed] › my-bookings.spec.ts:31:7 › My Bookings › status filter tabs work
+  [chromium-authed] › my-bookings.spec.ts:45:7 › My Bookings › clicking card navigates to detail
+  [chromium-authed] › my-bookings.spec.ts:56:7 › My Bookings › cancel button shows confirmation dialog
+  [chromium-authed] › my-bookings.spec.ts:67:7 › My Bookings › cancel succeeds for eligible booking
+  [chromium-authed] › my-bookings.spec.ts:86:7 › My Bookings › cancel button disabled for ineligible booking
+  [chromium-authed] › my-reviews.spec.ts:9:7 › My Reviews › my reviews page renders
+  [chromium-authed] › my-reviews.spec.ts:15:7 › My Reviews › my reviews shows empty state or list
+  [chromium-authed] › my-reviews.spec.ts:24:7 › My Reviews › review card shows tour name and rating
+  [chromium-authed] › my-reviews.spec.ts:34:7 › My Reviews › editable review shows edit button
+  [chromium-authed] › my-reviews.spec.ts:45:7 › My Reviews › review edit form can be cancelled
+  [chromium-authed] › my-reviews.spec.ts:61:7 › My Reviews › empty state links to search page
+  [chromium-authed] › payment.spec.ts:4:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+  [chromium-authed] › payment.spec.ts:51:7 › Payment Flow › booking page shows payment section after confirming booking
+  [chromium-authed] › payment.spec.ts:59:7 › Payment Flow › participant selector updates price breakdown
+  [chromium-authed] › payment.spec.ts:65:7 › Payment Flow › responsive layout at 390px
+  [chromium-authed] › profile.spec.ts:3:5 › traveler pages retain the shared navigation and footer
+  [chromium-authed] › profile.spec.ts:16:7 › Profile › profile page renders settings form
+  [chromium-authed] › profile.spec.ts:26:7 › Profile › updating profile shows success feedback
+  [chromium-authed] › profile.spec.ts:43:7 › Profile › change password form validates mismatch
+  [chromium-authed] › profile.spec.ts:65:7 › Profile › language preference can be changed
+  [chromium-authed] › profile.spec.ts:79:7 › Profile › marketing emails toggle exists
+  [chromium-authed] › review-submission.spec.ts:8:7 › Review Submission › confirmed booking cannot submit a review before travel
+  [chromium-authed] › review-submission.spec.ts:14:7 › Review Submission › completed booking shows review form and validates the rating
+  [chromium-authed] › review-submission.spec.ts:46:7 › Review Submission › should restrict review editing after window limit
+  [chromium-authed] › review-submission.spec.ts:75:9 › Review Submission › es completed booking shows translated review controls
+  [chromium-authed] › review-submission.spec.ts:75:9 › Review Submission › it completed booking shows translated review controls
+  [chromium-authed] › wishlist.spec.ts:9:7 › Wishlist › wishlist page renders
+  [chromium-authed] › wishlist.spec.ts:15:7 › Wishlist › wishlist shows empty state or grid
+  [chromium-authed] › wishlist.spec.ts:25:7 › Wishlist › tour card wishlist button toggles saved state
+  [chromium-authed] › wishlist.spec.ts:46:7 › Wishlist › removing item from wishlist updates grid
+  [chromium-authed] › wishlist.spec.ts:82:7 › Wishlist › wishlist item links to tour detail
+  [mobile-authed] › booking-detail.spec.ts:17:7 › Booking Detail › detail page renders sections
+  [mobile-authed] › booking-detail.spec.ts:28:7 › Booking Detail › receipt display shows payment info
+  [mobile-authed] › booking-detail.spec.ts:37:7 › Booking Detail › cancel button visible for eligible booking
+  [mobile-authed] › booking-detail.spec.ts:46:7 › Booking Detail › 404 for invalid reference
+  [mobile-authed] › booking-detail.spec.ts:52:7 › Booking Detail › mobile layout renders single column
+  [mobile-authed] › booking.spec.ts:13:9 › Booking Flow › pending_payment confirmation never claims a completed booking
+  [mobile-authed] › booking.spec.ts:13:9 › Booking Flow › cancelled confirmation never claims a completed booking
+  [mobile-authed] › booking.spec.ts:13:9 › Booking Flow › expired confirmation never claims a completed booking
+  [mobile-authed] › booking.spec.ts:13:9 › Booking Flow › unexpected_status confirmation never claims a completed booking
+  [mobile-authed] › booking.spec.ts:35:7 › Booking Flow › confirmed booking alone displays the success title
+  [mobile-authed] › booking.spec.ts:75:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay
+  [mobile-authed] › booking.spec.ts:122:7 › Booking Flow › shows error for sold out tour
+  [mobile-authed] › booking.spec.ts:129:7 › Booking Flow › shows the localized rate limit message
+  [mobile-authed] › booking.spec.ts:147:7 › Booking Flow › clamps an invalid participant query value to the tour minimum
+  [mobile-authed] › cancel-booking.spec.ts:9:7 › Cancel Booking › opens cancellation modal
+  [mobile-authed] › cancel-booking.spec.ts:20:7 › Cancel Booking › confirm cancellation updates status
+  [mobile-authed] › cancel-booking.spec.ts:35:7 › Cancel Booking › keep booking closes modal
+  [mobile-authed] › cancel-booking.spec.ts:50:7 › Cancel Booking › error handling on cancellation failure
+  [mobile-authed] › checkout.spec.ts:11:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+  [mobile-authed] › checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+  [mobile-authed] › checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+  [mobile-authed] › checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+  [mobile-authed] › checkout.spec.ts:54:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+  [mobile-authed] › checkout.spec.ts:73:7 › Checkout › booking page loads with tour details
+  [mobile-authed] › checkout.spec.ts:82:7 › Checkout › participant selector respects min and max
+  [mobile-authed] › checkout.spec.ts:90:7 › Checkout › price breakdown updates with participants
+  [mobile-authed] › checkout.spec.ts:96:7 › Checkout › shows error when tour or date missing
+  [mobile-authed] › checkout.spec.ts:101:7 › Checkout › responsive layout at 390px
+  [mobile-authed] › my-bookings.spec.ts:13:7 › My Bookings › bookings list renders cards
+  [mobile-authed] › my-bookings.spec.ts:31:7 › My Bookings › status filter tabs work
+  [mobile-authed] › my-bookings.spec.ts:45:7 › My Bookings › clicking card navigates to detail
+  [mobile-authed] › my-bookings.spec.ts:56:7 › My Bookings › cancel button shows confirmation dialog
+  [mobile-authed] › my-bookings.spec.ts:67:7 › My Bookings › cancel succeeds for eligible booking
+  [mobile-authed] › my-bookings.spec.ts:86:7 › My Bookings › cancel button disabled for ineligible booking
+  [mobile-authed] › my-reviews.spec.ts:9:7 › My Reviews › my reviews page renders
+  [mobile-authed] › my-reviews.spec.ts:15:7 › My Reviews › my reviews shows empty state or list
+  [mobile-authed] › my-reviews.spec.ts:24:7 › My Reviews › review card shows tour name and rating
+  [mobile-authed] › my-reviews.spec.ts:34:7 › My Reviews › editable review shows edit button
+  [mobile-authed] › my-reviews.spec.ts:45:7 › My Reviews › review edit form can be cancelled
+  [mobile-authed] › my-reviews.spec.ts:61:7 › My Reviews › empty state links to search page
+  [mobile-authed] › payment.spec.ts:4:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+  [mobile-authed] › payment.spec.ts:51:7 › Payment Flow › booking page shows payment section after confirming booking
+  [mobile-authed] › payment.spec.ts:59:7 › Payment Flow › participant selector updates price breakdown
+  [mobile-authed] › payment.spec.ts:65:7 › Payment Flow › responsive layout at 390px
+  [mobile-authed] › profile.spec.ts:3:5 › traveler pages retain the shared navigation and footer
+  [mobile-authed] › profile.spec.ts:16:7 › Profile › profile page renders settings form
+  [mobile-authed] › profile.spec.ts:26:7 › Profile › updating profile shows success feedback
+  [mobile-authed] › profile.spec.ts:43:7 › Profile › change password form validates mismatch
+  [mobile-authed] › profile.spec.ts:65:7 › Profile › language preference can be changed
+  [mobile-authed] › profile.spec.ts:79:7 › Profile › marketing emails toggle exists
+  [mobile-authed] › review-submission.spec.ts:8:7 › Review Submission › confirmed booking cannot submit a review before travel
+  [mobile-authed] › review-submission.spec.ts:14:7 › Review Submission › completed booking shows review form and validates the rating
+  [mobile-authed] › review-submission.spec.ts:46:7 › Review Submission › should restrict review editing after window limit
+  [mobile-authed] › review-submission.spec.ts:75:9 › Review Submission › es completed booking shows translated review controls
+  [mobile-authed] › review-submission.spec.ts:75:9 › Review Submission › it completed booking shows translated review controls
+  [mobile-authed] › wishlist.spec.ts:9:7 › Wishlist › wishlist page renders
+  [mobile-authed] › wishlist.spec.ts:15:7 › Wishlist › wishlist shows empty state or grid
+  [mobile-authed] › wishlist.spec.ts:25:7 › Wishlist › tour card wishlist button toggles saved state
+  [mobile-authed] › wishlist.spec.ts:46:7 › Wishlist › removing item from wishlist updates grid
+  [mobile-authed] › wishlist.spec.ts:82:7 › Wishlist › wishlist item links to tour detail
+  [a11y-authed] › a11y/auth-nav-a11y.spec.ts:5:7 › Auth Navigation Accessibility › user menu dropdown has no accessibility violations
+  [a11y-authed] › a11y/auth-nav-a11y.spec.ts:16:7 › Auth Navigation Accessibility › mobile navigation panel has no accessibility violations
+  [a11y-authed] › a11y/booking-detail-a11y.spec.ts:5:7 › Booking Detail Accessibility › booking detail page has no accessibility violations
+  [a11y-authed] › a11y/booking-detail-a11y.spec.ts:12:7 › Booking Detail Accessibility › completed booking review form has no accessibility violations
+  [a11y-authed] › a11y/cancel-booking-a11y.spec.ts:5:7 › Cancel Booking Accessibility › cancel modal has no accessibility violations
+  [a11y-authed] › a11y/checkout-a11y.spec.ts:4:5 › checkout page should not have accessibility violations
+  [a11y-authed] › a11y/my-bookings-a11y.spec.ts:5:7 › My Bookings Accessibility › my bookings page has no accessibility violations
+  [a11y-authed] › a11y/my-bookings-a11y.spec.ts:12:7 › My Bookings Accessibility › filter tabs are keyboard accessible
+  [a11y-authed] › a11y/my-reviews-a11y.spec.ts:5:7 › My Reviews Accessibility › my reviews page has no accessibility violations
+  [a11y-authed] › a11y/payment-a11y.spec.ts:4:5 › booking page should not have accessibility violations
+  [a11y-authed] › a11y/profile-a11y.spec.ts:5:7 › Profile Accessibility › profile page has no accessibility violations
+  [a11y-authed] › a11y/wishlist-a11y.spec.ts:5:7 › Wishlist Accessibility › wishlist page has no accessibility violations
+  [chromium-partner] › partner/analytics.spec.ts:8:7 › Partner Analytics Page › should display the Analytics heading
+  [chromium-partner] › partner/analytics.spec.ts:12:7 › Partner Analytics Page › shows data-backed summary and chart instead of a heading-only placeholder
+  [chromium-partner] › partner/analytics.spec.ts:20:7 › Partner Analytics Page › formats minor-unit revenue and never presents unavailable conversion as zero
+  [chromium-partner] › partner/analytics.spec.ts:37:7 › Partner Analytics Page › keeps analytics and partner navigation usable at 390px
+  [chromium-partner] › partner/analytics.spec.ts:57:7 › Partner Dashboard Summary & Charts › should display analytics summary cards on dashboard
+  [chromium-partner] › partner/analytics.spec.ts:65:7 › Partner Dashboard Summary & Charts › should display summary card values
+  [chromium-partner] › partner/analytics.spec.ts:74:7 › Partner Dashboard Summary & Charts › should display bookings over time chart
+  [chromium-partner] › partner/analytics.spec.ts:83:7 › Partner Dashboard Summary & Charts › should render chart with bookings and revenue lines
+  [chromium-partner] › partner/analytics.spec.ts:90:7 › Partner Dashboard Summary & Charts › should show correct currency format in revenue card
+  [chromium-partner] › partner/analytics.spec.ts:99:7 › Partner Dashboard Summary & Charts › does not invent a conversion percentage without a measured denominator
+  [chromium-partner] › partner/analytics.spec.ts:107:7 › Partner Analytics - Responsive › should display single-column summary cards on mobile
+  [chromium-partner] › partner/analytics.spec.ts:116:7 › Partner Analytics - Responsive › should display two-column summary cards on tablet
+  [chromium-partner] › partner/bookings.spec.ts:4:7 › Partner Bookings Page › should display bookings page heading
+  [chromium-partner] › partner/bookings.spec.ts:10:7 › Partner Bookings Page › should show loading state while fetching bookings
+  [chromium-partner] › partner/bookings.spec.ts:18:7 › Partner Bookings Page › should show empty state when no bookings exist
+  [chromium-partner] › partner/bookings.spec.ts:33:7 › Partner Bookings Page › should display bookings table when data exists
+  [chromium-partner] › partner/bookings.spec.ts:71:7 › Partner Bookings Page › should display status badges with correct colors
+  [chromium-partner] › partner/bookings.spec.ts:124:7 › Partner Bookings Page › should show error state when API fails
+  [chromium-partner] › partner/bookings.spec.ts:140:7 › Partner Booking Detail › loads a seeded booking through the real scoped detail endpoint
+  [chromium-partner] › partner/bookings.spec.ts:175:7 › Partner Booking Detail › partner booking detail page shows the seeded booking with status actions
+  [chromium-partner] › partner/bookings.spec.ts:195:7 › Partner Booking Detail › partner booking detail page shows not-found for unknown reference
+  [chromium-partner] › partner/bookings.spec.ts:202:7 › Partner Booking Filters › should render filter controls
+  [chromium-partner] › partner/bookings.spec.ts:222:7 › Partner Booking Filters › should show clear all button when filters are active
+  [chromium-partner] › partner/dashboard.spec.ts:8:7 › Partner Dashboard Home › should display analytics summary cards
+  [chromium-partner] › partner/dashboard.spec.ts:16:7 › Partner Dashboard Home › should display analytics values in summary cards
+  [chromium-partner] › partner/dashboard.spec.ts:26:7 › Partner Dashboard Home › should display bookings over time chart
+  [chromium-partner] › partner/dashboard.spec.ts:35:7 › Partner Dashboard Home › should show icon badges on each summary card
+  [chromium-partner] › partner/dashboard.spec.ts:42:7 › Partner Dashboard Home › summary cards should be in a responsive grid
+  [chromium-partner] › partner/dashboard.spec.ts:50:7 › Partner Dashboard - Mobile View › should stack summary cards on mobile
+  [chromium-partner] › partner/dashboard.spec.ts:59:7 › Partner Dashboard - Mobile View › should show chart below cards on mobile
+  [chromium-partner] › partner/navigation.spec.ts:21:7 › Partner Dashboard Navigation › should render the partner layout with sidebar and header
+  [chromium-partner] › partner/navigation.spec.ts:28:7 › Partner Dashboard Navigation › should render all sidebar navigation items
+  [chromium-partner] › partner/navigation.spec.ts:39:7 › Partner Dashboard Navigation › should highlight active sidebar item based on current page
+  [chromium-partner] › partner/navigation.spec.ts:55:7 › Partner Dashboard Navigation › should navigate between all dashboard pages via sidebar
+  [chromium-partner] › partner/navigation.spec.ts:71:7 › Partner Dashboard Navigation › should display app name "Bookly" in sidebar
+  [chromium-partner] › partner/navigation.spec.ts:76:7 › Partner Dashboard Navigation › should show mobile hamburger menu on small screens
+  [chromium-partner] › partner/navigation.spec.ts:90:7 › Partner Dashboard Navigation › should close mobile drawer when overlay is clicked
+  [chromium-partner] › partner/navigation.spec.ts:107:7 › Partner Dashboard Navigation › should close mobile drawer when navigation link is clicked
+  [chromium-partner] › partner/navigation.spec.ts:122:7 › Partner Dashboard Navigation › should show notification bell in header
+  [chromium-partner] › partner/navigation.spec.ts:128:7 › Partner Dashboard Navigation › should show user avatar and name in header
+  [chromium-partner] › partner/navigation.spec.ts:134:7 › Partner Dashboard Navigation › should toggle user dropdown menu
+  [chromium-partner] › partner/navigation.spec.ts:152:7 › Partner Navigation - Sign Out (isolated) › should sign out from dropdown menu
+  [chromium-partner] › partner/navigation.spec.ts:174:7 › Partner Navigation - Auth Guard › should redirect unauthenticated users to login
+  [chromium-partner] › partner/navigation.spec.ts:185:7 › Partner Navigation - Auth Guard › should redirect non-partner users to home
+  [chromium-partner] › partner/profile.spec.ts:8:7 › Partner Profile Page › should display business profile form
+  [chromium-partner] › partner/profile.spec.ts:12:7 › Partner Profile Page › should display all profile form fields
+  [chromium-partner] › partner/profile.spec.ts:32:7 › Partner Profile Page › should allow typing in all profile form fields
+  [chromium-partner] › partner/profile.spec.ts:64:7 › Partner Profile Page › should display Save Changes button
+  [chromium-partner] › partner/profile.spec.ts:68:7 › Partner Profile Page › should display payout information section
+  [chromium-partner] › partner/profile.spec.ts:72:7 › Partner Profile Page › should display all payout form fields
+  [chromium-partner] › partner/profile.spec.ts:81:7 › Partner Profile Page › should have IBAN placeholder hint
+  [chromium-partner] › partner/profile.spec.ts:86:7 › Partner Profile Page › should limit Country ISO to 2 characters
+  [chromium-partner] › partner/profile.spec.ts:91:7 › Partner Profile Page › should display Save Payout Details button
+  [chromium-partner] › partner/profile.spec.ts:95:7 › Partner Profile Page › should display notification preferences section
+  [chromium-partner] › partner/profile.spec.ts:99:7 › Partner Profile Page › should display all notification toggles
+  [chromium-partner] › partner/profile.spec.ts:115:7 › Partner Profile Page › should toggle notification switches
+  [chromium-partner] › partner/profile.spec.ts:131:7 › Partner Profile Page › should display Save Preferences button for notifications
+  [chromium-partner] › partner/profile.spec.ts:135:7 › Partner Profile Page › should have proper form layout with two-column grid
+  [chromium-partner] › partner/profile.spec.ts:143:7 › Partner Profile - Responsive › should stack form fields on mobile
+  [chromium-partner] › partner/reviews.spec.ts:8:7 › Partner Reviews Page › should display review cards with star ratings
+  [chromium-partner] › partner/reviews.spec.ts:18:7 › Partner Reviews Page › should show review comment text
+  [chromium-partner] › partner/reviews.spec.ts:27:7 › Partner Reviews Page › should display date on review cards
+  [chromium-partner] › partner/reviews.spec.ts:38:7 › Partner Reviews Page › should allow responding to a review
+  [chromium-partner] › partner/reviews.spec.ts:60:7 › Partner Reviews Page › should cancel response writing
+  [chromium-partner] › partner/reviews.spec.ts:78:7 › Partner Reviews Page › should show character counter while typing response
+  [chromium-partner] › partner/reviews.spec.ts:92:7 › Partner Reviews Page › should disable submit when response is empty
+  [chromium-partner] › partner/reviews.spec.ts:103:7 › Partner Reviews Page › should show existing response on reviews that have one
+  [chromium-partner] › partner/reviews.spec.ts:112:7 › Partner Reviews Page › should allow editing an existing response
+  [chromium-partner] › partner/reviews.spec.ts:128:7 › Partner Reviews - API Integration › should fetch and display reviews from API
+  [chromium-partner] › partner/reviews.spec.ts:168:7 › Partner Reviews - API Integration › should show empty state when no reviews exist
+  [chromium-partner] › partner/reviews.spec.ts:185:7 › Partner Reviews - API Integration › should show error when API fails
+  [chromium-partner] › partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+  [chromium-partner] › partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+  [chromium-partner] › partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+  [chromium-partner] › partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  [chromium-partner] › partner/tour-create.spec.ts:285:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+  [chromium-partner] › partner/tour-create.spec.ts:353:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+  [chromium-partner] › partner/tour-create.spec.ts:543:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+  [chromium-partner] › partner/tour-create.spec.ts:570:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+  [chromium-partner] › partner/tour-create.spec.ts:580:7 › Partner Tour Edit › should navigate to edit page from tour card
+  [chromium-partner] › partner/tour-edit.spec.ts:20:7 › Partner Tour Edit Workflow › reorders English itinerary and gallery, selects cover, previews and saves the same order
+  [chromium-partner] › partner/tour-edit.spec.ts:81:7 › Partner Tour Edit Workflow › edits English source only while showing generated translation states
+  [chromium-partner] › partner/tour-edit.spec.ts:116:7 › Partner Tour Edit Workflow › should load the edit page for an existing tour
+  [chromium-partner] › partner/tour-edit.spec.ts:125:7 › Partner Tour Edit Workflow › should show tour cards with status badges on tours list
+  [chromium-partner] › partner/tour-edit.spec.ts:200:7 › Partner Tour Edit Workflow › should show tour destination in card
+  [chromium-partner] › partner/tour-edit.spec.ts:243:7 › Partner Tour Edit Workflow › should link to edit page from tour card
+  [chromium-partner] › partner/tour-edit.spec.ts:298:7 › Partner Tour Edit - Real API (Spec 019 US1) › round-trips owned English source with repeated days via real API and reopens
+  [chromium-partner] › partner/tour-edit.spec.ts:368:7 › Partner Tour Edit - Real API (Spec 019 US1) › preserves nullable source on unrelated save and clears on explicit empty list
+  [chromium-partner] › partner/tour-edit.spec.ts:430:7 › Partner Tour Edit - Real API (Spec 019 US1) › restores a partial owned snapshot with nested EN precedence via real API
+  [chromium-partner] › partner/tour-edit.spec.ts:517:7 › Partner Tour Edit - Real API (Spec 019 US1) › shows localized cleared-title validation in EN/ES/IT via real API
+  [chromium-partner] › partner/tour-edit.spec.ts:594:7 › Partner Tour Edit - Real API (Spec 019 US1) › rejects fractional durations and over-long list items with localized errors via real API
+  [chromium-partner] › partner/tour-edit.spec.ts:674:7 › Partner Tour Edit - Real API (Spec 019 US1) › denies cross-owner reads with 404 for a real second principal and localizes denied loads
+  [chromium-partner] › partner/tour-edit.spec.ts:725:7 › Partner Tour Edit - Real API (Spec 019 US1) › failed submit retains the owned draft id and retry submits the same tour
+  [chromium-partner] › partner/tour-edit.spec.ts:793:7 › Partner Tour Edit - Real API (Spec 019 US1) › renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+  [chromium-partner] › partner/tour-edit.spec.ts:822:7 › Partner Tour Edit - Real API (Spec 019 US4) › authors alt, difficulty, guide codes and gallery order/cover in the edit UI with GET proof
+  [chromium-partner] › partner/tour-edit.spec.ts:961:7 › Partner Tour Edit - Real API (Spec 019 US4) › accepts 20 photos with a 500-codepoint alt and rejects the 21st at the real boundary
+  [chromium-partner] › partner/tour-edit.spec.ts:1033:7 › Partner Tour Edit - Real API (Spec 019 US4) › blocks an invalid alt draft without partial saving and supports the keyboard file chooser
+  [chromium-partner] › partner/tour-edit.spec.ts:1098:7 › Partner Tour Edit - Real API (Spec 019 US4) › preserves legacy null difficulty through unrelated UI and guide-code saves
+  [chromium-partner] › partner/tours.spec.ts:8:7 › Partner Tours List Page › should display the tours page with heading
+  [chromium-partner] › partner/tours.spec.ts:14:7 › Partner Tours List Page › should show Create Tour button
+  [chromium-partner] › partner/tours.spec.ts:21:7 › Partner Tours List Page › should navigate to tour creation page
+  [chromium-partner] › partner/tours.spec.ts:29:7 › Partner Tours List Page › should display empty state when no tours exist
+  [chromium-partner] › partner/tours.spec.ts:46:7 › Partner Tours List Page › should display tour cards when tours exist
+  [chromium-partner] › partner/tours.spec.ts:95:7 › Partner Tours List Page › should show tour status badges
+  [chromium-partner] › partner/tours.spec.ts:106:7 › Partner Tours List Page › should show loading state initially
+  [chromium-partner] › partner/tours.spec.ts:125:7 › Partner Tours List Page › should show error state when API fails
+  [chromium-partner] › partner/tours.spec.ts:141:7 › Partner Tour Card Component › should display tour card with all details
+  [chromium-partner] › partner/tours.spec.ts:203:7 › Partner Tour Card Component › should show archive button for non-archived tours
+  [chromium-partner] › partner/tours.spec.ts:248:7 › Partner Tour Card Component › should not show archive button for already archived tours
+  [chromium-partner] › partner/tours.spec.ts:294:7 › Partner Tour Card Component › should show "No cover image" placeholder when tour has no cover
+  [mobile-partner] › partner/analytics.spec.ts:8:7 › Partner Analytics Page › should display the Analytics heading
+  [mobile-partner] › partner/analytics.spec.ts:12:7 › Partner Analytics Page › shows data-backed summary and chart instead of a heading-only placeholder
+  [mobile-partner] › partner/analytics.spec.ts:20:7 › Partner Analytics Page › formats minor-unit revenue and never presents unavailable conversion as zero
+  [mobile-partner] › partner/analytics.spec.ts:37:7 › Partner Analytics Page › keeps analytics and partner navigation usable at 390px
+  [mobile-partner] › partner/analytics.spec.ts:57:7 › Partner Dashboard Summary & Charts › should display analytics summary cards on dashboard
+  [mobile-partner] › partner/analytics.spec.ts:65:7 › Partner Dashboard Summary & Charts › should display summary card values
+  [mobile-partner] › partner/analytics.spec.ts:74:7 › Partner Dashboard Summary & Charts › should display bookings over time chart
+  [mobile-partner] › partner/analytics.spec.ts:83:7 › Partner Dashboard Summary & Charts › should render chart with bookings and revenue lines
+  [mobile-partner] › partner/analytics.spec.ts:90:7 › Partner Dashboard Summary & Charts › should show correct currency format in revenue card
+  [mobile-partner] › partner/analytics.spec.ts:99:7 › Partner Dashboard Summary & Charts › does not invent a conversion percentage without a measured denominator
+  [mobile-partner] › partner/analytics.spec.ts:107:7 › Partner Analytics - Responsive › should display single-column summary cards on mobile
+  [mobile-partner] › partner/analytics.spec.ts:116:7 › Partner Analytics - Responsive › should display two-column summary cards on tablet
+  [mobile-partner] › partner/bookings.spec.ts:4:7 › Partner Bookings Page › should display bookings page heading
+  [mobile-partner] › partner/bookings.spec.ts:10:7 › Partner Bookings Page › should show loading state while fetching bookings
+  [mobile-partner] › partner/bookings.spec.ts:18:7 › Partner Bookings Page › should show empty state when no bookings exist
+  [mobile-partner] › partner/bookings.spec.ts:33:7 › Partner Bookings Page › should display bookings table when data exists
+  [mobile-partner] › partner/bookings.spec.ts:71:7 › Partner Bookings Page › should display status badges with correct colors
+  [mobile-partner] › partner/bookings.spec.ts:124:7 › Partner Bookings Page › should show error state when API fails
+  [mobile-partner] › partner/bookings.spec.ts:140:7 › Partner Booking Detail › loads a seeded booking through the real scoped detail endpoint
+  [mobile-partner] › partner/bookings.spec.ts:175:7 › Partner Booking Detail › partner booking detail page shows the seeded booking with status actions
+  [mobile-partner] › partner/bookings.spec.ts:195:7 › Partner Booking Detail › partner booking detail page shows not-found for unknown reference
+  [mobile-partner] › partner/bookings.spec.ts:202:7 › Partner Booking Filters › should render filter controls
+  [mobile-partner] › partner/bookings.spec.ts:222:7 › Partner Booking Filters › should show clear all button when filters are active
+  [mobile-partner] › partner/dashboard.spec.ts:8:7 › Partner Dashboard Home › should display analytics summary cards
+  [mobile-partner] › partner/dashboard.spec.ts:16:7 › Partner Dashboard Home › should display analytics values in summary cards
+  [mobile-partner] › partner/dashboard.spec.ts:26:7 › Partner Dashboard Home › should display bookings over time chart
+  [mobile-partner] › partner/dashboard.spec.ts:35:7 › Partner Dashboard Home › should show icon badges on each summary card
+  [mobile-partner] › partner/dashboard.spec.ts:42:7 › Partner Dashboard Home › summary cards should be in a responsive grid
+  [mobile-partner] › partner/dashboard.spec.ts:50:7 › Partner Dashboard - Mobile View › should stack summary cards on mobile
+  [mobile-partner] › partner/dashboard.spec.ts:59:7 › Partner Dashboard - Mobile View › should show chart below cards on mobile
+  [mobile-partner] › partner/navigation.spec.ts:21:7 › Partner Dashboard Navigation › should render the partner layout with sidebar and header
+  [mobile-partner] › partner/navigation.spec.ts:28:7 › Partner Dashboard Navigation › should render all sidebar navigation items
+  [mobile-partner] › partner/navigation.spec.ts:39:7 › Partner Dashboard Navigation › should highlight active sidebar item based on current page
+  [mobile-partner] › partner/navigation.spec.ts:55:7 › Partner Dashboard Navigation › should navigate between all dashboard pages via sidebar
+  [mobile-partner] › partner/navigation.spec.ts:71:7 › Partner Dashboard Navigation › should display app name "Bookly" in sidebar
+  [mobile-partner] › partner/navigation.spec.ts:76:7 › Partner Dashboard Navigation › should show mobile hamburger menu on small screens
+  [mobile-partner] › partner/navigation.spec.ts:90:7 › Partner Dashboard Navigation › should close mobile drawer when overlay is clicked
+  [mobile-partner] › partner/navigation.spec.ts:107:7 › Partner Dashboard Navigation › should close mobile drawer when navigation link is clicked
+  [mobile-partner] › partner/navigation.spec.ts:122:7 › Partner Dashboard Navigation › should show notification bell in header
+  [mobile-partner] › partner/navigation.spec.ts:128:7 › Partner Dashboard Navigation › should show user avatar and name in header
+  [mobile-partner] › partner/navigation.spec.ts:134:7 › Partner Dashboard Navigation › should toggle user dropdown menu
+  [mobile-partner] › partner/navigation.spec.ts:152:7 › Partner Navigation - Sign Out (isolated) › should sign out from dropdown menu
+  [mobile-partner] › partner/navigation.spec.ts:174:7 › Partner Navigation - Auth Guard › should redirect unauthenticated users to login
+  [mobile-partner] › partner/navigation.spec.ts:185:7 › Partner Navigation - Auth Guard › should redirect non-partner users to home
+  [mobile-partner] › partner/profile.spec.ts:8:7 › Partner Profile Page › should display business profile form
+  [mobile-partner] › partner/profile.spec.ts:12:7 › Partner Profile Page › should display all profile form fields
+  [mobile-partner] › partner/profile.spec.ts:32:7 › Partner Profile Page › should allow typing in all profile form fields
+  [mobile-partner] › partner/profile.spec.ts:64:7 › Partner Profile Page › should display Save Changes button
+  [mobile-partner] › partner/profile.spec.ts:68:7 › Partner Profile Page › should display payout information section
+  [mobile-partner] › partner/profile.spec.ts:72:7 › Partner Profile Page › should display all payout form fields
+  [mobile-partner] › partner/profile.spec.ts:81:7 › Partner Profile Page › should have IBAN placeholder hint
+  [mobile-partner] › partner/profile.spec.ts:86:7 › Partner Profile Page › should limit Country ISO to 2 characters
+  [mobile-partner] › partner/profile.spec.ts:91:7 › Partner Profile Page › should display Save Payout Details button
+  [mobile-partner] › partner/profile.spec.ts:95:7 › Partner Profile Page › should display notification preferences section
+  [mobile-partner] › partner/profile.spec.ts:99:7 › Partner Profile Page › should display all notification toggles
+  [mobile-partner] › partner/profile.spec.ts:115:7 › Partner Profile Page › should toggle notification switches
+  [mobile-partner] › partner/profile.spec.ts:131:7 › Partner Profile Page › should display Save Preferences button for notifications
+  [mobile-partner] › partner/profile.spec.ts:135:7 › Partner Profile Page › should have proper form layout with two-column grid
+  [mobile-partner] › partner/profile.spec.ts:143:7 › Partner Profile - Responsive › should stack form fields on mobile
+  [mobile-partner] › partner/reviews.spec.ts:8:7 › Partner Reviews Page › should display review cards with star ratings
+  [mobile-partner] › partner/reviews.spec.ts:18:7 › Partner Reviews Page › should show review comment text
+  [mobile-partner] › partner/reviews.spec.ts:27:7 › Partner Reviews Page › should display date on review cards
+  [mobile-partner] › partner/reviews.spec.ts:38:7 › Partner Reviews Page › should allow responding to a review
+  [mobile-partner] › partner/reviews.spec.ts:60:7 › Partner Reviews Page › should cancel response writing
+  [mobile-partner] › partner/reviews.spec.ts:78:7 › Partner Reviews Page › should show character counter while typing response
+  [mobile-partner] › partner/reviews.spec.ts:92:7 › Partner Reviews Page › should disable submit when response is empty
+  [mobile-partner] › partner/reviews.spec.ts:103:7 › Partner Reviews Page › should show existing response on reviews that have one
+  [mobile-partner] › partner/reviews.spec.ts:112:7 › Partner Reviews Page › should allow editing an existing response
+  [mobile-partner] › partner/reviews.spec.ts:128:7 › Partner Reviews - API Integration › should fetch and display reviews from API
+  [mobile-partner] › partner/reviews.spec.ts:168:7 › Partner Reviews - API Integration › should show empty state when no reviews exist
+  [mobile-partner] › partner/reviews.spec.ts:185:7 › Partner Reviews - API Integration › should show error when API fails
+  [mobile-partner] › partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+  [mobile-partner] › partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+  [mobile-partner] › partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+  [mobile-partner] › partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  [mobile-partner] › partner/tour-create.spec.ts:285:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+  [mobile-partner] › partner/tour-create.spec.ts:353:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+  [mobile-partner] › partner/tour-create.spec.ts:543:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+  [mobile-partner] › partner/tour-create.spec.ts:570:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+  [mobile-partner] › partner/tour-create.spec.ts:580:7 › Partner Tour Edit › should navigate to edit page from tour card
+  [mobile-partner] › partner/tour-edit.spec.ts:20:7 › Partner Tour Edit Workflow › reorders English itinerary and gallery, selects cover, previews and saves the same order
+  [mobile-partner] › partner/tour-edit.spec.ts:81:7 › Partner Tour Edit Workflow › edits English source only while showing generated translation states
+  [mobile-partner] › partner/tour-edit.spec.ts:116:7 › Partner Tour Edit Workflow › should load the edit page for an existing tour
+  [mobile-partner] › partner/tour-edit.spec.ts:125:7 › Partner Tour Edit Workflow › should show tour cards with status badges on tours list
+  [mobile-partner] › partner/tour-edit.spec.ts:200:7 › Partner Tour Edit Workflow › should show tour destination in card
+  [mobile-partner] › partner/tour-edit.spec.ts:243:7 › Partner Tour Edit Workflow › should link to edit page from tour card
+  [mobile-partner] › partner/tour-edit.spec.ts:298:7 › Partner Tour Edit - Real API (Spec 019 US1) › round-trips owned English source with repeated days via real API and reopens
+  [mobile-partner] › partner/tour-edit.spec.ts:368:7 › Partner Tour Edit - Real API (Spec 019 US1) › preserves nullable source on unrelated save and clears on explicit empty list
+  [mobile-partner] › partner/tour-edit.spec.ts:430:7 › Partner Tour Edit - Real API (Spec 019 US1) › restores a partial owned snapshot with nested EN precedence via real API
+  [mobile-partner] › partner/tour-edit.spec.ts:517:7 › Partner Tour Edit - Real API (Spec 019 US1) › shows localized cleared-title validation in EN/ES/IT via real API
+  [mobile-partner] › partner/tour-edit.spec.ts:594:7 › Partner Tour Edit - Real API (Spec 019 US1) › rejects fractional durations and over-long list items with localized errors via real API
+  [mobile-partner] › partner/tour-edit.spec.ts:674:7 › Partner Tour Edit - Real API (Spec 019 US1) › denies cross-owner reads with 404 for a real second principal and localizes denied loads
+  [mobile-partner] › partner/tour-edit.spec.ts:725:7 › Partner Tour Edit - Real API (Spec 019 US1) › failed submit retains the owned draft id and retry submits the same tour
+  [mobile-partner] › partner/tour-edit.spec.ts:793:7 › Partner Tour Edit - Real API (Spec 019 US1) › renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+  [mobile-partner] › partner/tour-edit.spec.ts:822:7 › Partner Tour Edit - Real API (Spec 019 US4) › authors alt, difficulty, guide codes and gallery order/cover in the edit UI with GET proof
+  [mobile-partner] › partner/tour-edit.spec.ts:961:7 › Partner Tour Edit - Real API (Spec 019 US4) › accepts 20 photos with a 500-codepoint alt and rejects the 21st at the real boundary
+  [mobile-partner] › partner/tour-edit.spec.ts:1033:7 › Partner Tour Edit - Real API (Spec 019 US4) › blocks an invalid alt draft without partial saving and supports the keyboard file chooser
+  [mobile-partner] › partner/tour-edit.spec.ts:1098:7 › Partner Tour Edit - Real API (Spec 019 US4) › preserves legacy null difficulty through unrelated UI and guide-code saves
+  [mobile-partner] › partner/tours.spec.ts:8:7 › Partner Tours List Page › should display the tours page with heading
+  [mobile-partner] › partner/tours.spec.ts:14:7 › Partner Tours List Page › should show Create Tour button
+  [mobile-partner] › partner/tours.spec.ts:21:7 › Partner Tours List Page › should navigate to tour creation page
+  [mobile-partner] › partner/tours.spec.ts:29:7 › Partner Tours List Page › should display empty state when no tours exist
+  [mobile-partner] › partner/tours.spec.ts:46:7 › Partner Tours List Page › should display tour cards when tours exist
+  [mobile-partner] › partner/tours.spec.ts:95:7 › Partner Tours List Page › should show tour status badges
+  [mobile-partner] › partner/tours.spec.ts:106:7 › Partner Tours List Page › should show loading state initially
+  [mobile-partner] › partner/tours.spec.ts:125:7 › Partner Tours List Page › should show error state when API fails
+  [mobile-partner] › partner/tours.spec.ts:141:7 › Partner Tour Card Component › should display tour card with all details
+  [mobile-partner] › partner/tours.spec.ts:203:7 › Partner Tour Card Component › should show archive button for non-archived tours
+  [mobile-partner] › partner/tours.spec.ts:248:7 › Partner Tour Card Component › should not show archive button for already archived tours
+  [mobile-partner] › partner/tours.spec.ts:294:7 › Partner Tour Card Component › should show "No cover image" placeholder when tour has no cover
+  [a11y-partner] › a11y/partner-a11y.spec.ts:6:7 › Partner Dashboard Accessibility › partner dashboard home should not have accessibility violations
+  [a11y-partner] › a11y/partner-a11y.spec.ts:15:7 › Partner Dashboard Accessibility › partner tours page should not have accessibility violations
+  [a11y-partner] › a11y/partner-a11y.spec.ts:22:7 › Partner Dashboard Accessibility › partner bookings page should not have accessibility violations
+  [a11y-partner] › a11y/partner-a11y.spec.ts:29:7 › Partner Dashboard Accessibility › partner reviews page should not have accessibility violations
+  [a11y-partner] › a11y/partner-a11y.spec.ts:36:7 › Partner Dashboard Accessibility › partner profile page should not have accessibility violations
+  [a11y-partner] › a11y/partner-a11y.spec.ts:45:7 › Partner Layout Accessibility › sidebar should have accessible navigation landmark
+  [a11y-partner] › a11y/partner-a11y.spec.ts:58:7 › Partner Layout Accessibility › sidebar links should have aria-current for active page
+  [a11y-partner] › a11y/partner-a11y.spec.ts:67:7 › Partner Layout Accessibility › mobile menu button should have aria-label
+  [a11y-partner] › a11y/partner-a11y.spec.ts:75:7 › Partner Layout Accessibility › mobile drawer should have proper ARIA attributes
+  [a11y-partner] › a11y/partner-a11y.spec.ts:100:7 › Partner Layout Accessibility › notification bell should have accessible label
+  [a11y-partner] › a11y/partner-a11y.spec.ts:107:7 › Partner Layout Accessibility › header should have main content landmark
+  [a11y-partner] › a11y/partner-a11y.spec.ts:115:7 › Partner Layout Accessibility › form inputs should have associated labels
+  [a11y-partner] › a11y/partner-a11y.spec.ts:133:7 › Partner Layout Accessibility › switch toggles should have accessible roles
+  [a11y-partner] › a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+  [a11y-partner] › a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+  [a11y-partner] › a11y/partner-a11y.spec.ts:183:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › difficulty and guide-language controls are labeled in each page language
+  [a11y-partner] › a11y/partner-a11y.spec.ts:207:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › english-source notice stays visible and page-localized on details step
+  [a11y-partner] › a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+  [a11y-partner] › a11y/partner-a11y.spec.ts:232:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › uploader dropzone and alt-field contract on the edit page
+Total: 879 tests in 63 files
+NUMERIC_EXIT=0

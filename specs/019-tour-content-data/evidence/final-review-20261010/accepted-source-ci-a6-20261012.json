@@ -1,0 +1,31 @@
+{
+  "source_commit": "a6c24b5e460642e7fe73d955a11071c846cdcb30",
+  "ci_run": 38250428936,
+  "all_jobs": "success",
+  "local_playwright": {
+    "retries": 0,
+    "passed": 825,
+    "exit_code": 0,
+    "skipped": 54,
+    "planned": 879
+  },
+  "ci_shards": {
+    "shard2_skipped": 54,
+    "shard3_passed": 294,
+    "shard2_passed": 240,
+    "shard1_passed": 295
+  },
+  "skip_reason": "Existing duplicate mobile instances of explicit width matrices in shared-shell.spec.ts and visual-acceptance.spec.ts",
+  "ci_extra_setup_runs": 4,
+  "after_source_boundary_change": {
+    "jest_suites": 55,
+    "home_blog_axe": 4,
+    "build": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "jest_tests": 414,
+    "public_wishlist_browser": 148,
+    "production_build": "CBdGR95o7ksvay8ozJBbZ",
+    "full_new_head_ci": "pending"
+  }
+}

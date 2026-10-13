@@ -1,0 +1,26 @@
+[
+  {
+    "file": "backend-ready.txt",
+    "sha256": "D97E1B5FE3E2CF8C1284BB7D71EC18517E88578886A8819F4600465438A8EFBA",
+    "last": "NUMERIC_EXIT=1",
+    "log_last_write_utc": "2026-10-10T14:22:37.2549144Z"
+  },
+  {
+    "file": "frontend.txt",
+    "sha256": "AB4B1CCFEB8ADFDF2598B2129DFA307BFFBC23DE9738CE6B6891AE1FC97A72C1",
+    "last": "NUMERIC_EXIT=1",
+    "log_last_write_utc": "2026-10-10T14:17:27.5665830Z"
+  },
+  {
+    "file": "edit-alt.txt",
+    "sha256": "D6B0F0853A4307BFA9121A1AE1AC380DED0121B7FC7219D95440574CB446FD6F",
+    "last": "NUMERIC_EXIT=1",
+    "log_last_write_utc": "2026-10-10T14:23:47.1319398Z"
+  },
+  {
+    "file": "backend.txt",
+    "sha256": "9E6D676EB3CC6EDCEE01B2A26148529FC3919536FBF6A09DEFBE975AEF9396B7",
+    "last": "NUMERIC_EXIT=143",
+    "log_last_write_utc": "2026-10-10T14:18:07.9562743Z"
+  }
+]

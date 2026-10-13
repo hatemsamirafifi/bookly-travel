@@ -1,0 +1,2 @@
+{"step":"bounded-recovery","exit":0,"output":"Inspected 1 tours. Continue with --after-id=48.\nQueued 2 translation jobs.","queue_size":7,"retry_after":90}
+NUMERIC_EXIT=0

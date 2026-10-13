@@ -1,0 +1,141 @@
+docker compose --env-file C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser.env -p bookly-spec019-browser --project-directory 'F:/Travel Website/bookly travel' -f docker-compose.ci.yml -f C:/Users/HaTeM/.codex/delegation/bookly-spec019-20261003/browser-overrides.yml exec -T nextjs npm test -- --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t "summary flag"
+
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx -t summary flag
+
+FAIL src/components/tour/__tests__/TourDetail.test.tsx (12.981 s)
+  TourDetail
+    ✕ shows no fallback notice for empty sections in en even with the summary flag (202 ms)
+    ✕ shows no fallback notice for empty sections in es even with the summary flag (30 ms)
+    ✕ shows no fallback notice for empty sections in it even with the summary flag (39 ms)
+    ✕ shows no fallback notice for current requested content in en even with the summary flag (40 ms)
+    ✕ shows no fallback notice for current requested content in es even with the summary flag (44 ms)
+    ✕ shows no fallback notice for current requested content in it even with the summary flag (70 ms)
+    ○ skipped renders the category name, not the raw category object (F1 regression)
+    ○ skipped renders the title and location
+    ○ skipped renders the star rating from the rating object
+    ○ skipped renders guide metadata independently of en content locale
+    ○ skipped renders guide metadata independently of es content locale
+    ○ skipped renders guide metadata independently of it content locale
+    ○ skipped labels an English content fallback without changing guide languages
+    ○ skipped shows independent content/itinerary fallback notices in en
+    ○ skipped shows independent content/itinerary fallback notices in es
+    ○ skipped shows independent content/itinerary fallback notices in it
+    ○ skipped suppresses the itinerary section and notice for an empty itinerary
+    ○ skipped declares actual text languages while keeping page-locale labels
+    ○ skipped renders repeated valid day numbers with stable composite keys
+    ○ skipped renders translated important information in en
+    ○ skipped renders translated important information in es
+    ○ skipped renders translated important information in it
+    ○ skipped omits empty optional sections while retaining the booking action
+    ○ skipped navigates only to visible sections with a safe sticky offset and renders public operator and related tours
+
+  ● TourDetail › shows no fallback notice for empty sections in en even with the summary flag
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <p class="mt-2 inline-block rounded bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Some content is displayed in English</p> instead
+
+      209 |     expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      210 |     expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    > 211 |     expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+          |                                                                 ^
+      212 |   });
+      213 |
+      214 |   it.each([
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:211:65
+
+  ● TourDetail › shows no fallback notice for empty sections in es even with the summary flag
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <p class="mt-2 inline-block rounded bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Parte del contenido se muestra en inglés</p> instead
+
+      209 |     expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      210 |     expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    > 211 |     expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+          |                                                                 ^
+      212 |   });
+      213 |
+      214 |   it.each([
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:211:65
+
+  ● TourDetail › shows no fallback notice for empty sections in it even with the summary flag
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <p class="mt-2 inline-block rounded bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Alcuni contenuti sono visualizzati in inglese</p> instead
+
+      209 |     expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      210 |     expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    > 211 |     expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+          |                                                                 ^
+      212 |   });
+      213 |
+      214 |   it.each([
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:211:65
+
+  ● TourDetail › shows no fallback notice for current requested content in en even with the summary flag
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <p class="mt-2 inline-block rounded bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Some content is displayed in English</p> instead
+
+      227 |     expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      228 |     expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    > 229 |     expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+          |                                                                 ^
+      230 |   });
+      231 |
+      232 |   it('declares actual text languages while keeping page-locale labels', () => {
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:229:65
+
+  ● TourDetail › shows no fallback notice for current requested content in es even with the summary flag
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <p class="mt-2 inline-block rounded bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Parte del contenido se muestra en inglés</p> instead
+
+      227 |     expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      228 |     expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    > 229 |     expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+          |                                                                 ^
+      230 |   });
+      231 |
+      232 |   it('declares actual text languages while keeping page-locale labels', () => {
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:229:65
+
+  ● TourDetail › shows no fallback notice for current requested content in it even with the summary flag
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <p class="mt-2 inline-block rounded bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700">Alcuni contenuti sono visualizzati in inglese</p> instead
+
+      227 |     expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      228 |     expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+    > 229 |     expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+          |                                                                 ^
+      230 |   });
+      231 |
+      232 |   it('declares actual text languages while keeping page-locale labels', () => {
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:229:65
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 18 skipped, 24 total
+Snapshots:   0 total
+Time:        15.502 s
+Ran all test suites within paths "src/components/tour/__tests__/TourDetail.test.tsx".
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+NUMERIC_EXIT=1

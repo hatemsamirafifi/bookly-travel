@@ -1,0 +1,140 @@
+
+   FAIL  Tests\Feature\Partner\TourTranslationJobStateTest
+  ⨯ it skips provider and derivative rewrites for an already current re… 7.20s
+  ✓ it repairs a matching ready state whose derivative row is missing    0.23s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.25s
+  ✓ it does not let terminal failure demote ready content or newer desi… 0.37s
+  ⨯ it checks fresh English before recording terminal failure even when… 0.95s
+  ⨯ it persists a fixed safe category for unrecognized permanent except… 0.23s
+  ⨯ it persists a fixed safe category for unrecognized permanent except… 0.20s
+  ⨯ it persists a fixed safe category for unrecognized permanent except… 0.38s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.21s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.21s
+  ✓ it keeps recognized permanent failure categories with ('translation… 0.22s
+  ⨯ it does not serialize internal revision hashes or error categories…  0.22s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it skips prov…
+  Failed asserting that 1 is identical to 0.
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:42
+     38▕     $beforeState = $this->tour->translationStates()->where('locale', 'es')->firstOrFail()->getRawOriginal();
+     39▕     $translator = spec019CountingTranslator();
+     40▕     (new GenerateTourTranslationJob($this->tour->id, 'es', $this->hash))->handle($this->service, $translator);
+     41▕
+  ➜  42▕     expect($translator->calls)->toBe(0);
+     43▕     expect($this->tour->translations()->where('locale', 'es')->firstOrFail()->getRawOriginal())->toBe($before);
+     44▕     expect($this->tour->translationStates()->where('locale', 'es')->firstOrFail()->getRawOriginal())->toBe($beforeState);
+     45▕ });
+     46▕
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:42
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it checks fre…
+  Failed asserting that two arrays are identical.
+       'locale' => 'es',
+       'source_hash' => '74d33da92ceb4b2b806cf132f0edb73b50ab3cb2aa0de7944c6cdf8d6c5d36a4',
+       'translated_hash' => null,
+  -    'status' => 'pending',
+  -    'last_error_code' => null,
+  +    'status' => 'failed',
+  +    'last_error_code' => 'translation_provider_temporary',
+       'created_at' => '2026-10-09 18:21:29',
+       'updated_at' => '2026-10-09 18:21:29',
+   ]
+
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:71
+     67▕ it('checks fresh English before recording terminal failure even when desired state is behind', function () {
+     68▕     $this->english->update(['title' => 'New English source already committed']);
+     69▕     $before = $this->tour->translationStates()->where('locale', 'es')->firstOrFail()->getRawOriginal();
+     70▕     (new GenerateTourTranslationJob($this->tour->id, 'es', $this->hash))->failed(new RuntimeException('FAKE_PRIVATE_PROVIDER_BODY_019'));
+  ➜  71▕     expect($this->tour->translationStates()->where('locale', 'es')->firstOrFail()->getRawOriginal())->toBe($before);
+     72▕ });
+     73▕
+     74▕ it('persists a fixed safe category for unrecognized permanent exception text', function (string $message) {
+     75▕     $translator = new class($message) implements TourContentTranslator
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:71
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it persists a…
+  Failed asserting that two strings are identical.
+  -'translation_output_invalid'
+  +'FAKE_PRIVATE_PROVIDER_BODY_019'
+
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:87
+     83▕     };
+     84▕     (new GenerateTourTranslationJob($this->tour->id, 'es', $this->hash))->handle($this->service, $translator);
+     85▕     $state = $this->tour->translationStates()->where('locale', 'es')->firstOrFail();
+     86▕     expect($state->status)->toBe('failed');
+  ➜  87▕     expect($state->last_error_code)->toBe('translation_output_invalid');
+     88▕     expect($state->last_error_code)->not->toContain($message);
+     89▕ })->with(['FAKE_PRIVATE_PROVIDER_BODY_019', ' arbitrary response ', str_repeat('FAKE_BODY_', 10)]);
+     90▕
+     91▕ it('keeps recognized permanent failure categories', function (string $code) {
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:87
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it persists a…
+  Failed asserting that two strings are identical.
+  -'translation_output_invalid'
+  +' arbitrary response '
+
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:87
+     83▕     };
+     84▕     (new GenerateTourTranslationJob($this->tour->id, 'es', $this->hash))->handle($this->service, $translator);
+     85▕     $state = $this->tour->translationStates()->where('locale', 'es')->firstOrFail();
+     86▕     expect($state->status)->toBe('failed');
+  ➜  87▕     expect($state->last_error_code)->toBe('translation_output_invalid');
+     88▕     expect($state->last_error_code)->not->toContain($message);
+     89▕ })->with(['FAKE_PRIVATE_PROVIDER_BODY_019', ' arbitrary response ', str_repeat('FAKE_BODY_', 10)]);
+     90▕
+     91▕ it('keeps recognized permanent failure categories', function (string $code) {
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:87
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest…  QueryException
+  SQLSTATE[22001]: String data, right truncated: 7 ERROR:  value too long for type character varying(40) (Connection: pgsql, SQL: update "tour_translation_states" set "status" = failed, "last_error_code" = FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_FAKE_BODY_, "updated_at" = 2026-10-09 18:21:30 where "tour_id" = 8 and "locale" = es and "source_hash" = 74d33da92ceb4b2b806cf132f0edb73b50ab3cb2aa0de7944c6cdf8d6c5d36a4 and "status" != ready)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:596
+    592▕             $statement = $this->getPdo()->prepare($query);
+    593▕
+    594▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    595▕
+  ➜ 596▕             $statement->execute();
+    597▕
+    598▕             $this->recordsHaveBeenModified(
+    599▕                 ($count = $statement->rowCount()) > 0
+    600▕             );
+
+      [2m+7 vendor frames [22m
+  8   app/Domains/Partner/Jobs/GenerateTourTranslationJob.php:101
+  9   app/Domains/Partner/Jobs/GenerateTourTranslationJob.php:54
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourTranslationJobStateTest > it does not s…
+  Failed asserting that true is false.
+
+  at tests/Feature/Partner/TourTranslationJobStateTest.php:109
+    105▕ it('does not serialize internal revision hashes or error categories from the state model', function () {
+    106▕     $state = TourTranslationState::where('tour_id', $this->tour->id)->where('locale', 'es')->firstOrFail();
+    107▕     $state->update(['last_error_code' => 'translation_not_configured']);
+    108▕     foreach (['source_hash', 'translated_hash', 'last_error_code'] as $key) {
+  ➜ 109▕         expect(array_key_exists($key, $state->toArray()))->toBeFalse();
+    110▕     }
+    111▕ });
+    112▕
+    113▕
+
+  1   tests/Feature/Partner/TourTranslationJobStateTest.php:109
+
+
+  Tests:    6 failed, 6 passed (14 assertions)
+  Duration: 13.04s
+
+NUMERIC_EXIT=2

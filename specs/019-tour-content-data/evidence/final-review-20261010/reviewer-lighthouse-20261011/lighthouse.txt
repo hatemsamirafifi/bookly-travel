@@ -1,0 +1,2 @@
+Windows resource preflight blocked: low-physical-headroom. Free resources before measuring.
+NUMERIC_EXIT=1

@@ -1,0 +1,9 @@
+{
+    "tour_id": 48,
+    "slug": "spec019-local-real-generation-20261010193622-01m4kn22vpgpxz32xm7bhycp5y",
+    "partner_id": 2,
+    "source_hash": "7034bcabc96842bd70af8e00a7e1cff3518bfea39feaef80fb3768ade1c735b3",
+    "source_sha256": "7034bcabc96842bd70af8e00a7e1cff3518bfea39feaef80fb3768ade1c735b3",
+    "legacy_raw": null,
+    "queue": "spec019-live-local-20261010"
+}

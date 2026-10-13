@@ -1,0 +1,26 @@
+docker compose exec -T -e GEMINI_API_KEY= laravel php -d memory_limit=512M vendor/bin/pest --configuration=phpunit.pgsql.xml tests/Feature/Search/TourDetailTest.php --filter="English-only itinerary"
+
+
+   FAIL  Tests\Feature\Search\TourDetailTest
+  ⨯ it discloses an English-only itinerary fallback in the compatible s… 9.35s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Search\TourDetailTest > it discloses an English-onl…
+  Failed asserting that null is identical to 'partial_translation'.
+
+  at tests/Feature/Search/TourDetailTest.php:999
+     995▕             ->assertJsonPath('data.title', '')
+     996▕             ->assertJsonPath('data.content_locale', 'en')
+     997▕             ->assertJsonPath('data.itinerary.0.title', 'English day')
+     998▕             ->assertJsonPath('data.itinerary_locale', 'en')
+  ➜  999▕             ->assertJsonPath('data.translation_warning', 'partial_translation');
+    1000▕     }
+    1001▕ });
+    1002▕
+    1003▕ it('never exposes hashes, provider errors or job state on public detail (US2)', function () {
+
+
+  Tests:    1 failed (6 assertions)
+  Duration: 10.16s
+
+
+NUMERIC_EXIT=1

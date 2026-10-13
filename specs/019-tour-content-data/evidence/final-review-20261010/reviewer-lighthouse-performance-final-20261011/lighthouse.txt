@@ -1,0 +1,10 @@
+{"page":"home","round":1,"passed":false,"scores":{"performance":0.57,"accessibility":1,"best-practices":0.79,"seo":1},"benchmarkIndex":1933,"runtimeError":null}
+{"page":"search","round":1,"passed":false,"scores":{"performance":0.69,"accessibility":1,"best-practices":0.79,"seo":1},"benchmarkIndex":1920,"runtimeError":null}
+{"page":"tour","round":1,"passed":false,"scores":{"performance":0.67,"accessibility":1,"best-practices":0.79,"seo":0.92},"benchmarkIndex":1907,"runtimeError":null}
+{"page":"blog","round":1,"passed":false,"scores":{"performance":0.74,"accessibility":1,"best-practices":0.79,"seo":0.92},"benchmarkIndex":1804.5,"runtimeError":null}
+{"page":"home","round":2,"passed":false,"scores":{"performance":0.49,"accessibility":1,"best-practices":0.79,"seo":1},"benchmarkIndex":1585,"runtimeError":null}
+{"page":"search","round":2,"passed":false,"scores":{"performance":0.83,"accessibility":1,"best-practices":0.79,"seo":1},"benchmarkIndex":1896,"runtimeError":null}
+{"page":"tour","round":2,"passed":false,"scores":{"performance":0.64,"accessibility":1,"best-practices":0.79,"seo":0.92},"benchmarkIndex":1103.5,"runtimeError":null}
+{"page":"blog","round":2,"passed":false,"scores":{"performance":0.34,"accessibility":1,"best-practices":0.79,"seo":0.92},"benchmarkIndex":1920.5,"runtimeError":null}
+Reports retained: /app/.phase0-evidence/lighthouse/run-2026-10-10T22-53-10-605Z; not run: 0; gate: FAIL
+NUMERIC_EXIT=1

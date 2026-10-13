@@ -1,0 +1,622 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/ImageGallery.test.tsx src/components/partner/tours/__tests__/ImageUploader.test.tsx src/lib/validators/__tests__/partner.test.ts src/components/partner/tours/__tests__/TourWizard.test.tsx
+
+FAIL src/lib/validators/__tests__/partner.test.ts (9.77 s)
+  ● tourMediaStepSchema US4 twenty-image gallery with specific alt (Spec 019) › rejects a twenty-first authored image
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      471 |     expect(tourMediaStepSchema.safeParse({
+      472 |       media: [...media20, { id: '20', url: 'https://example.com/20.png', is_cover: false }],
+    > 473 |     }).success).toBe(false);
+          |                 ^
+      474 |   });
+      475 |
+      476 |   it('retains omitted, cleared, and written alt_text', () => {
+
+      at Object.<anonymous> (src/lib/validators/__tests__/partner.test.ts:473:17)
+
+  ● tourMediaStepSchema US4 twenty-image gallery with specific alt (Spec 019) › retains omitted, cleared, and written alt_text
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 4
+
+    - ObjectContaining {
+    -   "alt_text": null,
+    + Object {
+    +   "id": "b",
+    +   "is_cover": false,
+    +   "url": "https://example.com/b.png",
+      }
+
+      486 |       expect(r.data.media[0]).toEqual(expect.objectContaining({ id: 'a' }));
+      487 |       expect(r.data.media[0]).not.toEqual(expect.objectContaining({ alt_text: expect.anything() }));
+    > 488 |       expect(r.data.media[1]).toEqual(expect.objectContaining({ alt_text: null }));
+          |                               ^
+      489 |       expect(r.data.media[2]).toEqual(expect.objectContaining({ alt_text: 'Stone archway' }));
+      490 |     }
+      491 |   });
+
+      at Object.<anonymous> (src/lib/validators/__tests__/partner.test.ts:488:31)
+
+  ● tourMediaStepSchema US4 twenty-image gallery with specific alt (Spec 019) › counts alt_text in code points: 500 valid, 501 invalid
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      497 |       }).success;
+      498 |     expect(withAlt(NON_BMP.repeat(500))).toBe(true);
+    > 499 |     expect(withAlt(NON_BMP.repeat(501))).toBe(false);
+          |                                          ^
+      500 |     expect(withAlt('x'.repeat(500))).toBe(true);
+      501 |     expect(withAlt('x'.repeat(501))).toBe(false);
+      502 |   });
+
+      at Object.<anonymous> (src/lib/validators/__tests__/partner.test.ts:499:42)
+
+  ● tourBasicDetailsSchema US4 nullable difficulty and guide codes (Spec 019) › keeps missing or null difficulty absent instead of inventing a default
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      505 | describe('tourBasicDetailsSchema US4 nullable difficulty and guide codes (Spec 019)', () => {
+      506 |   it('keeps missing or null difficulty absent instead of inventing a default', () => {
+    > 507 |     expect(tourBasicDetailsSchema.safeParse({ ...validDetails, difficulty_level: undefined }).success).toBe(true);
+          |                                                                                                        ^
+      508 |     expect(tourBasicDetailsSchema.safeParse({ ...validDetails, difficulty_level: null }).success).toBe(true);
+      509 |   });
+      510 |
+
+      at Object.<anonymous> (src/lib/validators/__tests__/partner.test.ts:507:104)
+
+FAIL src/components/partner/tours/__tests__/ImageUploader.test.tsx (7.647 s)
+  ● ImageUploader twenty-image gallery with specific alt (Spec 019 US4) › accepts a twentieth image without the old ten-image cap
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "image/png", 100
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    <html>
+      <head />
+      <body>
+        <div>
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors border-gray-300 hover:border-[#FFB800]"
+            >
+              <input
+                accept="image/jpeg,image/png,image/webp"
+                class="hidden"
+                multiple=""
+                type="file"
+              />
+              <div
+                class="space-y-2"
+              >
+                <div
+                  class="text-gray-400"
+                >
+                  <svg
+                    class="w-10 h-10 mx-auto"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 16v-8m0 0l-3 3m3-3l3 3M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                    />
+                  </svg>
+                </div>
+                <p
+                  class="text-sm text-gray-600 font-medium"
+                >
+                  form.dragDrop
+                </p>
+                <p
+                  class="text-xs text-gray-400"
+                >
+                  form.maxFileSize
+                </p>
+              </div>
+            </div>
+            <div
+              aria-live="polite"
+              class="space-y-1"
+              role="alert"
+            >
+              <p
+                class="text-sm text-red-600"
+              >
+                <span
+                  class="font-medium"
+                >
+                  twenty.png
+                  :
+                </span>
+
+                Maximum number of images reached.
+              </p>
+              <button
+                class="text-xs text-gray-400 hover:text-gray-600 underline"
+                type="button"
+              >
+                Dismiss
+              </button>
+            </div>
+            <div
+              class="space-y-2"
+            >
+              <p
+                class="text-sm font-medium text-[#0A2540]"
+              >
+                form.coverImage
+              </p>
+              <div
+                class="relative inline-block"
+              >
+                <img
+                  alt="form.coverImage"
+                  class="object-cover rounded-lg border border-gray-200"
+                  height="128"
+                  src="https://cdn.example.com/0.png"
+                  width="192"
+                />
+                <button
+                  aria-label="form.remove"
+                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                  type="button"
+                >
+                  x
+                </button>
+                <span
+                  class="absolute top-2 left-2 px-2 py-0.5 bg-[#FFB800] text-[#0A2540] text-xs font-medium rounded"
+                >
+                  form.coverBadge
+                </span>
+              </div>
+            </div>
+            <div
+              class="space-y-2"
+            >
+              <p
+                class="text-sm font-medium text-[#0A2540]"
+              >
+                form.galleryImages
+              </p>
+              <div
+                class="flex flex-wrap gap-3"
+              >
+                <div
+                  class="relative group"
+                >
+                  <img
+                    alt="form.galleryImageAlt"
+                    class="object-cover rounded-lg border border-gray-200"
+                    height="80"
+                    src="https://cdn.example.com/1.png"
+                    width="96"
+                  />
+                  <div
+                    class="absolute inset-x-0 bottom-0 rounded-b-lg bg-black/60 p-1 flex items-center justify-center gap-1"
+                  >
+                    <button
+                      aria-label="form.moveUp"
+                      class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                      disabled=""
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-chevron-up w-3.5 h-3.5"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m18 15-6-6-6 6"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="form.moveDown"
+                      class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                      type="button"...
+
+      159 |
+      160 |     await waitFor(() => {
+    > 161 |       expect(getSignedUploadUrl).toHaveBeenCalledWith('image/png', 100);
+          |                                  ^
+      162 |     });
+      163 |     await waitFor(() => {
+      164 |       expect(onChange).toHaveBeenCalledWith(
+
+      at src/components/partner/tours/__tests__/ImageUploader.test.tsx:161:34
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● ImageUploader twenty-image gallery with specific alt (Spec 019 US4) › edits specific alt through an associated labeled field, retaining identity and order
+
+    TestingLibraryElementError: Unable to find a label with the text of: /alt/i
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors border-gray-300 hover:border-[#FFB800]"
+          >
+            <input
+              accept="image/jpeg,image/png,image/webp"
+              class="hidden"
+              multiple=""
+              type="file"
+            />
+            <div
+              class="space-y-2"
+            >
+              <div
+                class="text-gray-400"
+              >
+                <svg
+                  class="w-10 h-10 mx-auto"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 16v-8m0 0l-3 3m3-3l3 3M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm text-gray-600 font-medium"
+              >
+                form.dragDrop
+              </p>
+              <p
+                class="text-xs text-gray-400"
+              >
+                form.maxFileSize
+              </p>
+            </div>
+          </div>
+          <div
+            class="space-y-2"
+          >
+            <p
+              class="text-sm font-medium text-[#0A2540]"
+            >
+              form.coverImage
+            </p>
+            <div
+              class="relative inline-block"
+            >
+              <img
+                alt="form.coverImage"
+                class="object-cover rounded-lg border border-gray-200"
+                height="128"
+                src="https://cdn.example.com/cover.png"
+                width="192"
+              />
+              <button
+                aria-label="form.remove"
+                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                type="button"
+              >
+                x
+              </button>
+              <span
+                class="absolute top-2 left-2 px-2 py-0.5 bg-[#FFB800] text-[#0A2540] text-xs font-medium rounded"
+              >
+                form.coverBadge
+              </span>
+            </div>
+          </div>
+          <div
+            class="space-y-2"
+          >
+            <p
+              class="text-sm font-medium text-[#0A2540]"
+            >
+              form.galleryImages
+            </p>
+            <div
+              class="flex flex-wrap gap-3"
+            >
+              <div
+                class="relative group"
+              >
+                <img
+                  alt="form.galleryImageAlt"
+                  class="object-cover rounded-lg border border-gray-200"
+                  height="80"
+                  src="https://cdn.example.com/g1.png"
+                  width="96"
+                />
+                <div
+                  class="absolute inset-x-0 bottom-0 rounded-b-lg bg-black/60 p-1 flex items-center justify-center gap-1"
+                >
+                  <button
+                    aria-label="form.moveUp"
+                    class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled=""
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-up w-3.5 h-3.5"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m18 15-6-6-6 6"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="form.moveDown"
+                    class="px-1.5 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled=""
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-down w-3.5 h-3.5"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="px-2 py-1 bg-white text-[#0A2540] text-xs font-medium rounded hover:bg-gray-100"
+                    type="button"
+                  >
+                    form.setCover
+                  </button>
+                  <button
+                    class="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600"
+                    type="button"
+                  >
+                    form.remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p
+            class="text-xs text-gray-400"
+          >
+            form.imagesCount
+          </p>
+        </div>
+      </div>
+    </body>
+
+      196 |     render(<ImageUploader media={media} onChange={onChange} />);
+      197 |
+    > 198 |     const labeled = screen.getAllByLabelText(/alt/i);
+          |                            ^
+      199 |     expect(labeled.length).toBeGreaterThanOrEqual(2);
+      200 |     labeled.forEach((field) => expect(field).not.toHaveAttribute('maxlength'));
+      201 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+      at Object.<anonymous> (src/components/partner/tours/__tests__/ImageUploader.test.tsx:198:28)
+
+  ● ImageUploader twenty-image gallery with specific alt (Spec 019 US4) › accepts a 500-code-point alt and flags a 501-code-point alt without a native maxlength
+
+    TestingLibraryElementError: Unable to find a label with the text of: /alt/i
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors border-gray-300 hover:border-[#FFB800]"
+          >
+            <input
+              accept="image/jpeg,image/png,image/webp"
+              class="hidden"
+              multiple=""
+              type="file"
+            />
+            <div
+              class="space-y-2"
+            >
+              <div
+                class="text-gray-400"
+              >
+                <svg
+                  class="w-10 h-10 mx-auto"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 16v-8m0 0l-3 3m3-3l3 3M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  />
+                </svg>
+              </div>
+              <p
+                class="text-sm text-gray-600 font-medium"
+              >
+                form.dragDrop
+              </p>
+              <p
+                class="text-xs text-gray-400"
+              >
+                form.maxFileSize
+              </p>
+            </div>
+          </div>
+          <div
+            class="space-y-2"
+          >
+            <p
+              class="text-sm font-medium text-[#0A2540]"
+            >
+              form.coverImage
+            </p>
+            <div
+              class="relative inline-block"
+            >
+              <img
+                alt="form.coverImage"
+                class="object-cover rounded-lg border border-gray-200"
+                height="128"
+                src="https://cdn.example.com/cover.png"
+                width="192"
+              />
+              <button
+                aria-label="form.remove"
+                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                type="button"
+              >
+                x
+              </button>
+              <span
+                class="absolute top-2 left-2 px-2 py-0.5 bg-[#FFB800] text-[#0A2540] text-xs font-medium rounded"
+              >
+                form.coverBadge
+              </span>
+            </div>
+          </div>
+          <p
+            class="text-xs text-gray-400"
+          >
+            form.imagesCount
+          </p>
+        </div>
+      </div>
+    </body>
+
+      236 |     const { container } = render(<ImageUploader media={media} onChange={onChange} />);
+      237 |
+    > 238 |     const field = screen.getByLabelText(/alt/i);
+          |                          ^
+      239 |     expect(field).not.toHaveAttribute('maxlength');
+      240 |
+      241 |     const ok = NON_BMP.repeat(500);
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at getAllByLabelText (node_modules/@testing-library/dom/dist/queries/label-text.js:111:38)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (src/components/partner/tours/__tests__/ImageUploader.test.tsx:238:26)
+
+FAIL src/components/tour/__tests__/ImageGallery.test.tsx
+  ● ImageGallery truthful media (Spec 019 US4) › uses the authored English alt in its actual locale while action labels stay page-localized
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      71 |     // Actual image/caption text declares its real language (EN authored
+      72 |     // alt on an ES/IT page), instead of inheriting the page language.
+    > 73 |     expect(dialog.querySelector('[lang="en"]')).not.toBeNull();
+         |                                                     ^
+      74 |     // Controls remain in the page language; the dialog is not wrapped as English.
+      75 |     expect(screen.getByRole('button', { name: 'Close lightbox' })).toBeInTheDocument();
+      76 |     expect(screen.getByRole('button', { name: 'Close lightbox' }).closest('[lang="en"]')).toBeNull();
+
+      at Object.<anonymous> (src/components/tour/__tests__/ImageGallery.test.tsx:73:53)
+
+  ● ImageGallery truthful media (Spec 019 US4) › shows the actual cover first, keeping remaining media order
+
+    expect(element).toHaveAttribute("src", "https://images.example.com/cover.jpg") // element.getAttribute("src") === "https://images.example.com/cover.jpg"
+
+    Expected the element to have attribute:
+      src="https://images.example.com/cover.jpg"
+    Received:
+      src="https://images.example.com/a.jpg"
+
+      100 |       />
+      101 |     );
+    > 102 |     expect(screen.getByRole('button', { name: 'Open image gallery' }).querySelector('img')).toHaveAttribute('src', 'https://images.example.com/cover.jpg');
+          |                                                                                             ^
+      103 |     const thumbs = screen.getAllByRole('button', { name: /View image \d+/ });
+      104 |     expect(thumbs[0].querySelector('img')?.getAttribute('src')).toContain('cover.jpg');
+      105 |   });
+
+      at Object.<anonymous> (src/components/tour/__tests__/ImageGallery.test.tsx:102:93)
+
+FAIL src/components/partner/tours/__tests__/TourWizard.test.tsx (12.614 s)
+  ● TourWizard US4 truthful facts (Spec 019) › omits an untouched missing difficulty on save instead of inventing easy
+
+    expect(received).not.toHaveProperty(path)
+
+    Expected path: not "difficulty_level"
+
+    Received value: null
+
+      316 |
+      317 |     await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    > 318 |     expect(mockedCreateTour.mock.calls[0][0]).not.toHaveProperty('difficulty_level');
+          |                                                   ^
+      319 |   });
+      320 |
+      321 |   it('sends an explicitly chosen difficulty code', async () => {
+
+      at Object.<anonymous> (src/components/partner/tours/__tests__/TourWizard.test.tsx:318:51)
+
+Test Suites: 4 failed, 4 total
+Tests:       10 failed, 73 passed, 83 total
+Snapshots:   0 total
+Time:        43.604 s
+Ran all test suites within paths "src/components/tour/__tests__/ImageGallery.test.tsx", "src/components/partner/tours/__tests__/ImageUploader.test.tsx", "src/lib/validators/__tests__/partner.test.ts", "src/components/partner/tours/__tests__/TourWizard.test.tsx".
+NUMERIC_EXIT=1

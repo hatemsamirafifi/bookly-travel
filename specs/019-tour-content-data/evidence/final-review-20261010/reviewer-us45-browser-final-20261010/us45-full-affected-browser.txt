@@ -1,0 +1,91 @@
+
+Running 86 tests using 1 worker
+
+[1/86] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/86] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/86] [chromium] › tests/e2e/tour-detail.spec.ts:118:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[4/86] [chromium] › tests/e2e/tour-detail.spec.ts:212:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[5/86] [chromium] › tests/e2e/tour-detail.spec.ts:300:7 › Tour Detail Page › tour detail page loads with all sections
+[6/86] [chromium] › tests/e2e/tour-detail.spec.ts:310:7 › Tour Detail Page › image gallery is visible
+[7/86] [chromium] › tests/e2e/tour-detail.spec.ts:317:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[8/86] [chromium] › tests/e2e/tour-detail.spec.ts:333:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[9/86] [chromium] › tests/e2e/tour-detail.spec.ts:347:7 › Tour Detail Page › section navigation links only to rendered sections
+[10/86] [chromium] › tests/e2e/tour-detail.spec.ts:359:7 › Tour Detail Page › availability calendar shows available dates
+[11/86] [chromium] › tests/e2e/tour-detail.spec.ts:366:7 › Tour Detail Page › booking CTA is visible
+[12/86] [chromium] › tests/e2e/tour-detail.spec.ts:382:7 › Tour Detail Page › participant selector increments and decrements
+[13/86] [chromium] › tests/e2e/tour-detail.spec.ts:396:7 › Tour Detail Page › shows 404 page for non-existent tour
+[14/86] [chromium] › tests/e2e/tour-detail.spec.ts:403:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[15/86] [chromium] › tests/e2e/tour-detail.spec.ts:420:7 › Tour Detail Page › about section displays description
+[16/86] [chromium] › tests/e2e/tour-detail.spec.ts:427:7 › Tour Detail Page › tour detail has proper SEO metadata
+[17/86] [chromium] › tests/e2e/tour-detail.spec.ts:449:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[18/86] [chromium] › tests/e2e/tour-detail.spec.ts:449:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[19/86] [chromium] › tests/e2e/tour-detail.spec.ts:449:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[20/86] [chromium] › tests/e2e/tour-detail.spec.ts:461:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[21/86] [chromium] › tests/e2e/tour-detail.spec.ts:473:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[22/86] [chromium] › tests/e2e/tour-detail.spec.ts:494:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[23/86] [chromium] › tests/e2e/tour-detail.spec.ts:510:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[24/86] [chromium] › tests/e2e/tour-detail.spec.ts:510:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[25/86] [chromium] › tests/e2e/tour-detail.spec.ts:510:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[26/86] [chromium] › tests/e2e/tour-detail.spec.ts:532:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[27/86] [mobile] › tests/e2e/tour-detail.spec.ts:118:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[28/86] [mobile] › tests/e2e/tour-detail.spec.ts:212:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[29/86] [mobile] › tests/e2e/tour-detail.spec.ts:300:7 › Tour Detail Page › tour detail page loads with all sections
+[30/86] [mobile] › tests/e2e/tour-detail.spec.ts:310:7 › Tour Detail Page › image gallery is visible
+[31/86] [mobile] › tests/e2e/tour-detail.spec.ts:317:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+[32/86] [mobile] › tests/e2e/tour-detail.spec.ts:333:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+[33/86] [mobile] › tests/e2e/tour-detail.spec.ts:347:7 › Tour Detail Page › section navigation links only to rendered sections
+[34/86] [mobile] › tests/e2e/tour-detail.spec.ts:359:7 › Tour Detail Page › availability calendar shows available dates
+[35/86] [mobile] › tests/e2e/tour-detail.spec.ts:366:7 › Tour Detail Page › booking CTA is visible
+[36/86] [mobile] › tests/e2e/tour-detail.spec.ts:382:7 › Tour Detail Page › participant selector increments and decrements
+[37/86] [mobile] › tests/e2e/tour-detail.spec.ts:396:7 › Tour Detail Page › shows 404 page for non-existent tour
+[38/86] [mobile] › tests/e2e/tour-detail.spec.ts:403:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[39/86] [mobile] › tests/e2e/tour-detail.spec.ts:420:7 › Tour Detail Page › about section displays description
+[40/86] [mobile] › tests/e2e/tour-detail.spec.ts:427:7 › Tour Detail Page › tour detail has proper SEO metadata
+[41/86] [mobile] › tests/e2e/tour-detail.spec.ts:449:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[42/86] [mobile] › tests/e2e/tour-detail.spec.ts:449:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[43/86] [mobile] › tests/e2e/tour-detail.spec.ts:449:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[44/86] [mobile] › tests/e2e/tour-detail.spec.ts:461:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[45/86] [mobile] › tests/e2e/tour-detail.spec.ts:473:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[46/86] [mobile] › tests/e2e/tour-detail.spec.ts:494:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[47/86] [mobile] › tests/e2e/tour-detail.spec.ts:510:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[48/86] [mobile] › tests/e2e/tour-detail.spec.ts:510:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[49/86] [mobile] › tests/e2e/tour-detail.spec.ts:510:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[50/86] [mobile] › tests/e2e/tour-detail.spec.ts:532:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[51/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:20:7 › Partner Tour Edit Workflow › reorders English itinerary and gallery, selects cover, previews and saves the same order
+[52/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:81:7 › Partner Tour Edit Workflow › edits English source only while showing generated translation states
+[53/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:116:7 › Partner Tour Edit Workflow › should load the edit page for an existing tour
+[54/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:125:7 › Partner Tour Edit Workflow › should show tour cards with status badges on tours list
+[55/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:200:7 › Partner Tour Edit Workflow › should show tour destination in card
+[56/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:243:7 › Partner Tour Edit Workflow › should link to edit page from tour card
+[57/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:298:7 › Partner Tour Edit - Real API (Spec 019 US1) › round-trips owned English source with repeated days via real API and reopens
+[58/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:368:7 › Partner Tour Edit - Real API (Spec 019 US1) › preserves nullable source on unrelated save and clears on explicit empty list
+[59/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:430:7 › Partner Tour Edit - Real API (Spec 019 US1) › restores a partial owned snapshot with nested EN precedence via real API
+[60/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:517:7 › Partner Tour Edit - Real API (Spec 019 US1) › shows localized cleared-title validation in EN/ES/IT via real API
+[61/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:594:7 › Partner Tour Edit - Real API (Spec 019 US1) › rejects fractional durations and over-long list items with localized errors via real API
+[62/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:674:7 › Partner Tour Edit - Real API (Spec 019 US1) › denies cross-owner reads with 404 for a real second principal and localizes denied loads
+[63/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:725:7 › Partner Tour Edit - Real API (Spec 019 US1) › failed submit retains the owned draft id and retry submits the same tour
+[64/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:793:7 › Partner Tour Edit - Real API (Spec 019 US1) › renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[65/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:822:7 › Partner Tour Edit - Real API (Spec 019 US4) › authors alt, difficulty, guide codes and gallery order/cover in the edit UI with GET proof
+[66/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:961:7 › Partner Tour Edit - Real API (Spec 019 US4) › accepts 20 photos with a 500-codepoint alt and rejects the 21st at the real boundary
+[67/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:1033:7 › Partner Tour Edit - Real API (Spec 019 US4) › blocks an invalid alt draft without partial saving and supports the keyboard file chooser
+[68/86] [chromium-partner] › tests/e2e/partner/tour-edit.spec.ts:1098:7 › Partner Tour Edit - Real API (Spec 019 US4) › preserves legacy null difficulty through unrelated UI and guide-code saves
+[69/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:20:7 › Partner Tour Edit Workflow › reorders English itinerary and gallery, selects cover, previews and saves the same order
+[70/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:81:7 › Partner Tour Edit Workflow › edits English source only while showing generated translation states
+[71/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:116:7 › Partner Tour Edit Workflow › should load the edit page for an existing tour
+[72/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:125:7 › Partner Tour Edit Workflow › should show tour cards with status badges on tours list
+[73/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:200:7 › Partner Tour Edit Workflow › should show tour destination in card
+[74/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:243:7 › Partner Tour Edit Workflow › should link to edit page from tour card
+[75/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:298:7 › Partner Tour Edit - Real API (Spec 019 US1) › round-trips owned English source with repeated days via real API and reopens
+[76/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:368:7 › Partner Tour Edit - Real API (Spec 019 US1) › preserves nullable source on unrelated save and clears on explicit empty list
+[77/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:430:7 › Partner Tour Edit - Real API (Spec 019 US1) › restores a partial owned snapshot with nested EN precedence via real API
+[78/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:517:7 › Partner Tour Edit - Real API (Spec 019 US1) › shows localized cleared-title validation in EN/ES/IT via real API
+[79/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:594:7 › Partner Tour Edit - Real API (Spec 019 US1) › rejects fractional durations and over-long list items with localized errors via real API
+[80/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:674:7 › Partner Tour Edit - Real API (Spec 019 US1) › denies cross-owner reads with 404 for a real second principal and localizes denied loads
+[81/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:725:7 › Partner Tour Edit - Real API (Spec 019 US1) › failed submit retains the owned draft id and retry submits the same tour
+[82/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:793:7 › Partner Tour Edit - Real API (Spec 019 US1) › renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[83/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:822:7 › Partner Tour Edit - Real API (Spec 019 US4) › authors alt, difficulty, guide codes and gallery order/cover in the edit UI with GET proof
+[84/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:961:7 › Partner Tour Edit - Real API (Spec 019 US4) › accepts 20 photos with a 500-codepoint alt and rejects the 21st at the real boundary
+[85/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:1033:7 › Partner Tour Edit - Real API (Spec 019 US4) › blocks an invalid alt draft without partial saving and supports the keyboard file chooser
+[86/86] [mobile-partner] › tests/e2e/partner/tour-edit.spec.ts:1098:7 › Partner Tour Edit - Real API (Spec 019 US4) › preserves legacy null difficulty through unrelated UI and guide-code saves
+  86 passed (6.7m)
+NUMERIC_EXIT=0

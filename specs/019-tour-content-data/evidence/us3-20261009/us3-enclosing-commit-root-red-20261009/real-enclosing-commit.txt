@@ -1,0 +1,112 @@
+
+   FAIL  Tests\Feature\Partner\TourAfterCommitContainmentTest
+  ⨯ it contains real generation failures when the enclosing transaction… 9.11s
+  ⨯ it contains real generation failures when the enclosing transaction… 0.28s
+  ⨯ it contains a real removal projection dispatch failure after commit… 0.24s
+  ⨯ it contains a real removal projection dispatch failure after commit… 0.23s
+  ⨯ it rejects reconcile cursors outside the native integer range with…  0.22s
+  ⨯ it rejects reconcile cursors outside the native integer range with…  0.21s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentT…  ErrorException
+  Indirect modification of overloaded property Pest\Support\HigherOrderTapProxy::$ownedRows has no effect
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:82
+     78▕         'difficulty_level' => 'easy',
+     79▕     ], ['Authorization' => 'Bearer '.test()->owner['token']]));
+     80▕     $response->assertCreated();
+     81▕     $id = (int) $response->json('data.id');
+  ➜  82▕     Spec019CommittedFixtures::trackTour(test()->ownedRows, $id);
+     83▕
+     84▕     return Tour::findOrFail($id);
+     85▕ }
+     86▕
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:93
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentT…  ErrorException
+  Indirect modification of overloaded property Pest\Support\HigherOrderTapProxy::$ownedRows has no effect
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:82
+     78▕         'difficulty_level' => 'easy',
+     79▕     ], ['Authorization' => 'Bearer '.test()->owner['token']]));
+     80▕     $response->assertCreated();
+     81▕     $id = (int) $response->json('data.id');
+  ➜  82▕     Spec019CommittedFixtures::trackTour(test()->ownedRows, $id);
+     83▕
+     84▕     return Tour::findOrFail($id);
+     85▕ }
+     86▕
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:88
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentT…  ErrorException
+  Indirect modification of overloaded property Pest\Support\HigherOrderTapProxy::$ownedRows has no effect
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:82
+     78▕         'difficulty_level' => 'easy',
+     79▕     ], ['Authorization' => 'Bearer '.test()->owner['token']]));
+     80▕     $response->assertCreated();
+     81▕     $id = (int) $response->json('data.id');
+  ➜  82▕     Spec019CommittedFixtures::trackTour(test()->ownedRows, $id);
+     83▕
+     84▕     return Tour::findOrFail($id);
+     85▕ }
+     86▕
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:113
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentT…  ErrorException
+  Indirect modification of overloaded property Pest\Support\HigherOrderTapProxy::$ownedRows has no effect
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:82
+     78▕         'difficulty_level' => 'easy',
+     79▕     ], ['Authorization' => 'Bearer '.test()->owner['token']]));
+     80▕     $response->assertCreated();
+     81▕     $id = (int) $response->json('data.id');
+  ➜  82▕     Spec019CommittedFixtures::trackTour(test()->ownedRows, $id);
+     83▕
+     84▕     return Tour::findOrFail($id);
+     85▕ }
+     86▕
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:113
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentTest > it rejects…
+  Failed asserting that 0 is identical to 1.
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:138
+    134▕     expect(Tour::whereKey($tour->id)->exists())->toBe($operation === 'save');
+    135▕ })->with(['save', 'delete']);
+    136▕
+    137▕ it('rejects reconcile cursors outside the native integer range', function (string $cursor) {
+  ➜ 138▕     expect(Artisan::call('tours:queue-translations', ['--after-id' => $cursor, '--limit' => '1']))->toBe(1);
+    139▕     expect(Artisan::output())->toContain('After ID must be a non-negative integer.');
+    140▕ })->with([str_repeat('9', 40), (string) PHP_INT_MAX.'0']);
+    141▕
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:138
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourAfterCommitContainmentTest > it rejects…
+  Failed asserting that 0 is identical to 1.
+
+  at tests/Feature/Partner/TourAfterCommitContainmentTest.php:138
+    134▕     expect(Tour::whereKey($tour->id)->exists())->toBe($operation === 'save');
+    135▕ })->with(['save', 'delete']);
+    136▕
+    137▕ it('rejects reconcile cursors outside the native integer range', function (string $cursor) {
+  ➜ 138▕     expect(Artisan::call('tours:queue-translations', ['--after-id' => $cursor, '--limit' => '1']))->toBe(1);
+    139▕     expect(Artisan::output())->toContain('After ID must be a non-negative integer.');
+    140▕ })->with([str_repeat('9', 40), (string) PHP_INT_MAX.'0']);
+    141▕
+
+  1   tests/Feature/Partner/TourAfterCommitContainmentTest.php:138
+
+
+  Tests:    6 failed (24 assertions)
+  Duration: 10.70s
+

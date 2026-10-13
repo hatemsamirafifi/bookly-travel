@@ -1,0 +1,1 @@
+Scout initial1fail5assertionsnative1 was rootfixture missingpositiveprice beforetargetbehavior. Correctedfixtureprice5000; productionunchanged.

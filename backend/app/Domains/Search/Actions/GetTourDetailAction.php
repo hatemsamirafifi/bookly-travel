@@ -61,21 +61,85 @@ class GetTourDetailAction
         $english = $tour->translations->firstWhere('locale', 'en');
         $translation = $this->translationService->currentTranslation($tour, $locale);
         $t = $translation ?? $english;
-        $englishItinerary = $english->itinerary ?? null;
-        $itineraryFallback = $locale !== 'en' && $t?->itinerary === null && $englishItinerary !== null;
-        $contentLocale = $t->locale ?? $locale;
+        $englishItinerary = optional($english)->itinerary;
+        $hasNonemptyEnglishItinerary = is_array($englishItinerary) && count($englishItinerary) > 0;
+        // An explicit [] derivative stays empty; missing/empty English never warns.
+        $itineraryFallback = $locale !== 'en'
+            && $hasNonemptyEnglishItinerary
+            && ($translation === null || optional($t)->itinerary === null);
+        $contentLocale = optional($t)->locale ?? $locale;
 
+        /** @var mixed $selectedItinerary */
+        $selectedItinerary = optional($t)->itinerary ?? $englishItinerary ?? [];
+        if (! is_array($selectedItinerary)) {
+            $selectedItinerary = [];
+        }
+        // A nonempty itinerary claims its actual language; an empty
+        // itinerary retains the selected content locale without claiming
+        // translated text exists.
+        $itineraryLocale = count($selectedItinerary) > 0
+            ? ($itineraryFallback ? 'en' : $contentLocale)
+            : $contentLocale;
+
+        // Spec 019 US4 T052: allImageUrls stays authoritative for order,
+        // dedup, legacy fallback and no-image []. Per-URL specific alt comes
+        // from the eager-loaded media collection (no extra queries):
+        // nonblank English alt projects with alt_locale=en, otherwise the
+        // selected current title with the actual content locale (not the
+        // requested locale when falling back to EN). No placeholder or
+        // fabricated photo is introduced.
         $images = $tour->allImageUrls();
+        $mediaRows = $tour->relationLoaded('media') ? $tour->media : collect();
+        $specificAltByUrl = [];
+        foreach ($mediaRows as $row) {
+            $rowUrl = $row->getAttribute('url');
+            if (! is_string($rowUrl) || $rowUrl === '') {
+                continue;
+            }
+            $rowAlt = $row->getAttribute('alt_text');
+            $isSpecific = is_string($rowAlt) && trim($rowAlt) !== '';
+            if (! array_key_exists($rowUrl, $specificAltByUrl)) {
+                $specificAltByUrl[$rowUrl] = $isSpecific ? $rowAlt : null;
+            } elseif ($isSpecific && $specificAltByUrl[$rowUrl] === null) {
+                $specificAltByUrl[$rowUrl] = $rowAlt;
+            }
+        }
+        $selectedTitle = optional($t)->title ?? '';
         $imageObjects = [];
         foreach ($images as $i => $url) {
-            $imageObjects[] = [
-                'url' => $url,
-                'is_cover' => $i === 0,
-                'alt' => optional($t)->title ?? '',
-            ];
+            $specific = $specificAltByUrl[$url] ?? null;
+            if (is_string($specific) && trim($specific) !== '') {
+                $imageObjects[] = [
+                    'url' => $url,
+                    'is_cover' => $i === 0,
+                    'alt' => $specific,
+                    'alt_locale' => 'en',
+                ];
+            } else {
+                $imageObjects[] = [
+                    'url' => $url,
+                    'is_cover' => $i === 0,
+                    'alt' => $selectedTitle,
+                    'alt_locale' => $contentLocale,
+                ];
+            }
         }
 
         $availableDates = $tour->upcomingAvailableDates();
+
+        // Bounded primary-review fix: derive the public aggregate from the
+        // same actual visible+flagged review set as the distribution (one
+        // reviewDistribution() query, no cached claims, no cache rewrites).
+        // Empty = 0/0; visible 5 + flagged 3 = avg 4 / count 2; hidden is
+        // excluded by reviewDistribution() itself.
+        $reviewDistribution = $tour->reviewDistribution();
+        $reviewCount = (int) array_sum($reviewDistribution);
+        $reviewSum = 5 * (int) ($reviewDistribution['5'] ?? 0)
+            + 4 * (int) ($reviewDistribution['4'] ?? 0)
+            + 3 * (int) ($reviewDistribution['3'] ?? 0)
+            + 2 * (int) ($reviewDistribution['2'] ?? 0)
+            + 1 * (int) ($reviewDistribution['1'] ?? 0);
+        $reviewAverage = $reviewCount > 0 ? round($reviewSum / $reviewCount, 2) : 0;
 
         $data = [
             'id' => $tour->id,
@@ -103,8 +167,8 @@ class GetTourDetailAction
             // contract, but make its meaning explicit in the new field.
             'languages' => $tour->guideLanguages(),
             'guide_languages' => $tour->guideLanguages(),
-            'itinerary' => $t->itinerary ?? $englishItinerary ?? [],
-            'itinerary_locale' => $itineraryFallback ? 'en' : $contentLocale,
+            'itinerary' => $selectedItinerary,
+            'itinerary_locale' => $itineraryLocale,
             'group_size' => [
                 'min' => $tour->group_size_min,
                 'max' => $tour->group_size_max,
@@ -131,25 +195,56 @@ class GetTourDetailAction
             ],
             // `rating` mirrors the TourCard contract (TourDetail extends TourCard)
             // so the frontend can render the listing-style StarRating uniformly.
+            // Both share the genuine visible+flagged facts derived above.
             'rating' => [
-                'average' => $tour->averageRating(),
-                'count' => $tour->reviewCount(),
+                'average' => $reviewAverage,
+                'count' => $reviewCount,
             ],
             'reviews' => [
-                'average_rating' => $tour->averageRating(),
-                'count' => $tour->reviewCount(),
-                'distribution' => $tour->reviewDistribution(),
+                'average_rating' => $reviewAverage,
+                'count' => $reviewCount,
+                'distribution' => $reviewDistribution,
             ],
             'operator' => $this->operatorSummary->execute($tour),
             'related_tours' => $this->relatedTours->execute($tour, $locale),
             'seo' => $this->buildSeoMetadata($tour, $t, $locale),
         ];
 
-        if (($locale !== 'en' && ! $translation && $english) || $itineraryFallback) {
+        // `partial_translation` summarizes actual nonempty English fallbacks only.
+        $generalFallback = $locale !== 'en' && ! $translation && $english && $this->hasNonemptyGeneralContent($english);
+        if ($generalFallback || $itineraryFallback) {
             $data['translation_warning'] = 'partial_translation';
         }
 
         return ['data' => $data];
+    }
+
+    /**
+     * Whether the English source carries any nonempty general traveler
+     * content worth disclosing as a fallback. Lists count when any entry
+     * is a nonempty string.
+     */
+    protected function hasNonemptyGeneralContent(TourTranslation $english): bool
+    {
+        foreach (['title', 'description', 'meeting_point', 'cancellation_policy'] as $field) {
+            $value = $english->{$field};
+            if (is_string($value) && trim($value) !== '') {
+                return true;
+            }
+        }
+
+        foreach (['highlights', 'inclusions', 'exclusions', 'important_information'] as $field) {
+            $value = $english->{$field};
+            if (is_array($value)) {
+                foreach ($value as $entry) {
+                    if (is_string($entry) && trim($entry) !== '') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

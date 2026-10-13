@@ -1,0 +1,89 @@
+
+Running 20 tests using 1 worker
+
+[1/20] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/20] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+[4/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+[5/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+[6/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  1) [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.waitForResponse: Test timeout of 60000ms exceeded.
+
+      233 |
+      234 |     // Unrelated browser edit save: only the technical location changes.
+    > 235 |     const unrelatedSavePromise = page.waitForResponse(
+          |                                       ^
+      236 |       (resp) =>
+      237 |         resp.url().includes(`/api/partner/tours/${tourId}`) &&
+      238 |         resp.request().method() === 'PUT' &&
+        at /app/tests/e2e/partner/tour-create.spec.ts:235:39
+
+    Error: locator.fill: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByPlaceholder('e.g. Rome, Italy')
+
+
+      239 |         resp.status() === 200
+      240 |     );
+    > 241 |     await page.getByPlaceholder('e.g. Rome, Italy').fill('Siena, Italy');
+          |                                                     ^
+      242 |     await page.getByRole('button', { name: 'Save Tour Details' }).click();
+      243 |     await unrelatedSavePromise;
+      244 |     await expect(page.getByText('Tour details saved successfully.')).toBeVisible();
+        at /app/tests/e2e/partner/tour-create.spec.ts:241:53
+
+    Error Context: test-results/partner-tour-create-Partne-86630-nd-reopens-persisted-values-chromium-partner/error-context.md
+
+
+[7/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:288:7 › Partner Tour Create - Real API (Spec 019 US1) › types non-BMP boundary input past native limits and persists it exactly (T017)
+[8/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:356:7 › Partner Tour Create - Real API (Spec 019 US1) › creates via the Wizard, fails submit deterministically, corrects and retries the same tour
+[9/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:546:7 › Partner Tour Create - Real API (Spec 019 US1) › renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix
+[10/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:573:7 › Partner Tours List - Create Button › should display Create Tour button on tours list page
+[11/20] [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:583:7 › Partner Tour Edit › should navigate to edit page from tour card
+[12/20] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:43:7 › Partner Tour Creation › should display the tour creation page
+[13/20] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:48:7 › Partner Tour Creation › saves an ordered English day and stop in a draft payload
+[14/20] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:73:7 › Partner Tour Creation › should navigate through the wizard and submit the tour
+[15/20] [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  2) [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+
+    Test was interrupted.
+
+    Error: page.waitForResponse: Test ended.
+
+      233 |
+      234 |     // Unrelated browser edit save: only the technical location changes.
+    > 235 |     const unrelatedSavePromise = page.waitForResponse(
+          |                                       ^
+      236 |       (resp) =>
+      237 |         resp.url().includes(`/api/partner/tours/${tourId}`) &&
+      238 |         resp.request().method() === 'PUT' &&
+        at /app/tests/e2e/partner/tour-create.spec.ts:235:39
+
+    Error: locator.fill: Test ended.
+    Call log:
+      - waiting for getByPlaceholder('e.g. Rome, Italy')
+
+
+      239 |         resp.status() === 200
+      240 |     );
+    > 241 |     await page.getByPlaceholder('e.g. Rome, Italy').fill('Siena, Italy');
+          |                                                     ^
+      242 |     await page.getByRole('button', { name: 'Save Tour Details' }).click();
+      243 |     await unrelatedSavePromise;
+      244 |     await expect(page.getByText('Tour details saved successfully.')).toBeVisible();
+        at /app/tests/e2e/partner/tour-create.spec.ts:241:53
+
+    Error Context: test-results/partner-tour-create-Partne-86630-nd-reopens-persisted-values-mobile-partner/error-context.md
+
+
+  1 failed
+    [chromium-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  1 interrupted
+    [mobile-partner] › tests/e2e/partner/tour-create.spec.ts:126:7 › Partner Tour Create - Real API (Spec 019 US1) › creates an owned English tour with full source via real API and reopens persisted values
+  5 did not run
+  13 passed (2.4m)
+NUMERIC_EXIT=130

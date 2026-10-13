@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-10-09T17:41:46.8133858+00:00",
+  "finished_at": "2026-10-09T17:44:25.5671016+00:00",
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Admin/TourModerationTest.php",
+    "tests/Feature/Admin/Filament/TourResourceTest.php"
+  ],
+  "exit_code": 2,
+  "purpose": "Root tests-first verification before production edits",
+  "accepted": false
+}

@@ -1,0 +1,15 @@
+{
+  "observed_at": "2026-10-03 (Africa/Cairo)",
+  "branch_head": "7d60da9",
+  "working_tree": "Uncommitted foundation implementation under review",
+  "scope": "TourContentRules in the isolated browser application; existing TourController is not yet wired to these rules and independently rejects non-English locales",
+  "command_result": 0,
+  "observations": {
+    "null_title": { "accepted": true, "errors": [] },
+    "unsupported_locale": { "accepted": true, "errors": [] },
+    "empty_owned_hash": { "accepted": true, "errors": [] },
+    "null_stops": { "accepted": true, "errors": [] },
+    "non_array_normalized": []
+  },
+  "review_outcome": "Contract regressions reproduced; implementation acceptance remains pending"
+}

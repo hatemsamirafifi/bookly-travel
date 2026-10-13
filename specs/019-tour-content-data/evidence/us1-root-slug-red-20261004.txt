@@ -1,0 +1,245 @@
+
+   FAIL  Tests\Feature\Partner\TourCreateTest
+  ⨯ it creates distinct stable nonempty links for repeated valid sourc… 14.54s
+  ⨯ it creates distinct stable nonempty links for repeated valid source… 0.72s
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it creates distinct stable…
+  Expecting '' not to be ''.
+
+  at tests/Feature/Partner/TourCreateTest.php:52
+     48▕         ], ['Authorization' => 'Bearer ' . $this->token])->assertCreated();
+     49▕         $id = $created->json('data.id');
+     50▕         $detail = getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+     51▕         $slug = $detail->json('data.slug');
+  ➜  52▕         expect($slug)->toBeString()->not->toBe('');
+     53▕         expect($detail->json('data.translations.0.title'))->toBe($title);
+     54▕         putJson('/api/partner/tours/' . $id, ['destination' => 'Rome, Italy'], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+     55▕         getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk()->assertJsonPath('data.slug', $slug);
+     56▕         $ids[] = $id;
+
+  1   tests/Feature/Partner/TourCreateTest.php:52
+
+  ────────────────────────────────────────────────────────────────────────────
+   FAILED  Tests\Feature\Partner\TourCreateTest > it creates distinct stable…
+  Expected response status code [201] but received 500.
+Failed asserting that 500 is identical to 201.
+
+The following exception occurred during the last request:
+
+PDOException: SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "tours_slug_unique"
+DETAIL:  Key (slug)=(repeated-florence-source-tour) already exists. in /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php:412
+Stack trace:
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(412): PDOStatement->execute()
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\Database\Connection->Illuminate\Database\{closure}('insert into "to...', Array)
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\Database\Connection->runQueryCallback('insert into "to...', Array, Object(Closure))
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\Database\Connection->run('insert into "to...', Array, Object(Closure))
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(385): Illuminate\Database\Connection->select('insert into "to...', Array, false)
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/PostgresProcessor.php(24): Illuminate\Database\Connection->selectFromWriteConnection('insert into "to...', Array)
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3766): Illuminate\Database\Query\Processors\PostgresProcessor->processInsertGetId(Object(Illuminate\Database\Query\Builder), 'insert into "to...', Array, 'id')
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(2120): Illuminate\Database\Query\Builder->insertGetId(Array, 'id')
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1359): Illuminate\Database\Eloquent\Builder->__call('insertGetId', Array)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1324): Illuminate\Database\Eloquent\Model->insertAndSetId(Object(Illuminate\Database\Eloquent\Builder), Array)
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1163): Illuminate\Database\Eloquent\Model->performInsert(Object(Illuminate\Database\Eloquent\Builder))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1128): Illuminate\Database\Eloquent\Model->save()
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(399): Illuminate\Database\Eloquent\Builder->Illuminate\Database\Eloquent\{closure}(Object(App\Models\Tour))
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1127): tap(Object(App\Models\Tour), Object(Closure))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php(23): Illuminate\Database\Eloquent\Builder->create(Array)
+#15 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2372): Illuminate\Database\Eloquent\Model->forwardCallTo(Object(Illuminate\Database\Eloquent\Builder), 'create', Array)
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2384): Illuminate\Database\Eloquent\Model->__call('create', Array)
+#17 /var/www/html/app/Domains/Partner/Services/TourService.php(85): Illuminate\Database\Eloquent\Model::__callStatic('create', Array)
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php(32): App\Domains\Partner\Services\TourService->App\Domains\Partner\Services\{closure}(Object(Illuminate\Database\PostgresConnection))
+#19 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(495): Illuminate\Database\Connection->transaction(Object(Closure))
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\Database\DatabaseManager->__call('transaction', Array)
+#21 /var/www/html/app/Domains/Partner/Services/TourService.php(84): Illuminate\Support\Facades\Facade::__callStatic('transaction', Array)
+#22 /var/www/html/app/Domains/Partner/Controllers/TourController.php(65): App\Domains\Partner\Services\TourService->createTour(2, Array)
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(47): App\Domains\Partner\Controllers\TourController->store(Object(App\Domains\Partner\Requests\StoreTourRequest))
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\ControllerDispatcher->dispatch(Object(Illuminate\Routing\Route), Object(App\Domains\Partner\Controllers\TourController), 'store')
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(212): Illuminate\Routing\Route->runController()
+#26 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(808): Illuminate\Routing\Route->run()
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Routing\Router->Illuminate\Routing\{closure}(Object(Illuminate\Http\Request))
+#28 /var/www/html/app/Domains/Partner/Middleware/PartnerRoleMiddleware.php(36): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\Domains\Partner\Middleware\PartnerRoleMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(51): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#32 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(161): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(127): Illuminate\Routing\Middleware\ThrottleRequests->handleRequest(Object(Illuminate\Http\Request), Object(Closure), Array)
+#34 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(89): Illuminate\Routing\Middleware\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\Http\Request), Object(Closure), 'booking.get', Object(Closure))
+#35 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\ThrottleRequests->handle(Object(Illuminate\Http\Request), Object(Closure), 'booking.get')
+#36 /var/www/html/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(64): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Auth\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure), 'sanctum')
+#38 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#39 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(807): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#40 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(786): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#41 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(750): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#42 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(739): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#43 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(201): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#44 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#45 /var/www/html/vendor/livewire/livewire/src/Features/SupportDisablingBackButtonCache/DisableBackButtonCacheMiddleware.php(19): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#46 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Livewire\Features\SupportDisablingBackButtonCache\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#47 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#48 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#49 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#50 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#51 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#52 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#53 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#54 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#55 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(110): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#56 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#57 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(62): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#58 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#59 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#60 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#61 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#62 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#63 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#64 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(176): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#65 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#66 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#67 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('POST', '/api/partner/to...', Array, Array, Array, Array, '{"title":"Repea...')
+#68 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(411): Illuminate\Foundation\Testing\TestCase->json('POST', '/api/partner/to...', Array, Array, 0)
+#69 [internal function]: Illuminate\Foundation\Testing\TestCase->postJson('/api/partner/to...', Array, Array)
+#70 /var/www/html/vendor/pestphp/pest/src/Support/Reflection.php(38): ReflectionMethod->invoke(Object(P\Tests\Feature\Partner\TourCreateTest), '/api/partner/to...', Array, Array)
+#71 /var/www/html/vendor/pestphp/pest/src/Support/HigherOrderMessage.php(58): Pest\Support\Reflection::call(Object(P\Tests\Feature\Partner\TourCreateTest), 'postJson', Array)
+#72 /var/www/html/vendor/pestphp/pest/src/Support/HigherOrderTapProxy.php(66): Pest\Support\HigherOrderMessage->call(Object(P\Tests\Feature\Partner\TourCreateTest))
+#73 /var/www/html/vendor/pestphp/pest-plugin-laravel/src/Http.php(219): Pest\Support\HigherOrderTapProxy->__call('postJson', Array)
+#74 /var/www/html/tests/Feature/Partner/TourCreateTest.php(40): Pest\Laravel\postJson('/api/partner/to...', Array, Array)
+#75 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseMethodFactory.php(171): P\Tests\Feature\Partner\TourCreateTest->{closure}('Repeated Floren...')
+#76 [internal function]: P\Tests\Feature\Partner\TourCreateTest->Pest\Factories\{closure}('Repeated Floren...')
+#77 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): call_user_func_array(Object(Closure), Array)
+#78 /var/www/html/vendor/pestphp/pest/src/Support/ExceptionTrace.php(26): P\Tests\Feature\Partner\TourCreateTest->Pest\Concerns\{closure}()
+#79 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): Pest\Support\ExceptionTrace::ensure(Object(Closure))
+#80 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(321): P\Tests\Feature\Partner\TourCreateTest->__callClosure(Object(Closure), Array)
+#81 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseFactory.php(170) : eval()'d code(18): P\Tests\Feature\Partner\TourCreateTest->__runTest(Object(Closure), 'Repeated Floren...')
+#82 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): P\Tests\Feature\Partner\TourCreateTest->__pest_evaluable_it_creates_distinct_stable_nonempty_links_for_repeated_valid_source_titles('Repeated Floren...')
+#83 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(519): PHPUnit\Framework\TestCase->runTest()
+#84 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#85 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(365): PHPUnit\Framework\TestRunner->run(Object(P\Tests\Feature\Partner\TourCreateTest))
+#86 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#87 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#88 /var/www/html/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#89 /var/www/html/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#90 /var/www/html/vendor/pestphp/pest/src/Kernel.php(103): PHPUnit\TextUI\Application->run(Array)
+#91 /var/www/html/vendor/pestphp/pest/bin/pest(184): Pest\Kernel->handle(Array, Array)
+#92 /var/www/html/vendor/pestphp/pest/bin/pest(192): {closure}()
+#93 /var/www/html/vendor/bin/pest(119): include('/var/www/html/v...')
+#94 {main}
+
+Next Illuminate\Database\UniqueConstraintViolationException: SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "tours_slug_unique"
+DETAIL:  Key (slug)=(repeated-florence-source-tour) already exists. (Connection: pgsql, SQL: insert into "tours" ("partner_id", "category_id", "slug", "location", "location_slug", "duration_minutes", "duration_label", "group_size_min", "group_size_max", "price_amount", "status", "cover_image_url", "difficulty_level", "guide_languages", "updated_at", "created_at") values (2, 2, repeated-florence-source-tour, Florence, Italy, florence-italy, 180, 3 hours, 1, 10, 0, draft, ?, easy, [], 2026-10-04 01:19:45, 2026-10-04 01:19:45) returning "id") in /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php:820
+Stack trace:
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\Database\Connection->runQueryCallback('insert into "to...', Array, Object(Closure))
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(398): Illuminate\Database\Connection->run('insert into "to...', Array, Object(Closure))
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(385): Illuminate\Database\Connection->select('insert into "to...', Array, false)
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/PostgresProcessor.php(24): Illuminate\Database\Connection->selectFromWriteConnection('insert into "to...', Array)
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3766): Illuminate\Database\Query\Processors\PostgresProcessor->processInsertGetId(Object(Illuminate\Database\Query\Builder), 'insert into "to...', Array, 'id')
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(2120): Illuminate\Database\Query\Builder->insertGetId(Array, 'id')
+#6 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1359): Illuminate\Database\Eloquent\Builder->__call('insertGetId', Array)
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1324): Illuminate\Database\Eloquent\Model->insertAndSetId(Object(Illuminate\Database\Eloquent\Builder), Array)
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1163): Illuminate\Database\Eloquent\Model->performInsert(Object(Illuminate\Database\Eloquent\Builder))
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1128): Illuminate\Database\Eloquent\Model->save()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/helpers.php(399): Illuminate\Database\Eloquent\Builder->Illuminate\Database\Eloquent\{closure}(Object(App\Models\Tour))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1127): tap(Object(App\Models\Tour), Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php(23): Illuminate\Database\Eloquent\Builder->create(Array)
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2372): Illuminate\Database\Eloquent\Model->forwardCallTo(Object(Illuminate\Database\Eloquent\Builder), 'create', Array)
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2384): Illuminate\Database\Eloquent\Model->__call('create', Array)
+#15 /var/www/html/app/Domains/Partner/Services/TourService.php(85): Illuminate\Database\Eloquent\Model::__callStatic('create', Array)
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php(32): App\Domains\Partner\Services\TourService->App\Domains\Partner\Services\{closure}(Object(Illuminate\Database\PostgresConnection))
+#17 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(495): Illuminate\Database\Connection->transaction(Object(Closure))
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\Database\DatabaseManager->__call('transaction', Array)
+#19 /var/www/html/app/Domains/Partner/Services/TourService.php(84): Illuminate\Support\Facades\Facade::__callStatic('transaction', Array)
+#20 /var/www/html/app/Domains/Partner/Controllers/TourController.php(65): App\Domains\Partner\Services\TourService->createTour(2, Array)
+#21 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(47): App\Domains\Partner\Controllers\TourController->store(Object(App\Domains\Partner\Requests\StoreTourRequest))
+#22 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\ControllerDispatcher->dispatch(Object(Illuminate\Routing\Route), Object(App\Domains\Partner\Controllers\TourController), 'store')
+#23 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Route.php(212): Illuminate\Routing\Route->runController()
+#24 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(808): Illuminate\Routing\Route->run()
+#25 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Routing\Router->Illuminate\Routing\{closure}(Object(Illuminate\Http\Request))
+#26 /var/www/html/app/Domains/Partner/Middleware/PartnerRoleMiddleware.php(36): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#27 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\Domains\Partner\Middleware\PartnerRoleMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#28 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(51): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#29 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\SubstituteBindings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#30 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(161): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#31 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(127): Illuminate\Routing\Middleware\ThrottleRequests->handleRequest(Object(Illuminate\Http\Request), Object(Closure), Array)
+#32 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(89): Illuminate\Routing\Middleware\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\Http\Request), Object(Closure), 'booking.get', Object(Closure))
+#33 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Routing\Middleware\ThrottleRequests->handle(Object(Illuminate\Http\Request), Object(Closure), 'booking.get')
+#34 /var/www/html/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(64): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#35 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Auth\Middleware\Authenticate->handle(Object(Illuminate\Http\Request), Object(Closure), 'sanctum')
+#36 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#37 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(807): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#38 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(786): Illuminate\Routing\Router->runRouteWithinStack(Object(Illuminate\Routing\Route), Object(Illuminate\Http\Request))
+#39 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(750): Illuminate\Routing\Router->runRoute(Object(Illuminate\Http\Request), Object(Illuminate\Routing\Route))
+#40 /var/www/html/vendor/laravel/framework/src/Illuminate/Routing/Router.php(739): Illuminate\Routing\Router->dispatchToRoute(Object(Illuminate\Http\Request))
+#41 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(201): Illuminate\Routing\Router->dispatch(Object(Illuminate\Http\Request))
+#42 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}(Object(Illuminate\Http\Request))
+#43 /var/www/html/vendor/livewire/livewire/src/Features/SupportDisablingBackButtonCache/DisableBackButtonCacheMiddleware.php(19): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#44 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Livewire\Features\SupportDisablingBackButtonCache\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\Http\Request), Object(Closure))
+#45 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#46 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#47 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle(Object(Illuminate\Http\Request), Object(Closure))
+#48 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#49 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle(Object(Illuminate\Http\Request), Object(Closure))
+#50 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\TrimStrings->handle(Object(Illuminate\Http\Request), Object(Closure))
+#51 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#52 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\ValidatePostSize->handle(Object(Illuminate\Http\Request), Object(Closure))
+#53 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(110): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#54 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle(Object(Illuminate\Http\Request), Object(Closure))
+#55 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(62): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#56 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\HandleCors->handle(Object(Illuminate\Http\Request), Object(Closure))
+#57 /var/www/html/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#58 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Http\Middleware\TrustProxies->handle(Object(Illuminate\Http\Request), Object(Closure))
+#59 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#60 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle(Object(Illuminate\Http\Request), Object(Closure))
+#61 /var/www/html/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}(Object(Illuminate\Http\Request))
+#62 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(176): Illuminate\Pipeline\Pipeline->then(Object(Closure))
+#63 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#64 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#65 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase->call('POST', '/api/partner/to...', Array, Array, Array, Array, '{"title":"Repea...')
+#66 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(411): Illuminate\Foundation\Testing\TestCase->json('POST', '/api/partner/to...', Array, Array, 0)
+#67 [internal function]: Illuminate\Foundation\Testing\TestCase->postJson('/api/partner/to...', Array, Array)
+#68 /var/www/html/vendor/pestphp/pest/src/Support/Reflection.php(38): ReflectionMethod->invoke(Object(P\Tests\Feature\Partner\TourCreateTest), '/api/partner/to...', Array, Array)
+#69 /var/www/html/vendor/pestphp/pest/src/Support/HigherOrderMessage.php(58): Pest\Support\Reflection::call(Object(P\Tests\Feature\Partner\TourCreateTest), 'postJson', Array)
+#70 /var/www/html/vendor/pestphp/pest/src/Support/HigherOrderTapProxy.php(66): Pest\Support\HigherOrderMessage->call(Object(P\Tests\Feature\Partner\TourCreateTest))
+#71 /var/www/html/vendor/pestphp/pest-plugin-laravel/src/Http.php(219): Pest\Support\HigherOrderTapProxy->__call('postJson', Array)
+#72 /var/www/html/tests/Feature/Partner/TourCreateTest.php(40): Pest\Laravel\postJson('/api/partner/to...', Array, Array)
+#73 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseMethodFactory.php(171): P\Tests\Feature\Partner\TourCreateTest->{closure}('Repeated Floren...')
+#74 [internal function]: P\Tests\Feature\Partner\TourCreateTest->Pest\Factories\{closure}('Repeated Floren...')
+#75 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): call_user_func_array(Object(Closure), Array)
+#76 /var/www/html/vendor/pestphp/pest/src/Support/ExceptionTrace.php(26): P\Tests\Feature\Partner\TourCreateTest->Pest\Concerns\{closure}()
+#77 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(419): Pest\Support\ExceptionTrace::ensure(Object(Closure))
+#78 /var/www/html/vendor/pestphp/pest/src/Concerns/Testable.php(321): P\Tests\Feature\Partner\TourCreateTest->__callClosure(Object(Closure), Array)
+#79 /var/www/html/vendor/pestphp/pest/src/Factories/TestCaseFactory.php(170) : eval()'d code(18): P\Tests\Feature\Partner\TourCreateTest->__runTest(Object(Closure), 'Repeated Floren...')
+#80 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): P\Tests\Feature\Partner\TourCreateTest->__pest_evaluable_it_creates_distinct_stable_nonempty_links_for_repeated_valid_source_titles('Repeated Floren...')
+#81 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(519): PHPUnit\Framework\TestCase->runTest()
+#82 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase->runBare()
+#83 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestCase.php(365): PHPUnit\Framework\TestRunner->run(Object(P\Tests\Feature\Partner\TourCreateTest))
+#84 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase->run()
+#85 /var/www/html/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite->run()
+#86 /var/www/html/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#87 /var/www/html/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#88 /var/www/html/vendor/pestphp/pest/src/Kernel.php(103): PHPUnit\TextUI\Application->run(Array)
+#89 /var/www/html/vendor/pestphp/pest/bin/pest(184): Pest\Kernel->handle(Array, Array)
+#90 /var/www/html/vendor/pestphp/pest/bin/pest(192): {closure}()
+#91 /var/www/html/vendor/bin/pest(119): include('/var/www/html/v...')
+#92 {main}
+
+----------------------------------------------------------------------------------
+
+SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "tours_slug_unique"
+DETAIL:  Key (slug)=(repeated-florence-source-tour) already exists. (Connection: pgsql, SQL: insert into "tours" ("partner_id", "category_id", "slug", "location", "location_slug", "duration_minutes", "duration_label", "group_size_min", "group_size_max", "price_amount", "status", "cover_image_url", "difficulty_level", "guide_languages", "updated_at", "created_at") values (2, 2, repeated-florence-source-tour, Florence, Italy, florence-italy, 180, 3 hours, 1, 10, 0, draft, ?, easy, [], 2026-10-04 01:19:45, 2026-10-04 01:19:45) returning "id")
+
+  at tests/Feature/Partner/TourCreateTest.php:48
+     44▕             'destination' => 'Florence, Italy',
+     45▕             'duration_value' => 3,
+     46▕             'duration_unit' => 'hour',
+     47▕             'difficulty_level' => 'easy',
+  ➜  48▕         ], ['Authorization' => 'Bearer ' . $this->token])->assertCreated();
+     49▕         $id = $created->json('data.id');
+     50▕         $detail = getJson('/api/partner/tours/' . $id, ['Authorization' => 'Bearer ' . $this->token])->assertOk();
+     51▕         $slug = $detail->json('data.slug');
+     52▕         expect($slug)->toBeString()->not->toBe('');
+
+
+  Tests:    2 failed (13 assertions)
+  Duration: 20.64s
+
+NUMERIC_EXIT=1

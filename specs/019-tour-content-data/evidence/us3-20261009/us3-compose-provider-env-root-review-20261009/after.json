@@ -1,0 +1,21 @@
+{
+  "native_exit": 0,
+  "at": "2026-10-09T19:36:56.1621486+00:00",
+  "services": [
+    {
+      "service": "laravel",
+      "key_unset": true,
+      "model_unset": true,
+      "queue": "redis",
+      "retry_after": "90"
+    },
+    {
+      "service": "queue",
+      "key_unset": true,
+      "model_unset": true,
+      "queue": "redis",
+      "retry_after": "90"
+    }
+  ],
+  "source": "https://docs.docker.com/reference/compose-file/services/"
+}

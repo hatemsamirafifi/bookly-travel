@@ -2,6 +2,7 @@
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityRule;
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\TourMedia;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Reviews\Events\ReviewSubmitted;
@@ -14,9 +15,13 @@ use App\Models\TourTranslationState;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
+
+use Tests\Support\TourContentFixtures;
 
 uses(RefreshDatabase::class);
 
@@ -212,7 +217,7 @@ it('returns only approved public operator fields and visible-review aggregates',
         ->assertJsonPath('data.operator.review_count', 1)
         ->assertJsonPath('data.operator.average_rating', 5);
     $operator = $response->json('data.operator');
-    expect(array_keys($operator))->toBe(['name', 'description', 'logo_url', 'tour_count', 'review_count', 'average_rating']);
+    expect(array_keys($operator))->toBe(['name', 'description', 'logo_url', 'verified', 'tour_count', 'review_count', 'average_rating']);
     expect(json_encode($operator))->not->toContain('private@example.com', 'SECRET-TAX', 'IT60');
 });
 
@@ -749,6 +754,488 @@ it('computes the review distribution from visible reviews (L4)', function () {
         ]);
 });
 
+// ─── Spec 019 US2 (T025): locale/state selection matrix ───
+// Only row+ready+matching translated_hash is current; EN is source.
+// Null derivative itinerary may use nonempty EN; explicit [] stays empty.
+// Empty English creates no itinerary notice; warnings depend on actual
+// nonempty fallback sections. Public never exposes hashes/provider/job state.
+
+function spec019Us2MakeTour(string $slug, array $tourAttrs = []): Tour
+{
+    return Tour::create(array_merge([
+        'category_id' => Category::where('slug', 'test-category')->firstOrFail()->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 5000,
+        'slug' => $slug,
+        'location' => 'Rome, Italy',
+        'location_slug' => 'rome',
+        'duration_minutes' => 180,
+        'duration_label' => '3 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 8,
+        'status' => 'published',
+    ], $tourAttrs));
+}
+
+function spec019Us2English(Tour $tour, array $overrides = []): TourTranslation
+{
+    return TourTranslation::create(array_merge([
+        'tour_id' => $tour->id,
+        'locale' => 'en',
+        'title' => 'English title',
+        'description' => 'English description',
+        'highlights' => ['English highlight'],
+        'inclusions' => [],
+        'exclusions' => [],
+        'itinerary' => [['day' => 1, 'title' => 'English day', 'stops' => []]],
+    ], $overrides, ['tour_id' => $tour->id, 'locale' => 'en']));
+}
+
+function spec019Us2Derivative(Tour $tour, string $locale, array $overrides = []): TourTranslation
+{
+    return TourTranslation::create(array_merge([
+        'tour_id' => $tour->id,
+        'locale' => $locale,
+        'title' => $locale === 'es' ? 'Título español' : 'Titolo italiano',
+        'description' => $locale === 'es' ? 'Descripción española' : 'Descrizione italiana',
+        'itinerary' => [['day' => 1, 'title' => $locale === 'es' ? 'Día español' : 'Giorno italiano', 'stops' => []]],
+    ], $overrides, ['tour_id' => $tour->id, 'locale' => $locale]));
+}
+
+function spec019Us2State(Tour $tour, string $locale, string $status, ?string $sourceHash = null, ?string $translatedHash = null): TourTranslationState
+{
+    $english = $tour->translations()->where('locale', 'en')->firstOrFail();
+    $current = app(TourTranslationService::class)->sourceHash($english);
+
+    return TourTranslationState::create([
+        'tour_id' => $tour->id,
+        'locale' => $locale,
+        'source_hash' => $sourceHash ?? $current,
+        'translated_hash' => $translatedHash,
+        'status' => $status,
+    ]);
+}
+
+it('serves current derivatives in en/es/it with exact source language and no fallback notice (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-current-all');
+    spec019Us2English($tour);
+    spec019Us2Derivative($tour, 'es');
+    spec019Us2Derivative($tour, 'it');
+    markDerivedTourTranslationReady($tour, 'es');
+    markDerivedTourTranslationReady($tour, 'it');
+
+    getJson('/api/public/tours/us2-current-all?locale=en')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.itinerary_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'source')
+        ->assertJsonMissingPath('data.translation_warning');
+
+    getJson('/api/public/tours/us2-current-all?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'Título español')
+        ->assertJsonPath('data.content_locale', 'es')
+        ->assertJsonPath('data.itinerary_locale', 'es')
+        ->assertJsonPath('data.translation_status', 'ready')
+        ->assertJsonMissingPath('data.translation_warning');
+
+    getJson('/api/public/tours/us2-current-all?locale=it')->assertOk()
+        ->assertJsonPath('data.title', 'Titolo italiano')
+        ->assertJsonPath('data.content_locale', 'it')
+        ->assertJsonPath('data.itinerary_locale', 'it')
+        ->assertJsonPath('data.translation_status', 'ready')
+        ->assertJsonMissingPath('data.translation_warning');
+});
+
+it('falls back to current English for missing row+state, pending, stale and failed derivatives (US2)', function () {
+    // Missing derivative row and missing state row.
+    $missing = spec019Us2MakeTour('us2-missing-both');
+    spec019Us2English($missing);
+
+    getJson('/api/public/tours/us2-missing-both?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.itinerary_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'pending')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+
+    // Pending state without a derivative row.
+    $pending = spec019Us2MakeTour('us2-pending-norow');
+    spec019Us2English($pending);
+    spec019Us2State($pending, 'es', 'pending');
+
+    getJson('/api/public/tours/us2-pending-norow?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'pending')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+
+    // Stale: outdated derivative row retained, desired hash advanced.
+    $stale = spec019Us2MakeTour('us2-stale-old');
+    spec019Us2English($stale);
+    spec019Us2Derivative($stale, 'es', ['title' => 'Título antiguo']);
+    markDerivedTourTranslationReady($stale, 'es');
+    $english = $stale->translations()->where('locale', 'en')->firstOrFail();
+    $english->update(['description' => 'English description v2']);
+    $fresh = app(TourTranslationService::class)->sourceHash($english->fresh());
+    TourTranslationState::where('tour_id', $stale->id)->where('locale', 'es')
+        ->update(['status' => 'stale', 'source_hash' => $fresh]);
+
+    getJson('/api/public/tours/us2-stale-old?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.description', 'English description v2')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'stale')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+
+    // Failed: source preserved, sanitized status only.
+    $failed = spec019Us2MakeTour('us2-failed-keep');
+    spec019Us2English($failed);
+    spec019Us2State($failed, 'it', 'failed');
+
+    getJson('/api/public/tours/us2-failed-keep?locale=it')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'failed')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+});
+
+it('maps an apparent-ready hash mismatch to stale English fallback (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-hash-mismatch');
+    spec019Us2English($tour);
+    spec019Us2Derivative($tour, 'es');
+    // State claims ready but the translated hash does not match current EN.
+    spec019Us2State($tour, 'es', 'ready', translatedHash: str_repeat('0', 64));
+
+    getJson('/api/public/tours/us2-hash-mismatch?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.itinerary.0.title', 'English day')
+        ->assertJsonPath('data.itinerary_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'stale')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+});
+
+it('keeps requested general content while a null itinerary independently falls back to nonempty English (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-independent-itinerary');
+    spec019Us2English($tour);
+    spec019Us2Derivative($tour, 'es', ['itinerary' => null]);
+    markDerivedTourTranslationReady($tour, 'es');
+
+    getJson('/api/public/tours/us2-independent-itinerary?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'Título español')
+        ->assertJsonPath('data.content_locale', 'es')
+        ->assertJsonPath('data.itinerary.0.title', 'English day')
+        ->assertJsonPath('data.itinerary_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'ready')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+});
+
+it('treats an explicit empty derivative itinerary as intentional empty without English substitution (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-explicit-empty');
+    spec019Us2English($tour);
+    spec019Us2Derivative($tour, 'es', ['itinerary' => []]);
+    markDerivedTourTranslationReady($tour, 'es');
+
+    getJson('/api/public/tours/us2-explicit-empty?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'Título español')
+        ->assertJsonPath('data.content_locale', 'es')
+        ->assertJsonPath('data.itinerary', [])
+        ->assertJsonPath('data.itinerary_locale', 'es')
+        ->assertJsonPath('data.translation_status', 'ready')
+        ->assertJsonMissingPath('data.translation_warning');
+});
+
+it('produces no misleading itinerary warning when English itinerary is empty (US2 [] regression)', function () {
+    $tour = spec019Us2MakeTour('us2-empty-english');
+    spec019Us2English($tour, ['itinerary' => []]);
+    // Current ES general content but explicitly unavailable itinerary; the
+    // empty English array must not trigger a fallback warning.
+    spec019Us2Derivative($tour, 'es', ['itinerary' => null]);
+    markDerivedTourTranslationReady($tour, 'es');
+
+    getJson('/api/public/tours/us2-empty-english?locale=es')->assertOk()
+        ->assertJsonPath('data.title', 'Título español')
+        ->assertJsonPath('data.content_locale', 'es')
+        ->assertJsonPath('data.itinerary', [])
+        ->assertJsonPath('data.itinerary_locale', 'es')
+        ->assertJsonMissingPath('data.translation_warning');
+});
+
+it('returns empty itinerary without an itinerary claim when English has no itinerary (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-no-english-itinerary');
+    spec019Us2English($tour, ['itinerary' => null]);
+
+    getJson('/api/public/tours/us2-no-english-itinerary?locale=it')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.itinerary', [])
+        // Empty itinerary retains the selected content locale without
+        // claiming translated text exists.
+        ->assertJsonPath('data.itinerary_locale', 'en')
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+});
+
+// Root correction R1 (red first): an English row carrying ONLY itinerary
+// text must still disclose the fallback in the compatible summary. The
+// baseline computes itineraryFallback only when the selected itinerary is
+// null, which is false under full fallback (t = EN, EN itinerary
+// selected), while generalFallback is false for empty general fields.
+it('discloses an English-only itinerary fallback in the compatible summary (US2 R1)', function () {
+    foreach (['es', 'it'] as $locale) {
+        $slug = "us2-itin-only-{$locale}";
+        $tour = spec019Us2MakeTour($slug);
+        spec019Us2English($tour, [
+            'title' => '',
+            'description' => '',
+            'highlights' => [],
+            'inclusions' => [],
+            'exclusions' => [],
+            'meeting_point' => null,
+            'cancellation_policy' => null,
+            'important_information' => null,
+            'itinerary' => [['day' => 1, 'title' => 'English day', 'stops' => []]],
+        ]);
+
+        getJson("/api/public/tours/{$slug}?locale={$locale}")->assertOk()
+            ->assertJsonPath('data.title', '')
+            ->assertJsonPath('data.content_locale', 'en')
+            ->assertJsonPath('data.itinerary.0.title', 'English day')
+            ->assertJsonPath('data.itinerary_locale', 'en')
+            ->assertJsonPath('data.translation_warning', 'partial_translation');
+    }
+});
+
+// Root correction R4: data-driven actual-API matrix across es+it for
+// every derivative status variant. Compact table, no duplicated bodies.
+// EN kinds: FULL (all 9 fields), ITIN_ONLY (general empty, nonempty
+// itinerary), EMPTY_ARR/EMPTY_NULL (fully empty). Derivative kinds: none,
+// values, nullItin, emptyItin. States: none, pending, stale, failed,
+// readyMatch, readyMismatch, readyNoRow.
+it('selects actual languages across the full es/it status matrix (US2 R4)', function () {
+    $variants = [
+        // [name, enKind, derivKind, stateKind, expContent, expItin, expStatus, expWarn]
+        ['current', 'FULL', 'values', 'readyMatch', 'req', 'req', 'ready', false],
+        ['noRowNoState', 'FULL', 'none', 'none', 'en', 'en', 'pending', true],
+        ['derivNoState', 'FULL', 'values', 'none', 'en', 'en', 'pending', true],
+        ['readyNoRow', 'FULL', 'none', 'readyNoRow', 'en', 'en', 'stale', true],
+        ['pendingRetained', 'FULL', 'values', 'pending', 'en', 'en', 'pending', true],
+        ['staleRetained', 'FULL', 'values', 'stale', 'en', 'en', 'stale', true],
+        ['failedRetained', 'FULL', 'values', 'failed', 'en', 'en', 'failed', true],
+        ['readyMismatch', 'FULL', 'values', 'readyMismatch', 'en', 'en', 'stale', true],
+        ['nullItinFallback', 'FULL', 'nullItin', 'readyMatch', 'req', 'en', 'ready', true],
+        ['explicitEmpty', 'FULL', 'emptyItin', 'readyMatch', 'req', 'empty-req', 'ready', false],
+        ['nullItinEmptyEN', 'EMPTY_ARR', 'nullItin', 'readyMatch', 'req', 'empty-req', 'ready', false],
+        // Null vs [] empty EN itinerary both yield [] with no warning and
+        // no fabricated content; only a nonempty EN itinerary warns.
+        ['missingDerivEmptyEN', 'EMPTY_ARR', 'none', 'none', 'en', 'empty-en', 'pending', false],
+        ['itinOnly', 'ITIN_ONLY', 'none', 'none', 'en', 'en', 'pending', true],
+        ['emptyEnglish', 'EMPTY_NULL', 'none', 'none', 'en', 'empty-en', 'pending', false],
+    ];
+
+    foreach (['es', 'it'] as $locale) {
+        $tag = strtoupper($locale);
+        $enItin = [
+            [
+                'day' => 3,
+                'title' => 'EN day A',
+                'description' => 'EN desc A',
+                'stops' => [
+                    ['title' => 'EN stop A1', 'description' => 'EN stop desc', 'duration_minutes' => 15],
+                    ['title' => 'EN stop A2', 'description' => null, 'duration_minutes' => null],
+                ],
+            ],
+            ['day' => 3, 'title' => 'EN day B', 'description' => null, 'stops' => []],
+        ];
+        $derivItin = [
+            [
+                'day' => 3,
+                'title' => "{$tag} day A",
+                'description' => "{$tag} desc A",
+                'stops' => [
+                    ['title' => "{$tag} stop A1", 'description' => "{$tag} stop desc", 'duration_minutes' => 15],
+                    ['title' => "{$tag} stop A2", 'description' => null, 'duration_minutes' => null],
+                ],
+            ],
+            ['day' => 3, 'title' => "{$tag} day B", 'description' => null, 'stops' => []],
+        ];
+        $enFull = [
+            'title' => 'EN title', 'description' => 'EN description',
+            'highlights' => ['EN highlight'], 'inclusions' => ['EN inclusion'],
+            'exclusions' => ['EN exclusion'], 'meeting_point' => 'EN meeting',
+            'cancellation_policy' => 'EN policy', 'important_information' => ['EN info'],
+        ];
+        $derivFull = [
+            'title' => "{$tag} title", 'description' => "{$tag} description",
+            'highlights' => ["{$tag} highlight"], 'inclusions' => ["{$tag} inclusion"],
+            'exclusions' => ["{$tag} exclusion"], 'meeting_point' => "{$tag} meeting",
+            'cancellation_policy' => "{$tag} policy", 'important_information' => ["{$tag} info"],
+        ];
+        $emptyGeneral = [
+            'title' => '', 'description' => '', 'highlights' => [], 'inclusions' => [],
+            'exclusions' => [], 'meeting_point' => null, 'cancellation_policy' => null,
+            'important_information' => null,
+        ];
+
+        foreach ($variants as [$name, $enKind, $derivKind, $stateKind, $expContent, $expItin, $expStatus, $expWarn]) {
+            $slug = "us2mx-{$name}-{$locale}";
+            $tour = spec019Us2MakeTour($slug);
+
+            $enAttrs = match ($enKind) {
+                'FULL' => [...$enFull, 'itinerary' => $enItin],
+                'ITIN_ONLY' => [...$emptyGeneral, 'itinerary' => $enItin],
+                'EMPTY_ARR' => [...$emptyGeneral, 'itinerary' => []],
+                'EMPTY_NULL' => [...$emptyGeneral, 'itinerary' => null],
+            };
+            spec019Us2English($tour, $enAttrs);
+
+            if ($derivKind !== 'none') {
+                $derivItinValue = match ($derivKind) {
+                    'values' => $derivItin,
+                    'nullItin' => null,
+                    'emptyItin' => [],
+                };
+                spec019Us2Derivative($tour, $locale, [...$derivFull, 'itinerary' => $derivItinValue]);
+            }
+
+            if ($stateKind !== 'none') {
+                $english = $tour->translations()->where('locale', 'en')->firstOrFail();
+                $current = app(TourTranslationService::class)->sourceHash($english);
+                [$status, $translated] = match ($stateKind) {
+                    'pending' => ['pending', null],
+                    'stale' => ['stale', null],
+                    'failed' => ['failed', null],
+                    'readyMatch' => ['ready', $current],
+                    'readyMismatch' => ['ready', str_repeat('0', 64)],
+                    'readyNoRow' => ['ready', $current],
+                };
+                TourTranslationState::create([
+                    'tour_id' => $tour->id, 'locale' => $locale,
+                    'source_hash' => $current, 'translated_hash' => $translated,
+                    'status' => $status,
+                ]);
+            }
+
+            $expGeneral = $expContent === 'req' ? $derivFull : ($enKind === 'FULL' ? $enFull : $emptyGeneral);
+            $expItinerary = match ($expItin) {
+                'req' => $derivItin,
+                'en' => $enItin,
+                default => [],
+            };
+            $expItinLocale = match ($expItin) {
+                'req' => $locale,
+                'en' => 'en',
+                'empty-req' => $locale,
+                'empty-en' => 'en',
+            };
+
+            $response = getJson("/api/public/tours/{$slug}?locale={$locale}")->assertOk()
+                ->assertJsonPath('data.content_locale', $expContent === 'req' ? $locale : 'en')
+                ->assertJsonPath('data.itinerary_locale', $expItinLocale)
+                ->assertJsonPath('data.translation_status', $expStatus)
+                ->assertJsonPath('data.title', $expGeneral['title'])
+                ->assertJsonPath('data.description', $expGeneral['description'] ?? '')
+                ->assertJsonPath('data.highlights', $expGeneral['highlights'] ?? [])
+                ->assertJsonPath('data.inclusions', $expGeneral['inclusions'] ?? [])
+                ->assertJsonPath('data.exclusions', $expGeneral['exclusions'] ?? [])
+                ->assertJsonPath('data.meeting_point', $expGeneral['meeting_point'] ?? '')
+                ->assertJsonPath('data.cancellation_policy', $expGeneral['cancellation_policy'] ?? '')
+                ->assertJsonPath('data.important_information', $expGeneral['important_information'] ?? [])
+                ->assertJsonCount(count($expItinerary), 'data.itinerary')
+                ->assertJsonMissingPath('data.source_hash')
+                ->assertJsonMissingPath('data.translated_hash')
+                ->assertJsonMissingPath('data.last_error_code')
+                ->assertJsonMissingPath('data.provider_error')
+                ->assertJsonMissingPath('data.job_state');
+
+            // JSONB object-key order is immaterial; list order and nullable
+            // primitive types must survive the public projection unchanged.
+            $actualItinerary = $response->json('data.itinerary');
+            $this->assertEquals($expItinerary, $actualItinerary);
+            foreach ($expItinerary as $dayIndex => $day) {
+                $this->assertSame($day['day'], $actualItinerary[$dayIndex]['day']);
+                $this->assertSame($day['description'], $actualItinerary[$dayIndex]['description']);
+                foreach ($day['stops'] as $stopIndex => $stop) {
+                    $actualStop = $actualItinerary[$dayIndex]['stops'][$stopIndex];
+                    $this->assertSame($stop['description'], $actualStop['description']);
+                    $this->assertSame($stop['duration_minutes'], $actualStop['duration_minutes']);
+                }
+            }
+
+            if ($expWarn) {
+                $response->assertJsonPath('data.translation_warning', 'partial_translation');
+            } else {
+                $response->assertJsonMissingPath('data.translation_warning');
+            }
+        }
+    }
+});
+
+it('always serves English source irrespective of derived states (US2 R4)', function () {
+    $tour = spec019Us2MakeTour('us2-en-source');
+    spec019Us2English($tour);
+    spec019Us2Derivative($tour, 'es');
+    spec019Us2Derivative($tour, 'it');
+    spec019Us2State($tour, 'es', 'failed');
+    spec019Us2State($tour, 'it', 'stale');
+
+    getJson('/api/public/tours/us2-en-source?locale=en')->assertOk()
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.itinerary.0.title', 'English day')
+        ->assertJsonPath('data.itinerary_locale', 'en')
+        ->assertJsonPath('data.translation_status', 'source')
+        ->assertJsonMissingPath('data.translation_warning');
+});
+
+it('never exposes hashes, provider errors or job state on public detail (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-privacy');
+    spec019Us2English($tour);
+    TourTranslationState::create([
+        'tour_id' => $tour->id,
+        'locale' => 'es',
+        'source_hash' => str_repeat('a', 64),
+        'translated_hash' => null,
+        'status' => 'failed',
+        'last_error_code' => 'provider_unavailable',
+    ]);
+
+    $response = getJson('/api/public/tours/us2-privacy?locale=es')->assertOk()
+        ->assertJsonPath('data.translation_status', 'failed')
+        ->assertJsonMissingPath('data.source_hash')
+        ->assertJsonMissingPath('data.translated_hash')
+        ->assertJsonMissingPath('data.last_error_code')
+        ->assertJsonMissingPath('data.provider_error')
+        ->assertJsonMissingPath('data.provider_body')
+        ->assertJsonMissingPath('data.job_state')
+        ->assertJsonMissingPath('data.job_id');
+
+    expect($response->json('data'))->not->toHaveKeys([
+        'source_hash', 'translated_hash', 'last_error_code',
+        'provider_error', 'provider_body', 'job_state', 'job_id',
+    ]);
+});
+
+it('preserves locale validation, 404/410, canonicals and money behavior with US2 selection (US2)', function () {
+    $tour = spec019Us2MakeTour('us2-compat-money');
+    spec019Us2English($tour);
+
+    getJson('/api/public/tours/us2-compat-money')->assertStatus(422)->assertJsonValidationErrors(['locale']);
+    getJson('/api/public/tours/no-such-tour-us2?locale=en')->assertStatus(404);
+
+    $archived = spec019Us2MakeTour('us2-archived', ['status' => 'archived', 'published_at' => now()->subWeek()]);
+    spec019Us2English($archived);
+    getJson('/api/public/tours/us2-archived?locale=en')->assertStatus(410);
+
+    $response = getJson('/api/public/tours/us2-compat-money?locale=en')->assertOk();
+    $data = $response->json('data');
+    // Money stays server-authoritative integer minor units.
+    expect($data['pricing']['base_price']['amount'])->toBeInt();
+    // Canonicals/routes unchanged.
+    expect($data['seo']['canonical_url'])->toContain('/en/tours/us2-compat-money');
+    expect($data['seo']['hreflang'])->toHaveKeys(['en', 'es', 'it']);
+    expect($data['slug'])->toBe('us2-compat-money');
+});
+
 it('excludes hidden reviews from the distribution (L4)', function () {
     $tour = Tour::create([
         'category_id' => $this->category->id,
@@ -799,3 +1286,189 @@ it('excludes hidden reviews from the distribution (L4)', function () {
             '5' => 1, '4' => 0, '3' => 0, '2' => 0, '1' => 0,
         ]);
 });
+
+// ---------------------------------------------------------------------------
+// Spec 019 US4 (T047): public gallery truthfulness and alt language.
+// Authoring-only red-first regressions; root must run red before production
+// (T052 projects real ordered images with optional alt_locale). Queue is
+// faked inside the HTTP-driven test only (in-test artifact); provider key
+// stays blank via the shared test env. Fixture derivatives reuse the shared
+// TourContentFixtures state helper (current hash + stored derivative).
+// ---------------------------------------------------------------------------
+
+it('dedupes mixed legacy and typed gallery rows into sorted unique HTTP(S) images with the cover first (US4 T047)', function () {
+    $tour = spec019Us2MakeTour('us4-mixed-gallery', [
+        'cover_image_url' => 'https://images.example.com/legacy.jpg',
+        'guide_languages' => ['de', 'en'],
+        'difficulty_level' => 'moderate',
+    ]);
+    spec019Us2English($tour);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/b.jpg', 'sort_order' => 2]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 1]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'image', 'url' => 'https://images.example.com/legacy.jpg', 'sort_order' => 5]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'cover', 'url' => 'https://images.example.com/cover.jpg', 'sort_order' => 9]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 10]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'ftp://images.example.com/junk.jpg', 'sort_order' => 0]);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'not-a-url', 'sort_order' => 0]);
+
+    // FR-019/020: cover first, remaining order kept, each URL once, no
+    // unusable schemes; envelope and guide codes stay independent.
+    getJson('/api/public/tours/us4-mixed-gallery?locale=en')->assertOk()
+        ->assertJsonPath('data.slug', 'us4-mixed-gallery')
+        ->assertJsonPath('data.difficulty_level', 'moderate')
+        ->assertJsonPath('data.languages', ['de', 'en'])
+        ->assertJsonPath('data.guide_languages', ['de', 'en'])
+        ->assertJsonPath('data.images', [
+            ['url' => 'https://images.example.com/cover.jpg', 'is_cover' => true, 'alt' => 'English title', 'alt_locale' => 'en'],
+            ['url' => 'https://images.example.com/a.jpg', 'is_cover' => false, 'alt' => 'English title', 'alt_locale' => 'en'],
+            ['url' => 'https://images.example.com/b.jpg', 'is_cover' => false, 'alt' => 'English title', 'alt_locale' => 'en'],
+            ['url' => 'https://images.example.com/legacy.jpg', 'is_cover' => false, 'alt' => 'English title', 'alt_locale' => 'en'],
+        ]);
+});
+
+it('surfaces an HTTP-authored specific English alt with an English locale mark on the public page (US4 T047)', function () {
+    // RED until T051/T052: the old writer drops alt_text and the public
+    // projection has no alt_locale, so alt falls back to the tour title.
+    Queue::fake();
+    Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
+    $partnerUser = User::factory()->partner()->create();
+    $partner = Partner::create([
+        'user_id' => $partnerUser->id,
+        'role' => 'partner',
+        'onboarding_status' => 'complete',
+        'is_active' => true,
+    ]);
+    $token = $partnerUser->createToken('test', ['partner'])->plainTextToken;
+
+    $created = postJson('/api/partner/tours', [
+        'title' => 'US4 Specific Alt Gallery Tour',
+        'description' => str_repeat('A guided vineyard walk in Florence. ', 5),
+        'category' => 'wine-food',
+        'destination' => 'Florence, Italy',
+        'duration_value' => 3,
+        'duration_unit' => 'hour',
+        'difficulty_level' => 'easy',
+        'guide_languages' => ['en', 'de'],
+        'media' => [
+            ['url' => 'https://images.example.com/vineyard-cover.jpg', 'is_cover' => true, 'alt_text' => 'Sunset over the vineyard rows'],
+            ['url' => 'https://images.example.com/cellar.jpg'],
+        ],
+    ], ['Authorization' => 'Bearer ' . $token])->assertCreated();
+
+    $tour = Tour::findOrFail($created->json('data.id'));
+    // Publish the owned draft for the public read (same direct-update
+    // precedent as the published-source tests above; not a moderation claim).
+    $tour->update(['status' => 'published']);
+
+    // FR-021: the specific description is English even on the page read.
+    TourContentFixtures::seedDerivative($tour, 'es', 'current');
+    TourContentFixtures::seedDerivative($tour, 'it', 'current');
+    foreach (['en', 'es', 'it'] as $locale) {
+        getJson("/api/public/tours/{$tour->slug}?locale={$locale}")->assertOk()
+            ->assertJsonPath('data.slug', $tour->slug)
+            ->assertJsonPath('data.guide_languages', ['en', 'de'])
+            ->assertJsonPath('data.languages', ['en', 'de'])
+            ->assertJsonPath('data.images.0.url', 'https://images.example.com/vineyard-cover.jpg')
+            ->assertJsonPath('data.images.0.is_cover', true)
+            ->assertJsonPath('data.images.0.alt', 'Sunset over the vineyard rows')
+            ->assertJsonPath('data.images.0.alt_locale', 'en');
+    }
+});
+
+it('falls back to the current Spanish title and content locale for image alt without specific text (US4 T047)', function () {
+    // RED until T052 on alt_locale only; the selected-title fallback itself
+    // already holds, so the locale mark is the genuine contract gap.
+    $tour = spec019Us2MakeTour('us4-alt-current-es', ['difficulty_level' => 'easy']);
+    spec019Us2English($tour);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 0]);
+    TourContentFixtures::seedDerivative($tour, 'es', 'current');
+
+    getJson('/api/public/tours/us4-alt-current-es?locale=es')->assertOk()
+        ->assertJsonPath('data.content_locale', 'es')
+        ->assertJsonPath('data.title', 'Title es')
+        ->assertJsonPath('data.images.0.alt', 'Title es')
+        ->assertJsonPath('data.images.0.alt_locale', 'es');
+});
+
+it('falls back to the English title for image alt when the derivative is stale (US4 T047)', function () {
+    // RED until T052 on alt_locale only; stale English fallback itself holds.
+    $tour = spec019Us2MakeTour('us4-alt-stale-es');
+    spec019Us2English($tour);
+    TourMedia::create(['tour_id' => $tour->id, 'type' => 'gallery', 'url' => 'https://images.example.com/a.jpg', 'sort_order' => 0]);
+    TourContentFixtures::seedDerivative($tour, 'es', 'stale');
+
+    getJson('/api/public/tours/us4-alt-stale-es?locale=es')->assertOk()
+        ->assertJsonPath('data.content_locale', 'en')
+        ->assertJsonPath('data.title', 'English title')
+        ->assertJsonPath('data.images.0.alt', 'English title')
+        ->assertJsonPath('data.images.0.alt_locale', 'en');
+});
+
+it('serves the nonblank legacy cover only without usable media and empty images when there is no photo (US4 T047)', function () {
+    // FR-020: a real legacy cover survives with no gallery; no photo means
+    // [] rather than an invented placeholder.
+    $covered = spec019Us2MakeTour('us4-legacy-only', [
+        'cover_image_url' => 'https://images.example.com/real-legacy.jpg',
+    ]);
+    spec019Us2English($covered);
+    TourMedia::create(['tour_id' => $covered->id, 'type' => 'gallery', 'url' => 'ftp://images.example.com/junk.jpg', 'sort_order' => 0]);
+
+    getJson('/api/public/tours/us4-legacy-only?locale=en')->assertOk()
+        ->assertJsonCount(1, 'data.images')
+        ->assertJsonPath('data.images.0.url', 'https://images.example.com/real-legacy.jpg')
+        ->assertJsonPath('data.images.0.is_cover', true);
+
+    $bare = spec019Us2MakeTour('us4-no-photo', ['cover_image_url' => '   ']);
+    spec019Us2English($bare);
+
+    getJson('/api/public/tours/us4-no-photo?locale=en')->assertOk()
+        ->assertJsonPath('data.images', []);
+});
+
+it('projects genuine primary review facts even when cached legacy aggregates are stale', function () {
+    Queue::fake();
+    $tour = Tour::create([
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'slug' => 'us6-genuine-primary-review-facts',
+        'location' => 'Rome, Italy', 'location_slug' => 'rome',
+        'duration_minutes' => 180, 'duration_label' => '3 hours',
+        'group_size_min' => 1, 'group_size_max' => 8,
+        'status' => 'published', 'price_amount' => 5000,
+    ]);
+    $tour->translations()->create(['locale' => 'en', 'title' => 'Actual review facts', 'description' => 'An authored tour.']);
+    DB::table('tours')->where('id', $tour->id)->update(['average_rating' => 5.0, 'review_count' => 50]);
+    expect($tour->fresh()->averageRating())->toBe(5.0);
+    expect($tour->fresh()->reviewCount())->toBe(50);
+
+    getJson('/api/public/tours/us6-genuine-primary-review-facts?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.rating.count', 0)
+        ->assertJsonPath('data.rating.average', 0)
+        ->assertJsonPath('data.reviews.count', 0)
+        ->assertJsonPath('data.reviews.average_rating', 0);
+
+    $traveler = User::factory()->create();
+    foreach ([[5, 'visible'], [3, 'flagged'], [1, 'hidden']] as [$rating, $status]) {
+        $booking = Booking::create([
+            'reference' => Booking::generateReference(), 'traveler_id' => $traveler->id,
+            'tour_id' => $tour->id, 'tour_date' => now()->subDay(),
+            'participant_count' => 1, 'price_per_person' => 5000, 'total_price' => 5000,
+            'currency' => 'EUR', 'status' => Booking::STATUS_COMPLETED,
+        ]);
+        Review::create([
+            'booking_id' => $booking->id, 'tour_id' => $tour->id, 'traveler_id' => $traveler->id,
+            'rating' => $rating, 'status' => $status, 'locale' => 'en',
+        ]);
+    }
+    getJson('/api/public/tours/us6-genuine-primary-review-facts?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.rating.count', 2)
+        ->assertJsonPath('data.rating.average', 4)
+        ->assertJsonPath('data.reviews.count', 2)
+        ->assertJsonPath('data.reviews.average_rating', 4)
+        ->assertJsonPath('data.reviews.distribution', ['5' => 1, '4' => 0, '3' => 1, '2' => 0, '1' => 0]);
+    // A public read does not silently rewrite the old stored cache.
+    expect($tour->fresh()->averageRating())->toBe(5.0);
+    expect($tour->fresh()->reviewCount())->toBe(50);
+})->group('spec019-us6');

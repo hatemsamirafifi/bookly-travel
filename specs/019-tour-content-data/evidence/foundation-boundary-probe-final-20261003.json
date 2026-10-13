@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-03",
+  "environment": "Root reviewer, isolated bookly-spec019-browser Laravel, read-only Validator probe",
+  "procedure": "Load Laravel; combine sourceRules(false) and nested itineraryRules; attach forbiddenPresentPaths after-hook; independently assert rejection path or accepted valid patch for ten cases",
+  "exit_code": 0,
+  "observed": {
+    "null_title": {
+      "accepted": false,
+      "errors": [
+        "title"
+      ]
+    },
+    "null_stops": {
+      "accepted": false,
+      "errors": [
+        "translations.en.itinerary.0.stops"
+      ]
+    },
+    "empty_stops": {
+      "accepted": true,
+      "errors": []
+    },
+    "provider_body": {
+      "accepted": false,
+      "errors": [
+        "translations.en.provider_body"
+      ]
+    },
+    "unknown_en": {
+      "accepted": false,
+      "errors": [
+        "translations.en.unexpected"
+      ]
+    },
+    "provider_error": {
+      "accepted": false,
+      "errors": [
+        "provider_error"
+      ]
+    },
+    "job_state": {
+      "accepted": false,
+      "errors": [
+        "job_state"
+      ]
+    },
+    "null_hash": {
+      "accepted": false,
+      "errors": [
+        "source_hash"
+      ]
+    },
+    "non_en_null": {
+      "accepted": false,
+      "errors": [
+        "translations.it"
+      ]
+    },
+    "valid_patch": {
+      "accepted": true,
+      "errors": []
+    }
+  },
+  "limit": "Shared-rule behavior verified. Actual create/update controller wiring and endpoint round trips remain US1 acceptance."
+}

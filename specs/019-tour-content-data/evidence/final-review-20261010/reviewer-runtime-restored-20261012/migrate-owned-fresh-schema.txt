@@ -1,0 +1,70 @@
+
+   INFO  Preparing database.
+
+  Creating migration table ...................................... 14.57ms DONE
+
+   INFO  Running migrations.
+
+  0001_01_01_000000_create_users_table .......................... 29.51ms DONE
+  0001_01_01_000001_create_cache_table .......................... 11.56ms DONE
+  0001_01_01_000001_create_personal_access_tokens_table .......... 9.19ms DONE
+  0001_01_01_000002_create_guest_identities_table ............... 13.99ms DONE
+  0001_01_01_000002_create_jobs_table ........................... 16.94ms DONE
+  0001_01_01_000003_create_auth_audit_logs_table ................ 11.98ms DONE
+  2026_04_28_000001_add_verification_email_sent_at_to_users_table  2.73ms DONE
+  2026_05_01_000001_create_categories_table ...................... 6.31ms DONE
+  2026_05_01_000002_create_tours_table .......................... 19.76ms DONE
+  2026_05_01_000003_create_tour_translations_table .............. 11.52ms DONE
+  2026_05_03_000001_add_last_lockout_email_sent_at_to_users_table  2.20ms DONE
+  2026_05_09_000001_create_bookings_table ....................... 30.21ms DONE
+  2026_05_09_000002_create_booking_audit_logs_table ............. 14.54ms DONE
+  2026_05_11_000001_add_anonymized_at_to_bookings_table .......... 3.80ms DONE
+  2026_05_11_100001_create_payments_table ....................... 18.01ms DONE
+  2026_05_11_100002_create_financial_ledger_entries_table ....... 17.08ms DONE
+  2026_05_11_100003_create_stripe_webhook_events_table .......... 11.16ms DONE
+  2026_05_11_100004_add_payment_columns_to_bookings_table ........ 5.67ms DONE
+  2026_05_13_100001_create_reviews_table ........................ 16.28ms DONE
+  2026_05_13_100002_create_review_audit_trails_table ............. 8.91ms DONE
+  2026_05_13_100003_add_rating_columns_to_tours_table ............ 2.48ms DONE
+  2026_05_13_100004_make_traveler_id_nullable_for_anonymization . 11.66ms DONE
+  2026_06_01_000001_add_profile_columns_to_users_table .......... 10.68ms DONE
+  2026_06_01_000002_create_wishlists_table ...................... 10.46ms DONE
+  2026_06_02_100001_create_partners_table ........................ 7.34ms DONE
+  2026_06_02_100002_create_notifications_table ................... 9.53ms DONE
+  2026_06_02_100003_create_tour_drafts_table .................... 12.03ms DONE
+  2026_06_02_100004_create_tour_media_table ...................... 7.38ms DONE
+  2026_06_02_100005_create_pricing_tiers_table ................... 5.31ms DONE
+  2026_06_02_100006_create_availability_rules_table .............. 8.37ms DONE
+  2026_06_02_100007_create_availability_exceptions_table ......... 5.95ms DONE
+  2026_06_02_100008_add_partner_columns_to_tours_table .......... 12.23ms DONE
+  2026_06_02_100009_create_review_responses_table ................ 9.91ms DONE
+  2026_06_02_100010_create_partner_profiles_table ............... 10.54ms DONE
+  2026_06_02_100011_create_partner_settings_table ............... 11.13ms DONE
+  2026_06_06_231248_fix_tours_partner_id_to_partners_table ....... 6.47ms DONE
+  2026_06_20_000001_create_settings_table ........................ 6.84ms DONE
+  2026_06_20_100000_create_general_settings ..................... 22.24ms DONE
+  2026_06_20_100001_create_governance_audit_logs_table .......... 17.56ms DONE
+  2026_06_20_100001_create_seo_settings ......................... 12.24ms DONE
+  2026_06_20_100002_create_admin_permissions_table ............... 8.72ms DONE
+  2026_06_20_100002_create_contact_settings ...................... 9.73ms DONE
+  2026_06_20_100003_create_booking_settings ..................... 15.64ms DONE
+  2026_06_20_100003_create_static_pages_table ................... 16.00ms DONE
+  2026_06_20_100100_widen_bookings_status_column ................. 4.01ms DONE
+  2026_06_20_100200_backfill_governance_audit_logs_from_legacy_trails  5.50ms DONE
+  2026_06_29_000001_add_guest_identity_id_to_bookings_table ...... 8.42ms DONE
+  2026_07_04_100100_add_voucher_freshness_columns_to_bookings .... 3.21ms DONE
+  2026_07_17_100000_add_start_time_to_bookings_table ............. 1.93ms DONE
+  2026_07_23_100000_drop_unique_payments_intent_add_composite .... 5.40ms DONE
+  2026_08_18_100000_create_partner_invitations_table ............ 13.99ms DONE
+  2026_08_18_100001_add_rejection_reason_to_partner_profiles_table  1.84ms DONE
+  2026_08_18_100002_add_invited_by_admin_to_partners_table ....... 2.00ms DONE
+  2026_08_22_100001_create_blog_categories_table ................. 6.66ms DONE
+  2026_08_22_100002_create_blog_posts_table ..................... 21.36ms DONE
+  2026_08_22_100003_create_author_profiles_table ................. 9.59ms DONE
+  2026_08_22_100004_create_blog_post_tours_table ................ 14.08ms DONE
+  2026_08_22_100005_add_meta_title_to_blog_posts_table ........... 2.63ms DONE
+  2026_09_19_100001_add_stripe_connect_columns_to_partners_table  12.72ms DONE
+  2026_09_22_100001_add_stripe_invoice_fields_to_bookings_table . 12.07ms DONE
+  2026_09_25_000001_add_guide_languages_and_localized_itinerary .. 5.26ms DONE
+  2026_09_25_000002_create_tour_translation_states_table ........ 10.99ms DONE
+  2026_10_02_000001_add_alt_text_to_tour_media_table ............. 2.66ms DONE

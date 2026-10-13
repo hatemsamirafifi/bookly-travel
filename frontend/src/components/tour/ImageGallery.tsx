@@ -9,9 +9,10 @@ import { useTranslations } from 'next-intl';
 interface ImageGalleryProps {
   images: TourImage[];
   title: string;
+  contentLocale?: string;
 }
 
-export default function ImageGallery({ images, title }: ImageGalleryProps) {
+export default function ImageGallery({ images, title, contentLocale }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -24,9 +25,18 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
     triggerRef.current?.focus();
   }, []);
 
+  // Cover first everywhere, preserving caller relative order otherwise.
+  const displayImages: TourImage[] = [
+    ...images.filter((img) => img.is_cover),
+    ...images.filter((img) => !img.is_cover),
+  ];
+  const selectedIndex = activeIndex < displayImages.length ? activeIndex : 0;
+
   const goTo = useCallback((index: number) => {
-    setActiveIndex((index + images.length) % images.length);
-  }, [images.length]);
+    const total = displayImages.length;
+    if (total === 0) return;
+    setActiveIndex((index + total) % total);
+  }, [displayImages.length]);
 
   useEffect(() => {
     if (!lightboxOpen) return;
@@ -34,8 +44,8 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
     closeRef.current?.focus();
 
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') goTo(activeIndex - 1);
-      if (e.key === 'ArrowRight') goTo(activeIndex + 1);
+      if (e.key === 'ArrowLeft') goTo(selectedIndex - 1);
+      if (e.key === 'ArrowRight') goTo(selectedIndex + 1);
       if (e.key === 'Escape') closeGallery();
       if (e.key === 'Tab') {
         const buttons = Array.from(dialogRef.current?.querySelectorAll('button') ?? []);
@@ -54,19 +64,20 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
 
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [lightboxOpen, activeIndex, goTo, closeGallery]);
+  }, [lightboxOpen, selectedIndex, goTo, closeGallery]);
 
-  const displayImages = images.length > 0
-    ? images
-    : [{ url: '', is_cover: true, alt: title }];
+  // Actual language of each image text: authored alt_locale, else the
+  // passed actual selected content locale (fallback title language).
+  const resolveImageLang = (img: TourImage): string | undefined =>
+    img.alt_locale || contentLocale || undefined;
 
-  const currentImage = displayImages[activeIndex];
+  const currentImage = displayImages[selectedIndex];
 
   return (
     <>
       <div className="relative overflow-hidden rounded-xl bg-surface-alt">
         <div className="relative aspect-[16/10]">
-          {currentImage.url ? (
+          {currentImage && currentImage.url ? (
             <button
               ref={triggerRef}
               type="button"
@@ -77,10 +88,12 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
               <Image
                 src={currentImage.url}
                 alt={currentImage.alt || title}
+                lang={resolveImageLang(currentImage)}
                 fill
                 sizes="(min-width: 1024px) 66vw, 100vw"
                 className="object-cover"
                 priority
+                fetchPriority="high"
                 {...getImagePlaceholderProps(currentImage)}
               />
             </button>
@@ -95,7 +108,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           {displayImages.length > 1 && (
             <>
               <button
-                onClick={() => goTo(activeIndex - 1)}
+                onClick={() => goTo(selectedIndex - 1)}
                 className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
                 aria-label={t('previous')}
               >
@@ -104,7 +117,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
                 </svg>
               </button>
               <button
-                onClick={() => goTo(activeIndex + 1)}
+                onClick={() => goTo(selectedIndex + 1)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"
                 aria-label={t('next')}
               >
@@ -124,15 +137,16 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
                   type="button"
                   onClick={() => setActiveIndex(i)}
                   className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
-                    i === activeIndex ? 'border-bookly-navy' : 'border-transparent hover:border-border'
+                    i === selectedIndex ? 'border-bookly-navy' : 'border-transparent hover:border-border'
                   }`}
                   aria-label={t('view', { number: i + 1 })}
-                  aria-current={i === activeIndex ? 'true' : undefined}
+                  aria-current={i === selectedIndex ? 'true' : undefined}
                 >
                   {img.url ? (
                     <Image
                       src={img.url}
-                      alt={img.alt || `${title} thumbnail ${i + 1}`}
+                      alt={img.alt || title}
+                      lang={resolveImageLang(img)}
                       fill
                       sizes="96px"
                       className="object-cover"
@@ -146,8 +160,9 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
         )}
       </div>
 
-      {/* Lightbox */}
-      {lightboxOpen && (
+      {/* Lightbox: dialog itself carries no image lang so localized
+          close/prev/next controls never inherit the image language. */}
+      {lightboxOpen && currentImage && (
         <div
           ref={dialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
@@ -169,8 +184,8 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           </button>
           {displayImages.length > 1 && (
             <>
-              <button type="button" onClick={(event) => { event.stopPropagation(); goTo(activeIndex - 1); }} aria-label={t('previous')} className="absolute left-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white">‹</button>
-              <button type="button" onClick={(event) => { event.stopPropagation(); goTo(activeIndex + 1); }} aria-label={t('next')} className="absolute right-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white">›</button>
+              <button type="button" onClick={(event) => { event.stopPropagation(); goTo(selectedIndex - 1); }} aria-label={t('previous')} className="absolute left-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white">‹</button>
+              <button type="button" onClick={(event) => { event.stopPropagation(); goTo(selectedIndex + 1); }} aria-label={t('next')} className="absolute right-3 z-10 rounded-full bg-white/15 p-3 text-white hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white">›</button>
             </>
           )}
           <div
@@ -181,6 +196,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
               <Image
                 src={currentImage.url}
                 alt={currentImage.alt || title}
+                lang={resolveImageLang(currentImage)}
                 fill
                 sizes="90vw"
                 className="object-contain"
@@ -188,7 +204,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
               />
             )}
           </div>
-          {currentImage.alt && <p className="absolute bottom-4 max-w-[80vw] text-center text-sm text-white">{currentImage.alt}</p>}
+          {currentImage.alt && <p lang={resolveImageLang(currentImage)} className="absolute bottom-4 max-w-[80vw] text-center text-sm text-white">{currentImage.alt}</p>}
         </div>
       )}
     </>

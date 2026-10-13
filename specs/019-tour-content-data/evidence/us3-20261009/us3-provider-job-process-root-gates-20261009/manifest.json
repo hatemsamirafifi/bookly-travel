@@ -1,0 +1,29 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "-e",
+    "GEMINI_API_KEY=",
+    "-e",
+    "SPEC019_RACE_EVIDENCE_DIR=/tmp/spec019-race-evidence-20261009T190009",
+    "laravel",
+    "php",
+    "-d",
+    "memory_limit=512M",
+    "vendor/bin/pest",
+    "--configuration=phpunit.pgsql.xml",
+    "tests/Feature/Partner/TourTranslationProviderTest.php",
+    "tests/Feature/Partner/TourContentRevisionTest.php",
+    "tests/Feature/Partner/TourContentInputTest.php",
+    "tests/Feature/Partner/TourTranslationJobStateTest.php",
+    "tests/Feature/Partner/TourTranslationConcurrencyTest.php"
+  ],
+  "started": "2026-10-09T19:00:09.3696416+00:00",
+  "finished": "2026-10-09T19:01:28.0010607+00:00",
+  "native_exit": 0,
+  "observed_process_snapshot_copy_exit": 0,
+  "temp_evidence_path": "/tmp/spec019-race-evidence-20261009T190009",
+  "context": "Root sole Pest owner. Provider+Job+all5races authors completednative0; source/dispatch author AUTHORING ONLY separate source code. No completeUS3 or final-head acceptance claim until later fullsource gates."
+}

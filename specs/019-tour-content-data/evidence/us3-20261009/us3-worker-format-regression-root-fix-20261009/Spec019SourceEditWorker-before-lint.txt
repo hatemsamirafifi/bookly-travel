@@ -1,0 +1,4 @@
+
+Fatal error: strict_types declaration must be the very first statement in the script in tests/Support/Spec019SourceEditWorker.php on line 11
+Errors parsing tests/Support/Spec019SourceEditWorker.php
+NUMERIC_EXIT=255

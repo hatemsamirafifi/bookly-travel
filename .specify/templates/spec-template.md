@@ -2,6 +2,9 @@
 
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
+**Spec ID / Master-plan phase**: [repository-wide spec ID; mapped phase or standalone feature]
+**Governing Constitution**: [current version and link]
+**Baseline / Dependencies**: [verified base branch and commit; pending predecessor PRs or none]
 **Status**: Draft  
 **Input**: User description: "$ARGUMENTS"
 

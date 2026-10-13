@@ -1,0 +1,6 @@
+{
+  "original_outcome": "timeout-worker native0 expected1;75sec fakeprovider returned; NOT timeout acceptance",
+  "cause": "Root probe used --once -> WorkCommand runNextJob; Worker runNextJob lacks registerTimeoutHandler. Production command daemon registers alarm.",
+  "evidence": "installed vendor WorkCommand.php145-151 and Worker.php daemon179 / runNextJob343",
+  "correction": "new separate daemon proof directory; --stop-when-empty + max-time120; preserve oldlogs; ownfixturecleanupnative0"
+}

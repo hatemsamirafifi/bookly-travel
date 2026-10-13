@@ -1,0 +1,994 @@
+
+Running 30 tests using 1 worker
+
+[1/30] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[2/30] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[3/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › en tour detail with loaded reviews should not have accessibility violations
+[4/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › es tour detail with loaded reviews should not have accessibility violations
+[5/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:5:7 › it tour detail with loaded reviews should not have accessibility violations
+[6/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:27:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+[7/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:39:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+[8/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:48:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+[9/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:60:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+[10/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:98:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+[11/30] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:128:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+[12/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:6:7 › Partner Dashboard Accessibility › partner dashboard home should not have accessibility violations
+[13/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:15:7 › Partner Dashboard Accessibility › partner tours page should not have accessibility violations
+[14/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:22:7 › Partner Dashboard Accessibility › partner bookings page should not have accessibility violations
+[15/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:29:7 › Partner Dashboard Accessibility › partner reviews page should not have accessibility violations
+[16/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:36:7 › Partner Dashboard Accessibility › partner profile page should not have accessibility violations
+[17/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:45:7 › Partner Layout Accessibility › sidebar should have accessible navigation landmark
+[18/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:58:7 › Partner Layout Accessibility › sidebar links should have aria-current for active page
+[19/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:67:7 › Partner Layout Accessibility › mobile menu button should have aria-label
+[20/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:75:7 › Partner Layout Accessibility › mobile drawer should have proper ARIA attributes
+[21/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:100:7 › Partner Layout Accessibility › notification bell should have accessible label
+[22/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:107:7 › Partner Layout Accessibility › header should have main content landmark
+[23/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:115:7 › Partner Layout Accessibility › form inputs should have associated labels
+[24/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:133:7 › Partner Layout Accessibility › switch toggles should have accessible roles
+[25/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+  1) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 35
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+    +     "help": "Page should contain a level-one heading",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/page-has-heading-one?application=playwright",
+    +     "id": "page-has-heading-one",
+    +     "impact": "moderate",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "page-has-heading-one",
+    +             "impact": "moderate",
+    +             "message": "Page must have a level-one heading",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "any": Array [],
+    +         "failureSummary": "Fix all of the following:
+    +   Page must have a level-one heading",
+    +         "html": "<html lang=\"en\" class=\"plus_jakarta_sans_2f34c5d8-module__elNu7G__variable h-full antialiased\">",
+    +         "impact": "moderate",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "html",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "best-practice",
+    +     ],
+    +   },
+    + ]
+
+      169 |       await expect(page.locator('main#main-content')).toBeVisible();
+      170 |       const results = await new AxeBuilder({ page }).analyze();
+    > 171 |       expect(results.violations).toEqual([]);
+          |                                  ^
+      172 |     }
+      173 |   });
+      174 |
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:171:34
+
+    Error Context: test-results/a11y-partner-a11y-Partner--397cd-tributed-locales-and-widths-a11y-partner/error-context.md
+
+
+[26/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+  2) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 35
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+    +     "help": "Page should contain a level-one heading",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/page-has-heading-one?application=playwright",
+    +     "id": "page-has-heading-one",
+    +     "impact": "moderate",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "page-has-heading-one",
+    +             "impact": "moderate",
+    +             "message": "Page must have a level-one heading",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "any": Array [],
+    +         "failureSummary": "Fix all of the following:
+    +   Page must have a level-one heading",
+    +         "html": "<html lang=\"en\" class=\"plus_jakarta_sans_2f34c5d8-module__elNu7G__variable h-full antialiased\">",
+    +         "impact": "moderate",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "html",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "best-practice",
+    +     ],
+    +   },
+    + ]
+
+      178 |     await page.goto('/en/partner/tours/create');
+      179 |     await expect(page.locator('main#main-content')).toBeVisible();
+    > 180 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                   ^
+      181 |   });
+      182 |
+      183 |   test('difficulty and guide-language controls are labeled in each page language', async ({ page }) => {
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:180:67
+
+    Error Context: test-results/a11y-partner-a11y-Partner--38e48-width-has-no-axe-violations-a11y-partner/error-context.md
+
+
+[27/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:183:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › difficulty and guide-language controls are labeled in each page language
+[28/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:207:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › english-source notice stays visible and page-localized on details step
+[29/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+  3) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 231
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#fb2c36",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"bg-white rounded-xl border border-gray-200 p-6\">",
+    +                 "target": Array [
+    +                   ".bg-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p class=\"text-xs text-red-500 mt-1\" role=\"alert\">Title is required.</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".space-y-4 > .space-y-1:nth-child(2) > .text-red-500.mt-1[role=\"alert\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#fb2c36",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"bg-white rounded-xl border border-gray-200 p-6\">",
+    +                 "target": Array [
+    +                   ".bg-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p class=\"text-xs text-red-500 mt-1\" role=\"alert\">Description must be at least 100 characters.</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".space-y-1:nth-child(3) > .text-red-500.mt-1[role=\"alert\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#fb2c36",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"bg-white rounded-xl border border-gray-200 p-6\">",
+    +                 "target": Array [
+    +                   ".bg-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p class=\"text-xs text-red-500 mt-1\" role=\"alert\">Category is required.</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".grid-cols-1.sm\\:grid-cols-2.grid:nth-child(8) > .space-y-1:nth-child(1) > .text-red-500.mt-1[role=\"alert\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#fb2c36",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"bg-white rounded-xl border border-gray-200 p-6\">",
+    +                 "target": Array [
+    +                   ".bg-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p class=\"text-xs text-red-500 mt-1\" role=\"alert\">Destination is required.</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".grid-cols-1.sm\\:grid-cols-2.grid:nth-child(8) > .space-y-1:nth-child(2) > .text-red-500.mt-1[role=\"alert\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#fb2c36",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"bg-white rounded-xl border border-gray-200 p-6\">",
+    +                 "target": Array [
+    +                   ".bg-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #fb2c36, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p class=\"text-xs text-red-500 mt-1\" role=\"alert\">Duration must be a positive number.</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".grid-cols-2 > .space-y-1:nth-child(1) > .text-red-500.mt-1[role=\"alert\"]",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    +   Object {
+    +     "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+    +     "help": "Page should contain a level-one heading",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/page-has-heading-one?application=playwright",
+    +     "id": "page-has-heading-one",
+    +     "impact": "moderate",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "page-has-heading-one",
+    +             "impact": "moderate",
+    +             "message": "Page must have a level-one heading",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "any": Array [],
+    +         "failureSummary": "Fix all of the following:
+    +   Page must have a level-one heading",
+    +         "html": "<html lang=\"en\" class=\"plus_jakarta_sans_2f34c5d8-module__elNu7G__variable h-full antialiased\">",
+    +         "impact": "moderate",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "html",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.semantics",
+    +       "best-practice",
+    +     ],
+    +   },
+    + ]
+
+      227 |     // Field-level announced error for the missing English title.
+      228 |     await expect(page.locator('p[role="alert"]', { hasText: /.+/ }).first()).toBeVisible();
+    > 229 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                   ^
+      230 |   });
+      231 |
+      232 |   test('uploader dropzone and alt-field contract on the edit page', async ({ page }) => {
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:229:67
+
+    Error Context: test-results/a11y-partner-a11y-Partner--09c5b--moves-focus-to-the-summary-a11y-partner/error-context.md
+
+
+[30/30] [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:232:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › uploader dropzone and alt-field contract on the edit page
+  4) [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:232:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › uploader dropzone and alt-field contract on the edit page
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 569
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 2.6,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#99a1af",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 2.6 (foreground color: #99a1af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"rounded-xl border border-border bg-surface p-5\">",
+    +                 "target": Array [
+    +                   ".p-5.bg-surface.border-border",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 2.6 (foreground color: #99a1af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<span class=\"text-xs text-gray-400 block\">JPG/PNG, max 5MB per image. Up to 20 images total.</span>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".text-gray-400:nth-child(3)",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#fb2c36",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #ffffff, background color: #fb2c36, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<button type=\"button\" class=\"px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600\">Remove</button>",
+    +                 "target": Array [
+    +                   ".w-24.space-y-1:nth-child(3) > .group.relative > .inset-x-0.bottom-0.rounded-b-lg > .hover\\:bg-red-600.bg-red-500.text-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #ffffff, background color: #fb2c36, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<button type=\"button\" class=\"px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600\">Remove</button>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".w-24.space-y-1:nth-child(3) > .group.relative > .inset-x-0.bottom-0.rounded-b-lg > .hover\\:bg-red-600.bg-red-500.text-white",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#fb2c36",
+    +               "contrastRatio": 3.8,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#ffffff",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 3.8 (foreground color: #ffffff, background color: #fb2c36, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<button type=\"button\" class=\"px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600\">Remove</button>",
+    +                 "target": Array [
+    +                   ".w-24.space-y-1:nth-child(4) > .group.relative > .inset-x-0.bottom-0.rounded-b-lg > .hover\\:bg-red-600.bg-red-500.text-white",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 3.8 (foreground color: #ffffff, background color: #fb2c36, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<button type=\"button\" class=\"px-2 py-1 bg-red-500 text-white text-xs font-medium rounded hover:bg-red-600\">Remove</button>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".w-24.space-y-1:nth-child(4) > .group.relative > .inset-x-0.bottom-0.rounded-b-lg > .hover\\:bg-red-600.bg-red-500.text-white",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#ffffff",
+    +               "contrastRatio": 2.6,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#99a1af",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 2.6 (foreground color: #99a1af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<div class=\"rounded-xl border border-border bg-surface p-5\">",
+    +                 "target": Array [
+    +                   ".p-5.bg-surface.border-border",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 2.6 (foreground color: #99a1af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<p class=\"text-xs text-gray-400\">5 / 20 images</p>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".space-y-4 > .text-gray-400",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    +   Object {
+    +     "description": "Ensure every form element has a label",
+    +     "help": "Form elements must have labels",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/label?application=playwright",
+    +     "id": "label",
+    +     "impact": "critical",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "implicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an implicit (wrapped) <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "explicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an explicit <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "critical",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "critical",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "critical",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-placeholder",
+    +             "impact": "critical",
+    +             "message": "Element has no placeholder attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "presentational-role",
+    +             "impact": "critical",
+    +             "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element does not have an implicit (wrapped) <label>
+    +   Element does not have an explicit <label>
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute
+    +   Element has no placeholder attribute
+    +   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +         "html": "<input required=\"\" min=\"1\" class=\"px-3 py-2 text-sm border rounded-lg bg-white outline-none\" type=\"number\" value=\"3\">",
+    +         "impact": "critical",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "input[value=\"3\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "implicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an implicit (wrapped) <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "explicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an explicit <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "critical",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "critical",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "critical",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-placeholder",
+    +             "impact": "critical",
+    +             "message": "Element has no placeholder attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "presentational-role",
+    +             "impact": "critical",
+    +             "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element does not have an implicit (wrapped) <label>
+    +   Element does not have an explicit <label>
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute
+    +   Element has no placeholder attribute
+    +   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +         "html": "<input required=\"\" min=\"1\" class=\"px-3 py-2 text-sm border rounded-lg bg-white outline-none\" type=\"number\" value=\"1\">",
+    +         "impact": "critical",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "input[value=\"1\"]",
+    +         ],
+    +       },
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "implicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an implicit (wrapped) <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "explicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an explicit <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "critical",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "critical",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "critical",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-placeholder",
+    +             "impact": "critical",
+    +             "message": "Element has no placeholder attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "presentational-role",
+    +             "impact": "critical",
+    +             "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element does not have an implicit (wrapped) <label>
+    +   Element does not have an explicit <label>
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute
+    +   Element has no placeholder attribute
+    +   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +         "html": "<input required=\"\" min=\"1\" class=\"px-3 py-2 text-sm border rounded-lg bg-white outline-none\" type=\"number\" value=\"20\">",
+    +         "impact": "critical",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "input[value=\"20\"]",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.forms",
+    +       "wcag2a",
+    +       "wcag412",
+    +       "section508",
+    +       "section508.22.n",
+    +       "TTv5",
+    +       "TT5.c",
+    +       "EN-301-549",
+    +       "EN-9.4.1.2",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-11.1.1",
+    +     ],
+    +   },
+    +   Object {
+    +     "description": "Ensure links have discernible text",
+    +     "help": "Links must have discernible text",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-name?application=playwright",
+    +     "id": "link-name",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "has-visible-text",
+    +             "impact": "serious",
+    +             "message": "Element does not have text that is visible to screen readers",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "serious",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "serious",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "serious",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix all of the following:
+    +   Element is in tab order and does not have accessible text
+    +
+    + Fix any of the following:
+    +   Element does not have text that is visible to screen readers
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute",
+    +         "html": "<a class=\"p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500\" href=\"/en/partner\">",
+    +         "impact": "serious",
+    +         "none": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-no-name",
+    +             "impact": "serious",
+    +             "message": "Element is in tab order and does not have accessible text",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "target": Array [
+    +           ".p-2.text-gray-500[href$=\"partner\"]",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.name-role-value",
+    +       "wcag2a",
+    +       "wcag244",
+    +       "wcag412",
+    +       "section508",
+    +       "section508.22.a",
+    +       "TTv5",
+    +       "TT6.a",
+    +       "EN-301-549",
+    +       "EN-9.2.4.4",
+    +       "EN-9.4.1.2",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-6.2.1",
+    +     ],
+    +   },
+    +   Object {
+    +     "description": "Ensure select element has an accessible name",
+    +     "help": "Select element must have an accessible name",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/select-name?application=playwright",
+    +     "id": "select-name",
+    +     "impact": "critical",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "implicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an implicit (wrapped) <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "explicit-label",
+    +             "impact": "critical",
+    +             "message": "Element does not have an explicit <label>",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "critical",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "critical",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "critical",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "presentational-role",
+    +             "impact": "critical",
+    +             "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element does not have an implicit (wrapped) <label>
+    +   Element does not have an explicit <label>
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute
+    +   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\"",
+    +         "html": "<select class=\"px-3 py-2 text-sm border rounded-lg bg-white outline-none\"><option value=\"hour\">Hours</option><option value=\"day\">Days</option></select>",
+    +         "impact": "critical",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".gap-1\\.5.flex-col.flex:nth-child(2) > select",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.forms",
+    +       "wcag2a",
+    +       "wcag412",
+    +       "section508",
+    +       "section508.22.n",
+    +       "TTv5",
+    +       "TT5.c",
+    +       "EN-301-549",
+    +       "EN-9.4.1.2",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-11.1.1",
+    +     ],
+    +   },
+    + ]
+
+      259 |       }
+      260 |     }
+    > 261 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                   ^
+      262 |   });
+      263 | });
+      264 |
+        at /app/tests/e2e/a11y/partner-a11y.spec.ts:261:67
+
+    Error Context: test-results/a11y-partner-a11y-Partner--ddd9e-d-contract-on-the-edit-page-a11y-partner/error-context.md
+
+
+  4 failed
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:157:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create page has no axe violations across distributed locales and widths
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:175:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › wizard create layout width has no axe violations
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:216:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › empty wizard next announces validation errors and moves focus to the summary
+    [a11y-partner] › tests/e2e/a11y/partner-a11y.spec.ts:232:7 › Partner Tour Wizard Accessibility (Spec019 FR-030) › uploader dropzone and alt-field contract on the edit page
+  26 passed (2.1m)
+NUMERIC_EXIT=1

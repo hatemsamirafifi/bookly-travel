@@ -1,0 +1,10 @@
+{
+  "processing_to_timed_out_seconds": 60.000010002,
+  "reason": "timed_out",
+  "status": 1,
+  "native_exit": 1,
+  "max_tries": 4,
+  "backoff": "5,15,60",
+  "job_timeout": 60,
+  "worker_timeout": 60
+}

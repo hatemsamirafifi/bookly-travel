@@ -1,0 +1,2 @@
+{"step":"after-rollback-retained-data","sha256":"15ab683d0950f420187c214d55c2dd6219216e9191811e1f6182714bbbde84e8","unchanged":true,"translations":3,"media":1}
+NUMERIC_EXIT=0
