@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import LocaleSwitcher from './LocaleSwitcher';
 import { Container } from '@/components/ui/Container';
@@ -13,9 +14,18 @@ export default async function Footer({ locale }: FooterProps) {
   return (
     <footer className="bg-primary text-text-on-dark">
       <Container className="py-section">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr_1fr]">
           <div>
-            <p className="mb-3 text-lg font-semibold text-text-inverse">Bookly</p>
+            <div className="mb-4 w-full max-w-80 rounded-xl bg-white p-4">
+              <Image
+                src="/brand/bookly-travel-slogan.png"
+                alt="Bookly Travel — Book smarter. Travel better."
+                width={1453}
+                height={427}
+                className="h-auto w-full"
+                unoptimized
+              />
+            </div>
             <p className="text-sm">{t('tagline')}</p>
           </div>
 
