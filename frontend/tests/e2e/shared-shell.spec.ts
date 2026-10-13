@@ -1,4 +1,7 @@
 import { test, expect } from '@playwright/test';
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import en from '../../messages/en.json';
 import es from '../../messages/es.json';
 import it from '../../messages/it.json';
@@ -8,6 +11,15 @@ test.skip(({ isMobile }) => isMobile, 'Explicit 390px and 1440px matrix uses Chr
 
 test.beforeEach(async ({ context }, testInfo) => {
   await context.addCookies([{ name: 'bookly_cookie_consent', value: 'true', url: testInfo.project.use.baseURL as string }]);
+});
+
+test('official header logo loads directly without a locale redirect', async ({ request }) => {
+  const response = await request.get('/brand/bookly-travel-logo.webp', { maxRedirects: 0 });
+  expect(response.status()).toBe(200);
+  expect(response.headers()['content-type']).toMatch(/^image\/webp/);
+  const original = await readFile(resolve(__dirname, '../../public/brand/bookly-travel-logo.webp'));
+  const digest = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex');
+  expect(digest(await response.body())).toBe(digest(original));
 });
 
 for (const locale of ['en', 'es', 'it'] as const) {

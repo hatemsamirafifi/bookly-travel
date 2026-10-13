@@ -14,6 +14,6 @@ export const config = {
     // /videos, /vouchers, …) keep flowing through next-intl. (Next 16 renamed
     // middleware.ts → proxy.ts; the /v exclusion lives here, the authoritative
     // proxy file.)
-    '/((?!v/|api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\\\..*).*)',
+    '/((?!v/|api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
   ],
 };
