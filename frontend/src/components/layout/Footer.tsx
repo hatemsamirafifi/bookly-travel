@@ -12,7 +12,7 @@ export default async function Footer({ locale }: FooterProps) {
   const t = await getTranslations({ locale, namespace: 'footer' });
   const nav = await getTranslations({ locale, namespace: 'nav' });
   return (
-    <footer className="bg-primary text-text-on-dark">
+    <footer className="border-t border-border bg-surface-alt text-text-muted">
       <Container className="py-section">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr_1fr]">
           <div>
@@ -29,24 +29,24 @@ export default async function Footer({ locale }: FooterProps) {
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold text-white">{t('explore')}</p>
+            <p className="mb-3 text-sm font-semibold text-primary">{t('explore')}</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href={`/${locale}/search`} className="hover:text-white transition-colors">{t('searchTours')}</Link></li>
-              <li><Link href={`/${locale}/categories`} className="hover:text-white transition-colors">{nav('categories')}</Link></li>
-              <li><Link href={`/${locale}/destinations`} className="hover:text-white transition-colors">{nav('destinations')}</Link></li>
+              <li><Link href={`/${locale}/search`} className="hover:text-primary transition-colors">{t('searchTours')}</Link></li>
+              <li><Link href={`/${locale}/categories`} className="hover:text-primary transition-colors">{nav('categories')}</Link></li>
+              <li><Link href={`/${locale}/destinations`} className="hover:text-primary transition-colors">{nav('destinations')}</Link></li>
             </ul>
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold text-white">{t('company')}</p>
+            <p className="mb-3 text-sm font-semibold text-primary">{t('company')}</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t('privacy')}</Link></li>
-              <li><Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t('terms')}</Link></li>
+              <li><Link href={`/${locale}/privacy`} className="hover:text-primary transition-colors">{t('privacy')}</Link></li>
+              <li><Link href={`/${locale}/terms`} className="hover:text-primary transition-colors">{t('terms')}</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-text-on-dark/20 pt-8 text-sm sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm sm:flex-row">
           <span>&copy; {new Date().getFullYear()} Bookly. {t('rights')}</span>
           <LocaleSwitcher />
         </div>
