@@ -16,7 +16,7 @@ export default async function Footer({ locale }: FooterProps) {
       <Container className="py-section">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr_1fr]">
           <div>
-            <div className="w-full max-w-80 rounded-xl bg-white p-4">
+            <div className="w-full max-w-80">
               <Image
                 src="/brand/bookly-travel-slogan.png"
                 alt="Bookly Travel — Book smarter. Travel better."
