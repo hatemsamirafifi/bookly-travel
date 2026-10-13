@@ -30,7 +30,7 @@ export default function LocaleSwitcher() {
       <select
         value={currentLocale}
         onChange={(e) => switchTo(e.target.value)}
-        className="min-h-11 rounded-md border border-border bg-surface px-2 py-1 text-sm text-primary focus-visible:ring-2 focus-visible:ring-focus"
+        className="min-h-11 rounded-full border border-border bg-surface px-3 py-1 text-sm text-primary focus-visible:ring-2 focus-visible:ring-focus"
         aria-label={t('switchLanguage')}
       >
         {locales.map((locale) => (

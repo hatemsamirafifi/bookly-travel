@@ -18,7 +18,16 @@ for (const locale of ['en', 'es', 'it'] as const) {
       await page.goto(`/${locale}/auth/login`);
       const nav = catalogs[locale].nav;
       const banner = page.getByRole('banner');
-      await expect(banner.getByRole('navigation', { name: nav.discoverTours })).toBeVisible();
+      await expect(banner.locator('nav')).toHaveCount(1);
+      if (width >= 1280) {
+        const navigation = banner.getByRole('navigation', { name: nav.mainNavigation });
+        await expect(navigation).toBeVisible();
+        await expect(navigation.getByRole('link')).toHaveCount(4);
+        for (const href of ['', '/search', '/categories', '/destinations']) {
+          await expect(navigation.locator(`a[href="/${locale}${href}"]`)).toHaveCount(1);
+        }
+      }
+      expect(await banner.evaluate((element) => element.getBoundingClientRect().height)).toBeLessThanOrEqual(81);
       const searchTrigger = banner.getByRole('button', { name: nav.searchTours });
       await searchTrigger.focus();
       await page.keyboard.press('Enter');
@@ -30,12 +39,15 @@ for (const locale of ['en', 'es', 'it'] as const) {
       await page.keyboard.press('Escape');
       await expect(searchTrigger).toBeFocused();
       await expect(input).not.toBeVisible();
-      if (width < 1024) {
+      if (width < 1280) {
         const menu = banner.getByRole('button', { name: nav.openMenu });
         await menu.focus();
         await page.keyboard.press('Enter');
         const drawer = page.getByRole('dialog', { name: nav.mainNavigation });
         await expect(drawer.getByRole('button', { name: nav.closeMenu })).toBeFocused();
+        for (const href of ['', '/search', '/categories', '/destinations']) {
+          await expect(drawer.locator(`a[href="/${locale}${href}"]`)).toBeVisible();
+        }
         await page.keyboard.press('Shift+Tab');
         await expect(drawer.getByRole('link', { name: catalogs[locale].traveler.nav.signUp })).toBeFocused();
         await page.keyboard.press('Escape');
@@ -50,6 +62,14 @@ for (const locale of ['en', 'es', 'it'] as const) {
       await expect(page).toHaveURL(new RegExp(`/${locale}/search\\?q=Rome$`));
       await page.goto(`/${locale}`);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      if (width >= 1280) {
+        await expect(banner.getByRole('link', { name: nav.home })).toHaveAttribute('aria-current', 'page');
+      } else {
+        await banner.getByRole('button', { name: nav.openMenu }).click();
+        const drawer = page.getByRole('dialog', { name: nav.mainNavigation });
+        await expect(drawer.getByRole('link', { name: nav.home })).toHaveAttribute('aria-current', 'page');
+        await page.keyboard.press('Escape');
+      }
       await page.screenshot({ path: `.phase1-evidence/screenshots/public-${locale}-${width}.png`, fullPage: true });
     });
   }
