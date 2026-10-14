@@ -1,7 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
-import type { AddressInfo } from 'node:net';
 import type { EnglishSourceInput, TourDetail } from '@/lib/api/types';
 import {
   apiGet,
@@ -12,69 +9,7 @@ import {
   ownedGuideLanguages,
   ownedMedia,
 } from './partner/tour-content-helpers';
-
-async function freePort(): Promise<number> {
-  const probe = createServer();
-  await new Promise<void>((resolve) => probe.listen(0, '127.0.0.1', resolve));
-  const port = (probe.address() as AddressInfo).port;
-  await new Promise<void>((resolve) => probe.close(() => resolve()));
-  return port;
-}
-
-interface SsrHarness {
-  mockPort: number;
-  nextPort: number;
-  stop: () => Promise<void>;
-}
-
-// Local SSR harness (Spec 019 US2): page routes fetch from the server during
-// SSR, so browser route mocking cannot intercept them. An isolated Next
-// process plus a local API fixture server exercise the real page/metadata
-// path without modifying shared tour data. The isolated Next server-fetches
-// through API_INTERNAL_URL on every load because the detail fetch uses
-// explicit no-store.
-async function startSsrHarness(slug: string, readCurrent: () => TourDetail): Promise<SsrHarness> {
-  const mock = createServer((req, res) => {
-    if (!req.url?.startsWith(`/api/public/tours/${slug}`)) {
-      res.writeHead(404).end();
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ data: readCurrent() }));
-  });
-  await new Promise<void>((resolve) => mock.listen(0, '127.0.0.1', resolve));
-  const mockPort = (mock.address() as AddressInfo).port;
-  const nextPort = await freePort();
-  const next = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', String(nextPort), '-H', '127.0.0.1'], {
-    cwd: process.cwd(),
-    env: { ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${mockPort}`, NEXT_TELEMETRY_DISABLED: '1' },
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  let startupOutput = '';
-  next.stdout.on('data', (chunk: Buffer) => { startupOutput += chunk.toString(); });
-  next.stderr.on('data', (chunk: Buffer) => { startupOutput += chunk.toString(); });
-  await expect.poll(async () => {
-    if (next.exitCode !== null) throw new Error(`Isolated Next server exited: ${startupOutput}`);
-    try { return (await fetch(`http://127.0.0.1:${nextPort}/favicon.ico`)).status; } catch { return 0; }
-  }, { timeout: 30000 }).not.toBe(0);
-  return {
-    mockPort,
-    nextPort,
-    stop: async () => {
-      next.kill('SIGTERM');
-      await new Promise<void>((resolve) => mock.close(() => resolve()));
-    },
-  };
-}
-
-// The actual boundary response the isolated Next server consumes. Asserting
-// the served JSON (rather than the test's own fixture object) proves what
-// SSR actually rendered the fallback/ready transition from.
-async function readServedDetail(mockPort: number, slug: string, locale: string): Promise<TourDetail> {
-  const response = await fetch(`http://127.0.0.1:${mockPort}/api/public/tours/${slug}?locale=${locale}`);
-  expect(response.status).toBe(200);
-  return ((await response.json()).data) as TourDetail;
-}
+import { readServedDetail, startSsrHarness } from './helpers/tour-detail-ssr';
 
 test.describe('Tour Detail Page', () => {
   test('controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims', async ({ page, request }) => {
