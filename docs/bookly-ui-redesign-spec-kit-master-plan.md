@@ -19,7 +19,7 @@
 | Phase 0 | `018` | `specs/018-bookly-ui-redesign/` | Spec Kit Bootstrap and Design Contracts | Existing baseline |
 | Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; PR #28 merged with successful checks; release pending |
 | Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation complete: 78/78 accepted; complete source Tests and twelve-report Lighthouse CI pass on ee24b45; PR #29; documentation-head CI/readiness tracked separately; merge/release pending |
-| Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Planned |
+| Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Specification, planning/design and 74 execution tasks generated on 2026-10-14; implementation pending |
 | Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Planned |
 | Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
 | Phase 6 | `023` | `specs/023-auth-traveler-checkout/` | Auth, Traveler, and Checkout | Planned |
@@ -28,7 +28,7 @@
 | Phase 9 | `026` | `specs/026-redesign-quality-gate/` | Cross-Cutting Quality Gate | Planned |
 | Phase 10 | `027` | `specs/027-redesign-deployment/` | Deployment and Compatibility | Planned |
 
-Phase numbers and task numbers (for example Phase 2 / Task 2.1) remain unchanged. A generated `tasks.md` may have its own setup/foundation phase headings; those do not redefine this mapping. Specs `020-027` are reservations, not created or completed features.
+Phase numbers and task numbers (for example Phase 2 / Task 2.1) remain unchanged. A generated `tasks.md` may have its own setup/foundation phase headings; those do not redefine this mapping. Spec `020` now has a specification; Specs `021-027` remain reservations, not created or completed features.
 
 Spec `018` and its existing artifacts MUST be preserved. Its original full-program requirements and contracts remain the design baseline; active Phase 2 requirements, contract revisions, and acceptance evidence belong to `specs/019-tour-content-data/`. Later specifications must reference their predecessor rather than overwrite its history. The former uncreated product-roadmap Specs `019-025` move to `028-034` in the PRD and product implementation roadmap.
 
@@ -435,7 +435,7 @@ git commit -m "feat: add structured tour content contract"
 
 ## Phase 3 - Tripadvisor-Style Tour Detail Experience
 
-**Spec:** `020-tour-detail-experience` (planned; create through Spec Kit when this phase starts).
+**Spec:** [020-tour-detail-experience](../specs/020-tour-detail-experience/spec.md), [implementation plan](../specs/020-tour-detail-experience/plan.md) and [74 execution tasks](../specs/020-tour-detail-experience/tasks.md) (generated on 2026-10-14; implementation pending). Its baseline includes merged Spec 019 PR #29 and six retained header/footer/static-asset commits; their separate merge readiness is recorded in the specification.
 
 ### Task 3.1: Decompose the detail page
 
