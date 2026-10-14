@@ -85,3 +85,19 @@ The earlier bounded probe failures remain diagnostic evidence; subsequent root c
 Native Node24.14.1/npm11.12.1 differ from the guide's Node22/npm10 recommendation. No dependencies were changed. First native focused Jest attempt stalled before any result and was stopped only after verifying its exact owned PID/command. A single-suite retry with --watchman=false passed6 tests; the complete focused baseline with that flag then passed8 suites/64 tests in14.188s. This establishes a usable runner configuration, not a proven causal diagnosis of the first stall. All baseline logs are retained.
 
 Root reviewed the delegated evidence against actual files, bundled server/client/error/image guides, primitive interfaces, git ancestry/pointer and ignore configuration. T001-T004 are accepted for the verified local implementation baseline; external target deployment and retained-shell merge readiness remain separate future T073 gates. No source behavior has changed yet.
+
+## Review feedback triage — 2026-10-14
+
+The user supplied 47 annotations of the specification/design documents. Most emphasize the importance of existing requirements rather than identify an implemented defect; severity labels alone do not establish a vulnerability. They remain verification obligations during implementation.
+
+- Financial correctness, invalid pricing, date-only UTC rollover, fresh-prop invalidation and auth recovery: T020–T033 explicitly require red/green tests, safe cents calculations, authoritative checkout totals and no silent replacement/auto-submission.
+- Client privacy and truthful content/trust/media: T034–T043 and T044–T065 preserve public-only props, actual language and supplied facts. The specification now explicitly defines "fabricated" as unsupported UI-invented tour facts, distinguishing valid localized surface states from absent optional content.
+- Modal/focus/navigation/localized errors: T044–T057 and final T069–T070 require real keyboard/focus evidence, beyond documentation or screenshots alone.
+- Runtime image source, real SSR harness, versions/fixture isolation and source dependency: T001–T004 evidence records local readiness and discrepancies; T008/T067/T073 retain separate runtime/merge/release checks.
+- Locale performance coverage: T071–T072 must extend the strict JS config and retain all eighteen reports; the current EN-only audit cannot prove SC-008.
+- Annotation 8: pathname-only AuthGuard demonstrably drops selection query, but no open-redirect exploit is established by that fact. Existing safeAuthReturnUrl rejects external/backslash/cross-locale candidates. Preserve that boundary and test complete safe return paths rather than asserting a new proven vulnerability.
+- Annotation 29: current backend is EUR/cents. Avoiding an unapproved currency-exponent expansion is the documented compatibility boundary, not a current correctness failure. Future backend currency support needs separate contract review.
+- Annotation 30: the 600-code-point preview threshold is an explicit UI design decision. Implementation must use a named constant and boundary/Unicode tests, not silently remove the agreed behavior.
+- Annotation 41: an absent/inconsistent next date prevents automatic initialization, not all explicit selection. A real offered future date may be chosen manually only when every existing bookability/pricing/count guard passes; no inferred alternative is booked.
+
+The initial reviewed specification/setup snapshot was committed as `9e3cde4` after LiveReview attestation. Feature behavior acceptance remains pending. An unrelated deletion of `.claude/settings.local.json` appeared during execution; it is outside delegated ownership, absent from OpenCode's recorded write/edit actions and is preserved without staging/restoration.
