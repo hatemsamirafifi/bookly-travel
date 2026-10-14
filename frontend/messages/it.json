@@ -188,7 +188,11 @@
       "previous": "Immagine precedente",
       "next": "Immagine successiva",
       "thumbnails": "Navigazione miniature",
-      "view": "Vedi immagine {number}"
+      "view": "Vedi immagine {number}",
+      "seeAll": "Vedi tutte le {count} foto",
+      "counter": "{current} di {total}",
+      "empty": "Nessuna foto disponibile per questo tour.",
+      "imageFailed": "Questa foto non è disponibile."
     },
     "liveGuide": "Guida dal vivo",
     "itinerary": "Itinerario",
@@ -201,6 +205,7 @@
     "cancellationPolicy": "Politica di Cancellazione",
     "importantInformation": "Informazioni importanti",
     "reviews": "Recensioni",
+    "ratingLabel": "Valutazione: {rating} su 5",
     "selectDate": "Seleziona Data",
     "nextAvailable": "Prossimo disponibile",
     "unavailable": "Non Disponibile",
@@ -214,7 +219,29 @@
     "selected": "Selezionato:",
     "partialTranslation": "Alcuni contenuti sono visualizzati in inglese",
     "contentFallback": "Il contenuto è mostrato in inglese",
-    "itineraryFallback": "L'itinerario è mostrato in inglese"
+    "itineraryFallback": "L'itinerario è mostrato in inglese",
+    "overview": {
+      "readMore": "Leggi di più",
+      "readLess": "Leggi di meno"
+    },
+    "booking": {
+      "estimatedTotal": "Totale stimato",
+      "invalidDate": "Seleziona una data disponibile per continuare.",
+      "invalidCount": "Inserisci un numero intero compreso tra {min} e {max}.",
+      "dateChanged": "Le date disponibili sono cambiate da quando è stata caricata la pagina. Seleziona di nuovo una data.",
+      "invalidPricing": "Il prezzo del tour non è disponibile. Non è possibile continuare la prenotazione.",
+      "invalidBounds": "I limiti dei viaggiatori non sono disponibili. Non è possibile continuare la prenotazione.",
+      "countChanged": "I limiti dei viaggiatori sono cambiati. Scegli di nuovo il numero di viaggiatori.",
+      "editSelection": "Modifica le scelte di prenotazione"
+    },
+    "authRecovery": {
+      "continueNotice": "Accedi per continuare con la prenotazione. Tour, data, numero di viaggiatori e lingua vengono conservati e nulla viene prenotato finché non confermi.",
+      "sessionExpired": "La tua sessione è scaduta. Accedi di nuovo per continuare con le tue scelte. Conferma la prenotazione al tuo ritorno."
+    },
+    "states": {
+      "withdrawnTitle": "Questo tour non è più disponibile",
+      "withdrawnDescription": "Questo tour è stato archiviato e non può essere prenotato."
+    }
   },
   "home": {
     "heroTitle": "Scopri e Prenota Tour Incredibili",
@@ -523,7 +550,12 @@
       "promptTitle": "Accedi per salvare tour",
       "promptBody": "Accedi o crea un account per aggiungere tour alla lista desideri.",
       "signIn": "Accedi",
-      "notNow": "Non ora"
+      "notNow": "Non ora",
+      "saved": "Salvato nella tua lista dei desideri.",
+      "saveFailed": "Impossibile aggiornare la tua lista dei desideri. Riprova.",
+      "removed": "Rimosso dalla tua lista dei desideri.",
+      "statusFailed": "Non è stato possibile verificare se questo tour è salvato. Riprova.",
+      "denied": "Non puoi aggiornare questa lista dei desideri."
     },
     "myReviews": {
       "loadError": "Impossibile caricare le recensioni.",

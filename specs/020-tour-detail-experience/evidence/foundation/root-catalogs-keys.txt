@@ -1,0 +1,1 @@
+Final supplementary keys (all EN/ES/IT): tour.ratingLabel{rating}; tour.booking.invalidPricing/invalidBounds/countChanged/editSelection; traveler.wishlistButton.removed/statusFailed/denied. Original16keys retained; total24. Session-expired copy no longer claims no operation occurred; return requires explicit confirmation.

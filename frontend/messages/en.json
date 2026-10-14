@@ -188,7 +188,11 @@
       "previous": "Previous image",
       "next": "Next image",
       "thumbnails": "Thumbnail navigation",
-      "view": "View image {number}"
+      "view": "View image {number}",
+      "seeAll": "See all {count} photos",
+      "counter": "{current} of {total}",
+      "empty": "No photos are available for this tour.",
+      "imageFailed": "This photo is unavailable."
     },
     "liveGuide": "Live guide",
     "itinerary": "Itinerary",
@@ -201,6 +205,7 @@
     "cancellationPolicy": "Cancellation Policy",
     "importantInformation": "Important information",
     "reviews": "Reviews",
+    "ratingLabel": "Rating: {rating} out of 5",
     "selectDate": "Select a Date",
     "nextAvailable": "Next available",
     "unavailable": "Currently Unavailable",
@@ -214,7 +219,29 @@
     "selected": "Selected:",
     "partialTranslation": "Some content is displayed in English",
     "contentFallback": "Content is shown in English",
-    "itineraryFallback": "Itinerary is shown in English"
+    "itineraryFallback": "Itinerary is shown in English",
+    "overview": {
+      "readMore": "Read more",
+      "readLess": "Read less"
+    },
+    "booking": {
+      "estimatedTotal": "Estimated total",
+      "invalidDate": "Select an offered date to continue.",
+      "invalidCount": "Enter a whole number from {min} to {max}.",
+      "dateChanged": "Available dates changed since the page loaded. Select a date again.",
+      "invalidPricing": "The tour price is unavailable. Booking cannot continue.",
+      "invalidBounds": "Traveler limits are unavailable. Booking cannot continue.",
+      "countChanged": "Traveler limits changed. Choose your traveler count again.",
+      "editSelection": "Edit booking selections"
+    },
+    "authRecovery": {
+      "continueNotice": "Sign in to continue booking. Your tour, date, traveler count and language are kept, and nothing is booked until you confirm.",
+      "sessionExpired": "Your session expired. Sign in again to continue with your selections. Confirm the booking when you return."
+    },
+    "states": {
+      "withdrawnTitle": "This tour is no longer available",
+      "withdrawnDescription": "This tour was archived and cannot be booked."
+    }
   },
   "home": {
     "heroTitle": "Discover & Book Amazing Tours",
@@ -523,7 +550,12 @@
       "promptTitle": "Sign in to save tours",
       "promptBody": "Sign in or create an account to add tours to your wishlist.",
       "signIn": "Sign In",
-      "notNow": "Not now"
+      "notNow": "Not now",
+      "saved": "Saved to your wishlist.",
+      "saveFailed": "Could not update your wishlist. Try again.",
+      "removed": "Removed from your wishlist.",
+      "statusFailed": "Could not check whether this tour is saved. Try again.",
+      "denied": "You cannot update this wishlist."
     },
     "myReviews": {
       "loadError": "Reviews could not be loaded.",
