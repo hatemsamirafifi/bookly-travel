@@ -1,0 +1,78 @@
+ACTUAL INITIAL RELAY COMMAND:
+npm test -- --runInBand --watchman=false --runTestsByPath src/lib/tours/__tests__/booking-selection.test.ts 2>&1 | Tee-Object -FilePath "..\..\specs\020-tour-detail-experience\evidence\us2\booking-model-red.txt" | Select-Object -Last 60
+ACTUAL TOOL OUTPUT:
+out-file : Could not find a part of the path 'F:\Travel 
+Website\specs\020-tour-detail-experience\evidence\us2\booking-model-red.txt'.
+At line:1 char:1
++ npm test -- --runInBand --watchman=false --runTestsByPath src/lib/tou ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OpenError: (:) [out-file], DirectoryNotFoundException
+    + FullyQualifiedErrorId : FileOpenFailure,Microsoft.PowerShell.Commands.OutFileCommand
+ 
+
+
+ACTUAL INITIAL RELAY COMMAND:
+npm test -- --runInBand --watchman=false --runTestsByPath src/lib/tours/__tests__/booking-selection.test.ts 2>&1 | Tee-Object -FilePath "F:\Travel Website\bookly travel\specs\020-tour-detail-experience\evidence\us2\booking-model-red.txt" | Select-Object -Last 80
+ACTUAL TOOL OUTPUT:
+          |                 ^
+      306 |       `/en/booking?tour=${encodeURIComponent('rome & 
+hidden/gems')}&participants=3&date=${encodeURIComponent(dates[2])}`,
+      307 |     );
+      308 |   });
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:305:17)
+  ● booking-selection checkout and auth continuation URLs › rejects external, cross-locale and backslash booking 
+paths https://evil.example/en/booking?tour=x
+    expect(received).toBe(expected) // Object.is equality
+    Expected: "/en/auth/login?returnUrl=%2Fen%2F"
+    Received: "/en/auth/login?returnUrl=https%3A%2F%2Fevil.example%2Fen%2Fbooking%3Ftour%3Dx"
+      331 |     'rejects external, cross-locale and backslash booking paths %s',
+      332 |     (badPath) => {
+    > 333 |       expect(buildAuthContinuationUrl('en', badPath)).toBe(
+          |                                                       ^
+      334 |         `/en/auth/login?returnUrl=${encodeURIComponent(safeAuthReturnUrl('en', badPath))}`,
+      335 |       );
+      336 |       expect(safeAuthReturnUrl('en', badPath)).toBe('/en/');
+      at src/lib/tours/__tests__/booking-selection.test.ts:333:55
+  ● booking-selection checkout and auth continuation URLs › rejects external, cross-locale and backslash booking 
+paths /es/booking?tour=x&participants=2&date=2026-10-20
+    expect(received).toBe(expected) // Object.is equality
+    Expected: "/en/auth/login?returnUrl=%2Fen%2F"
+    Received: "/en/auth/login?returnUrl=%2Fes%2Fbooking%3Ftour%3Dx%26participants%3D2%26date%3D2026-10-20"
+      331 |     'rejects external, cross-locale and backslash booking paths %s',
+      332 |     (badPath) => {
+    > 333 |       expect(buildAuthContinuationUrl('en', badPath)).toBe(
+          |                                                       ^
+      334 |         `/en/auth/login?returnUrl=${encodeURIComponent(safeAuthReturnUrl('en', badPath))}`,
+      335 |       );
+      336 |       expect(safeAuthReturnUrl('en', badPath)).toBe('/en/');
+      at src/lib/tours/__tests__/booking-selection.test.ts:333:55
+  ● booking-selection checkout and auth continuation URLs › rejects external, cross-locale and backslash booking 
+paths /en\evil
+    expect(received).toBe(expected) // Object.is equality
+    Expected: "/en/auth/login?returnUrl=%2Fen%2F"
+    Received: "/en/auth/login?returnUrl=%2Fen%5Cevil"
+      331 |     'rejects external, cross-locale and backslash booking paths %s',
+      332 |     (badPath) => {
+    > 333 |       expect(buildAuthContinuationUrl('en', badPath)).toBe(
+          |                                                       ^
+      334 |         `/en/auth/login?returnUrl=${encodeURIComponent(safeAuthReturnUrl('en', badPath))}`,
+      335 |       );
+      336 |       expect(safeAuthReturnUrl('en', badPath)).toBe('/en/');
+      at src/lib/tours/__tests__/booking-selection.test.ts:333:55
+  ● booking-selection UTC display and purity › formats the offered date in explicit UTC with no calendar-day shift
+    expect(received).toBe(expected) // Object.is equality
+    Expected: "10/15/2026"
+    Received: "2026-10-15"
+      347 |       day: '2-digit',
+      348 |     }).format(new Date('2026-10-15T00:00:00.000Z'));
+    > 349 |     expect(formatOfferedDateUtc('2026-10-15', 'en')).toBe(expected);
+          |                                                      ^
+      350 |   });
+      351 |
+      352 |   it('keeps the original date string intact for checkout handoff', () => {
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:349:54)
+Test Suites: 1 failed, 1 total
+Tests:       45 failed, 10 passed, 55 total
+Snapshots:   0 total
+Time:        4.288 s
+Ran all test suites within paths "src/lib/tours/__tests__/booking-selection.test.ts".
