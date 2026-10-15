@@ -1,0 +1,90 @@
+US1 (T010-T019) readable-content-hierarchy increment — worker summary
+Branch: codex/020-tour-detail-experience | Date: 2026-10-14 (Africa/Cairo)
+Authority: specs/020-tour-detail-experience/{spec,plan,data-model,tasks,contracts/*}
+Bundled Next docs read: 01-app/01-getting-started/05-server-and-client-components.md,
+01-app/03-api-reference/01-directives/use-client.md. frontend/AGENTS.md read.
+
+RED (meaningful, compiling — behavioral failures, not missing files):
+- specs/020-tour-detail-experience/evidence/us1/t010-t011-red.txt
+  suites TourOverview + TourSections vs naive stubs: 13 failed / 7 passed.
+  Failures: no preview/disclosure, no breadcrumbs nav, no review link,
+  no party/difficulty/guide facts, dropped highlights/itinerary.
+
+GREEN:
+- specs/020-tour-detail-experience/evidence/us1/t016-green.txt — 3 suites, 48/48.
+- specs/020-tour-detail-experience/evidence/us1/t018-tourdetail.txt — TourDetail.test.tsx exit 0 (33 tests).
+- specs/020-tour-detail-experience/evidence/us1/t019-gates-jest.txt — required 4 paths, 77/77:
+  TourOverview 8 + TourSections 12 + TourDetail 33 + detail-presentation 24.
+- specs/020-tour-detail-experience/evidence/us1/t019-gates-eslint.txt — changed files, exit 0.
+- specs/020-tour-detail-experience/evidence/us1/t019-gates-typecheck.txt — npm run typecheck, exit 0.
+- specs/020-tour-detail-experience/evidence/us1/t019-gates-playwright-list.txt — 58 tests listed,
+  incl. 2 new US1 SSR tests (complete/sparse).
+
+CHANGED FILES (no commits/staging):
+- frontend/src/components/tour/TourHeader.tsx (new): breadcrumbs+title+location+real rating;
+  review link (#reviews) only when reviewCount>0; RatingBadge with tour.ratingLabel;
+  no wishlist (stays in booking until later story).
+- frontend/src/components/tour/TourFacts.tsx (new): duration/groupRange/optional difficulty/
+  localized guide-language names via getGuideLanguageNames.
+- frontend/src/components/tour/TourHighlights.tsx (new): verbatim usable entries, lang attr.
+- frontend/src/components/tour/TourOverview.tsx (new, client island): props text+contentLocale only;
+  named export DESCRIPTION_PREVIEW_CODE_POINTS=600; Array.from code-point preview;
+  >600 expand/collapse with aria-expanded/aria-controls; focus restored to toggle BEFORE
+  collapse when the panel holds focus; collapsed full text not in the tree; <=600 no control.
+- frontend/src/components/tour/TourItinerary.tsx (new): authored order/text/lang preserved,
+  composite keys, null when unusable.
+- frontend/src/components/tour/TourInclusions.tsx (new): shared Accordion per list with own
+  #included/#excluded anchors; absent lists absent.
+- frontend/src/components/tour/TourMeetingPoint.tsx (new): meeting/cancellation/important,
+  fully readable, null when unusable, no maps/coordinates/rights.
+- frontend/src/components/tour/TourDetail.tsx (rewrite, stays server-compatible): presence derived
+  once via getDetailPresentation drives sections+nav; order header -> full-width gallery ->
+  nav -> article/sidebar grid (lg:grid-cols-3, article col-span-2 ~2:1, single col <1024) ->
+  related; operator/reviews inside article so sidebar stays bounded; existing gallery/booking/
+  operator/reviews/related child behavior preserved; getTourDetail/schema untouched.
+- frontend/src/components/ui/Breadcrumbs.tsx: ADDITIVE optional `lang` per item only
+  (undefined renders no attribute; byte-identical for existing consumers). Required to keep
+  the R3 breadcrumb actual-language assertion while reusing the shared primitive.
+- frontend/src/components/tour/__tests__/TourOverview.test.tsx (new, T010).
+- frontend/src/components/tour/__tests__/TourSections.test.tsx (new, T011).
+- frontend/src/components/tour/__tests__/TourDetail.test.tsx (T018): every prior
+  content/lang/fallback/privacy assertion preserved (28/28 still green); mock upgraded to
+  resolve nested namespaces (tour.overview); RelatedTours mock renders section#related like
+  the real component; added 5 US1 order/sparse/practical/disclosure tests.
+- frontend/tests/e2e/tour-detail.spec.ts (T018): 2 US1 SSR tests via extracted
+  startSsrHarness + foundation fixtures (complete order/disclosure/no-orphans; sparse
+  omissions/zero-review claims). Existing assertions untouched.
+- globals.css: UNTOUCHED (no new semantic tokens needed; existing tokens + Tailwind suffice).
+- Catalogs (messages/*.json): UNTOUCHED. Consumed keys: tour.overview.readMore/readLess,
+  tour.ratingLabel ({rating}; EN "Rating: {rating} out of 5" matches existing), existing tour labels.
+
+DECISIONS:
+- No second wishlist engine in header (kept in BookingCTA per task).
+- TourOverview owns section#overview incl. page-localized h2; props stay text+locale.
+- Two Accordions (included/excluded) so each keeps its anchor target for nav.
+- Pre-existing working-tree deletion of .claude/settings.local.json left untouched (not mine).
+- verification.md/tasks.md NOT edited (root owns ledger); no tasks marked complete.
+- Concurrent workers' files (booking-selection, evidence/us2) and competitor-profiles untouched.
+
+PENDING ROOT (not run by this worker): production build, full jest, browser/a11y suites,
+manual 12-combination acceptance, SSR/manual acceptance. No runtime/CI/merge/release claimed.
+
+REVIEW DELTA (same ownership + approved Breadcrumbs lang extension):
+- Tokens: text-[#0A2540]( /80) -> text-primary(/80), text-[#5A6B7B] -> text-text-muted,
+  text-bookly-navy -> text-primary, gray-400 icons -> text-text-muted, green-500 checks ->
+  text-trust, red-400 cross -> text-error, yellow badges -> bg-warning/10 border
+  border-warning/30 text-warning (LoginForm pattern), h1 -> text-page-title, h2 section
+  titles -> text-section-title (SectionHeading convention). No new raw/z values, no shell changes.
+  TourSectionNav.tsx left untouched (US4 owns nav).
+- Comments trimmed to one-liners; behavior-neutral.
+- Breadcrumbs.test.tsx (new, ui/__tests__): default output unchanged with no lang (no [lang]
+  rendered), and title span declares contentLocale (en) independently of page crumbs.
+- test-guard: zero-review header test keeps unmount + genuine-zero assertions (no scored
+  stars/link, no fabricated 0.0); unicode preview asserts exact first-600-code-point region
+  content via panel id (layout-independent); 600 boundary/reachability/focus tests intact;
+  inclusions stay h3-button Accordions with no duplicate h2s; all T018 assertions intact.
+- Gates (delta-green-*.txt, UTF-8, $LASTEXITCODE preserved): jest 9 suites 99/99
+  (tour overview 8 + sections 12 + TourDetail 33 + presentation 24 + Breadcrumbs 2 +
+  design-system/form/feedback/interactive regressions), eslint changed files exit 0,
+  typecheck exit 0, playwright --list 58 tests incl. 2 US1 SSR additions.
+- Root owns production build/SSR/visual acceptance; no task markers or commits.

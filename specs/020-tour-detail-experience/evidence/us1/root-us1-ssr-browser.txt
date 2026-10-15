@@ -1,0 +1,19 @@
+
+Running 7 tests using 1 worker
+
+
+
+[1A[2K(node:25876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K(node:25876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K[1/7] [chromium] › tests\e2e\tour-detail.spec.ts:19:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K[2/7] [chromium] › tests\e2e\tour-detail.spec.ts:70:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[1A[2K[3/7] [chromium] › tests\e2e\tour-detail.spec.ts:167:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[1A[2K[4/7] [chromium] › tests\e2e\tour-detail.spec.ts:820:7 › Tour Detail Page › US1 SSR complete tour at 390px keeps prescribed order with disclosure and no orphan nav entries
+[1A[2K[5/7] [chromium] › tests\e2e\tour-detail.spec.ts:882:7 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+[1A[2K[6/7] [chromium] › tests\e2e\tour-detail.spec.ts:820:7 › Tour Detail Page › US1 SSR complete tour at 1440px keeps prescribed order with disclosure and no orphan nav entries
+[1A[2K[7/7] [chromium] › tests\e2e\tour-detail.spec.ts:882:7 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+[1A[2K  7 passed (18.3s)

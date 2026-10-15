@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import TourDetail from '../TourDetail';
 import type { TourDetail as TourDetailType } from '@/lib/api/types';
 import enMessages from '../../../../messages/en.json';
@@ -8,8 +8,10 @@ import itMessages from '../../../../messages/it.json';
 const mockMessages = { en: enMessages, es: esMessages, it: itMessages };
 let mockLocale: 'en' | 'es' | 'it' = 'en';
 jest.mock('next-intl', () => ({
-  useTranslations: () => (key: string, values?: Record<string, string | number>) => {
-    const value = (mockMessages[mockLocale].tour as unknown as Record<string, string>)[key] ?? key;
+  useTranslations: (namespace?: string) => (key: string, values?: Record<string, string | number>) => {
+    const root = mockMessages[mockLocale] as unknown as Record<string, unknown>;
+    const scope = (namespace ? namespace.split('.').reduce<unknown>((node, part) => (node as Record<string, unknown> | undefined)?.[part], root) : root) as unknown as Record<string, string>;
+    const value = scope?.[key] ?? key;
     return Object.entries(values ?? {}).reduce((result, [name, replacement]) => result.replace(`{${name}}`, String(replacement)), value);
   },
 }));
@@ -45,7 +47,7 @@ jest.mock('../BookingCTA', () => ({
 }));
 jest.mock('../RelatedTours', () => ({
   __esModule: true,
-  default: ({ tours }: { tours: { title: string }[] }) => <div>{tours.map((related) => <span key={related.title}>{related.title}</span>)}</div>,
+  default: ({ tours }: { tours: { title: string }[] }) => <section id="related">{tours.map((related) => <span key={related.title}>{related.title}</span>)}</section>,
 }));
 
 const tour: TourDetailType = {
@@ -411,6 +413,128 @@ describe('TourDetail', () => {
       expect(screen.getByText('Rated tour')).toBeInTheDocument();
       expect(screen.getByText('Unrated tour')).toBeInTheDocument();
       expect(screen.queryByText(/\(0 reviews\)/)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('US1 readable hierarchy (Spec 020)', () => {
+    const completeTour: TourDetailType = {
+      ...tour,
+      description: 'Explore Tuscany in depth.',
+      difficulty_level: 'moderate',
+      important_information: ['Bring your passport for the cellar check.'],
+      itinerary: [
+        { day: 1, title: 'Tuscan vineyards', description: 'Visit the vineyards.', stops: [] },
+        { day: 2, title: 'Cellar lunch', description: 'Taste with the maker.', stops: [] },
+      ],
+      operator: { name: 'Tuscan Walks', description: 'Local guides.', logo_url: null, tour_count: 3, review_count: 8, average_rating: 4.5 },
+      related_tours: [{
+        id: 43, slug: 'other-tour', title: 'Other tour', location: 'Florence, Italy',
+        category: 'Food & Wine', duration_label: '2 hours',
+        price: { amount: 5000, currency: 'EUR', formatted: '€50.00' },
+        rating: { average: 0, count: 0 }, cover_image_url: '',
+        group_size: { min: 1, max: 8 }, next_available_date: null,
+      }],
+    };
+
+    const assertDocumentOrder = (elements: (Element | null)[]) => {
+      elements.forEach((element) => expect(element).not.toBeNull());
+      for (let index = 0; index < elements.length - 1; index += 1) {
+        expect(elements[index]!.compareDocumentPosition(elements[index + 1]!)).toBe(
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+      }
+    };
+
+    it('orders header, gallery, nav, article sections and related with no orphan entries', () => {
+      const { container } = renderTour('en', completeTour);
+
+      const gallery = container.querySelector('[data-testid="image-gallery"]');
+      const nav = screen.getByRole('navigation', { name: enMessages.tour.sectionNavigation });
+      assertDocumentOrder([
+        screen.getByRole('heading', { level: 1 }),
+        gallery,
+        nav,
+        container.querySelector('#overview'),
+        container.querySelector('#facts'),
+        container.querySelector('#highlights'),
+        container.querySelector('#itinerary'),
+        container.querySelector('#included'),
+        container.querySelector('#excluded'),
+        container.querySelector('#meeting'),
+        container.querySelector('#cancellation'),
+        container.querySelector('#important'),
+        container.querySelector('#operator'),
+        container.querySelector('#reviews'),
+        container.querySelector('#related'),
+      ]);
+
+      // Navigation targets exactly the rendered sections: no orphans, no gaps.
+      const renderedIds = ['overview', 'facts', 'highlights', 'itinerary', 'included', 'excluded', 'meeting', 'cancellation', 'important', 'operator', 'reviews', 'related'];
+      expect(Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href'))).toEqual(
+        renderedIds.map((id) => `#${id}`),
+      );
+      for (const id of renderedIds) {
+        expect(container.querySelectorAll(`#${id}`)).toHaveLength(1);
+      }
+    });
+
+    it('keeps only overview and facts for sparse content with matching navigation', () => {
+      const { container } = renderTour('en', {
+        ...tour,
+        highlights: [], inclusions: [], exclusions: [], itinerary: [],
+        meeting_point: '', cancellation_policy: '', important_information: [],
+        operator: null, related_tours: [],
+        reviews: { average_rating: 0, count: 0, distribution: {} },
+        rating: { average: 0, count: 0 },
+      });
+
+      expect(container.querySelector('#overview')).not.toBeNull();
+      expect(container.querySelector('#facts')).not.toBeNull();
+      for (const id of ['highlights', 'itinerary', 'included', 'excluded', 'meeting', 'cancellation', 'important', 'operator', 'reviews', 'related']) {
+        expect(container.querySelector(`#${id}`)).toBeNull();
+      }
+      const nav = screen.getByRole('navigation', { name: enMessages.tour.sectionNavigation });
+      expect(Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href'))).toEqual([
+        '#overview', '#facts',
+      ]);
+      expect(screen.getByTestId('booking-cta')).toBeInTheDocument();
+    });
+
+    it('keeps important information fully readable without preview controls', () => {
+      renderTour('en', {
+        ...completeTour,
+        important_information: [`Passport rule. ${'Carry it always. '.repeat(60)}`],
+      });
+
+      expect(screen.getByText(/Passport rule\./)).toBeInTheDocument();
+      expect(screen.getByText(/Carry it always\./)).toBeInTheDocument();
+      const important = document.querySelector('#important');
+      expect(important?.querySelector('button')).toBeNull();
+    });
+
+    it('exposes long descriptions through an accessible disclosure', () => {
+      const longDescription = `${'Tuscan sun. '.repeat(80)}Final reachable sentence.`;
+      renderTour('en', { ...tour, description: longDescription });
+
+      expect(screen.queryByText(longDescription)).not.toBeInTheDocument();
+      const expand = screen.getByRole('button', { name: enMessages.tour.overview.readMore });
+      expect(expand).toHaveAttribute('aria-expanded', 'false');
+      expect(expand.getAttribute('aria-controls')).toBeTruthy();
+
+      fireEvent.click(expand);
+      expect(screen.getByText(longDescription)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: enMessages.tour.overview.readLess })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      );
+    });
+
+    it('keeps short descriptions fully readable with no disclosure', () => {
+      renderTour('en', completeTour);
+
+      expect(screen.getByText('Explore Tuscany in depth.')).toBeInTheDocument();
+      const overview = document.querySelector('#overview');
+      expect(overview?.querySelector('button')).toBeNull();
     });
   });
 });

@@ -6,7 +6,7 @@
 **Governing Constitution**: [Bookly v2.1.0](../../.specify/memory/constitution.md)  
 **Branch / baseline**: `codex/020-tour-detail-experience` at `4afdbc6`, containing merged Spec 019 PR #29 (`origin/main` recorded at `9e241b9`) and six retained shell commits from `codex/header-navigation-polish`. Verify current merge/deployment readiness separately; preserve 018/019 and existing unrelated files.  
 **Created**: 2026-10-14 (Africa/Cairo)  
-**Status**: Implementation in progress: setup T001–T004 and foundation T005–T009 and independent booking model T020/T023 accepted against retained evidence; 63 tasks remain. Feature runtime acceptance, CI, merge and release completion are not claimed.
+**Status**: Implementation in progress: setup T001–T004, foundation T005–T009, US1 T010–T019 and independent booking model T020/T023 accepted against retained evidence; 53 tasks remain. Feature runtime acceptance, CI, merge and release completion are not claimed.
 
 **Tests**: Required by the specification and constitution for the changed critical journey, shared interactions and source-language/SEO behavior. Write meaningful failing behavioral tests before implementing the relevant change; retain exact red/green output. Fixture preparation and behavior-preserving harness extraction must retain existing passing assertions. Do not assert failure solely because a planned file is missing.
 
@@ -47,19 +47,19 @@ Each executable task is an unchecked checklist line with a unique sequential ID 
 
 ### Tests first
 
-- [ ] T010 [P] [US1] Add failing overview/disclosure tests in `frontend/src/components/tour/__tests__/TourOverview.test.tsx` for "600-code-point preview only when longer", Unicode-safe preview, full-text reachability, expanded relationships and focus restoration before hiding descendants.
-- [ ] T011 [P] [US1] Add failing section rendering/order/empty/lang/facts/practical-content assertions in `frontend/src/components/tour/__tests__/TourSections.test.tsx`; verify authentic supplied values, unchanged itinerary order, localized spoken-language names and no invented map/cancellation/rating facts.
+- [X] T010 [P] [US1] Add failing overview/disclosure tests in `frontend/src/components/tour/__tests__/TourOverview.test.tsx` for "600-code-point preview only when longer", Unicode-safe preview, full-text reachability, expanded relationships and focus restoration before hiding descendants.
+- [X] T011 [P] [US1] Add failing section rendering/order/empty/lang/facts/practical-content assertions in `frontend/src/components/tour/__tests__/TourSections.test.tsx`; verify authentic supplied values, unchanged itinerary order, localized spoken-language names and no invented map/cancellation/rating facts.
 
 ### Implementation
 
-- [ ] T012 [P] [US1] Create server-compatible `frontend/src/components/tour/TourHeader.tsx`, `frontend/src/components/tour/TourFacts.tsx` and `frontend/src/components/tour/TourHighlights.tsx`, reusing Breadcrumbs/RatingBadge/wishlist and supplied title/location/facts; header review access is conditional and guide-language names belong in facts (after T011).
-- [ ] T013 [P] [US1] Implement the narrow interactive `frontend/src/components/tour/TourOverview.tsx` with the model's "600-code-point preview only when longer", complete selected-language text and safe collapse/focus behavior (after T010).
-- [ ] T014 [P] [US1] Extract ordered day/stop rendering into `frontend/src/components/tour/TourItinerary.tsx`, preserving actual itinerary language, supplied descriptions and intentional emptiness without inventing stops, times or coordinates (after T011).
-- [ ] T015 [P] [US1] Implement `frontend/src/components/tour/TourInclusions.tsx` and `frontend/src/components/tour/TourMeetingPoint.tsx` using shared Accordion and fully readable meeting/cancellation/important-information content; absent sections disappear with their entries (after T011).
-- [ ] T016 [US1] Compose the approved header/gallery/nav/article/practical/trust order in server-compatible `frontend/src/components/tour/TourDetail.tsx`, using the shared presence model and narrow client children; preserve existing operator/review/related/gallery/booking behavior until replaced by later stories (after T012â€“T015).
-- [ ] T017 [US1] Apply the <1024 single-column and â‰¥1024 article/sidebar layout through `frontend/src/components/tour/TourDetail.tsx` and semantic tokens in `frontend/src/app/globals.css` only where needed; preserve current shell and avoid raw repeated brand/z-index values (after T016).
-- [ ] T018 [US1] Extend `frontend/src/components/tour/__tests__/TourDetail.test.tsx` and `frontend/tests/e2e/tour-detail.spec.ts` with actual SSR complete/sparse ordering, important-information retention, disclosure accessibility and no orphan entries; replace brittle old layout selectors with semantic assertions (after T016â€“T017).
-- [ ] T019 [US1] Run US1 component/SSR checks and inspect representative complete/sparse desktop/mobile pages; retain red/green results and hierarchy evidence in `specs/020-tour-detail-experience/evidence/us1/` and `specs/020-tour-detail-experience/verification.md`.
+- [X] T012 [P] [US1] Create server-compatible `frontend/src/components/tour/TourHeader.tsx`, `frontend/src/components/tour/TourFacts.tsx` and `frontend/src/components/tour/TourHighlights.tsx`, reusing Breadcrumbs/RatingBadge/wishlist and supplied title/location/facts; header review access is conditional and guide-language names belong in facts (after T011).
+- [X] T013 [P] [US1] Implement the narrow interactive `frontend/src/components/tour/TourOverview.tsx` with the model's "600-code-point preview only when longer", complete selected-language text and safe collapse/focus behavior (after T010).
+- [X] T014 [P] [US1] Extract ordered day/stop rendering into `frontend/src/components/tour/TourItinerary.tsx`, preserving actual itinerary language, supplied descriptions and intentional emptiness without inventing stops, times or coordinates (after T011).
+- [X] T015 [P] [US1] Implement `frontend/src/components/tour/TourInclusions.tsx` and `frontend/src/components/tour/TourMeetingPoint.tsx` using shared Accordion and fully readable meeting/cancellation/important-information content; absent sections disappear with their entries (after T011).
+- [X] T016 [US1] Compose the approved header/gallery/nav/article/practical/trust order in server-compatible `frontend/src/components/tour/TourDetail.tsx`, using the shared presence model and narrow client children; preserve existing operator/review/related/gallery/booking behavior until replaced by later stories (after T012â€“T015).
+- [X] T017 [US1] Apply the <1024 single-column and â‰¥1024 article/sidebar layout through `frontend/src/components/tour/TourDetail.tsx` and semantic tokens in `frontend/src/app/globals.css` only where needed; preserve current shell and avoid raw repeated brand/z-index values (after T016).
+- [X] T018 [US1] Extend `frontend/src/components/tour/__tests__/TourDetail.test.tsx` and `frontend/tests/e2e/tour-detail.spec.ts` with actual SSR complete/sparse ordering, important-information retention, disclosure accessibility and no orphan entries; replace brittle old layout selectors with semantic assertions (after T016â€“T017).
+- [X] T019 [US1] Run US1 component/SSR checks and inspect representative complete/sparse desktop/mobile pages; retain red/green results and hierarchy evidence in `specs/020-tour-detail-experience/evidence/us1/` and `specs/020-tour-detail-experience/verification.md`.
 
 **Checkpoint**: Readable-content MVP is independently demonstrable with existing gallery/booking. This does not accept the later gallery/navigation improvements or the full spec.
 

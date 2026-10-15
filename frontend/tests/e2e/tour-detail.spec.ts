@@ -10,6 +10,10 @@ import {
   ownedMedia,
 } from './partner/tour-content-helpers';
 import { readServedDetail, startSsrHarness } from './helpers/tour-detail-ssr';
+import {
+  createFullTourDetail,
+  createSparseTourDetail,
+} from '../fixtures/tour-detail';
 
 test.describe('Tour Detail Page', () => {
   test('controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims', async ({ page, request }) => {
@@ -807,4 +811,106 @@ test.describe('Tour Detail Page', () => {
       await authedContext.close();
     }
   });
+
+  // Spec 020 US1: ordered readable hierarchy through the real built SSR
+  // server. Controlled complete/sparse responses prove prescribed order,
+  // usable disclosure, important-information retention and no orphan nav
+  // entries without touching shared tour data.
+  for (const width of [390, 1440]) {
+    test(`US1 SSR complete tour at ${width}px keeps prescribed order with disclosure and no orphan nav entries`, async ({ page }) => {
+      test.setTimeout(180000);
+      await page.setViewportSize({ width, height: 900 });
+      const slug = 'hidden-gems-rome-walking-tour';
+      const complete = createFullTourDetail(new Date('2026-10-14T00:00:00.000Z'));
+      complete.description = `${'Tuscan sun. '.repeat(80)}Final reachable sentence.`;
+      const harness = await startSsrHarness(slug, () => complete);
+      try {
+        await page.context().addCookies([{ name: 'bookly_cookie_consent', value: 'true', url: `http://127.0.0.1:${harness.nextPort}` }]);
+        const served = await readServedDetail(harness.mockPort, slug, 'en');
+        expect(served.title).toBe(complete.title);
+        expect(served.reviews.count).toBeGreaterThan(0);
+
+        await page.goto(`http://127.0.0.1:${harness.nextPort}/en/tours/${slug}`);
+
+        // Header: breadcrumbs, title, location and genuine rating/review link.
+        await expect(page.getByRole('navigation', { name: 'Breadcrumbs' })).toBeVisible();
+        await expect(page.getByRole('heading', { level: 1 })).toHaveText(complete.title);
+        await expect(page.getByText('Rome, Italy').first()).toBeVisible();
+        const reviewLinks = page.locator('a[href="#reviews"]');
+        await expect(reviewLinks).toHaveCount(2);
+
+        // Prescribed section order in the served document.
+        const ids = ['overview', 'facts', 'highlights', 'itinerary', 'included', 'excluded', 'meeting', 'cancellation', 'important', 'operator', 'reviews', 'related'];
+        const ordered = await page.evaluate((wanted: string[]) => {
+          const elements = wanted.map((id) => document.getElementById(id));
+          if (elements.some((element) => element === null)) return false;
+          return elements.every((element, index) =>
+            index === 0 || elements[index - 1]!.compareDocumentPosition(element!) === 4,
+          );
+        }, ids);
+        expect(ordered).toBe(true);
+
+        // Navigation targets exactly the rendered sections.
+        const nav = page.getByRole('navigation', { name: 'Tour sections' });
+        const hrefs = await nav.getByRole('link').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+        expect(hrefs).toEqual(ids.map((id) => `#${id}`));
+        for (const href of hrefs) {
+          await expect(page.locator(href!)).toHaveCount(1);
+        }
+
+        // Long overview: preview first, full text reachable through disclosure.
+        await expect(page.getByText('Final reachable sentence.')).toHaveCount(0);
+        const expand = page.getByRole('button', { name: 'Read more' });
+        await expect(expand).toHaveAttribute('aria-expanded', 'false');
+        expect(await expand.getAttribute('aria-controls')).toBeTruthy();
+        await expand.click();
+        await expect(page.getByText('Final reachable sentence.')).toBeVisible();
+        const collapse = page.getByRole('button', { name: 'Read less' });
+        await expect(collapse).toHaveAttribute('aria-expanded', 'true');
+        await collapse.click();
+        await expect(page.getByText('Final reachable sentence.')).toHaveCount(0);
+
+        // Practical information stays fully readable; genuine facts shown.
+        await expect(page.locator('#important')).toContainText('Bring your passport');
+        await expect(page.locator('#facts')).toContainText('Moderate');
+        await expect(page.locator('#itinerary')).toContainText('Artisan quarter');
+        await page.screenshot({ path: `../specs/020-tour-detail-experience/evidence/us1/visual/complete-en-${width}.png`, fullPage: true });
+      } finally {
+        await harness.stop();
+      }
+    });
+
+    test(`US1 SSR sparse tour at ${width}px omits absent sections, entries and review claims`, async ({ page }) => {
+      test.setTimeout(180000);
+      await page.setViewportSize({ width, height: 900 });
+      const slug = 'hidden-gems-rome-walking-tour';
+      const sparse = createSparseTourDetail(new Date('2026-10-14T00:00:00.000Z'));
+      const harness = await startSsrHarness(slug, () => sparse);
+      try {
+        await page.context().addCookies([{ name: 'bookly_cookie_consent', value: 'true', url: `http://127.0.0.1:${harness.nextPort}` }]);
+        const served = await readServedDetail(harness.mockPort, slug, 'en');
+        expect(served.reviews.count).toBe(0);
+
+        await page.goto(`http://127.0.0.1:${harness.nextPort}/en/tours/${slug}`);
+
+        await expect(page.getByRole('heading', { level: 1 })).toHaveText(sparse.title);
+        await expect(page.locator('#overview')).toBeVisible();
+        await expect(page.locator('#facts')).toBeVisible();
+        for (const id of ['highlights', 'itinerary', 'included', 'excluded', 'meeting', 'cancellation', 'important', 'operator', 'reviews', 'related']) {
+          await expect(page.locator(`#${id}`)).toHaveCount(0);
+        }
+        const nav = page.getByRole('navigation', { name: 'Tour sections' });
+        const hrefs = await nav.getByRole('link').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+        expect(hrefs).toEqual(['#overview', '#facts']);
+        // Zero reviews: no scored rating and no review link anywhere.
+        await expect(page.locator('a[href="#reviews"]')).toHaveCount(0);
+        await expect(page.getByText(/out of 5/)).toHaveCount(0);
+        // Short description stays fully readable with no disclosure.
+        await expect(page.getByRole('button', { name: 'Read more' })).toHaveCount(0);
+        await page.screenshot({ path: `../specs/020-tour-detail-experience/evidence/us1/visual/sparse-en-${width}.png`, fullPage: true });
+      } finally {
+        await harness.stop();
+      }
+    });
+  }
 });
