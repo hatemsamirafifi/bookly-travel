@@ -1,0 +1,346 @@
+{
+  "review_id": 13034,
+  "status": "completed",
+  "summary": "# Refactor Tour Detail Page Components\n\n## Overview\nThis change decomposes the monolithic `TourDetail` component into smaller, specialized UI components. It centralizes dynamic section management and introduces new display features. This improves maintainability, readability, and reusability of tour detail page sections.\n\n## Technical Highlights\n- **frontend/src/components/tour/TourDetail.tsx**: Decomposed the monolithic component; introduced `getDetailPresentation` for dynamic section visibility and navigation.\n- **frontend/src/components/tour/TourFacts.tsx, TourHeader.tsx, TourHighlights.tsx, TourInclusions.tsx, TourItinerary.tsx, TourMeetingPoint.tsx, TourOverview.tsx**: Added new, dedicated UI components for displaying specific tour details.\n- **frontend/src/components/ui/Breadcrumbs.tsx**: Extended the `Breadcrumbs` component to support an optional `lang` attribute for individual items.\n- **frontend/src/components/tour/__tests__/*, frontend/src/components/ui/__tests__/*, frontend/tests/e2e/tour-detail.spec.ts**: Added comprehensive unit and end-to-end tests for new components, disclosure behavior, and content order.\n\n## Impact\n- **Functionality**: Users see a more structured, readable tour detail page with new sections and features like 'read more/less' for descriptions.\n- **Risk**: Extensive UI refactoring requires thorough visual regression testing to prevent unintended layout or content display issues.",
+  "envelope": {
+    "envelope_version": "v1",
+    "plan_code": "free_30k",
+    "plan_name": "free_30k",
+    "price_usd": 0,
+    "loc_limit_month": 30000,
+    "blocked": false,
+    "trial_readonly": false,
+    "operation_type": "diff_review",
+    "trigger_source": "api",
+    "operation_billable_loc": 1541,
+    "operation_id": "diff-review:13034",
+    "idempotency_key": "diff-review:13034",
+    "accounted_at": "2026-10-15T18:23:22Z"
+  },
+  "files": [
+    {
+      "file_path": "frontend/src/components/tour/TourDetail.tsx",
+      "comments": [
+        {
+          "line": 65,
+          "content": "Consider using a more semantic element for these fallback messages, like `div` or `span`, if they are not truly paragraphs.",
+          "severity": "info",
+          "confidence": "Low",
+          "type": "Code Smell",
+          "category": "Maintainability",
+          "subcategory": "Readability"
+        },
+        {
+          "line": 71,
+          "content": "The `ml-2` class here creates an inconsistent left margin compared to the first fallback message.",
+          "severity": "warning",
+          "confidence": "High",
+          "type": "Code Smell",
+          "category": "Maintainability",
+          "subcategory": "UI/UX"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourFacts.tsx",
+      "comments": [
+        {
+          "line": 28,
+          "content": "The `text-section-title` class might be redundant if `font-bold` and `text-primary` already define the desired style.",
+          "severity": "info",
+          "confidence": "Low",
+          "type": "Code Smell",
+          "category": "Maintainability",
+          "subcategory": "Code Complexity"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourHeader.tsx",
+      "comments": [
+        {
+          "line": 42,
+          "content": "The `text-page-title` class might be redundant if `font-bold` and `text-primary` already define the desired style.",
+          "severity": "info",
+          "confidence": "Low",
+          "type": "Code Smell",
+          "category": "Maintainability",
+          "subcategory": "Code Complexity"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourHighlights.tsx",
+      "comments": [
+        {
+          "line": 19,
+          "content": "Using `index` as a `key` is acceptable here as the `entries` list is likely static and not reordered. If `highlight` strings were guaranteed unique, using `highlight` itself would be more robust.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Code Quality"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourInclusions.tsx",
+      "comments": [
+        {
+          "line": 29,
+          "content": "Using `index` as a `key` is acceptable here as the `includedEntries` list is likely static and not reordered. If `item` strings were guaranteed unique, using `item` itself would be more robust.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Code Quality"
+        },
+        {
+          "line": 53,
+          "content": "Using `index` as a `key` is acceptable here as the `excludedEntries` list is likely static and not reordered. If `item` strings were guaranteed unique, using `item` itself would be more robust.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Code Quality"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourItinerary.tsx",
+      "comments": [
+        {
+          "line": 26,
+          "content": "Using `index` as a `key` is acceptable here as the `day.stops` list is likely static and not reordered. If `stop.title` strings were guaranteed unique within a day, using `stop.title` would be more robust.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Code Quality"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourMeetingPoint.tsx",
+      "comments": [
+        {
+          "line": 44,
+          "content": "Using `index` as a `key` is acceptable here as the `entries` list is likely static and not reordered. If `item` strings were guaranteed unique, using `item` itself would be more robust.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Code Quality"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/TourOverview.tsx",
+      "comments": [
+        {
+          "line": 7,
+          "content": "Consider making `DESCRIPTION_PREVIEW_CODE_POINTS` a configurable value, e.g., via environment variables or a global config, to allow easier adjustments without code changes.",
+          "severity": "warning",
+          "confidence": "Medium",
+          "type": "Technical Debt",
+          "category": "Maintainability",
+          "subcategory": "Configuration Management"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/__tests__/TourDetail.test.tsx",
+      "comments": [
+        {
+          "line": 11,
+          "content": "This update to the `useTranslations` mock is critical for accurately testing components that utilize namespaced translations, ensuring the mock behaves like the actual `next-intl` hook.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Developer Experience",
+          "subcategory": "Testing"
+        },
+        {
+          "line": 49,
+          "content": "Wrapping the mock content in a `&lt;section id=\"related\"&gt;` is a good practice for making the mocked component discoverable by DOM queries in tests, aligning with how real components would be structured.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Developer Experience",
+          "subcategory": "Testing"
+        },
+        {
+          "line": 439,
+          "content": "The `assertDocumentOrder` helper is a robust way to verify the sequential rendering of elements, which is crucial for accessibility and content flow.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Developer Experience",
+          "subcategory": "Testing"
+        },
+        {
+          "line": 472,
+          "content": "This test verifies that the navigation links precisely match the rendered sections, preventing broken links or missing navigation targets. This is a strong check for correctness and UX.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Correctness",
+          "subcategory": "Logic Errors"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/tour/__tests__/TourOverview.test.tsx",
+      "comments": []
+    },
+    {
+      "file_path": "frontend/src/components/tour/__tests__/TourSections.test.tsx",
+      "comments": []
+    },
+    {
+      "file_path": "frontend/src/components/ui/Breadcrumbs.tsx",
+      "comments": [
+        {
+          "line": 3,
+          "content": "Adding `lang?: string` to the item type is a good enhancement for internationalization.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Internationalization"
+        },
+        {
+          "line": 4,
+          "content": "Applying the `lang` attribute to both `Link` and `span` ensures correct language declaration for all breadcrumb elements.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Internationalization"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/ui/__tests__/Breadcrumbs.test.tsx",
+      "comments": []
+    },
+    {
+      "file_path": "frontend/tests/e2e/tour-detail.spec.ts",
+      "comments": [
+        {
+          "line": 821,
+          "content": "A 3-minute timeout is very long for an E2E test. Investigate if the harness setup or page loading can be optimized.",
+          "severity": "warning",
+          "confidence": "High",
+          "type": "Performance",
+          "category": "Performance",
+          "subcategory": "Startup Performance"
+        }
+      ]
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/delta-green-eslint.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/delta-green-jest.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/delta-green-playwright-list.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/delta-green-typecheck.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-build.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-eslint.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-final-eslint.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-final-typecheck.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-jest.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-ssr-browser.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-ssr-visual.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t010-t011-red.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t010-t015-green.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t016-green.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t018-tourdetail.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t019-gates-eslint.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t019-gates-jest.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t019-gates-playwright-list.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/t019-gates-typecheck.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/us1-summary.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/visual/complete-en-1440.png",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/visual/complete-en-390.png",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/visual/sparse-en-1440.png",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/visual/sparse-en-390.png",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/tasks.md",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/verification.md",
+      "comments": []
+    }
+  ]
+}

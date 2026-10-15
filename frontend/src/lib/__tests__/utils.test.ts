@@ -1,4 +1,4 @@
-import { formatCurrency } from '../utils';
+import { formatCurrency, formatExactCentsDecimal } from '../utils';
 
 // Shared-formatter precision tests (Spec 020 review delta). Binary floating
 // point cannot render every large cent value: MAX_SAFE cents are .91, while
@@ -65,5 +65,23 @@ describe('formatCurrency legacy behavior is preserved', () => {
   it('falls back with the currency code for an unrecognized currency', () => {
     expect(formatCurrency(100, 'XX', 'en')).toBe('XX 1.00');
     expect(formatCurrency(Number.MAX_SAFE_INTEGER - 9, 'XX', 'en')).toBe('XX 90071992547409.81');
+  });
+});
+
+describe('formatExactCentsDecimal shared exact helper', () => {
+  it.each([
+    { amount: 1099, expected: '10.99' },
+    { amount: 5, expected: '0.05' },
+    { amount: 0, expected: '0.00' },
+    { amount: -1, expected: '-0.01' },
+    { amount: -1099, expected: '-10.99' },
+    { amount: Number.MAX_SAFE_INTEGER, expected: '90071992547409.91' },
+    { amount: Number.MAX_SAFE_INTEGER - 9, expected: '90071992547409.82' },
+  ])('renders $amount safe cents as exact decimal $expected', ({ amount, expected }) => {
+    expect(formatExactCentsDecimal(amount)).toBe(expected);
+  });
+
+  it.each([1099, Number.MAX_SAFE_INTEGER])('agrees with the visible EUR formatter fallback for %s cents', (amount) => {
+    expect(`EUR ${formatExactCentsDecimal(amount)}`).toBe(formatCurrency(amount, 'EUR', '!!'));
   });
 });

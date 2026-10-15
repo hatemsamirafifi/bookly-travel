@@ -1,0 +1,14 @@
+Spec020 US6 isolated TouristTrip lane — LINT + TYPECHECK (after implementation)
+Workdir: frontend/
+
+1) npx eslint src/components/seo/StructuredData.tsx src/components/seo/__tests__/StructuredData.test.tsx src/lib/utils.ts src/lib/__tests__/utils.test.ts
+Result: clean, zero warnings/errors (empty output, exit 0).
+
+2) npm run typecheck (tsc --noEmit, whole frontend project)
+Result: clean, exit 0. NOTE: the working tree contains other workers' in-flight
+edits (US2 controller/auth, gallery workers); typecheck was green at this run,
+but root must rerun all gates before acceptance since those files are not owned
+by this lane.
+
+No build/browser/backend/service restart performed (out of scope per lane gates).
+No test config changed; jsdom environment kept; no assertions disabled.

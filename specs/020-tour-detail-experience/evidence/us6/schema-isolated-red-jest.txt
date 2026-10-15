@@ -1,0 +1,29 @@
+Spec020 US6 isolated TouristTrip lane — INITIAL RED (before implementation)
+Command: npm test -- --runInBand --watchman=false --runTestsByPath src/components/seo/__tests__/StructuredData.test.tsx
+Workdir: frontend/ | Node 24.14.1 / npm 11.12.1 observed | jsdom, config unchanged
+Result: 1 suite failed | Tests: 12 failed, 13 passed, 25 total | Snapshots: 0 | Time: ~1.57s
+
+All 8 pre-existing schema tests still pass (13 passed includes the new MAX_SAFE .91 pin,
+which float happens to render correctly). The 12 failures are the meaningful behavior gaps:
+
+exact-price offer (5):
+- unsafe integer amount (MAX_SAFE+1) emits false Offer price "90071992547409.92" (want: no offers)
+- unsupported currency JPY emits Offer priceCurrency JPY (want: no offers)
+- fractional amount 10.5 emits false Offer price "0.10" (want: no offers)
+- MAX_SAFE-9 renders "90071992547409.81" via float (want exact "90071992547409.82" = visible formatter)
+- (0/-500/NaN already omitted; kept as pinned cases)
+
+truthful availability (6):
+- listed past next (2026-10-01, clock frozen 2026-10-14) claims InStock (want OutOfStock, no validFrom)
+- listed today next (2026-10-14) claims InStock (want OutOfStock, no validFrom)
+- missing next with offered futures claims OutOfStock (want honest InStock, no invented validFrom)
+- missing is_unavailable flag claims InStock (want fail-closed OutOfStock)
+- invalid group bounds (9 > 8) claims InStock (want OutOfStock)
+- unsafe minimum estimate (MAX_SAFE x min 2) claims InStock (want OutOfStock)
+
+genuine ratings/media (2 distinct asserts, 1 failure entry each):
+- fractional review count 2.5 emits fabricated aggregateRating (want absent)
+- blank/whitespace image urls fabricate ["https://bookly.com/"] photo (want [] and no image key)
+
+No missing-module red: every failure is asserted behavior against current real code.
+Clock frozen via standard jest.useFakeTimers + setSystemTime (no production knob).

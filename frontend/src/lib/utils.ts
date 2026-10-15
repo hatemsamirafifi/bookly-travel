@@ -33,17 +33,22 @@ function formatExactEuroCents(amountCents: number, locale: string): string {
   return rendered.join('');
 }
 
-function exactDecimalFallback(amountCents: number): string {
-  if (Number.isSafeInteger(amountCents)) {
-    const total = BigInt(amountCents);
-    const negative = total < ZERO_CENTS;
-    const magnitude = negative ? -total : total;
-    const whole = magnitude / CENTS_PER_EURO;
-    const rest = magnitude % CENTS_PER_EURO;
-    return `${negative ? '-' : ''}${whole.toString()}.${rest.toString().padStart(2, '0')}`;
-  }
-  const value = (Number.isFinite(amountCents) ? amountCents : 0) / 100;
-  return value.toFixed(2);
+/**
+ * Exact plain "whole.rr" decimal for an integer cent amount. Single shared
+ * helper: binary floating point cannot render every large cent value
+ * (MAX_SAFE cents end in .91, MAX_SAFE-9 in .82), so the whole units and the
+ * two-digit remainder come from BigInt arithmetic.
+ *
+ * Precondition: `amountCents` must satisfy `Number.isSafeInteger`. Callers
+ * validate before invoking; non-integer input is outside the contract.
+ */
+export function formatExactCentsDecimal(amountCents: number): string {
+  const total = BigInt(amountCents);
+  const negative = total < ZERO_CENTS;
+  const magnitude = negative ? -total : total;
+  const whole = magnitude / CENTS_PER_EURO;
+  const rest = magnitude % CENTS_PER_EURO;
+  return `${negative ? '-' : ''}${whole.toString()}.${rest.toString().padStart(2, '0')}`;
 }
 
 /**
@@ -60,7 +65,7 @@ export function formatCurrency(amountCents: number, currency = 'EUR', locale = '
     try {
       return formatExactEuroCents(amountCents, locale);
     } catch {
-      return `${currency} ${exactDecimalFallback(amountCents)}`;
+      return `${currency} ${formatExactCentsDecimal(amountCents)}`;
     }
   }
   const value = (Number.isFinite(amountCents) ? amountCents : 0) / 100;
