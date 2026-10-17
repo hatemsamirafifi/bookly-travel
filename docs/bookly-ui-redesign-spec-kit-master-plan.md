@@ -237,9 +237,8 @@ git commit -m "docs: define Bookly UI redesign specification"
 
 Public header behavior:
 
-- Desktop row: Bookly wordmark, expandable search, primary navigation, locale, wishlist/account.
-- Secondary row: tour discovery categories and contextual navigation.
-- Mobile: compact logo/search/account bar and navigation drawer.
+- Desktop: one row with the Bookly wordmark, unique Home/Search tours/Categories/Destinations links, an expandable search icon, locale, and wishlist/account actions. Highlight the current page.
+- Below 1280px: compact logo/search/account bar and navigation drawer containing all discovery links, avoiding a second navigation row or crowded translated labels.
 - Do not render hotels, restaurants, rewards, AI planning, or other unsupported links.
 
 - [x] Add failing guest, traveler, partner, mobile-menu, and keyboard navigation tests.

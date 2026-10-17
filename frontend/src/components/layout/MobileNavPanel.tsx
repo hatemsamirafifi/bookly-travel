@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Drawer } from '@/components/ui/Drawer';
 import { Button } from '@/components/ui/button';
@@ -17,17 +18,18 @@ interface MobileNavPanelProps {
 }
 
 export default function MobileNavPanel({ locale, userName, userRole, isAuthenticated, isOpen, onClose, onLogout }: MobileNavPanelProps) {
+  const pathname = usePathname();
   const t = useTranslations('nav');
   const travelerT = useTranslations('traveler.nav');
   const partnerT = useTranslations('partner.nav');
   const isPartner = userRole === 'partner';
-  const mainLinks = [{ href: `/${locale}`, label: t('home') }, { href: `/${locale}/search`, label: t('search') }, { href: `/${locale}/categories`, label: t('categories') }, { href: `/${locale}/destinations`, label: t('destinations') }];
+  const mainLinks = [{ href: `/${locale}`, label: t('home') }, { href: `/${locale}/search`, label: t('searchTours') }, { href: `/${locale}/categories`, label: t('categories') }, { href: `/${locale}/destinations`, label: t('destinations') }];
   const partnerLinks = ['dashboard', 'tours', 'bookings', 'reviews', 'profile'].map((key) => ({ href: `/${locale}/partner${key === 'dashboard' ? '' : `/${key}`}`, label: partnerT(key) }));
   const travelerLinks = [{ href: `/${locale}/my-bookings`, label: travelerT('dashboard') }, { href: `/${locale}/my-bookings`, label: travelerT('myBookings') }, { href: `/${locale}/wishlist`, label: travelerT('wishlist') }, { href: `/${locale}/my-reviews`, label: travelerT('myReviews') }, { href: `/${locale}/profile`, label: travelerT('profile') }];
-  const linkClass = 'flex min-h-11 items-center rounded-md px-3 py-2 text-sm text-primary hover:bg-surface-alt';
+  const linkClass = 'flex min-h-11 items-center rounded-md px-3 py-2 text-sm text-primary hover:bg-surface-alt aria-[current=page]:bg-accent/10 aria-[current=page]:font-semibold';
   return <Drawer open={isOpen} onClose={onClose} title={t('mainNavigation')} closeLabel={t('closeMenu')}>
     <nav aria-label={t('mainNavigation')}>
-      <ul className="space-y-1">{mainLinks.map((link) => <li key={link.href}><Link href={link.href} className={linkClass} onClick={onClose}>{link.label}</Link></li>)}</ul>
+      <ul className="space-y-1">{mainLinks.map((link) => <li key={link.href}><Link href={link.href} aria-current={pathname === link.href ? 'page' : undefined} className={linkClass} onClick={onClose}>{link.label}</Link></li>)}</ul>
       <div className="my-4 border-t border-border" />
       <LocaleSwitcher />
       <div className="my-4 border-t border-border" />
