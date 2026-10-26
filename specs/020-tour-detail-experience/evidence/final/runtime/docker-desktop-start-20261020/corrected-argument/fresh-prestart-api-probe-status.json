@@ -1,0 +1,20 @@
+{
+  "name": "fresh-prestart-api-probe",
+  "argv": [
+    "docker",
+    "version",
+    "--format={{.Server.Version}}"
+  ],
+  "spawnOptions": {
+    "shell": false,
+    "timeoutMs": 15000,
+    "windowsHide": true
+  },
+  "startedAtUtc": "2026-10-20T19:18:46.087Z",
+  "finishedAtUtc": "2026-10-20T19:18:46.271Z",
+  "durationMs": 184,
+  "exitCode": 1,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null
+}

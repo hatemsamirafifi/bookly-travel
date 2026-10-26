@@ -1,0 +1,33 @@
+{
+  "startedAt": "2026-10-21T16:31:25.530Z",
+  "scope": "one loading-file image overlay only",
+  "tag": "booklytravel-nextjs:spec020-loading-viewport-20261021-aebeca",
+  "baseId": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+  "commands": [
+    {
+      "name": "base-image",
+      "args": [
+        "image",
+        "inspect",
+        "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+        "--format",
+        "{{.Id}}"
+      ],
+      "startedAt": "2026-10-21T16:31:41.467Z",
+      "finishedAt": "2026-10-21T16:31:59.559Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    }
+  ],
+  "passed": false,
+  "sourceDifferences": [
+    {
+      "rel": "src\\app\\[locale]\\(public)\\tours\\[slug]\\loading.tsx",
+      "expected": "4c4c5a738832e0d1787a8afc19253f90435b90a0acd664ef39ad8413b85d44d6",
+      "actual": "aebeca0d972e5545d7531a985fbbd80c33ae15729fe01254134e968d975544db"
+    }
+  ],
+  "error": "Error: base-image failed",
+  "finishedAt": "2026-10-21T16:31:59.666Z"
+}

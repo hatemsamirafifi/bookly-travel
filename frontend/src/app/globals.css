@@ -55,6 +55,12 @@
   --motion-slow: 300ms;
   --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
   --transition: var(--motion-fast) var(--motion-easing);
+
+  /* Measured mobile booking bar reservation (Spec 020 US2). The bar sets its
+   * own spacer height inline from ResizeObserver; these tokens keep the
+   * safe-area contract explicit and overridable without touching layout. */
+  --tour-booking-bar-height: 0px;
+  --tour-booking-bar-safe-area: env(safe-area-inset-bottom, 0px);
 }
 
 @media (min-width: 48rem) {
@@ -122,6 +128,28 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+/* Spec 020 US4: measured tour section-nav offset. The nav island publishes
+ * --tour-section-nav-height/--tour-section-nav-offset on its nearest page
+ * container (its parent, marked [data-tour-detail]); these rules keep real
+ * tour headings clear of the sticky nav while falling back to the
+ * pre-existing 5rem (scroll-mt-20) baseline until a measurement exists.
+ * Scoped under the TourDetail marker so identical IDs on other pages are
+ * unaffected. */
+[data-tour-detail] [id="overview"],
+[data-tour-detail] [id="facts"],
+[data-tour-detail] [id="highlights"],
+[data-tour-detail] [id="itinerary"],
+[data-tour-detail] [id="included"],
+[data-tour-detail] [id="excluded"],
+[data-tour-detail] [id="meeting"],
+[data-tour-detail] [id="cancellation"],
+[data-tour-detail] [id="important"],
+[data-tour-detail] [id="operator"],
+[data-tour-detail] [id="reviews"],
+[data-tour-detail] [id="related"] {
+  scroll-margin-top: var(--tour-section-nav-offset, 5rem);
 }
 
 @media (prefers-reduced-motion: reduce) {

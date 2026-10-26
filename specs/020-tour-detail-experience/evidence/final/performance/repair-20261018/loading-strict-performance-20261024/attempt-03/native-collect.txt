@@ -1,0 +1,101 @@
+[lh-engine-select] armed: root engine v12.8.2 at F:\Travel Website\bookly travel\frontend\node_modules\lighthouse (caller-gated to node-runner.js only)
+[lh-engine-select] caller=F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\node-runner.js request=lighthouse selected=F:\Travel Website\bookly travel\frontend\node_modules\lighthouse\core\index.js v12.8.2
+{"attempt":1,"benchmarkIndex":1177.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1468,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1159.5,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1392.5,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1593.5,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1622.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1641,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1801.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/search?q=rome
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1327.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1260.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1229,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1272,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1084,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1242.5,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1477.5,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1197.5,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1254.5,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1319,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1329,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1461.5,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1286,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1222.5,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1120.5,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1038,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1231.5,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1376,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1326,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1252.5,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1355.5,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":1331,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":1236,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":1425.5,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":1502.5,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":1466.5,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":1785,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":1832,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1443.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1893,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1884,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/blog/hidden-gems-florence
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1123,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1430,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1765,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1731.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/es/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1037,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1205,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1326,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1272,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1291.5,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1103.5,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1224,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1136.5,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1198,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1167,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1129.5,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1180.5,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1151,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1098,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1235,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1235.5,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1165,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1121.5,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1154.5,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1128,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1058,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1103,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":1110,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":1140.5,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":1245,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":1098,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":970.5,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":1049.5,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":1153,"url":"about:blank","appVisited":false}
+Error: CPU readiness budget (30 samples / 30000ms) exhausted; performance audit must not start
+    at prepareBrowserCpu (file:///F:/Travel%20Website/bookly%20travel/frontend/scripts/lighthouse-runtime-preflight.mjs:48:15)
+    at async module.exports (F:\Travel Website\bookly travel\frontend\scripts\lighthouse-browser-ready.cjs:5:3)
+    at async PuppeteerManager.invokePuppeteerScriptForUrl (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\puppeteer-manager.js:113:5)
+    at async Object.runCommand (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\collect.js:251:7)
+    at async run (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\cli.js:100:7)

@@ -1,0 +1,31 @@
+
+Running 3 tests using 1 worker
+
+[1A[2K(node:12060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:12060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/3] [chromium] › tests\e2e\tour-detail.spec.ts:2067:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+[1A[2K(node:23260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/3] [chromium] › tests\e2e\tour-detail.spec.ts:2067:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+[1A[2K(node:18852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:18852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/3] [chromium] › tests\e2e\tour-detail.spec.ts:2067:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+[1A[2K  3 passed (18.6s)

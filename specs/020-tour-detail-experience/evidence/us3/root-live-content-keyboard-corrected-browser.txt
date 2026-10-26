@@ -1,0 +1,129 @@
+
+Running 2 tests using 1 worker
+
+[1A[2K(node:18292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:18292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/2] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state
+[1A[2K  1) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('main#main-content')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('main#main-content')[22m
+
+
+      240 |     try {
+      241 |       await page.goto(`http://127.0.0.1:${harness.nextPort}/en/tours/${slug}`);
+    > 242 |       await expect(page.locator('main#main-content')).toBeVisible();
+          |                                                       ^
+      243 |       const overview = page.locator('main#main-content #overview');
+      244 |       await expect(overview).toBeVisible();
+      245 |       // Preview first: the full text is reachable only through the disclosure.
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:242:55
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\content-keyboard-corrected\a11y-tour-detail-a11y-Spec-bd1f3-erable-with-announced-state-a11y\error-context.md
+
+
+[1A[2K(node:14144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:14144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/2] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:265:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred
+[1A[2K  2) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:265:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 58[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",[39m
+    [31m+     "help": "Elements must meet minimum color contrast ratio thresholds",[39m
+    [31m+     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",[39m
+    [31m+     "id": "color-contrast",[39m
+    [31m+     "impact": "serious",[39m
+    [31m+     "nodes": Array [[39m
+    [31m+       Object {[39m
+    [31m+         "all": Array [],[39m
+    [31m+         "any": Array [[39m
+    [31m+           Object {[39m
+    [31m+             "data": Object {[39m
+    [31m+               "bgColor": "#f7f9fb",[39m
+    [31m+               "contrastRatio": 4.44,[39m
+    [31m+               "expectedContrastRatio": "4.5:1",[39m
+    [31m+               "fgColor": "#11845b",[39m
+    [31m+               "fontSize": "10.5pt (14px)",[39m
+    [31m+               "fontWeight": "normal",[39m
+    [31m+               "messageKey": null,[39m
+    [31m+             },[39m
+    [31m+             "id": "color-contrast",[39m
+    [31m+             "impact": "serious",[39m
+    [31m+             "message": "Element has insufficient color contrast of 4.44 (foreground color: #11845b, background color: #f7f9fb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+             "relatedNodes": Array [[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<body class=\"min-h-full flex flex-col font-sans\">",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   "body",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+             ],[39m
+    [31m+           },[39m
+    [31m+         ],[39m
+    [31m+         "failureSummary": "Fix any of the following:[39m
+    [31m+   Element has insufficient color contrast of 4.44 (foreground color: #11845b, background color: #f7f9fb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+         "html": "<span aria-hidden=\"true\">4.5</span>",[39m
+    [31m+         "impact": "serious",[39m
+    [31m+         "none": Array [],[39m
+    [31m+         "target": Array [[39m
+    [31m+           "span[aria-label=\"Valoración: 4.5 de 5\"] > span:nth-child(2)",[39m
+    [31m+         ],[39m
+    [31m+       },[39m
+    [31m+     ],[39m
+    [31m+     "tags": Array [[39m
+    [31m+       "cat.color",[39m
+    [31m+       "wcag2aa",[39m
+    [31m+       "wcag143",[39m
+    [31m+       "TTv5",[39m
+    [31m+       "TT13.c",[39m
+    [31m+       "EN-301-549",[39m
+    [31m+       "EN-9.1.4.3",[39m
+    [31m+       "ACT",[39m
+    [31m+       "RGAAv4",[39m
+    [31m+       "RGAA-3.2.1",[39m
+    [31m+     ],[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      272 |     const nav = page.getByRole('navigation', { name: 'Secciones del tour', exact: true });
+      273 |     await expect(nav).toBeVisible();
+    > 274 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                   ^
+      275 |   });
+      276 | });
+      277 |
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:274:67
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\content-keyboard-corrected\a11y-tour-detail-a11y-Spec-ecce7-th-reduced-motion-preferred-a11y\error-context.md
+
+
+[1A[2K  2 failed
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state 
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:265:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred 

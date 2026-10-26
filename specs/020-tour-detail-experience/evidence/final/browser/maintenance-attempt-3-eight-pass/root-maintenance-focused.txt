@@ -1,0 +1,12 @@
+
+Running 8 tests using 1 worker
+
+[1A[2K[1/8] [chromium] › tests/e2e/tour-detail.spec.ts:354:7 › Tour Detail Page › booking CTA is visible
+[1A[2K[2/8] [chromium] › tests/e2e/tour-detail.spec.ts:707:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[1A[2K[3/8] [chromium] › tests/e2e/tour-detail.spec.ts:1176:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[4/8] [chromium] › tests/e2e/tour-detail.spec.ts:1206:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K[5/8] [mobile] › tests/e2e/tour-detail.spec.ts:354:7 › Tour Detail Page › booking CTA is visible
+[1A[2K[6/8] [mobile] › tests/e2e/tour-detail.spec.ts:707:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[1A[2K[7/8] [mobile] › tests/e2e/tour-detail.spec.ts:1176:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[8/8] [mobile] › tests/e2e/tour-detail.spec.ts:1206:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K  8 passed (50.8s)

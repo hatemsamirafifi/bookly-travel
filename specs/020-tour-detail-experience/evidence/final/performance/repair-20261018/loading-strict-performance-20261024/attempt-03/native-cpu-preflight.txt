@@ -1,0 +1,8 @@
+{"attempt":1,"benchmarkIndex":887.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1495,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1022,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1014,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1105,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1475,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1606,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1704.5,"url":"about:blank","appVisited":false}

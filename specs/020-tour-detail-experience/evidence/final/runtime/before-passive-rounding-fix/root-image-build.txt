@@ -1,0 +1,66 @@
+ Image booklytravel-nextjs Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.47kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile:
+#2 transferring dockerfile: 625B 0.0s done
+#2 DONE 0.2s
+
+#3 [internal] load metadata for docker.io/library/node:20
+#3 ...
+
+#4 [auth] library/node:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:20
+#3 DONE 2.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 399B done
+#5 DONE 0.1s
+
+#6 [1/7] FROM docker.io/library/node:20@sha256:8f693eaa7e0a8e71560c9a82b55fd54c2ae920a2ba5d2cde28bac7d1c01c9ba5
+#6 resolve docker.io/library/node:20@sha256:8f693eaa7e0a8e71560c9a82b55fd54c2ae920a2ba5d2cde28bac7d1c01c9ba5 0.1s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 12.69MB 4.9s
+#7 transferring context: 14.73MB 8.0s done
+#7 DONE 8.1s
+
+#8 [4/7] COPY package*.json ./
+#8 CACHED
+
+#9 [5/7] RUN npm install
+#9 CACHED
+
+#10 [2/7] RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [3/7] WORKDIR /app
+#11 CACHED
+
+#12 [6/7] RUN npx playwright install --with-deps chromium
+#12 CACHED
+
+#13 [7/7] COPY . .
+#13 DONE 1.3s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 0.9s done
+#14 exporting manifest sha256:e8c6fec75b250e20e6fd4f68e6e983613724239dcb439272b2cbd5563a6773d5 0.0s done
+#14 exporting config sha256:680e937718c923f5757eb9d52d9bbb703dffc54f5606d7fb67d448de7a2734eb 0.1s done
+#14 exporting attestation manifest sha256:b1d7ee38e9513d72ed8a987027ea9248d875855134c1d5953174e34031e836ce
+#14 exporting attestation manifest sha256:b1d7ee38e9513d72ed8a987027ea9248d875855134c1d5953174e34031e836ce 0.1s done
+#14 exporting manifest list sha256:8fb8e05d4ed2467fa38559647c9639c22ae752a76e852af70b4e3df0a8a53d6e 0.0s done
+#14 naming to docker.io/library/booklytravel-nextjs:latest done
+#14 unpacking to docker.io/library/booklytravel-nextjs:latest
+#14 unpacking to docker.io/library/booklytravel-nextjs:latest 193.1s done
+#14 DONE 195.2s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.4s
+ Image booklytravel-nextjs Built 

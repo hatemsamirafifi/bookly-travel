@@ -1,0 +1,39 @@
+[lh-engine-select] armed: root engine v12.8.2 at F:\Travel Website\bookly travel\frontend\node_modules\lighthouse (caller-gated to node-runner.js only)
+[lh-engine-select] caller=F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\node-runner.js request=lighthouse selected=F:\Travel Website\bookly travel\frontend\node_modules\lighthouse\core\index.js v12.8.2
+{"attempt":1,"benchmarkIndex":1841,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":2129.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":2089.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":2241,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/search?q=rome
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":2109,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":2229.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":2147,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":2194.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/blog/hidden-gems-florence
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1946,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1900.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/es/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":2105.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":2192.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/it/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Done running Lighthouse!

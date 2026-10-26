@@ -1,0 +1,23 @@
+{
+  "scope": "Fresh native built Next, real owned public/auth/booking/payment/cancel API; media-only CDN adapter.",
+  "checks": [],
+  "createRequests": [],
+  "paymentStatuses": [],
+  "origin": "http://127.0.0.1:58250",
+  "sourceHead": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "buildId": "2b7daSvhEzPFaswVcuN3y",
+  "publicFacts": {
+    "slug": "hidden-gems-rome-walking-tour",
+    "dateCount": 60,
+    "baseCents": 4500,
+    "currency": "EUR",
+    "group": {
+      "min": 1,
+      "max": 20
+    },
+    "picked": "2026-11-16",
+    "mobilePicked": "2026-11-17"
+  },
+  "passed": false,
+  "error": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"/en/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-11-16\"\nReceived: \"/en/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-17\""
+}

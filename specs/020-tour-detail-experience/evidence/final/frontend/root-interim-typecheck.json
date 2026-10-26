@@ -1,0 +1,1 @@
+{"command":"node node_modules/typescript/bin/tsc --noEmit","workdir":"frontend","exitCode":0,"finishedAt":"2026-10-17T00:25:26+03:00","scope":"Interim independent root typecheck after genuine-review type predicate repair; US5 baseline-read implementation still in progress. Not the final stable-source gate."}

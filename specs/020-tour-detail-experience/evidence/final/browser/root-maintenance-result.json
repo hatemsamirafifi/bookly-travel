@@ -1,0 +1,90 @@
+{
+  "startedAt": "2026-10-17T14:15:53.758Z",
+  "sourceHash": "a326dd4669251c69997c6737a4103f38596623338c804b2ca0e19ceb6d1dadc9",
+  "scope": "Only existing tour-detail browser test maintenance; accepted production source/build and component tests unchanged.",
+  "stages": [
+    {
+      "name": "sync",
+      "command": "docker",
+      "args": [
+        "cp",
+        "F:\\Travel Website\\bookly travel\\frontend\\tests\\e2e\\tour-detail.spec.ts",
+        "bookly-frontend:/app/tests/e2e/tour-detail.spec.ts"
+      ],
+      "startedAt": "2026-10-17T14:15:53.770Z",
+      "finishedAt": "2026-10-17T14:15:53.985Z",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "tests/e2e/tour-detail.spec.ts"
+      ],
+      "startedAt": "2026-10-17T14:15:53.986Z",
+      "finishedAt": "2026-10-17T14:16:00.406Z",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-17T14:16:00.406Z",
+      "finishedAt": "2026-10-17T14:16:09.093Z",
+      "exitCode": 0
+    },
+    {
+      "name": "parity",
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/Users/HaTeM/.codex/tmp/bookly-spec020/root-final-runtime-review.cjs"
+      ],
+      "startedAt": "2026-10-17T14:16:09.099Z",
+      "finishedAt": "2026-10-17T14:16:16.398Z",
+      "exitCode": 0
+    },
+    {
+      "name": "focused",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "tests/e2e/tour-detail.spec.ts",
+        "--project=chromium",
+        "--project=mobile",
+        "--no-deps",
+        "--workers=1",
+        "--reporter=line",
+        "--repeat-each=3",
+        "--grep",
+        "US4 passive scrolling follows",
+        "--output=/tmp/spec020-maintenance-focused"
+      ],
+      "startedAt": "2026-10-17T14:16:16.398Z",
+      "finishedAt": "2026-10-17T14:17:17.979Z",
+      "exitCode": 1
+    }
+  ],
+  "passed": false,
+  "error": "focused exited 1",
+  "finishedAt": "2026-10-17T14:17:17.979Z"
+}

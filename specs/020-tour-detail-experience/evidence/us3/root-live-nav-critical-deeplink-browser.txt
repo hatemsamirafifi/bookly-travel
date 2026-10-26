@@ -1,0 +1,59 @@
+
+Running 2 tests using 1 worker
+
+[1A[2K(node:12416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:12416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/2] [chromium] › tests\e2e\tour-detail.spec.ts:2188:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:2188:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target 
+
+    Error: "apiRequestContext.get: Target page, context or browser has been closed
+    Call log:
+    [2m  - → GET http://localhost:8080/tours/rome-gallery-2.jpg[22m
+    [2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.7778.96 Safari/537.36[22m
+    [2m    - accept: */*[22m
+    [2m    - accept-encoding: gzip,deflate,br[22m
+    [2m    - Host: cdn.bookly.test[22m
+    [2m  - ← 200 OK[22m
+    [2m    - server: nginx/1.31.3[22m
+    [2m    - date: Fri, 16 Oct 2026 17:07:03 GMT[22m
+    [2m    - content-type: image/jpeg[22m
+    [2m    - content-length: 15883[22m
+    [2m    - last-modified: Fri, 18 Sep 2026 21:04:49 GMT[22m
+    [2m    - connection: keep-alive[22m
+    [2m    - etag: "6aada771-3e0b"[22m
+    [2m    - expires: Fri, 16 Oct 2026 18:07:03 GMT[22m
+    [2m    - cache-control: max-age=3600, public[22m
+    [2m    - accept-ranges: bytes[22m
+    " while running route callback.
+    Consider awaiting `await page.unrouteAll({ behavior: 'ignoreErrors' })`
+    before the end of the test to ignore remaining routes in flight.
+
+       at helpers\tour-detail-ssr.ts:225
+
+      223 |       return;
+      224 |     }
+    > 225 |     const upstream = await context.request.get(`${proxy}${sourceUrl.pathname}${sourceUrl.search}`, {
+          |                                            ^
+      226 |       headers: { Host: 'cdn.bookly.test' },
+      227 |     });
+      228 |     await route.fulfill({ response: upstream });
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\helpers\tour-detail-ssr.ts:225:44
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\nav-critical-deeplink\tour-detail-Tour-Detail-se-1049d-restores-the-reading-target-chromium\error-context.md
+
+
+[1A[2K(node:7764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:7764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/2] [chromium] › tests\e2e\tour-detail.spec.ts:2217:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size

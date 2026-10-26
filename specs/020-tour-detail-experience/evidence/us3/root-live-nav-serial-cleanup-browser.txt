@@ -1,0 +1,37 @@
+
+Running 2 tests using 1 worker
+
+[1A[2K(node:24200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/2] [chromium] › tests\e2e\tour-detail.spec.ts:2193:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+[1A[2K[2/2] [chromium] › tests\e2e\tour-detail.spec.ts:2222:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:2222:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size 
+
+    [31mTest timeout of 180000ms exceeded.[39m
+
+    Error: locator.boundingBox: Test timeout of 180000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('aside').filter({ has: locator('main#main-content').getByTestId('tour-booking-card-slot') })[22m
+
+
+      2273 |       const gapPx = await sharedTokenGapPx(page);
+      2274 |       const cardBox = await cardSlot.boundingBox();
+    > 2275 |       const asideBox = await aside.boundingBox();
+           |                                    ^
+      2276 |       expect(cardBox).not.toBeNull();
+      2277 |       expect(asideBox).not.toBeNull();
+      2278 |       expect(asideBox!.y + asideBox!.height - (cardBox!.y + cardBox!.height)).toBeGreaterThan(gapPx);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:2275:36
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\nav-serial-cleanup\tour-detail-Tour-Detail-se-f6dae-uction-at-200-nav-text-size-chromium\error-context.md
+
+
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:2222:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size 
+  1 passed (3.1m)

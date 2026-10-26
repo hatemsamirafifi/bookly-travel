@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-10-19T20:31:29.545Z",
+  "purpose": "Baseline hashes BEFORE any future edit (no edits performed in this session).",
+  "files": {
+    "frontend/src/components/tour/TourGallery.tsx": "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb",
+    "frontend/src/components/tour/TourDetail.tsx": "560d292c7f739e4d9a6ba0b371d760ee9a3354802f3d1b82ab692f7459712c17",
+    "frontend/src/components/blog/BlogCard.tsx": "777075d106196fc81dd5b5aef6699844a14e0a7116cec4be7500ee3503ec11a1",
+    "frontend/src/components/blog/RelatedPosts.tsx": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+    "frontend/src/components/layout/Footer.tsx": "66ab590fbd4955b105fdcb202459ae0c5de742789160070e56f2a65630067874",
+    "frontend/src/components/search/TourCard.tsx": "3ff6738ba5032335d77c668ec444896a4fc93c82ba0277402258ce7736740552"
+  },
+  "lighthousercJs": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672"
+}

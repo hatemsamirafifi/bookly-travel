@@ -1,0 +1,5 @@
+time="2026-10-26T04:10:04+03:00" level=warning msg="volume \"booklytravel_redis_data\" already exists but was not created by Docker Compose. Use `external: true` to use an existing volume"
+ Container bookly-frontend Recreate 
+ Container bookly-frontend Recreated 
+ Container bookly-frontend Starting 
+ Container bookly-frontend Started 

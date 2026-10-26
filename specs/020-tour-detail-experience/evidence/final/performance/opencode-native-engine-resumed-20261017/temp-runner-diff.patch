@@ -1,0 +1,13 @@
+﻿diff --git a/native-resumed-final-performance.cjs b/native-engine-resumed-audit.cjs
+index 8e0bdee..7e3db3d 100644
+--- a/native-resumed-final-performance.cjs
++++ b/native-engine-resumed-audit.cjs
+@@ -1,6 +1,6 @@
+ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{spawn,execSync}=require('node:child_process');
+-const root='F:/Travel Website/bookly travel',fe=path.join(root,'frontend'),dir=path.join(root,'specs/020-tour-detail-experience/evidence/final/performance/opencode-native-resumed-20261017');fs.mkdirSync(dir,{recursive:true});
+-const runtime=JSON.parse(fs.readFileSync(path.join(root,'specs/020-tour-detail-experience/evidence/final/runtime/root-runtime-accepted.json'),'utf8'));if(!runtime.passed)throw Error('Accepted Docker source runtime required');
++const root='F:/Travel Website/bookly travel',fe=path.join(root,'frontend'),dir=path.join(root,'specs/020-tour-detail-experience/evidence/final/performance/opencode-native-engine-resumed-20261017');fs.mkdirSync(dir,{recursive:true});
++const runtime=JSON.parse(fs.readFileSync(path.join(root,'specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/opencode-runtime-ready.json'),'utf8'));if(!runtime.passedReadinessOnly)throw Error('Fresh verified Docker runtime evidence (root restore) required');
+ const baseline=JSON.parse(fs.readFileSync(path.join(root,'specs/020-tour-detail-experience/evidence/final/frontend/root-gates-after.json'),'utf8'));
+ const TIMEOUTS={preflightTests:120000,cpuPreflight:90000,collect:1500000,assert:120000};
+ const baseEnv={...process.env,LIGHTHOUSE_BASE_URL:'http://localhost:8080',CHROME_PATH:'C:/Program Files/Google/Chrome/Application/chrome.exe'};

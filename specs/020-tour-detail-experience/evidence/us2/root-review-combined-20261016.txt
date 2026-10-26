@@ -1,0 +1,10 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx src/components/ui/__tests__/interactive-primitives.test.tsx src/components/auth/__tests__/LoginForm.test.tsx src/components/auth/__tests__/RegisterForm.test.tsx src/components/booking/__tests__/BookingForm.test.tsx src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/__tests__/AvailabilityCalendar.test.tsx src/components/tour/__tests__/BookingCTA.test.tsx src/components/tour/__tests__/MobileBookingAction.test.tsx src/components/tour/__tests__/TourDetail.test.tsx src/lib/auth/__tests__/return-url.test.ts src/lib/tours/__tests__/booking-selection.test.ts
+
+
+Test Suites: 12 passed, 12 total
+Tests:       237 passed, 237 total
+Snapshots:   0 total
+Time:        160.221 s
+Ran all test suites within paths "src/components/tour/__tests__/TourGallery.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx", "src/components/auth/__tests__/LoginForm.test.tsx", "src/components/auth/__tests__/RegisterForm.test.tsx", "src/components/booking/__tests__/BookingForm.test.tsx", "src/components/tour/__tests__/TourBookingController.test.tsx", "src/components/tour/__tests__/AvailabilityCalendar.test.tsx", "src/components/tour/__tests__/BookingCTA.test.tsx", "src/components/tour/__tests__/MobileBookingAction.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx", "src/lib/auth/__tests__/return-url.test.ts", "src/lib/tours/__tests__/booking-selection.test.ts".

@@ -1,0 +1,35 @@
+Spec020 TEST MAINTENANCE — checkout/payment/checkout-a11y E2E specs
+Model: approved Muse only. No production/config/dependency/docs/task/ledger/.todo edits,
+no commits/staging/reset/restores. All prior source and regression assertions preserved.
+
+CHANGED FILES (owned only):
+- frontend/tests/e2e/helpers/offered-date.ts (new, narrow): fetchOfferedTourFacts validates
+  live public tour response (ok, is_unavailable false, nonempty available_dates) and selects
+  the first explicitly-offered date strictly after the current UTC day — never blindly
+  trusting next_available_date. Also utcToday + formatEstimateTotal exact-estimate helper.
+- frontend/tests/e2e/checkout.spec.ts: local availableDate helper replaced by shared facts;
+  hardcoded 2026-11-15 navigations replaced. Drift + cancel-failure tests keep their
+  controlled API mocks and assertions, now on a validated offered date.
+- frontend/tests/e2e/payment.spec.ts: same date/helper replacement; deterministic retry
+  coverage (bookingPosts 1 / paymentAttempts 2) untouched.
+- frontend/tests/e2e/a11y/checkout-a11y.spec.ts: 2026-06-01 replaced; asserts READY form
+  (tour title heading, rendered selected-date content, enabled Confirm & Pay) before axe,
+  so the scan cannot pass on a disabled invalid state.
+
+MEANINGFUL BEHAVIOR (no booking POST in the strengthened tests):
+- min/max test: drives the real stepper from actual groupMin to groupMax (POST counter
+  route observes zero bookings), asserting disabled ends, live count, and exact visible
+  estimates at both bounds.
+- price-updates tests (checkout + payment): exact estimate text before/after one step
+  (or disabled increase when min==max), zero POSTs.
+- tour identity asserted via live title heading; a11y asserts selected-date content.
+
+GATES:
+- ESLint (checkout-maintenance-eslint): 0 findings on 3 specs + helper.
+- Typecheck (checkout-maintenance-typecheck): tsc --noEmit clean project-wide.
+- Playwright --list only, no browsers/build/backend (checkout-maintenance-list):
+  31 tests in 5 files across setup/chromium-authed/mobile-authed/a11y-authed. Exit 0.
+
+NOT RUN (root-owned runtime): browsers, build, backend/API, mutable fixtures.
+Fixtures read-only; only pre-existing controlled API response mocks used — no actual-success claim.
+test-guard/clean-code-guard: clean. No acceptance/commit claims.

@@ -1,0 +1,9 @@
+{
+  "pid": 22800,
+  "startedAt": "2026-10-17T15:36:07.8741893Z",
+  "scope": "Delegated native installed-Chrome strict QA attempt against unchanged Docker production app, after independently reviewed Docker readiness failure; root reviews only",
+  "model": "opencode/glm-5.3-flash-free",
+  "variant": "max",
+  "session": "ses_eb5877c55ffejDwLyNfLsHK7iJ",
+  "brief": "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\delegated-final-performance\\native-brief.md"
+}

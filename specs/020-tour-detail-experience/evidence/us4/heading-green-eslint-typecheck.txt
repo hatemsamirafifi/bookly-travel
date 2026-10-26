@@ -1,0 +1,20 @@
+FOCUSED ESLINT (owned files only)
+  frontend> npx eslint src/components/tour/TourSectionNav.tsx src/components/tour/__tests__/TourSectionNav.test.tsx
+  RESULT: clean — no output, 0 errors, 0 warnings, 0 suppressions.
+
+WHOLE-PROJECT TYPECHECK (read-only gate for this slice)
+  frontend> npm run typecheck  (tsc --noEmit)
+  RESULT: clean — no output, 0 errors across the whole frontend project.
+
+PROVENANCE CORRECTION (root-corrected, preserved verbatim here):
+  A prior handwritten note in isolated-review-green-eslint-typecheck.txt stated
+  the temporary StructuredData.test.tsx TS1128 parse error was "resolved via
+  another lane's committed change b046503". Root corrected this: b046503 was
+  already HEAD before US6's uncommitted append introduced the extra brace, and
+  the repair was uncommitted — no new commits occurred at any point in this
+  slice's history. That raw log file is left unmodified per instructions; this
+  correction is recorded here instead. Current whole-project typecheck output
+  is quoted verbatim above. This lane made no edits to StructuredData or any
+  unowned source; `git status --short` scoped to owned paths shows only
+  TourSectionNav.tsx (M), TourSectionNav.test.tsx (??), globals.css (M, prior
+  owned slice, untouched this round), and evidence/us4/ (??).

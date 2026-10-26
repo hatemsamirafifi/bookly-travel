@@ -1,0 +1,69 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourBookingController.test.tsx
+
+node.exe : FAIL src/components/tour/__tests__/TourBookingController.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...roller.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ TourBookingController shared selection ΓÇ║ prevents a stale card continuation click after the UTC day advances, 
+without timer or visibility events
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      468 |       name: 'Book Now',
+      469 |     });
+    > 470 |     expect(fireEvent.click(checkout)).toBe(false);
+          |                                       ^
+      471 |
+      472 |     expect(
+      473 |       screen.getByText('Available dates changed since the page loaded. Select a date again.'),
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:470:39)
+
+  ΓùÅ TourBookingController shared selection ΓÇ║ prevents a stale mobile-bar continuation click through the same 
+single guard
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      485 |       name: 'Continue to booking',
+      486 |     });
+    > 487 |     expect(fireEvent.click(barAction)).toBe(false);
+          |                                        ^
+      488 |
+      489 |     expect(
+      490 |       screen.getByText('Available dates changed since the page loaded. Select a date again.'),
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:487:40)
+
+  ΓùÅ TourBookingController shared selection ΓÇ║ measures the visible bar with a real observer lifecycle and cleans 
+page tokens on release
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not ""
+
+      519 |       expect(
+      520 |         document.documentElement.style.getPropertyValue('--tour-booking-bar-height'),
+    > 521 |       ).not.toBe('');
+          |             ^
+      522 |
+      523 |       rerender(
+      524 |         <TourBookingController
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:521:13)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 20 passed, 23 total
+Snapshots:   0 total
+Time:        4.1 s
+Ran all test suites within paths "src/components/tour/__tests__/TourBookingController.test.tsx".

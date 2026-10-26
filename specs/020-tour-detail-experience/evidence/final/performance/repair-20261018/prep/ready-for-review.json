@@ -1,0 +1,51 @@
+{
+  "preparedAtUtc": "2026-10-17T22:34:28.970Z",
+  "parentRunner": {
+    "path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\tooling\\opencode-native-engine-resumed-audit.cjs",
+    "sha256": "e83fde176f096b31bf03b67e2c8506decf333d5bfe6df16c405daa490f9c70c2"
+  },
+  "preparedRunner": {
+    "path": "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\audit-runner.cjs",
+    "sha256": "0ba555e30dd8b53797e772780168a3146fcecae481e72b0c6b1dd5a925313def",
+    "nodeCheckOnly": true
+  },
+  "launcher": {
+    "path": "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\audit-launch.ps1",
+    "sha256": "18952e571cb654077a80f38fc9983ab94d64452e87290a2384b0bf1bc76b0e93",
+    "started": false,
+    "notes": "hidden, bounded, ownerPID 40min watchdog; records PID/start/finish/exit/exitCode; launches runner with cwd frontend"
+  },
+  "diffPath": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\prep\\temp-runner.diff",
+  "mutations": [
+    "output dir -> specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/audit",
+    "source Parity baseline input -> prep/candidate-manifest.json (original runtime-evidence path + passedReadinessOnly guard retained verbatim)",
+    "strict fresh-report validator inserted before passed; freshChecks details persisted; process exitCode falsified when fresh validation fails; freshPassed folded into existing passed predicate after all original conditions",
+    "expected URL set built on actual measurement base http://localhost:8080 (config default 3000 never consulted)"
+  ],
+  "preserved": [
+    "runtime passedReadinessOnly guard",
+    "container-state",
+    "'/' redirect probes only",
+    "TIMEOUTS watchdogs incl. tree-kill",
+    "prior 12 reports preservation + before/after hashes",
+    "serial preflight-tests -> cpu-preflight -> collect -> assert",
+    "config hash pinning",
+    "asset list/copy logic (frontend + .lighthouseci scan covers saveAssets prefix outputs in frontend/ per lhci node-runner + LH run.js:150-156 + asset-saver.js:468-480)"
+  ],
+  "candidateInputs": {
+    "candidateManifest": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\prep\\candidate-manifest.json",
+    "candidateVsBaseline": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\prep\\candidate-vs-baseline.json",
+    "runtimeCheck": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\prep\\runtime-check-20261018.json"
+  },
+  "stageBAuditContracts": [
+    "exact 6 URLs x 3 = 18 fresh unique LHRs",
+    "fetchTime within runner startedAt..validation time",
+    "no runtimeError",
+    "httpStatusAudit === 1 (LH 12.8.2 audit id http-status-code)",
+    "min performance >= 0.9 per URL (pessimistic aggregation unchanged in config)",
+    "collect+assert exit 0 with nonempty reports + nonempty assertionResults (assert.js:112 saveAssertionResults -> .lighthouseci/assertion-results.json)",
+    ">= 18 unique NEW traces + >= 18 unique NEW devtoolslogs via existing listAssets/ASSET_RE and content-dedup copy"
+  ],
+  "notExecuted": true,
+  "diffSha256": "ee71c7c59b6d282c5892275d832e2b154b008c38731ac471c4b5446e0295731a"
+}

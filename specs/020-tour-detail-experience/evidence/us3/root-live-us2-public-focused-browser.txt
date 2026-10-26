@@ -1,0 +1,51 @@
+
+Running 7 tests using 1 worker
+
+[1A[2K(node:24872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/7] [chromium] › tests\e2e\tour-detail.spec.ts:945:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+[1A[2K[2/7] [chromium] › tests\e2e\tour-detail.spec.ts:998:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize
+[1A[2K[3/7] [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back 
+
+    Error: locator.getAttribute: Error: strict mode violation: getByRole('link', { name: /sign in/i }) resolved to 2 elements:
+        1) <a aria-label="Sign In" href="/en/auth/login" class="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full px-2 text-sm font-semibold text-primary hover:bg-surface-alt">…</a> aka getByRole('link', { name: 'Sign In', exact: true })
+        2) <a class="text-primary font-semibold no-underline transition-colors hover:text-primary-dark hover:underline" href="/en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems-rome-walking-tour%26participants%3D2%26date%3D2026-10-26">Sign in</a> aka getByRole('link', { name: 'Sign in', exact: true })
+
+    Call log:
+    [2m  - waiting for getByRole('link', { name: /sign in/i })[22m
+
+
+      1104 |     expect(new URL(page.url()).searchParams.get('returnUrl')).toBe(booking);
+      1105 |
+    > 1106 |     const loginHref = await page.getByRole('link', { name: /sign in/i }).getAttribute('href');
+           |                                                                          ^
+      1107 |     expect(loginHref).toBe(`/en/auth/login?returnUrl=${encodeURIComponent(booking)}`);
+      1108 |
+      1109 |     await page.getByRole('link', { name: /sign in/i }).click();
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1106:74
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\us2-public-focused\tour-detail-Tour-Detail-Pa-2b764--login-to-register-and-back-chromium\error-context.md
+
+
+[1A[2K(node:25340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[4/7] [chromium] › tests\e2e\tour-detail.spec.ts:1119:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+[1A[2K[5/7] [chromium] › tests\e2e\tour-detail.spec.ts:1141:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[6/7] [chromium] › tests\e2e\tour-detail.spec.ts:1168:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K[7/7] [chromium] › tests\e2e\tour-detail.spec.ts:1203:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back 
+  6 passed (37.3s)

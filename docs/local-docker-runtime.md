@@ -18,12 +18,25 @@ addresses. Wait for `bookly-frontend` to finish its production build and report
 `Ready` before opening the site. A container's `running` state alone does not
 mean the build or HTTP server is ready.
 
-Backend `.env`, frontend `.env.local`, Laravel storage, and dependency volumes
-remain mounted. Nginx still serves backend public assets from the workspace.
+Backend `.env`, Laravel storage, and PHP dependency volumes remain mounted.
+Frontend `.env.local` is loaded through Compose `env_file`; recreate the frontend
+container after changing those settings. Frontend dependencies come from the
+image and its build output stays in the container, avoiding a large dependency
+copy into an anonymous volume on first start.
+Nginx still serves backend public assets from the workspace.
 PostgreSQL, Redis, and Meilisearch keep their existing data volumes. Image
 rebuilds do not run migrations or seed the database. Run required
 migrations separately after backing up the database. Avoid `docker compose down
 -v`, which removes persistent volumes.
+
+On 2026-10-23, the original `booklytravel_postgres_data` volume failed database
+catalog checks, including a single-user recovery attempt on a separate copy.
+The local stack now uses `booklytravel_postgres_local_20261023` for fresh demo
+data, with the user's approval. The original volume remains available, along
+with the separate `booklytravel_postgres_recovery_20261023` recovery copy. Do not
+delete either volume when cleaning up the local stack. PostgreSQL health checks
+allow five minutes for a cold initialization while still reporting ready as
+soon as a check passes.
 
 The backend build context excludes local environment files, uploaded storage,
 and generated bootstrap PHP cache files. The browser CI stack has its own

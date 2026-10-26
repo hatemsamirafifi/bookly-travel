@@ -1,0 +1,67 @@
+{
+  "recordedAt": "2026-10-17T20:23:44.887Z",
+  "model": "opencode/glm-5.3-flash-free",
+  "variant": "max",
+  "switchProvenance": "Muse Spark (opencode/muse-spark-1.3-contributor-free) two dispatched attempts returned only server-error events before any tool ran; no test executed on them (root-muse-attempts.json). The human explicitly approved GLM 5.3 Flash Free, root verified it in the current catalog (model-catalog-selection.json) and dispatched a fresh external executor session; the human then requested max effort and the same session resumed with --variant max. Catalog no longer lists Muse Spark; its absence does not establish the internal cause of the generic errors. OpenCode relay recorded 1.19.0 for the earlier attempts and 1.19.3 for the later resumed run; no upgrade was performed by root or executor, and this recorded difference is per-artifact provenance only.",
+  "executionChain": [
+    {
+      "run": "glm-run",
+      "dispatchEvidence": [
+        "specs/020-tour-detail-experience/evidence/final/performance/delegation-review/glm-dispatch.json (initial GLM dispatch)",
+        "specs/020-tour-detail-experience/evidence/final/performance/delegation-review/opencode-dispatch-glm-max.json (same session resumed at max effort)"
+      ]
+    }
+  ],
+  "delegatedRuns": [
+    {
+      "id": "docker-delegated-after-load-reduction",
+      "mode": "Docker in-container Chrome, approved model GLM at max",
+      "result": "passed:false — standalone CPU preflight passed 1623/1533, then collect aborted in its own unchanged readiness hook, samples 688, 1104, 1161, 1242.5, 1349; collect exit 1; assert vacuously exit 0 with ZERO reports; zero new traces/devtoolslogs; true node exit 1 disclosed instead of stale cmd %ERRORLEVEL% echo 0",
+      "evidence": "specs/020-tour-detail-experience/evidence/final/performance/opencode-after-load-reduction/"
+    },
+    {
+      "id": "native-after-load-reduction",
+      "mode": "native installed Google Chrome + Node24 + frontend deps, same Docker app",
+      "result": "stopped during preflight-tests; no final result exists; the owned process was absent when later checked; cause unproven; receives no acceptance credit; prior 12 historical LHR pairs preserved inside the attempt",
+      "evidence": "specs/020-tour-detail-experience/evidence/final/performance/opencode-native-after-load-reduction/"
+    },
+    {
+      "id": "native-resumed-20261017",
+      "mode": "same native topology after multi-hour interruption boundary",
+      "result": "runtime-identity docker exec exit 1 (engine stopped, npipe dockerDesktopLinuxEngine absent); source parity 419/419 zero; readiness/collection never started; not a page-performance failure",
+      "evidence": "specs/020-tour-detail-experience/evidence/final/performance/opencode-native-resumed-20261017/"
+    }
+  ],
+  "engineRestoration": {
+    "authorization": "Root authorized starting installed Docker Desktop and existing stopped Bookly services as reversible local QA setup only; no compose up/start/build/recreate/seed/migration or settings change",
+    "actions": "Start-Process Docker Desktop (no prompts), engine 29.8.2 reachable; all bookly-* services auto-started via their own restart policies; frontend entrypoint rm -rf /app/.next/* && npm run build && npm start rebuilt the generated output inside the SAME container cc21b897f1f4b01d0a4d92f8b07ff08c719660c21b95c3658f5a78a61b9ad79f and SAME image sha256:a254386f360c143a6174b651763a97b4f3b49dfd450ff2e7fa41b4149752573d",
+    "buildIds": {
+      "previous": "PWRC5Senrh_71s0M1xvjU",
+      "rebuilt": "sAEfqK7AIAvMIn5nyjbTK"
+    },
+    "versions": "Node v20.20.2 / Next 16.2.3 (accepted versions)",
+    "readiness": "direct 3001 and proxy 8080 each 3x HTTP 200",
+    "parity": {
+      "container": "420/420 zero mismatches vs root-reviewed-container-source.json",
+      "host": "419/419 zero mismatches vs frontend/root-gates-after.json"
+    },
+    "result": "opencode-runtime-ready.json passedReadinessOnly:true (readiness-only provenance, NOT CI/release acceptance)",
+    "evidence": "specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/"
+  },
+  "latestNativeAttempt": {
+    "id": "native-engine-resumed-20261017",
+    "startedAt": "2026-10-17T20:12:34.840Z",
+    "finishedAt": "2026-10-17T20:13:03.004Z",
+    "result": "passed:false — runtime identity matched fresh evidence; container state same ID; proxy localhost==127.0.0.1 identical; preflight-tests exit 0 (4/4, 18.7s); cpu-preflight exit 1 WITHOUT timeout, samples 959, 1160.5, 1263, 1493, 1105.5; collect/assert DID NOT RUN; zero current-source LHR scores/reports/traces",
+    "tempRunnerDiff": "destination + fresh runtime evidence input + passedReadinessOnly guard only (see native-audits-result.json hashes and tooling opencode-executor-tools-manifest.json); strict 6 URLs x 3 runs, pessimistic>=0.9, unchanged hooks/assertions",
+    "causalInterpretation": "Readiness failure is OBSERVED (exit 1 below threshold twice). Root cause is UNPROVEN. Aggregate CPU snapshots varied (then 68%, 18%, 41% single-sample reads; now 28% engine snapshot). Get-Process CPU values are CUMULATIVE process time, not instantaneous utilization; a blank vmmemWSL CPU value is UNAVAILABLE data, not zero. Attribution to specific user apps is NOT established; Docker/WSL/hardware/power contributors are not excluded. No new benchmark/retry/collection ran for these observations.",
+    "environmentSnapshot": "specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/environment-snapshot.json",
+    "evidence": "specs/020-tour-detail-experience/evidence/final/performance/opencode-native-engine-resumed-20261017/"
+  },
+  "acceptanceStates": {
+    "T072": "UNCHECKED/remaining — strict production audits still unproven; zero actual scores",
+    "T073": "UNCHECKED — preparatory refreshed read-only snapshot exists; CI for uncommitted working tree remains unproven; no merge/deploy performed",
+    "T074": "UNCHECKED — docs are current remaining-gap/preparatory records, not sequential acceptance",
+    "count": "71/74 unchanged"
+  }
+}

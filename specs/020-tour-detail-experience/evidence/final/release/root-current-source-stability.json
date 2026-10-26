@@ -1,0 +1,7 @@
+{
+  "recordedAt": "2026-10-17T15:18:57.736Z",
+  "scope": "Read-only current host inputs against accepted full frontend gates, no source mutation",
+  "files": 419,
+  "mismatches": [],
+  "passed": true
+}

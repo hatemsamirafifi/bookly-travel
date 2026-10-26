@@ -1,0 +1,44 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/booking/__tests__/BookingForm.test.tsx
+
+  console.error
+    Error: Not implemented: navigation (except hash changes)
+        at module.exports (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at navigateFetch (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+        at exports.navigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+        at LocationImpl._locationObjectNavigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:30:5)
+        at LocationImpl.assign (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:206:10)
+        at Location.assign (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\generated\Location.js:72:36)
+        at handleSubmit (F:\Travel Website\bookly travel\frontend\src\components\booking\BookingForm.tsx:390:25) {
+      type: 'not implemented'
+    }
+
+      388 |         // resubmits after return; nothing posts automatically.
+      389 |         localStorage.removeItem('auth_token');
+    > 390 |         window.location.assign(
+          |                         ^
+      391 |           buildCheckoutAuthRecoveryUrl(locale, tourSlug, count, date),
+      392 |         );
+      393 |         return;
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at navigateFetch (node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+      at exports.navigate (node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+      at LocationImpl._locationObjectNavigate (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:30:5)
+      at LocationImpl.assign (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:206:10)
+      at Location.assign (node_modules/jsdom/lib/jsdom/living/generated/Location.js:72:36)
+      at handleSubmit (src/components/booking/BookingForm.tsx:390:25)
+
+node.exe : Test Suites: 1 passed, 1 total
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Test Suites: 1 passed, 1 total:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        7.091 s
+Ran all test suites within paths "src/components/booking/__tests__/BookingForm.test.tsx".

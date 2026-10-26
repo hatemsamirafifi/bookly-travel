@@ -1,0 +1,438 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/booking/__tests__/BookingForm.test.tsx
+
+  console.error
+    Error: Not implemented: navigation (except hash changes)
+        at module.exports (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at navigateFetch (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+        at exports.navigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+        at LocationImpl._locationObjectNavigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:30:5)
+        at LocationImpl.assign (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:206:10)
+        at Location.assign (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\generated\Location.js:72:36)
+        at handleSubmit (F:\Travel Website\bookly travel\frontend\src\components\booking\BookingForm.tsx:365:25) {
+      type: 'not implemented'
+    }
+
+      363 |         // resubmits after return; nothing posts automatically.
+      364 |         localStorage.removeItem('auth_token');
+    > 365 |         window.location.assign(
+          |                         ^
+      366 |           buildCheckoutAuthRecoveryUrl(locale, tourSlug, count, date),
+      367 |         );
+      368 |         return;
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at navigateFetch (node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+      at exports.navigate (node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+      at LocationImpl._locationObjectNavigate (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:30:5)
+      at LocationImpl.assign (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:206:10)
+      at Location.assign (node_modules/jsdom/lib/jsdom/living/generated/Location.js:72:36)
+      at handleSubmit (src/components/booking/BookingForm.tsx:365:25)
+
+node.exe : FAIL src/components/booking/__tests__/BookingForm.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...ngForm.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ● BookingForm › withholds the previous quote while a new query selection is loading, then submits only the resolved 
+selection
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <h2 class="text-xl font-semibold text-bookly-navy">Hidden Gems of 
+Rome Walking Tour</h2> instead
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.85fr)] lg:items-start"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-6 rounded-xl border border-border bg-surface p-5 shadow-sm"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h2[39m
+                  [33mclass[39m=[32m"text-xl font-semibold text-bookly-navy"[39m
+                [36m>[39m
+                  [0mHidden Gems of Rome Walking Tour[0m
+                [36m</h2>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-text-muted"[39m
+                [36m>[39m
+                  [0mRome, Italy[0m
+                [36m</p>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center justify-between gap-4 rounded-xl border border-border 
+bg-surface-alt px-4 py-3"[39m
+              [36m>[39m
+                [36m<div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-sm font-medium text-bookly-navy"[39m
+                  [36m>[39m
+                    [0mSelected Date[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-lg font-semibold text-[#0A2540]"[39m
+                  [36m>[39m
+                    [0mThursday, October 15, 2026[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"text-sm font-medium text-[#0A2540] hover:text-[#071b2e] underline"[39m
+                  [33mhref[39m=[32m"/en/tours/b-course-walk"[39m
+                [36m>[39m
+                  [0mChange date[0m
+                [36m</a>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"block text-sm font-medium text-[#0A2540] mb-2"[39m
+                  [33mid[39m=[32m"participants-label"[39m
+                [36m>[39m
+                  [0mParticipants[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center gap-3"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Decrease participants"[39m
+                    [33mclass[39m=[32m"flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 
+text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-2 
+focus:ring-[#0A2540]"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"h-4 w-4"[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mstroke[39m=[32m"currentColor"[39m
+                      [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [36m>[39m
+                      [36m<path[39m
+                        [33md[39m=[32m"M20 12H4"[39m
+                        [33mstroke-linecap[39m=[32m"round"[39m
+                        [33mstroke-linejoin[39m=[32m"round"[39m
+                        [33mstroke-width[39m=[32m"2"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                  [36m<span[39m
+                    [33maria-labelledby[39m=[32m"participants-label"[39m
+                    [33maria-live[39m=[32m"polite"[39m
+                    [33mclass[39m=[32m"min-w-[3rem] text-center text-lg font-semibold text-[#0A2540]"[39m
+                  [36m>[39m
+                    [0m2[0m
+                  [36m</span>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Increase participants"[39m
+                    [33mclass[39m=[32m"flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 
+text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-2 
+focus:ring-[#0A2540]"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"h-4 w-4"[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mstroke[39m=[32m"currentColor"[39m
+                      [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [36m>[39m
+                      [36m<path[39m
+                        [33md[39m=[32m"M12 4v16m8-8H4"[39m
+                        [33mstroke-linecap[39m=[32m"round"[39m
+                        [33mstroke-linejoin[39m=[32m"round"[39m
+                        [33mstroke-width[39m=[32m"2"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-sm text-[#5A6B7B]"[39m
+                  [36m>[39m
+                    [0m1–8 allowed[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-[#5A6B7B]"[39m
+                [36m>[39m
+                  [0m€89.00[0m
+                  [0m [0m
+                  [0m/ person[0m
+                [36m</p>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-4"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"rounded-xl border border-border bg-surface p-5 shadow-sm"[39m
+              [36m>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"text-sm font-semibold text-bookly-navy mb-3"[39m
+                [36m>[39m
+                  [0mPrice Breakdown[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex justify-between text-sm text-[#5A6B7B]"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0m€89.00[0m
+                      [0m × [0m
+                      [0m{count, plural, one {# participant} other {# participants}}[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0m€178.00[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"border-t border-gray-200 pt-2 flex justify-between text-base font-semibold 
+text-[#0A2540]"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mTotal[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0m€178.00[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] 
+hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 
+disabled:cursor-not-allowed disabled:opacity-50 transition-colors"[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mConfirm & Pay[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      470 |     // No stale readable selection: skeleton only, A's quote gone, no submit.
+      471 |     await waitFor(() => {
+    > 472 |       expect(screen.queryByText('Hidden Gems of Rome Walking Tour')).not.toBeInTheDocument();
+          |                                                                          ^
+      473 |     });
+      474 |     expect(screen.queryByText('€178.00')).not.toBeInTheDocument();
+      475 |     expect(screen.queryByRole('button', { name: 'Confirm & Pay' })).not.toBeInTheDocument();
+
+      at src/components/booking/__tests__/BookingForm.test.tsx:472:74
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● BookingForm › ignores an older out-of-order response after a newer query resolved
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <h2 class="text-xl font-semibold text-bookly-navy">Hidden Gems of 
+Rome Walking Tour</h2> instead
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.85fr)] lg:items-start"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-6 rounded-xl border border-border bg-surface p-5 shadow-sm"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h2[39m
+                  [33mclass[39m=[32m"text-xl font-semibold text-bookly-navy"[39m
+                [36m>[39m
+                  [0mHidden Gems of Rome Walking Tour[0m
+                [36m</h2>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-text-muted"[39m
+                [36m>[39m
+                  [0mRome, Italy[0m
+                [36m</p>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center justify-between gap-4 rounded-xl border border-border 
+bg-surface-alt px-4 py-3"[39m
+              [36m>[39m
+                [36m<div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-sm font-medium text-bookly-navy"[39m
+                  [36m>[39m
+                    [0mSelected Date[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-lg font-semibold text-[#0A2540]"[39m
+                  [36m>[39m
+                    [0mThursday, October 15, 2026[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"text-sm font-medium text-[#0A2540] hover:text-[#071b2e] underline"[39m
+                  [33mhref[39m=[32m"/en/tours/b-course-walk"[39m
+                [36m>[39m
+                  [0mChange date[0m
+                [36m</a>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"block text-sm font-medium text-[#0A2540] mb-2"[39m
+                  [33mid[39m=[32m"participants-label"[39m
+                [36m>[39m
+                  [0mParticipants[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center gap-3"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Decrease participants"[39m
+                    [33mclass[39m=[32m"flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 
+text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-2 
+focus:ring-[#0A2540]"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"h-4 w-4"[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mstroke[39m=[32m"currentColor"[39m
+                      [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [36m>[39m
+                      [36m<path[39m
+                        [33md[39m=[32m"M20 12H4"[39m
+                        [33mstroke-linecap[39m=[32m"round"[39m
+                        [33mstroke-linejoin[39m=[32m"round"[39m
+                        [33mstroke-width[39m=[32m"2"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                  [36m<span[39m
+                    [33maria-labelledby[39m=[32m"participants-label"[39m
+                    [33maria-live[39m=[32m"polite"[39m
+                    [33mclass[39m=[32m"min-w-[3rem] text-center text-lg font-semibold text-[#0A2540]"[39m
+                  [36m>[39m
+                    [0m2[0m
+                  [36m</span>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Increase participants"[39m
+                    [33mclass[39m=[32m"flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 
+text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus:ring-2 
+focus:ring-[#0A2540]"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"h-4 w-4"[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mstroke[39m=[32m"currentColor"[39m
+                      [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [36m>[39m
+                      [36m<path[39m
+                        [33md[39m=[32m"M12 4v16m8-8H4"[39m
+                        [33mstroke-linecap[39m=[32m"round"[39m
+                        [33mstroke-linejoin[39m=[32m"round"[39m
+                        [33mstroke-width[39m=[32m"2"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-sm text-[#5A6B7B]"[39m
+                  [36m>[39m
+                    [0m1–8 allowed[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-[#5A6B7B]"[39m
+                [36m>[39m
+                  [0m€89.00[0m
+                  [0m [0m
+                  [0m/ person[0m
+                [36m</p>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-4"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"rounded-xl border border-border bg-surface p-5 shadow-sm"[39m
+              [36m>[39m
+                [36m<h3[39m
+                  [33mclass[39m=[32m"text-sm font-semibold text-bookly-navy mb-3"[39m
+                [36m>[39m
+                  [0mPrice Breakdown[0m
+                [36m</h3>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex justify-between text-sm text-[#5A6B7B]"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0m€89.00[0m
+                      [0m × [0m
+                      [0m{count, plural, one {# participant} other {# participants}}[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0m€178.00[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"border-t border-gray-200 pt-2 flex justify-between text-base font-semibold 
+text-[#0A2540]"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mTotal[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0m€178.00[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] 
+hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 
+disabled:cursor-not-allowed disabled:opacity-50 transition-colors"[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mConfirm & Pay[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      519 |     rerender(<BookingForm locale="en" todayUtc={TODAY_UTC} />);
+      520 |     await waitFor(() => {
+    > 521 |       expect(screen.queryByText('Hidden Gems of Rome Walking Tour')).not.toBeInTheDocument();
+          |                                                                          ^
+      522 |     });
+      523 |
+      524 |     // C resolves promptly on its own fetch and becomes the accepted selection.
+
+      at src/components/booking/__tests__/BookingForm.test.tsx:521:74
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 18 passed, 20 total
+Snapshots:   0 total
+Time:        5.056 s
+Ran all test suites within paths "src/components/booking/__tests__/BookingForm.test.tsx".

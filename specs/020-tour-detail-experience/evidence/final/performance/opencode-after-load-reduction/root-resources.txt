@@ -1,0 +1,9 @@
+bookly-frontend CPU=0.00% memory=565.5MiB / 2.84GiB
+bookly-scheduler CPU=0.09% memory=41.01MiB / 2.84GiB
+bookly-queue CPU=0.15% memory=51.46MiB / 2.84GiB
+bookly-backend CPU=0.00% memory=63.86MiB / 2.84GiB
+open-seo-preview CPU=0.14% memory=616.7MiB / 2.84GiB
+bookly-nginx CPU=0.00% memory=6.691MiB / 2.84GiB
+bookly-postgres CPU=0.00% memory=30.96MiB / 2.84GiB
+bookly-redis CPU=0.90% memory=7.543MiB / 2.84GiB
+bookly-meilisearch CPU=0.07% memory=19.11MiB / 2.84GiB

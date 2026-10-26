@@ -40,7 +40,7 @@ export function TourImportantInformation({ items, contentLocale }: { items: stri
   return (
     <section id="important" className="scroll-mt-20">
       <h2 className="mb-2 text-section-title font-bold text-primary">{t('importantInformation')}</h2>
-      <ul lang={contentLocale} className="list-disc space-y-1 pl-5 text-primary/80">
+      <ul lang={contentLocale} className="list-disc space-y-1 pl-5 text-primary/80 whitespace-pre-line">
         {entries.map((item, index) => <li key={`important-${index}`}>{item}</li>)}
       </ul>
     </section>

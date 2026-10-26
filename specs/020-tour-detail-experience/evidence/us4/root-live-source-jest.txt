@@ -1,0 +1,6 @@
+
+Test Suites: 3 passed, 3 total
+Tests:       100 passed, 100 total
+Snapshots:   0 total
+Time:        5.86 s, estimated 6 s
+Ran all test suites within paths "src/components/tour/__tests__/TourSectionNav.test.tsx", "src/components/tour/__tests__/TourBookingController.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx".

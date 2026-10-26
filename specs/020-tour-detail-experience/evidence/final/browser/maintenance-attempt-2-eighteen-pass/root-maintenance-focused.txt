@@ -1,0 +1,22 @@
+
+Running 18 tests using 1 worker
+
+[1A[2K[1/18] [chromium] › tests/e2e/tour-detail.spec.ts:34:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K[2/18] [chromium] › tests/e2e/tour-detail.spec.ts:344:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K[3/18] [chromium] › tests/e2e/tour-detail.spec.ts:391:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K[4/18] [chromium] › tests/e2e/tour-detail.spec.ts:485:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K[5/18] [chromium] › tests/e2e/tour-detail.spec.ts:503:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K[6/18] [chromium] › tests/e2e/tour-detail.spec.ts:503:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[1A[2K[7/18] [chromium] › tests/e2e/tour-detail.spec.ts:503:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[1A[2K[8/18] [chromium] › tests/e2e/tour-detail.spec.ts:931:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+[1A[2K[9/18] [chromium] › tests/e2e/tour-detail.spec.ts:931:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+[1A[2K[10/18] [mobile] › tests/e2e/tour-detail.spec.ts:34:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K[11/18] [mobile] › tests/e2e/tour-detail.spec.ts:344:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K[12/18] [mobile] › tests/e2e/tour-detail.spec.ts:391:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K[13/18] [mobile] › tests/e2e/tour-detail.spec.ts:485:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K[14/18] [mobile] › tests/e2e/tour-detail.spec.ts:503:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K[15/18] [mobile] › tests/e2e/tour-detail.spec.ts:503:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[1A[2K[16/18] [mobile] › tests/e2e/tour-detail.spec.ts:503:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[1A[2K[17/18] [mobile] › tests/e2e/tour-detail.spec.ts:931:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+[1A[2K[18/18] [mobile] › tests/e2e/tour-detail.spec.ts:931:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+[1A[2K  18 passed (30.3s)

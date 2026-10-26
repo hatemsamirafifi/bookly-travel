@@ -1,0 +1,310 @@
+{
+  "task": "docker desktop start - one authorized start of closed Docker Desktop as required local QA dependency",
+  "authorizedContext": "root confirmed Oct 20 2026 ~19:09Z: docker desktop status exited 1 ('Could not retrieve status. Is Docker Desktop running?'); Desktop closed; ONE official docker desktop start authorized",
+  "environment": {
+    "platform": "win32",
+    "nodeVersion": "v24.14.1",
+    "cwd": "F:\\Travel Website\\bookly travel"
+  },
+  "constraints": {
+    "startInvocationsMax": 1,
+    "startBoundMs": 120000,
+    "pollBudgetMs": 180000,
+    "eachPollCommandTimeoutMs": 15000,
+    "pollIntervalMs": 10000,
+    "note": "official timeout flag used only if documented by the actual docker desktop start --help output; overall start bound enforced via spawnSync timeout"
+  },
+  "createdAtUtc": "2026-10-20T19:15:11.347Z",
+  "prestartProbe": {
+    "name": "prestart-api-probe",
+    "command": [
+      "docker",
+      "version",
+      "--format={{.Server.Version}}"
+    ],
+    "spawnOptions": {
+      "shell": false,
+      "timeoutMs": 15000,
+      "windowsHide": true
+    },
+    "startedAtUtc": "2026-10-20T19:15:11.348Z",
+    "finishedAtUtc": "2026-10-20T19:15:11.531Z",
+    "durationMs": 183,
+    "exitCode": 1,
+    "signal": null,
+    "timedOut": false,
+    "spawnError": null
+  },
+  "helpRun": {
+    "name": "start-help",
+    "command": [
+      "docker",
+      "desktop",
+      "start",
+      "--help"
+    ],
+    "spawnOptions": {
+      "shell": false,
+      "timeoutMs": 30000,
+      "windowsHide": true
+    },
+    "startedAtUtc": "2026-10-20T19:15:11.626Z",
+    "finishedAtUtc": "2026-10-20T19:15:11.994Z",
+    "durationMs": 368,
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "spawnError": null
+  },
+  "startFlagDecision": {
+    "usedOfficialTimeoutFlag": true,
+    "flag": "--timeout",
+    "basis": "timeout flag documented in actual start-help output captured in this evidence run"
+  },
+  "startAttempt": {
+    "name": "start-once",
+    "command": [
+      "docker",
+      "desktop",
+      "start",
+      "--timeout"
+    ],
+    "spawnOptions": {
+      "shell": false,
+      "timeoutMs": 120000,
+      "windowsHide": true
+    },
+    "startedAtUtc": "2026-10-20T19:15:32.934Z",
+    "finishedAtUtc": "2026-10-20T19:15:33.146Z",
+    "durationMs": 212,
+    "exitCode": 125,
+    "signal": null,
+    "timedOut": false,
+    "spawnError": null
+  },
+  "polling": [
+    {
+      "name": "poll-01",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:15:33.148Z",
+      "finishedAtUtc": "2026-10-20T19:15:33.322Z",
+      "durationMs": 174,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-02",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:15:43.332Z",
+      "finishedAtUtc": "2026-10-20T19:15:43.610Z",
+      "durationMs": 278,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-03",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:15:53.620Z",
+      "finishedAtUtc": "2026-10-20T19:15:53.799Z",
+      "durationMs": 179,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-04",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:16:03.809Z",
+      "finishedAtUtc": "2026-10-20T19:16:03.977Z",
+      "durationMs": 168,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-05",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:16:13.988Z",
+      "finishedAtUtc": "2026-10-20T19:16:14.159Z",
+      "durationMs": 171,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-06",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:16:24.167Z",
+      "finishedAtUtc": "2026-10-20T19:16:24.363Z",
+      "durationMs": 196,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-07",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:16:34.375Z",
+      "finishedAtUtc": "2026-10-20T19:16:34.615Z",
+      "durationMs": 240,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-08",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:16:44.626Z",
+      "finishedAtUtc": "2026-10-20T19:16:44.794Z",
+      "durationMs": 168,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-09",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:16:54.800Z",
+      "finishedAtUtc": "2026-10-20T19:16:54.989Z",
+      "durationMs": 189,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-10",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:17:04.997Z",
+      "finishedAtUtc": "2026-10-20T19:17:05.167Z",
+      "durationMs": 170,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    },
+    {
+      "name": "poll-11",
+      "command": [
+        "docker",
+        "version",
+        "--format={{.Server.Version}}"
+      ],
+      "spawnOptions": {
+        "shell": false,
+        "timeoutMs": 15000,
+        "windowsHide": true
+      },
+      "startedAtUtc": "2026-10-20T19:17:15.184Z",
+      "finishedAtUtc": "2026-10-20T19:17:15.386Z",
+      "durationMs": 202,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null
+    }
+  ],
+  "outcome": null,
+  "serverVersion": null,
+  "finishedAtUtc": null
+}

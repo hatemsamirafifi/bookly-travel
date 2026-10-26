@@ -240,7 +240,12 @@
     },
     "states": {
       "withdrawnTitle": "This tour is no longer available",
-      "withdrawnDescription": "This tour was archived and cannot be booked."
+      "withdrawnDescription": "This tour was archived and cannot be booked.",
+      "loadingMessage": "Loading tour details…",
+      "errorTitle": "This tour could not be loaded",
+      "errorDescription": "Please try again. No payment or booking was made.",
+      "notFoundTitle": "Tour not found",
+      "notFoundDescription": "This tour does not exist or is no longer published."
     }
   },
   "home": {

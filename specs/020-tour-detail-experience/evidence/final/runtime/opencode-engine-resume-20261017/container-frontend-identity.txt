@@ -1,0 +1,1 @@
+﻿sha256:a254386f360c143a6174b651763a97b4f3b49dfd450ff2e7fa41b4149752573d cmd=["sh","-c","rm -rf /app/.next/* && npm run build && npm start"] entry=["docker-entrypoint.sh"] restart={"Name":"unless-stopped","MaximumRetryCount":0}

@@ -240,7 +240,12 @@
     },
     "states": {
       "withdrawnTitle": "Este tour ya no está disponible",
-      "withdrawnDescription": "Este tour fue archivado y no se puede reservar."
+      "withdrawnDescription": "Este tour fue archivado y no se puede reservar.",
+      "loadingMessage": "Cargando los detalles del tour…",
+      "errorTitle": "No se pudo cargar este tour",
+      "errorDescription": "Inténtalo de nuevo. No se ha realizado ningún pago ni reserva.",
+      "notFoundTitle": "Tour no encontrado",
+      "notFoundDescription": "Este tour no existe o ya no está publicado."
     }
   },
   "home": {

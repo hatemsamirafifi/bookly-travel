@@ -1,0 +1,32 @@
+# Post-diagnosis fix plan — ranked, minimal (planner only; NO edits performed in this session)
+
+Constraint recap: keep the gate as-is — `frontend/lighthouserc.js` (SHA `2a0bc3e1…d7672` verified), 6 URLs × 3 runs, `categories:performance` minScore 0.9 pessimistic, mobile, Lighthouse 12.8.2. Baselines for any future edit: `source-hashes.json` in this directory. All claims below cite session evidence; items marked HYPOTHESIS need the blocked tour SSR HTML (see diagnosis.md "Open questions").
+
+## P1 — Tour cover LCP request priority (tour pages)
+- Evidence: tour LCP img on all 3 runs is priority **Low**, `isLinkPreload=true`, observed 413–602 ms start on a fast local fetch, while lantern assigns sim Load Delay 2137–2249 ms (LCP sim 3890–4114). Mechanism comparison: home/search LCP imgs are High (`isLinkPreload=true`) with sim Load Delay 428–1044 ms.
+- Candidate A (preferred IFF SSR shows no server-HTML preload path): `frontend/src/components/tour/TourGallery.tsx` line 227 — replace `preload: true` with `fetchPriority: 'high' as const`; leave `loading` unset so `get-img-props.js:269` `isLazy` stays false (default eager rendering). This mirrors the verified comparator `frontend/src/components/search/TourCard.tsx:34` (`fetchPriority={imagePriority ? 'high' : undefined}`), whose LCP img is High priority on the fast path.
+- Candidate B (root-approved alternative): emit a native server-rendered `<link rel="preload" as="image" imagesrcset imagesizes crossorigin>` in the tour route head via Next `getImageProps` (available in this install: `image-external.d.ts`; semantics per `get-img-props.js:584`), reusing `SIZES_HALF` (constants at `TourGallery.tsx:24–30`) exactly so the cover URL candidate matches the rendered `<img>`.
+- Conflicts/hazards (all verified in source): `preload`+`loading:'lazy'` throws (`get-img-props.js:397`), `preload`+`priority` throws (`:404`); do not run candidate A and B together without checking for a duplicate fetch of the same cover URL with different candidates; never fabricate a `sizes` value or a candidate list not derived from the existing image props; keep gallery tiles 1–4 lazy (`loading:'lazy' as const`, position>0).
+- HYPOTHESIS status: whether the cover's SSR HTML already contains an `<img>`/`<link>` (and why Chrome assigned Low) is OPEN — decide A vs B after consuming the retained tour SSR file from the restoration owner. No pass/improvement is claimed; expected effect is directional (Load Delay band → home/search-like) and must be measured.
+- Revert-alone is NOT a fix: reverting `preload:true` returns the original 18-run configuration, which also failed minScore 0.9.
+
+## P2 — Blog LCP image lazy-loading (blog article pages)
+- Evidence: every blog run has `lcp-lazy-loaded=0`; LCP node = `div.grid > article.group > a.relative > img.object-cover` (first related-post card, `RelatedPosts.tsx:27` → `BlogCard.tsx:30–37`); BlogCard `<Image>` has no `loading`/`fetchPriority`, so `get-img-props.js:269` renders `loading="lazy"` (runs 1–2 show Low priority with observed start 262–315 ms).
+- Change: give the FIRST related-card image `fetchPriority="high"` and eager rendering (same shape as `TourCard.tsx:34`); leave every other card lazy. Alternatively `loading="eager"` alone if the simpler form survives review — prefer the fetchPriority form for consistency with the working search-only path.
+
+## P3 — Footer automatic-prefetch pruning (optional, association-level only)
+- Evidence (association only, no CPU attribution claimed): per-page `_rsc` prefetch waves — 6–19 fetches, total fetch bytes 11.8–20.7 KB/page, observed start spread 274–2312 ms, 3 cache-buster waves (`1we55`/`1h8ou`/`16xy1`), initiator `0a8gcdte55hy1.js:85008` (Link IntersectionObserver prefetch, rootMargin 200px in `0a8gcdte55hy1.js:55090`).
+- `frontend/src/components/layout/Footer.tsx` is an async server component with 5+ plain `<Link>`s without a `prefetch` prop (search/categories/destinations at lines 34–36, company column from line 42 truncating in the read view; actual full interval requires one more bounded read before scoring) → they are auto-prefetched whenever near the viewport.
+- Candidate: `prefetch={false}` limited to footer links that sit below the fold; do NOT remove prefetch from header/nav links; do not extend to other components without their own evidence. Keep navigation behavior intact (normal navigation still works; only the RSC warm-up is skipped).
+
+## Non-goals (locked; repeat of prior review directives)
+- No performance-threshold or gate-config changes (keep minScore 0.9, 6 URLs × 3 runs, pessimistic aggregation).
+- No broad app refactor: AuthProvider boundaries, tour-data load patterns, `TourCard` marketplace/search behavior, locale switching (`LocaleSwitcher` useSearchParams CSR-bailout remains UNPROVEN and is out of scope), cookie-consent gating, or content removal/SSR removal.
+- No CPU-attribution claims beyond association (home worst-run profile recorded in diagnosis.md F5; any script-splitting/home-shell work is a separate topic with its own evidence).
+- No `pytest`-style test rewrites, no new assertion rules, no legacy `.cjs` config edits.
+
+## Gate execution after any approved edits (owner-run; not this session)
+1. Rebuild app; restore/browser parity owners resolve runtime identity as planned (parity artifacts already recorded as incomplete in `06-parity-report.json` — host419 hashed 0; onlyInCurated420 `["jest.config.mjs"]`).
+2. Re-run the existing gate: same 6 URLs × 3 runs via `frontend/lighthouserc.js`; run ES first, then EN (run-order artifact noted in diagnosis.md: first-run doc-end 422–675 ms on tour vs 44–45 ms warm — no claims drawn from it).
+3. Focused pre-gate checks first (cheap): tour page SSR HTML contains the intended cover discovery mechanism; TourGallery unit expectations updated only if the position-0 preload assertion exists; `npm run types:app && npm run lint` (or repo standard).
+4. Measure, then report — no narrative "improvement" language without the recorded deltas from the fresh runs.

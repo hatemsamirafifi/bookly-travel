@@ -1,0 +1,58 @@
+{
+  "scope": "Fresh native built Next served through a browser frontend-resource transport adapter on the owned proxy origin. Public/auth/booking/payment/cancel API requests reach the actual owned API without interception. Media-only CDN adapter. This is not Docker deployment/optimizer/performance acceptance.",
+  "checks": [
+    "All offered dates, non-default selection, shared mobile dialog, 44px target, Escape focus return and resize preserved query.",
+    "Real login through register/login cross-links restored the full selection with no create POST.",
+    "Actual revoked-token create401 recovered full query; explicit retry alone created one deterministic booking with authoritative integer total.",
+    "Actual revoked-token payment401 retained the same pending reference; cross-tab login restored auth and explicit retry confirmed it without another create POST."
+  ],
+  "createRequests": [
+    {
+      "tour_slug": "hidden-gems-rome-walking-tour",
+      "tour_date": "2026-11-17",
+      "participant_count": 4,
+      "locale": "en",
+      "page_load_price": 4500
+    },
+    {
+      "tour_slug": "hidden-gems-rome-walking-tour",
+      "tour_date": "2026-11-17",
+      "participant_count": 4,
+      "locale": "en",
+      "page_load_price": 4500
+    }
+  ],
+  "paymentStatuses": [
+    401,
+    200
+  ],
+  "startedAtUtc": "2026-10-16T13:42:13.888Z",
+  "origin": "http://localhost:8080",
+  "nativeOrigin": "http://127.0.0.1:56020",
+  "sourceHead": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "buildId": "2b7daSvhEzPFaswVcuN3y",
+  "publicFacts": {
+    "slug": "hidden-gems-rome-walking-tour",
+    "dateCount": 60,
+    "baseCents": 4500,
+    "currency": "EUR",
+    "group": {
+      "min": 1,
+      "max": 20
+    },
+    "picked": "2026-11-16",
+    "mobilePicked": "2026-11-17"
+  },
+  "ownedReference": "BKO-A24MEH",
+  "serverTotal": {
+    "amount": 18000,
+    "currency": "EUR"
+  },
+  "passed": true,
+  "cleanup": {
+    "reference": "BKO-A24MEH",
+    "status": 200,
+    "passed": true,
+    "confirmedForCleanup": false
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "ready": true,
+  "task": "offline-QA-image-build (image-only-20261020)",
+  "runnerStartedAt": "2026-10-20T19:25:44.427Z",
+  "finishedAt": "2026-10-20T19:25:54.387Z",
+  "baseTag": "booklytravel-nextjs:spec020-preload-be653d72",
+  "baseImageIdRequired": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+  "baseImageIdVerified": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+  "targetTag": "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+  "targetImageId": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+  "build": {
+    "status": 0,
+    "timedOut": false,
+    "command": [
+      "docker",
+      "build",
+      "--network=none",
+      "--pull=false",
+      "-f",
+      "C:\\Users\\HaTeM\\AppData\\Local\\Temp\\opencode\\bookly-perf3-20261020\\image-only-20261020\\Dockerfile",
+      "-t",
+      "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+      "C:\\Users\\HaTeM\\AppData\\Local\\Temp\\opencode\\bookly-perf3-20261020\\image-only-20261020\\context"
+    ],
+    "shell": false,
+    "timeoutMs": 180000,
+    "startedAt": "2026-10-20T19:25:45.527Z",
+    "endedAt": "2026-10-20T19:25:54.024Z"
+  },
+  "imageReadyCriteria": {
+    "buildExit0": true,
+    "buildNotTimedOut": true,
+    "shaGuardsPassed": true,
+    "baseIdExactMatch": true,
+    "targetDidNotExistBefore": true
+  },
+  "dockerfileSha256": "e1f86b66ecaf5057c2d3f85cb97c5c6e1575acd8f4bef6fe05260b93966646ed",
+  "contextManifest": "context-manifest.json",
+  "rawLogs": "logs/",
+  "frontendCurrentState": {
+    "name": "/bookly-frontend",
+    "image": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+    "state": "running",
+    "labels": {
+      "com.docker.compose.config-hash": "4364d11eb4ff3e51be42a7326a4ad43db513bb16794e203acec74d6e574e031c",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.depends_on": "",
+      "com.docker.compose.image": "sha256:130b263a2d57303199a2b106b08a13d4362b64b8a8cdca7f6ef3fb9b712b97ba",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "booklytravel",
+      "com.docker.compose.project.config_files": "F:\\Travel Website\\bookly travel\\docker-compose.yml,C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\qa-preload\\compose.preload-override.yml",
+      "com.docker.compose.project.working_dir": "F:\\Travel Website\\bookly travel",
+      "com.docker.compose.replace": "bookly-frontend",
+      "com.docker.compose.service": "nextjs",
+      "com.docker.compose.version": "5.6.0"
+    },
+    "currentImageMatchesBase": true
+  },
+  "notes": [
+    "Earlier run stopped on labels-key mismatch: executor checked bare project/service keys; actual Docker labels are compose-qualified (com.docker.compose.*) with matching values. Record preserved at logs/stopped-superseded-20261020.json; rerun used corrected check.",
+    "Baseline auto-build (if in progress) recorded as current-not-ready; does not block offline image build.",
+    "No containers created/recreated here; owned-frontend step belongs to the next task.",
+    "Canonical/latest untouched: target tag was verified absent before build.",
+    "RelatedPosts.tsx copied=false, edited=false; only hash-verified against original."
+  ],
+  "gates": [
+    {
+      "name": "base-image-id-exact-match",
+      "pass": true,
+      "info": {
+        "tag": "booklytravel-nextjs:spec020-preload-be653d72",
+        "id": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9"
+      }
+    },
+    {
+      "name": "bookly-frontend-labels-match",
+      "pass": true,
+      "info": {
+        "project": "booklytravel",
+        "service": "nextjs"
+      }
+    },
+    {
+      "name": "bookly-frontend-image-vs-base-recorded",
+      "pass": true,
+      "info": {
+        "note": "if false: recorded as current-not-ready (baseline auto-build may be in progress); does not block offline image build",
+        "matches": true
+      }
+    },
+    {
+      "name": "target-tag-absent",
+      "pass": true,
+      "info": {
+        "tag": "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1"
+      }
+    },
+    {
+      "name": "source+copy-sha-guard-src/components/tour/TourGallery.tsx",
+      "pass": true,
+      "info": {
+        "expected": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+        "sourceSha": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+        "copiedSha": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e"
+      }
+    },
+    {
+      "name": "source+copy-sha-guard-src/components/layout/Footer.tsx",
+      "pass": true,
+      "info": {
+        "expected": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+        "sourceSha": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+        "copiedSha": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857"
+      }
+    },
+    {
+      "name": "source+copy-sha-guard-src/components/blog/BlogDetail.tsx",
+      "pass": true,
+      "info": {
+        "expected": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+        "sourceSha": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+        "copiedSha": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969"
+      }
+    },
+    {
+      "name": "related-posts-original-sha-verified",
+      "pass": true,
+      "info": {
+        "file": "src/components/blog/RelatedPosts.tsx",
+        "sha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+        "copied": false,
+        "edited": false
+      }
+    },
+    {
+      "name": "context-curated-count-3",
+      "pass": true,
+      "info": {
+        "count": 3
+      }
+    },
+    {
+      "name": "dockerfile-minimal",
+      "pass": true,
+      "info": {
+        "sha256": "e1f86b66ecaf5057c2d3f85cb97c5c6e1575acd8f4bef6fe05260b93966646ed",
+        "from": "booklytravel-nextjs:spec020-preload-be653d72",
+        "copyCount": 3,
+        "noRunNoEntrypointNoEnv": true
+      }
+    },
+    {
+      "name": "build-exit-0",
+      "pass": true,
+      "info": {
+        "status": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "target-image-inspected",
+      "pass": true,
+      "info": {
+        "tag": "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+        "id": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39"
+      }
+    }
+  ]
+}

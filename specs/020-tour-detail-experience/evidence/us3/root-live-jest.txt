@@ -1,0 +1,6 @@
+
+Test Suites: 4 passed, 4 total
+Tests:       94 passed, 94 total
+Snapshots:   0 total
+Time:        186.015 s
+Ran all test suites within paths "src/components/tour/__tests__/TourDetail.test.tsx", "src/components/tour/__tests__/ImageGallery.test.tsx", "src/components/tour/__tests__/TourGallery.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx".

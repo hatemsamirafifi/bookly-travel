@@ -1,0 +1,12 @@
+✔ a stable desktop CPU permits the unchanged mobile slowdown (1.383ms)
+✔ a slow or changing CPU must block the performance audit (0.4089ms)
+✔ startup settling requires two consecutive stable samples (0.2697ms)
+✔ missing or invalid measurements cannot accept the audit (0.3255ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18691.8216

@@ -1,0 +1,3 @@
+{"attempt":1,"benchmarkIndex":1495.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":2154.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":2235,"url":"about:blank","appVisited":false}

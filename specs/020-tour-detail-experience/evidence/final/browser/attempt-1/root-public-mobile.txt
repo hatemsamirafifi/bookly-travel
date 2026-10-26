@@ -1,0 +1,277 @@
+
+Running 138 tests using 1 worker
+
+[1A[2K[1/138] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/138] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[1A[2K[3/138] [chromium] › tests/e2e/tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K  1) [chromium] › tests/e2e/tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('#itinerary')
+    Expected substring: [32m"Legacy arrival"[39m
+    Error: strict mode violation: locator('#itinerary') resolved to 2 elements:
+        1) <section id="itinerary" class="scroll-mt-20">…</section> aka locator('#main-content').getByText('ItineraryDay 1: Legacy')
+        2) <section id="itinerary" class="scroll-mt-20">…</section> aka getByText('ItineraryDay 1: Legacy').nth(1)
+
+    Call log:
+    [2m  - Expect "toContainText" with timeout 20000ms[22m
+    [2m  - waiting for locator('#itinerary')[22m
+
+
+      63 |       ] };
+      64 |       await page.reload();
+    > 65 |       await expect(page.locator('#itinerary')).toContainText('Legacy arrival');
+         |                                                ^
+      66 |       await expect(page.locator('#itinerary')).toContainText('Legacy walking route');
+      67 |       const adopted = JSON.parse(await page.locator('script[type="application/ld+json"]').first().textContent() ?? '{}');
+      68 |       expect(adopted.itinerary.itemListElement.map((day: { position: number; identifier: number; name: string }) =>
+        at /app/tests/e2e/tour-detail.spec.ts:65:48
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-3371e--no-photos-or-review-claims-chromium/error-context.md
+
+
+[1A[2K[4/138] [chromium] › tests/e2e/tour-detail.spec.ts:81:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[1A[2K[5/138] [chromium] › tests/e2e/tour-detail.spec.ts:178:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[1A[2K[6/138] [chromium] › tests/e2e/tour-detail.spec.ts:269:7 › Tour Detail Page › tour detail page loads with all sections
+[1A[2K[7/138] [chromium] › tests/e2e/tour-detail.spec.ts:279:7 › Tour Detail Page › image gallery is visible
+[1A[2K[8/138] [chromium] › tests/e2e/tour-detail.spec.ts:286:7 › Tour Detail Page › image gallery rail controls move the counter with no thumbnail navigation
+[1A[2K[9/138] [chromium] › tests/e2e/tour-detail.spec.ts:311:7 › Tour Detail Page › lightbox opens from a keyboard-focusable tile and restores focus on Escape
+[1A[2K[10/138] [chromium] › tests/e2e/tour-detail.spec.ts:325:7 › Tour Detail Page › section navigation links only to rendered sections
+[1A[2K[11/138] [chromium] › tests/e2e/tour-detail.spec.ts:337:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K  2) [chromium] › tests/e2e/tour-detail.spec.ts:337:7 › Tour Detail Page › availability calendar shows available dates 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('Select a Date')
+    Expected: visible
+    Error: strict mode violation: getByText('Select a Date') resolved to 2 elements:
+        1) <label for="_r_a_" class="mb-3 block text-sm font-semibold text-primary">Select a Date</label> aka locator('label')
+        2) <option value="">Select a Date</option> aka getByLabel('Select a Date')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText('Select a Date')[22m
+
+
+      339 |
+      340 |     const calendar = page.getByText('Select a Date');
+    > 341 |     await expect(calendar).toBeVisible({ timeout: 10000 });
+          |                            ^
+      342 |   });
+      343 |
+      344 |   test('booking CTA is visible', async ({ page }) => {
+        at /app/tests/e2e/tour-detail.spec.ts:341:28
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-0e1be-endar-shows-available-dates-chromium/error-context.md
+
+
+[1A[2K[12/138] [chromium] › tests/e2e/tour-detail.spec.ts:344:7 › Tour Detail Page › booking CTA is visible
+[1A[2K[13/138] [chromium] › tests/e2e/tour-detail.spec.ts:360:7 › Tour Detail Page › participant selector increments and decrements
+[1A[2K[14/138] [chromium] › tests/e2e/tour-detail.spec.ts:374:7 › Tour Detail Page › shows 404 page for non-existent tour
+[1A[2K[15/138] [chromium] › tests/e2e/tour-detail.spec.ts:381:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K  3) [chromium] › tests/e2e/tour-detail.spec.ts:381:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /Reviews/i })
+    Expected: visible
+    Error: strict mode violation: getByRole('heading', { name: /Reviews/i }) resolved to 2 elements:
+        1) <h2 id="reviews-title" class="mb-3 text-xl font-semibold text-bookly-navy">Reviews</h2> aka locator('#reviews-title')
+        2) <h3 class="mb-3 text-sm font-semibold text-gray-700">Reviews</h3> aka getByRole('region', { name: 'Reviews' }).locator('h3')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /Reviews/i })[22m
+
+
+      388 |     const reviewsLink = page.getByRole('navigation', { name: 'Tour sections' }).getByRole('link', { name: 'Reviews' });
+      389 |     if (data.reviews.count > 0) {
+    > 390 |       await expect(reviewsHeading).toBeVisible();
+          |                                    ^
+      391 |       await expect(reviewsLink).toBeVisible();
+      392 |     } else {
+      393 |       await expect(reviewsHeading).toHaveCount(0);
+        at /app/tests/e2e/tour-detail.spec.ts:390:36
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-dd1db-API-reports-genuine-reviews-chromium/error-context.md
+
+
+[1A[2K[16/138] [chromium] › tests/e2e/tour-detail.spec.ts:398:7 › Tour Detail Page › about section displays description
+[1A[2K[17/138] [chromium] › tests/e2e/tour-detail.spec.ts:405:7 › Tour Detail Page › tour detail has proper SEO metadata
+[1A[2K[18/138] [chromium] › tests/e2e/tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+[1A[2K[19/138] [chromium] › tests/e2e/tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+[1A[2K[20/138] [chromium] › tests/e2e/tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+[1A[2K[21/138] [chromium] › tests/e2e/tour-detail.spec.ts:439:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+[1A[2K[22/138] [chromium] › tests/e2e/tour-detail.spec.ts:451:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+[1A[2K[23/138] [chromium] › tests/e2e/tour-detail.spec.ts:475:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K  4) [chromium] › tests/e2e/tour-detail.spec.ts:475:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatch[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected pattern: [32m/^\/en\/booking\?tour=hidden-gems-rome-walking-tour&participants=1&date=\d{4}-\d{2}-\d{2}$/[39m
+    Received string:  [31m"/en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems-rome-walking-tour%26participants%3D1%26date%3D2026-10-17"[39m
+
+      479 |     await expect(action).toBeVisible();
+      480 |     const href = await action.getAttribute('href');
+    > 481 |     expect(href).toMatch(/^\/en\/booking\?tour=hidden-gems-rome-walking-tour&participants=1&date=\d{4}-\d{2}-\d{2}$/);
+          |                  ^
+      482 |     await action.focus();
+      483 |     await expect(action).toBeFocused();
+      484 |   });
+        at /app/tests/e2e/tour-detail.spec.ts:481:18
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-70799-nd-uses-a-real-offered-date-chromium/error-context.md
+
+
+[1A[2K[24/138] [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K  5) [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Select a Date' })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Select a Date' })[22m
+
+
+      496 |       await page.goto(`/${locale}/tours/${slug}`);
+      497 |       await expect(page.getByRole('heading', { level: 1 })).toHaveText(data.title);
+    > 498 |       await expect(page.getByRole('heading', { name: selectDate })).toBeVisible();
+          |                                                                     ^
+      499 |       const action = page.getByRole('link', { name: bookNow }).first();
+      500 |       await expect(action).toBeVisible();
+      501 |       const href = new URL((await action.getAttribute('href'))!, 'http://bookly.test');
+        at /app/tests/e2e/tour-detail.spec.ts:498:69
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-8a1a5-ols-and-a-real-offered-date-chromium/error-context.md
+
+
+[1A[2K[25/138] [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[1A[2K  6) [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Seleccionar Fecha' })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Seleccionar Fecha' })[22m
+
+
+      496 |       await page.goto(`/${locale}/tours/${slug}`);
+      497 |       await expect(page.getByRole('heading', { level: 1 })).toHaveText(data.title);
+    > 498 |       await expect(page.getByRole('heading', { name: selectDate })).toBeVisible();
+          |                                                                     ^
+      499 |       const action = page.getByRole('link', { name: bookNow }).first();
+      500 |       await expect(action).toBeVisible();
+      501 |       const href = new URL((await action.getAttribute('href'))!, 'http://bookly.test');
+        at /app/tests/e2e/tour-detail.spec.ts:498:69
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-1b133-ols-and-a-real-offered-date-chromium/error-context.md
+
+
+[1A[2K[26/138] [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[1A[2K  7) [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Seleziona Data' })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Seleziona Data' })[22m
+
+
+      496 |       await page.goto(`/${locale}/tours/${slug}`);
+      497 |       await expect(page.getByRole('heading', { level: 1 })).toHaveText(data.title);
+    > 498 |       await expect(page.getByRole('heading', { name: selectDate })).toBeVisible();
+          |                                                                     ^
+      499 |       const action = page.getByRole('link', { name: bookNow }).first();
+      500 |       await expect(action).toBeVisible();
+      501 |       const href = new URL((await action.getAttribute('href'))!, 'http://bookly.test');
+        at /app/tests/e2e/tour-detail.spec.ts:498:69
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-54a10-ols-and-a-real-offered-date-chromium/error-context.md
+
+
+[1A[2K[27/138] [chromium] › tests/e2e/tour-detail.spec.ts:513:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[1A[2K[28/138] [chromium] › tests/e2e/tour-detail.spec.ts:680:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[1A[2K[29/138] [chromium] › tests/e2e/tour-detail.spec.ts:844:9 › Tour Detail Page › US1 SSR complete tour at 390px keeps prescribed order with disclosure and no orphan nav entries
+[1A[2K[30/138] [chromium] › tests/e2e/tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+[1A[2K[31/138] [chromium] › tests/e2e/tour-detail.spec.ts:844:9 › Tour Detail Page › US1 SSR complete tour at 1440px keeps prescribed order with disclosure and no orphan nav entries
+[1A[2K[32/138] [chromium] › tests/e2e/tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+[1A[2K  8) [chromium] › tests/e2e/tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('#overview')
+    Expected: visible
+    Error: strict mode violation: locator('#overview') resolved to 2 elements:
+        1) <section id="overview" class="scroll-mt-20">…</section> aka locator('#main-content').getByText('About This TourDiscover the')
+        2) <section id="overview" class="scroll-mt-20">…</section> aka getByText('About This TourDiscover the').nth(1)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 20000ms[22m
+    [2m  - waiting for locator('#overview')[22m
+
+
+      919 |
+      920 |         await expect(page.getByRole('heading', { level: 1 })).toHaveText(sparse.title);
+    > 921 |         await expect(page.locator('#overview')).toBeVisible();
+          |                                                 ^
+      922 |         await expect(page.locator('#facts')).toBeVisible();
+      923 |         for (const id of ['highlights', 'itinerary', 'included', 'excluded', 'meeting', 'cancellation', 'important', 'operator', 'reviews', 'related']) {
+      924 |           await expect(page.locator(`#${id}`)).toHaveCount(0);
+        at /app/tests/e2e/tour-detail.spec.ts:921:49
+
+    Error Context: ../tmp/spec020-final-browser-public-mobile/tour-detail-Tour-Detail-Pa-c27dc-s-entries-and-review-claims-chromium/error-context.md
+
+
+[1A[2K[33/138] [chromium] › tests/e2e/tour-detail.spec.ts:945:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+[1A[2K[34/138] [chromium] › tests/e2e/tour-detail.spec.ts:998:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize
+[1A[2K[35/138] [chromium] › tests/e2e/tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back
+[1A[2K[36/138] [chromium] › tests/e2e/tour-detail.spec.ts:1123:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+[1A[2K[37/138] [chromium] › tests/e2e/tour-detail.spec.ts:1145:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[38/138] [chromium] › tests/e2e/tour-detail.spec.ts:1172:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K[39/138] [chromium] › tests/e2e/tour-detail.spec.ts:1207:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+[1A[2K[40/138] [chromium] › tests/e2e/tour-detail.spec.ts:1238:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en
+[1A[2K[41/138] [chromium] › tests/e2e/tour-detail.spec.ts:1238:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es
+[1A[2K[42/138] [chromium] › tests/e2e/tour-detail.spec.ts:1238:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it
+[1A[2K[43/138] [chromium] › tests/e2e/tour-detail.spec.ts:1266:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en
+[1A[2K[44/138] [chromium] › tests/e2e/tour-detail.spec.ts:1266:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es
+[1A[2K[45/138] [chromium] › tests/e2e/tour-detail.spec.ts:1295:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+[1A[2K[46/138] [chromium] › tests/e2e/tour-detail.spec.ts:1338:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 403 renders safe localized recoverable state in es
+[1A[2K[47/138] [chromium] › tests/e2e/tour-detail.spec.ts:1338:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 422 renders safe localized recoverable state in it
+[1A[2K[48/138] [chromium] › tests/e2e/tour-detail.spec.ts:1338:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 429 renders safe localized recoverable state in en
+[1A[2K[49/138] [chromium] › tests/e2e/tour-detail.spec.ts:1371:7 › Tour Detail route states (Spec 020 US6) › US6 SSR intentional-empty translated itinerary stays empty with agreeing schema
+[1A[2K[50/138] [chromium] › tests/e2e/tour-detail.spec.ts:1423:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span
+[1A[2K[51/138] [chromium] › tests/e2e/tour-detail.spec.ts:1508:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability
+[1A[2K  9) [chromium] › tests/e2e/tour-detail.spec.ts:1508:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability 
+
+    Test was interrupted.
+
+
+[1A[2K  8 failed
+    [chromium] › tests/e2e/tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims 
+    [chromium] › tests/e2e/tour-detail.spec.ts:337:7 › Tour Detail Page › availability calendar shows available dates 
+    [chromium] › tests/e2e/tour-detail.spec.ts:381:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews 
+    [chromium] › tests/e2e/tour-detail.spec.ts:475:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date 
+    [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date 
+    [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date 
+    [chromium] › tests/e2e/tour-detail.spec.ts:491:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date 
+    [chromium] › tests/e2e/tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims 
+  1 interrupted
+    [chromium] › tests/e2e/tour-detail.spec.ts:1508:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability 
+  87 did not run
+  42 passed (4.2m)

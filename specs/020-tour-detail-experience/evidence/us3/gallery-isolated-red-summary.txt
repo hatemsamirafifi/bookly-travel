@@ -1,0 +1,54 @@
+Spec 020 US3 isolated gallery lane — RED baseline evidence (T044)
+===============================================================
+Date (UTC): 2026-10-15
+Branch: codex/020-tour-detail-experience @ 3efe32d (accepted foundation/content)
+Lane scope: ONLY frontend/src/components/tour/TourGallery.tsx (forwarding
+adapter around existing ImageGallery) + new
+frontend/src/components/tour/__tests__/TourGallery.test.tsx. No live-page
+integration, no edits to ImageGallery/Dialog/catalogs/fixtures/E2E.
+
+Command (from frontend/, detached, PowerShell):
+  npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx
+
+Result:
+  Test Suites: 1 failed, 1 total
+  Tests:       17 failed, 17 total
+  Snapshots:   0 total
+  Time:        261.39 s
+
+Failed tests (all behavioral — suite compiled and ran; no missing
+module/type/mock failure):
+  - TourGallery empty gallery > shows an honest localized empty state with reserved space and no viewer
+  - TourGallery desktop mosaic > shows a cover plus up to four supporting tiles with a real-count see-all beyond five
+  - TourGallery desktop mosaic > reaches every supplied photo in order, including slots beyond five, with wraparound
+  - TourGallery desktop mosaic > puts the cover first while preserving caller relative order otherwise
+  - TourGallery desktop mosaic > adapts sparse galleries with no duplicate tiles and no see-all
+  - TourGallery desktop mosaic > opens each tile at its own original index
+  - TourGallery desktop mosaic > keeps a failed slot stable with an honest placeholder while other photos stay reachable
+  - TourGallery desktop mosaic > recovers a failed slot when the media identity changes
+  - TourGallery desktop mosaic > marks image language from alt_locale while controls stay page-localized
+  - TourGallery desktop mosaic > renders alt text as text, never as raw HTML
+  - TourGallery mobile rail > shows every photo in a scroll rail with counter and controls, without thumbnails
+  - TourGallery mobile rail > updates the counter on scroll and moves the rail from visible controls
+  - TourGallery mobile rail > uses instant programmatic scrolls when reduced motion is preferred
+  - TourGallery mobile rail > reaches every rail photo through its own trigger
+  - TourGallery viewer focus > returns focus to the actual trigger on close
+  - TourGallery viewer focus > keeps focus stable on arrow navigation without refocusing close
+  - TourGallery viewer focus > applies the blur placeholder only from actually supplied metadata
+
+Legacy deficiencies proven (adapter forwards to existing ImageGallery):
+  - No >=1024 mosaic structure (no tour-gallery-mosaic region, no see-all
+    control with the real total, per-tile triggers do not open the viewer at
+    their own index).
+  - No <1024 scroll-snap rail with current/total counter and visible
+    previous/next; legacy instead renders a thumbnail strip.
+  - No honest localized empty message (empty renders bare icon space).
+  - No same-sized localized failed-image placeholder; failures erase slots.
+  - Blur placeholder applied from the default fallback even when the supplied
+    TourImage carries no blur metadata.
+  - No inert marking of the CSS-hidden variant; no reduced-motion-aware rail
+    scrolling; viewer position not announced per original-slot index.
+
+Full Jest output retained alongside this summary (gallery-isolated-red-full.log).
+No claim of full Spec 020 or root acceptance; browser layout/touch/geometry
+verification is owned by root later.

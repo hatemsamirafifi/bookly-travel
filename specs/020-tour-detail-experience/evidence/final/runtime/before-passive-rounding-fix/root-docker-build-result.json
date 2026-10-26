@@ -1,0 +1,67 @@
+{
+  "startedAt": "2026-10-16T22:10:16.962Z",
+  "stages": [
+    {
+      "name": "image-build",
+      "args": [
+        "compose",
+        "build",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-16T22:10:17.257Z",
+      "finishedAt": "2026-10-16T22:13:53.470Z",
+      "exitCode": 0
+    },
+    {
+      "name": "frontend-recreate",
+      "args": [
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--force-recreate",
+        "--renew-anon-volumes",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-16T22:13:53.471Z",
+      "finishedAt": "2026-10-16T22:17:20.824Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-source",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs'),crypto=require('node:crypto');const paths=JSON.parse(fs.readFileSync(0,'utf8'));console.log(JSON.stringify({node:process.version,next:require('next/package.json').version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),files:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync('/app/'+p.replaceAll('\\\\','/'))).digest('hex')]))}));"
+      ],
+      "startedAt": "2026-10-16T22:18:40.125Z",
+      "finishedAt": "2026-10-16T22:18:40.715Z",
+      "exitCode": 1
+    },
+    {
+      "name": "frontend-build-log",
+      "args": [
+        "compose",
+        "logs",
+        "--no-color",
+        "--tail",
+        "180",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-16T22:18:40.716Z",
+      "finishedAt": "2026-10-16T22:18:41.190Z",
+      "exitCode": 0
+    }
+  ],
+  "readiness": {
+    "direct": 200,
+    "proxy": 200
+  },
+  "error": "container-source exited 1",
+  "passed": false,
+  "finishedAt": "2026-10-16T22:18:41.191Z"
+}

@@ -1,0 +1,288 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: tour-detail.spec.ts >> Tour Detail Page >> en detail keeps localized booking controls and a real offered date
+- Location: tests/e2e/tour-detail.spec.ts:499:9
+
+# Error details
+
+```
+Test timeout of 60000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e4]:
+      - link "Bookly" [ref=e5] [cursor=pointer]:
+        - /url: /en
+      - generic [ref=e6]:
+        - button "Search tours" [ref=e7]:
+          - img [ref=e8]
+        - link "Sign In" [ref=e11] [cursor=pointer]:
+          - /url: /en/auth/login
+          - img [ref=e12]
+        - button "Open menu" [ref=e15]:
+          - img [ref=e16]
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - navigation "Breadcrumbs" [ref=e20]:
+          - list [ref=e21]:
+            - listitem [ref=e22]:
+              - link "Home" [ref=e23] [cursor=pointer]:
+                - /url: /en
+            - listitem [ref=e24]:
+              - generic [ref=e25]: /
+              - link "Walking Tours" [ref=e26] [cursor=pointer]:
+                - /url: /en/categories/walking
+            - listitem [ref=e27]:
+              - generic [ref=e28]: /
+              - generic [ref=e29]: Hidden Gems of Rome Walking Tour
+        - generic [ref=e30]:
+          - heading "Hidden Gems of Rome Walking Tour" [level=1] [ref=e31]
+          - button "Save to wishlist" [ref=e32]:
+            - generic [ref=e33]: ♡
+        - generic [ref=e35]:
+          - img [ref=e36]
+          - text: Rome, Italy
+        - generic [ref=e39]:
+          - 'generic "Rating: 4.5 out of 5" [ref=e40]':
+            - img [ref=e41]
+            - generic [ref=e43]: "4.5"
+            - generic [ref=e44]: "Rating: 4.5 out of 5"
+          - link "(2 Reviews)" [ref=e45] [cursor=pointer]:
+            - /url: "#reviews"
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - button "View image 1" [ref=e48]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e49]
+          - button "View image 2" [ref=e50]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e51]
+          - button "View image 3" [ref=e52]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e53]
+          - button "View image 4" [ref=e54]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e55]
+          - button "View image 5" [ref=e56]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e57]
+        - button "Previous image" [ref=e58]:
+          - img [ref=e59]
+        - button "Next image" [ref=e61]:
+          - img [ref=e62]
+        - paragraph [ref=e64]: 1 of 5
+      - navigation "Tour sections" [ref=e65]:
+        - generic [ref=e66]:
+          - link "About This Tour" [ref=e67] [cursor=pointer]:
+            - /url: "#overview"
+          - link "Tour facts" [ref=e68] [cursor=pointer]:
+            - /url: "#facts"
+          - link "Highlights" [ref=e69] [cursor=pointer]:
+            - /url: "#highlights"
+          - link "What's Included" [ref=e70] [cursor=pointer]:
+            - /url: "#included"
+          - link "What's Excluded" [ref=e71] [cursor=pointer]:
+            - /url: "#excluded"
+          - link "Meeting Point" [ref=e72] [cursor=pointer]:
+            - /url: "#meeting"
+          - link "Cancellation Policy" [ref=e73] [cursor=pointer]:
+            - /url: "#cancellation"
+          - link "Reviews" [ref=e74] [cursor=pointer]:
+            - /url: "#reviews"
+          - link "More experiences to explore" [ref=e75] [cursor=pointer]:
+            - /url: "#related"
+      - generic [ref=e76]:
+        - article [ref=e77]:
+          - generic [ref=e78]:
+            - heading "About This Tour" [level=2] [ref=e79]
+            - generic [ref=e80]: Discover the secret corners of Rome that most tourists never see. From hidden courtyards to local artisan shops, this tour takes you off the beaten path through the Eternal City.
+          - generic [ref=e81]:
+            - heading "Tour facts" [level=2] [ref=e82]
+            - generic [ref=e83]:
+              - generic [ref=e84]:
+                - term [ref=e85]: Duration
+                - definition [ref=e86]: 3 hours
+              - generic [ref=e87]:
+                - term [ref=e88]: Group size
+                - definition [ref=e89]: 1–20 travelers
+          - generic [ref=e90]:
+            - heading "Highlights" [level=2] [ref=e91]
+            - list [ref=e92]:
+              - listitem [ref=e93]:
+                - img [ref=e94]
+                - text: Hidden courtyards
+              - listitem [ref=e96]:
+                - img [ref=e97]
+                - text: Local artisan shops
+              - listitem [ref=e99]:
+                - img [ref=e100]
+                - text: Ancient Roman stories
+              - listitem [ref=e102]:
+                - img [ref=e103]
+                - text: Off the beaten path
+          - generic [ref=e105]:
+            - heading "What's Included" [level=3] [ref=e109]:
+              - button "What's Included" [ref=e110]:
+                - text: What's Included
+                - img [ref=e111]
+            - heading "What's Excluded" [level=3] [ref=e116]:
+              - button "What's Excluded" [ref=e117]:
+                - text: What's Excluded
+                - img [ref=e118]
+          - generic [ref=e120]:
+            - heading "Meeting Point" [level=2] [ref=e121]
+            - paragraph [ref=e122]:
+              - img [ref=e123]
+              - text: Colosseum main entrance
+          - generic [ref=e126]:
+            - heading "Cancellation Policy" [level=2] [ref=e127]
+            - paragraph [ref=e128]: Free cancellation up to 24 hours before the tour.
+          - region "Reviews" [ref=e129]:
+            - heading "Reviews" [level=2] [ref=e130]
+            - generic [ref=e131]:
+              - heading "Reviews" [level=3] [ref=e132]
+              - generic [ref=e134]:
+                - generic [ref=e135]: "4.5"
+                - generic [ref=e136]:
+                  - 'img "Rating: 4.5 out of 5" [ref=e137]':
+                    - img [ref=e138]
+                    - img [ref=e140]
+                    - img [ref=e142]
+                    - img [ref=e144]
+                    - img [ref=e146]
+                  - paragraph [ref=e148]: 2 reviews
+              - generic [ref=e149]:
+                - generic [ref=e150]:
+                  - generic [ref=e151]:
+                    - generic [ref=e152]: Test
+                    - generic [ref=e153]: Edited
+                  - generic [ref=e154]:
+                    - 'img "Rating: 4 out of 5" [ref=e155]':
+                      - img [ref=e156]
+                      - img [ref=e158]
+                      - img [ref=e160]
+                      - img [ref=e162]
+                      - img [ref=e164]
+                    - generic [ref=e166]: September 27, 2026
+                  - paragraph [ref=e167]: Updated comment value here.
+                - generic [ref=e168]:
+                  - generic [ref=e170]: Test
+                  - generic [ref=e171]:
+                    - 'img "Rating: 5 out of 5" [ref=e172]':
+                      - img [ref=e173]
+                      - img [ref=e175]
+                      - img [ref=e177]
+                      - img [ref=e179]
+                      - img [ref=e181]
+                    - generic [ref=e183]: September 12, 2026
+                  - paragraph [ref=e184]: A wonderful hidden-gems walk through Rome — highly recommended!
+        - complementary:
+          - generic [ref=e186]:
+            - paragraph [ref=e187]:
+              - generic [ref=e188]: €45.00 / person
+              - generic [ref=e189]: 10/17/2026 · 1 · €45.00
+            - generic [ref=e190]:
+              - link "Continue to booking" [ref=e191] [cursor=pointer]:
+                - /url: /en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems-rome-walking-tour%26participants%3D1%26date%3D2026-10-17
+              - button "Edit booking selections" [ref=e192]
+      - region "More experiences to explore" [ref=e193]:
+        - heading "More experiences to explore" [level=2] [ref=e194]
+        - generic [ref=e195]:
+          - generic [ref=e196]:
+            - 'link "Venice Hidden Canals Walking Tour Next: Oct 17, 2026 Venice, Italy 2.5 hours Venice Hidden Canals Walking Tour Walking Tours €55.00" [ref=e197] [cursor=pointer]':
+              - /url: /en/tours/venice-walking-tour-hidden-canals
+              - generic [ref=e198]:
+                - img "Venice Hidden Canals Walking Tour" [ref=e199]
+                - generic [ref=e200]: "Next: Oct 17, 2026"
+              - generic [ref=e201]:
+                - generic [ref=e202]:
+                  - generic [ref=e203]: Venice, Italy
+                  - generic [ref=e204]: ·
+                  - generic [ref=e205]: 2.5 hours
+                - heading "Venice Hidden Canals Walking Tour" [level=2] [ref=e206]
+                - generic [ref=e207]:
+                  - generic [ref=e208]: Walking Tours
+                  - generic [ref=e209]: €55.00
+            - button "Save to wishlist" [ref=e211]:
+              - generic [ref=e212]: ♡
+          - generic [ref=e213]:
+            - 'link "Barcelona Gaudí Architecture Masterpieces Tour Next: Oct 17, 2026 Barcelona, Spain 4 hours Barcelona Gaudí Architecture Masterpieces Tour Walking Tours €65.00" [ref=e214] [cursor=pointer]':
+              - /url: /en/tours/barcelona-gaudi-architecture-tour
+              - generic [ref=e215]:
+                - img "Barcelona Gaudí Architecture Masterpieces Tour" [ref=e216]
+                - generic [ref=e217]: "Next: Oct 17, 2026"
+              - generic [ref=e218]:
+                - generic [ref=e219]:
+                  - generic [ref=e220]: Barcelona, Spain
+                  - generic [ref=e221]: ·
+                  - generic [ref=e222]: 4 hours
+                - heading "Barcelona Gaudí Architecture Masterpieces Tour" [level=2] [ref=e223]
+                - generic [ref=e224]:
+                  - generic [ref=e225]: Walking Tours
+                  - generic [ref=e226]: €65.00
+            - button "Save to wishlist" [ref=e228]:
+              - generic [ref=e229]: ♡
+          - generic [ref=e230]:
+            - 'link "Montmartre Artists Quarter Walking Tour Next: Oct 17, 2026 Paris, France 2.5 hours Montmartre Artists Quarter Walking Tour Walking Tours €49.00" [ref=e231] [cursor=pointer]':
+              - /url: /en/tours/paris-montmartre-artists-quarter
+              - generic [ref=e232]:
+                - img "Montmartre Artists Quarter Walking Tour" [ref=e233]
+                - generic [ref=e234]: "Next: Oct 17, 2026"
+              - generic [ref=e235]:
+                - generic [ref=e236]:
+                  - generic [ref=e237]: Paris, France
+                  - generic [ref=e238]: ·
+                  - generic [ref=e239]: 2.5 hours
+                - heading "Montmartre Artists Quarter Walking Tour" [level=2] [ref=e240]
+                - generic [ref=e241]:
+                  - generic [ref=e242]: Walking Tours
+                  - generic [ref=e243]: €49.00
+            - button "Save to wishlist" [ref=e245]:
+              - generic [ref=e246]: ♡
+  - contentinfo [ref=e247]:
+    - generic [ref=e248]:
+      - generic [ref=e249]:
+        - img "Bookly Travel — Book smarter. Travel better." [ref=e252]
+        - generic [ref=e253]:
+          - paragraph [ref=e254]: Explore
+          - list [ref=e255]:
+            - listitem [ref=e256]:
+              - link "Search tours" [ref=e257] [cursor=pointer]:
+                - /url: /en/search
+            - listitem [ref=e258]:
+              - link "Categories" [ref=e259] [cursor=pointer]:
+                - /url: /en/categories
+            - listitem [ref=e260]:
+              - link "Destinations" [ref=e261] [cursor=pointer]:
+                - /url: /en/destinations
+        - generic [ref=e262]:
+          - paragraph [ref=e263]: Company
+          - list [ref=e264]:
+            - listitem [ref=e265]:
+              - link "Privacy policy" [ref=e266] [cursor=pointer]:
+                - /url: /en/privacy
+            - listitem [ref=e267]:
+              - link "Terms of service" [ref=e268] [cursor=pointer]:
+                - /url: /en/terms
+      - generic [ref=e269]:
+        - generic [ref=e270]: © 2026 Bookly. All rights reserved.
+        - combobox "Switch language" [ref=e272]:
+          - option "English" [selected]
+          - option "Español"
+          - option "Italiano"
+  - complementary "Cookie consent":
+    - generic [ref=e273]:
+      - generic [ref=e274]: We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept", you consent to our use of cookies.
+      - generic [ref=e275]:
+        - button "Reject" [ref=e276]
+        - button "Accept" [ref=e277]
+  - alert [ref=e278]
+```

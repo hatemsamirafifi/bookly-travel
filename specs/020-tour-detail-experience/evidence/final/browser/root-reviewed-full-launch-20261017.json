@@ -1,0 +1,6 @@
+{
+  "recordedAt": "2026-10-17T14:02:59.6615030Z",
+  "processId": 25344,
+  "mode": "browser",
+  "reason": "Fresh full regression after eight corrected desktop/mobile cases and Linux lint/typecheck/parity all passed"
+}

@@ -26,6 +26,17 @@ jest.mock('next-intl', () => ({
   },
 }));
 
+jest.mock('@/lib/hooks/useAuth', () => ({
+  useAuth: () => ({ user: null }),
+}));
+
+jest.mock('next/link', () => ({
+  __esModule: true,
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+}));
+
 const headerProps = {
   locale: 'en',
   title: 'Hidden Gems of Rome Walking Tour',
@@ -33,8 +44,8 @@ const headerProps = {
   location: 'Rome, Italy',
   categorySlug: 'walking',
   categoryName: 'Walking Tours',
-  ratingAverage: 4.7,
-  ratingCount: 124,
+  tourId: 7,
+  reviewAverage: 4.7,
   reviewCount: 124,
 };
 
@@ -64,10 +75,34 @@ describe('TourHeader', () => {
     expect(link).toHaveAttribute('href', '#reviews');
     unmount();
 
-    render(<TourHeader {...headerProps} ratingAverage={0} ratingCount={0} reviewCount={0} />);
+    render(<TourHeader {...headerProps} reviewAverage={0} reviewCount={0} />);
     expect(screen.queryByLabelText(/out of 5/)).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /reviews/i })).not.toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/0\.0 out of 5/);
+  });
+
+  it('derives the header score from the reviews summary even when a card rating disagrees', () => {
+    // The listing card rating is not a header prop anymore; a test double
+    // with an inflated card-style value must not leak into the score.
+    render(<TourHeader {...headerProps} reviewAverage={4.0} reviewCount={10} />);
+
+    expect(screen.getByLabelText('Rating: 4 out of 5')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Rating: 4.7 out of 5')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '(10 Reviews)' })).toHaveAttribute('href', '#reviews');
+  });
+
+  it('keeps review browsing without stars when the average is unavailable', () => {
+    render(<TourHeader {...headerProps} reviewAverage={0} reviewCount={10} />);
+
+    expect(screen.getByRole('link', { name: '(10 Reviews)' })).toHaveAttribute('href', '#reviews');
+    expect(screen.queryByLabelText(/out of 5/)).not.toBeInTheDocument();
+  });
+
+  it('exposes the single current-tour wishlist control beside the title', () => {
+    const { container } = render(<TourHeader {...headerProps} />);
+
+    const buttons = container.querySelectorAll('[data-testid="wishlist-button"][data-tour-id="7"]');
+    expect(buttons).toHaveLength(1);
   });
 });
 

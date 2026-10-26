@@ -1,0 +1,196 @@
+
+Running 17 tests using 1 worker
+
+[1A[2K(node:7256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:7256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/17] [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('meta[name="robots"]')
+    Expected pattern: [32m/noindex/[39m
+    Error: strict mode violation: locator('meta[name="robots"]') resolved to 3 elements:
+        1) <meta name="robots" content="noindex"/> aka locator('head meta[name="robots"]')
+        2) <meta name="robots" content="noindex"/> aka locator('meta[name="robots"]').nth(1)
+        3) <meta name="robots" content="noindex"/> aka locator('meta[name="robots"]').nth(2)
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for locator('meta[name="robots"]')[22m
+
+
+      1208 |         await expect(page.locator('main#main-content')).toBeVisible();
+      1209 |         await expect(page.getByRole('heading', { name: scenario.title })).toBeVisible();
+    > 1210 |         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+           |                                                           ^
+      1211 |         await expect(page.getByRole('link', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+      1212 |         expect(page.url()).toBe(unknownUrl);
+      1213 |       } finally {
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1210:59
+
+    Error Context: test-results\tour-detail-Tour-Detail-ro-3df54-ized-404-with-noindex-in-en-chromium\error-context.md
+
+
+[1A[2K(node:2248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:2248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/17] [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es
+[1A[2K  2) [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('meta[name="robots"]')
+    Expected pattern: [32m/noindex/[39m
+    Error: strict mode violation: locator('meta[name="robots"]') resolved to 3 elements:
+        1) <meta name="robots" content="noindex"/> aka locator('head meta[name="robots"]')
+        2) <meta name="robots" content="noindex"/> aka locator('meta[name="robots"]').nth(1)
+        3) <meta name="robots" content="noindex"/> aka locator('meta[name="robots"]').nth(2)
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for locator('meta[name="robots"]')[22m
+
+
+      1208 |         await expect(page.locator('main#main-content')).toBeVisible();
+      1209 |         await expect(page.getByRole('heading', { name: scenario.title })).toBeVisible();
+    > 1210 |         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+           |                                                           ^
+      1211 |         await expect(page.getByRole('link', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+      1212 |         expect(page.url()).toBe(unknownUrl);
+      1213 |       } finally {
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1210:59
+
+    Error Context: test-results\tour-detail-Tour-Detail-ro-510cd-ized-404-with-noindex-in-es-chromium\error-context.md
+
+
+[1A[2K(node:17204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:17204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/17] [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it
+[1A[2K  3) [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('meta[name="robots"]')
+    Expected pattern: [32m/noindex/[39m
+    Error: strict mode violation: locator('meta[name="robots"]') resolved to 3 elements:
+        1) <meta name="robots" content="noindex"/> aka locator('head meta[name="robots"]')
+        2) <meta name="robots" content="noindex"/> aka locator('meta[name="robots"]').nth(1)
+        3) <meta name="robots" content="noindex"/> aka locator('meta[name="robots"]').nth(2)
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for locator('meta[name="robots"]')[22m
+
+
+      1208 |         await expect(page.locator('main#main-content')).toBeVisible();
+      1209 |         await expect(page.getByRole('heading', { name: scenario.title })).toBeVisible();
+    > 1210 |         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+           |                                                           ^
+      1211 |         await expect(page.getByRole('link', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+      1212 |         expect(page.url()).toBe(unknownUrl);
+      1213 |       } finally {
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1210:59
+
+    Error Context: test-results\tour-detail-Tour-Detail-ro-bdb69-ized-404-with-noindex-in-it-chromium\error-context.md
+
+
+[1A[2K(node:18168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:18168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[4/17] [chromium] › tests\e2e\tour-detail.spec.ts:1223:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en
+[1A[2K  4) [chromium] › tests\e2e\tour-detail.spec.ts:1223:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('This tour was archived and cannot be booked.')
+    Expected: visible
+    Error: strict mode violation: getByText('This tour was archived and cannot be booked.') resolved to 2 elements:
+        1) <p class="mt-2 text-text-muted">This tour was archived and cannot be booked.</p> aka locator('#main-content').getByText('This tour was archived and')
+        2) <p class="mt-2 text-text-muted">This tour was archived and cannot be booked.</p> aka getByText('This tour was archived and').nth(1)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('This tour was archived and cannot be booked.')[22m
+
+
+      1233 |         await expect(page.locator('main#main-content')).toBeVisible();
+      1234 |         await expect(page.getByRole('heading', { name: scenario.title })).toBeVisible();
+    > 1235 |         await expect(page.getByText(scenario.description)).toBeVisible();
+           |                                                            ^
+      1236 |         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+      1237 |         await expect(page.getByRole('link', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+      1238 |         await expect(page.getByRole('button', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1235:60
+
+    Error Context: test-results\tour-detail-Tour-Detail-ro-91eaf-drawn-with-no-booking-in-en-chromium\error-context.md
+
+
+[1A[2K(node:12100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:12100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[5/17] [chromium] › tests\e2e\tour-detail.spec.ts:1223:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es
+[1A[2K  5) [chromium] › tests\e2e\tour-detail.spec.ts:1223:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('Este tour fue archivado y no se puede reservar.')
+    Expected: visible
+    Error: strict mode violation: getByText('Este tour fue archivado y no se puede reservar.') resolved to 2 elements:
+        1) <p class="mt-2 text-text-muted">Este tour fue archivado y no se puede reservar.</p> aka locator('#main-content').getByText('Este tour fue archivado y no')
+        2) <p class="mt-2 text-text-muted">Este tour fue archivado y no se puede reservar.</p> aka getByText('Este tour fue archivado y no').nth(1)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('Este tour fue archivado y no se puede reservar.')[22m
+
+
+      1233 |         await expect(page.locator('main#main-content')).toBeVisible();
+      1234 |         await expect(page.getByRole('heading', { name: scenario.title })).toBeVisible();
+    > 1235 |         await expect(page.getByText(scenario.description)).toBeVisible();
+           |                                                            ^
+      1236 |         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+      1237 |         await expect(page.getByRole('link', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+      1238 |         await expect(page.getByRole('button', { name: /Book Now|Reservar Ahora|Prenota Ora/ })).toHaveCount(0);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1235:60
+
+    Error Context: test-results\tour-detail-Tour-Detail-ro-53094-drawn-with-no-booking-in-es-chromium\error-context.md
+
+
+[1A[2K[31mTesting stopped early after 5 maximum allowed failures.[39m
+
+[1A[2K  5 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1199:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1223:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1223:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es 
+  12 did not run
+  1 error was not a part of any test, see above for details

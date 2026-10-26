@@ -1,0 +1,1566 @@
+{
+  "buildId": "DhEzii_99yXRuBv6VKIFa",
+  "scope": "Actual Rome public API; three independent fresh contexts, initial #reviews navigation; diagnostic only, no success mocks or fixture writes",
+  "runs": [
+    {
+      "samples": [
+        {
+          "time": 849,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 321.5,
+            "height": 268
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 353.5,
+              "bottom": 381.5,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 620,
+              "bottom": 676,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 620,
+              "bottom": 676,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 620,
+              "bottom": 676,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 962,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 321.5,
+            "height": 268
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 353.5,
+              "bottom": 381.5,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 620,
+              "bottom": 676,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 620,
+              "bottom": 676,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 620,
+              "bottom": 676,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 1468.7000000001863,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 2973.100000000093,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 7983.800000000279,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "samples": [
+        {
+          "time": 444.89999999990687,
+          "scrollY": 0,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 713.5,
+            "bottom": 767.5,
+            "height": 54
+          },
+          "section": {
+            "top": 1665.5,
+            "bottom": 1933.5,
+            "height": 268
+          },
+          "heading": {
+            "top": 1665.5,
+            "bottom": 1693.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": 799.5,
+              "bottom": 835.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": 948.5,
+              "bottom": 984.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": 1093.5,
+              "bottom": 1129.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": 1294.5,
+              "bottom": 1350.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": 1376.5,
+              "bottom": 1432.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": 1465.5,
+              "bottom": 1501.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": 1565.5,
+              "bottom": 1601.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 1665.5,
+              "bottom": 1693.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 1722.5,
+              "bottom": 1742.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 1965.5,
+              "bottom": 1993.5,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 2232,
+              "bottom": 2288,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 2232,
+              "bottom": 2288,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 2232,
+              "bottom": 2288,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 554.1999999997206,
+          "scrollY": 211,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 502.5,
+            "bottom": 556.5,
+            "height": 54
+          },
+          "section": {
+            "top": 1454.5,
+            "bottom": 1793,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 1454.5,
+            "bottom": 1482.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": 588.5,
+              "bottom": 624.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": 737.5,
+              "bottom": 773.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": 882.5,
+              "bottom": 918.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": 1083.5,
+              "bottom": 1139.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": 1165.5,
+              "bottom": 1221.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": 1254.5,
+              "bottom": 1290.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": 1354.5,
+              "bottom": 1390.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 1454.5,
+              "bottom": 1482.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 1511.5,
+              "bottom": 1531.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 1825,
+              "bottom": 1853,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 2091.5,
+              "bottom": 2147.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 2091.5,
+              "bottom": 2147.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 2091.5,
+              "bottom": 2147.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 1069.5,
+          "scrollY": 1610,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 55.5,
+            "bottom": 394,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 55.5,
+            "bottom": 83.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -810.5,
+              "bottom": -774.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -661.5,
+              "bottom": -625.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -516.5,
+              "bottom": -480.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -315.5,
+              "bottom": -259.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -233.5,
+              "bottom": -177.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -144.5,
+              "bottom": -108.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -44.5,
+              "bottom": -8.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 55.5,
+              "bottom": 83.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 112.5,
+              "bottom": 132.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 426,
+              "bottom": 454,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 692.5,
+              "bottom": 748.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 692.5,
+              "bottom": 748.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 692.5,
+              "bottom": 748.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 2584.600000000093,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 7603.699999999721,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "samples": [
+        {
+          "time": 428.1999999997206,
+          "scrollY": 0,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 713.5,
+            "bottom": 767.5,
+            "height": 54
+          },
+          "section": {
+            "top": 1665.5,
+            "bottom": 1933.5,
+            "height": 268
+          },
+          "heading": {
+            "top": 1665.5,
+            "bottom": 1693.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": 799.5,
+              "bottom": 835.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": 948.5,
+              "bottom": 984.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": 1093.5,
+              "bottom": 1129.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": 1294.5,
+              "bottom": 1350.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": 1376.5,
+              "bottom": 1432.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": 1465.5,
+              "bottom": 1501.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": 1565.5,
+              "bottom": 1601.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 1665.5,
+              "bottom": 1693.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 1722.5,
+              "bottom": 1742.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 1965.5,
+              "bottom": 1993.5,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 2232,
+              "bottom": 2288,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 2232,
+              "bottom": 2288,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 2232,
+              "bottom": 2288,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 534.5,
+          "scrollY": 211,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 502.5,
+            "bottom": 556.5,
+            "height": 54
+          },
+          "section": {
+            "top": 1454.5,
+            "bottom": 1793,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 1454.5,
+            "bottom": 1482.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": 588.5,
+              "bottom": 624.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": 737.5,
+              "bottom": 773.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": 882.5,
+              "bottom": 918.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": 1083.5,
+              "bottom": 1139.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": 1165.5,
+              "bottom": 1221.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": 1254.5,
+              "bottom": 1290.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": 1354.5,
+              "bottom": 1390.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 1454.5,
+              "bottom": 1482.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 1511.5,
+              "bottom": 1531.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 1825,
+              "bottom": 1853,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 2091.5,
+              "bottom": 2147.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 2091.5,
+              "bottom": 2147.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 2091.5,
+              "bottom": 2147.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 1043.7999999998137,
+          "scrollY": 1610,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 55.5,
+            "bottom": 394,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 55.5,
+            "bottom": 83.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -810.5,
+              "bottom": -774.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -661.5,
+              "bottom": -625.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -516.5,
+              "bottom": -480.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -315.5,
+              "bottom": -259.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -233.5,
+              "bottom": -177.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -144.5,
+              "bottom": -108.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -44.5,
+              "bottom": -8.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 55.5,
+              "bottom": 83.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 112.5,
+              "bottom": 132.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 426,
+              "bottom": 454,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 692.5,
+              "bottom": 748.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 692.5,
+              "bottom": 748.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 692.5,
+              "bottom": 748.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 2560.0999999996275,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        },
+        {
+          "time": 7575.899999999907,
+          "scrollY": 1612,
+          "hash": "#reviews",
+          "active": "#reviews",
+          "focus": "H2",
+          "focusText": "Reviews",
+          "nav": {
+            "top": 0,
+            "bottom": 54,
+            "height": 54
+          },
+          "section": {
+            "top": 53.5,
+            "bottom": 392,
+            "height": 338.5
+          },
+          "heading": {
+            "top": 53.5,
+            "bottom": 81.5,
+            "height": 28
+          },
+          "headings": [
+            {
+              "text": "About This Tour",
+              "top": -812.5,
+              "bottom": -776.5,
+              "height": 36
+            },
+            {
+              "text": "Tour facts",
+              "top": -663.5,
+              "bottom": -627.5,
+              "height": 36
+            },
+            {
+              "text": "Highlights",
+              "top": -518.5,
+              "bottom": -482.5,
+              "height": 36
+            },
+            {
+              "text": "What's Included",
+              "top": -317.5,
+              "bottom": -261.5,
+              "height": 56
+            },
+            {
+              "text": "What's Excluded",
+              "top": -235.5,
+              "bottom": -179.5,
+              "height": 56
+            },
+            {
+              "text": "Meeting Point",
+              "top": -146.5,
+              "bottom": -110.5,
+              "height": 36
+            },
+            {
+              "text": "Cancellation Policy",
+              "top": -46.5,
+              "bottom": -10.5,
+              "height": 36
+            },
+            {
+              "text": "Reviews",
+              "top": 53.5,
+              "bottom": 81.5,
+              "height": 28
+            },
+            {
+              "text": "Reviews",
+              "top": 110.5,
+              "bottom": 130.5,
+              "height": 20
+            },
+            {
+              "text": "More experiences to explore",
+              "top": 424,
+              "bottom": 452,
+              "height": 28
+            },
+            {
+              "text": "Venice Hidden Canals Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Barcelona Gaudí Architecture Masterpieces Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            },
+            {
+              "text": "Montmartre Artists Quarter Walking Tour",
+              "top": 690.5,
+              "bottom": 746.5,
+              "height": 56
+            }
+          ]
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

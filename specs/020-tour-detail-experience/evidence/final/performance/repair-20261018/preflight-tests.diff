@@ -1,0 +1,116 @@
+diff --git a/frontend/scripts/lighthouse-runtime-preflight.test.mjs b/frontend/scripts/lighthouse-runtime-preflight.test.mjs
+index fed351f..149a47d 100644
+--- a/frontend/scripts/lighthouse-runtime-preflight.test.mjs
++++ b/frontend/scripts/lighthouse-runtime-preflight.test.mjs
+@@ -1,6 +1,6 @@
+ import assert from 'node:assert/strict';
+ import test from 'node:test';
+-import { cpuReady } from './lighthouse-runtime-preflight.mjs';
++import { cpuReady, prepareBrowserCpu } from './lighthouse-runtime-preflight.mjs';
+ 
+ test('a stable desktop CPU permits the unchanged mobile slowdown', () => {
+   assert.equal(cpuReady([1800, 1850]), true);
+@@ -22,3 +22,103 @@ test('missing or invalid measurements cannot accept the audit', () => {
+     assert.equal(cpuReady(samples), false);
+   }
+ });
++
++// Deterministic fake browser for prepareBrowserCpu: url() is always controllable,
++// evaluate() is never the real benchmark and never visits the application.
++// onEvaluate is invoked after every evaluate so a fake clock can elapse per sample.
++function fakeBrowser({ values, url = () => 'about:blank', onEvaluate }) {
++  const state = { evaluateCalls: 0, pageCloses: 0, pagesCreated: 0 };
++  const page = {
++    url: () => url(),
++    async evaluate() {
++      const attempt = ++state.evaluateCalls;
++      const value = typeof values === 'function' ? values(attempt) : values[attempt - 1];
++      if (onEvaluate) onEvaluate(attempt);
++      return value;
++    },
++    async close() { state.pageCloses++; },
++  };
++  const browser = {
++    async newPage() { state.pagesCreated++; return page; },
++  };
++  return { browser, state };
++}
++
++// Deterministic fake elapsing clock: every legitimate evaluate advances fakeNow.
++// Restored in finally. No real waits ever occur.
++function withFakeClock(msPerSample, fn) {
++  return async () => {
++    let fakeNow = 0;
++    const realNow = Date.now;
++    const advance = () => { fakeNow += msPerSample; };
++    Date.now = () => fakeNow;
++    try {
++      await fn(advance);
++    } finally {
++      Date.now = realNow;
++    }
++  };
++}
++
++const INVALID_VALUES = Array.from({ length: 35 }, () => NaN);
++
++test('a browser that settles late is accepted while the exact unchanged criteria stay the gate',
++  withFakeClock(1000, async (advance) => {
++    const logs = [];
++    const realLog = console.log;
++    console.log = (line) => { logs.push(line); };
++    try {
++      // First five samples individually fail the last-two rule even after full settling:
++      // [700, 800, 900, 1400, 1450][4] pair (1400, 1450) is below 1500 or unstable.
++      const { browser, state } = fakeBrowser({ values: [700, 800, 900, 1400, 1450, 1800, 1850], onEvaluate: advance });
++      await prepareBrowserCpu(browser);
++      assert.equal(state.evaluateCalls, 7);
++      assert.equal(state.pageCloses, 1);
++      assert.equal(state.pagesCreated, 1);
++      for (const line of logs) assert.equal(JSON.parse(line).url, 'about:blank');
++      for (const line of logs) assert.equal(JSON.parse(line).appVisited, false);
++    } finally {
++      console.log = realLog;
++    }
++  }));
++
++test('persistent low, unstable, or invalid values exhaust the bounded budget and always reject',
++  withFakeClock(1000, async (advance) => {
++    for (const values of [
++      Array.from({ length: 35 }, () => 1400),
++      Array.from({ length: 35 }, (_, i) => (i % 2 === 0 ? 1500 : 1900)),
++      INVALID_VALUES,
++    ]) {
++      const { browser, state } = fakeBrowser({ onEvaluate: advance, values });
++      await assert.rejects(prepareBrowserCpu(browser), /slow or unstable/i);
++      assert.equal(state.evaluateCalls, 30);
++      assert.equal(state.pageCloses, 1);
++    }
++  }));
++
++test('the wall-clock deadline stops sample taking even when attempts remain',
++  withFakeClock(2500, async (advance) => {
++    const { browser, state } = fakeBrowser({
++      onEvaluate: advance,
++      values: (attempt) => (attempt <= 12 ? (attempt % 2 === 1 ? 1400 : 1450) : 1800),
++    });
++    await assert.rejects(prepareBrowserCpu(browser), /exhausted/i);
++    assert.equal(state.evaluateCalls, 12);
++    assert.equal(state.pageCloses, 1);
++  }));
++
++test('a fast, stable browser still passes on the first qualifying pair without extra samples',
++  withFakeClock(1000, async () => {
++    const { browser, state } = fakeBrowser({ values: [1700, 1750] });
++    await prepareBrowserCpu(browser);
++    assert.equal(state.evaluateCalls, 2);
++    assert.equal(state.pageCloses, 1);
++  }));
++
++test('an application URL can never be visited by the CPU preflight',
++  withFakeClock(1000, async () => {
++    const { browser, state } = fakeBrowser({ values: [1800, 1850], url: () => '/en/tours/hidden-gems-rome-walking-tour' });
++    await assert.rejects(prepareBrowserCpu(browser), /must not visit the application/i);
++    assert.equal(state.evaluateCalls, 0);
++    assert.equal(state.pageCloses, 1);
++  }));

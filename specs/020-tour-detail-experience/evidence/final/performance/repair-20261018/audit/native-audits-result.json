@@ -1,0 +1,1971 @@
+{
+  "startedAt": "2026-10-18T20:22:51.186Z",
+  "executor": "opencode/glm-5.3-flash-free --variant max",
+  "runtime": {
+    "node": "v20.20.2",
+    "buildId": "F6TXmaijafokZYkc5ATRu",
+    "next": "16.2.3"
+  },
+  "conditions": "Serial production audits of the verified Docker app (proxy http://localhost:8080) with measurement browser/Node on the native host: installed Google Chrome via CHROME_PATH, native Node v24.14.1 spawning the installed frontend dependencies. No rebuild/restart/fixture refetch/cache warming. The unchanged about:blank CPU readiness hook runs before each URL with the same browser as the real audits; default Lighthouse mobile throttling remains configured.",
+  "stages": [
+    {
+      "name": "runtime-identity",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');console.log(JSON.stringify({node:process.version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),next:require('/app/node_modules/next/package.json').version}))"
+      ],
+      "startedAt": "2026-10-18T20:22:51.493Z",
+      "finishedAt": "2026-10-18T20:22:52.084Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-state",
+      "args": [
+        "inspect",
+        "-f",
+        "{{.Id}} started={{.State.StartedAt}}",
+        "bookly-frontend"
+      ],
+      "startedAt": "2026-10-18T20:22:52.084Z",
+      "finishedAt": "2026-10-18T20:22:52.257Z",
+      "exitCode": 0
+    },
+    {
+      "name": "prior-reports-preserve",
+      "exitCode": 0,
+      "detail": [
+        "assertion-results.json",
+        "lhr-1791815553315.html",
+        "lhr-1791815553315.json",
+        "lhr-1791815565683.html",
+        "lhr-1791815565683.json",
+        "lhr-1791815577737.html",
+        "lhr-1791815577737.json",
+        "lhr-1791815593583.html",
+        "lhr-1791815593583.json",
+        "lhr-1791815605031.html",
+        "lhr-1791815605031.json",
+        "lhr-1791815616828.html",
+        "lhr-1791815616828.json",
+        "lhr-1791815632588.html",
+        "lhr-1791815632588.json",
+        "lhr-1791815646456.html",
+        "lhr-1791815646456.json",
+        "lhr-1791815659280.html",
+        "lhr-1791815659280.json",
+        "lhr-1791815676002.html",
+        "lhr-1791815676002.json",
+        "lhr-1791815687701.html",
+        "lhr-1791815687701.json",
+        "lhr-1791815699522.html",
+        "lhr-1791815699522.json"
+      ]
+    },
+    {
+      "name": "preflight-tests",
+      "args": [
+        "--test",
+        "scripts/lighthouse-runtime-preflight.test.mjs"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 25732,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 120000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-18T20:22:54.217Z",
+      "finishedAt": "2026-10-18T20:23:13.999Z",
+      "exitCode": 0
+    },
+    {
+      "name": "cpu-preflight",
+      "args": [
+        "scripts/lighthouse-runtime-preflight.mjs"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 30160,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 90000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-18T20:23:14.000Z",
+      "finishedAt": "2026-10-18T20:23:22.197Z",
+      "exitCode": 0
+    },
+    {
+      "name": "collect",
+      "args": [
+        "node_modules/@lhci/cli/src/cli.js",
+        "collect",
+        "--config=lighthouserc.js"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 23220,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 1500000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-18T20:23:22.198Z",
+      "finishedAt": "2026-10-18T20:30:20.090Z",
+      "exitCode": 0
+    },
+    {
+      "name": "assert",
+      "args": [
+        "node_modules/@lhci/cli/src/cli.js",
+        "assert",
+        "--config=lighthouserc.js"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 27332,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 120000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-18T20:30:20.091Z",
+      "finishedAt": "2026-10-18T20:30:20.823Z",
+      "exitCode": 1
+    },
+    {
+      "name": "runtime-identity-after",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');console.log(JSON.stringify({node:process.version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),next:require('/app/node_modules/next/package.json').version}))"
+      ],
+      "startedAt": "2026-10-18T20:30:21.111Z",
+      "finishedAt": "2026-10-18T20:30:21.685Z",
+      "exitCode": 0
+    }
+  ],
+  "sourceParityBefore": {
+    "files": 419,
+    "mismatches": []
+  },
+  "identity": {
+    "expected": {
+      "node": "v20.20.2",
+      "buildId": "F6TXmaijafokZYkc5ATRu",
+      "next": "16.2.3"
+    },
+    "observed": {
+      "node": "v20.20.2",
+      "buildId": "F6TXmaijafokZYkc5ATRu",
+      "next": "16.2.3"
+    }
+  },
+  "containerState": "cc21b897f1f4b01d0a4d92f8b07ff08c719660c21b95c3658f5a78a61b9ad79f started=2026-10-18T19:48:26.307022813Z",
+  "proxyIdentity": {
+    "localhost": {
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    "loopbackIp": {
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    }
+  },
+  "hashes": {
+    "lighthouserc.js": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "scripts/lighthouse-runtime-preflight.mjs": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+    "scripts/lighthouse-browser-ready.cjs": "a6a51071b31317674e9ad2c3ccfcd988d7b057a23aff97fdda4a7919e7325339",
+    "package.json": "0aba9b572479db9a9698fe7c1cc2041c0effdb87fb47eb757e9ac6de3dbd996d",
+    "package-lock.json": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c"
+  },
+  "priorAssets": [],
+  "cpuPreflightSamples": [
+    1484,
+    1716,
+    1666
+  ],
+  "hashesAfter": {
+    "lighthouserc.js": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "scripts/lighthouse-runtime-preflight.mjs": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+    "scripts/lighthouse-browser-ready.cjs": "a6a51071b31317674e9ad2c3ccfcd988d7b057a23aff97fdda4a7919e7325339",
+    "package.json": "0aba9b572479db9a9698fe7c1cc2041c0effdb87fb47eb757e9ac6de3dbd996d",
+    "package-lock.json": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c"
+  },
+  "sourceParityAfter": {
+    "files": 419,
+    "mismatches": []
+  },
+  "identityAfter": {
+    "node": "v20.20.2",
+    "buildId": "F6TXmaijafokZYkc5ATRu",
+    "next": "16.2.3"
+  },
+  "reports": [
+    {
+      "name": "lhr-1792355139916.json",
+      "url": "http://localhost:8080/en",
+      "finalUrl": "http://localhost:8080/en",
+      "fetchTime": "2026-10-18T20:25:25.852Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.87,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1879.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355177562.json",
+      "url": "http://localhost:8080/en",
+      "finalUrl": "http://localhost:8080/en",
+      "fetchTime": "2026-10-18T20:26:05.912Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.92,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1791.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355191499.json",
+      "url": "http://localhost:8080/en",
+      "finalUrl": "http://localhost:8080/en",
+      "fetchTime": "2026-10-18T20:26:20.053Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.89,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1783.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355206411.json",
+      "url": "http://localhost:8080/en/search?q=rome",
+      "finalUrl": "http://localhost:8080/en/search?q=rome",
+      "fetchTime": "2026-10-18T20:26:36.096Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.86,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1420.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355218667.json",
+      "url": "http://localhost:8080/en/search?q=rome",
+      "finalUrl": "http://localhost:8080/en/search?q=rome",
+      "fetchTime": "2026-10-18T20:26:49.385Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.96,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1564,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355231086.json",
+      "url": "http://localhost:8080/en/search?q=rome",
+      "finalUrl": "http://localhost:8080/en/search?q=rome",
+      "fetchTime": "2026-10-18T20:27:01.764Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.9,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1413.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355251906.json",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:27:18.775Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.82,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1859.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355267689.json",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:27:35.017Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.81,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1449,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355283223.json",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:27:50.663Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.77,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1429,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355298243.json",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "finalUrl": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "fetchTime": "2026-10-18T20:28:08.867Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.93,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1893.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355310311.json",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "finalUrl": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "fetchTime": "2026-10-18T20:28:20.829Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.88,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1733,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355323422.json",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "finalUrl": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "fetchTime": "2026-10-18T20:28:33.631Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.85,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1467,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355341124.json",
+      "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:28:48.967Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.83,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1867,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355355953.json",
+      "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:29:03.671Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.82,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1919.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355370840.json",
+      "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:29:18.486Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.75,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1490,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355389698.json",
+      "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:29:37.357Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.83,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1890,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355404474.json",
+      "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:29:52.317Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.8,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1898.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    },
+    {
+      "name": "lhr-1792355419854.json",
+      "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "fetchTime": "2026-10-18T20:30:07.502Z",
+      "httpStatusAudit": 1,
+      "categories": {
+        "performance": 0.82,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "benchmarkIndex": 1529.5,
+        "credits": {
+          "axe-core": "4.11.4"
+        }
+      },
+      "configSettings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": null,
+        "skipAudits": null
+      }
+    }
+  ],
+  "summary": [
+    {
+      "url": "http://localhost:8080/en",
+      "runs": 3,
+      "minimumPerformance": 0.87
+    },
+    {
+      "url": "http://localhost:8080/en/search?q=rome",
+      "runs": 3,
+      "minimumPerformance": 0.86
+    },
+    {
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "runs": 3,
+      "minimumPerformance": 0.77
+    },
+    {
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "runs": 3,
+      "minimumPerformance": 0.85
+    },
+    {
+      "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "runs": 3,
+      "minimumPerformance": 0.75
+    },
+    {
+      "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour",
+      "runs": 3,
+      "minimumPerformance": 0.8
+    }
+  ],
+  "generatedAssets": [
+    {
+      "name": "localhost_2026-10-18_23-25-25-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-25-25-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-25-25-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-25-25-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-05-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-05-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-05-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-05-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-20-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-20-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-20-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-20-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-36-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-36-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-36-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-36-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-49-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-49-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-49-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-26-49-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-01-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-01-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-01-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-01-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-18-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-18-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-18-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-18-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-35-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-35-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-35-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-35-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-50-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-50-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-50-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-27-50-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-08-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-08-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-08-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-08-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-20-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-20-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-20-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-20-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-33-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-33-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-33-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-33-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-48-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-48-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-48-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-28-48-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-03-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-03-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-03-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-03-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-18-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-18-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-18-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-18-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-37-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-37-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-37-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-37-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-52-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-52-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-52-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-29-52-0.trace.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-30-07-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-30-07-0.devtoolslog.json"
+    },
+    {
+      "name": "localhost_2026-10-18_23-30-07-0.trace.json",
+      "froms": [
+        "frontend"
+      ],
+      "copiedFrom": "localhost_2026-10-18_23-30-07-0.trace.json"
+    }
+  ],
+  "copiedTraces": 18,
+  "copiedDevtoolslogs": 18,
+  "assertionResults": [
+    {
+      "name": "minScore",
+      "expected": 0.9,
+      "actual": 0.87,
+      "values": [
+        0.87,
+        0.92,
+        0.89
+      ],
+      "operator": ">=",
+      "passed": false,
+      "auditProperty": "performance",
+      "auditId": "categories",
+      "level": "error",
+      "url": "http://localhost:8080/en"
+    },
+    {
+      "name": "minScore",
+      "expected": 0.9,
+      "actual": 0.86,
+      "values": [
+        0.86,
+        0.96,
+        0.9
+      ],
+      "operator": ">=",
+      "passed": false,
+      "auditProperty": "performance",
+      "auditId": "categories",
+      "level": "error",
+      "url": "http://localhost:8080/en/search?q=rome"
+    },
+    {
+      "name": "minScore",
+      "expected": 0.9,
+      "actual": 0.77,
+      "values": [
+        0.82,
+        0.81,
+        0.77
+      ],
+      "operator": ">=",
+      "passed": false,
+      "auditProperty": "performance",
+      "auditId": "categories",
+      "level": "error",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour"
+    },
+    {
+      "name": "minScore",
+      "expected": 0.9,
+      "actual": 0.85,
+      "values": [
+        0.93,
+        0.88,
+        0.85
+      ],
+      "operator": ">=",
+      "passed": false,
+      "auditProperty": "performance",
+      "auditId": "categories",
+      "level": "error",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence"
+    },
+    {
+      "name": "minScore",
+      "expected": 0.9,
+      "actual": 0.75,
+      "values": [
+        0.83,
+        0.82,
+        0.75
+      ],
+      "operator": ">=",
+      "passed": false,
+      "auditProperty": "performance",
+      "auditId": "categories",
+      "level": "error",
+      "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour"
+    },
+    {
+      "name": "minScore",
+      "expected": 0.9,
+      "actual": 0.8,
+      "values": [
+        0.83,
+        0.8,
+        0.82
+      ],
+      "operator": ">=",
+      "passed": false,
+      "auditProperty": "performance",
+      "auditId": "categories",
+      "level": "error",
+      "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour"
+    }
+  ],
+  "fresh": {
+    "validationTime": "2026-10-18T20:30:22.001Z",
+    "expectedUrls": [
+      "http://localhost:8080/en",
+      "http://localhost:8080/en/search?q=rome",
+      "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "http://localhost:8080/en/blog/hidden-gems-florence",
+      "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour",
+      "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour"
+    ]
+  },
+  "freshChecks": {
+    "reportsIs18": true,
+    "namesAreUnique": true,
+    "urlSetExact": true,
+    "sixUrlsThreeEach": true,
+    "fetchTimesInRange": true,
+    "noRuntimeError": true,
+    "allHttpStatusScore1": true,
+    "minPerformanceAtLeastZeroPointNineEveryUrl": false,
+    "assertionResultsNonemptyArray": true
+  },
+  "freshPassed": false,
+  "passed": false,
+  "finishedAt": "2026-10-18T20:30:22.001Z"
+}

@@ -1,0 +1,20 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx
+  (heading red run: one new regression test added; 14 prior tests untouched and passing)
+
+RESULT: FAIL — 1 failed, 14 passed, 15 total (behavioral red, no missing-module failures)
+
+FAIL — observes actual headings: a tall section body intersecting without its heading does not activate it
+  Observer-target assertion failed first:
+    Expected observed targets to contain <h2>About heading</h2>;
+    received only section containers:
+      [<section id="overview">…, <section id="overview">…, <section id="facts">…,
+       <section id="overview">…, <section id="facts">…, <section id="reviews">…].
+  Root cause proven: the island observes section containers (`getElementById`
+  + `observer.observe(section)`, keyed by `target.id`), not the actual
+  h1/h2/h3 headings the Spec020 UI contract requires ("IntersectionObserver
+  follows visible headings"). A tall section whose heading has scrolled above
+  the band would therefore count as visible merely because its body still
+  intersects. Body-noise and heading-mapping assertions not reached.
+
+Time: ~16-30s (cold). Full failure text retained from the focused jest run above.

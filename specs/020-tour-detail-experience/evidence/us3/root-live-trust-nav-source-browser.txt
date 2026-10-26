@@ -1,0 +1,27 @@
+
+Running 15 tests using 1 worker
+
+[1A[2K(node:25920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/15] [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back
+[1A[2K[2/15] [chromium] › tests\e2e\tour-detail.spec.ts:1961:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+[1A[2K[3/15] [chromium] › tests\e2e\tour-detail.spec.ts:2014:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sparse tour exposes only present entries and activates them
+[1A[2K[4/15] [chromium] › tests\e2e\tour-detail.spec.ts:2036:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[5/15] [chromium] › tests\e2e\tour-detail.spec.ts:2077:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+[1A[2K[6/15] [chromium] › tests\e2e\tour-detail.spec.ts:2141:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 long locale labels survive resize with reachable entries and no page overflow
+[1A[2K[7/15] [chromium] › tests\e2e\tour-detail.spec.ts:2174:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 reduced motion targets the reading position immediately
+[1A[2K[8/15] [chromium] › tests\e2e\tour-detail.spec.ts:2198:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+[1A[2K[9/15] [chromium] › tests\e2e\tour-detail.spec.ts:2227:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+[1A[2K[10/15] [chromium] › tests\e2e\tour-detail.spec.ts:2322:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 header shows the genuine API score with exactly one current-tour wishlist control
+[1A[2K[11/15] [chromium] › tests\e2e\tour-detail.spec.ts:2358:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 ES/IT header keeps the genuine score, review link and single current-tour control
+[1A[2K[12/15] [chromium] › tests\e2e\tour-detail.spec.ts:2384:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 sparse SSR tour exposes no reviews section, nav entry or header score
+[1A[2K[13/15] [chromium] › tests\e2e\tour-detail.spec.ts:2404:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 signed-out header wishlist opens the shared dialog with full focus lifecycle
+[1A[2K[14/15] [chromium] › tests\e2e\tour-detail.spec.ts:2430:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 review page failure preserves the readable tour
+[1A[2K[15/15] [chromium] › tests\e2e\tour-detail.spec.ts:2440:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 media failure preserves the readable tour
+[1A[2K  15 passed (41.5s)

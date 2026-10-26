@@ -284,3 +284,55 @@ describe('TouristTrip genuine ratings and media', () => {
     )).toEqual(['https://bookly.com/images/cover.jpg', 'https://cdn.example.com/second.jpg']);
   });
 });
+
+describe('TouristTrip visible-content agreement (Spec 020 US6)', () => {
+  it('keeps independent content/itinerary languages aligned with the visible fallback disclosure', () => {
+    const { container } = render(<TouristTripSchema tour={{
+      ...tour,
+      title: 'Contenido localizado',
+      description: 'Descripción localizada.',
+      content_locale: 'es',
+      itinerary: [{ day: 1, title: 'English day', stops: [] }],
+      itinerary_locale: 'en',
+    }} locale="es" />);
+    const schema = JSON.parse(container.querySelector('script')?.textContent ?? '{}');
+
+    expect(schema.name).toBe('Contenido localizado');
+    expect(schema['@context'].name['@language']).toBe('es');
+    expect(schema.mainEntityOfPage.inLanguage).toBe('es');
+    expect(schema.itinerary['@context'].name['@language']).toBe('en');
+    expect(schema.itinerary.itemListElement[0].name).toBe('English day');
+    expect(schema.inLanguage).toBeUndefined();
+    expect(schema.itinerary.inLanguage).toBeUndefined();
+  });
+
+  it('omits the itinerary when the translated itinerary is intentionally empty, matching the absent visible section', () => {
+    const { container } = render(<TouristTripSchema tour={{
+      ...tour,
+      title: 'Contenuto localizzato',
+      content_locale: 'it',
+      itinerary: [],
+      itinerary_locale: 'it',
+    }} locale="it" />);
+    const schema = JSON.parse(container.querySelector('script')?.textContent ?? '{}');
+
+    expect(schema['@context'].name['@language']).toBe('it');
+    expect(schema.mainEntityOfPage.inLanguage).toBe('it');
+    expect(schema.itinerary).toBeUndefined();
+  });
+
+  it('omits whitespace-only practical facts, matching the omitted visible sections', () => {
+    const { container } = render(<TouristTripSchema tour={{
+      ...tour,
+      meeting_point: '   ',
+      images: [],
+      reviews: { average_rating: 0, count: 0, distribution: {} },
+    }} locale="en" />);
+    const schema = JSON.parse(container.querySelector('script')?.textContent ?? '{}');
+
+    expect(schema.tripOrigin).toBeUndefined();
+    expect(schema.image).toBeUndefined();
+    expect(schema.aggregateRating).toBeUndefined();
+    expect(schema.description).not.toContain('Meeting point');
+  });
+});

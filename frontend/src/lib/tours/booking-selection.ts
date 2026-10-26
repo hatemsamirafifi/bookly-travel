@@ -191,13 +191,30 @@ export function buildCheckoutUrl(
   return `/${locale}/booking?tour=${encodeURIComponent(slug)}&participants=${participantCount}&date=${encodeURIComponent(selectedDate)}`;
 }
 
-/** Wraps the complete same-locale booking path through safeAuthReturnUrl.
- *  Null for an unsupported locale; unsafe paths fall back per that helper. */
-export function buildAuthContinuationUrl(locale: string, bookingPath: string): string | null {
+/** One validated continuation builder behind both auth handoffs: supported
+ *  locale, non-empty path and safe same-locale return only. */
+function buildValidatedContinuation(
+  locale: string,
+  bookingPath: string,
+  kind: 'login' | 'register',
+): string | null {
   if (!isSupportedLocale(locale)) return null;
   if (typeof bookingPath !== 'string' || bookingPath.length === 0) return null;
   const safe = safeAuthReturnUrl(locale, bookingPath);
-  return `/${locale}/auth/login?returnUrl=${encodeURIComponent(safe)}`;
+  return `/${locale}/auth/${kind}?returnUrl=${encodeURIComponent(safe)}`;
+}
+
+/** Wraps the complete same-locale booking path through safeAuthReturnUrl.
+ *  Null for an unsupported locale; unsafe paths fall back per that helper. */
+export function buildAuthContinuationUrl(locale: string, bookingPath: string): string | null {
+  return buildValidatedContinuation(locale, bookingPath, 'login');
+}
+
+/** Registration counterpart of the login continuation: the same validated
+ *  booking path is preserved so choosing registration over login keeps the
+ *  full tour/date/count/locale selection. */
+export function buildRegisterContinuationUrl(locale: string, bookingPath: string): string | null {
+  return buildValidatedContinuation(locale, bookingPath, 'register');
 }
 
 function isNonEmptyString(value: unknown): value is string {

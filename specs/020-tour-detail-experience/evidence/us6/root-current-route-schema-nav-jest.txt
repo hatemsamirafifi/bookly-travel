@@ -1,0 +1,6 @@
+
+Test Suites: 4 passed, 4 total
+Tests:       120 passed, 120 total
+Snapshots:   0 total
+Time:        4.435 s
+Ran all test suites within paths "src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx", "src/lib/tours/__tests__/detail-localization.test.ts", "src/components/seo/__tests__/StructuredData.test.tsx", "src/components/tour/__tests__/TourSectionNav.test.tsx".

@@ -1,0 +1,55 @@
+{
+  "appliedAt": "2026-10-18T21:21:58.811Z",
+  "scope": "root-review corrections ONLY (metadata + asset recovery); no tests/collect/assert/rebuild/source edits",
+  "assetsRecovered": {
+    "count": 2,
+    "files": [
+      {
+        "name": "localhost_2026-10-19_00-06-26-0.trace.json",
+        "sizeBytes": 4616301,
+        "sha256": "3b5eba13673ffe46a6930568c8d504399e60dbe49f00d8e213202a41f5b2d43e",
+        "copiedTo": "E/localhost_2026-10-19_00-06-26-0.trace.json",
+        "copyHashMatch": true
+      },
+      {
+        "name": "localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+        "sizeBytes": 281790,
+        "sha256": "e98be7f84f9c911dab2aa198a42caef295b15c0a6e63a21e85e1526af8f08bed",
+        "copiedTo": "E/localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+        "copyHashMatch": true
+      }
+    ]
+  },
+  "lhrIntegrity": {
+    "json": {
+      "sha256": "79bc38d3213b8f44c6e96d77c872a0798dcff212167f6aa5265cad7d2da15e54",
+      "unchangedVsHostCopy": true,
+      "hostCopyPresent": true
+    },
+    "html": {
+      "sha256": "92d86dc2b001f7920cf84b9b54e4bcc1ec0fe4285dda574356b6780dbaaedb0a",
+      "unchangedVsHostCopy": true,
+      "hostCopyPresent": true
+    }
+  },
+  "diagResultCorrections": [
+    "fresh.frontendAssetList replaced ([] was false) with 2 real assets incl. sizes/hashes/source paths",
+    "fresh.assetFilesRecovered added; stale no-assets claim attributed to runner assetName() regex drift (fixed, not re-run)",
+    "weavy artifacts record updated: assetCopiedCounts {traceJson:1, devtoolslogJson:1} appended to engineDiagFiles",
+    "stages.collect stamped cachedRecoveredFromOneActualCollect=true + actual measurement stamps 21:04:48.406Z..21:06:44.564Z (116158ms, exit 0); 0ms record explicitly labeled postprocessing reuse",
+    "clocksClarification added: measurement clock vs postprocessing clock separated; LHR fetchTime untouched",
+    "original first-failed-run provenance cited (events.jsonl line 36; run-level finishedAt 2026-10-18T21:06:44.565Z relay-observed from overwritten partial, not re-fabricated)",
+    "conditionsQualification added (reachability probes pre-measurement; cold-cache NOT proven; score 0.8 still fails 0.9; no version->performance causality; Gallery pending preload edits postdate measurement)"
+  ],
+  "unchanged": [
+    "lhr-1792357598848 (id and bytes; sha256 above)",
+    "LHR fetchTime 2026-10-18T21:06:26.970Z",
+    "verdict FAVORS-ENGINE-BUG (diagnostic scope only; NOT a measurement-gate pass)",
+    "prior 18 evidence in EVBASE audit/ (immutable)"
+  ],
+  "patchedFiles": [
+    "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\engine-diagnostic-12-8\\diag-result.json",
+    "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\diag\\diag-result.json",
+    "B/diag/run-diag.cjs (assetName regex, node --check only)"
+  ]
+}

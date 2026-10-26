@@ -1,0 +1,10 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/auth/__tests__/LoginForm.test.tsx src/components/auth/__tests__/RegisterForm.test.tsx src/components/booking/__tests__/BookingForm.test.tsx src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/__tests__/AvailabilityCalendar.test.tsx src/components/tour/__tests__/BookingCTA.test.tsx src/components/tour/__tests__/MobileBookingAction.test.tsx src/lib/auth/__tests__/return-url.test.ts src/lib/tours/__tests__/booking-selection.test.ts
+
+
+Test Suites: 9 passed, 9 total
+Tests:       168 passed, 168 total
+Snapshots:   0 total
+Time:        8.234 s, estimated 19 s
+Ran all test suites within paths "src/components/auth/__tests__/LoginForm.test.tsx", "src/components/auth/__tests__/RegisterForm.test.tsx", "src/components/booking/__tests__/BookingForm.test.tsx", "src/components/tour/__tests__/TourBookingController.test.tsx", "src/components/tour/__tests__/AvailabilityCalendar.test.tsx", "src/components/tour/__tests__/BookingCTA.test.tsx", "src/components/tour/__tests__/MobileBookingAction.test.tsx", "src/lib/auth/__tests__/return-url.test.ts", "src/lib/tours/__tests__/booking-selection.test.ts".

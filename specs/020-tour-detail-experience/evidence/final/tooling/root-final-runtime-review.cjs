@@ -1,0 +1,18 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{spawn}=require('node:child_process');
+const root='F:/Travel Website/bookly travel',dir=path.join(root,'specs/020-tour-detail-experience/evidence/final/runtime');
+const prior=JSON.parse(fs.readFileSync(path.join(dir,'root-docker-build-result.json'),'utf8'));
+if(!prior.stages.some(s=>s.name==='image-build'&&s.exitCode===0)||!prior.stages.some(s=>s.name==='frontend-recreate'&&s.exitCode===0)||prior.readiness?.proxy!==200)throw Error('Image/recreation/readiness must complete first');
+const expected=JSON.parse(fs.readFileSync(path.join(root,'specs/020-tour-detail-experience/evidence/final/frontend/root-gates-after.json'),'utf8'));
+expected['jest.config.mjs']=crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'frontend/jest.config.mjs'))).digest('hex');
+const reviewedTest=path.join('tests','e2e','tour-detail.spec.ts'),reviewedTestHash=crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'frontend',reviewedTest))).digest('hex');
+let testOnlyReview;
+if(reviewedTestHash!==expected[reviewedTest]){
+ const review=JSON.parse(fs.readFileSync(path.join(root,'specs/020-tour-detail-experience/evidence/final/browser/root-maintenance-static-result.json'),'utf8'));
+ if(!review.passed||review.sourceHash!==reviewedTestHash)throw Error('Changed browser test requires reviewed static gates');
+ testOnlyReview={path:reviewedTest,originalHash:expected[reviewedTest],reviewedHash:reviewedTestHash,evidence:'../browser/root-maintenance-static-result.json'};expected[reviewedTest]=reviewedTestHash;
+}
+const report={startedAt:new Date().toISOString(),buildProvenance:'root-docker-build-result.json',scope:'Independent source parity; .dockerignore is correctly absent from the image because it excludes itself. Its host hash is recorded separately.',dockerignoreHash:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'frontend/.dockerignore'))).digest('hex')};
+report.testOnlyReview=testOnlyReview;
+const program="const fs=require('node:fs'),crypto=require('node:crypto');const paths=JSON.parse(fs.readFileSync(0,'utf8'));console.log(JSON.stringify({node:process.version,next:require('next/package.json').version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),files:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync('/app/'+p.replaceAll('\\\\','/'))).digest('hex')]))}));";
+let output='';const child=spawn('docker',['compose','exec','-T','nextjs','node','-e',program],{cwd:root,stdio:['pipe','pipe','pipe']});child.stdin.end(JSON.stringify(Object.keys(expected)));child.stdout.on('data',s=>output+=s);child.stderr.on('data',s=>output+=s);
+child.on('exit',exitCode=>{try{report.exitCode=exitCode;if(exitCode!==0)throw Error(output);const actual=JSON.parse(output);report.container={node:actual.node,next:actual.next,buildId:actual.buildId};report.sourceParity={files:Object.keys(expected).length,mismatches:Object.keys(expected).filter(p=>actual.files[p]!==expected[p])};report.hostMismatches=Object.keys(expected).filter(p=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'frontend',p))).digest('hex')!==expected[p]);report.passed=!report.sourceParity.mismatches.length&&!report.hostMismatches.length;if(!report.passed)process.exitCode=1;fs.writeFileSync(path.join(dir,'root-reviewed-container-source.json'),JSON.stringify(actual,null,2))}catch(e){report.error=e.message;report.passed=false;process.exitCode=1}finally{report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(dir,'root-runtime-accepted.json'),JSON.stringify(report,null,2))}});

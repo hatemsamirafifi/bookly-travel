@@ -1,0 +1,37 @@
+{
+  "startedAt": "2026-10-20T19:50:11.234Z",
+  "scope": "local QA build and source readiness; frontend gates pending",
+  "commands": [
+    {
+      "name": "startup-1",
+      "args": [
+        "exec",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "const fs=require('node:fs');try{console.log(fs.readFileSync('/app/.next/BUILD_ID','utf8').trim())}catch(e){console.error(e.code);process.exitCode=1}"
+      ],
+      "startedAt": "2026-10-20T19:50:11.447Z",
+      "finishedAt": "2026-10-20T19:50:12.289Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    }
+  ],
+  "polls": [
+    {
+      "at": "2026-10-20T19:50:12.306Z",
+      "status": 0,
+      "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+      "root": {
+        "url": "http://127.0.0.1:3001/",
+        "status": 307,
+        "location": "/en",
+        "bytes": 3,
+        "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+      }
+    }
+  ],
+  "passedReadinessOnly": false
+}

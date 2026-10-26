@@ -1,0 +1,76 @@
+
+Running 2 tests using 1 worker
+
+[1A[2K(node:23284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/2] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state
+[1A[2K  1) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('#overview').getByRole('button', { name: 'Read more' })
+    Expected: [32m"true"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for locator('#overview').getByRole('button', { name: 'Read more' })[22m
+
+
+      251 |       await expect(expand).toBeFocused();
+      252 |       await page.keyboard.press('Enter');
+    > 253 |       await expect(expand).toHaveAttribute('aria-expanded', 'true');
+          |                            ^
+      254 |       await expect(page.getByText('Final reachable sentence.')).toBeVisible();
+      255 |       await expect(expand).toBeFocused();
+      256 |       await page.keyboard.press('Enter');
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:253:28
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\content-keyboard-initial\a11y-tour-detail-a11y-Spec-bd1f3-erable-with-announced-state-a11y\error-context.md
+
+
+[1A[2K(node:24680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/2] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:265:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred
+[1A[2K  2) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:265:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('navigation', { name: /secciones|Tour sections/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('navigation', { name: /secciones|Tour sections/ })[22m
+
+
+      271 |     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      272 |     const nav = page.getByRole('navigation', { name: /secciones|Tour sections/ });
+    > 273 |     await expect(nav).toBeVisible();
+          |                       ^
+      274 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+      275 |   });
+      276 | });
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:273:23
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\content-keyboard-initial\a11y-tour-detail-a11y-Spec-ecce7-th-reduced-motion-preferred-a11y\error-context.md
+
+
+[1A[2K  2 failed
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state 
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:265:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred 

@@ -1,0 +1,145 @@
+{
+  "createdAt": "2026-10-19T21:17:47.617Z",
+  "commands": {
+    "dockerVersion": {
+      "startedAt": "2026-10-19T21:17:47.618Z",
+      "cmd": "docker",
+      "args": [
+        "version",
+        "--format",
+        "{{.Server.Os}} {{.Server.Version}}"
+      ],
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "stdoutLen": 13,
+      "stderrLen": 0,
+      "endedAt": "2026-10-19T21:17:47.802Z"
+    },
+    "imagesBookly": {
+      "startedAt": "2026-10-19T21:17:47.802Z",
+      "cmd": "docker",
+      "args": [
+        "images",
+        "--format",
+        "{{.Repository}}:{{.Tag}} {{.ID}}",
+        "booklytravel-nextjs"
+      ],
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "stdoutLen": 157,
+      "stderrLen": 0,
+      "endedAt": "2026-10-19T21:17:48.073Z"
+    },
+    "imagePreload": {
+      "startedAt": "2026-10-19T21:17:48.073Z",
+      "cmd": "docker",
+      "args": [
+        "image",
+        "inspect",
+        "booklytravel-nextjs:spec020-preload-be653d72",
+        "--format",
+        "{{.Id}} {{.RepoTags}}"
+      ],
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "stdoutLen": 119,
+      "stderrLen": 0,
+      "endedAt": "2026-10-19T21:17:48.316Z"
+    },
+    "containerPs": {
+      "startedAt": "2026-10-19T21:17:48.316Z",
+      "cmd": "docker",
+      "args": [
+        "ps",
+        "--all",
+        "--filter",
+        "name=bookly-frontend",
+        "--format",
+        "{{.ID}} {{.Image}} {{.Status}}"
+      ],
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "stdoutLen": 75,
+      "stderrLen": 0,
+      "endedAt": "2026-10-19T21:17:48.505Z"
+    },
+    "containerInspect": {
+      "startedAt": "2026-10-19T21:17:48.505Z",
+      "cmd": "docker",
+      "args": [
+        "inspect",
+        "bookly-frontend"
+      ],
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "stdoutLen": 10706,
+      "stderrLen": 0,
+      "endedAt": "2026-10-19T21:17:48.676Z"
+    },
+    "composeVersion": {
+      "startedAt": "2026-10-19T21:17:48.676Z",
+      "cmd": "docker",
+      "args": [
+        "compose",
+        "version"
+      ],
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "spawnError": null,
+      "stdoutLen": 30,
+      "stderrLen": 0,
+      "endedAt": "2026-10-19T21:17:48.899Z"
+    }
+  },
+  "containerBrief": {
+    "State": {},
+    "MountsSummary": []
+  },
+  "configShas": {
+    "docker-compose.yml": {
+      "sha256": "949bb46aca2f7db63f843e0f3954e22558c7df65a6a1d217531bee53a73cedc5",
+      "bytes": 8141
+    },
+    "frontend/package.json": {
+      "sha256": "0aba9b572479db9a9698fe7c1cc2041c0effdb87fb47eb757e9ac6de3dbd996d",
+      "bytes": 1961
+    },
+    "frontend/package-lock.json": {
+      "sha256": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c",
+      "bytes": 736511
+    },
+    "frontend/next.config.ts": {
+      "sha256": "404c27cbeab144c79d9ea246ac092dcd1f25a916694b1ba14307391a6fb62dbb",
+      "bytes": 2227
+    },
+    "frontend/tsconfig.json": {
+      "sha256": "dbacf04aa5f38c1ce4b0f030fbb84e5adff19306fb785b2e4aafef9c58705658",
+      "bytes": 704
+    },
+    "frontend/eslint.config.mjs": {
+      "sha256": "c924ea6632392b9cf66ad8034b09ac996fe48139cac4e70214e7ca240239702a",
+      "bytes": 698
+    },
+    "frontend/lighthouserc.js": {
+      "sha256": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+      "bytes": 1434
+    },
+    "frontend/jest.config.ts": null,
+    "frontend/jest.config.js": null,
+    "frontend/jest.config.mjs": {
+      "sha256": "ea003c2348f2fdc10d178265a065c3230f2a670976e3c042a63125d229c40710",
+      "bytes": 589
+    }
+  }
+}

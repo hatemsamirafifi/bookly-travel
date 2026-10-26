@@ -10,8 +10,8 @@ import type {
  *
  * Base facts reuse the retained real public EN response
  * (`specs/020-tour-detail-experience/evidence/baseline/public-detail-en.json`:
- * Hidden Gems of Rome Walking Tour, EUR 4500, group 1-20, five genuine
- * gallery photos). Immutable here means each builder returns a fresh object
+ * Hidden Gems of Rome Walking Tour, EUR 4500, group 1-20, five supplied
+ * owned fixture media assets). Immutable here means each builder returns a fresh object
  * graph sharing no references with module state or caller-supplied overrides;
  * the returned tour itself stays mutable so state scenarios can exercise it.
  * Dates derive from an injected UTC clock so fixtures do not age.

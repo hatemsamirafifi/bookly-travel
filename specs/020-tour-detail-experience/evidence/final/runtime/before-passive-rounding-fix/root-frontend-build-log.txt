@@ -1,0 +1,85 @@
+bookly-frontend  | 
+bookly-frontend  | > frontend@0.1.0 build
+bookly-frontend  | > next build
+bookly-frontend  | 
+bookly-frontend  | Attention: Next.js now collects completely anonymous telemetry regarding usage.
+bookly-frontend  | This information is used to shape Next.js' roadmap and prioritize features.
+bookly-frontend  | You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+bookly-frontend  | https://nextjs.org/telemetry
+bookly-frontend  | 
+bookly-frontend  | ▲ Next.js 16.2.3 (Turbopack)
+bookly-frontend  | - Environments: .env.local
+bookly-frontend  | 
+bookly-frontend  |   Creating an optimized production build ...
+bookly-frontend  | ✓ Compiled successfully in 35.3s
+bookly-frontend  |   Running TypeScript ...
+bookly-frontend  |   Finished TypeScript in 33.6s ...
+bookly-frontend  |   Collecting page data using 7 workers ...
+bookly-frontend  |   Generating static pages using 7 workers (0/89) ...
+bookly-frontend  |   Generating static pages using 7 workers (22/89) 
+bookly-frontend  |   Generating static pages using 7 workers (44/89) 
+bookly-frontend  |   Generating static pages using 7 workers (66/89) 
+bookly-frontend  | ✓ Generating static pages using 7 workers (89/89) in 2.4s
+bookly-frontend  |   Finalizing page optimization ...
+bookly-frontend  | 
+bookly-frontend  | Route (app)
+bookly-frontend  | ┌ ○ /_not-found
+bookly-frontend  | ├ ƒ /[locale]
+bookly-frontend  | ├ ƒ /[locale]/[...notFound]
+bookly-frontend  | ├ ƒ /[locale]/auth/forgot-password
+bookly-frontend  | ├ ƒ /[locale]/auth/login
+bookly-frontend  | ├ ƒ /[locale]/auth/partner-register
+bookly-frontend  | ├ ƒ /[locale]/auth/register
+bookly-frontend  | ├ ƒ /[locale]/auth/reset-password
+bookly-frontend  | ├ ƒ /[locale]/auth/verify-email
+bookly-frontend  | ├ ƒ /[locale]/blog
+bookly-frontend  | ├ ƒ /[locale]/blog/[slug]
+bookly-frontend  | ├ ƒ /[locale]/blog/[slug]/preview
+bookly-frontend  | ├ ƒ /[locale]/blog/category/[slug]
+bookly-frontend  | ├ ƒ /[locale]/booking
+bookly-frontend  | ├ ƒ /[locale]/booking/confirmation
+bookly-frontend  | ├ ƒ /[locale]/categories
+bookly-frontend  | ├ ƒ /[locale]/categories/[slug]
+bookly-frontend  | ├ ƒ /[locale]/destinations
+bookly-frontend  | ├ ƒ /[locale]/destinations/[slug]
+bookly-frontend  | ├ ƒ /[locale]/my-bookings
+bookly-frontend  | ├ ƒ /[locale]/my-bookings/[reference]
+bookly-frontend  | ├ ƒ /[locale]/my-reviews
+bookly-frontend  | ├ ƒ /[locale]/partner
+bookly-frontend  | ├ ƒ /[locale]/partner-invite/[token]
+bookly-frontend  | ├ ƒ /[locale]/partner-register
+bookly-frontend  | ├ ƒ /[locale]/partner/analytics
+bookly-frontend  | ├ ƒ /[locale]/partner/bookings
+bookly-frontend  | ├ ƒ /[locale]/partner/bookings/[reference]
+bookly-frontend  | ├ ƒ /[locale]/partner/onboarding
+bookly-frontend  | ├ ƒ /[locale]/partner/profile
+bookly-frontend  | ├ ƒ /[locale]/partner/reviews
+bookly-frontend  | ├ ƒ /[locale]/partner/tours
+bookly-frontend  | ├ ƒ /[locale]/partner/tours/[id]/availability
+bookly-frontend  | ├ ƒ /[locale]/partner/tours/[id]/edit
+bookly-frontend  | ├ ƒ /[locale]/partner/tours/[id]/pricing
+bookly-frontend  | ├ ƒ /[locale]/partner/tours/create
+bookly-frontend  | ├ ƒ /[locale]/privacy
+bookly-frontend  | ├ ƒ /[locale]/profile
+bookly-frontend  | ├ ƒ /[locale]/search
+bookly-frontend  | ├ ƒ /[locale]/terms
+bookly-frontend  | ├ ƒ /[locale]/tours/[slug]
+bookly-frontend  | ├ ƒ /[locale]/wishlist
+bookly-frontend  | ├ ƒ /api/auth/session
+bookly-frontend  | ├ ○ /robots.txt
+bookly-frontend  | └ ƒ /v/[reference]
+bookly-frontend  | 
+bookly-frontend  | 
+bookly-frontend  | ƒ Proxy (Middleware)
+bookly-frontend  | 
+bookly-frontend  | ○  (Static)   prerendered as static content
+bookly-frontend  | ƒ  (Dynamic)  server-rendered on demand
+bookly-frontend  | 
+bookly-frontend  | 
+bookly-frontend  | > frontend@0.1.0 start
+bookly-frontend  | > next start
+bookly-frontend  | 
+bookly-frontend  | ▲ Next.js 16.2.3
+bookly-frontend  | - Local:         http://localhost:3000
+bookly-frontend  | - Network:       http://172.21.0.5:3000
+bookly-frontend  | ✓ Ready in 331ms

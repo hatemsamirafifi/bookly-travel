@@ -1,0 +1,11 @@
+{
+  "pid": 15388,
+  "startedAt": "2026-10-17T15:31:14.9605159Z",
+  "scope": "Resume same actual test-executor session at human-requested max effort; root reviews only",
+  "model": "opencode/glm-5.3-flash-free",
+  "variant": "max",
+  "catalogMapping": {
+    "reasoningEffort": "max"
+  },
+  "session": "ses_eb5877c55ffejDwLyNfLsHK7iJ"
+}

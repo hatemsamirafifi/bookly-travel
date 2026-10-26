@@ -12,8 +12,10 @@ import {
   getGuideLanguageNames,
   getPresentSectionIds,
   hasDifficulty,
+  hasGenuineReviewCount,
   hasUsableEntries,
   hasUsableItinerary,
+  isGenuineReviewScore,
   isUsableText,
   resolveImageAltLocale,
   shouldShowContentFallback,
@@ -125,6 +127,43 @@ describe('detail-presentation section projection', () => {
       rating: { average: 0, count: 0 },
     });
     expect(getPresentSectionIds(tour)).not.toContain('reviews');
+  });
+
+  it('suppresses the reviews section for fractional counts like the header rule', () => {
+    // Same-projection contract: section/nav presence uses the genuine-count
+    // rule, so a fractional count shows neither section nor header score.
+    for (const count of [1.5, 2.5]) {
+      const tour = createFullTourDetail(new Date('2026-10-14T00:00:00.000Z'), {
+        reviews: { average_rating: 4.5, count, distribution: {} },
+        rating: { average: 4.5, count },
+      });
+      expect(getPresentSectionIds(tour)).not.toContain('reviews');
+    }
+  });
+
+  it('accepts only a positive integer review count as genuine', () => {
+    expect(hasGenuineReviewCount(2)).toBe(true);
+    expect(hasGenuineReviewCount(124)).toBe(true);
+    expect(hasGenuineReviewCount(0)).toBe(false);
+    expect(hasGenuineReviewCount(-3)).toBe(false);
+    expect(hasGenuineReviewCount(2.5)).toBe(false);
+    expect(hasGenuineReviewCount(Number.NaN)).toBe(false);
+    expect(hasGenuineReviewCount('2')).toBe(false);
+    expect(hasGenuineReviewCount(undefined)).toBe(false);
+  });
+
+  it('scores only a genuine count with a finite average in (0, 5]', () => {
+    expect(isGenuineReviewScore(2, 4.5)).toBe(true);
+    expect(isGenuineReviewScore(124, 4.7)).toBe(true);
+    expect(isGenuineReviewScore(0, 4.5)).toBe(false);
+    expect(isGenuineReviewScore(-2, 4.5)).toBe(false);
+    expect(isGenuineReviewScore(2.5, 4.5)).toBe(false);
+    expect(isGenuineReviewScore(10, 0)).toBe(false);
+    expect(isGenuineReviewScore(10, -1)).toBe(false);
+    expect(isGenuineReviewScore(10, 5.5)).toBe(false);
+    expect(isGenuineReviewScore(10, Number.NaN)).toBe(false);
+    expect(isGenuineReviewScore(10, null)).toBe(false);
+    expect(isGenuineReviewScore(10, undefined)).toBe(false);
   });
 
   it('marks the operator section only when a summary is supplied', () => {

@@ -1,0 +1,13 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/__tests__/TourDetail.test.tsx
+  (settled green run: max() floor removed from sticky slot; no test changes needed)
+
+RESULT: PASS — 3 suites, 100 passed, 100 total, 0 failed; no snapshots, no skips.
+
+  15 nav (heading observer, delta snapshots, lifecycle, z-sticky token,
+  no passive focus/vertical scroll) + 31 controller (incl. 3 mobile-
+  unavailable visibility/copy/transition tests) + 54 Detail (incl. marker
+  scope/coordination test). The sticky-top formula change alters no asserted
+  behavior: visibility contract tests pin hidden/lg:block only, and no unit
+  test mirrors the top offset (browser proves geometry).
+Time: ~5.4s. Full output retained from the focused jest run above.

@@ -3,15 +3,13 @@ import {
   getDetailPresentation,
   type DetailSectionId,
 } from '@/lib/tours/detail-presentation';
-import ImageGallery from './ImageGallery';
-import AvailabilityCalendar from './AvailabilityCalendar';
-import ReviewList from '@/components/reviews/ReviewList';
-import BookingCTA from './BookingCTA';
+import TourGallery from './TourGallery';
+import TourReviews from './TourReviews';
+import TourBookingController from './TourBookingController';
 import { useTranslations } from 'next-intl';
 import TourSectionNav from './TourSectionNav';
 import OperatorSummary from './OperatorSummary';
 import RelatedTours from './RelatedTours';
-import MobileBookingAction from './MobileBookingAction';
 import TourHeader from './TourHeader';
 import TourFacts from './TourFacts';
 import TourHighlights from './TourHighlights';
@@ -24,11 +22,15 @@ import { Container } from '@/components/ui/Container';
 interface TourDetailProps {
   tour: TourDetailType;
   locale: string;
+  /** Server UTC-day snapshot (YYYY-MM-DD) injected by the route page so the
+   *  booking selection hydrates without a client-clock mismatch. */
+  todayUtc?: string;
 }
 
 /** Detail compositor: presence derived once from the model drives sections and
- *  nav. Gallery/booking/operator/reviews/related behavior is preserved. */
-export default function TourDetail({ tour, locale }: TourDetailProps) {
+ *  nav. Gallery/operator/reviews/related behavior is preserved. Booking state
+ *  lives in one page-local controller; the article stays server-rendered. */
+export default function TourDetail({ tour, locale, todayUtc }: TourDetailProps) {
   const t = useTranslations('tour');
   const presentation = getDetailPresentation(tour, locale);
   const present = new Set<DetailSectionId>(presentation.presentSectionIds);
@@ -50,7 +52,10 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
   const sections = presentation.presentSectionIds.map((id) => ({ id, label: sectionLabels[id] }));
 
   return (
-    <Container className="py-8 pb-24 lg:pb-8">
+    // data-tour-detail scopes the measured nav offset (published on this
+    // container by the nav island, inherited by the sidebar) and the
+    // section scroll margins, so identical IDs on other pages are unaffected.
+    <Container className="py-8 pb-24 lg:pb-8" data-tour-detail>
       <TourHeader
         locale={locale}
         title={tour.title}
@@ -58,22 +63,26 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
         location={tour.location}
         categorySlug={tour.category.slug}
         categoryName={tour.category.name}
-        ratingAverage={tour.rating.average}
-        ratingCount={tour.rating.count}
+        tourId={tour.id}
+        reviewAverage={tour.reviews.average_rating}
         reviewCount={tour.reviews.count}
       />
-      {presentation.disclosure.showContentFallback && (
-        <p className="mb-2 inline-block rounded border border-warning/30 bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
-          {t('contentFallback')}
-        </p>
-      )}
-      {presentation.disclosure.showItineraryFallback && (
-        <p className="mb-2 ml-2 inline-block rounded border border-warning/30 bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
-          {t('itineraryFallback')}
-        </p>
+      {(presentation.disclosure.showContentFallback || presentation.disclosure.showItineraryFallback) && (
+        <div className="mb-2 flex flex-wrap gap-2">
+          {presentation.disclosure.showContentFallback && (
+            <p className="inline-block rounded border border-warning/30 bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
+              {t('contentFallback')}
+            </p>
+          )}
+          {presentation.disclosure.showItineraryFallback && (
+            <p className="inline-block rounded border border-warning/30 bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
+              {t('itineraryFallback')}
+            </p>
+          )}
+        </div>
       )}
 
-      <ImageGallery images={tour.images} title={tour.title} contentLocale={tour.content_locale} />
+      <TourGallery images={tour.images} title={tour.title} contentLocale={tour.content_locale} />
 
       <TourSectionNav label={t('sectionNavigation')} sections={sections} />
 
@@ -118,27 +127,25 @@ export default function TourDetail({ tour, locale }: TourDetailProps) {
               verifiedLabel={t('operatorVerified')}
             />
           )}
-          {present.has('reviews') && <section id="reviews" className="scroll-mt-20"><ReviewList tourSlug={tour.slug} locale={locale} /></section>}
+          {present.has('reviews') && <TourReviews tourSlug={tour.slug} locale={locale} title={t('reviews')} />}
         </article>
 
         <aside className="space-y-5 lg:col-span-1">
-          <BookingCTA
+          <TourBookingController
+            slug={tour.slug}
+            locale={locale}
             pricing={tour.pricing}
             availability={tour.availability}
-            groupSize={tour.group_size}
-            locale={locale}
-            slug={tour.slug}
+            groupMin={tour.group_size.min}
+            groupMax={tour.group_size.max}
+            todayUtc={todayUtc ?? new Date().toISOString().slice(0, 10)}
             tourId={tour.id}
-          />
-          <AvailabilityCalendar
-            availableDates={tour.availability.available_dates}
-            nextAvailableDate={tour.availability.next_available_date}
-            locale={locale}
+            cancellationPolicy={tour.cancellation_policy}
+            cancellationPolicyLocale={tour.content_locale}
           />
         </aside>
       </div>
       {present.has('related') && tour.related_tours && <RelatedTours tours={tour.related_tours} locale={locale} title={t('relatedTours')} />}
-      <MobileBookingAction availability={tour.availability} pricing={tour.pricing} groupSize={tour.group_size} slug={tour.slug} locale={locale} actionLabel={t('mobileBookingAction')} priceLabel={t('perPerson')} />
     </Container>
   );
 }

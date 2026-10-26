@@ -1,0 +1,40 @@
+{
+  "startedAt": "2026-10-17T13:49:20.367Z",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "s4QChf7Q-ky9bFYfGCxKj"
+  },
+  "sourceParity": {
+    "files": 420,
+    "mismatches": []
+  },
+  "scope": "Real built Docker app/API/owned fixtures plus explicitly controlled failure/SSR boundaries; no native media adapter",
+  "stages": [
+    {
+      "name": "public-mobile",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "tests/e2e/tour-detail.spec.ts",
+        "--project=chromium",
+        "--project=mobile",
+        "--workers=1",
+        "--reporter=line",
+        "--output=/tmp/spec020-final-browser-public-mobile"
+      ],
+      "startedAt": "2026-10-17T13:49:20.368Z",
+      "finishedAt": "2026-10-17T13:59:06.654Z",
+      "exitCode": 130,
+      "containerArtifacts": "/tmp/spec020-final-browser-public-mobile"
+    }
+  ],
+  "error": "public-mobile exited 130",
+  "passed": false,
+  "finishedAt": "2026-10-17T13:59:06.667Z"
+}

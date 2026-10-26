@@ -20,11 +20,26 @@ jest.mock('next-intl', () => ({
 // care that the header renders the category correctly (regression: F1 —
 // `category` is an object, not a string, so it must NOT be rendered as a raw
 // React child). Mock the children so we don't pull in next/image, next-intl,
-// or the reviews fetch.
-jest.mock('../ImageGallery', () => ({
+// or the reviews fetch. The gallery mock captures the compositor contract
+// (full image list, title, content locale) without the viewer engine.
+jest.mock('../TourGallery', () => ({
   __esModule: true,
-  default: ({ title }: { images: unknown[]; title: string }) => (
-    <div data-testid="image-gallery" aria-label={title} />
+  default: ({
+    images,
+    title,
+    contentLocale,
+  }: {
+    images: { url: string }[];
+    title: string;
+    contentLocale?: string;
+  }) => (
+    <div
+      data-testid="tour-gallery"
+      aria-label={title}
+      data-count={images.length}
+      data-urls={images.map((image) => image.url).join(',')}
+      data-content-locale={contentLocale ?? ''}
+    />
   ),
 }));
 jest.mock('../AvailabilityCalendar', () => ({
@@ -45,9 +60,29 @@ jest.mock('../BookingCTA', () => ({
     <div data-testid="booking-cta">{slug}</div>
   ),
 }));
+jest.mock('../TourBookingController', () => ({
+  __esModule: true,
+  default: ({
+    slug,
+    locale,
+    todayUtc,
+    cancellationPolicyLocale,
+  }: {
+    slug: string;
+    locale: string;
+    todayUtc: string;
+    cancellationPolicyLocale?: string;
+  }) => (
+    <div data-testid="tour-booking-controller" data-slug={slug} data-locale={locale} data-today={todayUtc} data-policy-locale={cancellationPolicyLocale ?? ''} />
+  ),
+}));
 jest.mock('../RelatedTours', () => ({
   __esModule: true,
   default: ({ tours }: { tours: { title: string }[] }) => <section id="related">{tours.map((related) => <span key={related.title}>{related.title}</span>)}</section>,
+}));
+
+jest.mock('@/lib/hooks/useAuth', () => ({
+  useAuth: () => ({ user: null }),
 }));
 
 const tour: TourDetailType = {
@@ -302,7 +337,7 @@ describe('TourDetail', () => {
     expect(screen.queryByRole('heading', { name: enMessages.tour.highlights })).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: enMessages.tour.included })).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: enMessages.tour.meetingPoint })).not.toBeInTheDocument();
-    expect(screen.getByTestId('booking-cta')).toBeInTheDocument();
+    expect(screen.getByTestId('tour-booking-controller')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: enMessages.tour.itinerary })).not.toBeInTheDocument();
   });
 
@@ -326,6 +361,26 @@ describe('TourDetail', () => {
     expect(screen.getByText('Tuscan Walks')).toBeInTheDocument();
     expect(screen.getByText('Other tour')).toBeInTheDocument();
     expect(screen.getByText('Local guides.')).toBeInTheDocument();
+  });
+
+  it('scopes navigation and present-section anchors under the tour-detail marker', () => {
+    const { container } = renderTour('en');
+
+    // The marker is the single coordination point: the nav publishes its
+    // measured offset on this container and the sidebar inherits it, while
+    // the scroll-margin rules apply only to sections inside it.
+    const marker = container.querySelector('[data-tour-detail]');
+    expect(marker).not.toBeNull();
+    const nav = screen.getByRole('navigation', { name: enMessages.tour.sectionNavigation });
+    expect(marker).toContainElement(nav);
+
+    // Every supplied nav entry resolves to a present section in the marker.
+    const hrefs = Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href'));
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      expect(href).toMatch(/^#/);
+      expect(marker!.querySelector(href!)).not.toBeNull();
+    }
   });
 
   describe('operator and related (Spec 019 US5)', () => {
@@ -448,7 +503,7 @@ describe('TourDetail', () => {
     it('orders header, gallery, nav, article sections and related with no orphan entries', () => {
       const { container } = renderTour('en', completeTour);
 
-      const gallery = container.querySelector('[data-testid="image-gallery"]');
+      const gallery = container.querySelector('[data-testid="tour-gallery"]');
       const nav = screen.getByRole('navigation', { name: enMessages.tour.sectionNavigation });
       assertDocumentOrder([
         screen.getByRole('heading', { level: 1 }),
@@ -497,7 +552,7 @@ describe('TourDetail', () => {
       expect(Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href'))).toEqual([
         '#overview', '#facts',
       ]);
-      expect(screen.getByTestId('booking-cta')).toBeInTheDocument();
+      expect(screen.getByTestId('tour-booking-controller')).toBeInTheDocument();
     });
 
     it('keeps important information fully readable without preview controls', () => {
@@ -535,6 +590,265 @@ describe('TourDetail', () => {
       expect(screen.getByText('Explore Tuscany in depth.')).toBeInTheDocument();
       const overview = document.querySelector('#overview');
       expect(overview?.querySelector('button')).toBeNull();
+    });
+  });
+
+  describe('US2 booking boundary (Spec 020)', () => {
+    it('mounts one shared booking controller with the tour identity, locale and server UTC day', () => {
+      const { container } = renderTour('en', tour);
+
+      const controller = screen.getByTestId('tour-booking-controller');
+      expect(controller).toHaveAttribute('data-slug', 'tuscany-wine-tasting');
+      expect(controller).toHaveAttribute('data-locale', 'en');
+      expect(controller.getAttribute('data-today')).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      // The controller owns the sidebar booking slot; legacy engines are gone.
+      expect(screen.queryByTestId('booking-cta')).not.toBeInTheDocument();
+      expect(container.querySelector('aside [data-testid="availability-calendar"]')).toBeNull();
+    });
+
+    it('passes an injected server UTC snapshot through instead of the client clock', () => {
+      renderTour('es', { ...tour, slug: 'other-slug' });
+
+      const controller = screen.getByTestId('tour-booking-controller');
+      expect(controller).toHaveAttribute('data-slug', 'other-slug');
+      expect(controller).toHaveAttribute('data-locale', 'es');
+      expect(controller.getAttribute('data-today')).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+
+    it('keeps the server-rendered article alongside the booking boundary', () => {
+      const { container } = renderTour('en', tour);
+
+      expect(screen.getByRole('heading', { name: 'Tuscany Wine Tasting' })).toBeInTheDocument();
+      expect(container.querySelector('#overview')).not.toBeNull();
+      expect(container.querySelector('#facts')).not.toBeNull();
+      expect(screen.getByTestId('tour-booking-controller')).toBeInTheDocument();
+    });
+  });
+
+  describe('US6 language disclosure (Spec 020)', () => {
+    const englishFallbackTour: TourDetailType = {
+      ...tour,
+      title: 'Tuscany Wine Tasting',
+      description: 'Explore Tuscany.',
+      content_locale: 'en',
+      itinerary: [{ day: 1, title: 'Tuscan vineyards', stops: [] }],
+      itinerary_locale: 'en',
+      translation_status: 'pending',
+      translation_warning: 'partial_translation',
+    };
+
+    it.each([
+      ['es', esMessages.tour.contentFallback, esMessages.tour.itineraryFallback],
+      ['it', itMessages.tour.contentFallback, itMessages.tour.itineraryFallback],
+    ] as const)('shows paired fallback notices in one shared gap layout in %s', (locale, contentNotice, itineraryNotice) => {
+      renderTour(locale, englishFallbackTour);
+
+      const contentElement = screen.getByText(contentNotice);
+      const itineraryElement = screen.getByText(itineraryNotice);
+      // Paired notices share one wrapping element that separates them with
+      // layout gap instead of offset margins on the second notice.
+      expect(contentElement.parentElement).toBe(itineraryElement.parentElement);
+      expect(contentElement.parentElement).toHaveClass('gap-2');
+      expect(itineraryElement).not.toHaveClass('ml-2');
+    });
+
+    it.each([
+      ['es', esMessages.tour],
+      ['it', itMessages.tour],
+    ] as const)('shows no fallback notice for whitespace-only English content in %s', (locale, messages) => {
+      renderTour(locale, {
+        ...tour,
+        title: '   ',
+        description: ' \n\t ',
+        highlights: ['  '],
+        inclusions: [],
+        exclusions: [null as unknown as string],
+        meeting_point: '   ',
+        cancellation_policy: '',
+        important_information: ['   '],
+        content_locale: 'en',
+        itinerary: [{ day: 1, title: '   ', stops: [] }],
+        itinerary_locale: 'en',
+        translation_warning: 'partial_translation',
+      });
+
+      expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+      expect(screen.queryByText(messages.partialTranslation)).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: messages.itinerary })).not.toBeInTheDocument();
+    });
+
+    it.each([
+      ['es', esMessages.tour],
+      ['it', itMessages.tour],
+    ] as const)('keeps an intentionally empty translated itinerary empty with no substitution in %s', (locale, messages) => {
+      renderTour(locale, {
+        ...tour,
+        title: locale === 'es' ? 'Cata localizada' : 'Degustazione localizzata',
+        description: locale === 'es' ? 'Descripción localizada.' : 'Descrizione localizzata.',
+        content_locale: locale,
+        itinerary: [],
+        itinerary_locale: locale,
+        translation_status: 'ready',
+        translation_warning: undefined,
+      });
+
+      expect(screen.queryByRole('heading', { name: messages.itinerary })).not.toBeInTheDocument();
+      expect(screen.queryByText(messages.itineraryFallback)).not.toBeInTheDocument();
+      expect(screen.queryByText(messages.contentFallback)).not.toBeInTheDocument();
+      expect(screen.queryByText('Tuscan vineyards')).not.toBeInTheDocument();
+    });
+
+    it('preserves full multiline practical text with line breaks', () => {
+      renderTour('en', {
+        ...tour,
+        meeting_point: 'Gate A\nSecond line at the gate',
+        cancellation_policy: 'Free up to 24h.\nRefunds take five days.',
+        important_information: ['Bring your passport\nKeep it with you'],
+      });
+
+      expect(screen.getByText(/Gate A/)).toBeInTheDocument();
+      expect(screen.getByText(/Second line at the gate/)).toBeInTheDocument();
+      expect(screen.getByText(/Refunds take five days\./)).toBeInTheDocument();
+      expect(screen.getByText(/Keep it with you/)).toBeInTheDocument();
+      const meeting = document.querySelector('#meeting p');
+      expect(meeting).toHaveClass('whitespace-pre-line');
+      const cancellation = document.querySelector('#cancellation p');
+      expect(cancellation).toHaveClass('whitespace-pre-line');
+    });
+
+    it.each([
+      ['es', esMessages.tour.contentFallback, esMessages.tour.itineraryFallback],
+      ['it', itMessages.tour.contentFallback, itMessages.tour.itineraryFallback],
+    ] as const)('declares English on fallback text while notices stay in %s page locale', (locale, contentNotice, itineraryNotice) => {
+      renderTour(locale, englishFallbackTour);
+
+      expect(screen.getByRole('heading', { level: 1 })).toHaveAttribute('lang', 'en');
+      expect(screen.getByText(contentNotice)).not.toHaveAttribute('lang');
+      expect(screen.getByText(itineraryNotice)).not.toHaveAttribute('lang');
+      const itineraryHeading = screen.getByRole('heading', { name: /Tuscan vineyards/ });
+      expect(itineraryHeading.querySelector('span')).toHaveAttribute('lang', 'en');
+    });
+
+    it.each([
+      ['es', 'Guía en vivo:', 'Alemán, Inglés, Español'],
+      ['it', 'Guida dal vivo:', 'Tedesco, Inglese, Spagnolo'],
+    ] as const)('localizes spoken guide names in %s during English content fallback', (locale, label, languages) => {
+      renderTour(locale as 'es' | 'it', englishFallbackTour);
+
+      expect(screen.getByText(label)).toBeInTheDocument();
+      expect(screen.getByText(languages)).toBeInTheDocument();
+    });
+  });
+
+  describe('US3 canonical gallery composition (Spec 020)', () => {
+    const galleryPhoto = (n: number, over: Partial<TourDetailType['images'][number]> = {}) => ({
+      url: `https://cdn.test/gallery-${n}.jpg`,
+      is_cover: n === 1,
+      alt: `Gallery photo ${n}`,
+      ...over,
+    });
+
+    it.each([0, 1, 4, 7])('composes the canonical gallery with the full %s-photo list, title and content locale', (count) => {
+      const images = Array.from({ length: count }, (_, index) => galleryPhoto(index + 1));
+      renderTour('en', { ...tour, title: 'Gallery pass-through', content_locale: 'en', images });
+
+      // The legacy engine is gone: only the canonical gallery slot renders.
+      expect(screen.queryByTestId('image-gallery')).not.toBeInTheDocument();
+      const gallery = screen.getByTestId('tour-gallery');
+      expect(gallery).toHaveAttribute('aria-label', 'Gallery pass-through');
+      expect(gallery).toHaveAttribute('data-count', String(count));
+      expect(gallery).toHaveAttribute('data-content-locale', 'en');
+    });
+
+    it('keeps caller order in the composed image list', () => {
+      const images = [
+        galleryPhoto(2, { is_cover: false }),
+        galleryPhoto(1, { is_cover: true }),
+        galleryPhoto(3, { is_cover: false }),
+      ];
+      renderTour('en', { ...tour, images });
+
+      // The compositor passes the model order through untouched (cover-first
+      // sorting stays the gallery's job); nothing is dropped or re-sorted.
+      expect(screen.getByTestId('tour-gallery')).toHaveAttribute(
+        'data-urls',
+        'https://cdn.test/gallery-2.jpg,https://cdn.test/gallery-1.jpg,https://cdn.test/gallery-3.jpg',
+      );
+    });
+
+    it('passes the content locale for the cancellation policy while page controls stay localized', () => {
+      // ES page, EN content: the policy keeps its actual language while
+      // section labels follow the page locale.
+      renderTour('es', {
+        ...tour,
+        content_locale: 'en',
+        cancellation_policy: 'Free up to 24h.\nRefunds take five days.',
+      });
+
+      const controller = screen.getByTestId('tour-booking-controller');
+      expect(controller).toHaveAttribute('data-policy-locale', 'en');
+      expect(controller).toHaveAttribute('data-locale', 'es');
+      expect(screen.getByText(/Refunds take five days\./)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: esMessages.tour.cancellationPolicy })).toBeInTheDocument();
+    });
+  });
+
+  describe('US5 genuine reviews and header trust (Spec 020)', () => {
+    it('uses the authoritative reviews summary for the header score, not the card rating', () => {
+      renderTour('en', {
+        ...tour,
+        rating: { average: 5, count: 200 },
+        reviews: { average_rating: 4.0, count: 10, distribution: { '4': 10 } },
+      });
+
+      // A stale/inflated card rating must never surface as the header score.
+      expect(screen.queryByLabelText('Rating: 5 out of 5')).not.toBeInTheDocument();
+      expect(screen.getByLabelText('Rating: 4 out of 5')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: '(10 Reviews)' })).toHaveAttribute('href', '#reviews');
+    });
+
+    it('shows no header score, section or nav entry when reviews are zero despite a card rating', () => {
+      const { container } = renderTour('en', {
+        ...tour,
+        rating: { average: 5, count: 200 },
+        reviews: { average_rating: 0, count: 0, distribution: {} },
+      });
+
+      expect(screen.queryByLabelText(/out of 5/)).not.toBeInTheDocument();
+      expect(container.querySelector('#reviews')).toBeNull();
+      const nav = screen.getByRole('navigation', { name: enMessages.tour.sectionNavigation });
+      expect(Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href'))).not.toContain('#reviews');
+    });
+
+    it('allows real review browsing without fabricated stars when the average is unavailable', () => {
+      const { container } = renderTour('en', {
+        ...tour,
+        rating: { average: 5, count: 200 },
+        reviews: { average_rating: 0, count: 10, distribution: {} },
+      });
+
+      // Browsing stays (section, nav, review link) but no scored badge appears.
+      expect(container.querySelector('#reviews')).not.toBeNull();
+      expect(screen.getByRole('link', { name: '(10 Reviews)' })).toHaveAttribute('href', '#reviews');
+      expect(screen.queryByLabelText(/out of 5/)).not.toBeInTheDocument();
+    });
+
+    it('renders the reviews section through the TourReviews wrapper with a real localized heading', () => {
+      const { container } = renderTour('en');
+
+      const section = container.querySelector('#reviews');
+      expect(section?.tagName).toBe('SECTION');
+      expect(screen.getByRole('heading', { level: 2, name: 'Reviews' })).toBeInTheDocument();
+      expect(section).toContainElement(screen.getByTestId('review-list'));
+    });
+
+    it('exposes exactly one current-tour wishlist control in the header', () => {
+      const { container } = renderTour('en');
+
+      const currentButtons = container.querySelectorAll('[data-testid="wishlist-button"][data-tour-id="42"]');
+      expect(currentButtons).toHaveLength(1);
+      expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'false');
     });
   });
 });

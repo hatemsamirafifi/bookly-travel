@@ -1,0 +1,105 @@
+{
+  "generatedAt": "2026-10-19T20:52:32.951Z",
+  "note": "Computed ONLY from retained proof artifacts in this directory plus retained curated maps under evidence/final/hero-preload-runtime/. Current host app files were NOT hashed; no HTTP commands were issued; no tests/audits/scores.",
+  "proofScope": "PRE-new-4-file-experiment source state (approved experiment running elsewhere, not captured here)",
+  "container": {
+    "node": "20.20.2",
+    "buildId": "44IUYi13oU3gQJ-74yYhO",
+    "next": "16.2.3",
+    "identityObservedAt": "20:13:35Z",
+    "containerId": "02576f5389daf73a62d3ca5193d434ca12b6a8e13a43b4454496439caaa1e692",
+    "imageId": "834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+    "identityRecord": "05b-identity-verification.md",
+    "identityValidated": false
+  },
+  "checks": {
+    "hostFiles419": {
+      "expectedCount": 419,
+      "actualCount": null,
+      "unique": null,
+      "readErrors": null,
+      "comparison": {
+        "possible": false
+      },
+      "comparedAgainst": "retained curated 419 manifest (new419-candidate-manifest.json), NOT current host files",
+      "validated": false
+    },
+    "containerFiles420": {
+      "expectedCount": 420,
+      "actualCount": null,
+      "unique": null,
+      "readErrors": null,
+      "comparison": {
+        "possible": false
+      },
+      "extraFiles": [],
+      "comparedAgainst": "retained 420 expected map (new420-container-source.json wrapper.files), NOT current host files",
+      "validated": false
+    },
+    "parityReport": {
+      "file": "06-parity-report.json",
+      "readOk": false,
+      "sum": {
+        "host": 419,
+        "container": 420
+      },
+      "historicalHarnessFailuresAreNotSourceChanges": true
+    },
+    "restartAndEngine": {
+      "onceOfficialRestart": "20:02:01â€“20:02:22Z exit 0 (03-docker-desktop-restart.md)",
+      "engineApi": "29.8.2 exit 0 (04-engine-recovery.md)",
+      "preRestartHealthyAt": "20:00:51Z already healthy BEFORE restart (01-pre-restart-failed-state.md) â€” no unique-cause claim",
+      "prior500s": "actual before 20:00 only; not proof of stopped container",
+      "harnessTypo": "05 record contains a `tu` typo false-fail; 05b corrected identity; root 307 was valid"
+    },
+    "http": {
+      "singleGet": "2026-10-19T20:24:57",
+      "url": "127.0.0.1:8080/en/tours/hidden-gems-rome-walking-tour",
+      "status": null,
+      "byteLength": null,
+      "curlExit0": false,
+      "rawHtmlByteLength": 159391,
+      "records": [
+        "08-ssr-probe.json",
+        "08-ssr-probe-record.md",
+        "08-ssr-en-tour-headers.txt",
+        "08-ssr-en-tour-raw.html",
+        "08-ssr-analysis.json",
+        "08-ssr-analysis.md"
+      ],
+      "validated": false,
+      "note": "no HTTP commands issued now; if a failed probe record exists in retained files it is preserved, not overwritten"
+    },
+    "ssrHtml": {
+      "rawBytes": 159391,
+      "rawUnmodified": true,
+      "analysisCopyInlineScriptsRemovedOnly": true,
+      "offsetsMeasured": {
+        "headEnd": 1511,
+        "coverPreloadLink": null,
+        "firstCoverImg": 109721
+      },
+      "coverImgTagsInAnalysisCopy": 5,
+      "coverPreloadLinksInAnalysisCopy": 0,
+      "bailoutMarkersInAnalysisCopy": false,
+      "nativeCoverHint": {
+        "matchesResponsiveSrcsetSizes": true,
+        "fetchPriorityHighPresentInSsr": false
+      },
+      "validated": false
+    }
+  },
+  "observedAsOf": [
+    "20:13:35Z (05b identity)",
+    "20:19 (retained run window)",
+    "20:22 (retained run window)",
+    "20:24:57Z (08 SSR GET)"
+  ],
+  "scopeFlags": {
+    "supersededForFutureSourceChanges": true,
+    "rebuildRequiredBeforeAnyNewPerformance": true,
+    "noCiTestPerformanceAcceptance": true,
+    "historicalFailedRecordsAndOldRuntime9QPreserved": true
+  },
+  "passedReadinessOnly": false
+}

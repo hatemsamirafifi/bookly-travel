@@ -1,0 +1,16 @@
+COMMAND (delegated implementer run, opencode/muse-spark-1.3-contributor-free)
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx
+  (red-first: new hash-preference test added, fix NOT yet applied)
+
+RESULT: FAIL — 1 failed, 16 passed, 17 total; normal exit, no snapshots.
+  Failing test: keeps the explicitly navigated section active while its
+  heading stays visible
+    expect(link Facts NOT current / Reviews current): received Facts active.
+    at TourSectionNav.test.tsx:639 — aria-current="location" missing on Reviews.
+  All 15 pre-existing tests + the new no-overreach guard passed.
+  Meaning: on current source the observer overwrites an explicit deep-link/
+  activation target with the earliest visible heading (visible[0]) as soon as
+  a later notification arrives — exactly the production failure in
+  root-deep-link-check.json (active #excluded at rest with reviews visible).
+  No missing-module failures; failure is behavioral.
+  Full failure text retained from the delegated run's result.json.

@@ -1,0 +1,42 @@
+US4 FINAL REVIEW — APPLIED CHANGES (exact files)
+
+1. tests/e2e/tour-detail.spec.ts (T053 block + single US2 assertion only):
+   - headingClearOfNav rewritten as a settle contract returning categorical
+     states ('settled' | 'missing' | 'nav-unstuck' | 'section-misaligned' |
+     'heading-obscured'): requires nav.y≈0 once scrolled, section-top to
+     nav-bottom within 2px (or legitimate end-of-document max-scroll with the
+     heading still fully visible). A far-below-fold heading can no longer
+     pass. Missing boxes fail instead of passing vacuously.
+   - headingFor scoped to main#main-content with section-scoped first
+     heading (mirrors the island's resolveHeading rule); all
+     document.querySelector/getElementById reads in the block scoped to main
+     (no .first() over ambiguous trees; role queries unchanged, visible-only).
+   - Card probe: middle #facts per root's actual Rome confirmation,
+     reduced-motion (matches root's reproduction) for deterministic settle,
+     explicit navTop≈0 premise, aside-remaining > live token gap premise
+     (excludes container-end push-up; root actual 528px), main-scoped
+     geometry, unchanged expected overlap (red retained on current source).
+   - Passive test: scroll + focus-compare scoped to main; focus re-verified
+     after geometry settles.
+   - Reduced-motion test: asserts matchMedia reduce + tight 3s settle.
+   - Narrow-rail test: mobile bar + enabled Continue link now required
+     (no no-op branch); aria re-asserted after settle.
+   - Single US2 assertion migrated: |cardY-80|<12 replaced by
+     |cardY-(navBottom+tokenGap)|<=2 with the token gap read from real
+     computed styles; sticky-within-aside and resize assertions preserved.
+2. TourBookingController.tsx (slot class + comment trim ONLY):
+   - Removed the permanent max(5rem,…) floor: top is now purely
+     calc(var(--tour-section-nav-offset,5rem)+var(--spacing-inline,0.5rem))
+     with the actual defined token and a 5rem pre-measurement fallback.
+     No other logic touched.
+3. TourSectionNav.tsx: no change required by review (z-sticky already applied).
+   Unit tests (15) untouched and green.
+
+LIMITS / REMAINING GAPS (root-owned):
+- No browser executed by this phase (list-only discovery); root fresh
+  build + browser run owns the actual green, including the T053 card-probe
+  red→green and the twelve-combination acceptance.
+- The migrated US2 assertion tightens to ±2px around the measured formula;
+  if the built prod nav height differs from jsdom-era estimates it still
+  passes by construction (live-measured), but root's browser run confirms.
+- No full-story/feature claim. Shared ownership released after these gates.

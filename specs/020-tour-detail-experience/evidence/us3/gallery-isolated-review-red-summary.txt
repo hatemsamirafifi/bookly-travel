@@ -1,0 +1,62 @@
+Spec 020 US3 isolated gallery lane — REVIEW RED evidence (root rework items 1-5)
+===============================================================================
+Date (UTC): 2026-10-15
+Branch: codex/020-tour-detail-experience
+Lane scope: ONLY frontend/src/components/tour/TourGallery.tsx (dual-DOM
+mosaic/rail implementation with inner-div viewer arrows, max-w-5xl viewer,
+counter gated on total>1, no sparse see-all) +
+frontend/src/components/tour/__tests__/TourGallery.test.tsx (reworked suite:
+single-DOM expectations, arrows-from-close, fullscreen panel, single-photo
+1of1, sparse seeAll{count}, renderToString->hydrateRoot hydration). No
+live-page integration; no edits outside exclusive ownership.
+
+Command (from frontend/, detached, PowerShell):
+  npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx
+
+Result:
+  Test Suites: 1 failed, 1 total
+  Tests:       18 failed, 2 passed, 20 total
+
+Passing (preserved pre-existing behaviors, no regression):
+  - TourGallery empty gallery > shows an honest localized empty state with reserved space and no viewer
+  - TourGallery single photo DOM > reaches every supplied photo in order, including slots beyond five, with wraparound
+    (viewer navigation reachability for >5 already worked via the see-all path)
+
+Failing (expected review gaps against the dual-DOM implementation):
+  - mounts each original photo exactly once in cover-first caller order
+    (dual DOM mounts the cover twice: mosaic hero + rail slide)
+  - shows a cover plus up to four supporting tiles with a real-count see-all beyond five
+  - opens each tile at its own original index
+  - discloses the truthful count for sparse galleries with see-all access to every photo
+    (no see-all control for sparse counts; contract reason: seeAll{count}
+    doubles as the truthful desktop count disclosure, documented in test)
+  - keeps a failed slot stable with an honest placeholder while other photos stay reachable
+  - recovers a failed slot when the media identity changes
+  - marks image language from alt_locale while controls stay page-localized
+  - mobile rail all-photos/counter/controls/no-thumbnails, scroll counter,
+    reduced-motion scroll, rail trigger reachability (single track absent)
+  - uses a fullscreen viewport panel instead of a centered card
+    (panel was max-w-5xl centered)
+  - announces position even for a single photo, without navigation controls
+    (counter was inside the total>1 condition)
+  - returns focus to the actual trigger on close
+  - keeps focus stable on arrow navigation without refocusing close
+  - advances with arrows from the dialog close button without moving focus
+    (arrows handled on an inner div the header close button is outside of)
+  - applies the blur placeholder only from actually supplied metadata
+  - hydrates a server snapshot on desktop without hydration errors and keeps controls usable
+    (exact React hydration mismatch reproduced: "A tree hydrated but some
+    attributes of the server rendered HTML didn't match the client
+    properties", caused by the browser-dependent useState initializer
+    leaving mosaic inert=true after hydration; matches root's
+    root-gallery-hydration-pattern-repro finding)
+
+Dropped per review item 5 (test guard): the raw-HTML alt-text escaping case
+(retested React framework escaping; no custom HTML insertion exists in the
+component). All meaningful media/lang/failed-slot/arrow-focus behaviors
+preserved. No source-regex tests added.
+
+Full Jest output retained alongside this summary
+(gallery-isolated-review-red-full.log). Earlier initial-lane evidence
+(gallery-isolated-red-*) is preserved untouched. No claim of full Spec 020
+or root acceptance; browser layout/touch/geometry stays with root.

@@ -1,0 +1,15 @@
+{
+  "target": "frontend/src/components/blog/RelatedPosts.tsx",
+  "evidenceSource": "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/priority-prefetch-server-source/RelatedPosts.before",
+  "evidenceSourceSha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+  "expectedOriginalSha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+  "expectedTemporarySha256": "8c9866d332eec621650062887904805516f78486d3671220068866fc5975c0ec",
+  "action": "restored-from-evidence",
+  "beforeRestoreSha256": "8c9866d332eec621650062887904805516f78486d3671220068866fc5975c0ec",
+  "afterRestoreSha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+  "proofFiles": {
+    "RelatedPosts.before-restore.tsx": "date-boundary-correction/RelatedPosts.before-restore.tsx",
+    "RelatedPosts.after-restore.tsx": "date-boundary-correction/RelatedPosts.after-restore.tsx"
+  },
+  "note": "original client boundary required: child BlogCard formats dates in browser timezone"
+}

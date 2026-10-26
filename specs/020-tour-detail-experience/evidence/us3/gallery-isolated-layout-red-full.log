@@ -1,0 +1,155 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx src/components/ui/__tests__/interactive-primitives.test.tsx
+
+FAIL src/components/tour/__tests__/TourGallery.test.tsx
+  ● Console
+
+    console.error
+      An update to Root inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      447 |     } finally {
+      448 |       console.error = originalError;
+    > 449 |       holder.current?.unmount();
+          |                       ^
+      450 |       container.remove();
+      451 |     }
+      452 |   });
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at updateContainerImpl (node_modules/react-dom/cjs/react-dom-client.development.js:23509:9)
+      at ReactDOMHydrationRoot.process.env.NODE_ENV.ReactDOMHydrationRoot.unmount.ReactDOMRoot.unmount [as unmount] (node_modules/react-dom/cjs/react-dom-client.development.js:27910:11)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:449:23)
+
+  ● TourGallery desktop span balance › gives both photos half width with half-frame sizes for two photos
+
+    expect(element).toHaveClass("lg:col-span-2")
+
+    Expected the element to have class:
+      lg:col-span-2
+    Received:
+      relative block aspect-[16/10] w-full shrink-0 snap-center overflow-hidden rounded-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus lg:rounded-xl lg:col-span-1
+
+      232 |     expect(tiles).toHaveLength(2);
+      233 |     expect(tiles[0]).toHaveClass('lg:col-span-2');
+    > 234 |     expect(tiles[1]).toHaveClass('lg:col-span-2');
+          |                      ^
+      235 |     expect(tiles[0]).not.toHaveClass('lg:row-span-2');
+      236 |     const rendered = within(track()).getAllByRole('img');
+      237 |     expect(rendered[0]).toHaveAttribute('sizes', SIZES_HALF);
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:234:22)
+
+  ● TourGallery desktop span balance › spans the last supporting tile across the remaining right row for four photos
+
+    expect(element).toHaveClass("lg:col-span-2")
+
+    Expected the element to have class:
+      lg:col-span-2
+    Received:
+      relative block aspect-[16/10] w-full shrink-0 snap-center overflow-hidden rounded-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus lg:rounded-xl lg:col-span-1
+
+      246 |     expect(tiles[1]).toHaveClass('lg:col-span-1');
+      247 |     expect(tiles[2]).toHaveClass('lg:col-span-1');
+    > 248 |     expect(tiles[3]).toHaveClass('lg:col-span-2');
+          |                      ^
+      249 |     const rendered = within(track()).getAllByRole('img');
+      250 |     expect(rendered[0]).toHaveAttribute('sizes', SIZES_HALF);
+      251 |     expect(rendered[1]).toHaveAttribute('sizes', SIZES_QUARTER);
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:248:22)
+
+  ● TourGallery desktop span balance › keeps full, half and quarter sizes for one, three and five photos
+
+    expect(element).toHaveAttribute("sizes", "(min-width: 80rem) 76rem, (min-width: 64rem) calc(100vw - 4rem), (min-width: 48rem) calc(100vw - 3rem), calc(100vw - 2rem)") // element.getAttribute("sizes") === "(min-width: 80rem) 76rem, (min-width: 64rem) calc(100vw - 4rem), (min-width: 48rem) calc(100vw - 3rem), calc(100vw - 2rem)"
+
+    Expected the element to have attribute:
+      sizes="(min-width: 80rem) 76rem, (min-width: 64rem) calc(100vw - 4rem), (min-width: 48rem) calc(100vw - 3rem), calc(100vw - 2rem)"
+    Received:
+      sizes="(min-width: 1024px) 50vw, 100vw"
+
+      256 |   it('keeps full, half and quarter sizes for one, three and five photos', () => {
+      257 |     const { rerender } = render(<TourGallery images={[photo(1)]} title="Rome walk" contentLocale="en" />);
+    > 258 |     expect(within(track()).getAllByRole('img')[0]).toHaveAttribute('sizes', SIZES_FULL);
+          |                                                    ^
+      259 |     rerender(<TourGallery images={[1, 2, 3].map((n) => photo(n))} title="Rome walk" contentLocale="en" />);
+      260 |     const three = within(track()).getAllByRole('img');
+      261 |     expect(three[0]).toHaveAttribute('sizes', SIZES_HALF);
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:258:52)
+
+  ● TourGallery viewer › uses a fullscreen viewport panel instead of a centered card
+
+    expect(element).not.toHaveClass("p-4")
+
+    Expected the element not to have class:
+      p-4
+    Received:
+      fixed inset-0 z-modal flex bg-overlay items-center justify-center p-4
+
+      327 |     expect(overlay).not.toBeNull();
+      328 |     expect(overlay).toHaveClass('fixed', 'inset-0');
+    > 329 |     expect(overlay).not.toHaveClass('p-4');
+          |                         ^
+      330 |   });
+      331 |
+      332 |   it('fits the viewer image in the available dialog body with visible controls', () => {
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:329:25)
+
+  ● TourGallery viewer › fits the viewer image in the available dialog body with visible controls
+
+    expect(element).toHaveClass("flex-1 min-h-0")
+
+    Expected the element to have class:
+      flex-1 min-h-0
+    Received:
+      relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-surface-alt
+
+      336 |     const frame = within(dialog).getByRole('img').closest('div');
+      337 |     expect(frame).not.toBeNull();
+    > 338 |     expect(frame).toHaveClass('flex-1', 'min-h-0');
+          |                   ^
+      339 |     expect(within(dialog).getByRole('img')).toHaveAttribute('sizes', 'calc(100vw - 2rem)');
+      340 |     expect(within(dialog).getByRole('button', { name: 'Previous image' })).toBeInTheDocument();
+      341 |     expect(within(dialog).getByText('1 of 3')).toBeInTheDocument();
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:338:19)
+
+FAIL src/components/ui/__tests__/interactive-primitives.test.tsx
+  ● renders a viewport-filling fullscreen panel with a flexible scrolling body
+
+    expect(element).toHaveClass("h-full w-full max-w-none rounded-none")
+
+    Expected the element to have class:
+      h-full w-full max-w-none rounded-none
+    Received:
+      flex max-h-full flex-col bg-surface text-primary shadow-modal h-full w-80 max-w-full
+
+      123 |   render(<Dialog open onClose={jest.fn()} title="Filters" closeLabel="Close" placement="fullscreen">Body</Dialog>);
+      124 |   const panel = screen.getByRole('dialog', { name: 'Filters' });
+    > 125 |   expect(panel).toHaveClass('h-full', 'w-full', 'max-w-none', 'rounded-none');
+          |                 ^
+      126 |   expect(panel).not.toHaveClass('max-w-lg');
+      127 |   const overlay = panel.parentElement;
+      128 |   expect(overlay).not.toBeNull();
+
+      at Object.<anonymous> (src/components/ui/__tests__/interactive-primitives.test.tsx:125:17)
+
+Test Suites: 2 failed, 2 total
+Tests:       6 failed, 31 passed, 37 total
+Snapshots:   0 total
+Time:        3.17 s
+Ran all test suites within paths "src/components/tour/__tests__/TourGallery.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx".

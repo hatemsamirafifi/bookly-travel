@@ -1,0 +1,11 @@
+{"attempt":1,"benchmarkIndex":688,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1104,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1161,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1242.5,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1349,"url":"about:blank","appVisited":false}
+Error: CPU baseline is slow or unstable; performance audit must not start
+    at prepareBrowserCpu (file:///app/scripts/lighthouse-runtime-preflight.mjs:43:11)
+    at async module.exports (/app/scripts/lighthouse-browser-ready.cjs:5:3)
+    at async PuppeteerManager.invokePuppeteerScriptForUrl (/app/node_modules/@lhci/cli/src/collect/puppeteer-manager.js:113:5)
+    at async Object.runCommand (/app/node_modules/@lhci/cli/src/collect/collect.js:251:7)
+    at async run (/app/node_modules/@lhci/cli/src/cli.js:100:7)

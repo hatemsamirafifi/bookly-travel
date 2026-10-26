@@ -1,0 +1,65 @@
+Spec 020 US3 isolated gallery lane — LAYOUT GREEN evidence (root browser-geometry rework)
+======================================================================================
+Date (UTC): 2026-10-15
+Branch: codex/020-tour-detail-experience (schema committed b046503, preserved)
+Lane scope: TourGallery.tsx (spans/sizes/fullscreen viewer) + TourGallery.test.tsx
+(6 new structural/size expectations), ui/Dialog.tsx (placement='fullscreen'
+runtime) + interactive-primitives.test.tsx (3 fullscreen variant/default
+regressions), tests/fixtures/tour-detail.ts (comment wording only). No
+live-page/catalog/booking/route/nav integration; no stage/commit/push.
+
+Focused Jest, gallery + shared UI suites in one command (from frontend/):
+  npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx src/components/ui/__tests__/interactive-primitives.test.tsx
+Result: Test Suites: 2 passed, 2 total; Tests: 37 passed, 37 total
+(23 TourGallery incl. 3 span-balance + strengthened fullscreen/fit cases;
+14 primitives incl. fullscreen panel/body/behavior locks)
+Full output: gallery-isolated-layout-green-full.log
+
+Focused ESLint, all five touched files (direct installed entry, frontend/):
+  node node_modules/eslint/bin/eslint.js src/components/tour/TourGallery.tsx src/components/tour/__tests__/TourGallery.test.tsx src/components/ui/Dialog.tsx src/components/ui/__tests__/interactive-primitives.test.tsx tests/fixtures/tour-detail.ts
+Result: EXITCODE=0, no findings (gallery-isolated-layout-lint.txt)
+
+Typecheck (frontend/, whole project at this commit moment):
+  npm run typecheck (tsc --noEmit) — EXITCODE=0, zero errors in any lane's
+  sources (gallery-isolated-layout-typecheck.txt). No other-lane WIP errors
+  observed; US2 review worker files untouched.
+
+Fixes applied (reds retained in gallery-isolated-layout-red-*):
+1. Balanced sparse mosaic, count-specific CSS classes, no JS viewport
+   branch: count2 both tiles lg:col-span-2 (cover keeps 16/10, no row-span);
+   count4 last supporting tile lg:col-span-2 across the remaining right row;
+   count1/3/5 geometry unchanged. Slots beyond five stay mounted for the
+   rail with lg:hidden. Mobile rail/order/scroll-snap/counter untouched.
+   Jest locks right-edge classes (last visible tile spans to the track
+   edge); pixel proof stays with root's browser rerun; no page-overflow
+   claim from jsdom.
+2. Container-derived sizes (verified against Container max-w-content 80rem
+   and px-gutter 1rem / 1.5rem at 48rem+ / 2rem at 64rem+, gap 0.5rem):
+   FULL 76rem / 100vw-4rem / 100vw-3rem / 100vw-2rem; HALF 37.75rem /
+   (100vw-4.5rem)/2 / rail fallbacks; QUARTER 18.625rem /
+   (100vw-5.5rem)/4 / rail fallbacks; viewer calc(100vw-2rem) for body
+   padding. Mapping: single FULL; pair HALF; cover HALF; count4 last HALF;
+   else QUARTER. One eager+high hero, lazy supporting/viewer, single photo
+   DOM (no duplicate downloads). Constants are static strings (SSR-safe,
+   no runtime config/prop).
+3. Shared Dialog placement='fullscreen' (root-approved narrow extension):
+   outer fixed inset-0 flex-col bg-overlay with zero padding; panel
+   h-full w-full max-w-none rounded-none with pb-safe; body flex-1
+   min-h-0 overflow-y-auto. Default center/left/right branches, single body
+   lock, inert, focus trap, Escape and trigger return byte-identical
+   (existing tests unchanged and green). Gallery viewer children are a
+   bounded flex column (image frame flex-1 min-h-0 with object-contain,
+   shrink-0 controls/caption, long captions reachable via body scroll,
+   header close always visible). No second modal engine, no drawer misuse.
+4. Provenance: fixture header now reads 'five supplied owned fixture media
+   assets' (owned colored CDN test cards, not production photographs).
+   Comment-only; zero fixture data changes.
+
+Preserved: prior 20green behaviors (incl. hydration renderToString->
+hydrateRoot, arrows-from-close focus stability, trigger return), prior
+Dialog behaviors, all earlier gallery-isolated-* reports.
+
+Open root-next gaps (not claimed): browser rerun of the diagnostic
+(count2/count4 right-edge alignment, no page overflow, fullscreen
+fullViewport/imageFitsBody at desktop/mobile), real-image loading, full
+US3 live integration after US2/US6.

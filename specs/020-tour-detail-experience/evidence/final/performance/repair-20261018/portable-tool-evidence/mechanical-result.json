@@ -1,0 +1,176 @@
+{
+  "task": "mechanical-docs-correction",
+  "executedAt": "2026-10-20",
+  "verificationMethods": [
+    "certutil SHA256 byte hashing",
+    "Test-Path existence checks",
+    "ConvertFrom-Json / UTF-8 parse checks",
+    "byte-level occurrence counting"
+  ],
+  "scope": {
+    "sourceTestsConfigModified": false,
+    "commandsRunFromDocs": false,
+    "networkAuditInstallGitChanges": false,
+    "reportNumbersEdited": false,
+    "noPassClaim": "No performance pass, CI pass, release, score, or approval is claimed."
+  },
+  "changes": [
+    {
+      "file": "post-preload-diagnosis/root-reviewed-findings.md",
+      "action": "replaced-with-exact-byte-copy",
+      "priorState": {
+        "note": "REJECTED hallucinated prose; byte-equality between file and rejected-correction copy verified BEFORE overwrite",
+        "sha256": "e7ca791b01c49ca30283a96849837ef8efaa2b0a44d8b3ea10531f4e3bfb9fac",
+        "bytes": 3673,
+        "rejectedCopyPath": "post-preload-diagnosis/rejected-correction/root-reviewed-findings.md",
+        "rejectedCopyPreservedUnchanged": true
+      },
+      "copySource": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/reviewed-historical-findings.PROPOSAL.md",
+      "copySourceSha256": "5bc36f59f9e2e0bb4664cb7965892ecc987f447a7b3079ccffda9daf9b9a508f",
+      "copySourceBytes": 1681,
+      "result": {
+        "sha256": "5bc36f59f9e2e0bb4664cb7965892ecc987f447a7b3079ccffda9daf9b9a508f",
+        "bytes": 1681,
+        "byteHashEqualToCopySource": true,
+        "newProseAdded": false
+      }
+    },
+    {
+      "file": "post-preload-diagnosis/run-bookkeeping.json",
+      "action": "verified-unchanged",
+      "sha256": "6655c25ec1aa5970fda13d44f3365c576560a3f61ceee851852db6df24012a44",
+      "validJson": true,
+      "oldPathOccurrences": 0,
+      "correctedPathAlreadyPresent": "evidence/final/performance/repair-20261018/hero-preload-runtime/performance/native-collect.txt",
+      "numbersPreserved": {
+        "collectExit": 1,
+        "assertExit": 1,
+        "lhrJson": 12,
+        "lhrHtml": 12,
+        "traceJson": 12,
+        "devtoolslogs": 12,
+        "urlsRan": 4,
+        "urlsInConfig": 6,
+        "missingUrlRuns": 2,
+        "missingUrls": ["/es/tours/hidden-gems-rome-walking-tour", "/it/tours/hidden-gems-rome-walking-tour"],
+        "cpuSamples": 29,
+        "benchmarkIndexMin": 835.5,
+        "benchmarkIndexMax": 1347
+      }
+    },
+    {
+      "file": "post-preload-diagnosis/lhr-summary-all12.json",
+      "action": "path-only-substring-replacement",
+      "replaced": "evidence/final/hero-preload-runtime/performance/reports",
+      "with": "evidence/final/performance/repair-20261018/hero-preload-runtime/performance/reports",
+      "occurrencesReplaced": 1,
+      "sha256Before": "6b6a7ee869917cc9aeede8c3d02612408b12ecf15a56b2ed08a88570d2e6b0e2",
+      "sha256After": "d00b54008dc2538feec739a92086c263589f73af8ed48e5a884b7a424fe073b4",
+      "validJsonAfter": true,
+      "runsCountAfter": 12,
+      "oldPathOccurrencesAfter": 0,
+      "preexistingMojibakeBytesUntouched": true,
+      "rejectedCopyPreservedUnchanged": true
+    },
+    {
+      "file": "runtime/docker-desktop-restore-20261019/restored-runtime-accepted.json",
+      "action": "preserved-then-replaced",
+      "priorOriginalSha256": "294c9e2293be4a373c95a98b3216613dfbf7b75ff291750ca007136a3fce2c24",
+      "preservedCopyPath": "runtime/docker-desktop-restore-20261019/rejected-correction/restored-runtime-accepted.json",
+      "preservedCopySha256": "294c9e2293be4a373c95a98b3216613dfbf7b75ff291750ca007136a3fce2c24",
+      "byteHashEqual": true,
+      "replacementSha256": "cc6aa396d6c104a5a479007ab1365cdf4d7948176a052dae88d487886587d99f",
+      "replacementFieldsOnly": [
+        "status=superseded-unaccepted-generated-summary",
+        "rawEvidencePreserved=true",
+        "currentSourceAcceptance=false",
+        "reason=fixed text",
+        "rawEvidence=[6 names listed below]"
+      ],
+      "validatedFieldsInferred": false,
+      "rawEvidenceVerifiedExisting": [
+        "03-docker-desktop-restart.md",
+        "05b-identity-verification.md",
+        "06a-host-file-hashes-419.json",
+        "06b-container-hashes-raw.json",
+        "08-ssr-probe.json",
+        "08-ssr-en-tour-raw.html"
+      ],
+      "rawFilesUntouched": true
+    },
+    {
+      "file": "tooling/lighthouse-engine-selector.README.md",
+      "action": "created-new",
+      "usagePathForm": "relative require path from frontend/, collect and assert as separate commands",
+      "absoluteAuthorPathsInUsage": false,
+      "documentedCommandsExecutedDuringDocStep": false,
+      "selectorTestedSha256": "b5283ec43f0ddf7aea231f3dce7697c6bde4c23e9774306f1e4632d5bf5666b4",
+      "selectorPin": "INSTALLED 12.8.2 instead of NESTED 12.1.0, fail-closed, no install",
+      "resultJsonSixResolutionCasesAndHelpExit0": true,
+      "toolingVerificationOnlyNoPerformanceCiPass": true
+    },
+    {
+      "file": "portable-tool-evidence/RESULT.md + portable-tool-evidence/mechanical-result.json",
+      "action": "created-new"
+    }
+  ],
+  "toolingFilesUntouchedSha256": {
+    "lighthouse-engine-selector.cjs": "b5283ec43f0ddf7aea231f3dce7697c6bde4c23e9774306f1e4632d5bf5666b4",
+    "lighthouse-engine-selector.focused-tests.cjs": "e9d81ef4355b3bfc564f096fd617f84625b6e8cc1938b7f6cfe40d1db01552fc",
+    "lighthouse-engine-selector.result.json": "b684f74b4456a6e3b7b14c4d4f8d07f06c09d5073ed4eba963f6bb46e5892df1",
+    "lighthouse-engine-selector.help-stdout.txt": "134718064ac867b3f4c7fe0e019a397005121883d8f66ede3c021de56f1debf8",
+    "lighthouse-engine-selector.help-stderr.txt": "8e5e6229a2bf5b90ddbc0c44f83578feb318ada55bb1431eb6ed4ef2523a84ac",
+    "helpHashesMatchResultJsonRecordedSha": true,
+    "selectorHashMatchesTestedSha": true
+  },
+  "rootReviewedFindingsLinkTargets": {
+    "note": "File contains 5 markdown link instances / 5 unique relative targets (actual count found); all verified to exist",
+    "targets": [
+      { "link": "../hero-preload-runtime/performance/reports/", "resolved": "evidence/final/performance/repair-20261018/hero-preload-runtime/performance/reports", "exists": true, "type": "dir" },
+      { "link": "../hero-preload-runtime/performance/native-collect.txt", "resolved": "evidence/final/performance/repair-20261018/hero-preload-runtime/performance/native-collect.txt", "exists": true, "type": "file" },
+      { "link": "lhr-summary-all12.json", "resolved": "evidence/final/performance/repair-20261018/post-preload-diagnosis/lhr-summary-all12.json", "exists": true, "type": "file" },
+      { "link": "../../../runtime/docker-desktop-restore-20261019/08-ssr-probe.json", "resolved": "evidence/final/runtime/docker-desktop-restore-20261019/08-ssr-probe.json", "exists": true, "type": "file" },
+      { "link": "rejected-correction/", "resolved": "evidence/final/performance/repair-20261018/post-preload-diagnosis/rejected-correction", "exists": true, "type": "dir" }
+    ]
+  },
+  "reviewCorrections": {
+    "executedAt": "2026-10-20",
+    "scope": "docs-only root-review corrections and verifications; no app/test/build/Docker/audit/git changes; existing hashes, dates, source proposal bytes, and raw files untouched",
+    "corrections": [
+      {
+        "id": 1,
+        "file": "evidence/final/tooling/lighthouse-engine-selector.README.md",
+        "action": "clause-replaced",
+        "before": "if the pinned engine is not found, it changes nothing",
+        "after": "if the pinned version or required entries are unavailable, it writes a FAIL-CLOSED diagnostic and exits with code 1",
+        "status": "applied-on-re-review"
+      },
+      {
+        "id": 2,
+        "file": "evidence/final/performance/repair-20261018/portable-tool-evidence/RESULT.md",
+        "action": "link-target-verified",
+        "link": "../../../tooling/lighthouse-engine-selector.result.json",
+        "resolvesTo": "evidence/final/tooling/lighthouse-engine-selector.result.json",
+        "status": "already-correct-on-disk (broken ../../final/tooling/ form was replaced during the initial pass); target exists verified",
+        "targetExists": true
+      },
+      {
+        "id": 3,
+        "file": "evidence/final/performance/repair-20261018/portable-tool-evidence/mechanical-result.json",
+        "action": "value-verified",
+        "field": "changes[restored-runtime-accepted.json].replacementFieldsOnly rawEvidence length label",
+        "beforeExpectation": "rawEvidence=[3 names listed below]",
+        "actualOnDisk": "rawEvidence=[6 names listed below]",
+        "status": "already-correct-on-disk ([3 names...] was corrected during the initial pass); rawEvidence array has 6 entries; no further edit made"
+      }
+    ],
+    "verification": {
+      "mechanicalResultJsonParses": true,
+      "resultJsonLinkTargetExists": true,
+      "selectorCjsSha256": "b5283ec43f0ddf7aea231f3dce7697c6bde4c23e9774306f1e4632d5bf5666b4",
+      "selectorUnchanged": true,
+      "selectorTestResultHelpFilesUnchanged": true,
+      "testsReRun": false
+    }
+  }
+}

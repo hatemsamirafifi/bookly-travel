@@ -1,5 +1,7 @@
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { RatingBadge } from '@/components/ui/RatingBadge';
+import WishlistButton from '@/components/wishlist/WishlistButton';
+import { hasGenuineReviewCount, isGenuineReviewScore } from '@/lib/tours/detail-presentation';
 import { useTranslations } from 'next-intl';
 
 interface TourHeaderProps {
@@ -9,13 +11,18 @@ interface TourHeaderProps {
   location: string;
   categorySlug: string;
   categoryName: string;
-  ratingAverage: number;
-  ratingCount: number;
+  /** Public tour id for the single current-tour wishlist control. */
+  tourId: string | number;
+  /** Authoritative genuine eligible summary (tour.reviews); the listing card
+   *  rating is never used here so a stale card value cannot surface a score. */
+  reviewAverage: number;
   reviewCount: number;
 }
 
-/** Header: breadcrumbs, title, location and genuine rating. Review link only
- *  when reviews exist; wishlist stays in booking until a later story. */
+/** Header: breadcrumbs, title, location, the single current-tour wishlist
+ *  control and the genuine rating. The scored badge renders only for a valid
+ *  score; a positive count with an unavailable average keeps the review link
+ *  for real browsing without fabricated stars. */
 export default function TourHeader({
   locale,
   title,
@@ -23,8 +30,8 @@ export default function TourHeader({
   location,
   categorySlug,
   categoryName,
-  ratingAverage,
-  ratingCount,
+  tourId,
+  reviewAverage,
   reviewCount,
 }: TourHeaderProps) {
   const t = useTranslations('tour');
@@ -39,7 +46,10 @@ export default function TourHeader({
           { label: title, lang: contentLocale },
         ]}
       />
-      <h1 lang={contentLocale} className="mt-4 text-page-title font-bold text-primary">{title}</h1>
+      <div className="mt-4 flex items-start justify-between gap-4">
+        <h1 lang={contentLocale} className="text-page-title font-bold text-primary">{title}</h1>
+        <WishlistButton tourId={tourId} locale={locale} />
+      </div>
       <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-text-muted">
         <span className="flex items-center gap-1">
           <svg className="h-4 w-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -49,20 +59,18 @@ export default function TourHeader({
           {location}
         </span>
       </div>
-      {(ratingCount > 0 || reviewCount > 0) && (
+      {hasGenuineReviewCount(reviewCount) && (
         <div className="mt-2 flex flex-wrap items-center gap-2">
-          {ratingCount > 0 && (
+          {isGenuineReviewScore(reviewCount, reviewAverage) && (
             <RatingBadge
-              rating={ratingAverage}
-              count={ratingCount}
-              label={t('ratingLabel', { rating: ratingAverage })}
+              rating={reviewAverage}
+              count={reviewCount}
+              label={t('ratingLabel', { rating: reviewAverage })}
             />
           )}
-          {reviewCount > 0 && (
-            <a href="#reviews" className="text-sm text-text-muted hover:text-primary hover:underline">
-              ({reviewCount} {t('reviews')})
-            </a>
-          )}
+          <a href="#reviews" className="text-sm text-text-muted hover:text-primary hover:underline">
+            ({reviewCount} {t('reviews')})
+          </a>
         </div>
       )}
     </div>

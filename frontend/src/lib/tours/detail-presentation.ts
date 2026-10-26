@@ -92,8 +92,28 @@ function hasOperator(tour: TourDetail): boolean {
   return tour.operator !== null && tour.operator !== undefined;
 }
 
-function hasScoredReviews(tour: TourDetail): boolean {
-  return Number.isFinite(tour.reviews?.count) && (tour.reviews?.count ?? 0) > 0;
+/**
+ * Genuine eligible review count: a positive integer only. Zero, negatives,
+ * non-integers and non-numbers are not a known zero and must never produce
+ * an invented count, average or no-review claim.
+ */
+export function hasGenuineReviewCount(count: unknown): count is number {
+  return typeof count === 'number' && Number.isInteger(count) && count > 0;
+}
+
+/**
+ * Genuine scored summary: a positive integer count with a finite average in
+ * (0, 5]. A positive count with an unavailable average still allows real
+ * review browsing (link + section) but never fabricated stars.
+ */
+export function isGenuineReviewScore(count: unknown, average: unknown): average is number {
+  return (
+    hasGenuineReviewCount(count) &&
+    typeof average === 'number' &&
+    Number.isFinite(average) &&
+    average > 0 &&
+    average <= 5
+  );
 }
 
 function hasRelated(tour: TourDetail): boolean {
@@ -136,7 +156,7 @@ function isSectionPresent(tour: TourDetail, id: DetailSectionId): boolean {
     case 'operator':
       return hasOperator(tour);
     case 'reviews':
-      return hasScoredReviews(tour);
+      return hasGenuineReviewCount(tour.reviews?.count);
     case 'related':
       return hasRelated(tour);
   }

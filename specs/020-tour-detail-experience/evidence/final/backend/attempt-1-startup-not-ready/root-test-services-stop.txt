@@ -1,0 +1,4 @@
+ Container bookly-test-meilisearch Stopping 
+ Container bookly-test-postgres Stopping 
+ Container bookly-test-meilisearch Stopped 
+ Container bookly-test-postgres Stopped 

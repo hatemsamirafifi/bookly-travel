@@ -1,0 +1,31 @@
+Checking assertions against 4 URL(s), 12 total run(s)
+
+1 result(s) for [1mhttp://localhost:8080/en[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.77[0m
+      [2mall values: 0.89, 0.87, 0.77[0m
+
+1 result(s) for [1mhttp://localhost:8080/en/search?q=rome[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.89[0m
+      [2mall values: 0.89, 0.9, 0.96[0m
+
+1 result(s) for [1mhttp://localhost:8080/en/tours/hidden-gems-rome-walking-tour[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.8[0m
+      [2mall values: 0.8, 0.84, 0.86[0m
+
+1 result(s) for [1mhttp://localhost:8080/en/blog/hidden-gems-florence[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.81[0m
+      [2mall values: 0.89, 0.93, 0.81[0m
+
+Assertion failed. Exiting with status code 1.
