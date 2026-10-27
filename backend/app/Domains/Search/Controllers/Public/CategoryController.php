@@ -22,15 +22,14 @@ class CategoryController
         $categories = Cache::remember($key, 1800, function () {
             return Category::popularWithCounts()
                 ->get()
-                ->map(function (Category $cat) {
-                    return [
-                        'slug' => (string) $cat->slug,
-                        'name' => (string) $cat->name,
-                        'description' => $cat->description ? (string) $cat->description : null,
-                        'image_url' => $cat->image_url ? (string) $cat->image_url : null,
-                        'tour_count' => (int) $cat->getAttribute('tours_count'),
-                    ];
-                });
+                ->map(fn (Category $cat) => [
+                    'slug' => (string) $cat->slug,
+                    'name' => (string) $cat->name,
+                    'description' => $cat->description ? (string) $cat->description : null,
+                    'image_url' => $cat->image_url ? (string) $cat->image_url : null,
+                    'tour_count' => (int) $cat->getAttribute('tours_count'),
+                ])
+                ->values();
         });
 
         return response()->json(['data' => $categories]);

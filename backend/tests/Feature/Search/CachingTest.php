@@ -2,10 +2,8 @@
 
 use App\Models\Category;
 use App\Models\Tour;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
