@@ -7,6 +7,7 @@ use App\Http\Requests\Public\Search\CategoryToursRequest;
 use App\Http\Requests\Public\Search\LocaleRequest;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController
 {
@@ -16,27 +17,30 @@ class CategoryController
 
     public function index(LocaleRequest $request): JsonResponse
     {
-        $categories = Category::popularWithCounts()
-            ->get()
-            ->map(fn (Category $cat) => [
-                'slug' => $cat->slug,
-                'name' => $cat->name,
-                'description' => $cat->description,
-                'image_url' => $cat->image_url,
-                'tour_count' => (int) $cat->getAttribute('tours_count'),
-            ]);
+        $key = 'categories.index';
+
+        $categories = Cache::remember($key, 1800, function () {
+            return Category::popularWithCounts()
+                ->get()
+                ->map(fn (Category $cat) => [
+                    'slug' => $cat->slug,
+                    'name' => $cat->name,
+                    'description' => $cat->description,
+                    'image_url' => $cat->image_url,
+                    'tour_count' => (int) $cat->getAttribute('tours_count'),
+                ]);
+        });
 
         return response()->json(['data' => $categories]);
     }
 
     public function tours(CategoryToursRequest $request, string $slug): JsonResponse
     {
-        $category = Category::where('slug', $slug)->where('is_active', true)->first();
-        if (! $category) {
-            return response()->json(['message' => 'Category not found.'], 404);
-        }
+        $key = 'categories.tours.' . $slug . '.' . md5(json_encode($request->validated()));
 
-        $result = $this->getScopedToursAction->execute('category', $slug, $request->validated());
+        $result = Cache::remember($key, 600, function () use ($slug, $request) {
+            return $this->getScopedToursAction->execute('category', $slug, $request->validated());
+        });
 
         return response()->json($result);
     }
