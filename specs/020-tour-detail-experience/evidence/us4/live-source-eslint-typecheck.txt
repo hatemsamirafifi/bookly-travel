@@ -1,0 +1,18 @@
+FOCUSED ESLINT (owned source + owned tests only; CSS has no eslint config)
+  frontend> npx eslint src/components/tour/TourSectionNav.tsx src/components/tour/__tests__/TourSectionNav.test.tsx src/components/tour/TourBookingController.tsx src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/TourDetail.tsx src/components/tour/__tests__/TourDetail.test.tsx
+  RESULT: clean — no output, 0 errors, 0 warnings, 0 suppressions.
+  (globals.css is not eslint-managed: "File ignored because no matching
+  configuration was supplied" is the expected tool boundary, not a finding.)
+
+WHOLE-PROJECT TYPECHECK (read-only gate for this phase)
+  frontend> npm run typecheck  (tsc --noEmit)
+  RESULT: owned files clean. Exactly 2 errors, both in UNOWNED,
+  actively-being-edited US3 lines of the read-only E2E file (do not touch):
+    tests/e2e/tour-detail.spec.ts(1562,85): error TS2339: Property 'inert' does not exist on type 'Element'.
+    tests/e2e/tour-detail.spec.ts(1579,85): error TS2339: Property 'inert' does not exist on type 'Element'.
+  Both sit in the US3 gallery viewer test ('US3 SSR viewer fills the viewport…'),
+  inside the region the US3 worker is currently correcting (browser
+  selectors/media adapter); line 1562 shows their mid-edit expression.
+  No error references TourSectionNav, TourBookingController, TourDetail,
+  globals.css, or any US4-owned path. Reported precisely per isolation
+  rules; not repaired, not modified, not claimed as baseline.

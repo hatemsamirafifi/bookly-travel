@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-10-19T20:49:56.680Z",
+  "purpose": "Quarantine of root-rejected drafting outputs. Contents are stale and rejected; they are NOT instructions for any owner.",
+  "entries": [
+    {
+      "originalPath": "fix-plan.md",
+      "quarantinedCopy": "rejected-draft/fix-plan.md.original.txt",
+      "sha256": "abef1328df7e82c634685febaf993852eab719815a169acdf20bd697c80f5f2a",
+      "byteLength": 6091,
+      "captureTime": "2026-10-19T20:49:56.369Z",
+      "status": "REJECTED DRAFT â€” untrusted; not executable instructions (root review correction)"
+    },
+    {
+      "originalPath": "diagnosis.md",
+      "quarantinedCopy": "rejected-draft/diagnosis.md.original.txt",
+      "sha256": "fd5d7d8c5de503c05f6f31eca18d92b4525bc7d3a5295f8896a2dc197b255d14",
+      "byteLength": 9883,
+      "captureTime": "2026-10-19T20:49:56.408Z",
+      "status": "REJECTED DRAFT â€” untrusted; not executable instructions (root review correction)"
+    },
+    {
+      "originalPath": "run-bookkeeping.json",
+      "quarantinedCopy": "rejected-draft/run-bookkeeping.json.original.txt",
+      "sha256": "914d2f85525bd896d69a58085afe20d92068dd6a5af29ff9fae4e89c24e957e8",
+      "byteLength": 916,
+      "captureTime": "2026-10-19T20:49:56.680Z",
+      "status": "REJECTED DRAFT â€” untrusted; not executable instructions (root review correction)"
+    }
+  ]
+}

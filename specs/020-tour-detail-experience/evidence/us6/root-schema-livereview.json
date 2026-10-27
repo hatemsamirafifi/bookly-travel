@@ -1,0 +1,259 @@
+{
+  "review_id": 13038,
+  "status": "completed",
+  "summary": "# Validate Structured Data for Tour Details\n\n## Overview\nThis change ensures accurate and precise structured data for tour details. It prevents misleading information from reaching search engines. New validation rules enforce data integrity for pricing, availability, and media.\n\n## Technical Highlights\n- **frontend/src/components/seo/StructuredData.tsx**: Implemented comprehensive validation for tour pricing, availability, and image URLs.\n- **frontend/src/lib/utils.ts**: Extracted `formatExactCentsDecimal` utility for `BigInt`-based precise decimal formatting.\n- **frontend/src/components/seo/__tests__/StructuredData.test.tsx**: Added extensive unit tests for new structured data validation logic.\n- **frontend/src/lib/__tests__/utils.test.ts**: Introduced unit tests for the new `formatExactCentsDecimal` utility.\n\n## Impact\n- **Functionality**: Search engines now receive correct and validated tour pricing, availability, and image information.\n- **Risk**: Changes to currency formatting may affect other components relying on `formatCurrency`'s fallback path.",
+  "envelope": {
+    "envelope_version": "v1",
+    "plan_code": "free_30k",
+    "plan_name": "free_30k",
+    "price_usd": 0,
+    "loc_limit_month": 30000,
+    "blocked": false,
+    "trial_readonly": false,
+    "operation_type": "diff_review",
+    "trigger_source": "api",
+    "operation_billable_loc": 1022,
+    "operation_id": "diff-review:13038",
+    "idempotency_key": "diff-review:13038",
+    "accounted_at": "2026-10-15T20:25:28Z"
+  },
+  "files": [
+    {
+      "file_path": "frontend/src/components/seo/StructuredData.tsx",
+      "comments": [
+        {
+          "line": 23,
+          "content": "Previously, an empty or whitespace-only image URL would resolve to the base URL, fabricating the homepage as an image. This fix correctly prevents such invalid URLs.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Logic Errors"
+        },
+        {
+          "line": 49,
+          "content": "This validation ensures that only safe integer cent amounts are considered for pricing, preventing potential `Number.MAX_SAFE_INTEGER` overflow issues.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Data Validation"
+        },
+        {
+          "line": 50,
+          "content": "Validating the currency ensures that only supported currencies are used for offers, preventing potential conversion errors or misrepresentation.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Data Validation"
+        },
+        {
+          "line": 54,
+          "content": "This check ensures that group size bounds are logically consistent (min <= max), preventing offers for impossible group configurations.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Data Validation"
+        },
+        {
+          "line": 56,
+          "content": "This validation ensures that the minimum estimated price can be safely calculated, preventing potential numerical errors for large group sizes or prices.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Numerical Accuracy"
+        },
+        {
+          "line": 57,
+          "content": "Filtering for genuinely future dates ensures that availability claims are accurate and not based on stale or past data.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Logic Errors"
+        },
+        {
+          "line": 59,
+          "content": "This comprehensive check ensures that all necessary conditions for a bookable tour are met before claiming `InStock` availability.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Business Rule Violations"
+        },
+        {
+          "line": 64,
+          "content": "This specific check ensures that `next_available_date` is a valid future date, which is crucial for setting `validFrom` correctly.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Logic Errors"
+        },
+        {
+          "line": 83,
+          "content": "Basing the offer generation on `priceValid` ensures that offers are only created when pricing data is robust and correctly formatted, preventing misleading information.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Business Rule Violations"
+        },
+        {
+          "line": 85,
+          "content": "Using `formatExactCentsDecimal` (which uses `BigInt`) correctly preserves precision for large integer cent amounts, preventing floating-point errors from `toFixed(2)`.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Numerical Accuracy"
+        },
+        {
+          "line": 90,
+          "content": "Setting `validFrom` only when `nextValid` is true ensures that the date represents a genuinely available future booking date, preventing stale or incorrect `validFrom` values.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Logic Errors"
+        },
+        {
+          "line": 92,
+          "content": "Adding `isPositiveSafeInteger` and `Number.isFinite` checks improves the robustness of rating data validation, preventing invalid or malformed ratings from being published.",
+          "severity": "warning",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Correctness",
+          "subcategory": "Data Validation"
+        }
+      ]
+    },
+    {
+      "file_path": "frontend/src/components/seo/__tests__/StructuredData.test.tsx",
+      "comments": []
+    },
+    {
+      "file_path": "frontend/src/lib/__tests__/utils.test.ts",
+      "comments": []
+    },
+    {
+      "file_path": "frontend/src/lib/utils.ts",
+      "comments": [
+        {
+          "line": 45,
+          "content": "This JSDoc explicitly states a precondition that `amountCents` must be a safe integer. Callers must ensure this condition is met to avoid runtime errors.",
+          "severity": "info",
+          "confidence": "High",
+          "type": "Best Practice",
+          "category": "Maintainability",
+          "subcategory": "Documentation"
+        },
+        {
+          "line": 68,
+          "content": "The `formatCurrency` fallback now directly calls `formatExactCentsDecimal(amountCents)`. If `amountCents` is not a safe integer (e.g., `Number.MAX_SAFE_INTEGER + 1` or fractional), `BigInt(amountCents)` will throw a `RangeError`, crashing the application. The previous `exactDecimalFallback` handled this by falling back to `toFixed(2)`.",
+          "severity": "critical",
+          "confidence": "High",
+          "type": "Bug",
+          "category": "Reliability",
+          "subcategory": "Error Handling"
+        }
+      ]
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us1/root-us1-livereview.json",
+      "comments": [
+        {
+          "line": 28,
+          "content": "The confidence for this semantic suggestion should be 'High'. The observation is clear, even if the impact is 'info' severity.",
+          "severity": "warning",
+          "confidence": "High",
+          "type": "Code Smell",
+          "category": "Developer Experience",
+          "subcategory": "Documentation Quality"
+        },
+        {
+          "line": 51,
+          "content": "The confidence for this potential redundancy observation should be 'High'. The observation is clear, even if the impact is 'info' severity.",
+          "severity": "warning",
+          "confidence": "High",
+          "type": "Code Smell",
+          "category": "Developer Experience",
+          "subcategory": "Documentation Quality"
+        },
+        {
+          "line": 65,
+          "content": "The confidence for this potential redundancy observation should be 'High'. The observation is clear, even if the impact is 'info' severity.",
+          "severity": "warning",
+          "confidence": "High",
+          "type": "Code Smell",
+          "category": "Developer Experience",
+          "subcategory": "Documentation Quality"
+        },
+        {
+          "line": 158,
+          "content": "While a test mock bug can lead to incorrect behavior, 'critical' severity is typically reserved for direct production impact. Re-evaluate if this specific test bug directly enables data corruption or user-visible incorrectness.",
+          "severity": "warning",
+          "confidence": "Medium",
+          "type": "Code Smell",
+          "category": "Developer Experience",
+          "subcategory": "Documentation Quality"
+        }
+      ]
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us2/root-gateway-20261015.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us2/root-jest-api-probe.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us2/root-public-detail-20261015.json",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/root-schema-corrected-red-probe.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/root-schema-green-final.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/root-schema-green.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/root-schema-original-red-relay.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/root-schema-typecheck.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/schema-isolated-design-rationale.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/schema-isolated-green-eslint-typecheck.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/schema-isolated-green-jest.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/evidence/us6/schema-isolated-red-jest.txt",
+      "comments": []
+    },
+    {
+      "file_path": "specs/020-tour-detail-experience/verification.md",
+      "comments": []
+    }
+  ]
+}

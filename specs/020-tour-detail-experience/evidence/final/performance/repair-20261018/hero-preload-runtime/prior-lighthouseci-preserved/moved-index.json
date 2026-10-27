@@ -1,0 +1,25 @@
+{
+ "movedAt": "2026-10-18T21:50:12.110Z",
+ "moved": [
+  {
+   "name": "assertion-results.json",
+   "sha": "7e5dd80c4df1a8ac74a98ecf2eb0e67a494d1174cc77a2e48f53322d96ba3c47",
+   "from": "F:\\Travel Website\\bookly travel\\frontend\\.lighthouseci\\assertion-results.json",
+   "to": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\prior-lighthouseci-preserved\\assertion-results.json"
+  },
+  {
+   "name": "lhr-1792357598848.html",
+   "sha": "92d86dc2b001f7920cf84b9b54e4bcc1ec0fe4285dda574356b6780dbaaedb0a",
+   "from": "F:\\Travel Website\\bookly travel\\frontend\\.lighthouseci\\lhr-1792357598848.html",
+   "to": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\prior-lighthouseci-preserved\\lhr-1792357598848.html"
+  },
+  {
+   "name": "lhr-1792357598848.json",
+   "sha": "79bc38d3213b8f44c6e96d77c872a0798dcff212167f6aa5265cad7d2da15e54",
+   "from": "F:\\Travel Website\\bookly travel\\frontend\\.lighthouseci\\lhr-1792357598848.json",
+   "to": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\prior-lighthouseci-preserved\\lhr-1792357598848.json"
+  }
+ ],
+ "left": [],
+ "chars": "verbatim sha256 per file; moved not overwritten"
+}\n

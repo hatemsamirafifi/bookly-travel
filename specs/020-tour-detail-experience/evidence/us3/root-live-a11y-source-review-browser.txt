@@ -1,0 +1,436 @@
+
+Running 16 tests using 1 worker
+
+[1A[2K(node:20696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:20696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:11:7 › en recoverable tour failure has a page heading and accessible retry
+[1A[2K[2/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:11:7 › es recoverable tour failure has a page heading and accessible retry
+[1A[2K[3/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:11:7 › it recoverable tour failure has a page heading and accessible retry
+[1A[2K[4/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:32:7 › en tour detail with loaded reviews should not have accessibility violations
+[1A[2K[5/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:32:7 › es tour detail with loaded reviews should not have accessibility violations
+[1A[2K[6/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:32:7 › it tour detail with loaded reviews should not have accessibility violations
+[1A[2K[7/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:54:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+[1A[2K  1) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:54:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 64[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",[39m
+    [31m+     "help": "Elements must meet minimum color contrast ratio thresholds",[39m
+    [31m+     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",[39m
+    [31m+     "id": "color-contrast",[39m
+    [31m+     "impact": "serious",[39m
+    [31m+     "nodes": Array [[39m
+    [31m+       Object {[39m
+    [31m+         "all": Array [],[39m
+    [31m+         "any": Array [[39m
+    [31m+           Object {[39m
+    [31m+             "data": Object {[39m
+    [31m+               "bgColor": "#697a8b",[39m
+    [31m+               "contrastRatio": 4.41,[39m
+    [31m+               "expectedContrastRatio": "4.5:1",[39m
+    [31m+               "fgColor": "#ffffff",[39m
+    [31m+               "fontSize": "9.0pt (12px)",[39m
+    [31m+               "fontWeight": "normal",[39m
+    [31m+               "messageKey": null,[39m
+    [31m+             },[39m
+    [31m+             "id": "color-contrast",[39m
+    [31m+             "impact": "serious",[39m
+    [31m+             "message": "Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+             "relatedNodes": Array [[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 of 5</p>",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   ".bottom-2",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<body class=\"min-h-full flex flex-col font-sans\">",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   "body",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+             ],[39m
+    [31m+           },[39m
+    [31m+         ],[39m
+    [31m+         "failureSummary": "Fix any of the following:[39m
+    [31m+   Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+         "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 of 5</p>",[39m
+    [31m+         "impact": "serious",[39m
+    [31m+         "none": Array [],[39m
+    [31m+         "target": Array [[39m
+    [31m+           ".bottom-2",[39m
+    [31m+         ],[39m
+    [31m+       },[39m
+    [31m+     ],[39m
+    [31m+     "tags": Array [[39m
+    [31m+       "cat.color",[39m
+    [31m+       "wcag2aa",[39m
+    [31m+       "wcag143",[39m
+    [31m+       "TTv5",[39m
+    [31m+       "TT13.c",[39m
+    [31m+       "EN-301-549",[39m
+    [31m+       "EN-9.1.4.3",[39m
+    [31m+       "ACT",[39m
+    [31m+       "RGAAv4",[39m
+    [31m+       "RGAA-3.2.1",[39m
+    [31m+     ],[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      60 |       await expect(page.locator('main#main-content')).toBeVisible();
+      61 |       const results = await new AxeBuilder({ page }).analyze();
+    > 62 |       expect(results.violations).toEqual([]);
+         |                                  ^
+      63 |     }
+      64 |   });
+      65 |
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:62:34
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\a11y-source-review\a11y-tour-detail-a11y-Spec-1b4c1-ns-across-responsive-widths-a11y\error-context.md
+
+
+[1A[2K(node:23924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[8/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:66:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+[1A[2K  2) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:66:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 64[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",[39m
+    [31m+     "help": "Elements must meet minimum color contrast ratio thresholds",[39m
+    [31m+     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",[39m
+    [31m+     "id": "color-contrast",[39m
+    [31m+     "impact": "serious",[39m
+    [31m+     "nodes": Array [[39m
+    [31m+       Object {[39m
+    [31m+         "all": Array [],[39m
+    [31m+         "any": Array [[39m
+    [31m+           Object {[39m
+    [31m+             "data": Object {[39m
+    [31m+               "bgColor": "#697a8b",[39m
+    [31m+               "contrastRatio": 4.41,[39m
+    [31m+               "expectedContrastRatio": "4.5:1",[39m
+    [31m+               "fgColor": "#ffffff",[39m
+    [31m+               "fontSize": "9.0pt (12px)",[39m
+    [31m+               "fontWeight": "normal",[39m
+    [31m+               "messageKey": null,[39m
+    [31m+             },[39m
+    [31m+             "id": "color-contrast",[39m
+    [31m+             "impact": "serious",[39m
+    [31m+             "message": "Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+             "relatedNodes": Array [[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 of 5</p>",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   ".bottom-2",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<body class=\"min-h-full flex flex-col font-sans\">",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   "body",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+             ],[39m
+    [31m+           },[39m
+    [31m+         ],[39m
+    [31m+         "failureSummary": "Fix any of the following:[39m
+    [31m+   Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+         "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 of 5</p>",[39m
+    [31m+         "impact": "serious",[39m
+    [31m+         "none": Array [],[39m
+    [31m+         "target": Array [[39m
+    [31m+           ".bottom-2",[39m
+    [31m+         ],[39m
+    [31m+       },[39m
+    [31m+     ],[39m
+    [31m+     "tags": Array [[39m
+    [31m+       "cat.color",[39m
+    [31m+       "wcag2aa",[39m
+    [31m+       "wcag143",[39m
+    [31m+       "TTv5",[39m
+    [31m+       "TT13.c",[39m
+    [31m+       "EN-301-549",[39m
+    [31m+       "EN-9.1.4.3",[39m
+    [31m+       "ACT",[39m
+    [31m+       "RGAAv4",[39m
+    [31m+       "RGAA-3.2.1",[39m
+    [31m+     ],[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      70 |     await expect(page.locator('main#main-content')).toBeVisible();
+      71 |     const results = await new AxeBuilder({ page }).analyze();
+    > 72 |     expect(results.violations).toEqual([]);
+         |                                ^
+      73 |   });
+      74 |
+      75 |   test('es and it tour detail have no axe violations at spot widths', async ({ page }) => {
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:72:32
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\a11y-source-review\a11y-tour-detail-a11y-Spec-c30bf-width-has-no-axe-violations-a11y\error-context.md
+
+
+[1A[2K(node:14440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:14440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[9/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:75:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+[1A[2K  3) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:75:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 64[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",[39m
+    [31m+     "help": "Elements must meet minimum color contrast ratio thresholds",[39m
+    [31m+     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",[39m
+    [31m+     "id": "color-contrast",[39m
+    [31m+     "impact": "serious",[39m
+    [31m+     "nodes": Array [[39m
+    [31m+       Object {[39m
+    [31m+         "all": Array [],[39m
+    [31m+         "any": Array [[39m
+    [31m+           Object {[39m
+    [31m+             "data": Object {[39m
+    [31m+               "bgColor": "#697a8b",[39m
+    [31m+               "contrastRatio": 4.41,[39m
+    [31m+               "expectedContrastRatio": "4.5:1",[39m
+    [31m+               "fgColor": "#ffffff",[39m
+    [31m+               "fontSize": "9.0pt (12px)",[39m
+    [31m+               "fontWeight": "normal",[39m
+    [31m+               "messageKey": null,[39m
+    [31m+             },[39m
+    [31m+             "id": "color-contrast",[39m
+    [31m+             "impact": "serious",[39m
+    [31m+             "message": "Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+             "relatedNodes": Array [[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 de 5</p>",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   ".bottom-2",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<body class=\"min-h-full flex flex-col font-sans\">",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   "body",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+             ],[39m
+    [31m+           },[39m
+    [31m+         ],[39m
+    [31m+         "failureSummary": "Fix any of the following:[39m
+    [31m+   Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+         "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 de 5</p>",[39m
+    [31m+         "impact": "serious",[39m
+    [31m+         "none": Array [],[39m
+    [31m+         "target": Array [[39m
+    [31m+           ".bottom-2",[39m
+    [31m+         ],[39m
+    [31m+       },[39m
+    [31m+     ],[39m
+    [31m+     "tags": Array [[39m
+    [31m+       "cat.color",[39m
+    [31m+       "wcag2aa",[39m
+    [31m+       "wcag143",[39m
+    [31m+       "TTv5",[39m
+    [31m+       "TT13.c",[39m
+    [31m+       "EN-301-549",[39m
+    [31m+       "EN-9.1.4.3",[39m
+    [31m+       "ACT",[39m
+    [31m+       "RGAAv4",[39m
+    [31m+       "RGAA-3.2.1",[39m
+    [31m+     ],[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      77 |     await page.goto('/es/tours/' + slug);
+      78 |     await expect(page.locator('main#main-content')).toBeVisible();
+    > 79 |     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+         |                                                                   ^
+      80 |
+      81 |     await page.setViewportSize({ width: 1440, height: 900 });
+      82 |     await page.goto('/it/tours/' + slug);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:79:67
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\a11y-source-review\a11y-tour-detail-a11y-Spec-b5ea5-e-violations-at-spot-widths-a11y\error-context.md
+
+
+[1A[2K(node:28268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:28268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[10/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:87:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+[1A[2K[11/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:134:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+[1A[2K  4) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:134:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  locator('main#main-content img').first()
+    Expected: [32m"en"[39m
+    Received: [31m""[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for locator('main#main-content img').first()[22m
+    [2m    14 × locator resolved to <img loading="lazy" decoding="async" data-nimg="fill" alt="Venice Hidden Canals Walking Tour" sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw" class="object-cover transition-transform duration-300 group-hover:scale-105" src="/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fvenice-walking.jpg&w=3840&q=75" srcset="/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fvenice-walking.jpg&w=256&q=75 256w, /_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fvenice-walking.jpg&…/>[22m
+    [2m       - unexpected value "null"[22m
+
+
+      153 |     const galleryImg = page.locator('main#main-content img').first();
+      154 |     await expect(galleryImg).toHaveAttribute('alt', /.+/);
+    > 155 |     await expect(galleryImg).toHaveAttribute('lang', actualLang);
+          |                              ^
+      156 |
+      157 |     // Localized control names still resolve in ES/IT (prefix match avoids
+      158 |     // diacritic brittleness while proving page-language controls).
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:155:30
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\a11y-source-review\a11y-tour-detail-a11y-Spec-99790--from-page-control-language-a11y\error-context.md
+
+
+[1A[2K(node:18464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:18464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[12/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:165:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+[1A[2K[13/16] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:204:7 › Spec020 US6 locale, width and interaction acceptance › EN/ES/IT x 390/768/1024/1440 with loaded reviews has no axe violations
+[1A[2K  5) [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:204:7 › Spec020 US6 locale, width and interaction acceptance › EN/ES/IT x 390/768/1024/1440 with loaded reviews has no axe violations › en at 390px 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 64[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",[39m
+    [31m+     "help": "Elements must meet minimum color contrast ratio thresholds",[39m
+    [31m+     "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",[39m
+    [31m+     "id": "color-contrast",[39m
+    [31m+     "impact": "serious",[39m
+    [31m+     "nodes": Array [[39m
+    [31m+       Object {[39m
+    [31m+         "all": Array [],[39m
+    [31m+         "any": Array [[39m
+    [31m+           Object {[39m
+    [31m+             "data": Object {[39m
+    [31m+               "bgColor": "#697a8b",[39m
+    [31m+               "contrastRatio": 4.41,[39m
+    [31m+               "expectedContrastRatio": "4.5:1",[39m
+    [31m+               "fgColor": "#ffffff",[39m
+    [31m+               "fontSize": "9.0pt (12px)",[39m
+    [31m+               "fontWeight": "normal",[39m
+    [31m+               "messageKey": null,[39m
+    [31m+             },[39m
+    [31m+             "id": "color-contrast",[39m
+    [31m+             "impact": "serious",[39m
+    [31m+             "message": "Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+             "relatedNodes": Array [[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 of 5</p>",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   ".bottom-2",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+               Object {[39m
+    [31m+                 "html": "<body class=\"min-h-full flex flex-col font-sans\">",[39m
+    [31m+                 "target": Array [[39m
+    [31m+                   "body",[39m
+    [31m+                 ],[39m
+    [31m+               },[39m
+    [31m+             ],[39m
+    [31m+           },[39m
+    [31m+         ],[39m
+    [31m+         "failureSummary": "Fix any of the following:[39m
+    [31m+   Element has insufficient color contrast of 4.41 (foreground color: #ffffff, background color: #697a8b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",[39m
+    [31m+         "html": "<p aria-live=\"polite\" class=\"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white lg:hidden\">1 of 5</p>",[39m
+    [31m+         "impact": "serious",[39m
+    [31m+         "none": Array [],[39m
+    [31m+         "target": Array [[39m
+    [31m+           ".bottom-2",[39m
+    [31m+         ],[39m
+    [31m+       },[39m
+    [31m+     ],[39m
+    [31m+     "tags": Array [[39m
+    [31m+       "cat.color",[39m
+    [31m+       "wcag2aa",[39m
+    [31m+       "wcag143",[39m
+    [31m+       "TTv5",[39m
+    [31m+       "TT13.c",[39m
+    [31m+       "EN-301-549",[39m
+    [31m+       "EN-9.1.4.3",[39m
+    [31m+       "ACT",[39m
+    [31m+       "RGAAv4",[39m
+    [31m+       "RGAA-3.2.1",[39m
+    [31m+     ],[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      224 |             await page.evaluate(() => document.documentElement.clientWidth),
+      225 |           );
+    > 226 |           expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+          |                                                                         ^
+      227 |         });
+      228 |       }
+      229 |     }
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:226:73
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\a11y\tour-detail-a11y.spec.ts:216:9
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\a11y-source-review\a11y-tour-detail-a11y-Spec-8a716-views-has-no-axe-violations-a11y\error-context.md
+
+
+[1A[2K[31mTesting stopped early after 5 maximum allowed failures.[39m
+
+[1A[2K  5 failed
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:54:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths 
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:66:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations 
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:75:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths 
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:134:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language 
+    [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:204:7 › Spec020 US6 locale, width and interaction acceptance › EN/ES/IT x 390/768/1024/1440 with loaded reviews has no axe violations 
+  3 did not run
+  8 passed (34.5s)
+  1 error was not a part of any test, see above for details

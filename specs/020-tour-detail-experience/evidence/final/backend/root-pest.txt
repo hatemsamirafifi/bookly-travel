@@ -1,0 +1,297 @@
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   2.60s  
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.09s  
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.10s  
+  ✓ it returns only approved public operator fields and visible-review…  0.16s  
+  ✓ it omits operator identity when its partner is not approved          0.13s  
+  ✓ it ranks only published bookable related tours by destination then…  0.21s  
+  ✓ it returns 404 for non-existent slug                                 0.06s  
+  ✓ it returns 404 for draft tour                                        0.08s  
+  ✓ it returns 404 for rejected tour                                     0.14s  
+  ✓ it returns 410 for an archived tour that was previously published    0.08s  
+  ✓ it returns 404 for an archived tour that was never published         0.08s  
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.09s  
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.10s  
+  ✓ it serves a fully bookable published tour as available (F2)          0.12s  
+  ✓ it returns content in the requested locale                           0.12s  
+  ✓ it keeps guide languages separate from localized content and itiner… 0.18s  
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.09s  
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.10s  
+  ✓ it falls back to English when requested locale is unavailable        0.12s  
+  ✓ it validates locale parameter is required                            0.05s  
+  ✓ it includes SEO metadata in response                                 0.10s  
+  ✓ it computes the review distribution from visible reviews (L4)        0.11s  
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.15s  
+  ✓ it falls back to current English for missing row+state, pending, st… 0.25s  
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 0.13s  
+  ✓ it keeps requested general content while a null itinerary independe… 0.13s  
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.12s  
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.20s  
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.09s  
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.11s  
+  ✓ it selects actual languages across the full es/it status matrix (US… 1.12s  
+  ✓ it always serves English source irrespective of derived states (US2… 0.11s  
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.11s  
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.15s  
+  ✓ it excludes hidden reviews from the distribution (L4)                0.15s  
+  ✓ it dedupes mixed legacy and typed gallery rows into sorted unique H… 0.12s  
+  ✓ it surfaces an HTTP-authored specific English alt with an English l… 0.27s  
+  ✓ it falls back to the current Spanish title and content locale for i… 0.13s  
+  ✓ it falls back to the English title for image alt when the derivativ… 0.12s  
+  ✓ it serves the nonblank legacy cover only without usable media and e… 0.15s  
+  ✓ it projects genuine primary review facts even when cached legacy ag… 0.12s  
+
+   PASS  Tests\Feature\Search\TourAvailabilityLogicTest
+  ✓ it derives upcoming available dates from a recurring daily rule      0.09s  
+  ✓ it returns no dates when there are no availability rules             0.04s  
+  ✓ it respects the recurring rule day-of-week filter                    0.04s  
+  ✓ it shouldBeSearchable is true only for published + priced + availab… 0.05s  
+
+   PASS  Tests\Feature\Search\AvailabilityResolutionRegressionTest
+  ✓ it resolves recurring + specific_date + block precedence with dedup… 0.09s  
+  ✓ it returns an empty list and is not searchable when every produced…  0.11s  
+
+   PASS  Tests\Feature\Booking\CreateBookingTest
+  ✓ it creates a booking successfully                                    0.14s  
+  ✓ it returns existing booking on idempotent retry                      0.17s  
+  ✓ it returns 404 for nonexistent tour                                  0.10s  
+  ✓ it returns 404 for draft tour                                        0.12s  
+  ✓ it returns 422 for past date                                         0.10s  
+  ✓ it returns 422 for participant count below minimum                   0.14s  
+  ✓ it returns 401 for unauthenticated request                           0.10s  
+  ✓ it returns 422 when idempotency key header is missing                0.10s  
+  ✓ it returns 422 when locale is missing                                0.09s  
+  ✓ it returns 422 for a non-operating date                              0.10s  
+  ✓ it snapshots the rule start time onto the booking                    0.13s  
+
+   PASS  Tests\Feature\Payment\AnonymizationTest
+  ✓ it anonymizes a stale booking: severs traveler/guest links, redacts… 0.12s  
+  ✓ it skips already-anonymized bookings on re-run (idempotent — no sec… 0.11s  
+
+   PASS  Tests\Feature\Payment\ConfirmBookingOnPaymentTest
+  ✓ it confirms a pending_payment booking, writes a debit ledger entry…  0.12s  
+  ✓ it does not resurrect an expired booking from a late payment_succee… 0.08s  
+  ✓ it is idempotent across duplicate payment_succeeded dispatches       0.08s  
+
+   PASS  Tests\Feature\Payment\DeterministicPaymentGatewayTest
+  ✓ it completes the authenticated booking payment path exactly once     0.13s  
+  ✓ it keeps payment confirmation owner scoped and secret bound          0.10s  
+  ✓ it derives stable intent references without hardcoded credentials    0.04s  
+  ✓ it does not expose the confirmation adapter unless explicitly confi… 0.04s  
+
+   PASS  Tests\Feature\Payment\ExpireBookingOnPaymentFailureTest
+  ✓ it expires a pending_payment booking on payment failure with a syst… 0.09s  
+  ✓ it does not overwrite a confirmed booking from a late payment_faile… 0.08s  
+  ✓ it does not write a second audit when the booking is already expire… 0.08s  
+
+   PASS  Tests\Feature\Payment\LedgerImmutabilityTest
+  ✓ it has UPDATED_AT set to null on FinancialLedgerEntry                0.04s  
+  ✓ it prevents updates on financial ledger entries                      0.09s  
+  ✓ it prevents deletion of financial ledger entries                     0.08s  
+  ✓ it can append new entries but not alter old ones                     0.07s  
+
+   PASS  Tests\Feature\Payment\PartnerFinancialSummaryTest
+  ✓ it returns financial summary for partner tours                       0.10s  
+  ✓ it does not expose raw stripe identifiers in partner response        0.09s  
+  ✓ it filters by tour_slug and date range                               0.12s  
+  ✓ it returns 401 for unauthenticated requests                          0.04s  
+
+   PASS  Tests\Feature\Payment\PaymentCaptureTest
+  ✓ it creates booking in pending_payment status with client_secret      0.10s  
+  ✓ it returns 409 when tour is sold out                                 0.08s  
+  ✓ it returns existing booking for duplicate idempotency key            0.11s  
+  ✓ it maintains price at booking time when partner changes tour price   0.14s  
+
+   PASS  Tests\Feature\Payment\PendingExpiryTest
+  ✓ it expires pending payment bookings older than 15 minutes and cance… 0.08s  
+  ✓ it keeps expiry durable when Stripe PaymentIntent cancel fails       0.07s  
+  ✓ it does not expire bookings that are still within the 15-minute win… 0.06s  
+  ✓ it does not cancel a PaymentIntent for bookings without one          0.08s  
+
+   PASS  Tests\Feature\Payment\RefundTest
+  ✓ it can cancel a booking within cancellation window and trigger refu… 0.20s  
+  ✓ it double cancellation is idempotent                                 0.14s  
+  ✓ it does not auto-refund when cancelling outside cancellation window  0.08s  
+
+   PASS  Tests\Feature\Payment\StripeConnectAndInvoicingTest
+  ✓ it routes destination charge and retains platform commission when p… 0.08s  
+  ✓ it updates and governance-audits partner status via account.updated… 0.16s  
+  ✓ it governance-audits Stripe account creation by a partner            0.07s  
+  ✓ it reuses the same Stripe invoice when invoice creation is retried   0.08s  
+  ✓ it rejects unauthenticated access to Stripe partner endpoints with…  0.04s  
+  ✓ it rejects unauthenticated access to Stripe partner endpoints with…  0.04s  
+  ✓ it rejects unauthenticated access to Stripe partner endpoints with…  0.04s  
+  ✓ it conceals Stripe partner endpoints from authenticated travelers w… 0.10s  
+  ✓ it conceals Stripe partner endpoints from authenticated travelers w… 0.06s  
+  ✓ it conceals Stripe partner endpoints from authenticated travelers w… 0.14s  
+  ✓ it confirms booking and creates ledger charge on invoice.paid webho… 0.18s  
+  ✓ it provides partner Stripe status via API                            0.07s  
+  ✓ it generates an onboarding link for a partner via API                0.12s  
+  ✓ it generates a dashboard login link for a partner with connected ac… 0.11s  
+
+   PASS  Tests\Feature\Payment\StripeDowntimeTest
+  ✓ it returns 503 and marks the booking expired when PaymentIntent cre… 0.15s  
+  ✓ it idempotency retry returns existing booking with stored client_se… 0.12s  
+  ✓ it compensates an orphan PaymentIntent when the local Payment write… 0.10s  
+
+   PASS  Tests\Feature\Payment\WebhookTest
+  ✓ it rejects webhook with missing signature                            0.05s  
+  ✓ it stores webhook event and skips duplicates                         0.05s  
+
+   PASS  Tests\Feature\Auth\BrowserReadRateLimitTest
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.04s  
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.05s  
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.05s  
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.05s  
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.07s  
+  ✓ it allows a higher browser read budget only in an opted-in local st… 0.08s  
+
+   PASS  Tests\Feature\Auth\ChangePasswordTest
+  ✓ it changes password with correct current password                    0.19s  
+  ✓ it fails with incorrect current password                             0.15s  
+  ✓ it fails with weak new password                                      0.16s  
+  ✓ it requires authentication for change password                       0.13s  
+
+   PASS  Tests\Feature\Auth\EmailVerificationTest
+  ✓ it verifies email with a valid signed url                            0.17s  
+  ✓ it returns already verified for previously verified email            0.14s  
+  ✓ it returns 403 for invalid signature                                 0.13s  
+  ✓ it returns 404 for non-existent user                                 0.13s  
+  ✓ it resends verification email when authenticated and not verified    0.33s  
+  ✓ it returns 400 when resending for already verified user              0.14s  
+  ✓ it rate limits resend verification to 3 per hour                     0.14s  
+
+   PASS  Tests\Feature\Auth\GuestConversionTest
+  ✓ it converts a guest to an account with valid data                    0.19s  
+  ✓ it links all guest bookings with the same email on conversion        0.17s  
+  ✓ it returns 422 for duplicate email conversion                        0.08s  
+
+   PASS  Tests\Feature\Auth\GuestIdentityTest
+  ✓ it creates a guest identity when none exists                         0.08s  
+  ✓ it detects an existing account by email                              0.07s  
+  ✓ it creates multiple guest bookings with the same email               0.10s  
+
+   PASS  Tests\Feature\Auth\LoginTest
+  ✓ it signs in a traveler with valid credentials                        0.10s  
+  ✓ it fails with generic error for non-existent email                   0.08s  
+  ✓ it fails with generic error for wrong password                       0.09s  
+  ✓ it fails validation with empty fields                                0.05s  
+  ✓ it normalizes email with whitespace and uppercase                    0.10s  
+  ✓ it fails for account with no password                                0.09s  
+  ✓ it returns structured error codes                                    0.11s  
+  ✓ it locks account after 5 failed attempts with 1 minute tier          0.54s  
+  ✓ it dispatches AccountLockedOut event when lockout triggers           0.26s  
+  ✓ it rejects login while account is locked even with correct password  0.14s  
+  ✓ it resets counter and tier on successful login after lockout expire… 0.36s  
+  ✓ it escalates to 30 minute tier on third lockout                      0.62s  
+  ✓ it resets failed count on successful login before reaching 5         0.16s  
+  ✓ it handles concurrent failed login requests safely                   0.13s  
+  ✓ it survives redis cache flush during lockout                         0.14s  
+  ✓ it rate limits the login endpoint after 10 requests                  0.25s  
+  ✓ it responds within 3 seconds                                         0.12s  
+  ✓ it does not send duplicate email for the same lockout event          0.23s  
+  ✓ it queues an email notification when account is locked out           0.19s  
+
+   PASS  Tests\Feature\Auth\LogoutTest
+  ✓ it revokes the current token on logout                               0.15s  
+  ✓ it returns 401 for revoked token                                     0.15s  
+  ✓ it keeps other sessions active after logout                          0.12s  
+  ✓ it returns 401 without token                                         0.09s  
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ it sends a reset email for a verified email                          0.13s  
+  ✓ it sends a verification email for an unverified email instead of re… 0.09s  
+  ✓ it returns the same response for non-existent email to prevent enum… 0.09s  
+  ✓ it resets password with a valid token                                0.29s  
+  ✓ it fails with an invalid token                                       0.16s  
+  ✓ it fails with expired token                                          0.33s  
+  ✓ it validates reset password request fields                           0.07s  
+  ✓ it dispatches a password reset email containing a valid reset URL a… 0.14s  
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  ✓ it registers a new traveler successfully                             0.09s  
+  ✓ it fails with a duplicate email                                      0.07s  
+  ✓ it fails with a weak password                                        0.08s  
+  ✓ it fails when fields are missing                                     0.04s  
+  ✓ it links guest bookings on registration                              0.08s  
+  ✓ it sets the locale correctly or defaults to en                       0.10s  
+  ✓ it normalizes the email address                                      0.07s  
+  ✓ it is protected by rate limiting                                     0.28s  
+
+   PASS  Tests\Feature\Auth\SessionManagementTest
+  ✓ it lists active sessions for authenticated user                      0.46s  
+  ✓ it never exposes token values in session list                        0.09s  
+  ✓ it returns 401 for unauthenticated session list request              0.05s  
+  ✓ it token expires after 7 days of inactivity                          0.08s  
+  ✓ it supports multiple concurrent sessions                             0.07s  
+
+   PASS  Tests\Feature\Reviews\AdminModerationTest
+  ✓ it admin sees all reviews across all tours                           0.16s  
+  ✓ it filters reviews by status                                         0.16s  
+  ✓ it filters reviews by tour                                           0.13s  
+  ✓ it hide action sets status to hidden                                 0.18s  
+  ✓ it reinstate action sets status to visible                           0.13s  
+  ✓ it audit trail records moderation actions                            0.11s  
+  ✓ it returns 403 for non-admin role                                    0.10s  
+  ✓ it hide recalculates aggregate rating                                0.12s  
+
+   PASS  Tests\Feature\Reviews\EditReviewTest
+  ✓ it allows edit within 48 hours of creation                           0.26s  
+  ✓ it shows edited flag after edit                                      0.13s  
+  ✓ it creates audit trail entry on edit                                 0.11s  
+  ✓ it returns 403 for edit after 48 hours                               0.09s  
+  ✓ it returns 403 when non-owner tries to edit                          0.10s  
+  ✓ it recalculates aggregate rating on edit                             0.10s  
+  ✓ it does not reset the 48h edit window on edit (FR-011 regression)    0.11s  
+  ✓ it flags an edited review whose new comment contains profanity       0.15s  
+  ✓ it clears the flag when an edit removes the profanity                0.09s  
+  ✓ it does not un-hide an admin-suppressed review via edit              0.09s  
+  ✓ it rolls back the review update if the audit-trail write fails       0.10s  
+
+   PASS  Tests\Feature\Reviews\PartnerReviewsTest
+  ✓ it partner sees only their tours reviews                             0.12s  
+  ✓ it returns aggregate values per tour                                 0.12s  
+  ✓ it filters by tour_id                                                0.11s  
+  ✓ it returns 401 for unauthenticated                                   0.08s  
+  ✓ it returns 404 for non-partner role                                  0.12s  
+  ✓ it exposes the contract shape and omits internal ids (no PII leak)   0.12s  
+  ✓ it includes tour_summaries with slug, title and aggregates           0.15s  
+  ✓ it includes the response when present and omits it when absent       0.15s  
+
+   PASS  Tests\Feature\Reviews\ProfanityFilterTest
+  ✓ it flags review containing profanity keyword                         0.06s  
+  ✓ it does not flag clean review                                        0.04s  
+  ✓ it matches case-insensitively                                        0.04s  
+  ✓ it matches word boundaries only                                      0.04s  
+  ✓ it handles null and empty input                                      0.04s  
+  ✓ it loads the tracked default keyword list with no runtime file (FR-… 0.04s  
+  ✓ it fully replaces the default list when an override file is present  0.03s  
+  ✓ it logs a warning when no keywords are loaded (observable, not sile… 0.04s  
+  ✓ it ships a tracked, non-empty profanity keyword list (CI guard)      0.04s  
+
+   PASS  Tests\Feature\Reviews\SubmitReviewTest
+  ✓ it returns 201 when traveler submits a valid review for a completed… 0.10s  
+  ✓ it succeeds with rating-only review (no comment)                     0.09s  
+  ✓ it returns 403 when booking is not completed                         0.07s  
+  ✓ it returns 403 when booking does not belong to traveler              0.08s  
+  ✓ it returns 403 for duplicate review                                  0.08s  
+  ✓ it returns 403 for booking outside 30-day window                     0.08s  
+  ✓ it returns 403 when booking has no payment record                    0.08s  
+  ✓ it returns 422 for rating outside 1-5                                0.08s  
+  ✓ it returns 422 for comment exceeding 2000 chars                      0.10s  
+  ✓ it returns 429 when rate limit exceeded                              0.32s  
+
+   PASS  Tests\Feature\Reviews\ViewReviewsTest
+  ✓ it returns paginated visible reviews for a tour                      0.14s  
+  ✓ it does not include hidden reviews in listing                        0.08s  
+  ✓ it includes flagged reviews in public listing                        0.09s  
+  ✓ it returns empty list for tour with no reviews                       0.07s  
+  ✓ it shows aggregate rating correctly                                  0.10s  
+  ✓ it shows first name only as reviewer name                            0.11s  
+  ✓ it shows "Anonymous Traveler" when traveler deleted                  0.11s  
+  ✓ it respects per_page parameter for pagination                        0.11s  
+
+  Tests:    229 passed (1715 assertions)
+  Duration: 31.37s
+

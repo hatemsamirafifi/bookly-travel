@@ -1,0 +1,9 @@
+{
+  "pid": 20192,
+  "startedAt": "2026-10-17T19:49:31.0654338Z",
+  "scope": "Delegated recovery of interrupted native QA; prior partial outputs preserved, temporary-runner review corrections, root reviews/plans/delegates only",
+  "model": "opencode/glm-5.3-flash-free",
+  "variant": "max",
+  "session": "ses_eb5877c55ffejDwLyNfLsHK7iJ",
+  "brief": "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\delegated-final-performance\\native-resume-brief.md"
+}

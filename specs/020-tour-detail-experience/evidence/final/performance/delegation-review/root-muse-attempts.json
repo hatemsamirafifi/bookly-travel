@@ -1,0 +1,54 @@
+{
+  "reviewedAt": "2026-10-17T15:26:42.565Z",
+  "scope": "Two explicit external OpenCode failures before tools, after human asked root to review only. No new test ran after host load reduction on these attempts. Relay touchedFiles reflects pre-existing working-tree status, not agent-authored changes.",
+  "records": [
+    {
+      "run": "run",
+      "status": "failed",
+      "exitCode": 1,
+      "model": "opencode/muse-spark-1.3-contributor-free",
+      "version": "1.19.0",
+      "sessionId": "ses_eb58af9f2ffe4adHWUlzDulSnB",
+      "startedAt": "2026-10-17T15:22:09.994Z",
+      "finishedAt": "2026-10-17T15:22:27.857Z",
+      "eventTypes": [
+        "error"
+      ],
+      "errors": [
+        {
+          "name": "UnknownError",
+          "data": {
+            "message": "Unexpected server error. Check server logs for details.",
+            "ref": "err_355c5590"
+          }
+        }
+      ],
+      "toolsExecuted": 0,
+      "finalMessage": ""
+    },
+    {
+      "run": "retry-run",
+      "status": "failed",
+      "exitCode": 1,
+      "model": "opencode/muse-spark-1.3-contributor-free",
+      "version": "1.19.0",
+      "sessionId": "ses_eb58af9f2ffe4adHWUlzDulSnB",
+      "startedAt": "2026-10-17T15:23:32.158Z",
+      "finishedAt": "2026-10-17T15:23:38.588Z",
+      "eventTypes": [
+        "error"
+      ],
+      "errors": [
+        {
+          "name": "UnknownError",
+          "data": {
+            "message": "Unexpected server error. Check server logs for details.",
+            "ref": "err_e1cc2226"
+          }
+        }
+      ],
+      "toolsExecuted": 0,
+      "finalMessage": ""
+    }
+  ]
+}

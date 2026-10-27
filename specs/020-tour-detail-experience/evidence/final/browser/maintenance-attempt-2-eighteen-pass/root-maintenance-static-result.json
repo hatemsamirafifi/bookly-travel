@@ -1,0 +1,52 @@
+{
+  "startedAt": "2026-10-16T22:30:34.432Z",
+  "sourceHash": "706212269a4a8a07480d8520885169f8be6686156149bc8567e22eeb40c3289e",
+  "scope": "Only existing tour-detail browser test maintenance; accepted production source/build and component tests unchanged.",
+  "stages": [
+    {
+      "name": "sync",
+      "command": "docker",
+      "args": [
+        "cp",
+        "F:\\Travel Website\\bookly travel\\frontend\\tests\\e2e\\tour-detail.spec.ts",
+        "bookly-frontend:/app/tests/e2e/tour-detail.spec.ts"
+      ],
+      "startedAt": "2026-10-16T22:30:34.630Z",
+      "finishedAt": "2026-10-16T22:30:34.825Z",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "tests/e2e/tour-detail.spec.ts"
+      ],
+      "startedAt": "2026-10-16T22:30:34.826Z",
+      "finishedAt": "2026-10-16T22:30:44.272Z",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-16T22:30:44.272Z",
+      "finishedAt": "2026-10-16T22:31:12.831Z",
+      "exitCode": 0
+    }
+  ],
+  "passed": true
+}

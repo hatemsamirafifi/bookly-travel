@@ -1,0 +1,419 @@
+{
+  "scope": "Standalone actual Gallery/Dialog/Tailwind diagnostic; SDK image and intl adapters, server-only unused blur export omitted; original owned CDN fixture testcard responses. Not built-Next, locale, optimization or full-spec acceptance.",
+  "buildSnapshot": {
+    "sourceFiles": {
+      "F:/Travel Website/bookly travel/frontend/src/components/tour/TourGallery.tsx": "aa2ef725cbf2c0c7a67a5804801569d5e6142ef549d52b54abf7e190095d1e1d",
+      "F:/Travel Website/bookly travel/frontend/src/components/ui/Dialog.tsx": "d5014e3f6dc1fc3b6ebbdece36cbbef039750f97323b2f223fb83c2eecb79d66"
+    },
+    "bundle": "2d5004b57acf3fb153239bc36e728ccfaea4a1d303beddbf016bcd36ffad3002",
+    "css": "63de3dffc25cce0a0e02133e776eff68f764de7066d1e82a52c6460705d4970e",
+    "builtAtUtc": "2026-10-16T13:46:35.159Z"
+  },
+  "metrics": [
+    {
+      "width": 1440,
+      "count": 1,
+      "track": {
+        "x": 96,
+        "y": 16,
+        "width": 1248,
+        "height": 780
+      },
+      "tiles": [
+        {
+          "x": 96,
+          "y": 16,
+          "width": 1248,
+          "height": 780
+        }
+      ],
+      "scrollWidth": 1248,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "coverage": 1
+    },
+    {
+      "width": 1440,
+      "count": 2,
+      "track": {
+        "x": 96,
+        "y": 16,
+        "width": 1248,
+        "height": 387.5
+      },
+      "tiles": [
+        {
+          "x": 96,
+          "y": 16,
+          "width": 620,
+          "height": 387.5
+        },
+        {
+          "x": 724,
+          "y": 16,
+          "width": 620,
+          "height": 387.5
+        }
+      ],
+      "scrollWidth": 1248,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "coverage": 0.9935897435897436
+    },
+    {
+      "width": 1440,
+      "count": 3,
+      "track": {
+        "x": 96,
+        "y": 16,
+        "width": 1248,
+        "height": 199.25
+      },
+      "tiles": [
+        {
+          "x": 96,
+          "y": 16,
+          "width": 620,
+          "height": 199.25
+        },
+        {
+          "x": 724,
+          "y": 16,
+          "width": 306,
+          "height": 191.25
+        },
+        {
+          "x": 1038,
+          "y": 16,
+          "width": 306,
+          "height": 191.25
+        }
+      ],
+      "scrollWidth": 1248,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "coverage": 0.9674902679921501
+    },
+    {
+      "width": 1440,
+      "count": 4,
+      "track": {
+        "x": 96,
+        "y": 16,
+        "width": 1248,
+        "height": 586.75
+      },
+      "tiles": [
+        {
+          "x": 96,
+          "y": 16,
+          "width": 620,
+          "height": 586.75
+        },
+        {
+          "x": 724,
+          "y": 16,
+          "width": 306,
+          "height": 191.25
+        },
+        {
+          "x": 1038,
+          "y": 16,
+          "width": 306,
+          "height": 191.25
+        },
+        {
+          "x": 724,
+          "y": 215.25,
+          "width": 620,
+          "height": 387.5
+        }
+      ],
+      "scrollWidth": 1248,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "coverage": 0.9847268198354692
+    },
+    {
+      "width": 1440,
+      "count": 5,
+      "track": {
+        "x": 96,
+        "y": 16,
+        "width": 1248,
+        "height": 390.5
+      },
+      "tiles": [
+        {
+          "x": 96,
+          "y": 16,
+          "width": 620,
+          "height": 390.5
+        },
+        {
+          "x": 724,
+          "y": 16,
+          "width": 306,
+          "height": 191.25
+        },
+        {
+          "x": 1038,
+          "y": 16,
+          "width": 306,
+          "height": 191.25
+        },
+        {
+          "x": 724,
+          "y": 215.25,
+          "width": 306,
+          "height": 191.25
+        },
+        {
+          "x": 1038,
+          "y": 215.25,
+          "width": 306,
+          "height": 191.25
+        }
+      ],
+      "scrollWidth": 1248,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "coverage": 0.9771331954430545
+    },
+    {
+      "width": 1440,
+      "count": 5,
+      "dialog": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900
+      },
+      "image": {
+        "x": 16,
+        "y": 93,
+        "width": 1408,
+        "height": 707
+      },
+      "body": {
+        "x": 0,
+        "y": 77,
+        "width": 1440,
+        "height": 823
+      },
+      "fullViewport": true,
+      "imageFitsBody": true
+    },
+    {
+      "width": 390,
+      "count": 1,
+      "track": {
+        "x": 16,
+        "y": 16,
+        "width": 358,
+        "height": 223.75
+      },
+      "tiles": [
+        {
+          "x": 16,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        }
+      ],
+      "scrollWidth": 358,
+      "viewport": 390,
+      "documentWidth": 390,
+      "coverage": 1
+    },
+    {
+      "width": 390,
+      "count": 2,
+      "track": {
+        "x": 16,
+        "y": 16,
+        "width": 358,
+        "height": 223.75
+      },
+      "tiles": [
+        {
+          "x": 16,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 374,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        }
+      ],
+      "scrollWidth": 716,
+      "viewport": 390,
+      "documentWidth": 390,
+      "coverage": 2
+    },
+    {
+      "width": 390,
+      "count": 3,
+      "track": {
+        "x": 16,
+        "y": 16,
+        "width": 358,
+        "height": 223.75
+      },
+      "tiles": [
+        {
+          "x": 16,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 374,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 732,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        }
+      ],
+      "scrollWidth": 1074,
+      "viewport": 390,
+      "documentWidth": 390,
+      "coverage": 3
+    },
+    {
+      "width": 390,
+      "count": 4,
+      "track": {
+        "x": 16,
+        "y": 16,
+        "width": 358,
+        "height": 223.75
+      },
+      "tiles": [
+        {
+          "x": 16,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 374,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 732,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 1090,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        }
+      ],
+      "scrollWidth": 1432,
+      "viewport": 390,
+      "documentWidth": 390,
+      "coverage": 4
+    },
+    {
+      "width": 390,
+      "count": 5,
+      "track": {
+        "x": 16,
+        "y": 16,
+        "width": 358,
+        "height": 223.75
+      },
+      "tiles": [
+        {
+          "x": 16,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 374,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 732,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 1090,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        },
+        {
+          "x": 1448,
+          "y": 16,
+          "width": 358,
+          "height": 223.75
+        }
+      ],
+      "scrollWidth": 1790,
+      "viewport": 390,
+      "documentWidth": 390,
+      "coverage": 5
+    },
+    {
+      "width": 390,
+      "count": 5,
+      "dialog": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 900
+      },
+      "image": {
+        "x": 16,
+        "y": 93,
+        "width": 358,
+        "height": 707
+      },
+      "body": {
+        "x": 0,
+        "y": 77,
+        "width": 390,
+        "height": 823
+      },
+      "fullViewport": true,
+      "imageFitsBody": true
+    },
+    {
+      "width": 390,
+      "longCaption": true,
+      "image": {
+        "x": 16,
+        "y": 93,
+        "width": 358,
+        "height": 240
+      },
+      "captionScroll": {
+        "scrollHeight": 4620,
+        "clientHeight": 823,
+        "captionBottom": 900,
+        "bodyBottom": 900,
+        "endReachable": true
+      }
+    }
+  ]
+}

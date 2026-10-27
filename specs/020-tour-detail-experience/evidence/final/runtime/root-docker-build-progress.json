@@ -1,0 +1,91 @@
+{
+  "startedAt": "2026-10-17T14:42:15.776Z",
+  "stages": [
+    {
+      "name": "image-build",
+      "args": [
+        "compose",
+        "build",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-17T14:42:16.332Z",
+      "finishedAt": "2026-10-17T14:42:42.815Z",
+      "exitCode": 0
+    },
+    {
+      "name": "frontend-recreate",
+      "args": [
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--force-recreate",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-17T14:42:42.816Z",
+      "finishedAt": "2026-10-17T14:42:52.828Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-source",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs'),crypto=require('node:crypto');const paths=JSON.parse(fs.readFileSync(0,'utf8'));console.log(JSON.stringify({node:process.version,next:require('next/package.json').version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),files:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync('/app/'+p.replaceAll('\\\\','/'))).digest('hex')]))}));"
+      ],
+      "startedAt": "2026-10-17T14:44:30.669Z",
+      "finishedAt": "2026-10-17T14:44:31.732Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-identity",
+      "args": [
+        "inspect",
+        "--format",
+        "{{.Id}} {{.Image}}",
+        "bookly-frontend"
+      ],
+      "startedAt": "2026-10-17T14:44:50.802Z",
+      "finishedAt": "2026-10-17T14:44:50.976Z",
+      "exitCode": 0
+    },
+    {
+      "name": "frontend-build-log",
+      "args": [
+        "compose",
+        "logs",
+        "--no-color",
+        "--tail",
+        "180",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-17T14:44:50.977Z",
+      "finishedAt": "2026-10-17T14:44:51.380Z",
+      "exitCode": 0
+    }
+  ],
+  "dependencyVolumeReuse": {
+    "enabled": true,
+    "lockHash": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c",
+    "reason": "Same verified lock and installed Linux dependencies; startup clears the owned .next volume and rebuilds production source."
+  },
+  "readiness": {
+    "direct": 200,
+    "proxy": 200
+  },
+  "container": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "sourceParity": {
+    "files": 420,
+    "mismatches": []
+  },
+  "sourceStable": true,
+  "passed": true
+}

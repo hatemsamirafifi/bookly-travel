@@ -1,0 +1,171 @@
+
+Running 31 tests using 1 worker
+
+[1A[2K(node:21696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:21696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/31] [chromium] › tests\e2e\tour-detail.spec.ts:505:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:505:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored) 
+
+    Error: Missing partner auth_token in localStorage
+
+       at partner\tour-content-helpers.ts:26
+
+      24 | export async function partnerToken(page: Page): Promise<string> {
+      25 |   const token = await page.evaluate(() => localStorage.getItem('auth_token'));
+    > 26 |   if (!token) throw new Error('Missing partner auth_token in localStorage');
+         |                     ^
+      27 |   return token;
+      28 | }
+      29 |
+        at partnerToken (F:\Travel Website\bookly travel\frontend\tests\e2e\partner\tour-content-helpers.ts:26:21)
+        at api (F:\Travel Website\bookly travel\frontend\tests\e2e\partner\tour-content-helpers.ts:31:17)
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:532:21
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\current-stories\tour-detail-Tour-Detail-Pa-fc0cb-pages-seeded-tour-restored--chromium\error-context.md
+
+
+[1A[2K(node:3272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:3272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/31] [chromium] › tests\e2e\tour-detail.spec.ts:933:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+[1A[2K  2) [chromium] › tests\e2e\tour-detail.spec.ts:933:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByLabel('Select a Date')
+    Expected: visible
+    Error: strict mode violation: getByLabel('Select a Date') resolved to 2 elements:
+        1) <select id="_r_4_" class="w-full rounded-md border border-border bg-surface px-2 py-2 text-sm text-primary">…</select> aka locator('[id="_r_4_"]')
+        2) <select disabled id="_R_2mav5ubt5tivb_" class="w-full rounded-md border border-border bg-surface px-2 py-2 text-sm text-primary">…</select> aka getByLabel('Select a Date').nth(1)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByLabel('Select a Date')[22m
+    [2m    - locator resolved to <select disabled id="_R_2mav5ubt5tivb_" class="w-full rounded-md border border-border bg-surface px-2 py-2 text-sm text-primary">…</select>[22m
+    [2m    - unexpected value "hidden"[22m
+
+
+      947 |
+      948 |       const cardSelect = page.getByLabel('Select a Date');
+    > 949 |       await expect(cardSelect).toBeVisible();
+          |                                ^
+      950 |       await cardSelect.selectOption(picked);
+      951 |       await page.getByRole('button', { name: 'Increase participants' }).click();
+      952 |       await page.getByRole('button', { name: 'Increase participants' }).click();
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:949:32
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\current-stories\tour-detail-Tour-Detail-Pa-23b32--across-card-bar-and-resize-chromium\error-context.md
+
+
+[1A[2K(node:23232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/31] [chromium] › tests\e2e\tour-detail.spec.ts:1107:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+[1A[2K[4/31] [chromium] › tests\e2e\tour-detail.spec.ts:1129:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[5/31] [chromium] › tests\e2e\tour-detail.spec.ts:1156:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K[6/31] [chromium] › tests\e2e\tour-detail.spec.ts:1191:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+[1A[2K[7/31] [chromium] › tests\e2e\tour-detail.spec.ts:1222:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en
+[1A[2K[8/31] [chromium] › tests\e2e\tour-detail.spec.ts:1222:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es
+[1A[2K[9/31] [chromium] › tests\e2e\tour-detail.spec.ts:1222:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it
+[1A[2K[10/31] [chromium] › tests\e2e\tour-detail.spec.ts:1250:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en
+[1A[2K[11/31] [chromium] › tests\e2e\tour-detail.spec.ts:1250:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es
+[1A[2K[12/31] [chromium] › tests\e2e\tour-detail.spec.ts:1279:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+[1A[2K[13/31] [chromium] › tests\e2e\tour-detail.spec.ts:1321:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 403 renders safe localized recoverable state in es
+[1A[2K[14/31] [chromium] › tests\e2e\tour-detail.spec.ts:1321:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 422 renders safe localized recoverable state in it
+[1A[2K[15/31] [chromium] › tests\e2e\tour-detail.spec.ts:1321:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 429 renders safe localized recoverable state in en
+[1A[2K[16/31] [chromium] › tests\e2e\tour-detail.spec.ts:1354:7 › Tour Detail route states (Spec 020 US6) › US6 SSR intentional-empty translated itinerary stays empty with agreeing schema
+[1A[2K[17/31] [chromium] › tests\e2e\tour-detail.spec.ts:1410:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span
+[1A[2K[18/31] [chromium] › tests\e2e\tour-detail.spec.ts:1495:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability
+[1A[2K[19/31] [chromium] › tests\e2e\tour-detail.spec.ts:1545:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile
+[1A[2K[20/31] [chromium] › tests\e2e\tour-detail.spec.ts:1601:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input
+[1A[2K[21/31] [chromium] › tests\e2e\tour-detail.spec.ts:1645:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap
+[1A[2K[22/31] [chromium] › tests\e2e\tour-detail.spec.ts:1755:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR alt keeps actual language while controls follow the page locale
+[1A[2K[23/31] [chromium] › tests\e2e\tour-detail.spec.ts:1789:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery keeps a stable box and no page overflow at 390 and 1440
+[1A[2K[24/31] [chromium] › tests\e2e\tour-detail.spec.ts:1947:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+[1A[2K[25/31] [chromium] › tests\e2e\tour-detail.spec.ts:2000:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sparse tour exposes only present entries and activates them
+[1A[2K[26/31] [chromium] › tests\e2e\tour-detail.spec.ts:2022:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[27/31] [chromium] › tests\e2e\tour-detail.spec.ts:2063:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+[1A[2K  3) [chromium] › tests\e2e\tour-detail.spec.ts:2063:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"se[7mttl[27med"[39m
+    Received: [31m"se[7mction-misalign[27med"[39m
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      1922 |         );
+      1923 |       }, { timeout: timeoutMs })
+    > 1924 |       .toBe('settled');
+           |        ^
+      1925 |   }
+      1926 |
+      1927 |   async function noPageHorizontalOverflow(page: Page) {
+        at headingClearOfNav (F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1924:8)
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:2080:13
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\current-stories\tour-detail-Tour-Detail-se-36392--moving-the-page-vertically-chromium\error-context.md
+
+
+[1A[2K(node:22328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:22328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[28/31] [chromium] › tests\e2e\tour-detail.spec.ts:2119:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 long locale labels survive resize with reachable entries and no page overflow
+[1A[2K[29/31] [chromium] › tests\e2e\tour-detail.spec.ts:2152:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 reduced motion targets the reading position immediately
+[1A[2K[30/31] [chromium] › tests\e2e\tour-detail.spec.ts:2176:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+[1A[2K[31/31] [chromium] › tests\e2e\tour-detail.spec.ts:2205:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+[1A[2K  4) [chromium] › tests\e2e\tour-detail.spec.ts:2205:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByTestId('tour-booking-card-slot')
+    Expected: visible
+    Error: strict mode violation: getByTestId('tour-booking-card-slot') resolved to 2 elements:
+        1) <div data-testid="tour-booking-card-slot" class="hidden lg:block lg:sticky lg:top-[calc(var(--tour-section-nav-offset,5rem)+var(--spacing-inline,0.5rem))]">…</div> aka locator('#main-content').getByTestId('tour-booking-card-slot')
+        2) <div data-testid="tour-booking-card-slot" class="hidden lg:block lg:sticky lg:top-[calc(var(--tour-section-nav-offset,5rem)+var(--spacing-inline,0.5rem))]">…</div> aka getByTestId('tour-booking-card-slot').nth(1)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('tour-booking-card-slot')[22m
+
+
+      2219 |       const nav = await navFor(page, 'Tour sections');
+      2220 |       const cardSlot = page.getByTestId('tour-booking-card-slot');
+    > 2221 |       await expect(cardSlot).toBeVisible();
+           |                              ^
+      2222 |       const aside = page.locator('aside', { has: cardSlot });
+      2223 |       const baselineNavHeight = (await nav.boundingBox())!.height;
+      2224 |       expect(baselineNavHeight).toBeGreaterThan(0);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:2221:30
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\current-stories\tour-detail-Tour-Detail-se-f6dae-uction-at-200-nav-text-size-chromium\error-context.md
+
+
+[1A[2K  4 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:505:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored) 
+    [chromium] › tests\e2e\tour-detail.spec.ts:933:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize 
+    [chromium] › tests\e2e\tour-detail.spec.ts:2063:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically 
+    [chromium] › tests\e2e\tour-detail.spec.ts:2205:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size 
+  27 passed (1.4m)

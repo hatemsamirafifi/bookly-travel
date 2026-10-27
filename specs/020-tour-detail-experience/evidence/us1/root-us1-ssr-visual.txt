@@ -1,0 +1,16 @@
+
+Running 4 tests using 1 worker
+
+
+
+[1A[2K(node:27336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K(node:27336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K[1/4] [chromium] › tests\e2e\tour-detail.spec.ts:820:9 › Tour Detail Page › US1 SSR complete tour at 390px keeps prescribed order with disclosure and no orphan nav entries
+[1A[2K[2/4] [chromium] › tests\e2e\tour-detail.spec.ts:883:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+[1A[2K[3/4] [chromium] › tests\e2e\tour-detail.spec.ts:820:9 › Tour Detail Page › US1 SSR complete tour at 1440px keeps prescribed order with disclosure and no orphan nav entries
+[1A[2K[4/4] [chromium] › tests\e2e\tour-detail.spec.ts:883:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+[1A[2K  4 passed (8.5s)

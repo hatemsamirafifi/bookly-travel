@@ -1,0 +1,51 @@
+Spec020 US6 isolated TouristTrip lane — DESIGN RATIONALE (worker decisions for root review)
+
+1) ONE exact-cents helper, two consumers.
+   formatExactCentsDecimal (frontend/src/lib/utils.ts) owns the only BigInt
+   quotient/remainder decimal rendering. Consumers: exactDecimalFallback (safe-
+   integer branch, behavior-identical refactor) and TouristTripSchema Offer
+   price. Integer precondition (Number.isSafeInteger) is documented on the
+   helper; schema validates positive-safe-EUR before calling. No second
+   financial algorithm, no float major-unit output, no BigInt in JSON, no
+   currency-exponent reinterpretation, no new money defaults. formatCurrency
+   exact-EUR path and every non-EUR/fractional/non-finite legacy branch
+   (incl. value.toFixed fallbacks, 'XX 90071992547409.81') byte-identical.
+
+2) Offer gating: positive safe integer + current supported currency (EUR via
+   the accepted pure-model predicates isPositiveSafeInteger /
+   isSupportedCurrency). Zero/negative/fractional/NaN/unsafe/unsupported emit
+   NO Offer node rather than a false "0.00"/drifted price. priceCurrency echoes
+   the supplied (validated EUR) value; no invented conversion.
+
+3) Availability honesty vs validFrom (the one judgment call).
+   InStock = priceValid + explicit is_unavailable===false (fail-closed) + real
+   offered future dates strictly after the actual UTC day + valid group bounds
+   + safe minimum estimate (base x min). validFrom is emitted ONLY when
+   next_available_date itself is a real offered future date. Consequences:
+   - missing next + other offered futures -> InStock, no validFrom (mirrors the
+     accepted pure model: resolveInitialDate null, explicit offered choice
+     allowed; we neither silently book a default nor falsely close).
+   - stale (past/today) next + remaining offered futures -> InStock, no
+     validFrom (same bookability reasoning; the stale string never becomes a
+     claim). Only-stale-dates -> OutOfStock, no validFrom.
+   - valid pricing but unavailable tour -> OutOfStock Offer preserved.
+   No capacity-remaining/hold implication; checkout stays authoritative.
+
+4) Clock: production reads the host UTC day (toISOString slice); tests freeze
+   it with standard Jest fake timers. No new production knob, no testing-only
+   data prop. Pre-existing 2026-10-15-unavailable test stays OutOfStock.
+
+5) Media: blank/whitespace URLs are absent media and omitted (previously
+   new URL('', base) fabricated the homepage as a photo). Legitimate
+   HTTP(S)/relative URLs and dedupe order preserved; also feeds metadata
+   (no route edit). No stock-image substitution.
+
+6) Ratings: aggregateRating requires positive-safe-integer count AND finite
+   average in (0,5]. Fractional counts no longer fabricate scores. Intentional
+   empty itinerary, ordered day/stop content, actual languages, meeting-point
+   order, '<' JSON-LD escaping, and all other schema functions untouched.
+
+Remaining root/runtime gaps (NOT claimed): SSR route/metadata wiring, locale
+reload/current-derivative/archive/noindex schema cases (full T040), browser
+acceptance, and rerun of all gates over the integrated tree with other
+workers' US2/gallery edits. No runtime/source acceptance claimed.

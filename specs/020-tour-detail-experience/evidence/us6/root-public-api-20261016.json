@@ -1,0 +1,44 @@
+{
+  "atUtc": "2026-10-16T14:27:43.6754885Z",
+  "scope": "Read-only actual owned public API status/facts; no page rendering or controlled SSR acceptance",
+  "responses": [
+    {
+      "locale": "en",
+      "status": 200,
+      "content_locale": "en",
+      "itinerary_locale": "en",
+      "dateCount": 60,
+      "baseCents": 4500,
+      "currency": "EUR",
+      "unavailable": false
+    },
+    {
+      "locale": "es",
+      "status": 200,
+      "content_locale": "es",
+      "itinerary_locale": "es",
+      "dateCount": 60,
+      "baseCents": 4500,
+      "currency": "EUR",
+      "unavailable": false
+    },
+    {
+      "locale": "it",
+      "status": 200,
+      "content_locale": "it",
+      "itinerary_locale": "it",
+      "dateCount": 60,
+      "baseCents": 4500,
+      "currency": "EUR",
+      "unavailable": false
+    },
+    {
+      "case": "unknown",
+      "status": 404
+    },
+    {
+      "case": "invalid-locale",
+      "status": 422
+    }
+  ]
+}

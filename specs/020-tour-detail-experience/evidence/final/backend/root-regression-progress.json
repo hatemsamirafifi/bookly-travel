@@ -1,0 +1,83 @@
+{
+  "startedAt": "2026-10-16T22:09:11.806Z",
+  "database": "bookly-test-postgres/bookly_test (disposable tmpfs)",
+  "stages": [
+    {
+      "name": "test-services",
+      "args": [
+        "compose",
+        "-f",
+        "docker-compose.yml",
+        "-f",
+        "docker-compose.test.yml",
+        "up",
+        "-d",
+        "test-postgres",
+        "test-meilisearch"
+      ],
+      "startedAt": "2026-10-16T22:09:11.806Z",
+      "finishedAt": "2026-10-16T22:09:13.137Z",
+      "exitCode": 0
+    },
+    {
+      "name": "postgres-ready",
+      "args": [
+        "compose",
+        "-f",
+        "docker-compose.yml",
+        "-f",
+        "docker-compose.test.yml",
+        "exec",
+        "-T",
+        "test-postgres",
+        "sh",
+        "-c",
+        "attempt=0; until pg_isready -U bookly_test -d bookly_test; do attempt=$((attempt+1)); [ \"$attempt\" -lt 30 ] || exit 1; sleep 1; done"
+      ],
+      "startedAt": "2026-10-16T22:09:13.138Z",
+      "finishedAt": "2026-10-16T22:09:15.942Z",
+      "exitCode": 0
+    },
+    {
+      "name": "pest",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "laravel",
+        "php",
+        "-d",
+        "memory_limit=512M",
+        "vendor/bin/pest",
+        "--configuration=phpunit.pgsql.xml",
+        "tests/Feature/Search/TourDetailTest.php",
+        "tests/Feature/Search/TourAvailabilityLogicTest.php",
+        "tests/Feature/Search/AvailabilityResolutionRegressionTest.php",
+        "tests/Feature/Booking/CreateBookingTest.php",
+        "tests/Feature/Payment/",
+        "tests/Feature/Auth/",
+        "tests/Feature/Reviews/"
+      ],
+      "startedAt": "2026-10-16T22:09:15.943Z",
+      "finishedAt": "2026-10-16T22:09:48.108Z",
+      "exitCode": 0
+    },
+    {
+      "name": "test-services-stop",
+      "args": [
+        "compose",
+        "-f",
+        "docker-compose.yml",
+        "-f",
+        "docker-compose.test.yml",
+        "stop",
+        "test-postgres",
+        "test-meilisearch"
+      ],
+      "startedAt": "2026-10-16T22:09:48.109Z",
+      "finishedAt": "2026-10-16T22:09:49.053Z",
+      "exitCode": 0
+    }
+  ],
+  "passed": true
+}

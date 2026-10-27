@@ -1,0 +1,170 @@
+﻿Listing tests:
+  [setup] › auth.setup.ts:23:6 › authenticate as traveler
+  [setup] › partner.setup.ts:19:6 › authenticate as partner
+  [chromium] › tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+  [chromium] › tour-detail.spec.ts:81:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+  [chromium] › tour-detail.spec.ts:178:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+  [chromium] › tour-detail.spec.ts:269:7 › Tour Detail Page › tour detail page loads with all sections
+  [chromium] › tour-detail.spec.ts:279:7 › Tour Detail Page › image gallery is visible
+  [chromium] › tour-detail.spec.ts:286:7 › Tour Detail Page › image gallery rail controls move the counter with no thumbnail navigation
+  [chromium] › tour-detail.spec.ts:311:7 › Tour Detail Page › lightbox opens from a keyboard-focusable tile and restores focus on Escape
+  [chromium] › tour-detail.spec.ts:325:7 › Tour Detail Page › section navigation links only to rendered sections
+  [chromium] › tour-detail.spec.ts:337:7 › Tour Detail Page › availability calendar shows available dates
+  [chromium] › tour-detail.spec.ts:344:7 › Tour Detail Page › booking CTA is visible
+  [chromium] › tour-detail.spec.ts:360:7 › Tour Detail Page › participant selector increments and decrements
+  [chromium] › tour-detail.spec.ts:374:7 › Tour Detail Page › shows 404 page for non-existent tour
+  [chromium] › tour-detail.spec.ts:381:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+  [chromium] › tour-detail.spec.ts:398:7 › Tour Detail Page › about section displays description
+  [chromium] › tour-detail.spec.ts:405:7 › Tour Detail Page › tour detail has proper SEO metadata
+  [chromium] › tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:439:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+  [chromium] › tour-detail.spec.ts:451:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+  [chromium] › tour-detail.spec.ts:475:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+  [chromium] › tour-detail.spec.ts:491:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:491:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:491:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:513:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+  [chromium] › tour-detail.spec.ts:680:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+  [chromium] › tour-detail.spec.ts:844:9 › Tour Detail Page › US1 SSR complete tour at 390px keeps prescribed order with disclosure and no orphan nav entries
+  [chromium] › tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+  [chromium] › tour-detail.spec.ts:844:9 › Tour Detail Page › US1 SSR complete tour at 1440px keeps prescribed order with disclosure and no orphan nav entries
+  [chromium] › tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+  [chromium] › tour-detail.spec.ts:945:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+  [chromium] › tour-detail.spec.ts:998:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize
+  [chromium] › tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back
+  [chromium] › tour-detail.spec.ts:1120:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+  [chromium] › tour-detail.spec.ts:1142:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+  [chromium] › tour-detail.spec.ts:1169:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+  [chromium] › tour-detail.spec.ts:1204:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+  [chromium] › tour-detail.spec.ts:1235:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en
+  [chromium] › tour-detail.spec.ts:1235:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es
+  [chromium] › tour-detail.spec.ts:1235:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it
+  [chromium] › tour-detail.spec.ts:1263:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en
+  [chromium] › tour-detail.spec.ts:1263:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es
+  [chromium] › tour-detail.spec.ts:1292:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+  [chromium] › tour-detail.spec.ts:1335:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 403 renders safe localized recoverable state in es
+  [chromium] › tour-detail.spec.ts:1335:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 422 renders safe localized recoverable state in it
+  [chromium] › tour-detail.spec.ts:1335:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 429 renders safe localized recoverable state in en
+  [chromium] › tour-detail.spec.ts:1368:7 › Tour Detail route states (Spec 020 US6) › US6 SSR intentional-empty translated itinerary stays empty with agreeing schema
+  [chromium] › tour-detail.spec.ts:1420:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span
+  [chromium] › tour-detail.spec.ts:1505:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability
+  [chromium] › tour-detail.spec.ts:1555:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile
+  [chromium] › tour-detail.spec.ts:1611:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input
+  [chromium] › tour-detail.spec.ts:1656:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap
+  [chromium] › tour-detail.spec.ts:1766:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR alt keeps actual language while controls follow the page locale
+  [chromium] › tour-detail.spec.ts:1800:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery keeps a stable box and no page overflow at 390 and 1440
+  [chromium] › tour-detail.spec.ts:1958:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+  [chromium] › tour-detail.spec.ts:2011:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sparse tour exposes only present entries and activates them
+  [chromium] › tour-detail.spec.ts:2033:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+  [chromium] › tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+  [chromium] › tour-detail.spec.ts:2138:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 long locale labels survive resize with reachable entries and no page overflow
+  [chromium] › tour-detail.spec.ts:2171:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 reduced motion targets the reading position immediately
+  [chromium] › tour-detail.spec.ts:2195:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+  [chromium] › tour-detail.spec.ts:2224:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+  [chromium] › tour-detail.spec.ts:2319:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 header shows the genuine API score with exactly one current-tour wishlist control
+  [chromium] › tour-detail.spec.ts:2355:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 ES/IT header keeps the genuine score, review link and single current-tour control
+  [chromium] › tour-detail.spec.ts:2381:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 sparse SSR tour exposes no reviews section, nav entry or header score
+  [chromium] › tour-detail.spec.ts:2401:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 signed-out header wishlist opens the shared dialog with full focus lifecycle
+  [chromium] › tour-detail.spec.ts:2427:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 review page failure preserves the readable tour
+  [chromium] › tour-detail.spec.ts:2437:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 media failure preserves the readable tour
+  [mobile] › tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+  [mobile] › tour-detail.spec.ts:81:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+  [mobile] › tour-detail.spec.ts:178:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+  [mobile] › tour-detail.spec.ts:269:7 › Tour Detail Page › tour detail page loads with all sections
+  [mobile] › tour-detail.spec.ts:279:7 › Tour Detail Page › image gallery is visible
+  [mobile] › tour-detail.spec.ts:286:7 › Tour Detail Page › image gallery rail controls move the counter with no thumbnail navigation
+  [mobile] › tour-detail.spec.ts:311:7 › Tour Detail Page › lightbox opens from a keyboard-focusable tile and restores focus on Escape
+  [mobile] › tour-detail.spec.ts:325:7 › Tour Detail Page › section navigation links only to rendered sections
+  [mobile] › tour-detail.spec.ts:337:7 › Tour Detail Page › availability calendar shows available dates
+  [mobile] › tour-detail.spec.ts:344:7 › Tour Detail Page › booking CTA is visible
+  [mobile] › tour-detail.spec.ts:360:7 › Tour Detail Page › participant selector increments and decrements
+  [mobile] › tour-detail.spec.ts:374:7 › Tour Detail Page › shows 404 page for non-existent tour
+  [mobile] › tour-detail.spec.ts:381:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+  [mobile] › tour-detail.spec.ts:398:7 › Tour Detail Page › about section displays description
+  [mobile] › tour-detail.spec.ts:405:7 › Tour Detail Page › tour detail has proper SEO metadata
+  [mobile] › tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+  [mobile] › tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+  [mobile] › tour-detail.spec.ts:427:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+  [mobile] › tour-detail.spec.ts:439:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+  [mobile] › tour-detail.spec.ts:451:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+  [mobile] › tour-detail.spec.ts:475:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+  [mobile] › tour-detail.spec.ts:491:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+  [mobile] › tour-detail.spec.ts:491:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+  [mobile] › tour-detail.spec.ts:491:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+  [mobile] › tour-detail.spec.ts:513:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+  [mobile] › tour-detail.spec.ts:680:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+  [mobile] › tour-detail.spec.ts:844:9 › Tour Detail Page › US1 SSR complete tour at 390px keeps prescribed order with disclosure and no orphan nav entries
+  [mobile] › tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+  [mobile] › tour-detail.spec.ts:844:9 › Tour Detail Page › US1 SSR complete tour at 1440px keeps prescribed order with disclosure and no orphan nav entries
+  [mobile] › tour-detail.spec.ts:907:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+  [mobile] › tour-detail.spec.ts:945:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+  [mobile] › tour-detail.spec.ts:998:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize
+  [mobile] › tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back
+  [mobile] › tour-detail.spec.ts:1120:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+  [mobile] › tour-detail.spec.ts:1142:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+  [mobile] › tour-detail.spec.ts:1169:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+  [mobile] › tour-detail.spec.ts:1204:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+  [mobile] › tour-detail.spec.ts:1235:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en
+  [mobile] › tour-detail.spec.ts:1235:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es
+  [mobile] › tour-detail.spec.ts:1235:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it
+  [mobile] › tour-detail.spec.ts:1263:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en
+  [mobile] › tour-detail.spec.ts:1263:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es
+  [mobile] › tour-detail.spec.ts:1292:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+  [mobile] › tour-detail.spec.ts:1335:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 403 renders safe localized recoverable state in es
+  [mobile] › tour-detail.spec.ts:1335:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 422 renders safe localized recoverable state in it
+  [mobile] › tour-detail.spec.ts:1335:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 429 renders safe localized recoverable state in en
+  [mobile] › tour-detail.spec.ts:1368:7 › Tour Detail route states (Spec 020 US6) › US6 SSR intentional-empty translated itinerary stays empty with agreeing schema
+  [mobile] › tour-detail.spec.ts:1420:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span
+  [mobile] › tour-detail.spec.ts:1505:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability
+  [mobile] › tour-detail.spec.ts:1555:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile
+  [mobile] › tour-detail.spec.ts:1611:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input
+  [mobile] › tour-detail.spec.ts:1656:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap
+  [mobile] › tour-detail.spec.ts:1766:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR alt keeps actual language while controls follow the page locale
+  [mobile] › tour-detail.spec.ts:1800:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery keeps a stable box and no page overflow at 390 and 1440
+  [mobile] › tour-detail.spec.ts:1958:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+  [mobile] › tour-detail.spec.ts:2011:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sparse tour exposes only present entries and activates them
+  [mobile] › tour-detail.spec.ts:2033:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+  [mobile] › tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+  [mobile] › tour-detail.spec.ts:2138:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 long locale labels survive resize with reachable entries and no page overflow
+  [mobile] › tour-detail.spec.ts:2171:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 reduced motion targets the reading position immediately
+  [mobile] › tour-detail.spec.ts:2195:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+  [mobile] › tour-detail.spec.ts:2224:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+  [mobile] › tour-detail.spec.ts:2319:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 header shows the genuine API score with exactly one current-tour wishlist control
+  [mobile] › tour-detail.spec.ts:2355:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 ES/IT header keeps the genuine score, review link and single current-tour control
+  [mobile] › tour-detail.spec.ts:2381:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 sparse SSR tour exposes no reviews section, nav entry or header score
+  [mobile] › tour-detail.spec.ts:2401:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 signed-out header wishlist opens the shared dialog with full focus lifecycle
+  [mobile] › tour-detail.spec.ts:2427:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 review page failure preserves the readable tour
+  [mobile] › tour-detail.spec.ts:2437:7 › Tour Detail trust and header wishlist (Spec 020 US5) › US5 media failure preserves the readable tour
+  [a11y] › a11y\tour-detail-a11y.spec.ts:11:7 › en recoverable tour failure has a page heading and accessible retry
+  [a11y] › a11y\tour-detail-a11y.spec.ts:11:7 › es recoverable tour failure has a page heading and accessible retry
+  [a11y] › a11y\tour-detail-a11y.spec.ts:11:7 › it recoverable tour failure has a page heading and accessible retry
+  [a11y] › a11y\tour-detail-a11y.spec.ts:32:7 › en tour detail with loaded reviews should not have accessibility violations
+  [a11y] › a11y\tour-detail-a11y.spec.ts:32:7 › es tour detail with loaded reviews should not have accessibility violations
+  [a11y] › a11y\tour-detail-a11y.spec.ts:32:7 › it tour detail with loaded reviews should not have accessibility violations
+  [a11y] › a11y\tour-detail-a11y.spec.ts:54:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+  [a11y] › a11y\tour-detail-a11y.spec.ts:66:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+  [a11y] › a11y\tour-detail-a11y.spec.ts:75:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+  [a11y] › a11y\tour-detail-a11y.spec.ts:87:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+  [a11y] › a11y\tour-detail-a11y.spec.ts:134:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+  [a11y] › a11y\tour-detail-a11y.spec.ts:165:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+  [a11y] › a11y\tour-detail-a11y.spec.ts:204:7 › Spec020 US6 locale, width and interaction acceptance › EN/ES/IT x 390/768/1024/1440 with loaded reviews has no axe violations
+  [a11y] › a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state
+  [a11y] › a11y\tour-detail-a11y.spec.ts:264:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred
+  [a11y] › a11y\tour-detail-a11y.spec.ts:284:7 › Spec020 US5 wishlist prompt dialog › sign-in prompt dialog is described, modal and focus-safe with no axe violations
+  [chromium-authed] › wishlist.spec.ts:67:7 › Wishlist › wishlist page renders
+  [chromium-authed] › wishlist.spec.ts:73:7 › Wishlist › wishlist shows empty state or grid
+  [chromium-authed] › wishlist.spec.ts:83:7 › Wishlist › owned tour header button toggles saved state with real API and restores it
+  [chromium-authed] › wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement
+  [chromium-authed] › wishlist.spec.ts:157:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement
+  [chromium-authed] › wishlist.spec.ts:193:7 › Wishlist › removing the owned tour from the wishlist grid restores its original state
+  [chromium-authed] › wishlist.spec.ts:228:7 › Wishlist › owned wishlist item links to its tour detail
+  [mobile-authed] › wishlist.spec.ts:67:7 › Wishlist › wishlist page renders
+  [mobile-authed] › wishlist.spec.ts:73:7 › Wishlist › wishlist shows empty state or grid
+  [mobile-authed] › wishlist.spec.ts:83:7 › Wishlist › owned tour header button toggles saved state with real API and restores it
+  [mobile-authed] › wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement
+  [mobile-authed] › wishlist.spec.ts:157:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement
+  [mobile-authed] › wishlist.spec.ts:193:7 › Wishlist › removing the owned tour from the wishlist grid restores its original state
+  [mobile-authed] › wishlist.spec.ts:228:7 › Wishlist › owned wishlist item links to its tour detail
+Total: 168 tests in 5 files

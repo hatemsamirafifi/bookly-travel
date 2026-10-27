@@ -1,0 +1,54 @@
+
+Running 7 tests using 1 worker
+
+[1A[2K(node:20592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:20592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/7] [chromium] › tests\e2e\tour-detail.spec.ts:945:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+[1A[2K[2/7] [chromium] › tests\e2e\tour-detail.spec.ts:998:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize
+[1A[2K[3/7] [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected: [32m"http://127.0.0.1:63831/en/booking[7m?[27mtour[7m=[27mhidden-gems-rome-walking-tour[7m&[27mparticipants[7m=2&[27mdate[7m=[27m2026-10-26"[39m
+    Received: [31m"http://127.0.0.1:63831/en/[7mauth/login?returnUrl=%2Fen%2F[27mbooking[7m%3F[27mtour[7m%3D[27mhidden-gems-rome-walking-tour[7m%26[27mparticipants[7m%3D2%26[27mdate[7m%3D[27m2026-10-26"[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    13 × unexpected value "http://127.0.0.1:63831/en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems-rome-walking-tour%26participants%3D2%26date%3D2026-10-26"[22m
+
+
+      1114 |
+      1115 |     // Seeded login succeeds and returns to the full booking query untouched.
+    > 1116 |     await expect(page).toHaveURL(`/en/booking?tour=${slug}&participants=2&date=${dates[10]}`);
+           |                        ^
+      1117 |     await expect(page.getByRole('button', { name: /Confirm & Pay/i })).toBeEnabled();
+      1118 |   });
+      1119 |
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1116:24
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\us2-public-reviewed\tour-detail-Tour-Detail-Pa-2b764--login-to-register-and-back-chromium\error-context.md
+
+
+[1A[2K(node:14620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:14620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[4/7] [chromium] › tests\e2e\tour-detail.spec.ts:1120:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+[1A[2K[5/7] [chromium] › tests\e2e\tour-detail.spec.ts:1142:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[6/7] [chromium] › tests\e2e\tour-detail.spec.ts:1169:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K[7/7] [chromium] › tests\e2e\tour-detail.spec.ts:1204:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1088:7 › Tour Detail Page › US2 auth cross-links preserve the full booking query from login to register and back 
+  6 passed (33.2s)

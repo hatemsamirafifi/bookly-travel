@@ -1,0 +1,30 @@
+{
+  "review": 13038,
+  "scope": "actual formatter invalid-locale legacy fallback; no source mutation",
+  "results": [
+    {
+      "input": "1099.5",
+      "actual": "EUR 10.99",
+      "expected": "EUR 10.99",
+      "passed": true
+    },
+    {
+      "input": "9007199254740992",
+      "actual": "EUR 90071992547409.92",
+      "expected": "EUR 90071992547409.92",
+      "passed": true
+    },
+    {
+      "input": "NaN",
+      "actual": "EUR 0.00",
+      "expected": "EUR 0.00",
+      "passed": true
+    },
+    {
+      "input": "Infinity",
+      "actual": "EUR 0.00",
+      "expected": "EUR 0.00",
+      "passed": true
+    }
+  ]
+}

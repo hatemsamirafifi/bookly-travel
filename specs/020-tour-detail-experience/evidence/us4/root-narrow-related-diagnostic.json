@@ -1,0 +1,88 @@
+{
+  "buildId": "MDBZcRDMEv6ez4wJeEWkH",
+  "scope": "390px controlled full actual SSR, no API mutations; reproduce related-anchor settle failure",
+  "before": {
+    "nav": {
+      "top": 598.75,
+      "bottom": 652.75,
+      "height": 54
+    },
+    "section": {
+      "top": 2625.25,
+      "bottom": 3150.75,
+      "height": 525.5
+    },
+    "heading": {
+      "top": 2657.25,
+      "bottom": 2685.25,
+      "height": 28
+    },
+    "bar": {
+      "top": 727,
+      "bottom": 844,
+      "height": 117
+    },
+    "scrollY": 0,
+    "maxScroll": 3107,
+    "active": "Skip to main contentHomeSearch toursCategoriesDestinationsEnglishEspañolItaliano",
+    "current": "#overview"
+  },
+  "clickedAt": 1792169539966,
+  "reviewResponse": {
+    "status": 200,
+    "at": 1792169539980
+  },
+  "last": {
+    "nav": {
+      "top": 0,
+      "bottom": 54,
+      "height": 54
+    },
+    "section": {
+      "top": 53.5,
+      "bottom": 579,
+      "height": 525.5
+    },
+    "heading": {
+      "top": 85.5,
+      "bottom": 113.5,
+      "height": 28
+    },
+    "bar": {
+      "top": 727,
+      "bottom": 844,
+      "height": 117
+    },
+    "scrollY": 2673,
+    "maxScroll": 3208,
+    "active": "More experiences to explore",
+    "current": "#related"
+  },
+  "passed": true,
+  "final": {
+    "nav": {
+      "top": 0,
+      "bottom": 54,
+      "height": 54
+    },
+    "section": {
+      "top": 53.5,
+      "bottom": 579,
+      "height": 525.5
+    },
+    "heading": {
+      "top": 85.5,
+      "bottom": 113.5,
+      "height": 28
+    },
+    "bar": {
+      "top": 727,
+      "bottom": 844,
+      "height": 117
+    },
+    "scrollY": 2673,
+    "maxScroll": 3208,
+    "active": "More experiences to explore",
+    "current": "#related"
+  }
+}

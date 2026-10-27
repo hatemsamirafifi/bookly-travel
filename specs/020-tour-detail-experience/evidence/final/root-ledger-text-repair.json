@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-10-16T22:13:20.746Z",
+  "scope": "Selective existing Windows-1252/UTF-8 punctuation repair only; no full-file reinterpretation",
+  "replacements": [
+    {
+      "codePoint": 8212,
+      "count": 6
+    },
+    {
+      "codePoint": 8211,
+      "count": 55
+    },
+    {
+      "codePoint": 8805,
+      "count": 4
+    },
+    {
+      "codePoint": 8804,
+      "count": 1
+    },
+    {
+      "codePoint": 8594,
+      "count": 18
+    },
+    {
+      "codePoint": 215,
+      "count": 1
+    }
+  ],
+  "beforeHash": "01c3fc27e9adcf8859ca8adee35f6a20bf6b7e90d2f9517bc05b77b77bf5dc22",
+  "afterHash": "ae127c74bba3464377b695ebae8c1ffe507701e01999e8755376af372cbc2b8b"
+}

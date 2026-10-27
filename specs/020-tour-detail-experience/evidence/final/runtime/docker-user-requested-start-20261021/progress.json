@@ -1,0 +1,20 @@
+{
+  "startedAt": "2026-10-21T16:57:52.307Z",
+  "scope": "user requested start/check only; no restart, database, WSL or settings changes",
+  "commands": [
+    {
+      "name": "initial-api",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:57:52.308Z",
+      "finishedAt": "2026-10-21T16:57:53.290Z",
+      "status": 0,
+      "signal": null,
+      "error": null
+    }
+  ],
+  "passed": false
+}

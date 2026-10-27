@@ -154,3 +154,15 @@ testsprite_tests/
 # Local IDE metadata
 .cursor/
 .gemini/
+
+# Lighthouse local audit dumps
+/frontend/localhost_*.json
+
+# Playwright CLI session artifacts
+.playwright-cli/
+
+# Local test output and sweep artifacts
+/output/
+
+# Temporary user attachments and media archives
+WhatsApp*

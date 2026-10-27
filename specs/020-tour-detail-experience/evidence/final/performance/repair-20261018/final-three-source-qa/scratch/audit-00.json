@@ -1,0 +1,159 @@
+{
+  "exactKnown": {
+    "host_current": {
+      "frontend/src/components/tour/TourGallery.tsx": {
+        "sha256": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+        "bytes": 13891,
+        "ok": true
+      },
+      "frontend/src/components/layout/Footer.tsx": {
+        "sha256": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+        "bytes": 2502,
+        "ok": true
+      },
+      "frontend/src/components/blog/BlogDetail.tsx": {
+        "sha256": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+        "bytes": 3173,
+        "ok": true
+      },
+      "frontend/src/components/blog/RelatedPosts.tsx": {
+        "sha256": "8c9866d332eec621650062887904805516f78486d3671220068866fc5975c0ec",
+        "bytes": 879,
+        "ok": true
+      }
+    },
+    "ppss_before_after": {
+      "RelatedPosts.before": {
+        "sha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+        "bytes": 896,
+        "ok": true
+      },
+      "RelatedPosts.after": {
+        "sha256": "8c9866d332eec621650062887904805516f78486d3671220068866fc5975c0ec",
+        "bytes": 879,
+        "ok": true
+      },
+      "TourGallery.before": {
+        "sha256": "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb",
+        "bytes": 13859,
+        "ok": true
+      },
+      "TourGallery.after": {
+        "sha256": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+        "bytes": 13891,
+        "ok": true
+      },
+      "Footer.before": {
+        "sha256": "66ab590fbd4955b105fdcb202459ae0c5de742789160070e56f2a65630067874",
+        "bytes": 2417,
+        "ok": true
+      },
+      "Footer.after": {
+        "sha256": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+        "bytes": 2502,
+        "ok": true
+      },
+      "BlogDetail.before": {
+        "sha256": "ec328d9c6cc4b2c909b420446779363d3f4d32ba7b91b151981ba566d33954ae",
+        "bytes": 3190,
+        "ok": true
+      },
+      "BlogDetail.after": {
+        "sha256": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+        "bytes": 3173,
+        "ok": true
+      },
+      "manifest-419-postpatch.json": {
+        "sha256": "f1c6f422c52171037a47a694f5063eb7fd97c388685449a00d4baa225221191e",
+        "bytes": 341,
+        "ok": true
+      }
+    }
+  },
+  "oldMaps": {
+    "new419-candidate-manifest.json": {
+      "name": "new419-candidate-manifest.json",
+      "topLevel": [
+        "eslint.config.mjs",
+        "lighthouserc.js",
+        "messages\\en.json",
+        "messages\\es.json",
+        "messages\\it.json",
+        "next.config.ts",
+        "package-lock.json",
+        "package.json",
+        "scripts\\Invoke-PerformanceAudit.ps1",
+        "scripts\\Set-BooklyPagefile.ps1",
+        "scripts\\check-i18n-completeness.ts",
+        "scripts\\lighthouse-audit.mjs"
+      ]
+    },
+    "new420-container-source.json": {
+      "name": "new420-container-source.json",
+      "topLevel": [
+        "node",
+        "next",
+        "buildId",
+        "files"
+      ]
+    },
+    "post-gates-source-recheck.json": {
+      "name": "post-gates-source-recheck.json",
+      "topLevel": [
+        "createdAt",
+        "afterWhat",
+        "contCount",
+        "contMism",
+        "contReadErr",
+        "contExit",
+        "hostCount",
+        "hostMism",
+        "hostReadErr",
+        "passed"
+      ]
+    },
+    "preload-selector-provenance.json": {
+      "name": "preload-selector-provenance.json",
+      "topLevel": [
+        "issuedAt",
+        "selectorSource",
+        "selectorSha256",
+        "selectorCopy",
+        "selectorCopySha256",
+        "rootLighthouseVersion",
+        "nestedNodeRunnerExists",
+        "selectorBehavior"
+      ]
+    },
+    "prep-delta-proof.json": {
+      "name": "prep-delta-proof.json",
+      "topLevel": [
+        "createdAt",
+        "old419Path",
+        "container420Path",
+        "counts",
+        "hostOld419Mismatches",
+        "hostCuratedNew419Mismatches",
+        "replacementRecords",
+        "unchangedMeta"
+      ]
+    },
+    "runtime-ready.json": {
+      "name": "runtime-ready.json",
+      "topLevel": [
+        "createdAt",
+        "environment",
+        "curatedSources",
+        "container",
+        "image",
+        "containerBrief",
+        "parity420",
+        "parityHost419",
+        "rootRedirectProbes",
+        "checks",
+        "passedReadinessOnly"
+      ]
+    }
+  },
+  "manifest419Postpatch": {}
+}

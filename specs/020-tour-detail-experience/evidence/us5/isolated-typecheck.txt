@@ -1,0 +1,6 @@
+﻿
+> frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/components/seo/__tests__/StructuredData.test.tsx(339,1): error TS1128: Declaration or statement expected.
+src/components/seo/__tests__/StructuredData.test.tsx(339,2): error TS1128: Declaration or statement expected.

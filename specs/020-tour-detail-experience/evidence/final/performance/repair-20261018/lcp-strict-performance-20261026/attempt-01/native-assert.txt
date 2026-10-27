@@ -1,0 +1,155 @@
+[lh-engine-select] armed: root engine v12.8.2 at F:\Travel Website\bookly travel\frontend\node_modules\lighthouse (caller-gated to node-runner.js only)
+[lh-engine-select] caller=F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\node-runner.js request=lighthouse selected=F:\Travel Website\bookly travel\frontend\node_modules\lighthouse\core\index.js v12.8.2
+Checking assertions against 6 URL(s), 18 total run(s)
+
+4 result(s) for [1mhttp://localhost:8080/en[0m :
+
+  ✅  [1mcategories[0m.performance passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.92[0m
+      [2mall values: 0.98, 0.97, 0.92[0m
+
+
+  ✅  [1mcategories[0m.accessibility passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.best-practices passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.seo passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+4 result(s) for [1mhttp://localhost:8080/en/search?q=rome[0m :
+
+  ✅  [1mcategories[0m.performance passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.91[0m
+      [2mall values: 0.91, 0.93, 0.97[0m
+
+
+  ✅  [1mcategories[0m.accessibility passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.best-practices passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.seo passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+4 result(s) for [1mhttp://localhost:8080/en/tours/hidden-gems-rome-walking-tour[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.89[0m
+      [2mall values: 0.89, 0.89, 0.91[0m
+
+
+  ✅  [1mcategories[0m.accessibility passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.best-practices passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.seo passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.92[0m
+      [2mall values: 0.92, 0.92, 0.92[0m
+
+4 result(s) for [1mhttp://localhost:8080/en/blog/hidden-gems-florence[0m :
+
+  ✅  [1mcategories[0m.performance passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.94[0m
+      [2mall values: 0.94, 0.94, 0.94[0m
+
+
+  ✅  [1mcategories[0m.accessibility passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.best-practices passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.seo passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+4 result(s) for [1mhttp://localhost:8080/es/tours/hidden-gems-rome-walking-tour[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.87[0m
+      [2mall values: 0.89, 0.89, 0.87[0m
+
+
+  ✅  [1mcategories[0m.accessibility passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.97[0m
+      [2mall values: 0.97, 0.97, 0.97[0m
+
+
+  ✅  [1mcategories[0m.best-practices passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.seo passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.92[0m
+      [2mall values: 0.92, 0.92, 0.92[0m
+
+4 result(s) for [1mhttp://localhost:8080/it/tours/hidden-gems-rome-walking-tour[0m :
+
+  [31m×[0m  [1mcategories[0m.performance failure for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [31m0.87[0m
+      [2mall values: 0.87, 0.9, 0.89[0m
+
+
+  ✅  [1mcategories[0m.accessibility passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.97[0m
+      [2mall values: 0.97, 0.97, 0.97[0m
+
+
+  ✅  [1mcategories[0m.best-practices passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m1[0m
+      [2mall values: 1, 1, 1[0m
+
+
+  ✅  [1mcategories[0m.seo passing for [1mminScore[0m assertion
+        expected: >=[32m0.9[0m
+           found: [32m0.92[0m
+      [2mall values: 0.92, 0.92, 0.92[0m
+
+Assertion failed. Exiting with status code 1.

@@ -1,10 +1,15 @@
 import { test, expect } from '@playwright/test';
+import {
+  fetchOfferedTourFacts,
+  formatEstimateTotal,
+} from './helpers/offered-date';
+
+const TOUR_SLUG = 'hidden-gems-rome-walking-tour';
 
 test.describe('Payment Flow', () => {
   test('deterministic payment failure can be retried without recreating the booking', async ({ page, request }) => {
-    const detail = await request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
-    expect(detail.ok()).toBeTruthy();
-    const date = (await detail.json()).data.availability.next_available_date as string;
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    const date = facts.date;
     let bookingPosts = 0;
     let paymentAttempts = 0;
     await page.route('**/api/public/bookings', (route) => {
@@ -48,23 +53,45 @@ test.describe('Payment Flow', () => {
     expect(bookingPosts).toBe(1);
     expect(paymentAttempts).toBe(2);
   });
-  test('booking page shows payment section after confirming booking', async ({ page }) => {
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+  test('booking page shows payment section after confirming booking', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=2`);
     // Wait for booking form to load
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    // Payment section appears after form submission; here we verify the initial state
+    await expect(page.getByRole('heading', { name: facts.title })).toBeVisible();
+    // Payment section appears after form submission; here we verify the initial
+    // state is a READY valid form with submission enabled.
     await expect(page.getByText(/Confirm & Pay/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Confirm & Pay' })).toBeEnabled();
   });
 
-  test('participant selector updates price breakdown', async ({ page }) => {
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+  test('participant selector updates price breakdown', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    let bookingPosts = 0;
+    await page.route('**/api/public/bookings', async (route) => {
+      bookingPosts += 1;
+      await route.continue();
+    });
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=${facts.groupMin}`);
     await expect(page.getByText(/Price Breakdown/i)).toBeVisible();
     await expect(page.getByText(/Total/i)).toBeVisible();
+    const before = formatEstimateTotal(facts.baseAmount, facts.groupMin, 'en', facts.baseCurrency);
+    await expect(page.getByText(before, { exact: true }).first()).toBeVisible();
+    if (facts.groupMin < facts.groupMax) {
+      await page.getByRole('button', { name: 'Increase participants' }).click();
+      const after = formatEstimateTotal(facts.baseAmount, facts.groupMin + 1, 'en', facts.baseCurrency);
+      await expect(page.getByText(after, { exact: true }).first()).toBeVisible();
+      await expect(page.locator('span[aria-labelledby="participants-label"]')).toHaveText(String(facts.groupMin + 1));
+    } else {
+      await expect(page.getByRole('button', { name: 'Increase participants' })).toBeDisabled();
+    }
+    expect(bookingPosts).toBe(0);
   });
 
-  test('responsive layout at 390px', async ({ page }) => {
+  test('responsive layout at 390px', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=2`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 });

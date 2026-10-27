@@ -1,0 +1,37 @@
+US2 narrow final integration prerequisite — policy continuation + policy locale + pending dialog
+Model/session: pinned Muse Spark, no commits (LiveReview quota), no staging/config/deps.
+Ownership: TourBookingController.tsx, BookingCard.tsx, TourBookingController.test.tsx only.
+Root strengthening preserved: hydration onRecoverableError collection + expect(hydrationErrors).toEqual([]).
+
+RED (policy-continuation-red-20261016.txt, controller suite only):
+  Suites: 1 failed, 1 total — Tests: 2 failed, 26 passed, 28 total.
+  Failing (behavioral, compiling):
+  - blocks a stale registration continuation click with the same day recheck as Book Now
+    (fireEvent.click returned true on stale register anchor; expected false)
+  - marks the supplied cancellation policy with its content language without changing control language
+    (lang="en" absent on policy text)
+  Passing pre-fix (green-on-arrival lock-in, reported honestly):
+  - keeps an open shared dialog inert while auth is pending, then re-enables with readiness
+    (MobileBookingBar dialog forwarding was already complete)
+
+GREEN (policy-continuation-green-20261016.txt, controller+booking+wrappers):
+  Suites: 4 passed, 4 total — Tests: 98 passed, 98 total, Jest normal exit.
+  Owned suites (controller 28 incl. 3 new + preserved hydration-error assertion; booking 18 unchanged): 46/46.
+  Non-owned wrappers (AvailabilityCalendar + TourDetail): 52/52.
+  Delta note: wrappers were 41 at the earlier 84-run; +11 are US6 in-flight TourDetail tests
+  (US6 actively owns TourDetail; files not touched here).
+
+LINT (policy-continuation-eslint-20261016.txt, 3 owned files): 0 errors, 0 warnings.
+TYPECHECK (policy-continuation-typecheck-20261016.txt, tsc --noEmit whole project): clean, no unowned-WIP failures.
+
+Source changes:
+- BookingCard.tsx: register anchor reuses onContinueClick day-recheck guard (stale click
+  preventDefaults + refreshes day; valid/modifier clicks untouched, no date substitution).
+- BookingCard.tsx + TourBookingController.tsx: OPTIONAL cancellationPolicyLocale prop,
+  controller forwards; lang attached ONLY to the policy <p> (omitted when absent) with
+  Tailwind whitespace-pre-line; control language never changes. Backward compatible.
+- No TourDetail edit (US6 owns; integration worker passes tour.content_locale after release).
+
+Remaining gaps (root-owned): fresh combined gates + ledger, production build
+(NEXT_PUBLIC_API_URL empty, API_INTERNAL_URL=http://127.0.0.1:8080), compositor/browser
+verification. No source ownership retained after completion. No Spec020/task completion claim.

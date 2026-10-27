@@ -1,0 +1,71 @@
+{
+  "script": "02-redact-scratch",
+  "startedAt": "2026-10-20T19:05:30.820Z",
+  "scratchDir": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\final-three-source-qa\\scratch",
+  "scope": "Env arrays in this task-owned scratch full-inspect copies only; all other raw status preserved byte-exact",
+  "results": [
+    {
+      "file": "cmd-containerInspect.out",
+      "path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\final-three-source-qa\\scratch\\cmd-containerInspect.out",
+      "sha256Current": "ee7e419575539e086fc92d0a216e9765ffe68c4594044889fea729c10d7a09f9",
+      "redacted": false,
+      "status": "OK_ALREADY_REDACTED",
+      "note": "Env array contains only the [REDACTED] marker"
+    },
+    {
+      "file": "docker-inspect-bookly-frontend.json",
+      "path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\final-three-source-qa\\scratch\\docker-inspect-bookly-frontend.json",
+      "sha256Current": "0bff0da99448597c75486997f62782c91165a4dac6b39feef5168fb6f8c3a9d3",
+      "entriesRedacted": 3,
+      "closed": false,
+      "envArrayCharRange": {
+        "start": 3954,
+        "end": 3999
+      },
+      "removalBytes": 52,
+      "sha256After": "1a27de622dbe0bcddaaba7b2604a753e49d1a426206991221518958576d24875",
+      "postRedactionEnv": "REDACTED_MARKER_ONLY",
+      "status": "OK"
+    }
+  ],
+  "priorRuns": [
+    {
+      "script": "02-redact-scratch",
+      "startedAt": "2026-10-20T19:02:39.689Z",
+      "scratchDir": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\final-three-source-qa\\scratch",
+      "scope": "Env arrays in this task-owned scratch full-inspect copies only; all other raw status preserved byte-exact",
+      "results": [
+        {
+          "file": "cmd-containerInspect.out",
+          "path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\final-three-source-qa\\scratch\\cmd-containerInspect.out",
+          "sha256Before": "9b7e168bba18e2d1398c114c23c2105b20fc44cca133add4af536237aba03a6b",
+          "hadEnvArray": null,
+          "entriesRedacted": 8,
+          "envArrayCharRange": {
+            "start": 6922,
+            "end": 7319
+          },
+          "removalBytes": 398,
+          "sha256After": "ee7e419575539e086fc92d0a216e9765ffe68c4594044889fea729c10d7a09f9",
+          "verified": "{\"start\":6922,\"end\":6935,\"elements\":0}",
+          "postRedactionEnv": "STILL_PRESENT",
+          "status": "CHECK_FAILED"
+        },
+        {
+          "file": "docker-inspect-bookly-frontend.json",
+          "path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\final-three-source-qa\\scratch\\docker-inspect-bookly-frontend.json",
+          "sha256Before": "0bff0da99448597c75486997f62782c91165a4dac6b39feef5168fb6f8c3a9d3",
+          "hadEnvArray": null,
+          "redacted": false,
+          "note": "\"Env\": [...] array literal not found (possibly empty array or previously redacted)",
+          "emptyEnvOnly": false,
+          "status": "NOTHING_TO_REDACT"
+        }
+      ],
+      "allOk": false,
+      "finishedAt": "2026-10-20T19:02:39.689Z"
+    }
+  ],
+  "allOk": true,
+  "finishedAt": "2026-10-20T19:05:30.821Z"
+}

@@ -1,0 +1,626 @@
+{
+  "startedAt": "2026-10-20T20:17:43.410Z",
+  "executor": "opencode/glm-5.3-flash-free --variant max",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+    "id": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5",
+    "image": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+    "startedAt": "2026-10-20T19:44:33.210501691Z"
+  },
+  "conditions": "Serial production audits of the verified Docker app (proxy http://localhost:8080) with measurement browser/Node on the native host: installed Google Chrome via CHROME_PATH, native Node v24.14.1 spawning the installed frontend dependencies. Fresh Linux frontend gates and source checks preceded this attempt. Readiness used root redirects; no deliberate full-page warming. Server caches were not purged. No rebuild/restart/fixture refetch during audits. The unchanged about:blank CPU readiness hook runs before each URL with the same browser as the real audits; default Lighthouse mobile throttling remains configured.",
+  "stages": [
+    {
+      "name": "runtime-identity",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');console.log(JSON.stringify({node:process.version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),next:require('/app/node_modules/next/package.json').version}))"
+      ],
+      "startedAt": "2026-10-20T20:17:46.420Z",
+      "finishedAt": "2026-10-20T20:17:47.362Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-state",
+      "args": [
+        "inspect",
+        "-f",
+        "{{.Id}}|{{.Image}}|{{.State.StartedAt}}",
+        "bookly-frontend"
+      ],
+      "startedAt": "2026-10-20T20:17:47.370Z",
+      "finishedAt": "2026-10-20T20:17:47.574Z",
+      "exitCode": 0
+    },
+    {
+      "name": "prior-reports-preserve",
+      "exitCode": 0,
+      "detail": [
+        "assertion-results.json",
+        "lhr-1792360678890.html",
+        "lhr-1792360678890.json",
+        "lhr-1792360714311.html",
+        "lhr-1792360714311.json",
+        "lhr-1792360731203.html",
+        "lhr-1792360731203.json",
+        "lhr-1792360752017.html",
+        "lhr-1792360752017.json",
+        "lhr-1792360766113.html",
+        "lhr-1792360766113.json",
+        "lhr-1792360779559.html",
+        "lhr-1792360779559.json",
+        "lhr-1792360796482.html",
+        "lhr-1792360796482.json",
+        "lhr-1792360813480.html",
+        "lhr-1792360813480.json",
+        "lhr-1792360828570.html",
+        "lhr-1792360828570.json",
+        "lhr-1792360844058.html",
+        "lhr-1792360844058.json",
+        "lhr-1792360858620.html",
+        "lhr-1792360858620.json",
+        "lhr-1792360875726.html",
+        "lhr-1792360875726.json"
+      ]
+    },
+    {
+      "name": "preflight-tests",
+      "args": [
+        "--test",
+        "scripts/lighthouse-runtime-preflight.test.mjs"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 30328,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 120000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-20T20:17:49.089Z",
+      "finishedAt": "2026-10-20T20:18:12.111Z",
+      "exitCode": 0
+    },
+    {
+      "name": "cpu-preflight",
+      "args": [
+        "scripts/lighthouse-runtime-preflight.mjs"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 7560,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 90000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-20T20:18:12.112Z",
+      "finishedAt": "2026-10-20T20:18:23.862Z",
+      "exitCode": 0
+    },
+    {
+      "name": "collect",
+      "args": [
+        "--require",
+        "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\tooling\\lighthouse-engine-selector.cjs",
+        "node_modules/@lhci/cli/src/cli.js",
+        "collect",
+        "--config=lighthouserc.js"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 30460,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "NODE_OPTIONS": ""
+      },
+      "timeoutMs": 1500000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-20T20:18:23.863Z",
+      "finishedAt": "2026-10-20T20:25:21.258Z",
+      "exitCode": 1
+    },
+    {
+      "name": "assert",
+      "args": [
+        "--require",
+        "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\tooling\\lighthouse-engine-selector.cjs",
+        "node_modules/@lhci/cli/src/cli.js",
+        "assert",
+        "--config=lighthouserc.js",
+        "--includePassedAssertions"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 30544,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "NODE_OPTIONS": ""
+      },
+      "timeoutMs": 120000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-20T20:25:21.259Z",
+      "finishedAt": "2026-10-20T20:25:22.433Z",
+      "exitCode": 1
+    },
+    {
+      "name": "runtime-identity-after",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');console.log(JSON.stringify({node:process.version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),next:require('/app/node_modules/next/package.json').version}))"
+      ],
+      "startedAt": "2026-10-20T20:25:22.806Z",
+      "finishedAt": "2026-10-20T20:25:25.572Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-state-after",
+      "args": [
+        "inspect",
+        "-f",
+        "{{.Id}}|{{.Image}}|{{.State.StartedAt}}",
+        "bookly-frontend"
+      ],
+      "startedAt": "2026-10-20T20:25:25.573Z",
+      "finishedAt": "2026-10-20T20:25:25.977Z",
+      "exitCode": 0
+    }
+  ],
+  "sourceParityBefore": {
+    "files": 419,
+    "mismatches": []
+  },
+  "identity": {
+    "expected": {
+      "node": "v20.20.2",
+      "next": "16.2.3",
+      "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+      "id": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5",
+      "image": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+      "startedAt": "2026-10-20T19:44:33.210501691Z"
+    },
+    "observed": {
+      "node": "v20.20.2",
+      "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+      "next": "16.2.3"
+    }
+  },
+  "containerState": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5|sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39|2026-10-20T19:44:33.210501691Z",
+  "expectedContainerState": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5|sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39|2026-10-20T19:44:33.210501691Z",
+  "proxyIdentity": {
+    "localhost": {
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    "loopbackIp": {
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    }
+  },
+  "hashes": {
+    "lighthouserc.js": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "scripts/lighthouse-runtime-preflight.mjs": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+    "scripts/lighthouse-browser-ready.cjs": "a6a51071b31317674e9ad2c3ccfcd988d7b057a23aff97fdda4a7919e7325339",
+    "package.json": "0aba9b572479db9a9698fe7c1cc2041c0effdb87fb47eb757e9ac6de3dbd996d",
+    "package-lock.json": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c"
+  },
+  "priorAssets": [
+    {
+      "name": "localhost_2026-10-18_23-25-25-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-25-25-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-05-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-05-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-20-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-20-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-36-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-36-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-49-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-26-49-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-01-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-01-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-18-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-18-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-35-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-35-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-50-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-27-50-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-08-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-08-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-20-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-20-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-33-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-33-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-48-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-28-48-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-03-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-03-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-18-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-18-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-37-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-37-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-52-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-29-52-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-30-07-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-18_23-30-07-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-06-26-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-57-43-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-57-43-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-58-21-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-58-21-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-58-37-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-58-37-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-01-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-01-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-15-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-15-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-29-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-29-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-44-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_00-59-44-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-00-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-00-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-16-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-16-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-33-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-33-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-48-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-00-48-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-01-03-0.devtoolslog.json",
+      "froms": [
+        "frontend"
+      ]
+    },
+    {
+      "name": "localhost_2026-10-19_01-01-03-0.trace.json",
+      "froms": [
+        "frontend"
+      ]
+    }
+  ],
+  "cpuPreflightSamples": [
+    1393.5,
+    1357,
+    1514.5,
+    1695
+  ],
+  "hashesAfter": {
+    "lighthouserc.js": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "scripts/lighthouse-runtime-preflight.mjs": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+    "scripts/lighthouse-browser-ready.cjs": "a6a51071b31317674e9ad2c3ccfcd988d7b057a23aff97fdda4a7919e7325339",
+    "package.json": "0aba9b572479db9a9698fe7c1cc2041c0effdb87fb47eb757e9ac6de3dbd996d",
+    "package-lock.json": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c"
+  },
+  "sourceParityAfter": {
+    "files": 419,
+    "mismatches": []
+  },
+  "identityAfter": {
+    "node": "v20.20.2",
+    "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+    "next": "16.2.3"
+  }
+}

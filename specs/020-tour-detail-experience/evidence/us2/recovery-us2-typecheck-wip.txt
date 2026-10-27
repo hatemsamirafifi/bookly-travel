@@ -1,0 +1,5 @@
+﻿src/components/booking/__tests__/BookingForm.test.tsx(2,23): error TS2614: Module '"../BookingForm"' has no exported member 'buildCheckoutAuthRecoveryUrl'. Did you mean to use 'import buildCheckoutAuthRecoveryUrl from "../BookingForm"' instead?
+src/components/tour/__tests__/TourBookingController.test.tsx(98,7): error TS2783: 'slug' is specified more than once, so this usage will be overwritten.
+src/components/tour/__tests__/TourBookingController.test.tsx(99,7): error TS2783: 'locale' is specified more than once, so this usage will be overwritten.
+src/components/tour/TourDetail.tsx(134,13): error TS2322: Type '{ availableDates: string[]; nextAvailableDate: string | null; locale: string; }' is not assignable to type 'IntrinsicAttributes & AvailabilityCalendarProps'.
+  Property 'availableDates' does not exist on type 'IntrinsicAttributes & AvailabilityCalendarProps'. Did you mean 'nextAvailableDate'?

@@ -1,0 +1,6 @@
+{"attempt":1,"benchmarkIndex":1487.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1867.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":2005,"url":"about:blank","appVisited":false}
+Running Lighthouse 1 time(s) on http://localhost:8080/en/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Done running Lighthouse!

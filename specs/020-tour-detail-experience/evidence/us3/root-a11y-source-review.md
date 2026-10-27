@@ -1,0 +1,5 @@
+# Root accessibility review — 2026-10-17
+
+Native source review on stable build DhEzii_99yXRuBv6VKIFa passed8/16 cases, failed5 and stopped at the existing five-failure cap; three cases did not run. This is not acceptance. Raw log: evidence/us3/root-live-a11y-source-review-browser.txt. Four failing scans report the same genuine mobile gallery counter contrast issue: white12px text on the translucent overlay composited to #697a8b, ratio4.41 rather than4.5. Root changed only that counter pill to the existing opaque bg-bookly-navy token; no overlay/global token or geometry changed and no Axe rule was excluded. The final fresh-build Axe/visual gates must establish green.
+
+The separate authored-image lang assertion used the first main image while the Docker-only CDN was unreachable in this native run; native runs with no media adapter can render a decorative broken-media placeholder instead. Root did not add authored-language claims to a decorative placeholder or weaken the assertion. The final Docker runtime/optimizer run against reachable fixture media remains required for that case. Earlier gallery loaded/broken-slot interaction evidence remains separate.

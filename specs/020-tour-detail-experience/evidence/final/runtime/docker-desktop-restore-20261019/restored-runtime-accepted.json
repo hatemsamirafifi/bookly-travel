@@ -1,0 +1,14 @@
+{
+  "status": "superseded-unaccepted-generated-summary",
+  "rawEvidencePreserved": true,
+  "currentSourceAcceptance": false,
+  "reason": "Prior generated summary failed root review. Raw restore evidence is historical and precedes the current three-file source experiment. Fresh final-three-source-qa proof requires a separate review.",
+  "rawEvidence": [
+    "03-docker-desktop-restart.md",
+    "05b-identity-verification.md",
+    "06a-host-file-hashes-419.json",
+    "06b-container-hashes-raw.json",
+    "08-ssr-probe.json",
+    "08-ssr-en-tour-raw.html"
+  ]
+}

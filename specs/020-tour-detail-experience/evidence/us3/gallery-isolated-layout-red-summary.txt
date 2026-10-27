@@ -1,0 +1,49 @@
+Spec 020 US3 isolated gallery lane — LAYOUT RED evidence (root browser-geometry rework)
+====================================================================================
+Date (UTC): 2026-10-15
+Branch: codex/020-tour-detail-experience (schema committed b046503, preserved)
+Lane scope: TourGallery.tsx + TourGallery.test.tsx, ui/Dialog.tsx (placement
+union only, runtime untouched) + interactive-primitives.test.tsx (fullscreen
+variant tests), tests/fixtures/tour-detail.ts (comment wording only). No
+live-page/catalog/booking/route/schema/nav integration; no stage/commit/push.
+
+Actual browser baseline (root, preserved): evidence/us3/isolated-browser/
+before-geometry.json — desktop count2 coverage 0.732 and count4 coverage
+0.857 from vacant right cells; fullscreen panel 16px inset per side with the
+image extending below the dialog body (fullViewport=false, imageFitsBody=false).
+
+Command (from frontend/, detached, PowerShell):
+  npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx src/components/ui/__tests__/interactive-primitives.test.tsx
+
+Result:
+  Test Suites: 2 failed, 2 total
+  Tests:       6 failed, 31 passed, 37 total
+
+Failing (each a required rework behavior, absent pre-fix):
+  - TourGallery desktop span balance > gives both photos half width with half-frame sizes for two photos
+    (pre-fix: second tile lg:col-span-1 leaving a vacant half row; hero sizes 50vw/25vw estimates)
+  - TourGallery desktop span balance > spans the last supporting tile across the remaining right row for four photos
+    (pre-fix: last tile lg:col-span-1 leaving a vacant quarter cell)
+  - TourGallery desktop span balance > keeps full, half and quarter sizes for one, three and five photos
+    (pre-fix sizes lack the container-derived rem/calc values)
+  - TourGallery viewer > uses a fullscreen viewport panel instead of a centered card
+    (pre-fix: centered overlay keeps p-4, so the panel can never reach the viewport edges)
+  - TourGallery viewer > fits the viewer image in the available dialog body with visible controls
+    (pre-fix: fixed aspect box overflows the dialog body; viewer sizes 100vw ignores body padding)
+  - Dialog fullscreen variant > renders a viewport-filling fullscreen panel with a flexible scrolling body
+    (pre-fix: placement union accepts 'fullscreen' but runtime falls through to the centered card)
+
+Passing (preserved, no regression): all 20 prior gallery behaviors (empty,
+order/count, sparse see-all, failed slots, lang, rail, trigger return, arrow
+stability incl. arrows-from-close, hydration) and 11 Dialog/primitive
+behaviors, including the new fullscreen shared focus/Escape/scroll-lock test
+and the default-center geometry lock.
+
+Provenance correction (same lane): the owned CDN media are colored test
+cards (ROME COVER / GALLERY n), not production photographs; the
+'tests/fixtures/tour-detail.ts' header now says 'five supplied owned fixture
+media assets'. Comment wording only; zero fixture data changes.
+
+Full Jest output retained alongside this summary
+(gallery-isolated-layout-red-full.log). All earlier gallery-isolated-*
+reports untouched. Geometry-pixel proof stays with root's browser rerun.

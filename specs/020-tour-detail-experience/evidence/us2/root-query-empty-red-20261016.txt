@@ -1,0 +1,55 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/booking/__tests__/BookingForm.test.tsx
+
+  console.error
+    Error: Not implemented: navigation (except hash changes)
+        at module.exports (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at navigateFetch (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+        at exports.navigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+        at LocationImpl._locationObjectNavigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:30:5)
+        at LocationImpl.assign (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:206:10)
+        at Location.assign (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\generated\Location.js:72:36)
+        at handleSubmit (F:\Travel Website\bookly travel\frontend\src\components\booking\BookingForm.tsx:390:25) {
+      type: 'not implemented'
+    }
+
+      388 |         // resubmits after return; nothing posts automatically.
+      389 |         localStorage.removeItem('auth_token');
+    > 390 |         window.location.assign(
+          |                         ^
+      391 |           buildCheckoutAuthRecoveryUrl(locale, tourSlug, count, date),
+      392 |         );
+      393 |         return;
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at navigateFetch (node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+      at exports.navigate (node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+      at LocationImpl._locationObjectNavigate (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:30:5)
+      at LocationImpl.assign (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:206:10)
+      at Location.assign (node_modules/jsdom/lib/jsdom/living/generated/Location.js:72:36)
+      at handleSubmit (src/components/booking/BookingForm.tsx:390:25)
+
+FAIL src/components/booking/__tests__/BookingForm.test.tsx
+  ● BookingForm › withholds an absent-count default when the query changes to an explicitly empty count
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <button class="w-full rounded-xl bg-[#FFB800] py-3 text-base font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors" type="submit">Confirm & Pay</button> instead
+
+      519 |     rerender(<BookingForm locale="en" todayUtc={TODAY_UTC} />);
+      520 |
+    > 521 |     expect(screen.queryByRole('button', { name: 'Confirm & Pay' })).not.toBeInTheDocument();
+          |                                                                         ^
+      522 |     expect(createBooking).not.toHaveBeenCalled();
+      523 |
+      524 |     resolveCurrent(bookingTour());
+
+      at Object.<anonymous> (src/components/booking/__tests__/BookingForm.test.tsx:521:73)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 20 passed, 21 total
+Snapshots:   0 total
+Time:        2.535 s, estimated 7 s
+Ran all test suites within paths "src/components/booking/__tests__/BookingForm.test.tsx".

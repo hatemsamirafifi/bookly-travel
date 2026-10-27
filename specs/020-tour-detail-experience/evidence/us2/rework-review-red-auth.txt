@@ -1,0 +1,118 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/auth/__tests__/LoginForm.test.tsx src/components/auth/__tests__/RegisterForm.test.tsx
+
+node.exe : FAIL src/components/auth/__tests__/RegisterForm.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...erForm.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ Console
+
+    console.error
+      An update to RegisterForm inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at 
+https://react.dev/link/wrap-tests-with-act
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at Object.callback (node_modules/react-hook-form/src/useForm.ts:99:5)
+      at Object.find (node_modules/react-hook-form/src/logic/shouldRenderFormState.ts:25:28)
+      at Object.next (node_modules/react-hook-form/src/utils/createSubject.ts:40:5)
+      at node_modules/react-hook-form/src/logic/createFormControl.ts:1418:14
+
+    console.error
+      An update to RegisterForm inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at 
+https://react.dev/link/wrap-tests-with-act
+
+      50 |
+      51 |   const onSubmit = async (data: RegisterFormData) => {
+    > 52 |     setServerError(null);
+         |     ^
+      53 |     try {
+      54 |       const response = await authApi.register(data);
+      55 |       setAuth(response.data, response.token);
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at onSubmit (src/components/auth/RegisterForm.tsx:52:5)
+      at unset (node_modules/react-hook-form/src/logic/createFormControl.ts:1423:7)
+
+  ΓùÅ RegisterForm ΓÇ║ preserves the full booking returnUrl on the sign-in cross-link
+
+    expect(element).toHaveAttribute("href", 
+"/en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems%26participants%3D3%26date%3D2026-10-20") // 
+element.getAttribute("href") === 
+"/en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems%26participants%3D3%26date%3D2026-10-20"
+
+    Expected the element to have attribute:
+      href="/en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems%26participants%3D3%26date%3D2026-10-20"
+    Received:
+      href="/en/auth/login"
+
+      145 |     const bookingPath = '/en/booking?tour=hidden-gems&participants=3&date=2026-10-20';
+      146 |     render(<RegisterForm returnUrl={bookingPath} />);
+    > 147 |     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute(
+          |                                                           ^
+      148 |       'href',
+      149 |       `/en/auth/login?returnUrl=${encodeURIComponent(bookingPath)}`,
+      150 |     );
+
+      at Object.<anonymous> (src/components/auth/__tests__/RegisterForm.test.tsx:147:59)
+
+FAIL src/components/auth/__tests__/LoginForm.test.tsx
+  ΓùÅ LoginForm ΓÇ║ preserves the full booking returnUrl on the registration cross-link
+
+    expect(element).toHaveAttribute("href", 
+"/en/auth/register?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems%26participants%3D3%26date%3D2026-10-20") // 
+element.getAttribute("href") === 
+"/en/auth/register?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems%26participants%3D3%26date%3D2026-10-20"
+
+    Expected the element to have attribute:
+      href="/en/auth/register?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems%26participants%3D3%26date%3D2026-10-20"
+    Received:
+      href="/en/auth/register"
+
+      147 |     const bookingPath = '/en/booking?tour=hidden-gems&participants=3&date=2026-10-20';
+      148 |     render(<LoginForm returnUrl={bookingPath} />);
+    > 149 |     expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+          |                                                           ^
+      150 |       'href',
+      151 |       `/en/auth/register?returnUrl=${encodeURIComponent(bookingPath)}`,
+      152 |     );
+
+      at Object.<anonymous> (src/components/auth/__tests__/LoginForm.test.tsx:149:59)
+
+Test Suites: 2 failed, 2 total
+Tests:       2 failed, 19 passed, 21 total
+Snapshots:   0 total
+Time:        4.616 s
+Ran all test suites within paths "src/components/auth/__tests__/LoginForm.test.tsx", 
+"src/components/auth/__tests__/RegisterForm.test.tsx".

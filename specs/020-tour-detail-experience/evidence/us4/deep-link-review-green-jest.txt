@@ -1,0 +1,12 @@
+COMMAND (orchestrator re-run after delegated fix + orchestrator comment trim)
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx
+
+RESULT: PASS — 1 suite, 17 passed, 17 total, 0 failed; normal exit, no snapshots.
+
+  15 pre-existing (native anchors, aria-current + non-color cue, heading
+  targets, delta snapshots, passive no-focus/no-scroll, measured activation,
+  modifier clicks, scoped offset publish/restore, re-observe lifecycle,
+  reduced motion, deep-link honor, horizontal-only reveal, tall-body) +
+  2 new (hash preference while hashed heading visible; reading-position
+  fallback when it is not).
+  Full output retained from the orchestrator's verification run.

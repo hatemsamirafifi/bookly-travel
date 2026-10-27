@@ -1,0 +1,22 @@
+node:fs:573
+  return binding.open(
+                 ^
+
+Error: ENOENT: no such file or directory, open '/app/.dockerignore'
+    at Object.openSync (node:fs:573:18)
+    at Object.readFileSync (node:fs:452:35)
+    at [eval]:1:351
+    at Array.map (<anonymous>)
+    at [eval]:1:303
+    at [eval]:1:420
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+    at [eval]-wrapper:6:24
+    at runScript (node:internal/process/execution:101:62) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/app/.dockerignore'
+}
+
+Node.js v20.20.2

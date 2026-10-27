@@ -1,0 +1,117 @@
+
+Running 14 tests using 1 worker
+
+[1A[2K(node:25732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/14] [setup] › tests\e2e\auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/14] [setup] › tests\e2e\partner.setup.ts:19:6 › authenticate as partner
+[1A[2K(node:26076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:26076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/14] [chromium-authed] › tests\e2e\booking.spec.ts:43:9 › Booking Flow › pending_payment confirmation never claims a completed booking
+[1A[2K[4/14] [chromium-authed] › tests\e2e\booking.spec.ts:43:9 › Booking Flow › cancelled confirmation never claims a completed booking
+[1A[2K[5/14] [chromium-authed] › tests\e2e\booking.spec.ts:43:9 › Booking Flow › expired confirmation never claims a completed booking
+[1A[2K[6/14] [chromium-authed] › tests\e2e\booking.spec.ts:43:9 › Booking Flow › unexpected_status confirmation never claims a completed booking
+[1A[2K[7/14] [chromium-authed] › tests\e2e\booking.spec.ts:65:7 › Booking Flow › confirmed booking alone displays the success title
+[1A[2K[8/14] [chromium-authed] › tests\e2e\booking.spec.ts:103:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay
+[1A[2K  1) [chromium-authed] › tests\e2e\booking.spec.ts:103:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.waitForResponse: Test timeout of 30000ms exceeded.
+
+      122 |
+      123 |     const [createResponse] = await Promise.all([
+    > 124 |       page.waitForResponse(
+          |            ^
+      125 |         (resp) =>
+      126 |           resp.request().method() === 'POST' &&
+      127 |           resp.url().endsWith('/api/public/bookings') &&
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\booking.spec.ts:124:12
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\booking-checkpoint\booking-Booking-Flow-compl-38fbd-on-and-an-idempotent-replay-chromium-authed\error-context.md
+
+
+[1A[2K(node:25244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[9/14] [chromium-authed] › tests\e2e\booking.spec.ts:166:7 › Booking Flow › surfaces the sold-out message when the server reports a conflict
+[1A[2K[10/14] [chromium-authed] › tests\e2e\booking.spec.ts:181:7 › Booking Flow › blocks an unoffered date locally without posting
+[1A[2K[11/14] [chromium-authed] › tests\e2e\booking.spec.ts:202:7 › Booking Flow › shows the localized rate limit message
+[1A[2K[12/14] [chromium-authed] › tests\e2e\booking.spec.ts:220:7 › Booking Flow › retains a supplied invalid participant value with a reselection route instead of clamping
+[1A[2K  2) [chromium-authed] › tests\e2e\booking.spec.ts:220:7 › Booking Flow › retains a supplied invalid participant value with a reselection route instead of clamping 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('link', { name: /Change date/i })
+    Expected: [32m"/en/tours/hidden-gems-rome-walking-tour"[39m
+    Error: strict mode violation: getByRole('link', { name: /Change date/i }) resolved to 2 elements:
+        1) <a href="/en/tours/hidden-gems-rome-walking-tour" class="text-sm font-medium text-[#0A2540] hover:text-[#071b2e] underline">Change date</a> aka getByRole('link', { name: 'Change date' }).first()
+        2) <a href="/en/tours/hidden-gems-rome-walking-tour" class="font-medium underline underline-offset-2">Change date</a> aka getByRole('link', { name: 'Change date' }).nth(1)
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('link', { name: /Change date/i })[22m
+
+
+      224 |     await expect(page.getByText(/Invalid booking details/)).toBeVisible();
+      225 |     await expect(page.getByRole('button', { name: /Confirm & Pay/i })).toBeDisabled();
+    > 226 |     await expect(page.getByRole('link', { name: /Change date/i })).toHaveAttribute(
+          |                                                                    ^
+      227 |       'href',
+      228 |       `/en/tours/${TOUR}`,
+      229 |     );
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\booking.spec.ts:226:68
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\booking-checkpoint\booking-Booking-Flow-retai-0ae9a-n-route-instead-of-clamping-chromium-authed\error-context.md
+
+
+[1A[2K(node:20964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:20964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[13/14] [chromium-authed] › tests\e2e\booking.spec.ts:232:7 › Booking Flow › retains a supplied malformed date with a reselection route and blocks submit
+[1A[2K[14/14] [chromium-authed] › tests\e2e\booking.spec.ts:243:7 › Booking Flow › expired session recovers through login with the full selection and no duplicate submit
+[1A[2K  3) [chromium-authed] › tests\e2e\booking.spec.ts:243:7 › Booking Flow › expired session recovers through login with the full selection and no duplicate submit 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.waitForResponse: Test timeout of 30000ms exceeded.
+
+      282 |     // so a later payment failure still leaves the exact owned reference.
+      283 |     const [createResponse] = await Promise.all([
+    > 284 |       page.waitForResponse(
+          |            ^
+      285 |         (resp) =>
+      286 |           resp.request().method() === 'POST' &&
+      287 |           resp.url().endsWith('/api/public/bookings') &&
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\booking.spec.ts:284:12
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\booking-checkpoint\booking-Booking-Flow-expir-721ae-ion-and-no-duplicate-submit-chromium-authed\error-context.md
+
+
+[1A[2K  3 failed
+    [chromium-authed] › tests\e2e\booking.spec.ts:103:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay 
+    [chromium-authed] › tests\e2e\booking.spec.ts:220:7 › Booking Flow › retains a supplied invalid participant value with a reselection route instead of clamping 
+    [chromium-authed] › tests\e2e\booking.spec.ts:243:7 › Booking Flow › expired session recovers through login with the full selection and no duplicate submit 
+  11 passed (1.3m)

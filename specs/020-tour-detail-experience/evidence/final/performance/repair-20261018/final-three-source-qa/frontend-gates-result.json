@@ -1,0 +1,193 @@
+{
+  "startedAt": "2026-10-20T19:59:48.127Z",
+  "scope": "existing full Linux frontend gates; no performance/CI/release claim",
+  "commands": [
+    {
+      "name": "identity-before",
+      "args": [
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{{.Id}}|{{.Image}}|{{.State.StartedAt}}|{{.State.Running}}"
+      ],
+      "startedAt": "2026-10-20T19:59:48.182Z",
+      "finishedAt": "2026-10-20T19:59:49.551Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "versions-before",
+      "args": [
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "const f=require('node:fs');console.log(JSON.stringify({node:process.version,next:require('/app/node_modules/next/package.json').version,buildId:f.readFileSync('/app/.next/BUILD_ID','utf8').trim()}))"
+      ],
+      "startedAt": "2026-10-20T19:59:49.592Z",
+      "finishedAt": "2026-10-20T19:59:51.930Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "jest",
+      "args": [
+        "exec",
+        "--workdir",
+        "/app",
+        "-e",
+        "NODE_ENV=test",
+        "bookly-frontend",
+        "node",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--json",
+        "--outputFile",
+        "/tmp/spec020-final3-jest-20261020.json"
+      ],
+      "startedAt": "2026-10-20T19:59:56.134Z",
+      "finishedAt": "2026-10-20T20:01:09.794Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "jest-json",
+      "args": [
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "process.stdout.write(require('node:fs').readFileSync('/tmp/spec020-final3-jest-20261020.json','utf8'))"
+      ],
+      "startedAt": "2026-10-20T20:01:09.918Z",
+      "finishedAt": "2026-10-20T20:01:10.423Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "typescript",
+      "args": [
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-20T20:01:10.755Z",
+      "finishedAt": "2026-10-20T20:01:33.003Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "eslint",
+      "args": [
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-20T20:01:33.003Z",
+      "finishedAt": "2026-10-20T20:02:02.880Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "identity-after",
+      "args": [
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{{.Id}}|{{.Image}}|{{.State.StartedAt}}|{{.State.Running}}"
+      ],
+      "startedAt": "2026-10-20T20:02:02.989Z",
+      "finishedAt": "2026-10-20T20:02:03.182Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "versions-after",
+      "args": [
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "const f=require('node:fs');console.log(JSON.stringify({node:process.version,next:require('/app/node_modules/next/package.json').version,buildId:f.readFileSync('/app/.next/BUILD_ID','utf8').trim()}))"
+      ],
+      "startedAt": "2026-10-20T20:02:03.184Z",
+      "finishedAt": "2026-10-20T20:02:03.531Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    }
+  ],
+  "passed": true,
+  "acceptedRuntimeSha256": "741fe9599e2cc9487107e44a8e1a3a2e8f45ea54420fa065baa14129efc58ed2",
+  "identityBefore": {
+    "id": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5",
+    "image": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+    "startedAt": "2026-10-20T19:44:33.210501691Z",
+    "running": "true",
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "dFu3J0-yfIjd2NqhYKf4R"
+  },
+  "host419Before": {
+    "count": 419,
+    "mismatches": 0
+  },
+  "jest": {
+    "numTotalTests": 846,
+    "numPassedTests": 846,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 69,
+    "numPassedTestSuites": 69,
+    "numFailedTestSuites": 0,
+    "numRuntimeErrorTestSuites": 0,
+    "success": true,
+    "wasInterrupted": false,
+    "startTime": 1792526399620
+  },
+  "identityAfter": {
+    "id": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5",
+    "image": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+    "startedAt": "2026-10-20T19:44:33.210501691Z",
+    "running": "true",
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "dFu3J0-yfIjd2NqhYKf4R"
+  },
+  "identityStable": true,
+  "host419After": {
+    "count": 419,
+    "mismatches": 0
+  },
+  "finishedAt": "2026-10-20T20:02:03.783Z"
+}

@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Server: nginx/1.31.3
+Date: Mon, 19 Oct 2026 20:24:57 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+link: <http://127.0.0.1/en/tours/hidden-gems-rome-walking-tour>; rel="alternate"; hreflang="en", <http://127.0.0.1/es/tours/hidden-gems-rome-walking-tour>; rel="alternate"; hreflang="es", <http://127.0.0.1/it/tours/hidden-gems-rome-walking-tour>; rel="alternate"; hreflang="it", <http://127.0.0.1/tours/hidden-gems-rome-walking-tour>; rel="alternate"; hreflang="x-default"
+link: </_next/static/media/fba5a26ea33df6a3-s.p.0eehd8tgys7nv.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </brand/bookly-travel-logo.webp>; rel=preload; as="image"
+set-cookie: NEXT_LOCALE=en; Path=/; SameSite=lax
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+X-Powered-By: Next.js
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+

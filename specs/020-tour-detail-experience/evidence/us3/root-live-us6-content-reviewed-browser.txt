@@ -1,0 +1,63 @@
+
+Running 15 tests using 1 worker
+
+[1A[2K(node:23284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/15] [setup] › tests\e2e\auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/15] [setup] › tests\e2e\partner.setup.ts:19:6 › authenticate as partner
+[1A[2K(node:23856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/15] [chromium] › tests\e2e\tour-detail.spec.ts:81:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[1A[2K[4/15] [chromium] › tests\e2e\tour-detail.spec.ts:178:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+[1A[2K[5/15] [chromium] › tests\e2e\tour-detail.spec.ts:680:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+[1A[2K[6/15] [chromium] › tests\e2e\tour-detail.spec.ts:1234:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in en
+[1A[2K[7/15] [chromium] › tests\e2e\tour-detail.spec.ts:1234:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in es
+[1A[2K[8/15] [chromium] › tests\e2e\tour-detail.spec.ts:1234:9 › Tour Detail route states (Spec 020 US6) › US6 SSR unknown slug renders localized 404 with noindex in it
+[1A[2K[9/15] [chromium] › tests\e2e\tour-detail.spec.ts:1262:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in en
+[1A[2K[10/15] [chromium] › tests\e2e\tour-detail.spec.ts:1262:9 › Tour Detail route states (Spec 020 US6) › US6 SSR archived tour renders localized withdrawn with no booking in es
+[1A[2K[11/15] [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text 
+
+    Error: route.fulfill: Route is already handled!
+
+       at helpers\tour-detail-ssr.ts:228
+
+      226 |       headers: { Host: 'cdn.bookly.test' },
+      227 |     });
+    > 228 |     await route.fulfill({ response: upstream });
+          |                 ^
+      229 |   });
+      230 | }
+      231 |
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\helpers\tour-detail-ssr.ts:228:17
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\us6-content-reviewed\tour-detail-Tour-Detail-ro-0bdea-thout-leaking-upstream-text-chromium\error-context.md
+
+
+[1A[2K(node:12996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:12996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[12/15] [chromium] › tests\e2e\tour-detail.spec.ts:1333:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 403 renders safe localized recoverable state in es
+[1A[2K[13/15] [chromium] › tests\e2e\tour-detail.spec.ts:1333:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 422 renders safe localized recoverable state in it
+[1A[2K[14/15] [chromium] › tests\e2e\tour-detail.spec.ts:1333:9 › Tour Detail route states (Spec 020 US6) › US6 SSR status 429 renders safe localized recoverable state in en
+[1A[2K[15/15] [chromium] › tests\e2e\tour-detail.spec.ts:1366:7 › Tour Detail route states (Spec 020 US6) › US6 SSR intentional-empty translated itinerary stays empty with agreeing schema
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text 
+  14 passed (1.2m)

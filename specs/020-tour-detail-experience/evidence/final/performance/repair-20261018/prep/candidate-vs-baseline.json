@@ -1,0 +1,26 @@
+{
+  "baselineSource": "specs/020-tour-detail-experience/evidence/final/frontend/root-gates-after.json",
+  "keySemantics": "frontend-relative",
+  "absolutePrefix": "F:/Travel Website/bookly travel/frontend/",
+  "baselineKeys": 419,
+  "recomputedAtUtc": "2026-10-17T22:19:33.310Z",
+  "allowedChangedTwoFiles": [
+    {
+      "key": "scripts\\lighthouse-runtime-preflight.mjs",
+      "expected": "5c7330d3db5e87b992aab605a70332a5825b48d831aca74490848f4603511611",
+      "actual": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+      "allowed": true
+    },
+    {
+      "key": "scripts\\lighthouse-runtime-preflight.test.mjs",
+      "expected": "d7ad8ce35e2c9b0b42b494a994d6adf8a6853480dd4cd8cef2eddbb8158baec7",
+      "actual": "7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1",
+      "allowed": true
+    }
+  ],
+  "changedCount": 2,
+  "identicalCount": 417,
+  "pinnedVerified": {
+    "lighthouserc.js": true
+  }
+}

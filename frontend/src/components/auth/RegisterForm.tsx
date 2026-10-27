@@ -31,6 +31,14 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  // Spec 020 US2/FR-022: the sign-in cross-link preserves the validated
+  // same-locale return (full booking query) instead of dropping the selection.
+  const validatedCrossReturn = safeAuthReturnUrl(locale, returnUrl);
+  const loginHref =
+    validatedCrossReturn === `/${locale}/`
+      ? `/${locale}/auth/login`
+      : `/${locale}/auth/login?returnUrl=${encodeURIComponent(validatedCrossReturn)}`;
+
   const {
     register,
     handleSubmit,
@@ -203,7 +211,10 @@ export function RegisterForm({ returnUrl }: RegisterFormProps) {
       {/* Sign-in prompt */}
       <p className="text-center text-sm text-text-muted m-0">
         {t('register.signinPrompt')}{' '}
-        <Link href={`/${locale}/auth/login`} className="text-primary font-semibold no-underline transition-colors hover:text-primary-dark hover:underline">
+        <Link
+          href={loginHref}
+          className="text-primary font-semibold no-underline transition-colors hover:text-primary-dark hover:underline"
+        >
           {t('register.signinLink')}
         </Link>
       </p>

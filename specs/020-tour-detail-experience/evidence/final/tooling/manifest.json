@@ -1,0 +1,18 @@
+{
+  "recordedAt": "2026-10-17T14:49:11.253Z",
+  "scope": "Retained exact machine-specific root runners; capturing these scripts does not imply pending gates passed.",
+  "originalDirectory": "C:/Users/HaTeM/.codex/tmp/bookly-spec020",
+  "hashes": {
+    "root-final-frontend-gates.cjs": "42b5cef4f6c8e1796b70ad65f01b0f078e2e53167b07f48c3902591d58c94e71",
+    "root-final-docker-build.cjs": "1733b45eb932e2bac57a8cf1716842bd1611337a526e399b5f84501f00f7a1f9",
+    "root-final-runtime-review.cjs": "f73f1b00bc9709b7c61e46e695757a47bc0f1b103aa84ffec265553382b2511b",
+    "root-final-browser.cjs": "50329ca8a84f831ade41b6db4dc5eabe0514775a316588ea1a2d9332b692acaf",
+    "root-final-launch.ps1": "c898a9c3c61568143d189ea8f8442349211ae4301de5ed5eb816e984657c962e",
+    "root-visual-matrix.cjs": "f6acde35170e9d54533ed0a09e23edd52fb9ad03674185a802ee14188dbc6bed",
+    "root-final-performance.cjs": "502b639366c5de10e829bf283ca0ac3ad0e9cdd03bbd8218cdbf73f70d50d5fe",
+    "root-final-backend.cjs": "c902b581ea0de72bffb27edd3439a2f2f1d8c281926111a01cb9368cf099d05e",
+    "root-final-release-audit.cjs": "500af058b3eac46dbe8ccad5147c8903785111abcb28187885b09c65b56e7e40",
+    "root-passive-browser.cjs": "e372904debd860832b114017c7576fc256100e9028b01532189c74a9ed73fc03",
+    "root-passive-unit.cjs": "b7a65b349049fe2509c6a9b79dbe739ee492da9227a53de66091736d86f799f8"
+  }
+}

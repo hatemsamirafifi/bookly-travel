@@ -1,0 +1,3633 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx
+
+  console.error
+    An update to Root inside a test was not wrapped in act(...).
+    
+    When testing, code that causes React state updates should be wrapped into act(...):
+    
+    act(() => {
+      /* fire events that update state */
+    });
+    /* assert on the output */
+    
+    This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      375 |     } finally {
+      376 |       console.error = originalError;
+    > 377 |       root?.unmount();
+          |             ^
+      378 |       container.remove();
+      379 |     }
+      380 |   });
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at updateContainerImpl (node_modules/react-dom/cjs/react-dom-client.development.js:23509:9)
+      at ReactDOMHydrationRoot.process.env.NODE_ENV.ReactDOMHydrationRoot.unmount.ReactDOMRoot.unmount [as unmount] (node_modules/react-dom/cjs/react-dom-client.development.js:27910:11)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:377:13)
+
+FAIL src/components/tour/__tests__/TourGallery.test.tsx (10.554 s)
+  ● TourGallery single photo DOM › mounts each original photo exactly once in cover-first caller order
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Harbor panorama"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/c.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Alley"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/b.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Square"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Harbor panorama"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/c.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Alley"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/b.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Square"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:102:28)
+
+  ● TourGallery single photo DOM › shows a cover plus up to four supporting tiles with a real-count see-all beyond five
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 4"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 4"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 5"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 5"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"absolute bottom-3 right-3 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mSee all 7 photos[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 7[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:112:26)
+
+  ● TourGallery single photo DOM › opens each tile at its own original index
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 4"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 4"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 4[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:139:28)
+
+  ● TourGallery single photo DOM › discloses the truthful count for sparse galleries with see-all access to every photo
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 4"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 4"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 4[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:149:19)
+
+  ● TourGallery single photo DOM › keeps a failed slot stable with an honest placeholder while other photos stay reachable
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 4"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 4"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 4[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:167:30)
+
+  ● TourGallery single photo DOM › recovers a failed slot when the media identity changes
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 2[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:184:28)
+
+  ● TourGallery single photo DOM › marks image language from alt_locale while controls stay page-localized
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Sunrise over the harbor"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/harbor.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Old street"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/street.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Sunrise over the harbor"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/harbor.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Old street"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/street.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 2[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:211:19)
+
+  ● TourGallery mobile rail › shows every photo in a scroll rail with counter and controls, without thumbnails
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 4"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 4"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 5"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 5"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"absolute bottom-3 right-3 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mSee all 7 photos[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 7[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:224:19)
+
+  ● TourGallery mobile rail › updates the counter on scroll and moves the rail from visible controls
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 4"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 4"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 5"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 5"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"absolute bottom-3 right-3 rounded-full bg-surface px-4 py-2 text-sm font-semibold text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mSee all 7 photos[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 7[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:233:22)
+
+  ● TourGallery mobile rail › uses instant programmatic scrolls when reduced motion is preferred
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:247:22)
+
+  ● TourGallery mobile rail › reaches every rail photo through its own trigger
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:256:28)
+
+  ● TourGallery viewer › uses a fullscreen viewport panel instead of a centered card
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:266:28)
+
+  ● TourGallery viewer › announces position even for a single photo, without navigation controls
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-4 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 1[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:274:28)
+
+  ● TourGallery viewer › returns focus to the actual trigger on close
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:283:28)
+
+  ● TourGallery viewer › keeps focus stable on arrow navigation without refocusing close
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:294:28)
+
+  ● TourGallery viewer › advances with arrows from the dialog close button without moving focus
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 3"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 3"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 3[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:308:28)
+
+  ● TourGallery viewer › applies the blur placeholder only from actually supplied metadata
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-track"]
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative hidden lg:block"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-mosaic"[39m
+          [33minert[39m=[32m""[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-4 gap-2"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 1"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-2 row-span-2 h-full min-h-full"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Has blur"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"View image 2"[39m
+              [33mclass[39m=[32m"relative block w-full overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus col-span-1 aspect-[16/10]"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 2"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mloading[39m=[32m"lazy"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 34vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative lg:hidden"[39m
+          [33mdata-testid[39m=[32m"tour-gallery-rail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex snap-x snap-mandatory overflow-x-auto motion-reduce:scroll-auto"[39m
+            [33mdata-testid[39m=[32m"tour-gallery-rail-scroll"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Has blur"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mfetchpriority[39m=[32m"high"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-full shrink-0 snap-center"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative block aspect-[16/10] w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33mloading[39m=[32m"lazy"[39m
+                  [33msizes[39m=[32m"100vw"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Previous image"[39m
+            [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Next image"[39m
+            [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-surface/90 p-2 text-primary shadow-modal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-overlay px-3 py-1 text-xs font-medium text-white"[39m
+          [36m>[39m
+            [0m1 of 2[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 | });
+      69 |
+    > 70 | const track = () => screen.getByTestId('tour-gallery-track');
+         |                            ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   reducedMotion = false;
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at track (src/components/tour/__tests__/TourGallery.test.tsx:70:28)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:332:29)
+
+  ● TourGallery hydration › hydrates a server snapshot on desktop without hydration errors and keeps controls usable
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 33
+
+    - Array []
+    + Array [
+    +   Array [
+    +     "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+    +
+    + - A server/client branch `if (typeof window !== 'undefined')`.
+    + - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+    + - Date formatting in a user's locale which doesn't match the server.
+    + - External changing data without sending a snapshot of it along with the HTML.
+    + - Invalid HTML tag nesting.
+    +
+    + It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+    +
+    + %s%s",
+    +     "https://react.dev/link/hydration-mismatch",
+    +     "
+    +
+    +   <TourGallery images={[...]} title=\"Rome walk\" contentLocale=\"en\">
+    +     <div
+    +       data-testid=\"tour-gallery-mosaic\"
+    + +     inert={false}
+    + -     inert=\"\"
+    +       className=\"relative hidden lg:block\"
+    +     >
+    +     <div
+    +       data-testid=\"tour-gallery-rail\"
+    + +     inert={true}
+    + -     inert={null}
+    +       className=\"relative lg:hidden\"
+    +     >
+    +     ...
+    + ",
+    +   ],
+    + ]
+
+      368 |         ),
+      369 |       );
+    > 370 |       expect(hydrationErrors).toEqual([]);
+          |                               ^
+      371 |       fireEvent.click(within(container).getByRole('button', { name: 'See all 7 photos' }));
+      372 |       const dialog = screen.getByRole('dialog', { name: 'Image lightbox' });
+      373 |       expect(within(dialog).getByRole('img')).toHaveAttribute('alt', 'Photo 1');
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:370:31)
+
+Test Suites: 1 failed, 1 total
+Tests:       18 failed, 2 passed, 20 total
+Snapshots:   0 total
+Time:        24.831 s
+Ran all test suites within paths "src/components/tour/__tests__/TourGallery.test.tsx".

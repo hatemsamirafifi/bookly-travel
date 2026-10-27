@@ -138,9 +138,10 @@ export const authApi = {
     return { data: mapUserApiToUser(res.data.user), token: res.data.token };
   },
 
-  logout: async (): Promise<void> => {
+  logout: async (token: string): Promise<void> => {
     await fetchApi<void>('/logout', {
       method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
     });
   },
 

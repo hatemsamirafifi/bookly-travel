@@ -1,0 +1,95 @@
+﻿{
+    "capturedAtUtc":  "2026-10-19T20:23:41.8982893Z",
+    "curatedMaps":  {
+                        "baseline419":  "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\prep\\candidate-manifest.json",
+                        "curated419":  "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\new419-candidate-manifest.json",
+                        "curated420":  "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\new420-container-source.json"
+                    },
+    "counts":  {
+                   "baseline419":  419,
+                   "curated419":  419,
+                   "curated420":  420
+               },
+    "host419":  {
+                    "entries":  419,
+                    "exit":  0,
+                    "mismatches":  [
+
+                                   ],
+                    "hashed":  419,
+                    "readErrors":  [
+
+                                   ]
+                },
+    "container420":  {
+                         "hashSource":  "docker exec -i bookly-frontend node -e (crypto sha256 of /app files); raw output saved at 06b-container-hashes-raw.json",
+                         "entries":  420,
+                         "expectedEntries":  420,
+                         "readErrors":  [
+
+                                        ],
+                         "mismatches":  [
+
+                                        ],
+                         "executionRecord":  "06b-container-hash-execution.txt",
+                         "unique":  420
+                     },
+    "keySetDelta":  {
+                        "expected":  "420-419=1 -\u003e jest.config.mjs only",
+                        "onlyInCurated420":  [
+                                                 "jest.config.mjs"
+                                             ],
+                        "onlyInCurated419":  [
+
+                                             ]
+                    },
+    "baselineVsCurated419":  {
+                                 "expected":  "exactly the four repaired files; other 415 identical",
+                                 "changedKeysCount":  2,
+                                 "changedKeys":  [
+                                                     "src\\components\\tour\\TourGallery.tsx",
+                                                     "src\\components\\tour\\__tests__\\TourGallery.test.tsx"
+                                                 ]
+                             },
+    "fourRepairedFiles":  [
+                              {
+                                  "rel":  "src\\components\\tour\\TourGallery.tsx",
+                                  "baselinePreRepairHash":  "153116c1dbb8b28e2d23fd6334892702cc59a5245b58bdaebf7abb65f781d28c",
+                                  "curated419Hash":  "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb",
+                                  "hostActualHash":  "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb",
+                                  "equalsCurated419":  true,
+                                  "differsFromPreRepairBaseline":  true,
+                                  "galleryShaExpectedByBrief":  "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb",
+                                  "galleryShaMatch":  true
+                              },
+                              {
+                                  "rel":  "src\\components\\tour\\__tests__\\TourGallery.test.tsx",
+                                  "baselinePreRepairHash":  "3e68199b52479862a2d8f4b68bb2530ebb0066b0dc2bc1540ef6377800c4d8ec",
+                                  "curated419Hash":  "d9c27ccff83d2dbb448b18c12e79b9989adf630e941e17027cb8e8e43f4847ea",
+                                  "hostActualHash":  "d9c27ccff83d2dbb448b18c12e79b9989adf630e941e17027cb8e8e43f4847ea",
+                                  "equalsCurated419":  true,
+                                  "differsFromPreRepairBaseline":  true
+                              },
+                              {
+                                  "rel":  "scripts\\lighthouse-runtime-preflight.mjs",
+                                  "baselinePreRepairHash":  "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+                                  "curated419Hash":  "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+                                  "hostActualHash":  "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+                                  "equalsCurated419":  true,
+                                  "differsFromPreRepairBaseline":  false
+                              },
+                              {
+                                  "rel":  "scripts\\lighthouse-runtime-preflight.test.mjs",
+                                  "baselinePreRepairHash":  "7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1",
+                                  "curated419Hash":  "7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1",
+                                  "hostActualHash":  "7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1",
+                                  "equalsCurated419":  true,
+                                  "differsFromPreRepairBaseline":  false
+                              }
+                          ],
+    "hostJestConfigHash":  {
+                               "actual":  "ea003c2348f2fdc10d178265a065c3230f2a670976e3c042a63125d229c40710",
+                               "preRepairRecordedPing":  "ea003c2348f2fdc10d178265a065c3230f2a670976e3c042a63125d229c40710",
+                               "note":  "jest config on host matches pre-repair hash record from prep-delta-proof.json"
+                           }
+}

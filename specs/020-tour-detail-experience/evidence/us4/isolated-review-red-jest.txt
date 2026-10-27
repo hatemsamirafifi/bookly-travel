@@ -1,0 +1,24 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx
+  (isolated-review red run: two new regression tests against the unfixed island; 12 prior tests untouched)
+
+RESULT: FAIL — 2 failed, 12 passed, 14 total (behavioral red, no missing-module failures)
+
+FAIL 1 — keeps the later visible section active when an earlier one exits alone across delta notifications
+  N1 (facts enters band) passed; N2 (overview alone exits while facts stays
+  intersecting and silent) moved aria-current backwards to "About":
+    Expected "Facts" to have aria-current="location", received null.
+  Root cause proven: the callback selected only from entries in that
+  notification (passed=[overview]), discarding the still-visible facts section.
+  N3 assertions not reached. No focus/scroll assertions were evaluated past N2.
+
+FAIL 2 — measures and observes across empty, present, replacement and empty lifecycles
+  Initial [] leg passed (no nav, no observers, scope values intact).
+  Empty -> present leg failed:
+    Expected resizeCallbacks.length 1, received 0.
+  Root cause proven: the measurement effect ran once with [] deps, exited
+  early on the initial null nav, and never re-ran when sections became
+  present — so no scoped offset was ever published and no ResizeObserver was
+  ever attached after an empty start. Replacement/empty legs not reached.
+
+Time: ~1.7s. Full failure text retained from the focused jest run above.

@@ -1,0 +1,13 @@
+▲ Next.js 16.2.3
+- Local:         http://127.0.0.1:52241
+- Network:       http://127.0.0.1:52241
+✓ Ready in 8.3s
+⨯ [TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo ENOTFOUND cdn.bookly.test
+      at ignore-listed frames {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'cdn.bookly.test'
+  }
+}

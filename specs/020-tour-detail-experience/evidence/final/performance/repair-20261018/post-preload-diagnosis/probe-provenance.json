@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-10-19T20:31:29.546Z",
+  "httpProbeAttempts": [
+    {
+      "target": "/en/tours/hidden-gems-rome-walking-tour",
+      "attempt": "first (ssr-probe.js 127.0.0.1, deadline 25s)",
+      "outcome": "timeout — no response body captured"
+    },
+    {
+      "targets": [
+        "/en/tours/hidden-gems-rome-walking-tour",
+        "/en",
+        "/en/blog/hidden-gems-florence"
+      ],
+      "attempt": "batched retry (ssr-probe2.js, family:4, 20s deadline per request)",
+      "outcome": "all three timed out; no fresh scores produced"
+    }
+  ],
+  "dockerApiAtProbeTime": "One docker API query returned HTTP 500 during the probe window. Recorded factually only; NO causal claim about engine or container state is made.",
+  "freshScoresProduced": false,
+  "ssrHtmlAvailablity": {
+    "tourSsrHtmlCapturedByThisRun": false,
+    "restoreDir": "evidence/final/runtime/docker-desktop-restore-20261019",
+    "restoreDirContents": [
+      "00-clock-env.txt",
+      "01-pre-restart-failed-state.md",
+      "02-docker-desktop-cli-discovery.md",
+      "03-docker-desktop-restart.md",
+      "04-engine-recovery.md",
+      "05-frontend-identity-readiness.md",
+      "05b-identity-verification.md",
+      "06-parity-report.json",
+      "06a-host-file-hashes-419.json",
+      "06b-container-hash-execution.txt"
+    ],
+    "containsSsrHtml": false,
+    "note": "Root instruction: consume retained SSR file if it appears later; current artifact set has no tour SSR HTML. SSR-level file presence remains UNCONFIRMED."
+  },
+  "traceParserFailures": "Earlier in-session trace/devtoolslog parsing attempts that failed were retained as diagnostic failures, not gates; the final devtoolslog initiator extraction (devlog-ini.js) completed successfully on tour run1, search run1, home run3, blog run1.",
+  "noInterference": "No container restarts, GETs, or audits performed in this session; another owner restored Docker Desktop exactly once and owns runtime/parity evidence."
+}

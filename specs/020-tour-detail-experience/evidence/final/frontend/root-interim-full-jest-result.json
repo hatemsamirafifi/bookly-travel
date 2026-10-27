@@ -1,0 +1,10 @@
+{
+  "args": [
+    "node_modules/jest/bin/jest.js",
+    "--runInBand"
+  ],
+  "startedAt": "2026-10-16T21:43:05.375Z",
+  "finishedAt": "2026-10-16T21:44:16.482Z",
+  "exitCode": 0,
+  "scope": "Interim root regression discovery while the delegated baseline-read fix remains pending; not final T066 acceptance"
+}

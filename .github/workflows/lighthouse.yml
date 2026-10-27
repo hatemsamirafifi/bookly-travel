@@ -81,7 +81,7 @@ jobs:
         run: |
           set -euo pipefail
           # These extra profiles diagnose failures; they do not replace any of
-          # the twelve acceptance reports already uploaded by the audit action.
+          # the eighteen acceptance reports already uploaded by the audit action.
           node - <<'JS'
           const fs = require('node:fs');
           const config = require('./frontend/lighthouserc.js');

@@ -1,0 +1,84 @@
+{
+  "generatedAt": "2026-10-19T20:52:27.833Z",
+  "collectExit": 1,
+  "assertExit": 1,
+  "reports": {
+    "lhrJson": 12,
+    "lhrHtml": 12
+  },
+  "traces": {
+    "traceJson": 12,
+    "devtoolslogs": 12
+  },
+  "urlsRan": 4,
+  "urlsInConfig": 6,
+  "missingUrlRuns": {
+    "count": 3,
+    "urls": [
+      "/en/search?q=rome",
+      "/es/tours/hidden-gems-rome-walking-tour",
+      "/it/tours/hidden-gems-rome-walking-tour"
+    ],
+    "note": "no runs for these URLs in this gate cycle (missing ES/IT)"
+  },
+  "gateConfig": {
+    "file": "frontend/lighthouserc.js",
+    "sha256": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "shaMatchesRootExpected": true,
+    "categories": [
+      "performance",
+      "accessibility",
+      "best-practices",
+      "seo"
+    ],
+    "numberOfCategories": 4,
+    "minScore": 0.9,
+    "cjsConfigInUse": false
+  },
+  "sourceHashesNote": "source-hashes.json (captured 20:23) is a PRE-EXPERIMENT baseline; host source is NOT recomputed while another owner edits approved app files.",
+  "cpuReadinessBlockBeforeEs": {
+    "source": "evidence/final/hero-preload-runtime/performance/native-collect.txt",
+    "extractedBlock": "final readiness block after the LAST literal \"Run #3...done.\" line",
+    "sampleCount": 29,
+    "appVisitedAllFalse": true,
+    "benchmarkIndexList": [
+      1202,
+      1226,
+      1054,
+      1298,
+      1257,
+      1148.5,
+      1299,
+      1112,
+      959.5,
+      1326.5,
+      1313.5,
+      1098,
+      1038,
+      1205,
+      1124.5,
+      1075.5,
+      1142.5,
+      1330.5,
+      1295,
+      1343.5,
+      1343.5,
+      1014.5,
+      835.5,
+      1308.5,
+      1323,
+      1347,
+      1270.5,
+      975,
+      976
+    ],
+    "benchmarkIndexMin": 835.5,
+    "benchmarkIndexMax": 1347,
+    "exhaustionError": "Error: CPU readiness budget (30 samples / 30000ms) exhausted; performance audit must not start",
+    "throwOrigin": [
+      "frontend/scripts/lighthouse-runtime-preflight.mjs:48",
+      "frontend/scripts/lighthouse-browser-ready.cjs:5"
+    ]
+  },
+  "noPassClaim": "No performance pass/improvement is claimed."
+}

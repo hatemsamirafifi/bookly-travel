@@ -1,0 +1,21 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx src/components/tour/__tests__/TourSections.test.tsx src/components/tour/__tests__/TourOverview.test.tsx src/components/tour/__tests__/ImageGallery.test.tsx src/lib/tours/__tests__/detail-localization.test.ts src/lib/tours/__tests__/detail-presentation.test.ts src/lib/tours/__tests__/booking-selection.test.ts src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx src/components/seo/__tests__/StructuredData.test.tsx
+
+node.exe : 
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Test Suites: 9 passed, 9 total
+Tests:       283 passed, 283 total
+Snapshots:   0 total
+Time:        9.327 s
+Ran all test suites within paths "src/components/tour/__tests__/TourDetail.test.tsx", 
+"src/components/tour/__tests__/TourSections.test.tsx", "src/components/tour/__tests__/TourOverview.test.tsx", 
+"src/components/tour/__tests__/ImageGallery.test.tsx", "src/lib/tours/__tests__/detail-localization.test.ts", 
+"src/lib/tours/__tests__/detail-presentation.test.ts", "src/lib/tours/__tests__/booking-selection.test.ts", 
+"src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx", 
+"src/components/seo/__tests__/StructuredData.test.tsx".

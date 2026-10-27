@@ -1,0 +1,24 @@
+﻿{
+    "recordedAtUtc":  "2026-10-17T20:22:04.1604816Z",
+    "purpose":  "Single post-restore environment observation for documentation only. No benchmark ran. One snapshot does not establish causality of any earlier readiness failure and does not exclude Docker/hardware/power contributors. No setting was changed and no application was started or stopped.",
+    "cpu":  {
+                "loadPercentSingleSample":  28,
+                "currentClockMhzRaw":  2304,
+                "maxClockMhzRaw":  2304,
+                "coreCount":  4,
+                "logicalProcessors":  8
+            },
+    "memory":  {
+                   "totalVisibleKb":  16550132,
+                   "freeKb":  3126196,
+                   "usedPercentApprox":  81.1
+               },
+    "power":  {
+                  "source":  "System.Windows.Forms.SystemInformation.PowerStatus",
+                  "powerLineStatusEnum":  "Online",
+                  "batteryChargeStatusEnum":  "NoSystemBattery",
+                  "batteryLifePercentRaw":  1,
+                  "batteryLifeSecondsRemainingRaw":  -1
+              },
+    "activePowerSchemeRawText":  "Power Scheme GUID: d010dcb1-f531-487f-9c46-b19bfeca4c41  (Ultimate Performance)"
+}

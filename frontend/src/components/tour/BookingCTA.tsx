@@ -1,10 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
 import type { PricingInfo, AvailabilityInfo } from '@/lib/api/types';
-import WishlistButton from '@/components/wishlist/WishlistButton';
-import { useTranslations } from 'next-intl';
+import TourBookingController from './TourBookingController';
 
 interface BookingCTAProps {
   pricing: PricingInfo;
@@ -13,85 +10,33 @@ interface BookingCTAProps {
   locale: string;
   slug: string;
   tourId: string | number;
+  cancellationPolicy?: string | null;
+  todayUtc?: string;
 }
 
-export default function BookingCTA({ pricing, availability, groupSize, locale, slug, tourId }: BookingCTAProps) {
-  const [participants, setParticipants] = useState(groupSize.min);
-  const t = useTranslations('tour');
-
-  const isAvailable =
-    !availability.is_unavailable &&
-    availability.next_available_date !== null &&
-    availability.available_dates.includes(availability.next_available_date) &&
-    pricing.base_price.amount > 0;
-
+/** Compatibility wrapper: the canonical TourBookingController owns all
+ *  date/count state. This wrapper carries no selection engine of its own. */
+export default function BookingCTA({
+  pricing,
+  availability,
+  groupSize,
+  locale,
+  slug,
+  tourId,
+  cancellationPolicy,
+  todayUtc,
+}: BookingCTAProps) {
   return (
-    <div className="sticky top-4 rounded-lg border border-gray-200 bg-white p-5 shadow-md">
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <span className="text-2xl font-bold text-gray-900">{pricing.base_price.formatted}</span>
-          <span className="text-sm text-gray-500"> {t('perPerson')}</span>
-        </div>
-        <WishlistButton tourId={tourId} locale={locale} />
-      </div>
-
-      {isAvailable ? (
-        <>
-          <div className="mb-3">
-            <label htmlFor="participants" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('participants')}
-            </label>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setParticipants(Math.max(groupSize.min, participants - 1))}
-                disabled={participants <= groupSize.min}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label={t('decreaseParticipants')}
-              >
-                -
-              </button>
-              <span className="w-10 text-center text-sm font-medium" id="participants-count" aria-live="polite">
-                {participants}
-              </span>
-              <button
-                onClick={() => setParticipants(Math.min(groupSize.max, participants + 1))}
-                disabled={participants >= groupSize.max}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label={t('increaseParticipants')}
-              >
-                +
-              </button>
-              <span className="ml-2 text-xs text-gray-500">
-                {t('allowedRange', { min: groupSize.min, max: groupSize.max })}
-              </span>
-            </div>
-          </div>
-
-          <Link
-            href={`/${locale}/booking?tour=${encodeURIComponent(slug)}&participants=${participants}&date=${encodeURIComponent(availability.next_available_date!)}`}
-            className="block w-full rounded-xl bg-[#FFB800] py-2.5 text-center text-sm font-semibold text-[#0A2540] hover:bg-[#e6a600] focus:outline-none focus:ring-2 focus:ring-[#FFB800] focus:ring-offset-2 transition-colors"
-          >
-            {t('bookNow')}
-          </Link>
-
-          <p className="mt-2 text-center text-xs text-green-800">
-            {t('nextAvailable')}: {new Date(`${availability.next_available_date}T00:00:00`).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
-          </p>
-        </>
-      ) : (
-        <div className="rounded-md bg-gray-100 py-3 text-center" role="status">
-          <p className="text-sm font-medium text-gray-500">{t('unavailable')}</p>
-          <p className="mt-1 text-xs text-gray-500">{t('unavailableHint')}</p>
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            className="mt-3 w-full rounded-lg bg-gray-300 py-2.5 text-center text-sm font-semibold text-gray-500 cursor-not-allowed"
-          >
-            {t('bookNow')}
-          </button>
-        </div>
-      )}
-    </div>
+    <TourBookingController
+      slug={slug}
+      locale={locale}
+      pricing={pricing}
+      availability={availability}
+      groupMin={groupSize.min}
+      groupMax={groupSize.max}
+      todayUtc={todayUtc ?? new Date().toISOString().slice(0, 10)}
+      tourId={tourId}
+      cancellationPolicy={cancellationPolicy ?? null}
+    />
   );
 }

@@ -1,0 +1,159 @@
+{
+  "startedAt": "2026-10-24T17:03:34.043Z",
+  "scope": "local QA source readiness, API/UI verification, and full Linux frontend gates on rebuilt Docker runtime; no performance/CI/release claim",
+  "passedReadinessOnly": true,
+  "frontendGates": {
+    "passed": true,
+    "jest": {
+      "numTotalTests": 847,
+      "numPassedTests": 847,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 70,
+      "numPassedTestSuites": 70,
+      "numFailedTestSuites": 0,
+      "numRuntimeErrorTestSuites": 0,
+      "success": true,
+      "wasInterrupted": false,
+      "startTime": 1792861423267
+    },
+    "commands": [
+      {
+        "name": "jest",
+        "args": [
+          "exec",
+          "--workdir",
+          "/app",
+          "-e",
+          "NODE_ENV=test",
+          "-e",
+          "NEXT_PUBLIC_SITE_URL=",
+          "bookly-frontend",
+          "node",
+          "node_modules/jest/bin/jest.js",
+          "--runInBand",
+          "--json",
+          "--outputFile",
+          "/tmp/spec020-loading-jest-20261024.json"
+        ],
+        "startedAt": "2026-10-24T17:03:42.415Z",
+        "finishedAt": "2026-10-24T17:04:33.540Z",
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "error": null
+      },
+      {
+        "name": "typescript",
+        "args": [
+          "exec",
+          "--workdir",
+          "/app",
+          "bookly-frontend",
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "--noEmit"
+        ],
+        "startedAt": "2026-10-24T17:04:33.749Z",
+        "finishedAt": "2026-10-24T17:05:05.642Z",
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "error": null
+      },
+      {
+        "name": "eslint",
+        "args": [
+          "exec",
+          "--workdir",
+          "/app",
+          "bookly-frontend",
+          "node",
+          "node_modules/eslint/bin/eslint.js",
+          "."
+        ],
+        "startedAt": "2026-10-24T17:05:05.642Z",
+        "finishedAt": "2026-10-24T17:05:51.425Z",
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "error": null
+      }
+    ]
+  },
+  "host419": {
+    "entries": 419,
+    "unique": 419,
+    "readErrors": [],
+    "mismatches": []
+  },
+  "container420": {
+    "entries": 420,
+    "unique": 420,
+    "readErrors": [],
+    "mismatches": []
+  },
+  "container": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "qCG5f2FVeu3OwbNmIl4-M",
+    "id": "ad3a06955964b5249f65caa4a3af90f356976e9be831d66347d0f708f5cd2673",
+    "image": "sha256:0d3642b23b6102d6ba79f9a1cf55e27a6f356ed37340d08dc6ad7ae87c6026d0",
+    "startedAt": "2026-10-24T15:44:07.658547586Z"
+  },
+  "rootProbes": [
+    {
+      "url": "http://127.0.0.1:3001/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    {
+      "url": "http://localhost:8080/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    {
+      "url": "http://127.0.0.1:8080/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    }
+  ],
+  "apiUiProbes": [
+    {
+      "url": "http://localhost:8080/api/public/tours/hidden-gems-rome-walking-tour?locale=en",
+      "status": 200,
+      "location": null,
+      "bytes": 3375,
+      "bodySha256": "49b0430b36f787ccd7b9ea2728f2cdfea3c48cd3e5721c3e0bad18fcf385500a"
+    },
+    {
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "status": 200,
+      "location": null,
+      "bytes": 138103,
+      "bodySha256": "3ea62d5b5007b7f78e353a0f141f5c05fb48ed78a157b2702dd7937435a1ebc0"
+    }
+  ],
+  "manifests": {
+    "new419Sha256": "7e1775e3fd66ed1d9adf7374af486c7a1c12437f683a68fec2ccd8b6f1e40891",
+    "new420Sha256": "58d4ecbf8574dfdc7e221795a13dc3df26ba2a6775b08a26bb35391727ef571c"
+  },
+  "checks": {
+    "host419": true,
+    "container420": true,
+    "versions": true,
+    "newBuildId": true,
+    "image": true,
+    "rootsHealthy": true,
+    "apiUiHealthy": true,
+    "runtimeStableSinceBuild": true
+  },
+  "finishedAt": "2026-10-24T17:05:52.002Z"
+}

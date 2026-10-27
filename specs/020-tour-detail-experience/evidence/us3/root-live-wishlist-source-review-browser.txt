@@ -1,0 +1,106 @@
+
+Running 9 tests using 1 worker
+
+[1A[2K(node:18280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:18280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/9] [setup] › tests\e2e\auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/9] [setup] › tests\e2e\partner.setup.ts:19:6 › authenticate as partner
+[1A[2K(node:10688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:10688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:67:7 › Wishlist › wishlist page renders
+[1A[2K[4/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:73:7 › Wishlist › wishlist shows empty state or grid
+[1A[2K[5/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:83:7 › Wishlist › owned tour header button toggles saved state with real API and restores it
+[1A[2K[6/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement
+[1A[2K  1) [chromium-authed] › tests\e2e\wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('alert')
+    Expected: [32m"You cannot update this wishlist."[39m
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <p role="alert" class="mt-2 text-sm text-error">You cannot update this wishlist.</p> aka getByText('You cannot update this')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('alert')[22m
+    [2m    5 × locator resolved to <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div>[22m
+    [2m      - unexpected value ""[22m
+
+
+      148 |       // Optimistic flip, then real rollback with the denied announcement and
+      149 |       // no false success.
+    > 150 |       await expect(page.getByRole('alert')).toHaveText('You cannot update this wishlist.');
+          |                                             ^
+      151 |       await expect(button).toHaveAttribute('aria-pressed', 'false');
+      152 |       await expect(button).toBeEnabled();
+      153 |       await expect(page.getByRole('status')).toHaveCount(0);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\wishlist.spec.ts:150:45
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\wishlist-source-review\wishlist-Wishlist-denied-w-ae336-th-a-localized-announcement-chromium-authed\error-context.md
+
+
+[1A[2K(node:9996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:9996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[7/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:163:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement
+[1A[2K  2) [chromium-authed] › tests\e2e\wishlist.spec.ts:163:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('alert')
+    Expected: [32m"Could not update your wishlist. Try again."[39m
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <p role="alert" class="mt-2 text-sm text-error">Could not update your wishlist. Try again.</p> aka getByText('Could not update your')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+    [2m  - Expect "toHaveText" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('alert')[22m
+    [2m    5 × locator resolved to <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div>[22m
+    [2m      - unexpected value ""[22m
+
+
+      188 |
+      189 |       await button.click();
+    > 190 |       await expect(page.getByRole('alert')).toHaveText(
+          |                                             ^
+      191 |         'Could not update your wishlist. Try again.',
+      192 |       );
+      193 |       await expect(button).toHaveAttribute('aria-pressed', 'false');
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\wishlist.spec.ts:190:45
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\wishlist-source-review\wishlist-Wishlist-failed-w-00693-th-a-localized-announcement-chromium-authed\error-context.md
+
+
+[1A[2K(node:24660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[8/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:205:7 › Wishlist › removing the owned tour from the wishlist grid restores its original state
+[1A[2K[9/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:242:7 › Wishlist › owned wishlist item links to its tour detail
+[1A[2K  2 failed
+    [chromium-authed] › tests\e2e\wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement 
+    [chromium-authed] › tests\e2e\wishlist.spec.ts:163:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement 
+  7 passed (18.6s)

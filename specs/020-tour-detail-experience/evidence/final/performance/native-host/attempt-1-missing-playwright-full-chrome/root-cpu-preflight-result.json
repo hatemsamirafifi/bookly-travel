@@ -1,0 +1,9 @@
+{
+  "startedAt": "2026-10-17T15:15:06.307Z",
+  "node": "v24.14.1",
+  "chromePath": "C:\\Users\\HaTeM\\AppData\\Local\\ms-playwright\\chromium-1223\\chrome-win64\\chrome.exe",
+  "scope": "Unchanged CPU readiness hook on native installed Chrome; only about:blank, no app cache warming or audit acceptance",
+  "exitCode": 1,
+  "passed": false,
+  "finishedAt": "2026-10-17T15:15:27.222Z"
+}

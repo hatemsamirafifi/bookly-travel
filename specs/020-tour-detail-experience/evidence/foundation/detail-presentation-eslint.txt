@@ -1,0 +1,10 @@
+# Detail-presentation lint evidence (Spec 020 foundation, T005–T007)
+
+Command (from `frontend/`):
+
+```text
+npx eslint src/lib/tours/detail-presentation.ts src/lib/tours/__tests__/detail-presentation.test.ts tests/fixtures/tour-detail.ts
+```
+
+Result: exit 0, no warnings, no errors. Output was empty, so this note
+stands in for the empty log.

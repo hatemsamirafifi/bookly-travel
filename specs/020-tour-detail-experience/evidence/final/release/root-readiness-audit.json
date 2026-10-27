@@ -1,0 +1,128 @@
+{
+  "recordedAt": "2026-10-17T15:18:20.899Z",
+  "scope": "Read-only source/CI/dependency audit. No commit, push, PR, merge, workflow dispatch or deployment.",
+  "commands": [
+    {
+      "name": "branch",
+      "command": "git",
+      "args": [
+        "branch",
+        "--show-current"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "head",
+      "command": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "working-tree",
+      "command": "git",
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "head-check-runs",
+      "command": "gh",
+      "args": [
+        "api",
+        "repos/hatemsamirafifi/bookly-travel/commits/b04650350e834ce84d7eb728e07f05fd4e67b076/check-runs",
+        "--jq",
+        "{total_count,check_runs:[.check_runs[]|{name,status,conclusion,head_sha,html_url}]}"
+      ],
+      "exitCode": 1
+    },
+    {
+      "name": "head-status",
+      "command": "gh",
+      "args": [
+        "api",
+        "repos/hatemsamirafifi/bookly-travel/commits/b04650350e834ce84d7eb728e07f05fd4e67b076/status",
+        "--jq",
+        "{state,total_count,statuses:[.statuses[]|{context,state,target_url}]}"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "feature-prs",
+      "command": "gh",
+      "args": [
+        "pr",
+        "list",
+        "--repo",
+        "hatemsamirafifi/bookly-travel",
+        "--state",
+        "all",
+        "--head",
+        "codex/020-tour-detail-experience",
+        "--json",
+        "number,state,isDraft,headRefOid,baseRefName,url"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "spec019-predecessor",
+      "command": "gh",
+      "args": [
+        "pr",
+        "view",
+        "29",
+        "--repo",
+        "hatemsamirafifi/bookly-travel",
+        "--json",
+        "number,state,mergedAt,mergeCommit,url,baseRefName"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "remote-main",
+      "command": "gh",
+      "args": [
+        "api",
+        "repos/hatemsamirafifi/bookly-travel/branches/main",
+        "--jq",
+        ".commit.sha"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "main-ancestor-of-head",
+      "command": "git",
+      "args": [
+        "merge-base",
+        "--is-ancestor",
+        "9e241b9377d42f904081cb7b2bca1871e3b4388d",
+        "b04650350e834ce84d7eb728e07f05fd4e67b076"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "shell-merged-into-main",
+      "command": "git",
+      "args": [
+        "merge-base",
+        "--is-ancestor",
+        "4afdbc6e0bec2d29341ea229b7b7f1b2226ecf27",
+        "9e241b9377d42f904081cb7b2bca1871e3b4388d"
+      ],
+      "exitCode": 1
+    }
+  ],
+  "branch": "codex/020-tour-detail-experience",
+  "head": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "hasUncommittedWork": true,
+  "remoteMain": "9e241b9377d42f904081cb7b2bca1871e3b4388d",
+  "currentWorkingTreeCI": "Pending: source is uncommitted; any commit check does not establish CI for this working tree.",
+  "targetDeployment": "Not executed or verified; target environment was not supplied. Spec019 target rollout and monitoring require separate confirmation.",
+  "rollback": "No schema rollback needed for020; retain a compatible predecessor frontend image/source. No target image digest or exercised production rollback supplied.",
+  "commitPolicy": "Human explicitly requested implementation/tests without commits during LiveReview quota outage. Optional SpecKit commit hooks are intentionally not invoked.",
+  "finishedAt": "2026-10-17T15:18:37.441Z"
+}

@@ -1,0 +1,138 @@
+{
+  "startedAt": "2026-10-20T19:50:11.234Z",
+  "scope": "local QA build and source readiness; frontend gates pending",
+  "commands": [
+    {
+      "name": "startup-1",
+      "args": [
+        "exec",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "const fs=require('node:fs');try{console.log(fs.readFileSync('/app/.next/BUILD_ID','utf8').trim())}catch(e){console.error(e.code);process.exitCode=1}"
+      ],
+      "startedAt": "2026-10-20T19:50:11.447Z",
+      "finishedAt": "2026-10-20T19:50:12.289Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "container-identity",
+      "args": [
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{\"id\":{{json .Id}},\"image\":{{json .Image}},\"state\":{{json .State}},\"project\":{{json (index .Config.Labels \"com.docker.compose.project\")}},\"service\":{{json (index .Config.Labels \"com.docker.compose.service\")}}}"
+      ],
+      "startedAt": "2026-10-20T19:50:12.580Z",
+      "finishedAt": "2026-10-20T19:50:12.825Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "container420",
+      "args": [
+        "exec",
+        "-i",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "(function () {\n  const f = require('node:fs'), c = require('node:crypto'); let data = '';\n  process.stdin.setEncoding('utf8'); process.stdin.on('data', x => data += x);\n  process.stdin.on('end', () => {\n    const files = Object.entries(JSON.parse(data)).map(([rel, expected]) => {\n      try {return {rel, expected, actual: c.createHash('sha256').update(f.readFileSync('/app/' + rel.replace(/\\\\/g, '/'))).digest('hex'), error: null};}\n      catch (e) {return {rel, expected, actual: null, error: e.code || String(e)};}\n    });\n    process.stdout.write(JSON.stringify({node: process.version, next: require('/app/node_modules/next/package.json').version, buildId: f.readFileSync('/app/.next/BUILD_ID', 'utf8').trim(), files}));\n  });\n})();"
+      ],
+      "startedAt": "2026-10-20T19:50:12.827Z",
+      "finishedAt": "2026-10-20T19:50:13.326Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "new-build-log",
+      "args": [
+        "logs",
+        "--tail",
+        "160",
+        "bookly-frontend"
+      ],
+      "startedAt": "2026-10-20T19:50:20.076Z",
+      "finishedAt": "2026-10-20T19:50:20.422Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    }
+  ],
+  "polls": [
+    {
+      "at": "2026-10-20T19:50:12.306Z",
+      "status": 0,
+      "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+      "root": {
+        "url": "http://127.0.0.1:3001/",
+        "status": 307,
+        "location": "/en",
+        "bytes": 3,
+        "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+      }
+    }
+  ],
+  "passedReadinessOnly": true,
+  "host419": {
+    "entries": 419,
+    "unique": 419,
+    "readErrors": [],
+    "mismatches": []
+  },
+  "container420": {
+    "entries": 420,
+    "unique": 420,
+    "readErrors": [],
+    "mismatches": []
+  },
+  "container": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "dFu3J0-yfIjd2NqhYKf4R",
+    "id": "ce459c3102ce686f222a9c5170eaa79bd9d8d4d131c6016c6dc21be907fe7ec5",
+    "image": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+    "startedAt": "2026-10-20T19:44:33.210501691Z"
+  },
+  "rootProbes": [
+    {
+      "url": "http://127.0.0.1:3001/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    {
+      "url": "http://localhost:8080/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    {
+      "url": "http://127.0.0.1:8080/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    }
+  ],
+  "checks": {
+    "host419": true,
+    "container420": true,
+    "versions": true,
+    "newBuildId": true,
+    "image": true,
+    "rootsHealthy": true,
+    "proxyEquivalent": true
+  },
+  "buildLogReadStatus": 0,
+  "finishedAt": "2026-10-20T19:50:20.423Z"
+}

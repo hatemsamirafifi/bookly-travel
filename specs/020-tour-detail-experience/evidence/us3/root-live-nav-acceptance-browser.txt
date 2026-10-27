@@ -1,0 +1,58 @@
+
+Running 8 tests using 1 worker
+
+[1A[2K(node:3160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:3160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/8] [chromium] › tests\e2e\tour-detail.spec.ts:1956:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+[1A[2K[2/8] [chromium] › tests\e2e\tour-detail.spec.ts:2009:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sparse tour exposes only present entries and activates them
+[1A[2K[3/8] [chromium] › tests\e2e\tour-detail.spec.ts:2031:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[4/8] [chromium] › tests\e2e\tour-detail.spec.ts:2072:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 narrow rail reveals the active entry without moving the page vertically
+[1A[2K[5/8] [chromium] › tests\e2e\tour-detail.spec.ts:2136:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 long locale labels survive resize with reachable entries and no page overflow
+[1A[2K[6/8] [chromium] › tests\e2e\tour-detail.spec.ts:2169:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 reduced motion targets the reading position immediately
+[1A[2K[7/8] [chromium] › tests\e2e\tour-detail.spec.ts:2193:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:2193:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByRole('navigation', { name: 'Tour sections' }).getByRole('link', { name: 'Reviews' })
+    Expected: [32m"location"[39m
+    Received: [31m""[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('navigation', { name: 'Tour sections' }).getByRole('link', { name: 'Reviews' })[22m
+    [2m    2 × locator resolved to <a href="#reviews" class="rounded-lg px-3 py-2 text-sm font-medium text-bookly-navy hover:bg-surface-alt focus-visible:outline-2 focus-visible:outline-focus">Reviews</a>[22m
+    [2m      - unexpected value "null"[22m
+
+
+      2202 |
+      2203 |       const nav = page.getByRole('navigation', { name: 'Tour sections' });
+    > 2204 |       await expect(nav.getByRole('link', { name: 'Reviews' })).toHaveAttribute('aria-current', 'location');
+           |                                                                ^
+      2205 |       await expect(headingFor(page, 'reviews')).toBeFocused();
+      2206 |       expect(page.url()).toContain('#reviews');
+      2207 |       await headingClearOfNav(page, 'Tour sections', 'reviews');
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:2204:64
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\nav-acceptance\tour-detail-Tour-Detail-se-1049d-restores-the-reading-target-chromium\error-context.md
+
+
+[1A[2K(node:25288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[8/8] [chromium] › tests\e2e\tour-detail.spec.ts:2222:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:2193:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 initial deep link restores the reading target 
+  7 passed (1.7m)

@@ -1,0 +1,385 @@
+FAIL src/components/wishlist/__tests__/WishlistButton.test.tsx
+  ● Console
+
+    console.error
+      An update to WishlistButton inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      112 |         setSaved(value);
+      113 |         setStatusError(false);
+    > 114 |         setCompletedStatusRead(statusReadKey);
+          |         ^
+      115 |       })
+      116 |       .catch(() => {
+      117 |         if (!active || !mountedRef.current || tourIdRef.current !== tour) return;
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at src/components/wishlist/WishlistButton.tsx:114:9
+
+    console.error
+      An update to WishlistButton inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      112 |         setSaved(value);
+      113 |         setStatusError(false);
+    > 114 |         setCompletedStatusRead(statusReadKey);
+          |         ^
+      115 |       })
+      116 |       .catch(() => {
+      117 |         if (!active || !mountedRef.current || tourIdRef.current !== tour) return;
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at src/components/wishlist/WishlistButton.tsx:114:9
+
+    console.error
+      An update to WishlistButton inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      112 |         setSaved(value);
+      113 |         setStatusError(false);
+    > 114 |         setCompletedStatusRead(statusReadKey);
+          |         ^
+      115 |       })
+      116 |       .catch(() => {
+      117 |         if (!active || !mountedRef.current || tourIdRef.current !== tour) return;
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at src/components/wishlist/WishlistButton.tsx:114:9
+
+    console.error
+      An update to WishlistButton inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      112 |         setSaved(value);
+      113 |         setStatusError(false);
+    > 114 |         setCompletedStatusRead(statusReadKey);
+          |         ^
+      115 |       })
+      116 |       .catch(() => {
+      117 |         if (!active || !mountedRef.current || tourIdRef.current !== tour) return;
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at src/components/wishlist/WishlistButton.tsx:114:9
+
+  ● WishlistButton › announces saved only after the add request resolves
+
+    expect(element).toHaveAttribute("aria-pressed", "true") // element.getAttribute("aria-pressed") === "true"
+
+    Expected the element to have attribute:
+      aria-pressed="true"
+    Received:
+      aria-pressed="mixed"
+
+      192 |     const btn = screen.getByTestId('wishlist-button');
+      193 |     fireEvent.click(btn);
+    > 194 |     expect(btn).toHaveAttribute('aria-pressed', 'true');
+          |                 ^
+      195 |
+      196 |     act(() => { jest.advanceTimersByTime(400); });
+      197 |     expect(mockAddWishlistItem).toHaveBeenCalledWith(42);
+
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:194:17)
+
+  ● WishlistButton › rolls back and reports saveFailed without false success when the toggle fails
+
+    Unable to find role="alert"
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Save to wishlist"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"h-10 w-10 min-h-11 min-w-11 inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/95 text-lg shadow-sm transition hover:border-[#FFB800] disabled:opacity-60"[39m
+          [33mdata-testid[39m=[32m"wishlist-button"[39m
+          [33mdata-tour-id[39m=[32m"42"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"text-gray-500"[39m
+          [36m>[39m
+            [0m♡[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      233 |     act(() => { jest.advanceTimersByTime(400); });
+      234 |
+    > 235 |     await waitFor(() => {
+          |                  ^
+      236 |       expect(screen.getByRole('alert')).toHaveTextContent('Could not update your wishlist. Try again.');
+      237 |     });
+      238 |     expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'false');
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:235:18)
+
+  ● WishlistButton › reports denied without false success on toggle status 401
+
+    Unable to find role="alert"
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Save to wishlist"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"h-10 w-10 min-h-11 min-w-11 inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/95 text-lg shadow-sm transition hover:border-[#FFB800] disabled:opacity-60"[39m
+          [33mdata-testid[39m=[32m"wishlist-button"[39m
+          [33mdata-tour-id[39m=[32m"42"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"text-gray-500"[39m
+          [36m>[39m
+            [0m♡[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      250 |       act(() => { jest.advanceTimersByTime(400); });
+      251 |
+    > 252 |       await waitFor(() => {
+          |                    ^
+      253 |         expect(screen.getByRole('alert')).toHaveTextContent('You cannot update this wishlist.');
+      254 |       });
+      255 |       expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'false');
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at src/components/wishlist/__tests__/WishlistButton.test.tsx:252:20
+
+  ● WishlistButton › reports denied without false success on toggle status 403
+
+    Unable to find role="alert"
+
+    Ignored nodes: comments, script, style
+    [36m<body[39m
+      [33mstyle[39m=[32m""[39m
+    [36m>[39m
+      [36m<div>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"false"[39m
+          [33maria-label[39m=[32m"Save to wishlist"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"h-10 w-10 min-h-11 min-w-11 inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/95 text-lg shadow-sm transition hover:border-[#FFB800] disabled:opacity-60"[39m
+          [33mdata-testid[39m=[32m"wishlist-button"[39m
+          [33mdata-tour-id[39m=[32m"42"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"text-gray-500"[39m
+          [36m>[39m
+            [0m♡[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      250 |       act(() => { jest.advanceTimersByTime(400); });
+      251 |
+    > 252 |       await waitFor(() => {
+          |                    ^
+      253 |         expect(screen.getByRole('alert')).toHaveTextContent('You cannot update this wishlist.');
+      254 |       });
+      255 |       expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'false');
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at src/components/wishlist/__tests__/WishlistButton.test.tsx:252:20
+
+  ● WishlistButton › does not remove a previously unsaved item on rapid save-then-undo before the request
+
+    expect(element).toHaveAttribute("aria-pressed", "false") // element.getAttribute("aria-pressed") === "false"
+
+    Expected the element to have attribute:
+      aria-pressed="false"
+    Received:
+      aria-pressed="mixed"
+
+      267 |     fireEvent.click(btn);
+      268 |     fireEvent.click(btn);
+    > 269 |     expect(btn).toHaveAttribute('aria-pressed', 'false');
+          |                 ^
+      270 |
+      271 |     await act(async () => { jest.advanceTimersByTime(1000); });
+      272 |
+
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:269:17)
+
+  ● WishlistButton › ignores a stale toggle failure after the tour changes
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 42
+
+    Number of calls: 0
+
+      311 |     fireEvent.click(screen.getByTestId('wishlist-button'));
+      312 |     act(() => { jest.advanceTimersByTime(400); });
+    > 313 |     expect(mockAddWishlistItem).toHaveBeenCalledWith(42);
+          |                                 ^
+      314 |
+      315 |     rerender(<WishlistButton tourId={99} locale="en" />);
+      316 |     await waitFor(() => {
+
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:313:33)
+
+  ● WishlistButton › ignores a stale toggle success after the session changes
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 42
+
+    Number of calls: 0
+
+      408 |     fireEvent.click(screen.getByTestId('wishlist-button'));
+      409 |     act(() => { jest.advanceTimersByTime(400); });
+    > 410 |     expect(mockAddWishlistItem).toHaveBeenCalledWith(42);
+          |                                 ^
+      411 |
+      412 |     // Session changes to B, whose authoritative state is unsaved: the stale
+      413 |     // success must not fabricate a saved state for the new session.
+
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:410:33)
+
+  ● WishlistButton › ignores a stale toggle failure after the session changes
+
+    old session failure
+
+      461 |     });
+      462 |
+    > 463 |     await act(async () => { rejectAdd(new Error('old session failure')); });
+          |                                       ^
+      464 |
+      465 |     expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'true');
+      466 |     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+
+      at src/components/wishlist/__tests__/WishlistButton.test.tsx:463:39
+      at node_modules/@testing-library/react/dist/act-compat.js:47:24
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:814:22)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:463:14)
+
+  ● WishlistButton › ignores a stale toggle failure after the session changes
+
+    old session failure
+
+      461 |     });
+      462 |
+    > 463 |     await act(async () => { rejectAdd(new Error('old session failure')); });
+          |                                       ^
+      464 |
+      465 |     expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'true');
+      466 |     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+
+      at src/components/wishlist/__tests__/WishlistButton.test.tsx:463:39
+      at node_modules/@testing-library/react/dist/act-compat.js:47:24
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:814:22)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:463:14)
+
+  ● WishlistButton › ignores a stale toggle failure after the session changes
+
+    old session failure
+
+      461 |     });
+      462 |
+    > 463 |     await act(async () => { rejectAdd(new Error('old session failure')); });
+          |                                       ^
+      464 |
+      465 |     expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'true');
+      466 |     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+
+      at src/components/wishlist/__tests__/WishlistButton.test.tsx:463:39
+      at node_modules/@testing-library/react/dist/act-compat.js:47:24
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:814:22)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:463:14)
+
+  ● WishlistButton › clears a failed status when the session changes
+
+    expect(element).toHaveAttribute("aria-pressed", "false") // element.getAttribute("aria-pressed") === "false"
+
+    Expected the element to have attribute:
+      aria-pressed="false"
+    Received:
+      aria-pressed="mixed"
+
+      551 |       expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+      552 |     });
+    > 553 |     expect(screen.getByTestId('wishlist-button')).toHaveAttribute('aria-pressed', 'false');
+          |                                                   ^
+      554 |     expect(screen.getByTestId('wishlist-button')).not.toBeDisabled();
+      555 |   });
+      556 |
+
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:553:51)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       9 failed, 34 passed, 43 total
+Snapshots:   0 total
+Time:        2.438 s
+Ran all test suites within paths "src/components/wishlist/__tests__/WishlistButton.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx".

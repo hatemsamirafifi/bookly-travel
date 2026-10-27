@@ -1,0 +1,67 @@
+{
+  "scope": "Fresh native built Next on its own origin; same-origin API rewrite reaches the actual owned backend. No frontend-resource or API response interception. Media-only CDN adapter. This is not Docker deployment/optimizer/performance acceptance.",
+  "checks": [
+    "All offered dates, non-default selection, shared mobile dialog, 44px target, Escape focus return and resize preserved query.",
+    "Real login through register/login cross-links restored the full selection with no create POST.",
+    "Actual revoked-token create401 recovered full query; explicit retry alone created one deterministic booking with authoritative integer total.",
+    "Actual revoked-token payment401 retained the same pending reference; cross-tab login restored auth and explicit retry confirmed it without another create POST."
+  ],
+  "createRequests": [
+    {
+      "tour_slug": "hidden-gems-rome-walking-tour",
+      "tour_date": "2026-11-17",
+      "participant_count": 4,
+      "locale": "en",
+      "page_load_price": 4500
+    },
+    {
+      "tour_slug": "hidden-gems-rome-walking-tour",
+      "tour_date": "2026-11-17",
+      "participant_count": 4,
+      "locale": "en",
+      "page_load_price": 4500
+    }
+  ],
+  "paymentStatuses": [
+    401,
+    200
+  ],
+  "startedAtUtc": "2026-10-16T16:25:12.430Z",
+  "origin": "http://127.0.0.1:50625",
+  "nativeOrigin": "http://127.0.0.1:50625",
+  "sourceHead": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "buildId": "3izO741kD6F5DDJ3N2S0V",
+  "sourceFiles": {
+    "src/components/tour/TourBookingController.tsx": "bb0e58d699fa5f6497c21b9c84df8290d3f350f0d974b20fc01cf0c1c1283902",
+    "src/components/tour/BookingCard.tsx": "3055a3f29c912f7ddb06da90b6ac4bc8109198b1bc5de446770d0e054209d57e",
+    "src/components/tour/MobileBookingBar.tsx": "05b7deb5d02ce924154547200288d943fa1f6748afb093b45dca84234cc74749",
+    "src/components/booking/BookingForm.tsx": "564bf8d9e38a8ca2e6642c6edd762c003adb45cfa643fe22703127dbd056be8e",
+    "src/components/auth/LoginForm.tsx": "fc483cdcae9b1573ac270562dbc7c574ca6b3a9b678d603212b59fb065565c11",
+    "src/components/auth/RegisterForm.tsx": "a8dec08bb7bd2b22e111871806bde734c2c19fa9fe7269f4f6a7c5d920c9a281",
+    "src/lib/tours/booking-selection.ts": "ed77639a5a08e0aa45defe2b1f5676712c85d5b114417bf80ba4184d522303b7"
+  },
+  "publicFacts": {
+    "slug": "hidden-gems-rome-walking-tour",
+    "dateCount": 60,
+    "baseCents": 4500,
+    "currency": "EUR",
+    "group": {
+      "min": 1,
+      "max": 20
+    },
+    "picked": "2026-11-16",
+    "mobilePicked": "2026-11-17"
+  },
+  "ownedReference": "BKO-PZJHA2",
+  "serverTotal": {
+    "amount": 18000,
+    "currency": "EUR"
+  },
+  "passed": true,
+  "cleanup": {
+    "reference": "BKO-PZJHA2",
+    "status": 200,
+    "passed": true,
+    "confirmedForCleanup": false
+  }
+}

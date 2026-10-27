@@ -1,0 +1,29 @@
+
+Running 9 tests using 1 worker
+
+[1A[2K(node:25516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/9] [setup] › tests\e2e\auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/9] [setup] › tests\e2e\partner.setup.ts:19:6 › authenticate as partner
+[1A[2K(node:20004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:20004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:67:7 › Wishlist › wishlist page renders
+[1A[2K[4/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:73:7 › Wishlist › wishlist shows empty state or grid
+[1A[2K[5/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:83:7 › Wishlist › owned tour header button toggles saved state with real API and restores it
+[1A[2K[6/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement
+[1A[2K[7/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:167:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement
+[1A[2K[8/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:211:7 › Wishlist › removing the owned tour from the wishlist grid restores its original state
+[1A[2K[9/9] [chromium-authed] › tests\e2e\wishlist.spec.ts:248:7 › Wishlist › owned wishlist item links to its tour detail
+[1A[2K  9 passed (15.5s)

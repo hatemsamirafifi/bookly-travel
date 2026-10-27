@@ -1,0 +1,100 @@
+FAIL src/components/tour/__tests__/TourSectionNav.test.tsx
+  TourSectionNav (US4 isolated slice)
+    ✓ renders only the supplied present sections as native anchors (136 ms)
+    ✓ marks the current section with aria-current plus a non-color cue (27 ms)
+    ✓ observes only actual present headings and ignores absent entries (20 ms)
+    ✓ follows actual headings: observer entries move the active entry (16 ms)
+    ✓ passive observer updates never take focus and never scroll the page vertically (26 ms)
+    ✕ plain activation keeps the hash, clears the measured sticky nav and focuses the real heading (30 ms)
+    ✓ modifier clicks keep native behavior: no interception, scroll or focus theft (13 ms)
+    ✕ publishes safe clearance for a 56 px nav and restores the scope (9 ms)
+    ✕ publishes safe clearance for a 54 px nav and restores the scope (8 ms)
+    ✕ publishes safe clearance for a 54.25 px nav and restores the scope (8 ms)
+    ✓ re-observes when the supplied sections change and drops removed targets (13 ms)
+    ✓ scrolls immediately without animation when reduced motion is preferred (14 ms)
+    ✓ honors an initial deep link into a present section (10 ms)
+    ✓ reveals the active entry horizontally without any vertical scrollIntoView (5 ms)
+    ✓ keeps the later visible section active when an earlier one exits alone across delta notifications (32 ms)
+    ✓ measures and observes across empty, present, replacement and empty lifecycles (20 ms)
+    ✓ observes actual headings: a tall section body intersecting without its heading does not activate it (18 ms)
+    ✓ keeps the explicitly navigated section active while its heading stays visible (14 ms)
+    ✓ falls back to reading position when the hashed heading is not visible (13 ms)
+
+  ● TourSectionNav (US4 isolated slice) › plain activation keeps the hash, clears the measured sticky nav and focuses the real heading
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "top": 151,
+    +   "top": 152,
+      }
+
+      247 |     expect(scrollTo).toHaveBeenCalledTimes(1);
+      248 |     // Measured48px obstruction plus1px native-scroll rounding allowance.
+    > 249 |     expect(scrollTo.mock.calls[0][0]).toMatchObject({ top: 151 });
+          |                                       ^
+      250 |     expect(heading).toHaveFocus();
+      251 |     expect(section).not.toHaveFocus();
+      252 |     expect(screen.getByRole('link', { name: 'Facts' })).toHaveAttribute(
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourSectionNav.test.tsx:249:39)
+
+  ● TourSectionNav (US4 isolated slice) › publishes safe clearance for a 56 px nav and restores the scope
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "57px"
+    Received: "56px"
+
+      305 |
+      306 |     expect(scope.style.getPropertyValue('--tour-section-nav-height')).toBe(`${measured}px`);
+    > 307 |     expect(scope.style.getPropertyValue('--tour-section-nav-offset')).toBe(`${clearance}px`);
+          |                                                                       ^
+      308 |
+      309 |     unmount();
+      310 |     expect(disconnectedObservers).toBeGreaterThan(0);
+
+      at src/components/tour/__tests__/TourSectionNav.test.tsx:307:71
+
+  ● TourSectionNav (US4 isolated slice) › publishes safe clearance for a 54 px nav and restores the scope
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "55px"
+    Received: "54px"
+
+      305 |
+      306 |     expect(scope.style.getPropertyValue('--tour-section-nav-height')).toBe(`${measured}px`);
+    > 307 |     expect(scope.style.getPropertyValue('--tour-section-nav-offset')).toBe(`${clearance}px`);
+          |                                                                       ^
+      308 |
+      309 |     unmount();
+      310 |     expect(disconnectedObservers).toBeGreaterThan(0);
+
+      at src/components/tour/__tests__/TourSectionNav.test.tsx:307:71
+
+  ● TourSectionNav (US4 isolated slice) › publishes safe clearance for a 54.25 px nav and restores the scope
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "55px"
+    Received: "54px"
+
+      304 |     });
+      305 |
+    > 306 |     expect(scope.style.getPropertyValue('--tour-section-nav-height')).toBe(`${measured}px`);
+          |                                                                       ^
+      307 |     expect(scope.style.getPropertyValue('--tour-section-nav-offset')).toBe(`${clearance}px`);
+      308 |
+      309 |     unmount();
+
+      at src/components/tour/__tests__/TourSectionNav.test.tsx:306:71
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 15 passed, 19 total
+Snapshots:   0 total
+Time:        2.536 s
+Ran all test suites within paths "src/components/tour/__tests__/TourSectionNav.test.tsx".

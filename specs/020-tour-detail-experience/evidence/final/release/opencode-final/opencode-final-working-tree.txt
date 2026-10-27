@@ -1,0 +1,477 @@
+ D .claude/settings.local.json
+ M .github/workflows/lighthouse.yml
+ M docs/bookly-ui-redesign-spec-kit-master-plan.md
+ M frontend/.dockerignore
+ M frontend/lighthouserc.js
+ M frontend/messages/en.json
+ M frontend/messages/es.json
+ M frontend/messages/it.json
+ M frontend/src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+ M frontend/src/app/[locale]/(public)/tours/[slug]/page.tsx
+ M frontend/src/app/globals.css
+ M frontend/src/components/auth/LoginForm.tsx
+ M frontend/src/components/auth/RegisterForm.tsx
+ M frontend/src/components/auth/__tests__/LoginForm.test.tsx
+ M frontend/src/components/auth/__tests__/RegisterForm.test.tsx
+ M frontend/src/components/booking/BookingForm.tsx
+ M frontend/src/components/booking/__tests__/BookingForm.test.tsx
+ M frontend/src/components/reviews/AggregateRating.tsx
+ M frontend/src/components/reviews/ReviewCard.tsx
+ M frontend/src/components/reviews/ReviewList.tsx
+ M frontend/src/components/reviews/__tests__/AggregateRating.test.tsx
+ M frontend/src/components/reviews/__tests__/ReviewList.test.tsx
+ M frontend/src/components/seo/__tests__/StructuredData.test.tsx
+ M frontend/src/components/tour/AvailabilityCalendar.tsx
+ M frontend/src/components/tour/BookingCTA.tsx
+ M frontend/src/components/tour/ImageGallery.tsx
+ M frontend/src/components/tour/MobileBookingAction.tsx
+ M frontend/src/components/tour/OperatorSummary.tsx
+ M frontend/src/components/tour/TourDetail.tsx
+AM frontend/src/components/tour/TourGallery.tsx
+ M frontend/src/components/tour/TourHeader.tsx
+ M frontend/src/components/tour/TourMeetingPoint.tsx
+ M frontend/src/components/tour/TourSectionNav.tsx
+ M frontend/src/components/tour/__tests__/BookingCTA.test.tsx
+ M frontend/src/components/tour/__tests__/ImageGallery.test.tsx
+ M frontend/src/components/tour/__tests__/MobileBookingAction.test.tsx
+ M frontend/src/components/tour/__tests__/TourDetail.test.tsx
+A  frontend/src/components/tour/__tests__/TourGallery.test.tsx
+ M frontend/src/components/tour/__tests__/TourSections.test.tsx
+MM frontend/src/components/ui/Dialog.tsx
+ M frontend/src/components/ui/RatingBadge.tsx
+MM frontend/src/components/ui/__tests__/interactive-primitives.test.tsx
+ M frontend/src/components/wishlist/WishlistButton.tsx
+ M frontend/src/components/wishlist/__tests__/WishlistButton.test.tsx
+ M frontend/src/lib/auth/__tests__/return-url.test.ts
+ M frontend/src/lib/tours/__tests__/detail-localization.test.ts
+ M frontend/src/lib/tours/__tests__/detail-presentation.test.ts
+ M frontend/src/lib/tours/booking-selection.ts
+ M frontend/src/lib/tours/detail-presentation.ts
+ M frontend/tests/e2e/a11y/checkout-a11y.spec.ts
+ M frontend/tests/e2e/a11y/tour-detail-a11y.spec.ts
+ M frontend/tests/e2e/booking.spec.ts
+ M frontend/tests/e2e/checkout.spec.ts
+ M frontend/tests/e2e/helpers/tour-detail-ssr.ts
+ M frontend/tests/e2e/payment.spec.ts
+ M frontend/tests/e2e/tour-detail.spec.ts
+ M frontend/tests/e2e/wishlist.spec.ts
+M  frontend/tests/fixtures/tour-detail.ts
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-layout-green-full.log
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-layout-green-summary.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-layout-lint.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-layout-red-full.log
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-layout-red-summary.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-layout-typecheck.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-red-full.log
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-red-summary.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-review-green-full.log
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-review-green-summary.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-review-lint.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-review-red-full.log
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-review-red-summary.txt
+A  specs/020-tour-detail-experience/evidence/us3/gallery-isolated-review-typecheck.txt
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-1440-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-1440-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-1440-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-1440-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-1440-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-390-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-390-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-390-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-390-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-390-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-geometry.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-long-caption-390.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-viewer-1440.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/accepted-source-viewer-390.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-1440-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-1440-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-1440-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-1440-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-1440-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-390-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-390-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-390-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-390-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-390-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-1440-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-1440-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-1440-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-1440-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-1440-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-390-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-390-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-390-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-390-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-390-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-geometry.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-long-caption-390.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-viewer-1440.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-extended-viewer-390.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-geometry.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/after-viewer-1440.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-1440-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-1440-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-1440-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-1440-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-1440-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-390-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-390-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-390-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-390-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-390-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-geometry.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/before-viewer-1440.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-1440-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-1440-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-1440-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-1440-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-1440-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-390-1.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-390-2.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-390-3.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-390-4.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-390-5.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-geometry.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-long-caption-390.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-viewer-1440.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/final-viewer-390.png
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/root-final-geometry-checks.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/root-layout-extended-checks.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/root-layout-red-checks.json
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/README.md
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/build.cjs
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/entry.tsx
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/image-sdk.tsx
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/intl-sdk.template.js
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/run.cjs
+A  specs/020-tour-detail-experience/evidence/us3/isolated-browser/tooling/ts-loader.cjs
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-acceptance-gates.json
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-final-eslint.txt
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-final-normal-jest.txt
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-final-red-relay.txt
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-hydration-pattern-repro.txt
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-opencode-final.json
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-opencode-layout.json
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-preserved-maxheight-jest.txt
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-review-green.txt
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-review-source.json
+A  specs/020-tour-detail-experience/evidence/us3/root-gallery-review-typecheck.txt
+ M specs/020-tour-detail-experience/quickstart.md
+MM specs/020-tour-detail-experience/tasks.md
+MM specs/020-tour-detail-experience/verification.md
+?? backend/database/seeders/BlogContentSeeder.php
+?? backend/database/seeders/DemoContentSeeder.php
+?? competitor-profiles/
+?? frontend/src/app/[locale]/(public)/tours/[slug]/error.tsx
+?? frontend/src/app/[locale]/(public)/tours/[slug]/loading.tsx
+?? frontend/src/app/[locale]/(public)/tours/[slug]/not-found.tsx
+?? frontend/src/components/tour/BookingCard.tsx
+?? frontend/src/components/tour/MobileBookingBar.tsx
+?? frontend/src/components/tour/TourBookingController.tsx
+?? frontend/src/components/tour/TourReviews.tsx
+?? frontend/src/components/tour/__tests__/AvailabilityCalendar.test.tsx
+?? frontend/src/components/tour/__tests__/RelatedTours.test.tsx
+?? frontend/src/components/tour/__tests__/TourBookingController.test.tsx
+?? frontend/src/components/tour/__tests__/TourReviews.test.tsx
+?? frontend/src/components/tour/__tests__/TourSectionNav.test.tsx
+?? frontend/src/lib/tours/booking-reasons.ts
+?? frontend/tests/e2e/helpers/offered-date.ts
+?? specs/020-tour-detail-experience/evidence/continuation-20261016.md
+?? specs/020-tour-detail-experience/evidence/final/
+?? specs/020-tour-detail-experience/evidence/us2/checkout-maintenance-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/checkout-maintenance-list-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/checkout-maintenance-results-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/checkout-maintenance-typecheck-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/opencode-us2-bounded-fix-20261016.md
+?? specs/020-tour-detail-experience/evidence/us2/policy-continuation-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/policy-continuation-green-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/policy-continuation-red-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/policy-continuation-results-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/policy-continuation-typecheck-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/query-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/query-green-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/query-green-controller-auth-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/query-red-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/query-typecheck-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-e2e-list.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-final-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-final-green.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-final-typecheck.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-green-jest.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-green-rework1.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-green-rework2.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-green-rework3.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-green-rework4.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-red-jest.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-typecheck-green.txt
+?? specs/020-tour-detail-experience/evidence/us2/recovery-us2-typecheck-wip.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-e2e-list.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-final-auth.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-final-booking.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-final-controller-booking.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-final-controller.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-final-rest.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-auth.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-booking.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-controller.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-detail.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-rest.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-green-typecheck.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-red-auth.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-red-booking.txt
+?? specs/020-tour-detail-experience/evidence/us2/rework-review-red-controller.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-booking-fixture-capacity.json
+?? specs/020-tour-detail-experience/evidence/us2/root-build-source-20261016.json
+?? specs/020-tour-detail-experience/evidence/us2/root-checkout-maintenance-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-current-us2-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-current-us2-gates-20261016.json
+?? specs/020-tour-detail-experience/evidence/us2/root-current-us2-jest-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-e2e-review-20261016.md
+?? specs/020-tour-detail-experience/evidence/us2/root-gateway-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-live-controller-checkout-jest.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-owned-cleanup-ANVWKQ.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-policy-nav-jest-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-progress-20261016.md
+?? specs/020-tour-detail-experience/evidence/us2/root-query-empty-green-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-query-empty-red-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-query-policy-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-review-build-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-review-combined-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-review-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-review-typecheck-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-login-ready-failure.png
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-login-ready.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-ready.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-same-origin-complete-failure.png
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-same-origin-failure.png
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-same-origin.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016-verified-transport.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-20261016.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-check.cjs
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-confirmation.png
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-current-same-origin-failure.png
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-current-same-origin.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-current-same-origin.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-relative-api.json
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-relative-api.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-runtime-selection-mobile-390.png
+?? specs/020-tour-detail-experience/evidence/us2/root-ssr-browser-launch.txt
+?? specs/020-tour-detail-experience/evidence/us2/root-us2-opencode-review.json
+?? specs/020-tour-detail-experience/evidence/us2/us2-final-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/us2-final-green-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/us2-final-green-verbose-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/us2-final-red-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/us2-final-red-money-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us2/us2-final-typecheck-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-jest-green.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-jest-red.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-playwright-list.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-review2-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-review2-playwright-list.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-review2-summary.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-review2-typecheck.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-summary.txt
+?? specs/020-tour-detail-experience/evidence/us3/live-typecheck.txt
+?? specs/020-tour-detail-experience/evidence/us3/native-browser-artifacts/
+?? specs/020-tour-detail-experience/evidence/us3/root-a11y-source-review.md
+?? specs/020-tour-detail-experience/evidence/us3/root-baseline-integrated-build-after.json
+?? specs/020-tour-detail-experience/evidence/us3/root-baseline-integrated-build-before.json
+?? specs/020-tour-detail-experience/evidence/us3/root-baseline-integrated-build-result.json
+?? specs/020-tour-detail-experience/evidence/us3/root-baseline-integrated-build.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-current-stories-launch.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-focused-stories-launch.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-gallery-real-media-launch.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-gallery-reviewed-launch.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-integrated-browser-launch.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-integrated-gallery-build-after.json
+?? specs/020-tour-detail-experience/evidence/us3/root-integrated-gallery-build-before.json
+?? specs/020-tour-detail-experience/evidence/us3/root-integrated-gallery-build-result.json
+?? specs/020-tour-detail-experience/evidence/us3/root-integrated-gallery-build.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-contrast-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-contrast-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-contrast-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-contrast-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-source-review-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-source-review-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-source-review-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-a11y-source-review-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-checkpoint-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-checkpoint-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-checkpoint-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-checkpoint-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-booking-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-build-source-post.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-build.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-checkout-payment-checkpoint-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-checkout-payment-checkpoint-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-checkout-payment-checkpoint-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-checkout-payment-checkpoint-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-corrected-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-corrected-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-corrected-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-corrected-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-initial-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-initial-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-initial-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-content-keyboard-initial-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-current-stories-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-current-stories-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-current-stories-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-current-stories-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-error-heading-a11y-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-error-heading-a11y-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-error-heading-a11y-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-error-heading-a11y-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-focused-stories-final-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-focused-stories-final-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-focused-stories-final-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-initial-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-initial-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-initial-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-initial-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-real-media-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-real-media-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-real-media-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-real-media-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-gallery-route-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-integrated-stories-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-integrated-stories-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-integrated-stories-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-integrated-stories-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-jest.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-legacy-owned-media-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-legacy-owned-media-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-legacy-owned-media-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-legacy-owned-media-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-acceptance-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-acceptance-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-acceptance-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-acceptance-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-deeplink-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-deeplink-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-deeplink-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-final-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-final-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-final-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-final-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-red-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-red-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-red-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-critical-red-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-narrow-repeat-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-narrow-repeat-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-narrow-repeat-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-narrow-repeat-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-resize-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-resize-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-resize-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-resize-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-serial-cleanup-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-serial-cleanup-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-serial-cleanup-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-nav-serial-cleanup-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-review-20261016.md
+?? specs/020-tour-detail-experience/evidence/us3/root-live-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-trust-nav-source-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-trust-nav-source-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-trust-nav-source-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-trust-nav-source-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-auth-form-ready-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-auth-form-retry-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-focused-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-focused-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-focused-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-focused-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us2-public-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-final-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-final-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-final-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-final-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-content-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-native-ssr-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-native-ssr-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-native-ssr-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-native-ssr-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-retry-cleanup-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-retry-cleanup-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-retry-cleanup-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-us6-retry-cleanup-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-final-focused-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-final-focused-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-final-focused-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-final-focused-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-reviewed-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-reviewed-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-reviewed-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-reviewed-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-source-review-browser-exit.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-source-review-browser.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-source-review-next.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-live-wishlist-source-review-runtime.json
+?? specs/020-tour-detail-experience/evidence/us3/root-nav-integrated-build-after.json
+?? specs/020-tour-detail-experience/evidence/us3/root-nav-integrated-build-before.json
+?? specs/020-tour-detail-experience/evidence/us3/root-nav-integrated-build-result.json
+?? specs/020-tour-detail-experience/evidence/us3/root-nav-integrated-build.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-relative-api-build-after.json
+?? specs/020-tour-detail-experience/evidence/us3/root-relative-api-build-before.json
+?? specs/020-tour-detail-experience/evidence/us3/root-relative-api-build-result.json
+?? specs/020-tour-detail-experience/evidence/us3/root-relative-api-build.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-reviewed-browser-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us3/root-trust-integrated-build-after.json
+?? specs/020-tour-detail-experience/evidence/us3/root-trust-integrated-build-before.json
+?? specs/020-tour-detail-experience/evidence/us3/root-trust-integrated-build-result.json
+?? specs/020-tour-detail-experience/evidence/us3/root-trust-integrated-build.txt
+?? specs/020-tour-detail-experience/evidence/us4/
+?? specs/020-tour-detail-experience/evidence/us5/
+?? specs/020-tour-detail-experience/evidence/us6/root-content-keyboard-corrected-launch.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-content-keyboard-launch.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-current-route-schema-nav-jest-result.json
+?? specs/020-tour-detail-experience/evidence/us6/root-current-route-schema-nav-jest.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-error-a11y-browser-launch.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-error-a11y-initial.json
+?? specs/020-tour-detail-experience/evidence/us6/root-error-a11y-launch-failure.json
+?? specs/020-tour-detail-experience/evidence/us6/root-error-heading-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-error-heading-review.md
+?? specs/020-tour-detail-experience/evidence/us6/root-locale-state-review.md
+?? specs/020-tour-detail-experience/evidence/us6/root-public-api-20261016.json
+?? specs/020-tour-detail-experience/evidence/us6/root-route-nav-eslint-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-route-schema-nav-jest-20261016.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-schema-eslint-final.txt
+?? specs/020-tour-detail-experience/evidence/us6/root-schema-livereview.json
+?? specs/020-tour-detail-experience/evidence/us6/root-schema-review-guard-probe.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-completion-note.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-correct-e2e-list.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-correct-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-correct-green-jest.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-correct-summary.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-correct-typecheck.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-e2e-list.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-final-eslint.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-final-typecheck.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-green-broad-jest.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-green-jest.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-t034-t035-red-jest.txt
+?? specs/020-tour-detail-experience/evidence/us6/us6-t034-t035-red-summary.txt

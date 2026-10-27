@@ -1,0 +1,19 @@
+FOCUSED ESLINT (owned source + owned unit/E2E tests; globals.css has no eslint config)
+  frontend> npx eslint src/components/tour/TourBookingController.tsx src/components/tour/__tests__/TourBookingController.test.tsx tests/e2e/tour-detail.spec.ts
+  RESULT: clean — no output, 0 errors, 0 warnings, 0 suppressions.
+  (TourSectionNav/TourDetail files unchanged this round; previously lint-clean.)
+
+WHOLE-PROJECT TYPECHECK
+  frontend> npm run typecheck  (tsc --noEmit)
+  RESULT: clean — no output, 0 errors across the whole frontend project.
+  The 2 unowned US3-region `.inert` errors reported in live-source-
+  eslint-typecheck.txt are gone: the US3 worker has since corrected that
+  region of the read-only E2E file. No action or claim by this slice.
+
+SCOPE PROOF
+  Owned and written this round: TourBookingController.tsx (slot class +
+  trimmed comment ONLY), tests/e2e/tour-detail.spec.ts (T053 helpers/probe
+  per review + the single US2 card-geometry assertion ONLY).
+  Production source otherwise untouched (TourSectionNav z-sticky, TourDetail
+  marker, scoped globals.css all stand from the prior phase; no nav-source
+  change was required by review). No commits, no staging.

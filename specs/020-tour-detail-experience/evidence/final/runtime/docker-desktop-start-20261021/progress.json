@@ -1,0 +1,345 @@
+{
+  "startedAt": "2026-10-21T16:35:36.975Z",
+  "scope": "one start of closed Docker Desktop; no restart or settings changes",
+  "commands": [
+    {
+      "name": "desktop-processes",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$p=@(Get-Process 'Docker Desktop','com.docker.backend' -ErrorAction SilentlyContinue); if($p.Count){$p|Select-Object Name,Id|ConvertTo-Json -Compress}else{'[]'}"
+      ],
+      "startedAt": "2026-10-21T16:35:36.976Z",
+      "finishedAt": "2026-10-21T16:35:37.470Z",
+      "status": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "start",
+      "args": [
+        "desktop",
+        "start",
+        "--timeout=120"
+      ],
+      "startedAt": "2026-10-21T16:35:37.587Z",
+      "finishedAt": "2026-10-21T16:35:53.734Z",
+      "status": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-1",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:35:53.778Z",
+      "finishedAt": "2026-10-21T16:36:08.787Z",
+      "status": null,
+      "signal": "SIGTERM",
+      "error": "Error: spawnSync docker ETIMEDOUT"
+    },
+    {
+      "name": "api-2",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:13.852Z",
+      "finishedAt": "2026-10-21T16:36:15.100Z",
+      "status": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-3",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:20.226Z",
+      "finishedAt": "2026-10-21T16:36:20.911Z",
+      "status": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-4",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:25.925Z",
+      "finishedAt": "2026-10-21T16:36:26.758Z",
+      "status": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-5",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:31.771Z",
+      "finishedAt": "2026-10-21T16:36:32.583Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-6",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:37.600Z",
+      "finishedAt": "2026-10-21T16:36:38.327Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-7",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:43.334Z",
+      "finishedAt": "2026-10-21T16:36:44.363Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-8",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:49.367Z",
+      "finishedAt": "2026-10-21T16:36:50.016Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-9",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:36:55.031Z",
+      "finishedAt": "2026-10-21T16:36:55.719Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-10",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:00.733Z",
+      "finishedAt": "2026-10-21T16:37:02.538Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-11",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:07.545Z",
+      "finishedAt": "2026-10-21T16:37:09.420Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-12",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:14.423Z",
+      "finishedAt": "2026-10-21T16:37:15.365Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-13",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:20.372Z",
+      "finishedAt": "2026-10-21T16:37:21.507Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-14",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:26.590Z",
+      "finishedAt": "2026-10-21T16:37:27.580Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-15",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:32.596Z",
+      "finishedAt": "2026-10-21T16:37:33.214Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-16",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:38.329Z",
+      "finishedAt": "2026-10-21T16:37:39.400Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-17",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:44.416Z",
+      "finishedAt": "2026-10-21T16:37:45.371Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-18",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:50.434Z",
+      "finishedAt": "2026-10-21T16:37:51.320Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-19",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:37:56.326Z",
+      "finishedAt": "2026-10-21T16:37:56.992Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-20",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:38:02.006Z",
+      "finishedAt": "2026-10-21T16:38:02.948Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-21",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:38:07.951Z",
+      "finishedAt": "2026-10-21T16:38:09.042Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-22",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:38:14.058Z",
+      "finishedAt": "2026-10-21T16:38:15.096Z",
+      "status": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "api-23",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:38:20.110Z",
+      "finishedAt": "2026-10-21T16:38:35.206Z",
+      "status": null,
+      "signal": "SIGTERM",
+      "error": "Error: spawnSync docker ETIMEDOUT"
+    },
+    {
+      "name": "api-24",
+      "args": [
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "startedAt": "2026-10-21T16:38:40.272Z",
+      "finishedAt": "2026-10-21T16:38:53.819Z",
+      "status": null,
+      "signal": "SIGTERM",
+      "error": "Error: spawnSync docker ETIMEDOUT"
+    }
+  ],
+  "passed": false
+}

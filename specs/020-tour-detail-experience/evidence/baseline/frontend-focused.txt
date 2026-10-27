@@ -1,0 +1,4 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx src/components/tour/__tests__/ImageGallery.test.tsx src/components/tour/__tests__/BookingCTA.test.tsx src/components/tour/__tests__/MobileBookingAction.test.tsx src/components/tour/__tests__/OperatorSummary.test.tsx src/components/booking/__tests__/BookingForm.test.tsx src/components/seo/__tests__/StructuredData.test.tsx src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+

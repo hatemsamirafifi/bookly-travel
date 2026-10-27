@@ -1,0 +1,167 @@
+{
+    "generatedAt":  "2026-10-17T23:01:14.9777087Z",
+    "generatedAtNote":  "captured from the real clock at the moment of this write (UTC, ISO-8601); no hardcoded timestamps",
+    "executor":  "OpenCode implementer/test executor (opencode/glm-5.3-flash-free)",
+    "revisionNote":  "revision 2: supersedes the stale-hash prepwriter draft after root fail-closed delta; same 3 fixtures re-run against the final hashed launcher; root reviews before any real dispatch",
+    "taskScopeNote":  "Narrow ownership: bounded correction and fixture verification of the Stage B launcher ONLY; streaming/diagnostic work and audit-runner provenance stay with the other executor; no repo exploration, app tests, source, commit/stage/install/model changes",
+    "launcher":  {
+                     "path":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\audit-launch.ps1",
+                     "sha256":  "4008B933FF27C182059E3059C181FC0EB7662FFB181DBB180A62F5FE58A818DD",
+                     "lines":  263,
+                     "parseErrors":  0,
+                     "fixesApplied":  [
+                                          "argument quoting: runner path wrapped in explicit double quotes inside psi.Arguments; old literal backtick quotes gone; proven by a fixture path containing spaces",
+                                          "watchdog removed: the Start-Job sleep-plus-blind-taskkill and Receive-Job-Wait design deleted; success returns promptly through ONE bounded Process.WaitForExit on the 40-minute default 2400000 ms; no unbounded sleeps or jobs",
+                                          "timeout-first cleanup: kill/ownership decision happens before any stream ReadToEnd result await; all stream reads are bounded 2000ms task waits on every path",
+                                          "FAIL-CLOSED ownership (root delta): Test-OwnedAlive returns owned=false with an explicit reason unless capturedStart is present, capturedName is present AND equals node, and capturedNodePath is present, AND the live process StartTime, name and path all match exactly; a PID match alone can never authorize taskkill",
+                                          "FAIL-CLOSED caller guard (root delta): the timeout branch additionally requires identityCaptured=true before cleanup; otherwise records timed-out-without-captured-identity-fail-closed and exits 125 without touching streams",
+                                          "explicit 125 guard (root delta): any recorded cleanupIssue combined with a null launcherExit produces explicit exit 125, never a plausible 0 or null; success preserves the actual child exit code; timeout exits 124; invalid args exit 2",
+                                          "honest kill outcome: on an actual attempt killOutcome always records the resulting state; not-attempted appears only when no attempt was made",
+                                          "records: per-PID start and finish JSON plus stdout/stderr transcripts under LogDir; UTF-8 without BOM; stream decode forced UTF-8; bounded 2000-char previews; no secrets embedded"
+                                      ]
+                 },
+    "ownershipFailClosedConfirmation":  {
+                                            "pidAloneNeverAuthorizesKill":  true,
+                                            "requiredEvidenceBeforeTaskkill":  [
+                                                                                   "captured process StartTime equality",
+                                                                                   "captured process name equality with node",
+                                                                                   "captured node path presence",
+                                                                                   "live StartTime equality",
+                                                                                   "live process name equality",
+                                                                                   "live process path equality"
+                                                                               ],
+                                            "callerRequirement":  "timeout branch executes cleanup only when identityCaptured=true; failure reasons: captured-start-missing-fail-closed, captured-name-missing-fail-closed, captured-name-not-node-fail-closed, captured-node-path-missing-fail-closed, process-path-unavailable-fail-closed, start-time-mismatch, process-name-mismatch, process-path-mismatch",
+                                            "killSynchronousOnlyOnExactOwnership":  true
+                                        },
+    "defaults":  {
+                     "runnerPathDefault":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\audit-runner.cjs  (EXISTS, untouched; NOT executed in this task)",
+                     "workingDirectory":  "F:/Travel Website/bookly travel/frontend",
+                     "timeoutMs":  2400000,
+                     "timeoutNote":  "actual outer 40-minute limit remains 2400000 ms",
+                     "hidden":  true,
+                     "createNoWindow":  true,
+                     "callerParameters":  {
+                                              "RunnerPath":  "legitimate; default kept in real launch; overridden only in fixtures",
+                                              "LogDir":  "legitimate; default kept in real launch; overridden only in fixtures",
+                                              "TimeoutMs":  "legitimate; default 2400000 kept in real launch; overridden only in fixtures",
+                                              "rejectedExperiments":  "no CPU threshold, bypass switches, score/config/hook changes"
+                                          }
+                 },
+    "environment":  {
+                        "powershell":  "5.1.26100.4202",
+                        "nodeUsedByLauncher":  "C:\\Program Files\\nodejs\\node.exe",
+                        "executionPolicy":  {
+                                                "bypassFlagUsed":  false,
+                                                "anyExecutionPolicyFlagUsed":  false,
+                                                "invocation":  "powershell.exe -NoProfile -NonInteractive -File SCRIPT (bare invocation, no execution-policy override)"
+                                            }
+                    },
+    "tests":  [
+                  {
+                      "id":  1,
+                      "purpose":  "fast success in a folder with a space: proves correct argument quoting AND no unconditional watchdog wait",
+                      "fixture":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\launcher-tests\\space folder with spaces\\success-fixture.cjs",
+                      "runLogDir":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\launcher-tests\\log\\test-1-access",
+                      "launcherExitCode":  0,
+                      "elapsedMs":  468,
+                      "childPid":  24872,
+                      "identityCaptured":  true,
+                      "timedOut":  false,
+                      "childExitRecorded":  0,
+                      "killAttempted":  false,
+                      "killOutcome":  "not-needed",
+                      "cleanupIssue":  null,
+                      "stdoutMarker":  "LAUNCHER-FIXTURE-SUCCESS arguments-clean",
+                      "passed":  true
+                  },
+                  {
+                      "id":  2,
+                      "purpose":  "fast failure: launcher returns and records 7, never fakes 0",
+                      "fixture":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\launcher-tests\\fail-fixture.cjs",
+                      "runLogDir":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\launcher-tests\\log\\test-2-access",
+                      "launcherExitCode":  7,
+                      "elapsedMs":  452,
+                      "childPid":  21184,
+                      "identityCaptured":  true,
+                      "timedOut":  false,
+                      "childExitRecorded":  7,
+                      "killAttempted":  false,
+                      "killOutcome":  "not-needed",
+                      "cleanupIssue":  null,
+                      "stdoutMarker":  "LAUNCHER-FIXTURE-FAIL-CODE-7",
+                      "passed":  true
+                  },
+                  {
+                      "id":  3,
+                      "purpose":  "slow owned child (30s timer armed to write a survivor marker at 29s); launcher timeout 1000ms: prompt 124, ONLY the owned tree terminated, cleanup recorded, no survivor",
+                      "fixture":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\launcher-tests\\slow-fixture.cjs",
+                      "runLogDir":  "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\launcher-tests\\log\\test-3-out",
+                      "launcherExitCode":  124,
+                      "elapsedMs":  1777,
+                      "childPid":  10012,
+                      "capturedStartBeforeWait":  "2026-10-17T22:57:57.0000000",
+                      "identityCaptured":  true,
+                      "timedOut":  true,
+                      "killAttempted":  true,
+                      "killOutcome":  "killed-owned-tree-success",
+                      "killExitCode":  0,
+                      "taskkillOutput":  "SUCCESS: The process with PID 7128 (child process of PID 10012) has been terminated. SUCCESS: The process with PID 10012 (child process of PID 23080) has been terminated.",
+                      "killedTreePids":  [
+                                             7128,
+                                             10012,
+                                             23080
+                                         ],
+                      "childExitAfterKill":  1,
+                      "cleanupIssue":  null,
+                      "passed":  true
+                  }
+              ],
+    "noSurvivorVerification":  {
+                                   "window":  "marker re-checked past +36s of the 30s child timer arming (marker write would occur at 29s if a survivor existed)",
+                                   "childStart":  "2026-10-17T22:57:57.0000000",
+                                   "survivorMarkerAbsent":  true,
+                                   "launcherTestsNodeProcessesRemaining":  0,
+                                   "killedTreePids":  [
+                                                          7128,
+                                                          10012,
+                                                          23080
+                                                      ],
+                                   "allRecordedKilledPidsDeadAtCheckTime":  true,
+                                   "result":  "CLEAN, verified by commandline-filtered Win32_Process enumeration, see launcher-test-3-survivor-verification.txt"
+                               },
+    "scopeGuard":  {
+                       "testsOnly":  true,
+                       "realAuditStarted":  false,
+                       "existingDefaultRunnerExecuted":  false,
+                       "noRealLighthouseChromeOrAppTests":  true,
+                       "noLighthouseOrPreflightReruns":  true,
+                       "noRepoExplorationOrSourceChanges":  true,
+                       "noCommitsOrStagingOrHooks":  true,
+                       "noInstallsModelOrProviderChanges":  true,
+                       "noDeploymentOrSettingsChanges":  true,
+                       "filesOwnedAndModified":  [
+                                                     "audit-launch.ps1 (bounded fail-closed delta only)",
+                                                     "launcher-tests run records (NEW per-PID start/finish JSON and stdout/stderr transcripts, small and credential-free)",
+                                                     "prep/launcher-review.json (this file)",
+                                                     "prep/launcher-test-1-console.txt, launcher-test-2-console.txt, launcher-test-3-console.txt, launcher-test-3-survivor-verification.txt (small transcripts)"
+                                                 ],
+                       "explicitlyNotTouched":  [
+                                                    "audit-runner.cjs and its provenance",
+                                                    "ready-for-review.json (owned by the other executor; root compares hashes)",
+                                                    "app/helper/tests/config/source code, docs, manifests, .todo",
+                                                    "git history, staging, CI configuration"
+                                                ]
+                   },
+    "evidenceTranscripts":  [
+                                "launcher-test-1-console.txt",
+                                "launcher-test-2-console.txt",
+                                "launcher-test-3-console.txt",
+                                "launcher-test-3-survivor-verification.txt"
+                            ],
+    "notesForRoot":  [
+                         "All three fixture proofs above belong to the FINAL fail-closed launcher whose live SHA256 is recorded in this file at write time.",
+                         "The timed-out kill path is double-gated: identity capture flag first, then exact StartTime, node name and node path equality; no PID-only kills.",
+                         "Cleanup issues force explicit exit 125 when the launcher exit is otherwise unassigned; timeout success is 124; real child exit codes are preserved on success and fast failure.",
+                         "Root must re-hash and inspect before dispatching the real spec-020 launch."
+                     ]
+}

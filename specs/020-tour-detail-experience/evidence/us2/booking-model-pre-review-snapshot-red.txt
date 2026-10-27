@@ -1,0 +1,341 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/lib/tours/__tests__/booking-selection.test.ts
+
+node.exe : FAIL src/lib/tours/__tests__/booking-selection.test.ts
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/lib/to...lection.test.ts:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ booking-selection server bookability is fail-closed ΓÇ║ blocks a missing or malformed is_unavailable flag 
+undefined
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      155 |         is_unavailable: flag,
+      156 |       } as AvailabilityInfo;
+    > 157 |       expect(isBookableAvailability(info)).toBe(false);
+          |                                            ^
+      158 |       expect(resolveInitialDate(info, TODAY_UTC)).toBeNull();
+      159 |       const view = getBookingSelectionView(validViewInput({ availability: info }));
+      160 |       expect(view.reasons).toContain('tour-unavailable');
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:157:44
+
+  ΓùÅ booking-selection server bookability is fail-closed ΓÇ║ blocks a missing or malformed is_unavailable flag null
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      155 |         is_unavailable: flag,
+      156 |       } as AvailabilityInfo;
+    > 157 |       expect(isBookableAvailability(info)).toBe(false);
+          |                                            ^
+      158 |       expect(resolveInitialDate(info, TODAY_UTC)).toBeNull();
+      159 |       const view = getBookingSelectionView(validViewInput({ availability: info }));
+      160 |       expect(view.reasons).toContain('tour-unavailable');
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:157:44
+
+  ΓùÅ booking-selection server bookability is fail-closed ΓÇ║ blocks a missing or malformed is_unavailable flag false
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      155 |         is_unavailable: flag,
+      156 |       } as AvailabilityInfo;
+    > 157 |       expect(isBookableAvailability(info)).toBe(false);
+          |                                            ^
+      158 |       expect(resolveInitialDate(info, TODAY_UTC)).toBeNull();
+      159 |       const view = getBookingSelectionView(validViewInput({ availability: info }));
+      160 |       expect(view.reasons).toContain('tour-unavailable');
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:157:44
+
+  ΓùÅ booking-selection server bookability is fail-closed ΓÇ║ blocks a missing or malformed is_unavailable flag 0
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      155 |         is_unavailable: flag,
+      156 |       } as AvailabilityInfo;
+    > 157 |       expect(isBookableAvailability(info)).toBe(false);
+          |                                            ^
+      158 |       expect(resolveInitialDate(info, TODAY_UTC)).toBeNull();
+      159 |       const view = getBookingSelectionView(validViewInput({ availability: info }));
+      160 |       expect(view.reasons).toContain('tour-unavailable');
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:157:44
+
+  ΓùÅ booking-selection server bookability is fail-closed ΓÇ║ blocks a missing or malformed is_unavailable flag 1
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      155 |         is_unavailable: flag,
+      156 |       } as AvailabilityInfo;
+    > 157 |       expect(isBookableAvailability(info)).toBe(false);
+          |                                            ^
+      158 |       expect(resolveInitialDate(info, TODAY_UTC)).toBeNull();
+      159 |       const view = getBookingSelectionView(validViewInput({ availability: info }));
+      160 |       expect(view.reasons).toContain('tour-unavailable');
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:157:44
+
+  ΓùÅ booking-selection initial date ΓÇ║ leaves the view initial date null when static price or bounds guards are 
+invalid
+
+    expect(received).toBeNull()
+
+    Received: "2026-10-15"
+
+      206 |     const badBounds = getBookingSelectionView(validViewInput({ groupMin: 9, groupMax: 8 }));
+      207 |     expect(badBounds.reasons).toContain('invalid-bounds');
+    > 208 |     expect(badBounds.initialDate).toBeNull();
+          |                                   ^
+      209 |     expect(badBounds.checkoutUrl).toBeNull();
+      210 |     const badPrice = getBookingSelectionView(validViewInput({ pricing: pricing(0, 'EUR') }));
+      211 |     expect(badPrice.reasons).toContain('invalid-price');
+
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:208:35)
+
+  ΓùÅ booking-selection pricing and estimate ΓÇ║ computes the estimate for a valid count even when the date is missing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 3297
+    Received: null
+
+      288 |     const view = getBookingSelectionView(validViewInput({ selectedDate: null }));
+      289 |     expect(view.reasons).toContain('missing-date');
+    > 290 |     expect(view.estimateCents).toBe(3297);
+          |                                ^
+      291 |     expect(view.estimateDisplay).toBe(formatCurrency(3297, 'EUR', 'en'));
+      292 |     expect(view.checkoutUrl).toBeNull();
+      293 |     expect(view.canContinue).toBe(false);
+
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:290:32)
+
+  ΓùÅ booking-selection pricing and estimate ΓÇ║ computes the estimate for a valid count even when the date is stale
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 3297
+    Received: null
+
+      297 |     const view = getBookingSelectionView(validViewInput({ selectedDate: '2026-12-25' }));
+      298 |     expect(view.reasons).toContain('invalid-date');
+    > 299 |     expect(view.estimateCents).toBe(3297);
+          |                                ^
+      300 |     expect(view.checkoutUrl).toBeNull();
+      301 |     expect(view.canContinue).toBe(false);
+      302 |   });
+
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:299:32)
+
+  ΓùÅ booking-selection pricing and estimate ΓÇ║ computes the estimate for a valid count even when the tour is 
+unavailable
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 3297
+    Received: null
+
+      308 |     );
+      309 |     expect(view.reasons).toContain('tour-unavailable');
+    > 310 |     expect(view.estimateCents).toBe(3297);
+          |                                ^
+      311 |     expect(view.checkoutUrl).toBeNull();
+      312 |     expect(view.canContinue).toBe(false);
+      313 |   });
+
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:310:32)
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ supports exactly the en, es and it locales
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      371 |     expect(isSupportedLocale('es')).toBe(true);
+      372 |     expect(isSupportedLocale('it')).toBe(true);
+    > 373 |     expect(isSupportedLocale('fr')).toBe(false);
+          |                                     ^
+      374 |     expect(isSupportedLocale('en-US')).toBe(false);
+      375 |     expect(isSupportedLocale('')).toBe(false);
+      376 |     expect(isSupportedLocale(null)).toBe(false);
+
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:373:37)
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses a checkout URL for unsupported locale fr
+
+    expect(received).toBeNull()
+
+    Received: "/fr/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-17"
+
+      389 |     (locale) => {
+      390 |       const dates = offered();
+    > 391 |       expect(buildCheckoutUrl(locale, SLUG, 3, dates[2])).toBeNull();
+          |                                                           ^
+      392 |     },
+      393 |   );
+      394 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:391:59
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses a checkout URL for unsupported locale en-US
+
+    expect(received).toBeNull()
+
+    Received: "/en-US/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-17"
+
+      389 |     (locale) => {
+      390 |       const dates = offered();
+    > 391 |       expect(buildCheckoutUrl(locale, SLUG, 3, dates[2])).toBeNull();
+          |                                                           ^
+      392 |     },
+      393 |   );
+      394 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:391:59
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses a checkout URL for unsupported locale en/
+
+    expect(received).toBeNull()
+
+    Received: "/en//booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-17"
+
+      389 |     (locale) => {
+      390 |       const dates = offered();
+    > 391 |       expect(buildCheckoutUrl(locale, SLUG, 3, dates[2])).toBeNull();
+          |                                                           ^
+      392 |     },
+      393 |   );
+      394 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:391:59
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses a checkout URL for unsupported locale /en
+
+    expect(received).toBeNull()
+
+    Received: "//en/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-17"
+
+      389 |     (locale) => {
+      390 |       const dates = offered();
+    > 391 |       expect(buildCheckoutUrl(locale, SLUG, 3, dates[2])).toBeNull();
+          |                                                           ^
+      392 |     },
+      393 |   );
+      394 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:391:59
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses a checkout URL for unsupported locale EN
+
+    expect(received).toBeNull()
+
+    Received: "/EN/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-17"
+
+      389 |     (locale) => {
+      390 |       const dates = offered();
+    > 391 |       expect(buildCheckoutUrl(locale, SLUG, 3, dates[2])).toBeNull();
+          |                                                           ^
+      392 |     },
+      393 |   );
+      394 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:391:59
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses an auth continuation for unsupported locale fr
+
+    expect(received).toBeNull()
+
+    Received: "/fr/auth/login?returnUrl=%2Ffr%2F"
+
+      397 |     (locale) => {
+      398 |       const dates = offered();
+    > 399 |       expect(buildAuthContinuationUrl(locale, 
+`/en/booking?tour=${SLUG}&participants=3&date=${dates[2]}`)).toBeNull();
+          |                                                                                                            
+^
+      400 |     },
+      401 |   );
+      402 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:399:108
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses an auth continuation for unsupported locale 
+
+    expect(received).toBeNull()
+
+    Received: "//auth/login?returnUrl=%2F%2F"
+
+      397 |     (locale) => {
+      398 |       const dates = offered();
+    > 399 |       expect(buildAuthContinuationUrl(locale, 
+`/en/booking?tour=${SLUG}&participants=3&date=${dates[2]}`)).toBeNull();
+          |                                                                                                            
+^
+      400 |     },
+      401 |   );
+      402 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:399:108
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ refuses an auth continuation for unsupported locale en/
+
+    expect(received).toBeNull()
+
+    Received: "/en//auth/login?returnUrl=%2Fen%2F%2F"
+
+      397 |     (locale) => {
+      398 |       const dates = offered();
+    > 399 |       expect(buildAuthContinuationUrl(locale, 
+`/en/booking?tour=${SLUG}&participants=3&date=${dates[2]}`)).toBeNull();
+          |                                                                                                            
+^
+      400 |     },
+      401 |   );
+      402 |
+
+      at src/lib/tours/__tests__/booking-selection.test.ts:399:108
+
+  ΓùÅ booking-selection checkout and auth continuation URLs ΓÇ║ explains an unbuildable route with invalid-route 
+instead of a silent block
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "invalid-route"
+    Received array: []
+
+      403 |   it('explains an unbuildable route with invalid-route instead of a silent block', () => {
+      404 |     const view = getBookingSelectionView(validViewInput({ locale: 'fr' }));
+    > 405 |     expect(view.reasons).toContain('invalid-route');
+          |                          ^
+      406 |     expect(view.checkoutUrl).toBeNull();
+      407 |     expect(view.canContinue).toBe(false);
+      408 |   });
+
+      at Object.<anonymous> (src/lib/tours/__tests__/booking-selection.test.ts:405:26)
+
+Test Suites: 1 failed, 1 total
+Tests:       19 failed, 61 passed, 80 total
+Snapshots:   0 total
+Time:        1.518 s
+Ran all test suites within paths "src/lib/tours/__tests__/booking-selection.test.ts".
+JEST_EXIT=1

@@ -1,0 +1,8 @@
+﻿== launcher-test-2: fast failure, child exits 7 (fail-closed launcher, root delta rerun) ==
+command: powershell.exe -NoProfile -NonInteractive -File audit-launch.ps1 -RunnerPath <exit7 fixture> -LogDir launcher-tests\\log\\test-2-access -TimeoutMs 20000
+  startArguments: "C:\Users\HaTeM\.codex\tmp\bookly-spec020\lighthouse-repair-20261018\launcher-tests\fail-fixture.cjs"
+  launcherExitCode: 7 (observed; actual child code propagated, never faked to 0)
+  elapsedMs: 452 (prompt)
+  rec: pid=21184 timedOut=False exitedInTime=True childExit=7 cleanupIssue= killOutcome=not-needed recElapsed=121 identityCaptured=True stdoutDrained=True
+  stdoutTranscript: LAUNCHER-FIXTURE-FAIL-CODE-7
+  RESULT: TEST-2 PASS

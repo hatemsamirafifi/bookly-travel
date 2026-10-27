@@ -1,0 +1,57 @@
+
+   PASS  Tests\Feature\Search\TourDetailTest
+  ✓ it returns tour detail for a valid slug and locale                   5.28s  
+  ✓ it returns the selected cover before ordered gallery media and expo… 0.09s  
+  ✓ it keeps the legacy cover as the only image when no gallery media e… 0.14s  
+  ✓ it returns only approved public operator fields and visible-review…  0.58s  
+  ✓ it omits operator identity when its partner is not approved          0.23s  
+  ✓ it ranks only published bookable related tours by destination then…  0.20s  
+  ✓ it returns 404 for non-existent slug                                 0.09s  
+  ✓ it returns 404 for draft tour                                        0.13s  
+  ✓ it returns 404 for rejected tour                                     0.17s  
+  ✓ it returns 410 for an archived tour that was previously published    0.11s  
+  ✓ it returns 404 for an archived tour that was never published         0.10s  
+  ✓ it marks a published tour with no valid pricing as unavailable (F2)  0.09s  
+  ✓ it marks a published tour with no upcoming availability as unavaila… 0.13s  
+  ✓ it serves a fully bookable published tour as available (F2)          0.09s  
+  ✓ it returns content in the requested locale                           0.31s  
+  ✓ it keeps guide languages separate from localized content and itiner… 0.20s  
+  ✓ it marks an English itinerary fallback when only that field lacks l… 0.10s  
+  ✓ it backfills a valid legacy itinerary into English without overwrit… 0.11s  
+  ✓ it falls back to English when requested locale is unavailable        0.09s  
+  ✓ it validates locale parameter is required                            0.05s  
+  ✓ it includes SEO metadata in response                                 0.27s  
+  ✓ it computes the review distribution from visible reviews (L4)        0.11s  
+  ✓ it serves current derivatives in en/es/it with exact source languag… 0.14s  
+  ✓ it falls back to current English for missing row+state, pending, st… 0.21s  
+  ✓ it maps an apparent-ready hash mismatch to stale English fallback (… 0.10s  
+  ✓ it keeps requested general content while a null itinerary independe… 0.10s  
+  ✓ it treats an explicit empty derivative itinerary as intentional emp… 0.10s  
+  ✓ it produces no misleading itinerary warning when English itinerary…  0.19s  
+  ✓ it returns empty itinerary without an itinerary claim when English…  0.14s  
+  ✓ it discloses an English-only itinerary fallback in the compatible s… 0.61s  
+  ✓ it selects actual languages across the full es/it status matrix (US… 1.51s  
+  ✓ it always serves English source irrespective of derived states (US2… 0.16s  
+  ✓ it never exposes hashes, provider errors or job state on public det… 0.09s  
+  ✓ it preserves locale validation, 404/410, canonicals and money behav… 0.28s  
+  ✓ it excludes hidden reviews from the distribution (L4)                0.45s  
+  ✓ it dedupes mixed legacy and typed gallery rows into sorted unique H… 0.10s  
+  ✓ it surfaces an HTTP-authored specific English alt with an English l… 0.68s  
+  ✓ it falls back to the current Spanish title and content locale for i… 0.11s  
+  ✓ it falls back to the English title for image alt when the derivativ… 0.10s  
+  ✓ it serves the nonblank legacy cover only without usable media and e… 0.13s  
+  ✓ it projects genuine primary review facts even when cached legacy ag… 0.12s  
+
+   PASS  Tests\Feature\Search\TourAvailabilityLogicTest
+  ✓ it derives upcoming available dates from a recurring daily rule      2.45s  
+  ✓ it returns no dates when there are no availability rules             0.03s  
+  ✓ it respects the recurring rule day-of-week filter                    0.03s  
+  ✓ it shouldBeSearchable is true only for published + priced + availab… 0.04s  
+
+   PASS  Tests\Feature\Search\AvailabilityResolutionRegressionTest
+  ✓ it resolves recurring + specific_date + block precedence with dedup… 0.10s  
+  ✓ it returns an empty list and is not searchable when every produced…  0.08s  
+
+  Tests:    47 passed (1083 assertions)
+  Duration: 21.16s
+

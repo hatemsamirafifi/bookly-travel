@@ -1,0 +1,5 @@
+All offered dates, non-default selection, shared mobile dialog, 44px target, Escape focus return and resize preserved query.
+Real login through register/login cross-links restored the full selection with no create POST.
+Actual revoked-token create401 recovered full query; explicit retry alone created one deterministic booking with authoritative integer total.
+Actual revoked-token payment401 retained the same pending reference; cross-tab login restored auth and explicit retry confirmed it without another create POST.
+{"passed":true,"checks":4,"cleanup":{"reference":"BKO-PZJHA2","status":200,"passed":true,"confirmedForCleanup":false}}

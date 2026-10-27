@@ -1,0 +1,21 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx
+  (green run against implemented US4 isolated slice + bounded globals.css offset rules)
+
+RESULT: PASS — 12 passed, 12 total, 0 failed; no act() warnings, no snapshots.
+
+  + renders only the supplied present sections as native anchors
+  + marks the current section with aria-current plus a non-color cue
+  + observes only actual present sections and ignores absent entries
+  + follows actual headings: observer entries move the active entry
+  + passive observer updates never take focus and never scroll the page vertically
+  + plain activation keeps the hash, clears the measured sticky nav and focuses the real heading
+  + modifier clicks keep native behavior: no interception, scroll or focus theft
+  + publishes the measured nav height as a scoped offset and restores it on unmount
+  + re-observes when the supplied sections change and drops removed targets
+  + scrolls immediately without animation when reduced motion is preferred
+  + honors an initial deep link into a present section
+  + reveals the active entry horizontally without any vertical scrollIntoView
+
+Time: ~1.4-2.5s. Full output retained from the focused jest run above; implementation files only
+frontend/src/components/tour/TourSectionNav.tsx, its test, and bounded globals.css offset rules.
