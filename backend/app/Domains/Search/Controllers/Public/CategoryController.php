@@ -26,8 +26,8 @@ class CategoryController
                 ->map(fn (Category $cat) => [
                     'slug' => (string) $cat->slug,
                     'name' => (string) $cat->name,
-                    'description' => $cat->description ? (string) $cat->description : null,
-                    'image_url' => $cat->image_url ? (string) $cat->image_url : null,
+                    'description' => $cat->description === '' ? null : (string) $cat->description,
+                    'image_url' => $cat->image_url === '' ? null : (string) $cat->image_url,
                     'tour_count' => (int) $cat->getAttribute('tours_count'),
                 ])
                 ->values();
