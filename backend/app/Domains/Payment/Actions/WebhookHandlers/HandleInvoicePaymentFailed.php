@@ -2,18 +2,20 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Models\StripeWebhookEvent;
 use Illuminate\Support\Facades\Log;
+use Stripe\Event;
 
 class HandleInvoicePaymentFailed
 {
-    public function execute(\Stripe\Event $event, string $eventId): array
+    public function execute(Event $event, string $eventId): array
     {
         $invoice = data_get($event, 'data.object');
         $bookingReference = data_get($invoice, 'metadata.booking_reference');
 
         if ($bookingReference) {
-            $booking = \App\Domains\Booking\Models\Booking::where('reference', $bookingReference)->first();
+            $booking = Booking::where('reference', $bookingReference)->first();
             if ($booking) {
                 $booking->update([
                     'stripe_invoice_id' => $invoice->id,
@@ -27,6 +29,7 @@ class HandleInvoicePaymentFailed
         }
 
         $this->markProcessed($eventId);
+
         return [];
     }
 

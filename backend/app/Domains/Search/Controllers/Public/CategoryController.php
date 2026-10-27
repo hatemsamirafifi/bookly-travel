@@ -19,8 +19,8 @@ class CategoryController
     {
         $key = 'categories.index';
 
-        /** @var \Illuminate\Support\Collection<int, array{slug: string, name: string, description: string|null, image_url: string|null, tour_count: int}> */
-        $categories = Cache::remember($key, 1800, function (): \Illuminate\Support\Collection {
+        /** @var array<int, array{slug: string, name: string, description: string|null, image_url: string|null, tour_count: int}> */
+        $categories = Cache::remember($key, 1800, function (): array {
             return Category::popularWithCounts()
                 ->get()
                 ->map(fn (Category $cat) => [
@@ -30,7 +30,8 @@ class CategoryController
                     'image_url' => $cat->image_url === '' ? null : (string) $cat->image_url,
                     'tour_count' => (int) $cat->getAttribute('tours_count'),
                 ])
-                ->values();
+                ->values()
+                ->all();
         });
 
         return response()->json(['data' => $categories]);
@@ -38,6 +39,11 @@ class CategoryController
 
     public function tours(CategoryToursRequest $request, string $slug): JsonResponse
     {
+        $category = Category::where('slug', $slug)->where('is_active', true)->first();
+        if (! $category) {
+            return response()->json(['message' => 'Category not found.'], 404);
+        }
+
         $key = 'categories.tours.' . $slug . '.' . md5(json_encode($request->validated()));
 
         $result = Cache::remember($key, 600, function () use ($slug, $request) {

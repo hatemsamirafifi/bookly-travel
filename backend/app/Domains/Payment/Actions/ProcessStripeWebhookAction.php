@@ -53,6 +53,7 @@ class ProcessStripeWebhookAction
 
             if (! $inserted) {
                 Log::info('Duplicate webhook event skipped', ['stripe_event_id' => $event->id]);
+
                 return [];
             }
 
@@ -64,7 +65,7 @@ class ProcessStripeWebhookAction
         }
     }
 
-    private function handleEvent(\Stripe\Event $event, string $eventId): array
+    private function handleEvent(Event $event, string $eventId): array
     {
         return match ($event->type) {
             'payment_intent.succeeded' => $this->handlePaymentSucceeded->execute($event, $eventId),
@@ -81,9 +82,10 @@ class ProcessStripeWebhookAction
     }
 
     /** @return array{} */
-    private function handleUnsupportedEvent(\Stripe\Event $event): array
+    private function handleUnsupportedEvent(Event $event): array
     {
         Log::info('Unhandled webhook event type', ['type' => $event->type]);
+
         return [];
     }
 }

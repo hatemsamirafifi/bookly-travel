@@ -2,11 +2,12 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
-use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Payment\Events\PaymentRefunded;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Payment\Services\LedgerService;
 use Illuminate\Support\Facades\Log;
+use Stripe\Event;
 
 class HandleRefunded
 {
@@ -14,7 +15,7 @@ class HandleRefunded
         private readonly LedgerService $ledger,
     ) {}
 
-    public function execute(\Stripe\Event $event, string $eventId): array
+    public function execute(Event $event, string $eventId): array
     {
         $charge = data_get($event, 'data.object');
         $intentId = $charge->payment_intent;
@@ -29,6 +30,7 @@ class HandleRefunded
 
         if (! $chargePayment) {
             Log::warning('Charge payment not found for refund', ['intent_id' => $intentId]);
+
             return [];
         }
 

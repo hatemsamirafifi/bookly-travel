@@ -1,9 +1,9 @@
 <?php
 
 use App\Domains\Booking\Models\Booking;
-use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Models\StripeWebhookEvent;
+use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,26 +19,20 @@ beforeEach(function () {
 it('rejects webhook without signature', function () {
     Http::fake();
 
-    $payload = json_encode([
-        'id' => 'evt_test',
-        'type' => 'payment_intent.succeeded',
-        'data' => ['object' => []],
-    ]);
-
-    postJson('/api/public/webhooks/stripe', [], [])
+    $this->postJson('/api/public/webhooks/stripe', [], [])
         ->assertBadRequest();
 });
 
 it('rejects webhook with invalid signature', function () {
     Http::fake();
 
-    $payload = json_encode([
+    $payload = [
         'id' => 'evt_test',
         'type' => 'payment_intent.succeeded',
         'data' => ['object' => []],
-    ]);
+    ];
 
-    postJson('/api/public/webhooks/stripe', $payload, [
+    $this->postJson('/api/public/webhooks/stripe', $payload, [
         'Stripe-Signature' => 'InvalidSignature',
     ])
         ->assertBadRequest();
@@ -47,7 +41,18 @@ it('rejects webhook with invalid signature', function () {
 it('processes payment_intent.succeeded webhook', function () {
     $partner = makePartner();
     $traveler = User::factory()->traveler()->create();
-    $tour = Tour::factory()->create(['partner_id' => $partner->id, 'status' => 'published']);
+    $category = Category::firstOrCreate(['slug' => 'webhook-cat'], ['name' => 'Webhook Category']);
+    $tour = Tour::create([
+        'partner_id' => $partner->id,
+        'category_id' => $category->id,
+        'slug' => 'webhook-tour-' . uniqid(),
+        'location' => 'Rome, Italy',
+        'duration_minutes' => 120,
+        'group_size_min' => 1,
+        'group_size_max' => 10,
+        'price_amount' => 10000,
+        'status' => 'published',
+    ]);
 
     $booking = Booking::create([
         'reference' => Booking::generateReference(),
@@ -68,7 +73,7 @@ it('processes payment_intent.succeeded webhook', function () {
         'status' => 'pending',
     ]);
 
-    $payload = json_encode([
+    $payload = [
         'id' => 'evt_test_123',
         'type' => 'payment_intent.succeeded',
         'data' => [
@@ -77,9 +82,9 @@ it('processes payment_intent.succeeded webhook', function () {
                 'charges' => ['data' => []],
             ],
         ],
-    ]);
+    ];
 
-    postJson('/api/public/webhooks/stripe', $payload, [
+    $this->postJson('/api/public/webhooks/stripe', $payload, [
         'Stripe-Signature' => 'valid_signature',
     ])
         ->assertOk();
@@ -92,19 +97,19 @@ it('processes payment_intent.succeeded webhook', function () {
 });
 
 it('deduplicates webhook events', function () {
-    $payload = json_encode([
+    $payload = [
         'id' => 'evt_duplicate_test',
         'type' => 'payment_intent.succeeded',
         'data' => ['object' => ['id' => 'pi_test', 'charges' => ['data' => []]]],
-    ]);
+    ];
 
     // First call
-    postJson('/api/public/webhooks/stripe', $payload, [
+    $this->postJson('/api/public/webhooks/stripe', $payload, [
         'Stripe-Signature' => 'valid_signature',
     ])->assertOk();
 
     // Second call with same event ID should be deduplicated
-    postJson('/api/public/webhooks/stripe', $payload, [
+    $this->postJson('/api/public/webhooks/stripe', $payload, [
         'Stripe-Signature' => 'valid_signature',
     ])->assertOk();
 
@@ -112,13 +117,13 @@ it('deduplicates webhook events', function () {
 });
 
 it('handles unsupported webhook event types gracefully', function () {
-    $payload = json_encode([
+    $payload = [
         'id' => 'evt_unsupported',
         'type' => 'customer.created',
         'data' => ['object' => []],
-    ]);
+    ];
 
-    postJson('/api/public/webhooks/stripe', $payload, [
+    $this->postJson('/api/public/webhooks/stripe', $payload, [
         'Stripe-Signature' => 'valid_signature',
     ])
         ->assertOk();
@@ -127,13 +132,13 @@ it('handles unsupported webhook event types gracefully', function () {
 });
 
 it('marks webhook event as processed', function () {
-    $payload = json_encode([
+    $payload = [
         'id' => 'evt_processed_test',
         'type' => 'payment_intent.succeeded',
         'data' => ['object' => ['id' => 'pi_test', 'charges' => ['data' => []]]],
-    ]);
+    ];
 
-    postJson('/api/public/webhooks/stripe', $payload, [
+    $this->postJson('/api/public/webhooks/stripe', $payload, [
         'Stripe-Signature' => 'valid_signature',
     ])->assertOk();
 

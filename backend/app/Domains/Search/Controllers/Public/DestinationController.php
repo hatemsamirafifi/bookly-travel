@@ -6,7 +6,6 @@ use App\Domains\Search\Actions\GetScopedToursAction;
 use App\Domains\Search\Support\DestinationAggregator;
 use App\Http\Requests\Public\Search\DestinationToursRequest;
 use App\Http\Requests\Public\Search\LocaleRequest;
-use App\Models\Tour;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 

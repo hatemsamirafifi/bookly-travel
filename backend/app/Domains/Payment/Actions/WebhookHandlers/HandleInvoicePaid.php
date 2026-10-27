@@ -2,12 +2,13 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
-use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Events\PaymentSucceeded;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Payment\Services\LedgerService;
 use Illuminate\Support\Facades\Log;
+use Stripe\Event;
 
 class HandleInvoicePaid
 {
@@ -15,13 +16,14 @@ class HandleInvoicePaid
         private readonly LedgerService $ledger,
     ) {}
 
-    public function execute(\Stripe\Event $event, string $eventId): array
+    public function execute(Event $event, string $eventId): array
     {
         $invoice = data_get($event, 'data.object');
         $bookingReference = data_get($invoice, 'metadata.booking_reference');
 
         if (! $bookingReference) {
             $this->markProcessed($eventId);
+
             return [];
         }
 
@@ -29,6 +31,7 @@ class HandleInvoicePaid
         if (! $booking) {
             Log::warning('Booking not found for invoice.paid webhook', ['reference' => $bookingReference]);
             $this->markProcessed($eventId);
+
             return [];
         }
 

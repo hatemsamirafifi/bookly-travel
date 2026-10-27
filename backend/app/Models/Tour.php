@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Laravel\Scout\Searchable;
 use Throwable;
@@ -67,6 +68,31 @@ class Tour extends Model
         } catch (Throwable) {
             Log::warning('tour scout queue dispatch contained');
         }
+    }
+
+    public static function clearDetailCache(?string $slug): void
+    {
+        if (! $slug) {
+            return;
+        }
+
+        foreach (['en', 'es', 'it'] as $locale) {
+            Cache::forget("tour.{$slug}.{$locale}");
+        }
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (Tour $tour) {
+            static::clearDetailCache($tour->slug);
+            if ($tour->wasChanged('slug') && $tour->getOriginal('slug')) {
+                static::clearDetailCache((string) $tour->getOriginal('slug'));
+            }
+        });
+
+        static::deleted(function (Tour $tour) {
+            static::clearDetailCache($tour->slug);
+        });
     }
 
     // Meilisearch index settings for Scout sync-index-settings

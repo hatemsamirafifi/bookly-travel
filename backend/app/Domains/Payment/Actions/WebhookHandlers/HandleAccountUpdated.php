@@ -2,10 +2,11 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
-use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Payment\Services\StripeAccountAuditService;
 use Illuminate\Support\Facades\Log;
+use Stripe\Event;
 
 class HandleAccountUpdated
 {
@@ -13,7 +14,7 @@ class HandleAccountUpdated
         private readonly StripeAccountAuditService $accountAudit,
     ) {}
 
-    public function execute(\Stripe\Event $event, string $eventId): array
+    public function execute(Event $event, string $eventId): array
     {
         $account = data_get($event, 'data.object');
         $accountId = $account->id;
@@ -22,6 +23,7 @@ class HandleAccountUpdated
         if (! $partner) {
             Log::info('Partner not found for connected account update', ['stripe_account_id' => $accountId]);
             $this->markProcessed($eventId);
+
             return [];
         }
 

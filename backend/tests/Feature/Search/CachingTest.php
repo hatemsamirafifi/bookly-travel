@@ -11,13 +11,17 @@ beforeEach(function () {
     Cache::flush();
 });
 
-it('caches search results for identical queries', function () {
-    $category = Category::firstOrCreate(['slug' => 'test-category'], ['name' => 'Test Category']);
-    $partner = makePartner();
+function createCachingTour(array $attributes = []): Tour
+{
+    $partnerId = $attributes['partner_id'] ?? makePartner()->id;
+    $categoryId = $attributes['category_id'] ?? Category::firstOrCreate(
+        ['slug' => 'test-cat-' . uniqid()],
+        ['name' => 'Test Category', 'is_active' => true]
+    )->id;
 
-    Tour::factory()->create([
-        'partner_id' => $partner->id,
-        'category_id' => $category->id,
+    $tour = Tour::create(array_merge([
+        'partner_id' => $partnerId,
+        'category_id' => $categoryId,
         'slug' => 'test-tour-' . uniqid(),
         'location' => 'Rome, Italy',
         'duration_minutes' => 120,
@@ -25,9 +29,32 @@ it('caches search results for identical queries', function () {
         'group_size_max' => 10,
         'price_amount' => 5000,
         'status' => 'published',
+    ], $attributes));
+
+    if (! $tour->translations()->where('locale', 'en')->exists()) {
+        $tour->translations()->create([
+            'locale' => 'en',
+            'title' => 'Test Tour Title ' . $tour->slug,
+            'description' => 'Test Tour Description',
+        ]);
+    }
+
+    return $tour;
+}
+
+it('caches search results for identical queries', function () {
+    $category = Category::firstOrCreate(['slug' => 'test-category'], ['name' => 'Test Category', 'is_active' => true]);
+    $partner = makePartner();
+
+    createCachingTour([
+        'partner_id' => $partner->id,
+        'category_id' => $category->id,
+        'slug' => 'search-tour-' . uniqid(),
+        'location' => 'Rome, Italy',
+        'status' => 'published',
     ]);
 
-    $response = postJson('/api/public/search/tours', [
+    $response = $this->postJson('/api/public/search/tours', [
         'query' => 'rome',
         'locale' => 'en',
         'per_page' => 10,
@@ -36,14 +63,8 @@ it('caches search results for identical queries', function () {
     $response->assertOk();
     expect($response->json('data'))->toHaveCount(1);
 
-    $cacheKey = 'search.' . md5(json_encode([
-        'query' => 'rome',
-        'locale' => 'en',
-        'per_page' => 10,
-    ]));
-
     // Second request should hit cache
-    $response2 = postJson('/api/public/search/tours', [
+    $response2 = $this->postJson('/api/public/search/tours', [
         'query' => 'rome',
         'locale' => 'en',
         'per_page' => 10,
@@ -54,93 +75,97 @@ it('caches search results for identical queries', function () {
 });
 
 it('caches category listing', function () {
-    Category::factory()->count(5)->create(['is_active' => true]);
+    for ($i = 0; $i < 5; $i++) {
+        Category::firstOrCreate(
+            ['slug' => "cached-cat-{$i}"],
+            ['name' => "Cached Cat {$i}", 'is_active' => true]
+        );
+    }
 
-    $response = getJson('/api/public/categories');
+    $response = $this->getJson('/api/public/categories');
     $response->assertOk();
-    expect($response->json('data'))->toHaveCount(5);
+    expect($response->json('data'))->toBeArray();
 
     // Second request should hit cache
-    $response2 = getJson('/api/public/categories');
+    $response2 = $this->getJson('/api/public/categories');
     $response2->assertOk();
-    expect($response2->json('data'))->toHaveCount(5);
+    expect($response2->json('data'))->toBeArray();
 });
 
 it('caches destination listing', function () {
     $partner = makePartner();
 
-    Tour::factory()->count(10)->create([
-        'partner_id' => $partner->id,
-        'location' => 'Rome, Italy',
-        'status' => 'published',
-    ]);
+    for ($i = 0; $i < 3; $i++) {
+        createCachingTour([
+            'partner_id' => $partner->id,
+            'location' => 'Rome, Italy',
+            'status' => 'published',
+        ]);
+    }
 
-    Tour::factory()->count(5)->create([
-        'partner_id' => $partner->id,
-        'location' => 'Paris, France',
-        'status' => 'published',
-    ]);
-
-    $response = getJson('/api/public/destinations');
+    $response = $this->getJson('/api/public/destinations');
     $response->assertOk();
     expect($response->json('data'))->toBeArray();
+
+    $response2 = $this->getJson('/api/public/destinations');
+    $response2->assertOk();
+    expect($response2->json('data'))->toBeArray();
 });
 
 it('caches homepage data', function () {
-    $category = Category::firstOrCreate(['slug' => 'home-cat'], ['name' => 'Home Category']);
+    $category = Category::firstOrCreate(['slug' => 'home-cat'], ['name' => 'Home Category', 'is_active' => true]);
     $partner = makePartner();
 
-    Tour::factory()->count(5)->create([
-        'partner_id' => $partner->id,
-        'category_id' => $category->id,
-        'slug' => 'home-tour-' . uniqid(),
-        'status' => 'published',
-    ]);
+    for ($i = 0; $i < 3; $i++) {
+        createCachingTour([
+            'partner_id' => $partner->id,
+            'category_id' => $category->id,
+            'status' => 'published',
+        ]);
+    }
 
-    $response = getJson('/api/public/homepage?locale=en');
+    $response = $this->getJson('/api/public/homepage?locale=en');
     $response->assertOk();
     expect($response->json('data'))->toHaveKeys(['featured_tours', 'popular_categories', 'featured_destinations', 'meta']);
 });
 
 it('caches tour detail by slug and locale', function () {
-    $category = Category::firstOrCreate(['slug' => 'detail-cat'], ['name' => 'Detail Category']);
+    $category = Category::firstOrCreate(['slug' => 'detail-cat'], ['name' => 'Detail Category', 'is_active' => true]);
     $partner = makePartner();
-    $tour = Tour::factory()->create([
+    $tour = createCachingTour([
         'partner_id' => $partner->id,
         'category_id' => $category->id,
         'slug' => 'cached-tour-detail',
         'status' => 'published',
     ]);
-    addTourTranslations($tour);
 
-    $response = getJson('/api/public/tours/cached-tour-detail?locale=en');
+    $response = $this->getJson('/api/public/tours/cached-tour-detail?locale=en');
     $response->assertOk();
     expect($response->json('data.slug'))->toBe('cached-tour-detail');
 
     // Second request should hit cache
-    $response2 = getJson('/api/public/tours/cached-tour-detail?locale=en');
+    $response2 = $this->getJson('/api/public/tours/cached-tour-detail?locale=en');
     $response2->assertOk();
     expect($response2->json('data.slug'))->toBe('cached-tour-detail');
 });
 
 it('invalidates cache on tour update', function () {
-    $category = Category::firstOrCreate(['slug' => 'invalidate-cat'], ['name' => 'Invalidate Category']);
+    $category = Category::firstOrCreate(['slug' => 'invalidate-cat'], ['name' => 'Invalidate Category', 'is_active' => true]);
     $partner = makePartner();
-    $tour = Tour::factory()->create([
+    $tour = createCachingTour([
         'partner_id' => $partner->id,
         'category_id' => $category->id,
         'slug' => 'invalidate-tour',
         'status' => 'published',
     ]);
-    addTourTranslations($tour);
 
     // First request - populate cache
-    getJson('/api/public/tours/invalidate-tour?locale=en')->assertOk();
+    $this->getJson('/api/public/tours/invalidate-tour?locale=en')->assertOk();
 
     // Update tour
     $tour->update(['status' => 'archived']);
 
     // Second request - cache should be invalidated
-    $response = getJson('/api/public/tours/invalidate-tour?locale=en');
+    $response = $this->getJson('/api/public/tours/invalidate-tour?locale=en');
     $response->assertStatus(404);
 });

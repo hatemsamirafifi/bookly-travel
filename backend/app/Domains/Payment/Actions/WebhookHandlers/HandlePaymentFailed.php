@@ -2,14 +2,15 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
-use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Payment\Events\PaymentFailed;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use Illuminate\Support\Facades\Log;
+use Stripe\Event;
 
 class HandlePaymentFailed
 {
-    public function execute(\Stripe\Event $event, string $eventId): array
+    public function execute(Event $event, string $eventId): array
     {
         $intent = data_get($event, 'data.object');
         $intentId = $intent->id;
@@ -17,6 +18,7 @@ class HandlePaymentFailed
         $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
         if (! $payment) {
             Log::warning('Payment not found for failed intent', ['intent_id' => $intentId]);
+
             return [];
         }
 
@@ -29,6 +31,7 @@ class HandlePaymentFailed
                 'payment_id' => $payment->id,
                 'intent_id' => $intentId,
             ]);
+
             return [];
         }
 
