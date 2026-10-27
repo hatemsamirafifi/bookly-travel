@@ -19,20 +19,21 @@ class CategoryController
     {
         $key = 'categories.index';
 
-        /** @var \Illuminate\Support\Collection<int, array{slug: string, name: string, description: string|null, image_url: string|null, tour_count: int}> $categories */
         $categories = Cache::remember($key, 1800, function () {
             return Category::popularWithCounts()
                 ->get()
-                ->map(fn (Category $cat) => [
-                    'slug' => (string) $cat->slug,
-                    'name' => (string) $cat->name,
-                    'description' => $cat->description ? (string) $cat->description : null,
-                    'image_url' => $cat->image_url ? (string) $cat->image_url : null,
-                    'tour_count' => (int) $cat->getAttribute('tours_count'),
-                ]);
+                ->map(function (Category $cat) {
+                    return [
+                        'slug' => (string) $cat->slug,
+                        'name' => (string) $cat->name,
+                        'description' => $cat->description ? (string) $cat->description : null,
+                        'image_url' => $cat->image_url ? (string) $cat->image_url : null,
+                        'tour_count' => (int) $cat->getAttribute('tours_count'),
+                    ];
+                });
         });
 
-        return response()->json(['data' => $categories->values()]);
+        return response()->json(['data' => $categories]);
     }
 
     public function tours(CategoryToursRequest $request, string $slug): JsonResponse
