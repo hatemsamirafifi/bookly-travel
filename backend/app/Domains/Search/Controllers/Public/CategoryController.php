@@ -19,7 +19,8 @@ class CategoryController
     {
         $key = 'categories.index';
 
-        $categories = Cache::remember($key, 1800, function () {
+        /** @var \Illuminate\Support\Collection<int, array{slug: string, name: string, description: string|null, image_url: string|null, tour_count: int}> */
+        $categories = Cache::remember($key, 1800, function (): \Illuminate\Support\Collection {
             return Category::popularWithCounts()
                 ->get()
                 ->map(fn (Category $cat) => [
