@@ -2,6 +2,7 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Events\PaymentSucceeded;
 use App\Domains\Payment\Models\Payment;

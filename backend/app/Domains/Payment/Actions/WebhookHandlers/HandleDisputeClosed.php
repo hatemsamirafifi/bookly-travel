@@ -4,6 +4,7 @@ namespace App\Domains\Payment\Actions\WebhookHandlers;
 
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Models\Payment;
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use Illuminate\Support\Facades\Log;
 
 class HandleDisputeClosed

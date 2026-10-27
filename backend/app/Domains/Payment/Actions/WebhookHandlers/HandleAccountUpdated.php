@@ -2,6 +2,7 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
+use App\Domains\Payment\Models\StripeWebhookEvent;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Services\StripeAccountAuditService;
 use Illuminate\Support\Facades\Log;
