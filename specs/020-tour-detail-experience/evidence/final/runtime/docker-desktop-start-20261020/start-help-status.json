@@ -1,0 +1,21 @@
+{
+  "name": "start-help",
+  "command": [
+    "docker",
+    "desktop",
+    "start",
+    "--help"
+  ],
+  "spawnOptions": {
+    "shell": false,
+    "timeoutMs": 30000,
+    "windowsHide": true
+  },
+  "startedAtUtc": "2026-10-20T19:15:11.626Z",
+  "finishedAtUtc": "2026-10-20T19:15:11.994Z",
+  "durationMs": 368,
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null
+}

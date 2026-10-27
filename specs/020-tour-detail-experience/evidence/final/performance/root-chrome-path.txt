@@ -1,0 +1,1 @@
+/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome

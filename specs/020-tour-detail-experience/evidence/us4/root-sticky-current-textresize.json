@@ -1,0 +1,37 @@
+{
+  "buildId": "MDBZcRDMEv6ez4wJeEWkH",
+  "scope": "Actual public Rome tour, native built source, real API reads, browser-only accessibility nav text resize; no API success mocks or fixture writes",
+  "lastObserved": {
+    "navTop": 0,
+    "navHeight": 98,
+    "sectionTop": 97.5,
+    "scrollY": 874
+  },
+  "geometry": {
+    "nav": {
+      "top": 0,
+      "bottom": 98,
+      "height": 98
+    },
+    "card": {
+      "top": 106,
+      "bottom": 640,
+      "height": 534
+    },
+    "aside": {
+      "top": -30.5,
+      "bottom": 1142,
+      "height": 1172.5
+    },
+    "heading": {
+      "top": 118.5,
+      "bottom": 154.5,
+      "height": 36
+    },
+    "scrollY": 874,
+    "cardCssTop": "106px"
+  },
+  "overlap": false,
+  "sourceCardTopIs80": false,
+  "premiseRemainingBelow": 502
+}

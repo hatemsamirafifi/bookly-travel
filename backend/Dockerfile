@@ -18,7 +18,7 @@ RUN apk add --no-cache \
 RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite bcmath gd zip intl pcntl
 
 # Install Redis extension
-RUN pecl install redis && docker-php-ext-enable redis
+RUN mkdir -p /usr/src/php/ext/redis && curl -fsSL https://github.com/phpredis/phpredis/archive/refs/tags/6.1.0.tar.gz | tar -xz -C /usr/src/php/ext/redis --strip-components=1 && docker-php-ext-install redis
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -1,0 +1,51 @@
+
+Running 2 tests using 1 worker
+
+[1A[2K(node:22668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:22668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/2] [chromium] › tests\e2e\tour-detail.spec.ts:994:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:994:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('€90.00')
+    Expected: visible
+    Error: strict mode violation: getByText('€90.00') resolved to 2 elements:
+        1) <span class="font-semibold text-primary">€90.00</span> aka getByTestId('tour-booking-card-slot').getByText('€90.00')
+        2) <span class="text-text-muted">11/17/2026 · 2 · €90.00</span> aka getByText('/17/2026 · 2 · €90.00')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('€90.00')[22m
+
+
+      1036 |       await page.setViewportSize({ width: 1280, height: 900 });
+      1037 |       await expect(page.locator('main#main-content').getByLabel('Select a Date')).toHaveValue(picked);
+    > 1038 |       await expect(page.getByText(formatCurrency(base * 2, 'EUR', 'en'), { exact: false })).toBeVisible();
+           |                                                                                             ^
+      1039 |       const cardLoginHref = await page.getByRole('link', { name: 'Book Now' }).first().getAttribute('href');
+      1040 |       expect(new URL(cardLoginHref!, 'http://bookly.test').searchParams.get('returnUrl')).toBe(
+      1041 |         `/en/booking?tour=${slug}&participants=2&date=${picked}`,
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1038:93
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\nav-critical-final\tour-detail-Tour-Detail-Pa-f240a-sured-targets-across-resize-chromium\error-context.md
+
+
+[1A[2K(node:23596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/2] [chromium] › tests\e2e\tour-detail.spec.ts:2222:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:994:7 › Tour Detail Page › US2 mobile dialog edits shared selection with measured targets across resize 
+  1 passed (10.9s)

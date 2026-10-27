@@ -1,0 +1,31 @@
+{
+  "args": [
+    "compose",
+    "exec",
+    "-T",
+    "nextjs",
+    "node",
+    "node_modules/@playwright/test/cli.js",
+    "test",
+    "tests/e2e/tour-detail.spec.ts",
+    "--project=chromium",
+    "--project=mobile",
+    "--no-deps",
+    "--workers=1",
+    "--reporter=line",
+    "--repeat-each=3",
+    "--grep",
+    "US4 passive scrolling follows",
+    "--output=/tmp/spec020-passive-rounding-browser-green"
+  ],
+  "startedAt": "2026-10-17T14:44:52.921Z",
+  "finishedAt": "2026-10-17T14:45:52.222Z",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "exitCode": 0,
+  "passed": true,
+  "scope": "Repeated actual built-source passive-scroll regression; existing geometry/focus predicates unchanged"
+}

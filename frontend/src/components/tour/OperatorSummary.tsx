@@ -1,4 +1,5 @@
 import type { PublicOperatorSummary } from '@/lib/api/types';
+import { isUsableText } from '@/lib/tours/detail-presentation';
 
 interface OperatorSummaryProps {
   operator: PublicOperatorSummary;
@@ -18,7 +19,7 @@ export default function OperatorSummary({ operator, title, tourCountLabel, revie
       {operator.verified === true && verifiedLabel ? (
         <p className="mt-1"><span data-testid="operator-verified" className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">{verifiedLabel}</span></p>
       ) : null}
-      {operator.description && <p className="mt-2 whitespace-pre-line text-text-muted">{operator.description}</p>}
+      {isUsableText(operator.description) && <p className="mt-2 whitespace-pre-line text-text-muted">{operator.description}</p>}
       <div className="mt-4 flex flex-wrap gap-3 text-sm text-text-muted">
         <span>{tourCountLabel}</span>
         {operator.review_count > 0 && <span>{reviewCountLabel}</span>}

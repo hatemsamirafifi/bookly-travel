@@ -1,0 +1,3009 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx
+
+  console.error
+    Received `true` for a non-boolean attribute `priority`.
+    
+    If you want to write it to the DOM, pass a string instead: priority="true" or priority={value.toString()}.
+
+      92 |
+      93 |   it('shows a cover plus up to four supporting tiles with a real-count see-all beyond five', () => {
+    > 94 |     render(<TourGallery images={[1, 2, 3, 4, 5, 6, 7].map((n) => photo(n))} title="Rome walk" contentLocale="en" />);
+         |           ^
+      95 |     expect(within(mosaic()).getAllByRole('button', { name: /View image \d+/ })).toHaveLength(5);
+      96 |     fireEvent.click(screen.getByRole('button', { name: 'See all 7 photos' }));
+      97 |     expect(screen.getByRole('dialog', { name: 'Image lightbox' })).toBeInTheDocument();
+
+      at validateProperty (node_modules/react-dom/cjs/react-dom-client.development.js:3070:27)
+      at warnUnknownProperties (node_modules/react-dom/cjs/react-dom-client.development.js:3146:9)
+      at validatePropertiesInDevelopment (node_modules/react-dom/cjs/react-dom-client.development.js:19868:9)
+      at setInitialProperties (node_modules/react-dom/cjs/react-dom-client.development.js:20491:7)
+      at completeWork (node_modules/react-dom/cjs/react-dom-client.development.js:12662:18)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at completeUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:17777:19)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:17658:11)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16504:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-dom/cjs/react-dom-client.development.js:18957:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:94:11)
+
+FAIL src/components/tour/__tests__/TourGallery.test.tsx (171.683 s)
+  ● TourGallery empty gallery › shows an honest localized empty state with reserved space and no viewer
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-empty"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex h-full items-center justify-center text-gray-400"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-16 w-16"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"1.5"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      78 |   it('shows an honest localized empty state with reserved space and no viewer', () => {
+      79 |     render(<TourGallery images={[]} title="Rome walk" contentLocale="en" />);
+    > 80 |     expect(screen.getByTestId('tour-gallery-empty')).toBeInTheDocument();
+         |                   ^
+      81 |     expect(screen.getByText('No photos are available for this tour.')).toBeInTheDocument();
+      82 |     expect(screen.queryByRole('img')).not.toBeInTheDocument();
+      83 |     expect(screen.queryByRole('button')).not.toBeInTheDocument();
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:80:19)
+
+  ● TourGallery desktop mosaic › shows a cover plus up to four supporting tiles with a real-count see-all beyond five
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:95:19)
+
+  ● TourGallery desktop mosaic › reaches every supplied photo in order, including slots beyond five, with wraparound
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "See all 7 photos"
+
+    Here are the accessible roles:
+
+      button:
+
+      Name "Open image gallery":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Open image gallery"[39m
+        [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "Previous image":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Previous image"[39m
+        [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+      [36m/>[39m
+
+      Name "Next image":
+      [36m<button[39m
+        [33maria-label[39m=[32m"Next image"[39m
+        [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+      [36m/>[39m
+
+      Name "View image 1":
+      [36m<button[39m
+        [33maria-current[39m=[32m"true"[39m
+        [33maria-label[39m=[32m"View image 1"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "View image 2":
+      [36m<button[39m
+        [33maria-label[39m=[32m"View image 2"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "View image 3":
+      [36m<button[39m
+        [33maria-label[39m=[32m"View image 3"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "View image 4":
+      [36m<button[39m
+        [33maria-label[39m=[32m"View image 4"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "View image 5":
+      [36m<button[39m
+        [33maria-label[39m=[32m"View image 5"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "View image 6":
+      [36m<button[39m
+        [33maria-label[39m=[32m"View image 6"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      Name "View image 7":
+      [36m<button[39m
+        [33maria-label[39m=[32m"View image 7"[39m
+        [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      img:
+
+      Name "Photo 1":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 1"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mfetchpriority[39m=[32m"high"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 1":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 1"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 2":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 2"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 3":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 3"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 4":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 4"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 5":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 5"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 6":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 6"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+      [36m/>[39m
+
+      Name "Photo 7":
+      [36m<img[39m
+        [33malt[39m=[32m"Photo 7"[39m
+        [33mclass[39m=[32m"object-cover"[39m
+        [33mdata-blur[39m=[32m"true"[39m
+        [33mdata-fill[39m=[32m"true"[39m
+        [33mdata-placeholder[39m=[32m"blur"[39m
+        [33mlang[39m=[32m"en"[39m
+        [33msizes[39m=[32m"96px"[39m
+        [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      list:
+
+      Name "thumbnails":
+      [36m<div[39m
+        [33maria-label[39m=[32m"thumbnails"[39m
+        [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+        [33mrole[39m=[32m"list"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      listitem:
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<div[39m
+        [33mrole[39m=[32m"listitem"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      101 |   it('reaches every supplied photo in order, including slots beyond five, with wraparound', () => {
+      102 |     render(<TourGallery images={[1, 2, 3, 4, 5, 6, 7].map((n) => photo(n))} title="Rome walk" contentLocale="en" />);
+    > 103 |     fireEvent.click(screen.getByRole('button', { name: 'See all 7 photos' }));
+          |                            ^
+      104 |     const dialog = screen.getByRole('dialog', { name: 'Image lightbox' });
+      105 |     const seen: Array<string | null> = [within(dialog).getByRole('img').getAttribute('alt')];
+      106 |     for (let step = 0; step < 6; step += 1) {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:103:28)
+
+  ● TourGallery desktop mosaic › puts the cover first while preserving caller relative order otherwise
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Harbor panorama"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/c.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Harbor panorama"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/c.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Alley"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/b.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Square"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:128:28)
+
+  ● TourGallery desktop mosaic › adapts sparse galleries with no duplicate tiles and no see-all
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:140:19)
+
+  ● TourGallery desktop mosaic › opens each tile at its own original index
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:150:28)
+
+  ● TourGallery desktop mosaic › keeps a failed slot stable with an honest placeholder while other photos stay reachable
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:158:30)
+
+  ● TourGallery desktop mosaic › recovers a failed slot when the media identity changes
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:175:28)
+
+  ● TourGallery desktop mosaic › marks image language from alt_locale while controls stay page-localized
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Sunrise over the harbor"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/harbor.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Sunrise over the harbor"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/harbor.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Old street"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/street.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:202:19)
+
+  ● TourGallery desktop mosaic › renders alt text as text, never as raw HTML
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"<img src=\"x\" onerror=\"alert(1)\"> Harbor"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/h.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:220:28)
+
+  ● TourGallery mobile rail › shows every photo in a scroll rail with counter and controls, without thumbnails
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-rail"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 |
+      69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+    > 70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+         |                           ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   viewport = { desktop: false, reducedMotion: false };
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at rail (src/components/tour/__tests__/TourGallery.test.tsx:70:27)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:230:19)
+
+  ● TourGallery mobile rail › updates the counter on scroll and moves the rail from visible controls
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-rail"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 4"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 4"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-4.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 5"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 5"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-5.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 6"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 6"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-6.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 7"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 7"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-7.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 |
+      69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+    > 70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+         |                           ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   viewport = { desktop: false, reducedMotion: false };
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at rail (src/components/tour/__tests__/TourGallery.test.tsx:70:27)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:241:22)
+
+  ● TourGallery mobile rail › uses instant programmatic scrolls when reduced motion is preferred
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-rail"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 |
+      69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+    > 70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+         |                           ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   viewport = { desktop: false, reducedMotion: false };
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at rail (src/components/tour/__tests__/TourGallery.test.tsx:70:27)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:255:22)
+
+  ● TourGallery mobile rail › reaches every rail photo through its own trigger
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-rail"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      68 |
+      69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+    > 70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+         |                           ^
+      71 |
+      72 | beforeEach(() => {
+      73 |   viewport = { desktop: false, reducedMotion: false };
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at rail (src/components/tour/__tests__/TourGallery.test.tsx:70:27)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:264:28)
+
+  ● TourGallery viewer focus › returns focus to the actual trigger on close
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:278:28)
+
+  ● TourGallery viewer focus › keeps focus stable on arrow navigation without refocusing close
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Photo 1"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 1"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-1.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 3"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 3"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-3.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:289:28)
+
+  ● TourGallery viewer focus › applies the blur placeholder only from actually supplied metadata
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tour-gallery-mosaic"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative overflow-hidden rounded-xl bg-surface-alt"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative aspect-[16/10]"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Open image gallery"[39m
+              [33mclass[39m=[32m"relative block h-full w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Has blur"[39m
+                [33mclass[39m=[32m"object-cover"[39m
+                [33mdata-blur[39m=[32m"true"[39m
+                [33mdata-fill[39m=[32m"true"[39m
+                [33mdata-placeholder[39m=[32m"blur"[39m
+                [33mfetchpriority[39m=[32m"high"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33msizes[39m=[32m"(min-width: 1024px) 66vw, 100vw"[39m
+                [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+              [36m/>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Previous image"[39m
+              [33mclass[39m=[32m"absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M15 19l-7-7 7-7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Next image"[39m
+              [33mclass[39m=[32m"absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#0A2540]"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"h-5 w-5 text-gray-700"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9 5l7 7-7 7"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"thumbnails"[39m
+            [33mclass[39m=[32m"flex gap-2 overflow-x-auto p-3"[39m
+            [33mrole[39m=[32m"list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-current[39m=[32m"true"[39m
+                [33maria-label[39m=[32m"View image 1"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-bookly-navy"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Has blur"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/a.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mrole[39m=[32m"listitem"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"View image 2"[39m
+                [33mclass[39m=[32m"relative h-16 w-24 shrink-0 overflow-hidden rounded-md border-2 transition-colors border-transparent hover:border-border"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m"Photo 2"[39m
+                  [33mclass[39m=[32m"object-cover"[39m
+                  [33mdata-blur[39m=[32m"true"[39m
+                  [33mdata-fill[39m=[32m"true"[39m
+                  [33mdata-placeholder[39m=[32m"blur"[39m
+                  [33mlang[39m=[32m"en"[39m
+                  [33msizes[39m=[32m"96px"[39m
+                  [33msrc[39m=[32m"https://images.example.com/photo-2.jpg"[39m
+                [36m/>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      67 | });
+      68 |
+    > 69 | const mosaic = () => screen.getByTestId('tour-gallery-mosaic');
+         |                             ^
+      70 | const rail = () => screen.getByTestId('tour-gallery-rail');
+      71 |
+      72 | beforeEach(() => {
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at mosaic (src/components/tour/__tests__/TourGallery.test.tsx:69:29)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:312:29)
+
+Test Suites: 1 failed, 1 total
+Tests:       17 failed, 17 total
+Snapshots:   0 total
+Time:        261.39 s
+Ran all test suites within paths "src/components/tour/__tests__/TourGallery.test.tsx".

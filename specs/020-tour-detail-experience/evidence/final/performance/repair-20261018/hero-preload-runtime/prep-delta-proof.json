@@ -1,0 +1,46 @@
+{
+ "createdAt": "2026-10-18T21:40:17.370Z",
+ "old419Path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\prep\\candidate-manifest.json",
+ "container420Path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\runtime\\root-reviewed-container-source.json",
+ "counts": {
+  "old419": 419,
+  "curated419": 419,
+  "old420": 420,
+  "curated420": 420,
+  "unique420": 420
+ },
+ "hostOld419Mismatches": [
+  {
+   "rel": "src\\components\\tour\\TourGallery.tsx",
+   "expect": "153116c1dbb8b28e2d23fd6334892702cc59a5245b58bdaebf7abb65f781d28c",
+   "actual": "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb"
+  },
+  {
+   "rel": "src\\components\\tour\\__tests__\\TourGallery.test.tsx",
+   "expect": "3e68199b52479862a2d8f4b68bb2530ebb0066b0dc2bc1540ef6377800c4d8ec",
+   "actual": "d9c27ccff83d2dbb448b18c12e79b9989adf630e941e17027cb8e8e43f4847ea"
+  }
+ ],
+ "hostCuratedNew419Mismatches": [],
+ "replacementRecords": {
+  "src\\components\\tour\\TourGallery.tsx": "be653d721870b51bfa8c458d302ee5ccf675ae63cf48c807652e9721d7767ebb",
+  "src\\components\\tour\\__tests__\\TourGallery.test.tsx": "d9c27ccff83d2dbb448b18c12e79b9989adf630e941e17027cb8e8e43f4847ea",
+  "scripts\\lighthouse-runtime-preflight.mjs": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf",
+  "scripts\\lighthouse-runtime-preflight.test.mjs": "7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1"
+ },
+ "unchangedMeta": {
+  "lighthouserc_sha": {
+   "old": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+   "curated": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+   "isRootVerified": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672"
+  },
+  "jestConfig420old": "ea003c2348f2fdc10d178265a065c3230f2a670976e3c042a63125d229c40710",
+  "jestConfigHostActual": "ea003c2348f2fdc10d178265a065c3230f2a670976e3c042a63125d229c40710",
+  "jestConfigExpected": "ea003c2348f2fdc10d178265a065c3230f2a670976e3c042a63125d229c40710",
+  "containerMetaPreserved": {
+   "node": "v20.20.2",
+   "next": "16.2.3",
+   "buildId": "PWRC5Senrh_71s0M1xvjU"
+  }
+ }
+}

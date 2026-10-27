@@ -1,0 +1,3 @@
+Root observed command result: exit0, no ESLint findings.
+Command from frontend: npx eslint src/components/seo/StructuredData.tsx src/components/seo/__tests__/StructuredData.test.tsx src/lib/utils.ts src/lib/__tests__/utils.test.ts
+Recorded from completed exec session78741; Tee-Object emits no file for an empty stream, so this is explicit exit metadata, not fabricated stdout.

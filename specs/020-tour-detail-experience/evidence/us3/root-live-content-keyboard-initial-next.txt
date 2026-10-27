@@ -1,0 +1,49 @@
+▲ Next.js 16.2.3
+- Local:         http://127.0.0.1:52237
+- Network:       http://127.0.0.1:52237
+✓ Ready in 502ms
+⨯ [TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo ENOTFOUND cdn.bookly.test
+      at ignore-listed frames {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'cdn.bookly.test'
+  }
+}
+⨯ [TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo ENOTFOUND cdn.bookly.test
+      at ignore-listed frames {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'cdn.bookly.test'
+  }
+}
+⨯ [TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo ENOTFOUND cdn.bookly.test
+      at ignore-listed frames {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'cdn.bookly.test'
+  }
+}
+⨯ [TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo ENOTFOUND cdn.bookly.test
+      at ignore-listed frames {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'cdn.bookly.test'
+  }
+}
+⨯ [TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo ENOTFOUND cdn.bookly.test
+      at ignore-listed frames {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'cdn.bookly.test'
+  }
+}

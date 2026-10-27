@@ -1,0 +1,5 @@
+Executor host launch environment for the native audit attempt launched 2026-10-17T20:12:38.111Z (PID 11612, metadata in evidence/final/performance/delegation-review/opencode-launcher-runner-metadata-2.json):
+node.exe path: C:\Program Files\nodejs\node.exe
+`node -v` output at recording time: v24.14.1
+recordedAtUtc: 2026-10-17T20:30:00Z
+Observation only; records the host Node major version used to spawn the native runner (runner stage execPath in native-audits-result.json). In-container app runtime remains Node v20.20.2 / Next 16.2.3 as recorded by the runtime-identity stage.

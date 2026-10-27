@@ -1,0 +1,27 @@
+cli.js collect
+
+Run Lighthouse and save the results to a local folder
+
+Options:
+  --help                         Show help  [boolean]
+  --version                      Show version number  [boolean]
+  --no-lighthouserc              Disables automatic usage of a .lighthouserc file.  [boolean]
+  --method                       The method of running Lighthouse to use. PSI will send the URL to a Google API and only be able to access URLs publicly available on the internet.  [string] [choices: "node", "psi"] [default: "node"]
+  --headful                      Run with a headful Chrome  [boolean]
+  --additive                     Skips clearing of previous collect data  [boolean]
+  --url                          A URL to run Lighthouse on. Use this flag multiple times to evaluate multiple URLs.
+  --autodiscoverUrlBlocklist     A URL to not include when autodiscovering urls from staticDistDir. Use this flag multiple times to filter multiple URLs.
+  --psiApiKey                    [psi only] The API key to use for PageSpeed Insights runner method.
+  --psiStrategy                  [psi only] The strategy to use for PageSpeed Insights runner method. Use mobile or desktop. The default value is mobile
+  --staticDistDir                The build directory where your HTML files to run Lighthouse on are located.
+  --isSinglePageApplication      If the application is created by Single Page Application, enable redirect to index.html.
+  --chromePath                   The path to the Chrome or Chromium executable to use for collection.  [default: "C:\Program Files\Google\Chrome\Application\chrome.exe"]
+  --puppeteerScript              The path to a script that manipulates the browser with puppeteer before running Lighthouse, used for auth.
+  --puppeteerLaunchOptions       The object of puppeteer launch options
+  --startServerCommand           The command to run to start the server.
+  --startServerReadyPattern      String pattern to listen for started server.  [string] [default: "listen|ready"]
+  --startServerReadyTimeout      The number of milliseconds to wait for the server to start before continuing  [number] [default: 10000]
+  --settings                     The Lighthouse settings and flags to use when collecting
+  --numberOfRuns, -n             The number of times to run Lighthouse.  [number] [default: 3]
+  --maxAutodiscoverUrls          The maximum number of pages to collect when using the staticDistDir option with no specified URLs. Disable this limit by setting to 0.  [number] [default: 5]
+  --staticDirFileDiscoveryDepth  The maximum depth level of nested folders that Lighthouse will look into to discover URLs. If not set, this will default to 2.  [number] [default: 2]

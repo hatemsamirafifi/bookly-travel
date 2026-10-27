@@ -1,0 +1,6 @@
+
+Test Suites: 2 passed, 2 total
+Tests:       43 passed, 43 total
+Snapshots:   0 total
+Time:        2.378 s
+Ran all test suites within paths "src/components/wishlist/__tests__/WishlistButton.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx".

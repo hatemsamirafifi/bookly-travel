@@ -1,0 +1,5 @@
+time="2026-10-17T17:42:44+03:00" level=warning msg="Found orphan containers (bookly-test-meilisearch, bookly-test-postgres) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container bookly-frontend Recreate 
+ Container bookly-frontend Recreated 
+ Container bookly-frontend Starting 
+ Container bookly-frontend Started 

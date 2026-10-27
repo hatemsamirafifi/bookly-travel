@@ -1,0 +1,16 @@
+
+Running 4 tests using 1 worker
+
+[1A[2K(node:25516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/4] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:204:7 › Spec020 US6 locale, width and interaction acceptance › EN/ES/IT x 390/768/1024/1440 with loaded reviews has no axe violations
+[1A[2K[2/4] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state
+[1A[2K[3/4] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:264:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred
+[1A[2K[4/4] [a11y] › tests\e2e\a11y\tour-detail-a11y.spec.ts:284:7 › Spec020 US5 wishlist prompt dialog › sign-in prompt dialog is described, modal and focus-safe with no axe violations
+[1A[2K  4 passed (23.1s)

@@ -1,0 +1,110 @@
+
+Running 18 tests using 1 worker
+
+[1A[2K[1/18] [chromium] › tests/e2e/tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K[2/18] [chromium] › tests/e2e/tour-detail.spec.ts:340:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K[3/18] [chromium] › tests/e2e/tour-detail.spec.ts:387:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K[4/18] [chromium] › tests/e2e/tour-detail.spec.ts:481:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K[5/18] [chromium] › tests/e2e/tour-detail.spec.ts:499:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K[6/18] [chromium] › tests/e2e/tour-detail.spec.ts:499:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+[1A[2K[7/18] [chromium] › tests/e2e/tour-detail.spec.ts:499:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+[1A[2K[8/18] [chromium] › tests/e2e/tour-detail.spec.ts:927:9 › Tour Detail Page › US1 SSR sparse tour at 390px omits absent sections, entries and review claims
+[1A[2K[9/18] [chromium] › tests/e2e/tour-detail.spec.ts:927:9 › Tour Detail Page › US1 SSR sparse tour at 1440px omits absent sections, entries and review claims
+[1A[2K[10/18] [mobile] › tests/e2e/tour-detail.spec.ts:30:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K[11/18] [mobile] › tests/e2e/tour-detail.spec.ts:340:7 › Tour Detail Page › availability calendar shows available dates
+[1A[2K  1) [mobile] › tests/e2e/tour-detail.spec.ts:340:7 › Tour Detail Page › availability calendar shows available dates 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('mobile-booking-bar').getByRole('button')[22m
+    [2m    - locator resolved to <button type="button" class="inline-flex min-h-11 items-center justify-center py-1 text-center text-xs font-medium text-bookly-navy underline underline-offset-2">Edit booking selections</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex w-full items-center justify-end gap-3 sm:w-auto">…</div> from <aside aria-label="Cookie consent">…</aside> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex w-full items-center justify-end gap-3 sm:w-auto">…</div> from <aside aria-label="Cookie consent">…</aside> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    115 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="flex w-full items-center justify-end gap-3 sm:w-auto">…</div> from <aside aria-label="Cookie consent">…</aside> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      342 |
+      343 |     if ((page.viewportSize()?.width ?? 0) < 1024) {
+    > 344 |       await page.getByTestId('mobile-booking-bar').getByRole('button').click();
+          |                                                                        ^
+      345 |     }
+      346 |     const calendar = page.getByRole('combobox', { name: 'Select a Date', exact: true });
+      347 |     await expect(calendar).toBeVisible({ timeout: 10000 });
+        at /app/tests/e2e/tour-detail.spec.ts:344:72
+
+    Error Context: ../tmp/spec020-maintenance-focused/tour-detail-Tour-Detail-Pa-0e1be-endar-shows-available-dates-mobile/error-context.md
+
+
+[1A[2K[12/18] [mobile] › tests/e2e/tour-detail.spec.ts:387:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+[1A[2K[13/18] [mobile] › tests/e2e/tour-detail.spec.ts:481:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+[1A[2K[14/18] [mobile] › tests/e2e/tour-detail.spec.ts:499:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+[1A[2K  2) [mobile] › tests/e2e/tour-detail.spec.ts:499:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('mobile-booking-bar').getByRole('button')[22m
+    [2m    - locator resolved to <button type="button" class="inline-flex min-h-11 items-center justify-center py-1 text-center text-xs font-medium text-bookly-navy underline underline-offset-2">Edit booking selections</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex w-full items-center justify-end gap-3 sm:w-auto">…</div> from <aside aria-label="Cookie consent">…</aside> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex w-full items-center justify-end gap-3 sm:w-auto">…</div> from <aside aria-label="Cookie consent">…</aside> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    114 × waiting for element to be visible, enabled and stable[22m
+    [2m        - element is visible, enabled and stable[22m
+    [2m        - scrolling into view if needed[22m
+    [2m        - done scrolling[22m
+    [2m        - <div class="flex w-full items-center justify-end gap-3 sm:w-auto">…</div> from <aside aria-label="Cookie consent">…</aside> subtree intercepts pointer events[22m
+    [2m      - retrying click action[22m
+    [2m        - waiting 500ms[22m
+
+
+      505 |       await expect(page.getByRole('heading', { level: 1 })).toHaveText(data.title);
+      506 |       if ((page.viewportSize()?.width ?? 0) < 1024) {
+    > 507 |         await page.getByTestId('mobile-booking-bar').getByRole('button').click();
+          |                                                                          ^
+      508 |       }
+      509 |       const dateSelector = page.getByRole('combobox', { name: selectDate, exact: true });
+      510 |       await expect(dateSelector).toBeVisible();
+        at /app/tests/e2e/tour-detail.spec.ts:507:74
+
+    Error Context: ../tmp/spec020-maintenance-focused/tour-detail-Tour-Detail-Pa-8a1a5-ols-and-a-real-offered-date-mobile/error-context.md
+
+
+[1A[2K  2 failed
+    [mobile] › tests/e2e/tour-detail.spec.ts:340:7 › Tour Detail Page › availability calendar shows available dates 
+    [mobile] › tests/e2e/tour-detail.spec.ts:499:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date 
+  4 did not run
+  12 passed (2.6m)

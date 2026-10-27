@@ -1,0 +1,15 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourBookingController.test.tsx
+
+node.exe : Test Suites: 1 passed, 1 total
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Test Suites: 1 passed, 1 total:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Tests:       19 passed, 19 total
+Snapshots:   0 total
+Time:        2.734 s, estimated 3 s
+Ran all test suites within paths "src/components/tour/__tests__/TourBookingController.test.tsx".

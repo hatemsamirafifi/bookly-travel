@@ -1,0 +1,62 @@
+{
+ "createdAt": "2026-10-18T21:45:22.472Z",
+ "environment": "LOCAL TEST ENV (not production deployment)",
+ "curatedSources": {
+  "container420": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\new420-container-source.json",
+  "host419": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\hero-preload-runtime\\new419-candidate-manifest.json"
+ },
+ "container": {
+  "node": "v20.20.2",
+  "buildId": "9QlDIMcu4mfKeXAkHbLh1",
+  "next": "16.2.3"
+ },
+ "image": {
+  "tag": "booklytravel-nextjs:spec020-preload-be653d72",
+  "id": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9"
+ },
+ "containerBrief": {
+  "id": "02576f5389daf73a62d3ca5193d434ca12b6a8e13a43b4454496439caaa1e692",
+  "startedAt": "2026-10-18T21:42:47.148138656Z",
+  "status": "running",
+  "image": "booklytravel-nextjs:spec020-preload-be653d72",
+  "imageId": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+  "projectLabel": "booklytravel",
+  "serviceLabel": "nextjs"
+ },
+ "parity420": {
+  "entries": 420,
+  "unique": 420,
+  "readErrors": [],
+  "mismatches": [],
+  "exit": 0
+ },
+ "parityHost419": {
+  "entries": 419,
+  "readErrors": [],
+  "mismatches": []
+ },
+ "rootRedirectProbes": [
+  {
+   "url": "http://127.0.0.1:3001/",
+   "status": "307",
+   "exit": 0
+  },
+  {
+   "url": "http://127.0.0.1:8080/",
+   "status": "307",
+   "exit": 0
+  }
+ ],
+ "checks": {
+  "identityExit0": true,
+  "contEntriesIs420": true,
+  "contUniqueIs420": true,
+  "contReadErrors0": true,
+  "contMismatches0": true,
+  "host419Mismatches0": true,
+  "host419ReadErrors0": true,
+  "rootRedirect3001": true,
+  "rootRedirect8080": true
+ },
+ "passedReadinessOnly": true
+}

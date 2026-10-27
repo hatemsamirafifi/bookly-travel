@@ -1,0 +1,9 @@
+﻿{
+    "capturedAtUtc":  "2026-10-19T20:24:57.5834911Z",
+    "url":  "http://127.0.0.1:8080/en/tours/hidden-gems-rome-walking-tour",
+    "httpStatus":  "200",
+    "curlStatus":  "{\"error\":\"\",\"args\":\"-sS -D C:\\\\Users\\\\HaTeM\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\docker-restore-20261019\\\\curl-ssr.hdr.txt -w \\\"code=%{http_code} size=%{size_download} namelookup=%{time_namelookup} connect=%{time_connect} starttransfer=%{time_starttransfer} total=%{time_total}\\\" -o C:\\\\Users\\\\HaTeM\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\docker-restore-20261019\\\\curl-ssr.body.txt --max-time 20 http://127.0.0.1:8080/en/tours/hidden-gems-rome-walking-tour\",\"elapsed_ms\":554,\"exe\":\"C:\\\\WINDOWS\\\\system32\\\\curl.exe\",\"exit\":0,\"watchdog\":\"completed\"}",
+    "headersFile":  "08-ssr-probe-record.md (headers section) + 08-ssr-en-tour-headers.txt",
+    "bodyFile":  "08-ssr-en-tour-raw.html",
+    "bodySize":  159391
+}

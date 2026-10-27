@@ -1,0 +1,33 @@
+COMMAND (discovery only — no browser, build, or API executed by this phase)
+  frontend> npx playwright test tests/e2e/tour-detail.spec.ts --list
+RESULT: Total: 126 tests in 3 files (setup + chromium + mobile projects).
+
+T053 block discovered in both chromium and mobile projects (8 titles each):
+  tour-detail.spec.ts:1760 › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav (now includes a genuine Tab/Enter keyboard activation step; aria-current re-asserted only after scrolling settles)
+  tour-detail.spec.ts:1813 › US4 sparse tour exposes only present entries and activates them
+  tour-detail.spec.ts:1835 › US4 passive scrolling follows reading position without moving focus (focus re-verified after geometry settles)
+  tour-detail.spec.ts:1867 › US4 narrow rail reveals the active entry without moving the page vertically (mobile bar + enabled Continue control now required, not optional; aria-current re-asserted after settle)
+  tour-detail.spec.ts:1923 › US4 long locale labels survive resize with reachable entries and no page overflow
+  tour-detail.spec.ts:1956 › US4 reduced motion targets the reading position immediately (asserts matchMedia reduce + tight-budget settle)
+  tour-detail.spec.ts:1980 › US4 initial deep link restores the reading target (aria-current re-asserted after settle)
+  tour-detail.spec.ts:2009 › US4 sticky booking card clears the measured nav obstruction at 200% nav text size (targets middle #meeting with explicit sticky containing-block premise: aside remaining below card > 200px; single nav-bottom vs card-top check, the expected red)
+
+REVIEW REVISIONS APPLIED IN THIS PASS (root review of the tests-only phase):
+  1. headingClearOfNav returns NEGATIVE_INFINITY on missing boxes, so absence
+     of the nav or heading fails instead of passing vacuously.
+  2. Card probe targets the middle #meeting section with an explicit
+     containing-block premise (aside remaining below card > 200px), isolating
+     the hardcoded-80px overlap from legitimate bottom-contained geometry.
+  3. activateEntry comment no longer claims "native" for a click; one genuine
+     Tab/Enter keyboard activation added (no click-only keyboard claim);
+     reduced-motion asserts matchMedia reduce plus tight-budget settle.
+  4. aria-current is asserted only after scrolling settles; an observer
+     override of the explicit target now fails instead of passing early.
+  5. Mobile-bar check is unconditional (visible bar + visible + enabled
+     Continue control + heading above bar) — no optional no-op.
+  6. 200%/line-height-2 probe confirmed as usable browser text-resize premise,
+     still labeled test-only with production source untouched.
+
+All pre-existing titles (US1/US2/US3/US6, gallery, route states, responsive,
+booking, SEO) are unchanged in the listing — no test added, removed, or
+renamed outside the T053 block. Full output retained from the --list run.

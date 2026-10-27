@@ -1,0 +1,57 @@
+US6 ROOT-REVIEW CORRECTIONS — source-only, no runtime/CI/merge claim
+Earlier red/green evidence preserved byte-identical; this file + us6-correct-*
+are the distinct correction outputs. No commits/staging/hook changes.
+
+1. UNMASKED PRODUCTION I18N (no raw fallback strings, no parallel hardcode map)
+- page.tsx: localizedFailureMetadata + Gone branch call getTranslations directly
+  with the explicit route locale (real request config + EN/ES/IT catalogs); the
+  try/catch with hardcoded English titles/descriptions is deleted. A catalog or
+  config fault now surfaces instead of printing fabricated interface copy.
+- loading.tsx: direct getLocale + getTranslations(tour.states/loadingMessage);
+  routing import, locale catch and 'Loading tour details…' literal deleted.
+- not-found.tsx: direct getLocale + tour.states/notFound translations; locale
+  catch and routing import deleted.
+- Test SDK mock (namespace-split fix) preserved and still supplies real catalog
+  values; 150 unit assertions keep passing against unmasked production paths.
+- Grep proof: zero hardcoded English fallback strings and zero `reset` remain in
+  route production files (only test-file catalog expectations match).
+
+2. ERROR CONTRACT: unstable_retry ONLY
+- error.tsx props reduced to { error, unstable_retry: () => void }; the optional
+  reset fallback is removed. Retry re-fetches through the real no-store read;
+  root verifies the 503->200 retry fetch from controlled SSR in the browser.
+
+3. A11Y CORRECTIONS (all prior checks retained; gallery source untouched)
+- Reduced-motion: browser.newContext without baseURL deleted; existing page
+  fixture + page.emulateMedia({ reducedMotion: 'reduce' }) is used.
+- Disclosure keyboard: conditional isVisible() no-op deleted; controlled SSR
+  fixture asserts >600 code points up front and unconditionally requires
+  Read more -> Enter -> expanded+full text+focus -> Enter -> collapsed.
+- 12-matrix (EN/ES/IT x 390/768/1024/1440, loaded actual reviews) wrapped in
+  named test.step per locale/width for inspectable provenance.
+- Spoken-language test: raw-code `p`-substring searches replaced by
+  Intl.DisplayNames expectations (same algorithm as production localizer)
+  asserted with toContainText inside the scoped #facts Live-guide fact;
+  API code-equality + difficulty intent preserved. Legacy gallery selectors
+  left for the US3 worker.
+
+4. STATUS COVERAGE WITHOUT LOOP BLOAT
+- Added one bounded case each: 403->es, 422->it, 429->en, asserting the generic
+  localized ErrorState title+description, localized retry label, noindex,
+  URL stability, no booking action, and no SECRET-XYZ-PRIVATE/'invalid'
+  upstream leakage. 503->200 full retry recovery kept once (not repeated).
+- Page catch unchanged: only NotFound->notFound, only Gone->withdrawn; every
+  other status rethrows to the generic boundary with no private .message.
+
+5. SCOPE KEPT
+- US2 controller/card/bar/form (incl. new OPTIONAL cancellationPolicyLocale),
+  US4 nav, US5 wishlist/reviews, gallery/Dialog, compositor ownership: untouched.
+  Compositor still passes tour.cancellation_policy through; root wires
+  content_locale after this slice releases.
+
+GATES (from frontend/, serial)
+- jest focused 4 suites: 150/150 pass (us6-correct-green-jest.txt)
+- eslint focused incl. all corrected files: exit 0 (us6-correct-eslint.txt)
+- typecheck: exit 0, no owned-or-other errors (us6-correct-typecheck.txt)
+- playwright --list both tour-detail specs: exit 0, 108 tests, all retained
+  titles present + 403/422/429 cases listed (us6-correct-e2e-list.txt)

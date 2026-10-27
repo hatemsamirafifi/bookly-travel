@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-10-17T14:44:51.554Z",
+  "buildProvenance": "root-docker-build-result.json",
+  "scope": "Independent source parity; .dockerignore is correctly absent from the image because it excludes itself. Its host hash is recorded separately.",
+  "dockerignoreHash": "1bef3a4bcdf9b3b98ea5d9d941bcc17471dd12c503843ed1d2b6746002b63792",
+  "exitCode": 0,
+  "container": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "sourceParity": {
+    "files": 420,
+    "mismatches": []
+  },
+  "hostMismatches": [],
+  "passed": true,
+  "finishedAt": "2026-10-17T14:44:52.825Z"
+}

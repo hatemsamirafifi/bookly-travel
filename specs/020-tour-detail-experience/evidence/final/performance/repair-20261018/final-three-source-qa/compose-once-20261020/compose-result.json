@@ -1,0 +1,95 @@
+{
+  "startedAt": "2026-10-20T19:44:22.319Z",
+  "scope": "owned QA frontend compose only",
+  "commands": [
+    {
+      "name": "target-image",
+      "args": [
+        "image",
+        "inspect",
+        "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+        "--format",
+        "{{.Id}}"
+      ],
+      "startedAt": "2026-10-20T19:44:22.319Z",
+      "endedAt": "2026-10-20T19:44:22.706Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "prior-image",
+      "args": [
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{{.Image}}"
+      ],
+      "startedAt": "2026-10-20T19:44:22.933Z",
+      "endedAt": "2026-10-20T19:44:23.154Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "project",
+      "args": [
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{{index .Config.Labels \"com.docker.compose.project\"}}"
+      ],
+      "startedAt": "2026-10-20T19:44:23.164Z",
+      "endedAt": "2026-10-20T19:44:23.363Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "service",
+      "args": [
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{{index .Config.Labels \"com.docker.compose.service\"}}"
+      ],
+      "startedAt": "2026-10-20T19:44:23.364Z",
+      "endedAt": "2026-10-20T19:44:23.570Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "compose",
+      "args": [
+        "compose",
+        "-p",
+        "booklytravel",
+        "-f",
+        "F:\\Travel Website\\bookly travel\\docker-compose.yml",
+        "-f",
+        "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\compose.final3-reviewed.yml",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--force-recreate",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-20T19:44:23.597Z",
+      "endedAt": "2026-10-20T19:44:35.355Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    }
+  ],
+  "passed": true,
+  "image": "sha256:2a82d98b49771d203ebf998d0c63d2973455b93ed0d7803b83b6911bbed23d39",
+  "target": "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+  "finishedAt": "2026-10-20T19:44:35.356Z"
+}

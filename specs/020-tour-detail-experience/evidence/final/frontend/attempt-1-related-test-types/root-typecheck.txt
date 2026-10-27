@@ -1,0 +1,5 @@
+src/components/tour/__tests__/RelatedTours.test.tsx(35,21): error TS2322: Type 'TourCard[] | undefined' is not assignable to type 'TourCard[]'.
+  Type 'undefined' is not assignable to type 'TourCard[]'.
+src/components/tour/__tests__/RelatedTours.test.tsx(41,64): error TS18048: 'cards' is possibly 'undefined'.
+src/components/tour/__tests__/RelatedTours.test.tsx(42,56): error TS18048: 'cards' is possibly 'undefined'.
+src/components/tour/__tests__/RelatedTours.test.tsx(44,86): error TS18048: 'cards' is possibly 'undefined'.

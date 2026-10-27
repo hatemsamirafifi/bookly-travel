@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
+import {
+  fetchOfferedTourFacts,
+  formatEstimateTotal,
+} from './helpers/offered-date';
+
+const TOUR_SLUG = 'hidden-gems-rome-walking-tour';
 
 test.describe('Checkout', () => {
-  async function availableDate(request: import('@playwright/test').APIRequestContext) {
-    const response = await request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
-    expect(response.ok()).toBeTruthy();
-    const body = await response.json();
-    return body.data.availability.next_available_date as string;
-  }
-
   test('price drift requires explicit acceptance of the backend price before payment', async ({ page, request }) => {
-    const date = await availableDate(request);
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    const date = facts.date;
     await page.route('**/api/public/bookings', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -40,7 +40,8 @@ test.describe('Checkout', () => {
     ['it', 'Data Selezionata', 'Riepilogo Prezzi'],
   ]) {
     test(`${locale} checkout shows the localized tour summary before payment`, async ({ page, request }) => {
-      const date = await availableDate(request);
+      const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, locale);
+      const date = facts.date;
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(`/${locale}/booking?tour=hidden-gems-rome-walking-tour&date=${date}&participants=2`);
       await expect(page.getByText(dateLabel, { exact: true })).toBeVisible();
@@ -52,7 +53,8 @@ test.describe('Checkout', () => {
   }
 
   test('failed cancellation of a drifted booking keeps the decision visible', async ({ page, request }) => {
-    const date = await availableDate(request);
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    const date = facts.date;
     await page.route('**/api/public/bookings', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -70,27 +72,64 @@ test.describe('Checkout', () => {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole('alert')).toContainText('Could not cancel');
   });
-  test('booking page loads with tour details', async ({ page }) => {
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+  test('booking page loads with tour details', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=2`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: facts.title })).toBeVisible();
     // Exact match: the ParticipantSelector label is "Participants", but PriceBreakdown
     // renders "{n} participants" — a substring /Participants/i regex matches both and
     // trips strict mode. Match the label only.
     await expect(page.getByText('Participants', { exact: true })).toBeVisible();
   });
 
-  test('participant selector respects min and max', async ({ page }) => {
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+  test('participant selector respects min and max', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    let bookingPosts = 0;
+    await page.route('**/api/public/bookings', async (route) => {
+      bookingPosts += 1;
+      await route.continue();
+    });
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=${facts.groupMin}`);
     const decreaseBtn = page.getByRole('button', { name: 'Decrease participants' });
     const increaseBtn = page.getByRole('button', { name: 'Increase participants' });
-    await expect(decreaseBtn).toBeVisible();
-    await expect(increaseBtn).toBeVisible();
+    const count = page.locator('span[aria-labelledby="participants-label"]');
+    // At the actual minimum the stepper shows the minimum, cannot go lower,
+    // and quotes exactly the per-person base.
+    await expect(count).toHaveText(String(facts.groupMin));
+    await expect(decreaseBtn).toBeDisabled();
+    await expect(page.getByText(formatEstimateTotal(facts.baseAmount, facts.groupMin, 'en', facts.baseCurrency), { exact: true }).first()).toBeVisible();
+    // Drive to the actual maximum: the count and the exact estimate follow,
+    // then the stepper cannot go higher. No booking POST is ever issued.
+    for (let n = facts.groupMin; n < facts.groupMax; n += 1) {
+      await increaseBtn.click();
+    }
+    await expect(count).toHaveText(String(facts.groupMax));
+    await expect(increaseBtn).toBeDisabled();
+    await expect(page.getByText(formatEstimateTotal(facts.baseAmount, facts.groupMax, 'en', facts.baseCurrency), { exact: true }).first()).toBeVisible();
+    expect(bookingPosts).toBe(0);
   });
 
-  test('price breakdown updates with participants', async ({ page }) => {
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+  test('price breakdown updates with participants', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
+    let bookingPosts = 0;
+    await page.route('**/api/public/bookings', async (route) => {
+      bookingPosts += 1;
+      await route.continue();
+    });
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=${facts.groupMin}`);
     await expect(page.getByText(/Price Breakdown/i)).toBeVisible();
     await expect(page.getByText(/Total/i)).toBeVisible();
+    const before = formatEstimateTotal(facts.baseAmount, facts.groupMin, 'en', facts.baseCurrency);
+    await expect(page.getByText(before, { exact: true }).first()).toBeVisible();
+    if (facts.groupMin < facts.groupMax) {
+      await page.getByRole('button', { name: 'Increase participants' }).click();
+      const after = formatEstimateTotal(facts.baseAmount, facts.groupMin + 1, 'en', facts.baseCurrency);
+      await expect(page.getByText(after, { exact: true }).first()).toBeVisible();
+    } else {
+      await expect(page.getByRole('button', { name: 'Increase participants' })).toBeDisabled();
+    }
+    expect(bookingPosts).toBe(0);
   });
 
   test('shows error when tour or date missing', async ({ page }) => {
@@ -98,9 +137,10 @@ test.describe('Checkout', () => {
     await expect(page.getByText(/select a tour and date/i)).toBeVisible();
   });
 
-  test('responsive layout at 390px', async ({ page }) => {
+  test('responsive layout at 390px', async ({ page, request }) => {
+    const facts = await fetchOfferedTourFacts(request, TOUR_SLUG, 'en');
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/en/booking?tour=hidden-gems-rome-walking-tour&date=2026-11-15&participants=2');
+    await page.goto(`/en/booking?tour=${facts.slug}&date=${facts.date}&participants=2`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 });

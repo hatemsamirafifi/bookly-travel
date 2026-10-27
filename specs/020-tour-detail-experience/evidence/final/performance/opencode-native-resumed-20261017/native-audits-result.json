@@ -1,0 +1,34 @@
+{
+  "startedAt": "2026-10-17T19:56:22.001Z",
+  "executor": "opencode/glm-5.3-flash-free --variant max",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "conditions": "Serial production audits of the verified Docker app (proxy http://localhost:8080) with measurement browser/Node on the native host: installed Google Chrome via CHROME_PATH, native Node v24.14.1 spawning the installed frontend dependencies. No rebuild/restart/fixture refetch/cache warming. The unchanged about:blank CPU readiness hook runs before each URL with the same browser as the real audits; default Lighthouse mobile throttling remains configured.",
+  "stages": [
+    {
+      "name": "runtime-identity",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');console.log(JSON.stringify({node:process.version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),next:require('/app/node_modules/next/package.json').version}))"
+      ],
+      "startedAt": "2026-10-17T19:56:33.634Z",
+      "finishedAt": "2026-10-17T19:56:36.242Z",
+      "exitCode": 1
+    }
+  ],
+  "sourceParityBefore": {
+    "files": 419,
+    "mismatches": []
+  },
+  "error": "runtime-identity exited 1",
+  "passed": false,
+  "finishedAt": "2026-10-17T19:56:36.243Z"
+}

@@ -140,4 +140,27 @@ describe('LoginForm', () => {
     render(<LoginForm sessionExpired />);
     expect(screen.getByText('Your session has expired. Please sign in again.')).toBeInTheDocument();
   });
+
+  // Spec 020 US2/FR-022: the registration cross-link preserves the full
+  // validated booking query so choosing registration keeps tour/date/count.
+  it('preserves the full booking returnUrl on the registration cross-link', () => {
+    const bookingPath = '/en/booking?tour=hidden-gems&participants=3&date=2026-10-20';
+    render(<LoginForm returnUrl={bookingPath} />);
+    expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+      'href',
+      `/en/auth/register?returnUrl=${encodeURIComponent(bookingPath)}`,
+    );
+  });
+
+  it.each([
+    'https://evil.example/en/booking?tour=x',
+    '/es/booking?tour=x&participants=2&date=2026-10-20',
+    '/en\\evil.example',
+  ])('drops an unsafe cross-locale registration returnUrl %s', (returnUrl) => {
+    render(<LoginForm returnUrl={returnUrl} />);
+    expect(screen.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+      'href',
+      '/en/auth/register',
+    );
+  });
 });

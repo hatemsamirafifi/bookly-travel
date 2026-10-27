@@ -1,4 +1,5 @@
-import StarRating from './StarRating';
+import { useTranslations } from 'next-intl';
+import StarRating from '@/components/ui/StarRating';
 
 interface ReviewCardProps {
   reviewerName: string;
@@ -17,6 +18,8 @@ export default function ReviewCard({
   createdAt,
   locale,
 }: ReviewCardProps) {
+  const t = useTranslations('reviews');
+  const tt = useTranslations('tour');
   const date = new Date(createdAt);
   const formattedDate = new Intl.DateTimeFormat(locale || 'en', {
     year: 'numeric',
@@ -30,13 +33,13 @@ export default function ReviewCard({
         <span className="text-sm font-medium text-gray-800">{reviewerName}</span>
         {edited && (
           <span className="text-xs bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded-full font-medium">
-            Edited
+            {t('edited')}
           </span>
         )}
       </div>
 
       <div className="flex items-center gap-2 mb-1">
-        <StarRating value={rating} readOnly size="sm" />
+        <StarRating value={rating} ariaLabel={tt('ratingLabel', { rating })} />
         <span className="text-xs text-gray-600">{formattedDate}</span>
       </div>
 

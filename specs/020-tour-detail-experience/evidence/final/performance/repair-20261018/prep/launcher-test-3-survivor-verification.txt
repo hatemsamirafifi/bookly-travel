@@ -1,0 +1,8 @@
+﻿== final no-survivor verification (launcher-test-3 owned tree, fail-closed launcher) ==
+childStart: 2026-10-17T22:57:57.0000000  markerDeadline(+36s): 2026-10-17T22:58:33.0000000  checkedAt: 2026-10-18T02:00:02.5704140+03:00  extraSleepMs: 0
+survivor-marker-3.txt absent: True
+launcher-tests node processes alive at check: 0
+killed tree pids recorded by taskkill: 7128, 10012, 23080
+all recorded killed pids dead at check time: True
+killOutput record: SUCCESS: The process with PID 7128 (child process of PID 10012) has been terminated. SUCCESS: The process with PID 10012 (child process of PID 23080) has been terminated.
+RESULT: NO-SURVIVOR VERIFICATION CLEAN

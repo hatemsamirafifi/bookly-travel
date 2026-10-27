@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-10-19T20:31:29.545Z",
+  "collectRuns": 1,
+  "assertRuns": 1,
+  "reportsJsonCount": 12,
+  "reportsHtmlCount": 12,
+  "traceCount": 12,
+  "devtoolslogCount": 12,
+  "beforeEsReadinessFailure": {
+    "source": "native-collect.txt",
+    "cpuSamplesSeen": 61,
+    "benchmarkIndexRange": [
+      835.5,
+      1989
+    ],
+    "appVisitedAllFalse": true,
+    "errorPresent": true,
+    "errorText": "Error: CPU readiness budget (30 samples / 30000ms) exhausted; performance audit must not start"
+  },
+  "configGate": {
+    "path": "frontend/lighthouserc.js",
+    "sha256Measured": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "matchesExpectedPrefix2a0bc3e1": true,
+    "legacyAlsoPresent": "frontend/lighthouserc.cjs (NOT the gate config)",
+    "urls": 6,
+    "runsPerUrl": 3,
+    "performanceAssertion": "minScore 0.9 pessimistic; also 4 other categories minScore 0.9"
+  }
+}

@@ -1,0 +1,66 @@
+[lh-engine-select] armed: root engine v12.8.2 at F:\Travel Website\bookly travel\frontend\node_modules\lighthouse (caller-gated to node-runner.js only)
+[lh-engine-select] caller=F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\node-runner.js request=lighthouse selected=F:\Travel Website\bookly travel\frontend\node_modules\lighthouse\core\index.js v12.8.2
+{"attempt":1,"benchmarkIndex":1206,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1436,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1641,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1702.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1251.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1693,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1648.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/search?q=rome
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1305,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1687,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1693.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1254,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1745.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1705,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/blog/hidden-gems-florence
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1193,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1240.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1218,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1339.5,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1056,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1351,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1353,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1194,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1140.5,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1140,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1188,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1217.5,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1414,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1074,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1050.5,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1163,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1286.5,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1422,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1402.5,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1352,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1401,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1406.5,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":1212.5,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":1436,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":1361,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":1449.5,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":1337,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":1147,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":1214,"url":"about:blank","appVisited":false}
+Error: CPU readiness budget (30 samples / 30000ms) exhausted; performance audit must not start
+    at prepareBrowserCpu (file:///F:/Travel%20Website/bookly%20travel/frontend/scripts/lighthouse-runtime-preflight.mjs:48:15)
+    at async module.exports (F:\Travel Website\bookly travel\frontend\scripts\lighthouse-browser-ready.cjs:5:3)
+    at async PuppeteerManager.invokePuppeteerScriptForUrl (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\puppeteer-manager.js:113:5)
+    at async Object.runCommand (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\collect.js:251:7)
+    at async run (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\cli.js:100:7)

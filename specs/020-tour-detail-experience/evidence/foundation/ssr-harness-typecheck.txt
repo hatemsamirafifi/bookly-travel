@@ -1,0 +1,14 @@
+T008 SSR harness extraction — typecheck evidence (static only, NOT runtime acceptance)
+Date: 2026-10-14
+Command (from frontend/): npm run typecheck
+Result: PASS (exit 0, no diagnostics)
+
+> frontend@0.1.0 typecheck
+> tsc --noEmit
+
+Scope: extraction of startSsrHarness/readServedDetail/SsrHarness from
+frontend/tests/e2e/tour-detail.spec.ts into
+frontend/tests/e2e/helpers/tour-detail-ssr.ts with hardened owned-process
+shutdown (idempotent stop, SIGTERM->SIGKILL escalation, mock close on
+startup failure). No page/component/catalog/auth/backend change.
+Actual production-build SSR runtime smoke is PENDING — root executes it.

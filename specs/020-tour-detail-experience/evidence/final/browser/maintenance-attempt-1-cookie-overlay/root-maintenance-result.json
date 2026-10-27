@@ -1,0 +1,58 @@
+{
+  "startedAt": "2026-10-16T22:27:38.759Z",
+  "sourceHash": "6eee1556fea3b5b3ba7d07ce737dfeb2964a793f0cbeacc59ff0863ffcc39a2c",
+  "scope": "Only existing tour-detail browser test maintenance; accepted production source/build and component tests unchanged.",
+  "stages": [
+    {
+      "name": "sync",
+      "command": "docker",
+      "args": [
+        "cp",
+        "F:\\Travel Website\\bookly travel\\frontend\\tests\\e2e\\tour-detail.spec.ts",
+        "bookly-frontend:/app/tests/e2e/tour-detail.spec.ts"
+      ],
+      "startedAt": "2026-10-16T22:27:38.763Z",
+      "finishedAt": "2026-10-16T22:27:38.978Z",
+      "exitCode": 0
+    },
+    {
+      "name": "parity",
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:/Users/HaTeM/.codex/tmp/bookly-spec020/root-final-runtime-review.cjs"
+      ],
+      "startedAt": "2026-10-16T22:27:38.978Z",
+      "finishedAt": "2026-10-16T22:27:39.693Z",
+      "exitCode": 0
+    },
+    {
+      "name": "focused",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "tests/e2e/tour-detail.spec.ts",
+        "--project=chromium",
+        "--project=mobile",
+        "--no-deps",
+        "--workers=1",
+        "--reporter=line",
+        "--grep",
+        "legacy-shaped|availability calendar shows|API reports genuine reviews|mobile booking action is keyboard|detail keeps localized booking controls|US1 SSR sparse tour",
+        "--output=/tmp/spec020-maintenance-focused"
+      ],
+      "startedAt": "2026-10-16T22:27:39.693Z",
+      "finishedAt": "2026-10-16T22:30:15.328Z",
+      "exitCode": 130
+    }
+  ],
+  "reusedStaticEvidence": "root-maintenance-static-result.json",
+  "error": "focused exited 130",
+  "passed": false,
+  "finishedAt": "2026-10-16T22:30:15.329Z"
+}

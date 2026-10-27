@@ -1,0 +1,21 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/__tests__/TourDetail.test.tsx
+  (live-source green run: 2 red-first tests now green against the integrated source; all prior tests untouched)
+
+RESULT: PASS — 3 suites, 100 passed, 100 total, 0 failed; no snapshots.
+
+  Breakdown (meaningful, no missing-module failures):
+  - TourSectionNav: 15 passed (heading observer node→ID map, full-snapshot
+    delta handling, empty/present lifecycle, no passive focus/vertical scroll).
+    z-20 → z-sticky semantic token change alters no asserted behavior.
+  - TourBookingController: 31 passed (28 prior + 3 new).
+    New: desktop-only bookable slot vs mobile-exposed unavailable slot (CSS
+    visibility contract bounded in jsdom); localized unavailable copy with
+    disabled aria-disabled continuation, no checkout link, no mobile bar;
+    available→unavailable→available transitions with identical restored hrefs.
+  - TourDetail: remainder incl. new marker test — nav publishes inside
+    [data-tour-detail], every nav href resolves to a present section in it.
+
+RED→GREEN: the 2 red-first tests from live-source-red-jest.txt both pass;
+no prior test changed outcome, no skips, no weakening.
+Time: ~6.4s. Full output retained from the focused jest run above.

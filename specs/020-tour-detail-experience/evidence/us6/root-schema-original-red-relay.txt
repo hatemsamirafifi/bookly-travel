@@ -1,0 +1,254 @@
+Provenance: original OpenCode schema session ses_ebedd0d5bffeoYIZCetXo4vG93 tool result, not the handwritten summary.
+Command: npm test -- --runInBand --watchman=false --runTestsByPath src/components/seo/__tests__/StructuredData.test.tsx 2>&1 | Out-String
+
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/seo/__tests__/StructuredData.test.tsx
+
+node.exe : FAIL src/components/seo/__tests__/StructuredData.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...edData.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ● TouristTrip exact-price offer (isolated US6 lane) › omits the offer for an unsafe integer cent amount instead 
+of a false price
+
+    expect(received).toBeUndefined()
+
+    Received: {"@type": "Offer", "availability": "https://schema.org/OutOfStock", "price": "90071992547409.92", 
+"priceCurrency": "EUR"}
+
+      185 |   it('omits the offer for an unsafe integer cent amount instead of a false price', () => {
+      186 |     const schema = readSchema({ pricing: { base_price: { amount: Number.MAX_SAFE_INTEGER + 1, currency: 
+'EUR', formatted: 'unused' }, tiered_pricing: null } });
+    > 187 |     expect(schema.offers).toBeUndefined();
+          |                           ^
+      188 |   });
+      189 |
+      190 |   it('omits the offer for an unsupported currency instead of a converted price', () => {
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:187:27)
+
+  ● TouristTrip exact-price offer (isolated US6 lane) › omits the offer for an unsupported currency instead of a 
+converted price
+
+    expect(received).toBeUndefined()
+
+    Received: {"@type": "Offer", "availability": "https://schema.org/OutOfStock", "price": "10.99", "priceCurrency": 
+"JPY"}
+
+      190 |   it('omits the offer for an unsupported currency instead of a converted price', () => {
+      191 |     const schema = readSchema({ pricing: { base_price: { amount: 1099, currency: 'JPY', formatted: 
+'unused' }, tiered_pricing: null } });
+    > 192 |     expect(schema.offers).toBeUndefined();
+          |                           ^
+      193 |   });
+      194 |
+      195 |   it.each([0, -500, 10.5, Number.NaN])('omits the offer for non-positive or fractional amount %s', 
+(amount) => {
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:192:27)
+
+  ● TouristTrip exact-price offer (isolated US6 lane) › omits the offer for non-positive or fractional amount 10.5
+
+    expect(received).toBeUndefined()
+
+    Received: {"@type": "Offer", "availability": "https://schema.org/OutOfStock", "price": "0.10", "priceCurrency": 
+"EUR"}
+
+      195 |   it.each([0, -500, 10.5, Number.NaN])('omits the offer for non-positive or fractional amount %s', 
+(amount) => {
+      196 |     const schema = readSchema({ pricing: { base_price: { amount, currency: 'EUR', formatted: 'unused' }, 
+tiered_pricing: null } });
+    > 197 |     expect(schema.offers).toBeUndefined();
+          |                           ^
+      198 |   });
+      199 |
+      200 |   it('renders the exact MAX_SAFE cent price .91 agreeing with the visible formatter', () => {
+
+      at src/components/seo/__tests__/StructuredData.test.tsx:197:27
+
+  ● TouristTrip exact-price offer (isolated US6 lane) › renders the exact MAX_SAFE-9 cent price .82 agreeing with 
+the visible formatter
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "90071992547409.82"
+    Received: "90071992547409.81"
+
+      214 |       availability: { next_available_date: '2026-10-15', available_dates: ['2026-10-15'], is_unavailable: 
+false },
+      215 |     }));
+    > 216 |     expect(schema.offers.price).toBe('90071992547409.82');
+          |                                 ^
+      217 |     expect(schema.offers.price).toBe(stripToDecimal(formatCurrency(amount, 'EUR', 'en')));
+      218 |   });
+      219 | });
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:216:33)
+
+  ● TouristTrip truthful availability (isolated US6 lane) › marks a listed past next date OutOfStock without an 
+invented validFrom
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://schema.org/OutOfStock"
+    Received: "https://schema.org/InStock"
+
+      224 |       availability: { next_available_date: '2026-10-01', available_dates: ['2026-10-01', '2026-10-15'], 
+is_unavailable: false },
+      225 |     }));
+    > 226 |     expect(schema.offers.availability).toBe('https://schema.org/OutOfStock');
+          |                                        ^
+      227 |     expect(schema.offers.validFrom).toBeUndefined();
+      228 |   });
+      229 |
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:226:40)
+
+  ● TouristTrip truthful availability (isolated US6 lane) › marks a listed today next date OutOfStock without an 
+invented validFrom
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://schema.org/OutOfStock"
+    Received: "https://schema.org/InStock"
+
+      232 |       availability: { next_available_date: '2026-10-14', available_dates: ['2026-10-14', '2026-10-15'], 
+is_unavailable: false },
+      233 |     }));
+    > 234 |     expect(schema.offers.availability).toBe('https://schema.org/OutOfStock');
+          |                                        ^
+      235 |     expect(schema.offers.validFrom).toBeUndefined();
+      236 |   });
+      237 |
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:234:40)
+
+  ● TouristTrip truthful availability (isolated US6 lane) › stays bookable without inventing a validFrom when the 
+next date is missing but other offered futures exist
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://schema.org/InStock"
+    Received: "https://schema.org/OutOfStock"
+
+      240 |       availability: { next_available_date: null, available_dates: ['2026-10-15', '2026-10-16'], 
+is_unavailable: false },
+      241 |     }));
+    > 242 |     expect(schema.offers.availability).toBe('https://schema.org/InStock');
+          |                                        ^
+      243 |     expect(schema.offers.validFrom).toBeUndefined();
+      244 |   });
+      245 |
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:242:40)
+
+  ● TouristTrip truthful availability (isolated US6 lane) › fails closed when the unavailable flag is missing 
+instead of claiming stock
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://schema.org/OutOfStock"
+    Received: "https://schema.org/InStock"
+
+      247 |     const availability = { next_available_date: '2026-10-15', available_dates: ['2026-10-15'], 
+is_unavailable: undefined as unknown as boolean };
+      248 |     const schema = frozenClock(() => readSchema({ availability }));
+    > 249 |     expect(schema.offers.availability).toBe('https://schema.org/OutOfStock');
+          |                                        ^
+      250 |     expect(schema.offers.validFrom).toBeUndefined();
+      251 |   });
+      252 |
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:249:40)
+
+  ● TouristTrip truthful availability (isolated US6 lane) › marks invalid group bounds OutOfStock without an 
+invented validFrom
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://schema.org/OutOfStock"
+    Received: "https://schema.org/InStock"
+
+      256 |       availability: { next_available_date: '2026-10-15', available_dates: ['2026-10-15'], is_unavailable: 
+false },
+      257 |     }));
+    > 258 |     expect(schema.offers.availability).toBe('https://schema.org/OutOfStock');
+          |                                        ^
+      259 |     expect(schema.offers.validFrom).toBeUndefined();
+      260 |   });
+      261 |
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:258:40)
+
+  ● TouristTrip truthful availability (isolated US6 lane) › marks an unsafe minimum estimate OutOfStock without an 
+invented validFrom
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://schema.org/OutOfStock"
+    Received: "https://schema.org/InStock"
+
+      266 |       availability: { next_available_date: '2026-10-15', available_dates: ['2026-10-15'], is_unavailable: 
+false },
+      267 |     }));
+    > 268 |     expect(schema.offers.availability).toBe('https://schema.org/OutOfStock');
+          |                                        ^
+      269 |     expect(schema.offers.validFrom).toBeUndefined();
+      270 |   });
+      271 | });
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:268:40)
+
+  ● TouristTrip genuine ratings and media (isolated US6 lane) › omits aggregateRating for a fractional review 
+count instead of a fabricated score
+
+    expect(received).toBeUndefined()
+
+    Received: {"@type": "AggregateRating", "bestRating": "5", "ratingValue": "4.5", "reviewCount": 2.5, "worstRating": 
+"1"}
+
+      274 |   it('omits aggregateRating for a fractional review count instead of a fabricated score', () => {
+      275 |     const schema = readSchema({ reviews: { average_rating: 4.5, count: 2.5, distribution: { 4: 1, 5: 1 } } 
+});
+    > 276 |     expect(schema.aggregateRating).toBeUndefined();
+          |                                    ^
+      277 |   });
+      278 |
+      279 |   it('omits blank image URLs instead of fabricating the homepage as a photo', () => {
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:276:36)
+
+  ● TouristTrip genuine ratings and media (isolated US6 lane) › omits blank image URLs instead of fabricating the 
+homepage as a photo
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "https://bookly.com/",
+    + ]
+
+      281 |       [{ url: '' }, { url: '   ' }],
+      282 |       'https://bookly.com',
+    > 283 |     )).toEqual([]);
+          |        ^
+      284 |     const schema = readSchema({ images: [{ url: '', is_cover: true, alt: 'Blank' }, { url: '   ', 
+is_cover: false, alt: 'Spaces' }] });
+      285 |     expect(schema.image).toBeUndefined();
+      286 |   });
+
+      at Object.<anonymous> (src/components/seo/__tests__/StructuredData.test.tsx:283:8)
+
+Test Suites: 1 failed, 1 total
+Tests:       12 failed, 13 passed, 25 total
+Snapshots:   0 total
+Time:        1.57 s
+Ran all test suites within paths "src/components/seo/__tests__/StructuredData.test.tsx".
+

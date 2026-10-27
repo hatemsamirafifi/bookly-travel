@@ -1,0 +1,93 @@
+Spec020 US3 browser review continuation (worker, no commits/staging).
+Read before editing: root-live-gallery-initial-browser.txt (5 failed, 2 not
+run), root-live-gallery-route-browser.txt (5 failed, 12 not run),
+root-live-us2-public-browser.txt (2 passed, 3 failed).
+
+OWNED THIS ROUND (nothing else touched):
+- frontend/tests/e2e/tour-detail.spec.ts: US3 describe revision + minimal
+  US6 robots/withdrawn scoping + minimal US2 selector fixes (failure 1, 2 and
+  unavailable scope). US4 T053 block preserved verbatim.
+- frontend/tests/e2e/helpers/tour-detail-ssr.ts: type import + exported
+  enableNativeMediaProxy only. No behavior change to existing exports.
+
+ROOT DEFECTS VERIFIED AGAINST EVIDENCE (all test-side; no app fault found):
+1) Seven-photo desktop: role query is visible-only, so count is 5, not 7.
+   Fixed without weakening: visible 5 via getByRole + full DOM 7 via
+   track button locator + all-7 viewer reachability already present.
+2) Broken slot used a 127.0.0.1 URL outside Next remotePatterns, so no
+   request could prove a 404. Fixed: allowed CDN host + known-missing path
+   (rome-gallery-missing.jpg), with the ACTUAL owned HTTP404 asserted via
+   page.waitForResponse attached before goto (status 404 on _next/image).
+3) Placeholder was asserted while index 5 was current. Fixed: explicit
+   Previous x2 to index 3, then caption ('US3 photo 3' via alt? no img
+   present: placeholder text), counter '3 of 5' and placeholder count 1
+   asserted together; tile geometry snapshotted before/after the dialog
+   via tiles.evaluateAll and compared equal.
+4) Sparse/mosaic geometry: classname-only span plus arbitrary unique-height
+   counts replaced with genuine dimensional tolerances: last-tile width ~=~
+   cover width (+-2px), last right edge ~=~ track right edge (+-2px, no
+   unused area, no overflow); quarters equal within 1px; cover == 2*quarter
+   + 8px grid gap within 2px (width and height).
+5) URL swap via reload is new-SSR-identity only. Fixed honestly: swap target
+   is an EXISTING owned asset (rome-gallery-2.jpg?us3-recovered) that must
+   actually decode (expect.poll complete && naturalWidth > 0) with zero
+   placeholders; the nonexistent '-fresh.jpg' is gone. Same-component
+   rerender recovery stays a unit-level claim.
+6) Native CDN unresolvable (root native-noimage limitation). Added the
+   authorized flag-gated adapter only: SPEC020_NATIVE_MEDIA_PROXY must equal
+   'http://localhost:8080', intercepts **/_next/image** with encoded source
+   host cdn.bookly.test, forwards owned path+search with Host:
+   cdn.bookly.test, fulfills ACTUAL status/body (404s preserved). All other
+   URLs continue; no API/session/production interception. Registered in the
+   US3 beforeEach (default page context) and explicitly on the owned touch
+   context. Docker final runs leave the flag unset (adapter no-ops).
+   Adapter runs prove gallery behavior, never the optimizer.
+7) Touch gesture: track scrolled into view first; start at 75% track width,
+   swipe 60% width (end stays positive, verified by assertion), settling one
+   tile; real CDP dispatchTouchEvent kept, no scripted scrollLeft.
+
+HIDDEN STREAMED NODES (Next16.2): visible-main scoping
+(main#main-content) applied to every testid/text locator in US3 that could
+match a hidden copy; role queries stay default visible-only; the portaled
+dialog stays role-scoped. The a11y/US2 text scopes follow the same rule.
+tour-gallery-empty, counters, placeholders and empty text are main-scoped.
+
+FIXTURE AUTHENTICITY (testcards): rome-cover.jpg and rome-gallery-1..4.jpg
+are the real owned CDN assets served by localhost:8080. Seven slots reuse
+gallery-1/gallery-2 with unique ?us3-slot6/7 queries (distinct identities,
+authentic bytes). The missing path returns a real owned 404. Recovery uses
+gallery-2.jpg?us3-recovered (real bytes, decoded in-browser).
+
+US6 MINIMAL (same spec file): robots lookup (4 sites) now asserts nonempty
+plus every content matches /noindex/ (never first-only); withdrawn
+description scoped to main#main-content. Headings, no-booking, no-schema,
+locale, retry and privacy assertions preserved. Other route failures, if any
+appear at runtime, need fresh diagnosis before changes.
+
+US2 MINIMAL (same spec file): failure 1 estimate scoped to the visible
+tour-booking-card-slot (hidden bar copy excluded), bar-summary assertion
+after resize kept explicit; failure 2 select scoped to the card slot with an
+enabled wait, validation text scoped to the slot, selectOption on the same
+handle. Failure 3 (unavailable) KEPT at full strength as required: dropped
+only .first() for main#main-content scoping to match the fixed source; link
+and bar absence assertions unchanged. No production edits in this lane.
+
+GATES (exact logs: live-review2-eslint/typecheck/playwright-list):
+- ESLint (spec + a11y + helper): exit 0, no findings.
+- Typecheck (npm run typecheck, whole project): exit 0 (one interim
+  self-caught malformed edit repaired before final; HTMLElement cast used
+  for the compound main#main-content selector).
+- Discovery: 126 tests in 3 files, all US3/US6/US2 cases listed, US4 T053
+  intact, no load errors. Discovery only, not runtime proof.
+
+REMAINING GAPS (root owns fresh build, browser runs, ledger):
+- All revised US3/US6/US2 browser tests await root execution; no gallery
+  runtime pass claimed.
+- waitForResponse 404 relies on the optimizer passing the upstream 404
+  through as the image-response status under the native adapter; if the
+  optimizer instead 400s/500s, root runtime will show the exact status and
+  the assertion needs that observed value (recorded here as claimed limit).
+- Touch swipe settling (exactly one tile) depends on real scroll-snap
+  physics; root runtime confirms 2-of-5.
+- Unavailable-bar absence (mobile-booking-bar count 0) kept page-wide; if
+  the fixed source renders a bar shell, root diagnoses before any change.

@@ -1,0 +1,51 @@
+# Post-preload·true diagnosis — clean12.8.2 performance gate failure (bounded, read-only)
+
+Scope: reviewer/planner only. No app/source/test/config edits, no builds, no audits, no GETs, no commits in this session. Ownership: this directory only. Raw inputs: `hero-preload-runtime/performance/` (12× `lhr-*.json`, 12 traces, 12 devtoolslogs, native-collect/native-assert).
+
+## Change control & provenance
+- Gate config verified: `frontend/lighthouserc.js` SHA-256 `2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672` (measured now; legacy `frontend/lighthouserc.cjs` also exists but is NOT the gate config). Gate: 6 URLs × 3 runs, `categories:performance` minScore 0.9 pessimistic (plus a11y/bp/seo minScore 0.9).
+- Assertion result (native-assert.txt): exactly 4 rows, all `categories.performance failure for minScore assertion`; exit 1. No a11y/bp/seo rows failed.
+- Runs: collect 1, assert 1. Artifacts: 12 LHR JSON + 12 LHR HTML + 12 `.trace.json` + 12 `.devtoolslog.json`.
+- Before-ES strict attempt (native-collect.txt, machine-verified): 61 preflight sample lines total, all `url":"about:blank"` with `appVisited:false` (segment sizes 22/6/2/2/29), benchmarkIndex range 835.5–1989; the strict attempt aborted with `Error: CPU readiness budget (30 samples / 30000ms) exhausted; performance audit must not start` thrown from `frontend/scripts/lighthouse-runtime-preflight.mjs:48` via `frontend/scripts/lighthouse-browser-ready.cjs:5`. Per-sample→segment attribution of the abort is not claimed beyond the recorded error.
+- HTTP probes: first tour-page probe timed out (25 s deadline); batched retry of tour/home/blog at 20 s deadline each also all timed out. No fresh scores produced. One docker API query returned HTTP 500 during that window — recorded factually; no causal claim about engine or container state is made. No further GETs attempted (per root instruction).
+- SSR HTML: NOT available. Retained restore evidence dir `evidence/final/runtime/docker-desktop-restore-20261019/` contains only parity/identity artifacts (00–06 incl. 06-parity-report.json); it has no tour SSR HTML file → "SSR unavailable" label used below.
+- Parity status: 06-parity-report.json itself shows `host419.hashed=0` (Get-FileHash failures) and `onlyInCurated420 = ["jest.config.mjs"]`; manifest-level parity is not proven by that artifact. I make NO byte-identity claim for runtime chunks; my earlier filename+size mapping is treated as plausibility only.
+- Earlier trace/devtoolslog parsing attempts that failed in this workstream are retained as diagnostic failures, not gates; the final initiator extraction succeeded on tour run1, search run1, home run3, blog run1.
+
+## Engine facts (all 12 LHRs, validated field-by-field from raw JSON)
+Lighthouse 12.8.2, 176 audits each, auditErrorCount 0, runWarnings 0, runtimeError null in all 12. Mobile form factor, throttlingMethod simulate, cpuSlowdownMultiplier 4. Scores (min per URL in bold):
+
+| run | URL | perf | bench | FCP | LCP | sim TTFB/LoadDelay/LoadTime/RenderDelay | LCP img: priority·linkPreload·observed r→end ms |
+|---|---|---|---|---|---|---|---|
+| 178890/714311/731203 | /en | 0.89 / 0.87 / **0.77** | 1811.5 / 1515.5 / 1925.5 | 945–1135 | 3275–3360 | r1: 858/0/0/2501.7; r2: 479/1044/1.2/1750.7; r3: 473/443/1.8/2401.6 | r1 text H1 (no img); r2 High·linkPreload·188→226; r3 High·linkPreload·95→273 |
+| 752017/766113/779559 | /en/search?q=rome | 0.89 / 0.90 / **0.96** | 1499 / 1465 / 1832.5 | 933–938 | 2584–3621 | r1: 466/2424/34.9/695.0; r2: 469/428/153.7/2154.8; r3: 469/469/167.2/1479.2 | High·linkPreload (r1 448→454; r2 66→77; r3 76→90) |
+| 796482/813480/828570 | /en/tours/hidden-gems-rome-walking-tour | 0.80 / 0.84 / **0.86** | 1713.5 / 1779.5 / **1877.5** | 941–962 | 3890–4114 | r1: 474/2137.5/286.9/991.2; r2: 481/2217.2/285.3/1130.2; r3: 471/2248.6/168.1/1112.6 | **Low**·isLinkPreload=TRUE (r1 601.952→668.172; r2 438.8→485.3; r3 413.1→438.7) |
+| 844058/858620/875726 | /en/blog/hidden-gems-florence | 0.89 / 0.93 / **0.81** | 1823 / 1657.5 / 1356.5 | 974–1019 | 3101–3301 | r1: 466/1012/2.4/1643; r2: 466/811/1.2/1822; r3: 481/1668/1.3/1151 | r1/r2 Low (315→331; 262→278); r3 High linkPreload (475→513, different LCP element) |
+
+LCP nodes (`largest-contentful-paint-element` details):
+- Tour (all runs): `div.relative > div.flex > button.relative > img.object-cover` — cover of `Hidden Gems of Rome Walking Tour`, `sizes` = `SIZES_HALF` from `TourGallery.tsx` (24–30), fill-hidden-gems cover, boundingRect top≈343 left 16, 380×238, size 90250.
+- Home r1: text H1 (no image); home r2/r3: Louvre card img (`paris-louvre.jpg&w=750`).
+- Search: rome-cover `&w=750&q=75` card img (`TourCard` markup).
+- Blog (all runs): `div.grid > article.group > a.relative > img.object-cover` — related-post card (BlogCard in `RelatedPosts`), `lcp-lazy-loaded score = 0` in every blog run.
+
+LCP-discovery audits present in JSON: `prioritize-lcp-image score=1` and `lcp-lazy-loaded` (tour=1, blog=0) per run; `lcp-discovery` audit id not present in this Lighthouse build (no `priorityHinted` field was found; my earlier `priorityHinted:false` note was an unverifiable field read — withdrawn).
+
+## Observed vs simulated (explicit separation)
+- Observed (CDP network): the tour LCP cover request completes early on the real page (438–668 ms end in all runs), over a single request, `isLinkPreload=true`, **priority Low**, and the `Network.requestWillBeSent` initiator stack points inside the react-dom chunk (`0nwnj.jo41.5k.js:189174`). Gallery tiles 1–4 are parser-initiated requests that START LATER (~814–816 ms run1; ~632 ms run2/3) than the cover request. The script initiator does NOT prove the SSR `<img>` was absent — SSR HTML is unavailable (below) — so SSR file presence remains unconfirmed either way.
+- Simulated (lantern): tour sim LCP = 3890–4114 ms, i.e. simulated `Load Delay` 2137–2249 ms. These phase values are lantern model outputs at 4G/4×CPU, NOT observed timings.
+
+## Findings (facts, with mechanism hypotheses labelled)
+- F1 (fact): Only `categories:performance` fails minScore 0.9 on all 4 EN URLs (pessimistic). Mins: home 77, search 89, tour 80, blog 81.
+- F2 (fact, association only): Every page ships ~445 KB raw shared root JS (rootMainFiles: `15rp_y8t3y2p6.js` 14809 B, `0nf7f.m_5vzju.js` 37844 B, `0nwnj.jo41.5k.js` 225342 B, `0a8gcdte55hy1.js` 122945 B, `0pqt~8bl3ukh4.js` 44414 B, `turbopack-0~kthrw7b.c.z.js` 10613 B) plus page chunks; total raw ScriptSum 681–729 KB. Worst-run main-thread totals: home 2961 ms (TBT 589, script eval 1309), tour 1444 ms single-chunk scripting. Chunk→module mapping (react-dom 19.3.0-canary-3f0b9e61-20260317 + scheduler in `0nwnj`; Next Link prefetch + RSC fetcher in `0a8g`) is derived from local `.next` chunk inspection — plausible, NOT proven for runtime bytes.
+- F3 (fact): Tour + home + search LCP image requests all carry `isLinkPreload=true`. Home/search: priority High, observed start 66–448 ms. Tour: priority **Low** with start 413–602 ms.
+- F4 (fact-of-correlation; mechanism hypothesis): In lantern, High-priority LCP images get simulated Load Delay 428–1044 ms (home/search), while the Low-priority tour image gets 2137–2249 ms behind the scripted/script load band on all three runs. Flipping the tour request's priority class is the mechanically consistent lever; the exact reason Chrome assigned Low to the cover (link-insertion timing at hydration vs viewport-candidate/`media`-mismatch of a preload link vs candidate selection) cannot be resolved without SSR HTML — OPEN QUESTION.
+- F5 (fact, association only): Home worst run: sim RenderDelay 2401.6 ms (72%), TBT 589, mt total 2961 — CPU-bound profile dominated by reaction to the ~445 KB shared shell + inline flight document (raw doc 169 KB). RSC prefetch: 6–19 `_rsc` fetches per page in up to 3 waves (cache-busters `1we55`/`1h8ou`/`16xy1`), initiator `0a8gcdte55hy1.js:85008` (Link IntersectionObserver prefetch, rootMargin 200px), per-page Fetch bytes 11.8–20.7 KB, observed start spread 274–2312 ms. No exact CPU attribution of prefetch is claimed. Console errors were only 3 fixture-404-related entries; no hydration error observed.
+- F6 (fact): Blog run1/run2 LCP image is the related-post card with default (`loading:'lazy'` via `get-img-props.js` line 269 `isLazy`), priority Low, sim LoadDelay 811–1668 ms; `lcp-lazy-loaded=0` on every blog run. Source: `BlogCard.tsx:30–37` (`<Image>` without `loading`/`fetchPriority`), rendered by `RelatedPosts.tsx:27` inside the article page.
+- F7 (fact): `TourGallery.tsx:227` uses `preload:true` on the position-0 tile only. In the compiled `next/image` client build, `preload` routes through `ImagePreload` → `ReactDOM.preload(src, {as:'image', ...no explicit fetchPriority})` (image-component.js:209–233) and `get-img-props` sets `isLazy=false`. Known from source; the runtime priority/Timing mismatch vs home/search is what remains unexplained pending SSR.
+
+## Open questions requiring actual SSR (blocked, owned elsewhere)
+- Does the tour page's initial HTML contain the cover `<img>` and/or a server-HTML `<link rel="preload" as="image" imageSrcSet imageSizes>`? (Consume the retained SSR file from the restoration owner when it appears; none exists today.)
+- Why is the cover's link-preload request priority Low while home/search equivalents are High (hydration-time insertion vs server float vs imagesizes mismatch)?
+- Reverting `preload:true` alone returns the app to the original 18-run configuration, which also failed — it cannot be presented as a complete fix on its own.
+
+Artifacts in same directory: `lhr-summary-all12.json` (all runs, validated fields), `run-bookkeeping.json`, `probe-provenance.json`, `source-hashes.json`. Fix plan: `fix-plan.md`. No pass/improvement claim is made anywhere.

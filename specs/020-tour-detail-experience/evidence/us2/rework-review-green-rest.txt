@@ -1,0 +1,18 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/AvailabilityCalendar.test.tsx src/components/tour/__tests__/BookingCTA.test.tsx src/components/tour/__tests__/MobileBookingAction.test.tsx src/lib/auth/__tests__/return-url.test.ts src/lib/tours/__tests__/booking-selection.test.ts
+
+node.exe : 
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Test Suites: 5 passed, 5 total
+Tests:       104 passed, 104 total
+Snapshots:   0 total
+Time:        3.099 s
+Ran all test suites within paths "src/components/tour/__tests__/AvailabilityCalendar.test.tsx", 
+"src/components/tour/__tests__/BookingCTA.test.tsx", "src/components/tour/__tests__/MobileBookingAction.test.tsx", 
+"src/lib/auth/__tests__/return-url.test.ts", "src/lib/tours/__tests__/booking-selection.test.ts".

@@ -1,0 +1,29 @@
+{
+  "startedAt": "2026-10-16T22:05:46.339Z",
+  "node": "v24.14.1",
+  "stages": [
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-16T22:05:46.340Z",
+      "finishedAt": "2026-10-16T22:06:06.385Z",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-16T22:06:06.386Z",
+      "finishedAt": "2026-10-16T22:06:16.146Z",
+      "exitCode": 2
+    }
+  ],
+  "sourceStable": true,
+  "finishedAt": "2026-10-16T22:06:16.379Z",
+  "passed": false
+}

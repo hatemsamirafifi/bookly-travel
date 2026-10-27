@@ -1,0 +1,43 @@
+{
+  "scope": "Standalone actual Gallery/Dialog/Tailwind diagnostic; SDK image and intl adapters, server-only unused blur export omitted; original owned CDN fixture testcard responses. Not built-Next, locale, optimization or full-spec acceptance.",
+  "sourceSnapshot": {
+    "frontend\\src\\components\\tour\\TourGallery.tsx": "aa2ef725cbf2c0c7a67a5804801569d5e6142ef549d52b54abf7e190095d1e1d",
+    "frontend\\src\\components\\ui\\Dialog.tsx": "ab93f1ec32aa01f1ccfc1d29f1f9f74ec8b64515b3a6b8b85022c7d8443916fc",
+    "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\gallery-browser\\dist\\bundle.js": "aa0b797dee706570852e2de3e3b0102fca30ad5fa2c49a9b18a299dd48cd1fcd",
+    "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\gallery-browser\\styles.css": "63de3dffc25cce0a0e02133e776eff68f764de7066d1e82a52c6460705d4970e"
+  },
+  "checks": [
+    {
+      "case": "sparse-2-right-edge",
+      "actualUnusedPixels": 0,
+      "passed": true
+    },
+    {
+      "case": "sparse-4-right-edge",
+      "actualUnusedPixels": 0,
+      "passed": true
+    },
+    {
+      "case": "1440-fullscreen",
+      "passed": true
+    },
+    {
+      "case": "1440-image-fits",
+      "passed": true
+    },
+    {
+      "case": "390-fullscreen",
+      "passed": true
+    },
+    {
+      "case": "390-image-fits",
+      "passed": true
+    },
+    {
+      "case": "390-long-caption-image",
+      "actualHeight": 240,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

@@ -44,10 +44,13 @@ export interface DialogProps {
   closeLabel: string;
   children: ReactNode;
   className?: string;
-  placement?: 'center' | 'left' | 'right';
+  placement?: 'center' | 'left' | 'right' | 'fullscreen';
+  /** Optional id of a caller-owned description node, wired as
+   *  aria-describedby on the panel. Absent by default: no description. */
+  descriptionId?: string;
 }
 
-export function Dialog({ open, onClose, title, closeLabel, children, className, placement = 'center' }: DialogProps) {
+export function Dialog({ open, onClose, title, closeLabel, children, className, placement = 'center', descriptionId }: DialogProps) {
   const mounted = useSyncExternalStore(subscribeToClient, clientSnapshot, serverSnapshot);
   const id = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -104,18 +107,43 @@ export function Dialog({ open, onClose, title, closeLabel, children, className, 
   }, [open, mounted]);
 
   if (!open || !mounted) return null;
+  const isFullscreen = placement === 'fullscreen';
   return createPortal(
     <div
-      className={cn('fixed inset-0 z-modal flex bg-overlay', placement === 'center' ? 'items-center justify-center p-4' : placement === 'left' ? 'justify-start' : 'justify-end')}
-      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+      className={cn(
+        'fixed inset-0 z-modal flex bg-overlay',
+        isFullscreen
+          ? 'flex-col'
+          : placement === 'center'
+            ? 'items-center justify-center p-4'
+            : placement === 'left'
+              ? 'justify-start'
+              : 'justify-end',
+      )}
+      onClick={
+        isFullscreen
+          ? undefined
+          : (event) => {
+              if (event.target === event.currentTarget) onClose();
+            }
+      }
     >
       <div
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={id}
+        aria-describedby={descriptionId}
         tabIndex={-1}
-        className={cn('flex max-h-full flex-col bg-surface text-primary shadow-modal', placement === 'center' ? 'w-full max-w-lg rounded-lg' : 'h-full w-80 max-w-full', className)}
+        className={cn(
+          'flex max-h-full flex-col bg-surface text-primary shadow-modal',
+          isFullscreen
+            ? 'h-full w-full min-h-0 max-w-none rounded-none pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]'
+            : placement === 'center'
+              ? 'w-full max-w-lg rounded-lg'
+              : 'h-full w-80 max-w-full',
+          className,
+        )}
       >
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-border p-4">
           <h2 id={id} className="text-lg font-bold">{title}</h2>
@@ -123,7 +151,7 @@ export function Dialog({ open, onClose, title, closeLabel, children, className, 
             <X aria-hidden="true" className="size-5" />
           </IconButton>
         </div>
-        <div className="min-h-0 overflow-y-auto p-4">{children}</div>
+        <div className={isFullscreen ? 'min-h-0 flex-1 overflow-y-auto p-4' : 'min-h-0 overflow-y-auto p-4'}>{children}</div>
       </div>
     </div>,
     document.body,

@@ -1,5 +1,7 @@
-import Link from 'next/link';
+'use client';
+
 import type { AvailabilityInfo, PricingInfo } from '@/lib/api/types';
+import TourBookingController from './TourBookingController';
 
 interface MobileBookingActionProps {
   availability: AvailabilityInfo;
@@ -7,27 +9,32 @@ interface MobileBookingActionProps {
   groupSize: { min: number; max: number };
   slug: string;
   locale: string;
-  actionLabel: string;
-  priceLabel: string;
+  tourId?: string | number;
+  todayUtc?: string;
 }
 
-export default function MobileBookingAction({ availability, pricing, groupSize, slug, locale, actionLabel, priceLabel }: MobileBookingActionProps) {
-  const date = availability.next_available_date;
-  if (availability.is_unavailable || !date || !availability.available_dates.includes(date) || pricing.base_price.amount <= 0) {
-    return null;
-  }
-
+/** Compatibility wrapper: the canonical TourBookingController owns all
+ *  date/count state. This wrapper carries no selection engine of its own.
+ *  Action/price labels come from the localized catalogs inside the bar. */
+export default function MobileBookingAction({
+  availability,
+  pricing,
+  groupSize,
+  slug,
+  locale,
+  tourId,
+  todayUtc,
+}: MobileBookingActionProps) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface px-4 py-3 shadow-card lg:hidden" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-        <p className="text-sm text-bookly-navy"><span className="block font-bold">{pricing.base_price.formatted}</span><span className="text-text-muted">{priceLabel}</span></p>
-        <Link
-          href={`/${locale}/booking?tour=${encodeURIComponent(slug)}&participants=${groupSize.min}&date=${encodeURIComponent(date)}`}
-          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-bookly-gold px-5 py-2.5 text-sm font-semibold text-bookly-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-        >
-          {actionLabel}
-        </Link>
-      </div>
-    </div>
+    <TourBookingController
+      slug={slug}
+      locale={locale}
+      pricing={pricing}
+      availability={availability}
+      groupMin={groupSize.min}
+      groupMax={groupSize.max}
+      todayUtc={todayUtc ?? new Date().toISOString().slice(0, 10)}
+      tourId={tourId ?? slug}
+    />
   );
 }

@@ -1,0 +1,1411 @@
+{
+  "diagnostic": "engine-12.8.2-single-url-en-tour",
+  "startedAt": "2026-10-18T21:10:28.547Z",
+  "finishedAt": "2026-10-18T21:10:32.121Z",
+  "error": null,
+  "stages": {
+    "preflight": {
+      "startedAt": "2026-10-18T21:10:28.555Z",
+      "ok": true,
+      "result": {
+        "strictSha": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+        "tour": {
+          "status": 200
+        },
+        "home": {
+          "status": 200
+        },
+        "preloadSha": "3a7f2f5950206c186b935ba5dc867aca75c09525279cd7c941fa59f0eb605ed3"
+      },
+      "finishedAt": "2026-10-18T21:10:29.817Z",
+      "durationMs": 1262
+    },
+    "runtimeIdentityBefore": {
+      "startedAt": "2026-10-18T21:10:29.817Z",
+      "ok": true,
+      "result": {
+        "inContainer": {
+          "node": "v20.20.2",
+          "buildId": "F6TXmaijafokZYkc5ATRu",
+          "next": "16.2.3"
+        },
+        "servedHtmlBuildId": null,
+        "match": true
+      },
+      "finishedAt": "2026-10-18T21:10:30.618Z",
+      "durationMs": 801
+    },
+    "snapshotPriorReports": {
+      "startedAt": "2026-10-18T21:10:30.618Z",
+      "ok": true,
+      "result": {
+        "resumedFromPartial": true,
+        "priorLhrJsons": 18,
+        "clearedEarlier": true
+      },
+      "finishedAt": "2026-10-18T21:10:30.618Z",
+      "durationMs": 0
+    },
+    "configEvaluation": {
+      "startedAt": "2026-10-18T21:10:30.618Z",
+      "ok": true,
+      "result": {
+        "resumedFromPartial": true,
+        "effectiveConfigExists": true
+      },
+      "finishedAt": "2026-10-18T21:10:30.619Z",
+      "durationMs": 1
+    },
+    "collect": {
+      "startedAt": "2026-10-18T21:10:30.619Z",
+      "ok": true,
+      "result": {
+        "resumedFromPartial": true,
+        "exitCode": 0,
+        "armedNotices": [
+          "[lh-engine-select] armed: root engine v12.8.2 at F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse (caller-gated to node-runner.js only)",
+          "[lh-engine-select] caller=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\src\\collect\\node-runner.js request=lighthouse selected=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js v12.8.2"
+        ],
+        "armed": true,
+        "hookLines": [
+          "{\"attempt\":1,\"benchmarkIndex\":1487.5,\"url\":\"about:blank\",\"appVisited\":false}",
+          "{\"attempt\":2,\"benchmarkIndex\":1867.5,\"url\":\"about:blank\",\"appVisited\":false}",
+          "{\"attempt\":3,\"benchmarkIndex\":2005,\"url\":\"about:blank\",\"appVisited\":false}"
+        ]
+      },
+      "finishedAt": "2026-10-18T21:10:30.619Z",
+      "durationMs": 0,
+      "cachedRecoveredFromOneActualCollect": true,
+      "actualCollectMeasurement": {
+        "stageStartedAt": "2026-10-18T21:04:48.406Z",
+        "stageFinishedAt": "2026-10-18T21:06:44.564Z",
+        "durationMs": 116158,
+        "exitCode": 0
+      },
+      "note": "This stage record is a cached/recovered result (0 ms postprocessing reuse). Exactly ONE actual collect ran (exit 0). No second collect ever ran; postprocessing passes only re-verified/extracted from the same lhr-1792357598848."
+    },
+    "freshLhrVerify": {
+      "startedAt": "2026-10-18T21:10:30.620Z",
+      "ok": true,
+      "result": {
+        "jsonFileName": "lhr-1792357598848.json",
+        "lighthouseVersion": "12.8.2",
+        "requestedUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+        "fetchTime": "2026-10-18T21:06:26.970Z",
+        "summary": {
+          "lighthouseVersion": "12.8.2",
+          "fetchTime": "2026-10-18T21:06:26.970Z",
+          "requestedUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+          "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+          "benchmarkIndex": 1910.5,
+          "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+          "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+          "throttling": {
+            "rttMs": 150,
+            "throughputKbps": 1638.4,
+            "requestLatencyMs": 562.5,
+            "downloadThroughputKbps": 1474.5600000000002,
+            "uploadThroughputKbps": 675,
+            "cpuSlowdownMultiplier": 4
+          },
+          "throttlingMethod": "simulate",
+          "runWarnings": [],
+          "runtimeError": null,
+          "categories": {
+            "performance": {
+              "score": 0.8
+            },
+            "accessibility": {
+              "score": 1
+            },
+            "best-practices": {
+              "score": 0.96
+            },
+            "seo": {
+              "score": 0.92
+            }
+          },
+          "metrics": {
+            "firstContentfulPaint": 941,
+            "largestContentfulPaint": 4187,
+            "totalBlockingTime": 288,
+            "cumulativeLayoutShift": 0.001059558800690095,
+            "speedIndex": 1850,
+            "observedFirstContentfulPaint": 232,
+            "observedLargestContentfulPaint": 682
+          },
+          "errorAudits": [],
+          "errorAuditCount": 0,
+          "focus": {
+            "largest-contentful-paint-element": {
+              "score": 0,
+              "scoreDisplayMode": "metricSavings",
+              "errorMessage": null,
+              "displayValue": "4,190 ms",
+              "numericValue": null,
+              "details": {
+                "type": "list",
+                "items": [
+                  {
+                    "type": "table",
+                    "headings": {
+                      "clippedArray": 1
+                    },
+                    "items": {
+                      "clippedArray": 1
+                    }
+                  },
+                  {
+                    "type": "table",
+                    "headings": {
+                      "clippedArray": 3
+                    },
+                    "items": {
+                      "clippedArray": 4
+                    }
+                  }
+                ]
+              }
+            },
+            "lcp-lazy-loaded": {
+              "score": 1,
+              "scoreDisplayMode": "metricSavings",
+              "errorMessage": null,
+              "displayValue": null,
+              "numericValue": null,
+              "details": {
+                "type": "table",
+                "headings": [
+                  {
+                    "key": "node",
+                    "valueType": "node",
+                    "label": "Element"
+                  }
+                ],
+                "items": [
+                  {
+                    "node": {
+                      "clippedObject": 7
+                    }
+                  }
+                ]
+              }
+            },
+            "prioritize-lcp-image": {
+              "score": 1,
+              "scoreDisplayMode": "metricSavings",
+              "errorMessage": null,
+              "displayValue": null,
+              "numericValue": 0,
+              "details": {
+                "type": "opportunity",
+                "headings": [],
+                "items": [],
+                "overallSavingsMs": 0,
+                "sortedBy": [
+                  "wastedMs"
+                ],
+                "debugData": {
+                  "type": "debugdata",
+                  "initiatorPath": [
+                    {
+                      "clippedObject": 2
+                    },
+                    {
+                      "clippedObject": 2
+                    }
+                  ],
+                  "pathLength": 2
+                }
+              }
+            },
+            "layout-shifts": {
+              "score": 1,
+              "scoreDisplayMode": "informative",
+              "errorMessage": null,
+              "displayValue": "1 layout shift found",
+              "numericValue": null,
+              "details": {
+                "type": "table",
+                "headings": [
+                  {
+                    "key": "node",
+                    "valueType": "node",
+                    "subItemsHeading": {
+                      "clippedObject": 1
+                    },
+                    "label": "Element"
+                  },
+                  {
+                    "key": "score",
+                    "valueType": "numeric",
+                    "subItemsHeading": {
+                      "clippedObject": 2
+                    },
+                    "granularity": 0.001,
+                    "label": "Layout shift score"
+                  }
+                ],
+                "items": [
+                  {
+                    "node": {
+                      "clippedObject": 7
+                    },
+                    "score": 0.001059558800690095,
+                    "subItems": {
+                      "clippedObject": 2
+                    }
+                  }
+                ]
+              }
+            },
+            "non-composited-animations": {
+              "score": null,
+              "scoreDisplayMode": "notApplicable",
+              "errorMessage": null,
+              "displayValue": null,
+              "numericValue": null,
+              "details": {
+                "type": "table",
+                "headings": [
+                  {
+                    "key": "node",
+                    "valueType": "node",
+                    "subItemsHeading": {
+                      "clippedObject": 2
+                    },
+                    "label": "Element"
+                  }
+                ],
+                "items": []
+              }
+            },
+            "render-blocking-resources": {
+              "score": 0.5,
+              "scoreDisplayMode": "metricSavings",
+              "errorMessage": null,
+              "displayValue": "Est savings of 0 ms",
+              "numericValue": 0,
+              "details": {
+                "type": "opportunity",
+                "headings": [
+                  {
+                    "key": "url",
+                    "valueType": "url",
+                    "label": "URL"
+                  },
+                  {
+                    "key": "totalBytes",
+                    "valueType": "bytes",
+                    "label": "Transfer Size"
+                  },
+                  {
+                    "key": "wastedMs",
+                    "valueType": "timespanMs",
+                    "label": "Duration"
+                  }
+                ],
+                "items": [
+                  {
+                    "url": "http://localhost:8080/_next/static/chunks/0l6itxrzbcoju.css",
+                    "totalBytes": 16488,
+                    "wastedMs": 171
+                  }
+                ],
+                "overallSavingsMs": 0
+              }
+            }
+          },
+          "attributions": {
+            "bootup-time": {
+              "numericValue": 916.03,
+              "displayValue": "0.9 s",
+              "scoreDisplayMode": "metricSavings",
+              "itemCount": 5,
+              "top": [
+                {
+                  "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+                  "total": 862.7920000000024,
+                  "scripting": 530.4640000000023,
+                  "scriptParseCompile": 20.524
+                },
+                {
+                  "url": "Unattributable",
+                  "total": 451.2600000000008,
+                  "scripting": 18.847999999999992,
+                  "scriptParseCompile": 0
+                },
+                {
+                  "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+                  "total": 423.94000000000005,
+                  "scripting": 24.61200000000005,
+                  "scriptParseCompile": 34.16799999999999
+                },
+                {
+                  "url": "http://localhost:8080/_next/static/chunks/15rp_y8t3y2p6.js",
+                  "total": 174.09600000000026,
+                  "scripting": 171.22400000000025,
+                  "scriptParseCompile": 2.604
+                },
+                {
+                  "url": "http://localhost:8080/_next/static/chunks/0a8gcdte55hy1.js",
+                  "total": 126.76799999999997,
+                  "scripting": 97.29199999999997,
+                  "scriptParseCompile": 16.291999999999998
+                }
+              ]
+            },
+            "mainthread-tasks": null,
+            "network-requests": {
+              "numericValue": null,
+              "displayValue": null,
+              "scoreDisplayMode": "informative",
+              "itemCount": 42,
+              "top": []
+            },
+            "unused-javascript": {
+              "numericValue": 600,
+              "displayValue": "Est savings of 21 KiB",
+              "scoreDisplayMode": "metricSavings",
+              "itemCount": 1,
+              "top": [
+                {
+                  "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+                  "totalBytes": 70595,
+                  "wastedBytes": 21288,
+                  "wastedPercent": 30.154609438098532
+                }
+              ]
+            }
+          }
+        },
+        "frontendAssetList": [
+          {
+            "name": "localhost_2026-10-19_00-06-26-0.trace.json",
+            "sourcePath": "F:\\Travel Website\\bookly travel\\frontend\\localhost_2026-10-19_00-06-26-0.trace.json",
+            "sizeBytes": 4616301,
+            "sha256": "3b5eba13673ffe46a6930568c8d504399e60dbe49f00d8e213202a41f5b2d43e",
+            "copiedTo": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\engine-diagnostic-12-8\\localhost_2026-10-19_00-06-26-0.trace.json",
+            "copySha256Match": true
+          },
+          {
+            "name": "localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+            "sourcePath": "F:\\Travel Website\\bookly travel\\frontend\\localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+            "sizeBytes": 281790,
+            "sha256": "e98be7f84f9c911dab2aa198a42caef295b15c0a6e63a21e85e1526af8f08bed",
+            "copiedTo": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\engine-diagnostic-12-8\\localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+            "copySha256Match": true
+          }
+        ],
+        "allFiles": [
+          "assertion-results.json",
+          "lhr-1792357598848.html",
+          "lhr-1792357598848.json"
+        ]
+      },
+      "finishedAt": "2026-10-18T21:10:30.632Z",
+      "durationMs": 12
+    },
+    "assert": {
+      "startedAt": "2026-10-18T21:10:30.632Z",
+      "ok": true,
+      "result": {
+        "exitCode": 1,
+        "timedOut": false,
+        "stdoutLines": [],
+        "stderrLines": [
+          "Checking assertions against 1 URL(s), 1 total run(s)",
+          "1 result(s) for \u001b[1mhttp://localhost:8080/en/tours/hidden-gems-rome-walking-tour\u001b[0m :",
+          "  \u001b[31m×\u001b[0m  \u001b[1mcategories\u001b[0m.performance failure for \u001b[1mminScore\u001b[0m assertion",
+          "        expected: >=\u001b[32m0.9\u001b[0m",
+          "           found: \u001b[31m0.8\u001b[0m",
+          "      \u001b[2mall values: 0.8\u001b[0m",
+          "Assertion failed. Exiting with status code 1."
+        ]
+      },
+      "finishedAt": "2026-10-18T21:10:31.367Z",
+      "durationMs": 735
+    },
+    "artifacts": {
+      "startedAt": "2026-10-18T21:10:31.367Z",
+      "ok": true,
+      "result": {
+        "engineDiagFiles": [
+          "assertion-results.json",
+          "lhr-1792357598848.html",
+          "lhr-1792357598848.json",
+          "collect-stdout.txt",
+          "collect-stderr.txt",
+          "assert-stdout.txt",
+          "assert-stderr.txt",
+          "localhost_2026-10-19_00-06-26-0.trace.json",
+          "localhost_2026-10-19_00-06-26-0.devtoolslog.json"
+        ],
+        "assetCopiedCounts": {
+          "traceJson": 1,
+          "devtoolslogJson": 1
+        }
+      },
+      "finishedAt": "2026-10-18T21:10:31.373Z",
+      "durationMs": 6
+    },
+    "runtimeIdentityAfter": {
+      "startedAt": "2026-10-18T21:10:31.373Z",
+      "ok": true,
+      "result": {
+        "inContainer": {
+          "node": "v20.20.2",
+          "buildId": "F6TXmaijafokZYkc5ATRu",
+          "next": "16.2.3"
+        },
+        "servedHtmlBuildId": null,
+        "strictShaAfter": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+        "unchanged": true
+      },
+      "finishedAt": "2026-10-18T21:10:31.990Z",
+      "durationMs": 617
+    },
+    "oldEnTour": {
+      "startedAt": "2026-10-18T21:10:31.990Z",
+      "ok": true,
+      "result": {
+        "candidateCount": 3,
+        "analyzed": [
+          {
+            "name": "lhr-1792355251906.json",
+            "fetchTime": "2026-10-18T20:27:18.775Z",
+            "lighthouseVersion": "12.1.0"
+          },
+          {
+            "name": "lhr-1792355267689.json",
+            "fetchTime": "2026-10-18T20:27:35.017Z",
+            "lighthouseVersion": "12.1.0"
+          },
+          {
+            "name": "lhr-1792355283223.json",
+            "fetchTime": "2026-10-18T20:27:50.663Z",
+            "lighthouseVersion": "12.1.0"
+          }
+        ],
+        "earliest": {
+          "name": "lhr-1792355251906.json",
+          "summary": {
+            "lighthouseVersion": "12.1.0",
+            "fetchTime": "2026-10-18T20:27:18.775Z",
+            "requestedUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+            "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+            "benchmarkIndex": 1859.5,
+            "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+            "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+            "throttling": {
+              "rttMs": 150,
+              "throughputKbps": 1638.4,
+              "requestLatencyMs": 562.5,
+              "downloadThroughputKbps": 1474.5600000000002,
+              "uploadThroughputKbps": 675,
+              "cpuSlowdownMultiplier": 4
+            },
+            "throttlingMethod": "simulate",
+            "runWarnings": [],
+            "runtimeError": null,
+            "categories": {
+              "performance": {
+                "score": 0.82
+              },
+              "accessibility": {
+                "score": 1
+              },
+              "best-practices": {
+                "score": 0.96
+              },
+              "seo": {
+                "score": 0.92
+              }
+            },
+            "metrics": {
+              "firstContentfulPaint": 959,
+              "largestContentfulPaint": 3972,
+              "totalBlockingTime": 280,
+              "cumulativeLayoutShift": 0.001059558800690095,
+              "speedIndex": 1847,
+              "observedFirstContentfulPaint": 186,
+              "observedLargestContentfulPaint": 819
+            },
+            "errorAudits": [
+              {
+                "id": "largest-contentful-paint-element",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+              },
+              {
+                "id": "lcp-lazy-loaded",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+              },
+              {
+                "id": "layout-shifts",
+                "errorMessage": "Required RootCauses gatherer encountered an error: Cannot read properties of undefined (reading 'frame_sequence')"
+              },
+              {
+                "id": "non-composited-animations",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+              },
+              {
+                "id": "prioritize-lcp-image",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+              },
+              {
+                "id": "render-blocking-resources",
+                "errorMessage": "Cannot read properties of undefined (reading 'frame_sequence')"
+              }
+            ],
+            "errorAuditCount": 6,
+            "focus": {
+              "largest-contentful-paint-element": {
+                "score": null,
+                "scoreDisplayMode": "error",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+                "displayValue": null,
+                "numericValue": null,
+                "details": "undefined"
+              },
+              "lcp-lazy-loaded": {
+                "score": null,
+                "scoreDisplayMode": "error",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+                "displayValue": null,
+                "numericValue": null,
+                "details": "undefined"
+              },
+              "prioritize-lcp-image": {
+                "score": null,
+                "scoreDisplayMode": "error",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+                "displayValue": null,
+                "numericValue": null,
+                "details": "undefined"
+              },
+              "layout-shifts": {
+                "score": null,
+                "scoreDisplayMode": "error",
+                "errorMessage": "Required RootCauses gatherer encountered an error: Cannot read properties of undefined (reading 'frame_sequence')",
+                "displayValue": null,
+                "numericValue": null,
+                "details": "undefined"
+              },
+              "non-composited-animations": {
+                "score": null,
+                "scoreDisplayMode": "error",
+                "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+                "displayValue": null,
+                "numericValue": null,
+                "details": "undefined"
+              },
+              "render-blocking-resources": {
+                "score": null,
+                "scoreDisplayMode": "error",
+                "errorMessage": "Cannot read properties of undefined (reading 'frame_sequence')",
+                "displayValue": null,
+                "numericValue": null,
+                "details": "undefined"
+              }
+            },
+            "attributions": {
+              "bootup-time": {
+                "numericValue": 1234.06,
+                "displayValue": "1.2 s",
+                "scoreDisplayMode": "informative",
+                "itemCount": 4,
+                "top": [
+                  {
+                    "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+                    "total": 1587.639999999994,
+                    "scripting": 961.7039999999938,
+                    "scriptParseCompile": 19.78
+                  },
+                  {
+                    "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+                    "total": 533.7480000000002,
+                    "scripting": 29.759999999999987,
+                    "scriptParseCompile": 51.48000000000002
+                  },
+                  {
+                    "url": "Unattributable",
+                    "total": 325.49200000000064,
+                    "scripting": 20.283999999999995,
+                    "scriptParseCompile": 0
+                  },
+                  {
+                    "url": "http://localhost:8080/_next/static/chunks/0a8gcdte55hy1.js",
+                    "total": 177.8000000000002,
+                    "scripting": 142.4480000000002,
+                    "scriptParseCompile": 8.608
+                  }
+                ]
+              },
+              "mainthread-tasks": null,
+              "network-requests": {
+                "numericValue": null,
+                "displayValue": null,
+                "scoreDisplayMode": "informative",
+                "itemCount": 50,
+                "top": []
+              },
+              "unused-javascript": {
+                "numericValue": 460,
+                "displayValue": "Potential savings of 21 KiB",
+                "scoreDisplayMode": "metricSavings",
+                "itemCount": 1,
+                "top": [
+                  {
+                    "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+                    "totalBytes": 70595,
+                    "wastedBytes": 21268,
+                    "wastedPercent": 30.12620816359134
+                  }
+                ]
+              }
+            }
+          },
+          "auditState": {
+            "largest-contentful-paint-element": "error",
+            "lcp-lazy-loaded": "error",
+            "prioritize-lcp-image": "error",
+            "layout-shifts": "error",
+            "non-composited-animations": "error",
+            "render-blocking-resources": "error"
+          }
+        }
+      },
+      "finishedAt": "2026-10-18T21:10:32.116Z",
+      "durationMs": 126
+    },
+    "comparison": {
+      "startedAt": "2026-10-18T21:10:32.116Z",
+      "ok": true,
+      "result": {
+        "sameUrl": true,
+        "sameBuildId": true,
+        "engineVersionOld": "12.1.0",
+        "engineVersionFresh": "12.8.2",
+        "benchmarkIndexOld": 1859.5,
+        "benchmarkIndexFresh": 1910.5,
+        "metricDelta": {
+          "firstContentfulPaint": -18,
+          "largestContentfulPaint": 215,
+          "totalBlockingTime": 8,
+          "cumulativeLayoutShift": 0,
+          "speedIndex": 3,
+          "observedFirstContentfulPaint": 46,
+          "observedLargestContentfulPaint": -137
+        },
+        "categoryDelta": {
+          "performance": -0.02,
+          "accessibility": 0,
+          "best-practices": 0,
+          "seo": 0
+        },
+        "errorAuditCountOld": 6,
+        "errorAuditCountFresh": 0,
+        "perAuditState": {
+          "largest-contentful-paint-element": {
+            "old": "error",
+            "fresh": "score:0"
+          },
+          "lcp-lazy-loaded": {
+            "old": "error",
+            "fresh": "score:1"
+          },
+          "prioritize-lcp-image": {
+            "old": "error",
+            "fresh": "score:1"
+          },
+          "layout-shifts": {
+            "old": "error",
+            "fresh": "score:1"
+          },
+          "non-composited-animations": {
+            "old": "error",
+            "fresh": "score:null"
+          },
+          "render-blocking-resources": {
+            "old": "error",
+            "fresh": "score:0.5"
+          }
+        },
+        "toolchainVerdict": "FAVORS-ENGINE-BUG",
+        "traceEngineFacts": {
+          "nestedVersion": "0.0.23",
+          "nestedScreenshotsHandlerLine": 29,
+          "nestedGuard": "unguarded evt.args.data.beginEvent.args.chrome_frame_reporter.frame_sequence",
+          "rootVersion": "0.0.59",
+          "rootScreenshotsHandlerLine": 35,
+          "rootGuard": "guarded: 'frame_reporter' in args ? args.frame_reporter : args.chrome_frame_reporter"
+        },
+        "verdictNotes": "FACT: with identical URL, app build, CPU hook, chrome, launch args and settings (except engine), root 12.8.2 produced no internal error audits while nested 12.1.0 produced 6. Measurement-toolchain (nested engine) bug implicated, not app behavior."
+      },
+      "finishedAt": "2026-10-18T21:10:32.121Z",
+      "durationMs": 5
+    }
+  },
+  "resumedFromPartial": true,
+  "partialCollectProvenance": null,
+  "collectOutcome": {
+    "armed": true,
+    "armNotices": [
+      "[lh-engine-select] armed: root engine v12.8.2 at F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse (caller-gated to node-runner.js only)",
+      "[lh-engine-select] caller=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\src\\collect\\node-runner.js request=lighthouse selected=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js v12.8.2"
+    ],
+    "hookLines": [
+      "{\"attempt\":1,\"benchmarkIndex\":1487.5,\"url\":\"about:blank\",\"appVisited\":false}",
+      "{\"attempt\":2,\"benchmarkIndex\":1867.5,\"url\":\"about:blank\",\"appVisited\":false}",
+      "{\"attempt\":3,\"benchmarkIndex\":2005,\"url\":\"about:blank\",\"appVisited\":false}"
+    ]
+  },
+  "fresh": {
+    "jsonFileName": "lhr-1792357598848.json",
+    "lighthouseVersion": "12.8.2",
+    "requestedUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+    "fetchTime": "2026-10-18T21:06:26.970Z",
+    "summary": {
+      "lighthouseVersion": "12.8.2",
+      "fetchTime": "2026-10-18T21:06:26.970Z",
+      "requestedUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "benchmarkIndex": 1910.5,
+      "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "runWarnings": [],
+      "runtimeError": null,
+      "categories": {
+        "performance": {
+          "score": 0.8
+        },
+        "accessibility": {
+          "score": 1
+        },
+        "best-practices": {
+          "score": 0.96
+        },
+        "seo": {
+          "score": 0.92
+        }
+      },
+      "metrics": {
+        "firstContentfulPaint": 941,
+        "largestContentfulPaint": 4187,
+        "totalBlockingTime": 288,
+        "cumulativeLayoutShift": 0.001059558800690095,
+        "speedIndex": 1850,
+        "observedFirstContentfulPaint": 232,
+        "observedLargestContentfulPaint": 682
+      },
+      "errorAudits": [],
+      "errorAuditCount": 0,
+      "focus": {
+        "largest-contentful-paint-element": {
+          "score": 0,
+          "scoreDisplayMode": "metricSavings",
+          "errorMessage": null,
+          "displayValue": "4,190 ms",
+          "numericValue": null,
+          "details": {
+            "type": "list",
+            "items": [
+              {
+                "type": "table",
+                "headings": {
+                  "clippedArray": 1
+                },
+                "items": {
+                  "clippedArray": 1
+                }
+              },
+              {
+                "type": "table",
+                "headings": {
+                  "clippedArray": 3
+                },
+                "items": {
+                  "clippedArray": 4
+                }
+              }
+            ]
+          }
+        },
+        "lcp-lazy-loaded": {
+          "score": 1,
+          "scoreDisplayMode": "metricSavings",
+          "errorMessage": null,
+          "displayValue": null,
+          "numericValue": null,
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "node",
+                "valueType": "node",
+                "label": "Element"
+              }
+            ],
+            "items": [
+              {
+                "node": {
+                  "clippedObject": 7
+                }
+              }
+            ]
+          }
+        },
+        "prioritize-lcp-image": {
+          "score": 1,
+          "scoreDisplayMode": "metricSavings",
+          "errorMessage": null,
+          "displayValue": null,
+          "numericValue": 0,
+          "details": {
+            "type": "opportunity",
+            "headings": [],
+            "items": [],
+            "overallSavingsMs": 0,
+            "sortedBy": [
+              "wastedMs"
+            ],
+            "debugData": {
+              "type": "debugdata",
+              "initiatorPath": [
+                {
+                  "clippedObject": 2
+                },
+                {
+                  "clippedObject": 2
+                }
+              ],
+              "pathLength": 2
+            }
+          }
+        },
+        "layout-shifts": {
+          "score": 1,
+          "scoreDisplayMode": "informative",
+          "errorMessage": null,
+          "displayValue": "1 layout shift found",
+          "numericValue": null,
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "node",
+                "valueType": "node",
+                "subItemsHeading": {
+                  "clippedObject": 1
+                },
+                "label": "Element"
+              },
+              {
+                "key": "score",
+                "valueType": "numeric",
+                "subItemsHeading": {
+                  "clippedObject": 2
+                },
+                "granularity": 0.001,
+                "label": "Layout shift score"
+              }
+            ],
+            "items": [
+              {
+                "node": {
+                  "clippedObject": 7
+                },
+                "score": 0.001059558800690095,
+                "subItems": {
+                  "clippedObject": 2
+                }
+              }
+            ]
+          }
+        },
+        "non-composited-animations": {
+          "score": null,
+          "scoreDisplayMode": "notApplicable",
+          "errorMessage": null,
+          "displayValue": null,
+          "numericValue": null,
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "node",
+                "valueType": "node",
+                "subItemsHeading": {
+                  "clippedObject": 2
+                },
+                "label": "Element"
+              }
+            ],
+            "items": []
+          }
+        },
+        "render-blocking-resources": {
+          "score": 0.5,
+          "scoreDisplayMode": "metricSavings",
+          "errorMessage": null,
+          "displayValue": "Est savings of 0 ms",
+          "numericValue": 0,
+          "details": {
+            "type": "opportunity",
+            "headings": [
+              {
+                "key": "url",
+                "valueType": "url",
+                "label": "URL"
+              },
+              {
+                "key": "totalBytes",
+                "valueType": "bytes",
+                "label": "Transfer Size"
+              },
+              {
+                "key": "wastedMs",
+                "valueType": "timespanMs",
+                "label": "Duration"
+              }
+            ],
+            "items": [
+              {
+                "url": "http://localhost:8080/_next/static/chunks/0l6itxrzbcoju.css",
+                "totalBytes": 16488,
+                "wastedMs": 171
+              }
+            ],
+            "overallSavingsMs": 0
+          }
+        }
+      },
+      "attributions": {
+        "bootup-time": {
+          "numericValue": 916.03,
+          "displayValue": "0.9 s",
+          "scoreDisplayMode": "metricSavings",
+          "itemCount": 5,
+          "top": [
+            {
+              "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+              "total": 862.7920000000024,
+              "scripting": 530.4640000000023,
+              "scriptParseCompile": 20.524
+            },
+            {
+              "url": "Unattributable",
+              "total": 451.2600000000008,
+              "scripting": 18.847999999999992,
+              "scriptParseCompile": 0
+            },
+            {
+              "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+              "total": 423.94000000000005,
+              "scripting": 24.61200000000005,
+              "scriptParseCompile": 34.16799999999999
+            },
+            {
+              "url": "http://localhost:8080/_next/static/chunks/15rp_y8t3y2p6.js",
+              "total": 174.09600000000026,
+              "scripting": 171.22400000000025,
+              "scriptParseCompile": 2.604
+            },
+            {
+              "url": "http://localhost:8080/_next/static/chunks/0a8gcdte55hy1.js",
+              "total": 126.76799999999997,
+              "scripting": 97.29199999999997,
+              "scriptParseCompile": 16.291999999999998
+            }
+          ]
+        },
+        "mainthread-tasks": null,
+        "network-requests": {
+          "numericValue": null,
+          "displayValue": null,
+          "scoreDisplayMode": "informative",
+          "itemCount": 42,
+          "top": []
+        },
+        "unused-javascript": {
+          "numericValue": 600,
+          "displayValue": "Est savings of 21 KiB",
+          "scoreDisplayMode": "metricSavings",
+          "itemCount": 1,
+          "top": [
+            {
+              "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+              "totalBytes": 70595,
+              "wastedBytes": 21288,
+              "wastedPercent": 30.154609438098532
+            }
+          ]
+        }
+      }
+    },
+    "frontendAssetList": [
+      {
+        "name": "localhost_2026-10-19_00-06-26-0.trace.json",
+        "sourcePath": "F:\\Travel Website\\bookly travel\\frontend\\localhost_2026-10-19_00-06-26-0.trace.json",
+        "sizeBytes": 4616301,
+        "sha256": "3b5eba13673ffe46a6930568c8d504399e60dbe49f00d8e213202a41f5b2d43e",
+        "copiedTo": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\engine-diagnostic-12-8\\localhost_2026-10-19_00-06-26-0.trace.json",
+        "copySha256Match": true
+      },
+      {
+        "name": "localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+        "sourcePath": "F:\\Travel Website\\bookly travel\\frontend\\localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+        "sizeBytes": 281790,
+        "sha256": "e98be7f84f9c911dab2aa198a42caef295b15c0a6e63a21e85e1526af8f08bed",
+        "copiedTo": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\repair-20261018\\engine-diagnostic-12-8\\localhost_2026-10-19_00-06-26-0.devtoolslog.json",
+        "copySha256Match": true
+      }
+    ],
+    "allFiles": [
+      "assertion-results.json",
+      "lhr-1792357598848.html",
+      "lhr-1792357598848.json"
+    ],
+    "assetFilesRecovered": {
+      "count": 2,
+      "recoveredDuring": "root-review metadata correction (postprocessing only)",
+      "writtenByActualCollect": "2026-10-18T21:04:48.406Z..21:06:44.564Z window (single actual collect)",
+      "causeOfEarlierFalseRecord": "temp runner assetName() regex matched \"-trace.json\"/\"-devtoolslog.json\" suffix form instead of actual \".trace.json\"/\".devtoolslog.json\" names; regex fixed during review with node --check only; runner NOT re-run"
+    }
+  },
+  "assertOutcome": {
+    "exitCode": 1,
+    "timedOut": false,
+    "stdoutLines": [],
+    "stderrLines": [
+      "Checking assertions against 1 URL(s), 1 total run(s)",
+      "1 result(s) for \u001b[1mhttp://localhost:8080/en/tours/hidden-gems-rome-walking-tour\u001b[0m :",
+      "  \u001b[31m×\u001b[0m  \u001b[1mcategories\u001b[0m.performance failure for \u001b[1mminScore\u001b[0m assertion",
+      "        expected: >=\u001b[32m0.9\u001b[0m",
+      "           found: \u001b[31m0.8\u001b[0m",
+      "      \u001b[2mall values: 0.8\u001b[0m",
+      "Assertion failed. Exiting with status code 1."
+    ]
+  },
+  "oldEnTour": {
+    "candidateCount": 3,
+    "analyzed": [
+      {
+        "name": "lhr-1792355251906.json",
+        "fetchTime": "2026-10-18T20:27:18.775Z",
+        "lighthouseVersion": "12.1.0"
+      },
+      {
+        "name": "lhr-1792355267689.json",
+        "fetchTime": "2026-10-18T20:27:35.017Z",
+        "lighthouseVersion": "12.1.0"
+      },
+      {
+        "name": "lhr-1792355283223.json",
+        "fetchTime": "2026-10-18T20:27:50.663Z",
+        "lighthouseVersion": "12.1.0"
+      }
+    ],
+    "earliest": {
+      "name": "lhr-1792355251906.json",
+      "summary": {
+        "lighthouseVersion": "12.1.0",
+        "fetchTime": "2026-10-18T20:27:18.775Z",
+        "requestedUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+        "finalUrl": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+        "benchmarkIndex": 1859.5,
+        "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "runWarnings": [],
+        "runtimeError": null,
+        "categories": {
+          "performance": {
+            "score": 0.82
+          },
+          "accessibility": {
+            "score": 1
+          },
+          "best-practices": {
+            "score": 0.96
+          },
+          "seo": {
+            "score": 0.92
+          }
+        },
+        "metrics": {
+          "firstContentfulPaint": 959,
+          "largestContentfulPaint": 3972,
+          "totalBlockingTime": 280,
+          "cumulativeLayoutShift": 0.001059558800690095,
+          "speedIndex": 1847,
+          "observedFirstContentfulPaint": 186,
+          "observedLargestContentfulPaint": 819
+        },
+        "errorAudits": [
+          {
+            "id": "largest-contentful-paint-element",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+          },
+          {
+            "id": "lcp-lazy-loaded",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+          },
+          {
+            "id": "layout-shifts",
+            "errorMessage": "Required RootCauses gatherer encountered an error: Cannot read properties of undefined (reading 'frame_sequence')"
+          },
+          {
+            "id": "non-composited-animations",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+          },
+          {
+            "id": "prioritize-lcp-image",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')"
+          },
+          {
+            "id": "render-blocking-resources",
+            "errorMessage": "Cannot read properties of undefined (reading 'frame_sequence')"
+          }
+        ],
+        "errorAuditCount": 6,
+        "focus": {
+          "largest-contentful-paint-element": {
+            "score": null,
+            "scoreDisplayMode": "error",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+            "displayValue": null,
+            "numericValue": null,
+            "details": "undefined"
+          },
+          "lcp-lazy-loaded": {
+            "score": null,
+            "scoreDisplayMode": "error",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+            "displayValue": null,
+            "numericValue": null,
+            "details": "undefined"
+          },
+          "prioritize-lcp-image": {
+            "score": null,
+            "scoreDisplayMode": "error",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+            "displayValue": null,
+            "numericValue": null,
+            "details": "undefined"
+          },
+          "layout-shifts": {
+            "score": null,
+            "scoreDisplayMode": "error",
+            "errorMessage": "Required RootCauses gatherer encountered an error: Cannot read properties of undefined (reading 'frame_sequence')",
+            "displayValue": null,
+            "numericValue": null,
+            "details": "undefined"
+          },
+          "non-composited-animations": {
+            "score": null,
+            "scoreDisplayMode": "error",
+            "errorMessage": "Required TraceElements gatherer encountered an error: Dependency \"RootCauses\" failed with exception: Cannot read properties of undefined (reading 'frame_sequence')",
+            "displayValue": null,
+            "numericValue": null,
+            "details": "undefined"
+          },
+          "render-blocking-resources": {
+            "score": null,
+            "scoreDisplayMode": "error",
+            "errorMessage": "Cannot read properties of undefined (reading 'frame_sequence')",
+            "displayValue": null,
+            "numericValue": null,
+            "details": "undefined"
+          }
+        },
+        "attributions": {
+          "bootup-time": {
+            "numericValue": 1234.06,
+            "displayValue": "1.2 s",
+            "scoreDisplayMode": "informative",
+            "itemCount": 4,
+            "top": [
+              {
+                "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+                "total": 1587.639999999994,
+                "scripting": 961.7039999999938,
+                "scriptParseCompile": 19.78
+              },
+              {
+                "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+                "total": 533.7480000000002,
+                "scripting": 29.759999999999987,
+                "scriptParseCompile": 51.48000000000002
+              },
+              {
+                "url": "Unattributable",
+                "total": 325.49200000000064,
+                "scripting": 20.283999999999995,
+                "scriptParseCompile": 0
+              },
+              {
+                "url": "http://localhost:8080/_next/static/chunks/0a8gcdte55hy1.js",
+                "total": 177.8000000000002,
+                "scripting": 142.4480000000002,
+                "scriptParseCompile": 8.608
+              }
+            ]
+          },
+          "mainthread-tasks": null,
+          "network-requests": {
+            "numericValue": null,
+            "displayValue": null,
+            "scoreDisplayMode": "informative",
+            "itemCount": 50,
+            "top": []
+          },
+          "unused-javascript": {
+            "numericValue": 460,
+            "displayValue": "Potential savings of 21 KiB",
+            "scoreDisplayMode": "metricSavings",
+            "itemCount": 1,
+            "top": [
+              {
+                "url": "http://localhost:8080/_next/static/chunks/0nwnj.jo41.5k.js",
+                "totalBytes": 70595,
+                "wastedBytes": 21268,
+                "wastedPercent": 30.12620816359134
+              }
+            ]
+          }
+        }
+      },
+      "auditState": {
+        "largest-contentful-paint-element": "error",
+        "lcp-lazy-loaded": "error",
+        "prioritize-lcp-image": "error",
+        "layout-shifts": "error",
+        "non-composited-animations": "error",
+        "render-blocking-resources": "error"
+      }
+    }
+  },
+  "comparison": {
+    "sameUrl": true,
+    "sameBuildId": true,
+    "engineVersionOld": "12.1.0",
+    "engineVersionFresh": "12.8.2",
+    "benchmarkIndexOld": 1859.5,
+    "benchmarkIndexFresh": 1910.5,
+    "metricDelta": {
+      "firstContentfulPaint": -18,
+      "largestContentfulPaint": 215,
+      "totalBlockingTime": 8,
+      "cumulativeLayoutShift": 0,
+      "speedIndex": 3,
+      "observedFirstContentfulPaint": 46,
+      "observedLargestContentfulPaint": -137
+    },
+    "categoryDelta": {
+      "performance": -0.02,
+      "accessibility": 0,
+      "best-practices": 0,
+      "seo": 0
+    },
+    "errorAuditCountOld": 6,
+    "errorAuditCountFresh": 0,
+    "perAuditState": {
+      "largest-contentful-paint-element": {
+        "old": "error",
+        "fresh": "score:0"
+      },
+      "lcp-lazy-loaded": {
+        "old": "error",
+        "fresh": "score:1"
+      },
+      "prioritize-lcp-image": {
+        "old": "error",
+        "fresh": "score:1"
+      },
+      "layout-shifts": {
+        "old": "error",
+        "fresh": "score:1"
+      },
+      "non-composited-animations": {
+        "old": "error",
+        "fresh": "score:null"
+      },
+      "render-blocking-resources": {
+        "old": "error",
+        "fresh": "score:0.5"
+      }
+    },
+    "toolchainVerdict": "FAVORS-ENGINE-BUG",
+    "traceEngineFacts": {
+      "nestedVersion": "0.0.23",
+      "nestedScreenshotsHandlerLine": 29,
+      "nestedGuard": "unguarded evt.args.data.beginEvent.args.chrome_frame_reporter.frame_sequence",
+      "rootVersion": "0.0.59",
+      "rootScreenshotsHandlerLine": 35,
+      "rootGuard": "guarded: 'frame_reporter' in args ? args.frame_reporter : args.chrome_frame_reporter"
+    },
+    "verdictNotes": "FACT: with identical URL, app build, CPU hook, chrome, launch args and settings (except engine), root 12.8.2 produced no internal error audits while nested 12.1.0 produced 6. Measurement-toolchain (nested engine) bug implicated, not app behavior. [QUALIFIED] identical-conditions claim is limited: preflight HTTP reachability probes preceded the measurement (cold-cache NOT proven); score 0.8 still fails 0.9; toolchain fix proven by zero error audits under guarded engine; no performance-gain causality implied."
+  },
+  "clocksClarification": {
+    "actualMeasurementClock": {
+      "runnerProcessStartAt": "2026-10-18T21:04:46.278Z",
+      "collectStageStartedAt": "2026-10-18T21:04:48.406Z",
+      "collectStageFinishedAt": "2026-10-18T21:06:44.564Z",
+      "collectDurationMs": 116158,
+      "lhrFetchTime": "2026-10-18T21:06:26.970Z",
+      "lhrId": "lhr-1792357598848",
+      "note": "LHR fetchTime is the measurement clock recorded inside the actual LHR artifact; NOT shifted."
+    },
+    "postProcessingClock": {
+      "currentDiagResultWrittenAt": "2026-10-18T21:10:32.121Z",
+      "thisCorrectionAppliedAt": "2026-10-18T21:21:58.811Z",
+      "note": "diag-result.startedAt/finishedAt belong to the postprocessing/resume passes on the host clock, separate from the measurement clock; the first resume pass timestamps (~21:09/21:10Z) are recovery/processing, not measurement."
+    },
+    "originalFailedRun": {
+      "cause": "stage wrapper returned undefined (missing `return out`) after the successful collect; runner crashed reading collectOut.armed",
+      "runLevelRecord": {
+        "startedAt": "2026-10-18T21:04:46.278Z",
+        "resultFinishedAt": "2026-10-18T21:06:44.565Z",
+        "resultFinishedAtProvenance": "relay-observed value from the partial diag-result.json written by the catch handler; that standalone partial was overwritten by subsequent resume passes and its result-level field is not stored in events.jsonl; cited from relay conversation provenance rather than re-fabricated"
+      },
+      "collectAspect": {
+        "exitCode": 0,
+        "durationMs": 116158
+      },
+      "provenance": {
+        "type": "events.jsonl",
+        "record": {
+          "file": "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\engine-diagnostic-resume-run\\events.jsonl",
+          "line": 36,
+          "contains": "run-diag.cjs crash output: error TypeError (reading armed) + stageStates incl. collect startedAt 2026-10-18T21:04:48.406Z finishedAt 2026-10-18T21:06:44.564Z durationMs 116158 exitCode 0 armed notices"
+        }
+      }
+    }
+  },
+  "conditionsQualification": {
+    "expectedProbesBeforeMeasurement": "preflight + identity probed HTTP GET /en and /en/tours/hidden-gems-rome-walking-tour before the collect; recorded as reachability probes only; server cache cold state NOT proven",
+    "browserConditionsUnchanged": "CPU readiness hook (about:blank probing loop) unchanged; default mobile emulation with 4x CPU slowdown (simulate) unchanged",
+    "proofScope": "zero internal error audits under guarded trace_engine 0.0.59 (root Lighthouse 12.8.2) vs six errors under nested 12.1.0 (trace_engine 0.0.23) proves the toolchain compatibility fix (measurement validity). Performance score 0.8 still FAILS the 0.9 assertion; measurement gate NOT marked pass; no performance-gain causality from engine version implied",
+    "sourceState": "app container buildId F6TXmaijafokZYkc5ATRu unchanged before/after the measurement (docker exec identity checks). Host source tree has NEW pending preload edits (Gallery worker) made AFTER the measurement; current host source NOT re-verified as identical to measurement-time state"
+  },
+  "reviewCorrectionsAppliedAt": "2026-10-18T21:21:58.811Z",
+  "reviewCorrectionsFile": "root-review-corrections.json"
+}

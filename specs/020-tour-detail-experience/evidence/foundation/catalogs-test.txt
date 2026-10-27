@@ -1,0 +1,5 @@
+Command: npm test -- --runInBand --watchman=false --runTestsByPath src/lib/tours/__tests__/detail-localization.test.ts
+Workdir: frontend/
+Result: PASS — Test Suites: 1 passed, 1 total; Tests: 32 passed, 32 total; Snapshots: 0.
+Coverage: 16 new keys x (1 presence + 1 placeholder-parity) = 32 assertions across en/es/it.
+Notes: No exact-wording assertions; placeholder sets compared order-insensitively.

@@ -1,0 +1,16 @@
+{
+  "ownedStoppedPids": [
+    16752,
+    19204,
+    10212,
+    7764,
+    23056,
+    9952,
+    3044,
+    5004,
+    21884
+  ],
+  "rootPid": 16752,
+  "at": "2026-10-16T20:08:51.2593247+03:00",
+  "reason": "Owned read-only diagnostic stopped after host memory/SWC failures and pending media-route teardown error; not a pass"
+}

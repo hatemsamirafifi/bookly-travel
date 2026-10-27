@@ -1,0 +1,546 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourBookingController.test.tsx src/components/booking/__tests__/BookingForm.test.tsx
+
+node.exe : FAIL src/components/tour/__tests__/TourBookingController.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...roller.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ TourBookingController shared selection ΓÇ║ disables date and count controls while auth restores, then enables 
+with provider readiness
+
+    expect(element).toBeDisabled()
+
+    Received element is not disabled:
+      <select class="w-full rounded-md border border-border bg-surface px-2 py-2 text-sm text-primary" id="_r_21_" />
+
+      525 |     const select = cardSelect();
+      526 |     expect(select.value).toBe(dates[0]);
+    > 527 |     expect(select).toBeDisabled();
+          |                    ^
+      528 |     const decrease = screen.getByRole('button', { name: 'Decrease participants' });
+      529 |     const increase = screen.getByRole('button', { name: 'Increase participants' });
+      530 |     expect(decrease).toBeDisabled();
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:527:20)
+
+  ΓùÅ TourBookingController shared selection ΓÇ║ keeps the server snapshot through hydration, then refreshes a 
+pre-midnight day with a stale explanation
+
+    TestingLibraryElementError: Unable to find an element with the text: Available dates changed since the page 
+loaded. Select a date again.. This could be because the text is broken up by multiple elements. In this case, you can 
+provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"hidden lg:block lg:sticky lg:top-20"[39m
+        [33mdata-testid[39m=[32m"tour-booking-card-slot"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rounded-lg border border-border bg-surface p-5 shadow-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-4 flex items-start justify-between gap-3"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-2xl font-bold text-primary"[39m
+              [36m>[39m
+                [0mΓé¼45.00[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-sm text-text-muted"[39m
+              [36m>[39m
+                [0m [0m
+                [0m/ person[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mΓÖí[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"rounded-lg border border-border bg-surface p-4"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"mb-3 block text-sm font-semibold text-primary"[39m
+              [33mfor[39m=[32m"_R_0_"[39m
+            [36m>[39m
+              [0mSelect a Date[0m
+            [36m</label>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"mb-3"[39m
+            [36m>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-xs text-text-muted"[39m
+              [36m>[39m
+                [0mNext available[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm font-medium text-trust"[39m
+              [36m>[39m
+                [0m10/15/2026[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"w-full rounded-md border border-border bg-surface px-2 py-2 text-sm 
+text-primary"[39m
+              [33mid[39m=[32m"_R_0_"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mSelect a Date[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mselected[39m=[32m""[39m
+                [33mvalue[39m=[32m"2026-10-15"[39m
+              [36m>[39m
+                [0m10/15/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-16"[39m
+              [36m>[39m
+                [0m10/16/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-17"[39m
+              [36m>[39m
+                [0m10/17/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-18"[39m
+              [36m>[39m
+                [0m10/18/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-19"[39m
+              [36m>[39m
+                [0m10/19/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-20"[39m
+              [36m>[39m
+                [0m10/20/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-21"[39m
+              [36m>[39m
+                [0m10/21/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-22"[39m
+              [36m>[39m
+                [0m10/22/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-23"[39m
+              [36m>[39m
+                [0m10/23/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-24"[39m
+              [36m>[39m
+                [0m10/24/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-25"[39m
+              [36m>[39m
+                [0m10/25/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-26"[39m
+              [36m>[39m
+                [0m10/26/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-27"[39m
+              [36m>[39m
+                [0m10/27/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-28"[39m
+              [36m>[39m
+                [0m10/28/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-29"[39m
+              [36m>[39m
+                [0m10/29/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-30"[39m
+              [36m>[39m
+                [0m10/30/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10-31"[39m
+              [36m>[39m
+                [0m10/31/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-01"[39m
+              [36m>[39m
+                [0m11/01/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-02"[39m
+              [36m>[39m
+                [0m11/02/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-03"[39m
+              [36m>[39m
+                [0m11/03/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-04"[39m
+              [36m>[39m
+                [0m11/04/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-05"[39m
+              [36m>[39m
+                [0m11/05/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-06"[39m
+              [36m>[39m
+                [0m11/06/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-07"[39m
+              [36m>[39m
+                [0m11/07/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-08"[39m
+              [36m>[39m
+                [0m11/08/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-09"[39m
+              [36m>[39m
+                [0m11/09/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-10"[39m
+              [36m>[39m
+                [0m11/10/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-11"[39m
+              [36m>[39m
+                [0m11/11/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-12"[39m
+              [36m>[39m
+                [0m11/12/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-13"[39m
+              [36m>[39m
+                [0m11/13/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-14"[39m
+              [36m>[39m
+                [0m11/14/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-15"[39m
+              [36m>[39m
+                [0m11/15/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-16"[39m
+              [36m>[39m
+                [0m11/16/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-17"[39m
+              [36m>[39m
+                [0m11/17/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-18"[39m
+              [36m>[39m
+                [0m11/18/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-19"[39m
+              [36m>[39m
+                [0m11/19/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-20"[39m
+              [36m>[39m
+                [0m11/20/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-21"[39m
+              [36m>[39m
+                [0m11/21/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-22"[39m
+              [36m>[39m
+                [0m11/22/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-23"[39m
+              [36m>[39m
+                [0m11/23/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-24"[39m
+              [36m>[39m
+                [0m11/24/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-25"[39m
+              [36m>[39m
+                [0m11/25/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-26"[39m
+              [36m>[39m
+                [0m11/26/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-27"[39m
+              [36m>[39m
+                [0m11/27/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-28"[39m
+              [36m>[39m
+                [0m11/28/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-29"[39m
+              [36m>[39m
+                [0m11/29/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11-30"[39m
+              [36m>[39m
+                [0m11/30/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-01"[39m
+              [36m>[39m
+                [0m12/01/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-02"[39m
+              [36m>[39m
+                [0m12/02/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-03"[39m
+              [36m>[39m
+                [0m12/03/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-04"[39m
+              [36m>[39m
+                [0m12/04/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-05"[39m
+              [36m>[39m
+                [0m12/05/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-06"[39m
+              [36m>[39m
+                [0m12/06/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-07"[39m
+              [36m>[39m
+                [0m12/07/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-08"[39m
+              [36m>[39m
+                [0m12/08/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-09"[39m
+              [36m>[39m
+                [0m12/09/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-10"[39m
+              [36m>[39m
+                [0m12/10/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-11"[39m
+              [36m>[39m
+                [0m12/11/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-12"[39m
+              [36m>[39m
+                [0m12/12/2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12-13"[39m
+              [36m>[39m
+                [0m12/13/2026[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-3 mt-3"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"mb-1 block text-sm font-medium text-primary"[39m
+            [36m>[39m
+              [0mParticipants[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Participants"[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Decrease participants"[39m
+                [33mclass[39m=[32m"flex min-h-11 min-w-11 items-center justify-center rounded-md border 
+border-border text-text-muted hover:bg-surface-alt disabled:cursor-not-allowed disabled:opacity-50"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mid[39m=[32m"_R_0_-count-decrease"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m-[0m
+              [36m</button>[39m
+              [36m<output[39m
+                [33maria-live[39m=[32m"polite"[39m
+                [33mclass[39m=[32m"w-10 text-center text-sm font-medium text-primary"[39m
+              [36m>[39m
+                [0m1[0m
+              [36m</output>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Increase participants"[39m
+                [33mclass[39m=[32m"flex min-h-11 min-w-11 items-center justify-center rounded-md border 
+border-border text-text-muted hover:bg-surface-alt disabled:cursor-not-allowed disabled:opacity-50"[39m
+                [33mid[39m=[32m"_R_0_-count-increase"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m+[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ml-2 text-xs text-text-muted"[39m
+              [36m>[39m
+                [0m1ΓÇô20 allowed[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33maria-live[39m=[32m"polite"[39m
+            [33mclass[39m=[32m"mb-3 text-sm text-text-muted"[39m
+          [36m>[39m
+            [0mEstimated total[0m
+            [0m:[0m
+            [0m [0m
+            [36m<span[39m
+              [33mclass[39m=[32m"font-semibold text-primary"[39m
+            [36m>[39m
+              [0mΓé¼45.00[0m
+            [36m</span>[39m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-3"[39m
+          [36m/>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"block w-full rounded-xl bg-bookly-gold py-2.5 text-center text-sm font-semibold 
+text-bookly-navy hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 
+transition-colors disabled:cursor-not-allowed disabled:opacity-50"[39m
+            [33mhref[39m=[32m"/en/booking?tour=hidden-gems-rome-walking-tour&participants=1&date=2026-10-15"[39m
+          [36m>[39m
+            [0mBook Now[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"fixed inset-x-0 bottom-0 z-sticky border-t border-border bg-surface px-4 py-3 
+shadow-card lg:hidden"[39m
+        [33mdata-testid[39m=[32m"mobile-booking-bar"[39m
+        [33mstyle[39m=[32m"padding-bottom:max(0.75rem, env(safe-area-inset-bottom))"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mx-auto flex max-w-7xl items-center justify-between gap-4"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-sm text-bookly-navy"[39m
+            [33mdata-testid[39m=[32m"mobile-bar-summary"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"block font-bold"[39m
+            [36m>[39m
+              [0mΓé¼45.00[0m
+              [0m [0m
+              [0m/ person[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-text-muted"[39m
+            [36m>[39m
+              [0m10/15/2026[0m
+              [0m ┬╖ [0m
+              [0m1[0m
+              [0m ┬╖ Γé¼45.00[0m
+            [36m</span>[39m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col items-stretch gap-1"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"inline-flex min-h-11 items-center justify-center rounded-xl bg-bookly-gold px-5 
+py-2.5 text-sm font-semibold text-bookly-navy focus-visible:outline-2 focus-visible:outline-offset-2 
+focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-50"[39m
+              [33mhref[39m=[32m"/en/booking?tour=hidden-gems-rome-walking-tour&participants=1&date=2026-10-15"[39m
+            [36m>[39m
+              [0mContinue to booking[0m
+            [36m</a>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"inline-flex min-h-11 items-center justify-center py-1 text-center text-xs 
+font-medium text-bookly-navy underline underline-offset-2"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mEdit booking selections[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+
+      590 |       expect(select.value).toBe(dates[0]);
+      591 |       expect(
+    > 592 |         within(container).getByText(
+          |                           ^
+      593 |           'Available dates changed since the page loaded. Select a date again.',
+      594 |         ),
+      595 |       ).toBeInTheDocument();
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:592:27)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       2 failed, 41 passed, 43 total
+Snapshots:   0 total
+Time:        24.042 s
+Ran all test suites within paths "src/components/tour/__tests__/TourBookingController.test.tsx", 
+"src/components/booking/__tests__/BookingForm.test.tsx".

@@ -1,0 +1,2 @@
+[lh-engine-select] armed: root engine v12.8.2 at F:\Travel Website\bookly travel\frontend\node_modules\lighthouse (caller-gated to node-runner.js only)
+[lh-engine-select] caller=F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\node-runner.js request=lighthouse selected=F:\Travel Website\bookly travel\frontend\node_modules\lighthouse\core\index.js v12.8.2

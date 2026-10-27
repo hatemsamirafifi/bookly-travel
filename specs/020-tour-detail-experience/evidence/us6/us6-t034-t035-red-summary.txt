@@ -1,0 +1,27 @@
+US6 T034/T035 RED — meaningful failing behavioral tests BEFORE source changes
+Command (from frontend/):
+  npm test -- --runInBand --watchman=false --runTestsByPath \
+    src/components/tour/__tests__/TourDetail.test.tsx \
+    src/lib/tours/__tests__/detail-localization.test.ts \
+    "src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx"
+Full log: us6-t034-t035-red-jest.txt
+Result: Test Suites: 3 failed, 3 total | Tests: 16 failed, 105 passed, 121 total
+
+Distinct red assertions (all exact behavioral diffs, no import/absence failures):
+- detail-localization (5): tour.states.loadingMessage/errorTitle/errorDescription/
+  notFoundTitle/notFoundDescription missing in en/es/it catalogs (typeof undefined).
+- TourDetail US6 gap layout (2: es, it): paired content+itinerary fallback notices
+  share the Container parent instead of one gap wrapper; itinerary notice has ml-2.
+- page.test corrected 404-vs-recoverable (1): es 404 returns "Tour Not Found | Bookly",
+  expected "Tour no encontrado | Bookly".
+- page.test localized 404 titles (3: en/es/it): hardcoded English for all locales.
+- page.test withdrawn 410 titles (3: en/es/it): GoneError returns English not-found,
+  expected localized withdrawn title + no openGraph + no upstream text.
+- page.test recoverable title (1): 500 returns "Tour Not Found", expected localized
+  recoverable title with no leak of SECRET-XYZ-PRIVATE.
+- page.test withdrawn render (1): Page() rejects with GoneError instead of resolving
+  to a localized withdrawn state with no booking action and no notFound() call.
+
+Pre-existing passing companions (105) retained: all US1 hierarchy/disclosure/order tests,
+all US2 booking-boundary tests, all prior fallback/intentional-empty/guide-lang tests,
+all StructuredData-unrelated suites untouched, hostile-metadata regression already green.

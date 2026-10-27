@@ -1,0 +1,88 @@
+Spec 020 US3 isolated gallery lane — REVIEW GREEN evidence (root rework items 1-5)
+================================================================================
+Date (UTC): 2026-10-15
+Branch: codex/020-tour-detail-experience
+Lane scope: ONLY frontend/src/components/tour/TourGallery.tsx (rewritten) +
+frontend/src/components/tour/__tests__/TourGallery.test.tsx (reworked) +
+evidence/us3/gallery-isolated-review-* (this lane). No live-page integration;
+ImageGallery, Dialog, catalogs, fixtures, E2E, booking, route, schema, nav,
+tasks/verification untouched. Root-owned
+evidence/us3/root-gallery-hydration-pattern-repro.txt and
+root-gallery-review-source.json preserved as found.
+
+Focused Jest, new + Dialog suites in one command (from frontend/):
+  npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourGallery.test.tsx src/components/ui/__tests__/interactive-primitives.test.tsx
+Result: Test Suites: 2 passed, 2 total; Tests: 30 passed, 30 total
+(20 TourGallery + 10 shared Dialog; full output in gallery-isolated-review-green-full.log)
+
+Focused ESLint (direct installed entry, from frontend/):
+  node node_modules/eslint/bin/eslint.js src/components/tour/TourGallery.tsx src/components/tour/__tests__/TourGallery.test.tsx
+Result: EXITCODE=0, no errors or warnings (gallery-isolated-review-lint.txt)
+
+Typecheck (from frontend/, whole project at this commit moment):
+  npm run typecheck  (tsc --noEmit)
+Result: EXITCODE=0, no errors in any file, including other lanes' in-flight
+sources (gallery-isolated-review-typecheck.txt). A transient TS2339
+(Property 'unmount' does not exist on type 'never') on the test-local
+hydrate-root holder was fixed inside the owned test file by storing the root
+on a holder object instead of a narrowed let; no other-lane file touched.
+
+Corrections applied (each had a compiling red regression first; reds retained
+in gallery-isolated-review-red-summary.txt / gallery-isolated-review-red-full.log):
+1. Hydration: removed all render-time viewport reads (deleted useMediaQuery).
+   One photo DOM serves every viewport (scroll-snap rail <1024 via flex,
+   cover mosaic >=1024 via lg: grid); responsive-only differences are CSS
+   classes, identical server/client markup. New regression renders
+   renderToString with matchMedia absent, hydrateRoots with a desktop
+   matchMedia, and asserts zero hydration warnings plus usable see-all ->
+   viewer. It failed pre-fix with React's exact hydration-mismatch warning.
+2. Single hero: each original photo mounts exactly once (cover-first caller
+   order asserted); slots beyond five stay mounted for the rail and carry
+   lg:hidden for the desktop mosaic. Hero (position 0) uses
+   loading="eager" + fetchPriority="high" (per installed Next 16 docs,
+   eager loads immediately and fetchPriority sets priority; preload, which
+   conflicts with both, is never used; `priority` is deprecated and unused).
+   Supporting/viewer media use loading="lazy". Accurate sizes: hero
+   "(min-width: 1024px) 50vw, 100vw" (half-width cover), supporting
+   "(min-width: 1024px) 25vw, 100vw" (quarter width), viewer "100vw".
+3. Viewer arrows: key handling moved to a React parent div around the shared
+   Dialog, so portal-bubbled key events from every viewer control (including
+   the Dialog header close button) navigate with wrap-around and never move
+   focus. Escape/Tab/body-lock/inert stay with the shared Dialog; no second
+   trap added. Removed the extra trigger-focus effect: openViewer focuses
+   the actual trigger before opening so the shared Dialog captures it for
+   return (shared Dialog already restores previousFocus; verified by test).
+   New red: arrows-from-close advanced nothing pre-fix; green post-fix with
+   focus untouched.
+4. Viewer layout: Dialog className "h-full w-full max-w-none rounded-none"
+   (tailwind-merge overrides the default centered max-w-lg card) for a
+   fullscreen viewport panel. Position counter renders for every gallery
+   size including single-photo 1of1 (controls stay gated on total>1).
+   Desktop see-all (existing seeAll{count} key, no new catalog key) now
+   renders for every gallery with total>1, so sparse galleries also disclose
+   the truthful count with full viewer access; the old sparse no-see-all
+   expectation was replaced by the stronger count+reachability assertion.
+   Contract reason: seeAll{count} is the desktop count disclosure, and every
+   tile already opens the viewer, so no new copy was needed. Icon controls
+   use min-h-11/min-w-11 per the existing Button min-size convention.
+5. Test guard: dropped the raw-HTML alt test (retested React escaping; the
+   component inserts no HTML), trimmed scaffolding comments, removed
+   speculative API fallbacks (direct scrollTo / matchMedia-in-handler, both
+   guaranteed in supported browsers and mocked at the SDK boundary in
+   tests). No test-only hidden strings; no source-regex tests. Preserved:
+   empty, order/count, sparse, failed-slot stability + URL-identity recovery,
+   alt_locale lang independence, rail reachability/counter/scroll/reduced
+   motion, trigger return, arrow focus stability, blur-only-from-metadata.
+
+Design decisions / deviations:
+- Mobile rail counter and desktop see-all coexist in one DOM, toggled by
+  lg:hidden / hidden lg:inline-flex (display:none is unfocusable, so no
+  inert bookkeeping is needed; browser proof stays with root).
+- Reduced-motion is read at scroll-event time, never during render.
+- No commits/staging/push; tasks.md, verification.md, checklists untouched.
+  Other lanes' in-flight edits (US2 controller/auth, schema worker
+  utils.ts/StructuredData) preserved; typecheck shows no cross-lane breakage.
+
+Remaining runtime gaps (root-owned, explicitly not claimed here): browser
+layout/touch/geometry at 390/768/1024/1440, real-image load/fail behavior,
+Lighthouse, full US3 live integration (T045/T050/T051) after US2/US6.

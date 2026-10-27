@@ -1,0 +1,17 @@
+COMMAND (discovery only — no browser, build, or API executed by this phase)
+  frontend> npx playwright test tests/e2e/tour-detail.spec.ts --list --grep "T053|US2 mobile dialog"
+RESULT: Total: 20 tests in 3 files (16 T053 + 2 US2 mobile-dialog + 2 setup).
+
+T053 titles (chromium + mobile; line numbers per current file):
+  1946 › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+  1999 › US4 sparse tour exposes only present entries and activates them
+  2021 › US4 passive scrolling follows reading position without moving focus
+  2062 › US4 narrow rail reveals the active entry without moving the page vertically
+  2118 › US4 long locale labels survive resize with reachable entries and no page overflow
+  2151 › US4 reduced motion targets the reading position immediately
+  2175 › US4 initial deep link restores the reading target
+  2204 › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+Migrated US2 assertion (chromium + mobile):
+  986 › US2 mobile dialog edits shared selection with measured targets across resize
+
+All other titles unchanged. Full listing retained from the --list run above.

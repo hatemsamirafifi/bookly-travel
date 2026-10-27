@@ -1,0 +1,6 @@
+{
+  "base": "http://127.0.0.1:57882",
+  "buildId": "YaLG1py5I-Ppx1HNynBPl",
+  "startedAt": "2026-10-16T16:22:05.364Z",
+  "scope": "Native production source, real SSR controlled API reads; CDN does not resolve on native host; no optimizer/media acceptance inferred."
+}

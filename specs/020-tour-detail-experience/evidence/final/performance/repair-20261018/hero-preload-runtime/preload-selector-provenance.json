@@ -1,0 +1,10 @@
+{
+  "issuedAt": "2026-10-18T21:54:36.240Z",
+  "selectorSource": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/diag/preload.cjs",
+  "selectorSha256": "3a7f2f5950206c186b935ba5dc867aca75c09525279cd7c941fa59f0eb605ed3",
+  "selectorCopy": "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/hero-preload-runtime/preload-selector-copy.cjs",
+  "selectorCopySha256": "3a7f2f5950206c186b935ba5dc867aca75c09525279cd7c941fa59f0eb605ed3",
+  "rootLighthouseVersion": "12.8.2",
+  "nestedNodeRunnerExists": true,
+  "selectorBehavior": "match.on(lighthouse module request) AND require.includes(@lhci/cli/src/collect/node-runner.js) -> resolve to root lighthouse 12.8.2; no match -> defer to native require (fail-closed, unchanged behavior)"
+}

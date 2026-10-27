@@ -1,0 +1,40 @@
+T008 SSR harness extraction REWORK — E2E selection evidence (listing only, NOT runtime acceptance)
+Date: 2026-10-14 (rework pass for root cleanup-correctness review)
+Command (from frontend/): npx playwright test tests/e2e/tour-detail.spec.ts --list --project=chromium
+Result: PASS — 28 tests in 3 files listed (26 in tour-detail.spec.ts plus
+2 setup auth entries). No browser run performed here.
+
+Listing tests:
+  [setup] › auth.setup.ts:23:6 › authenticate as traveler
+  [setup] › partner.setup.ts:19:6 › authenticate as partner
+  [chromium] › tour-detail.spec.ts:15:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+  [chromium] › tour-detail.spec.ts:66:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+  [chromium] › tour-detail.spec.ts:163:7 › Tour Detail Page › ES/IT SSR keeps current general content while the itinerary falls back, then shows ready on reload
+  [chromium] › tour-detail.spec.ts:254:7 › Tour Detail Page › tour detail page loads with all sections
+  [chromium] › tour-detail.spec.ts:264:7 › Tour Detail Page › image gallery is visible
+  [chromium] › tour-detail.spec.ts:271:7 › Tour Detail Page › image gallery navigation buttons work when multiple images
+  [chromium] › tour-detail.spec.ts:287:7 › Tour Detail Page › lightbox opens from a keyboard-focusable trigger and restores focus on Escape
+  [chromium] › tour-detail.spec.ts:301:7 › Tour Detail Page › section navigation links only to rendered sections
+  [chromium] › tour-detail.spec.ts:313:7 › Tour Detail Page › availability calendar shows available dates
+  [chromium] › tour-detail.spec.ts:320:7 › Tour Detail Page › booking CTA is visible
+  [chromium] › tour-detail.spec.ts:336:7 › Tour Detail Page › participant selector increments and decrements
+  [chromium] › tour-detail.spec.ts:350:7 › Tour Detail Page › shows 404 page for non-existent tour
+  [chromium] › tour-detail.spec.ts:357:7 › Tour Detail Page › shows the reviews section only when the API reports genuine reviews
+  [chromium] › tour-detail.spec.ts:374:7 › Tour Detail Page › about section displays description
+  [chromium] › tour-detail.spec.ts:381:7 › Tour Detail Page › tour detail has proper SEO metadata
+  [chromium] › tour-detail.spec.ts:403:9 › Tour Detail Page › tour detail page adapts to mobile viewport (375px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:403:9 › Tour Detail Page › tour detail page adapts to tablet viewport (768px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:403:9 › Tour Detail Page › tour detail page adapts to desktop viewport (1280px) without horizontal scroll
+  [chromium] › tour-detail.spec.ts:415:7 › Tour Detail Page › tour detail content stacks vertically on mobile
+  [chromium] › tour-detail.spec.ts:427:7 › Tour Detail Page › structured data matches the visible tour and does not invent reviews
+  [chromium] › tour-detail.spec.ts:451:7 › Tour Detail Page › mobile booking action is keyboard reachable and uses a real offered date
+  [chromium] › tour-detail.spec.ts:467:9 › Tour Detail Page › en detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:467:9 › Tour Detail Page › es detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:467:9 › Tour Detail Page › it detail keeps localized booking controls and a real offered date
+  [chromium] › tour-detail.spec.ts:489:7 › Tour Detail Page › US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)
+  [chromium] › tour-detail.spec.ts:656:7 › Tour Detail Page › US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)
+Total: 28 tests in 3 files
+
+Note: all test titles/assertions preserved; only header line numbers shifted
+by the extraction. Actual SSR runtime acceptance PENDING — root coordinates
+the production build/browser harness smoke.

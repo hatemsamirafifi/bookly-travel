@@ -1,0 +1,46 @@
+{
+  "startedAt": "2026-10-17T14:24:26.164Z",
+  "node": "v24.14.1",
+  "stages": [
+    {
+      "name": "lint",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-17T14:24:26.164Z",
+      "finishedAt": "2026-10-17T14:28:05.240Z",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-17T14:28:05.241Z",
+      "finishedAt": "2026-10-17T14:30:06.700Z",
+      "exitCode": 0
+    },
+    {
+      "name": "jest",
+      "args": [
+        "node_modules/jest/bin/jest.js",
+        "--runInBand"
+      ],
+      "startedAt": "2026-10-17T14:30:06.702Z",
+      "finishedAt": "2026-10-17T14:34:29.437Z",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "args": [
+        "node_modules/next/dist/bin/next",
+        "build"
+      ],
+      "startedAt": "2026-10-17T14:34:29.438Z",
+      "finishedAt": "2026-10-17T14:42:12.901Z",
+      "exitCode": 0
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "rootCommands": [
+    {
+      "command": "npx eslint TourGallery.tsx TourGallery.test.tsx Dialog.tsx interactive-primitives.test.tsx",
+      "exitCode": 0,
+      "output": "root-gallery-final-eslint.txt (empty stdout)"
+    },
+    {
+      "command": "npm test -- --runInBand --watchman=false --runTestsByPath TourGallery.test.tsx interactive-primitives.test.tsx",
+      "exitCode": 0,
+      "tests": 39,
+      "suites": 2,
+      "forceExit": false,
+      "output": "root-gallery-preserved-maxheight-jest.txt"
+    }
+  ],
+  "reviewCorrections": [
+    "Root preserved original max-h-full for left/right Dialog variants; worker had accidentally moved it only to center/fullscreen.",
+    "Worker final typecheck saw a concurrent US2 test type-name error; this is unfinished lane work, not a pre-existing baseline failure. Whole-tree typecheck must be rerun after that lane settles.",
+    "Worker used forceExit for one diagnostic; independent root normal Jest exits0 with all39tests, so forceExit is not acceptance."
+  ],
+  "geometry": "isolated-browser/accepted-source-geometry.json",
+  "geometryScope": "Actual Gallery/Dialog/Tailwind, SDK adapters; not Next SSR/optimizer/full US3 live acceptance."
+}

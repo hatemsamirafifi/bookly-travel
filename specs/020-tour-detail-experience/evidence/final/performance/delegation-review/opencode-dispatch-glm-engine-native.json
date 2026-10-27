@@ -1,0 +1,9 @@
+{
+  "pid": 23820,
+  "startedAt": "2026-10-17T19:58:28.7088395Z",
+  "scope": "Delegate existing Docker/Bookly environment recovery and source-provenance verification, then strict native QA; no recreate/build/data reset; root reviews only",
+  "model": "opencode/glm-5.3-flash-free",
+  "variant": "max",
+  "session": "ses_eb5877c55ffejDwLyNfLsHK7iJ",
+  "brief": "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\delegated-final-performance\\engine-recovery-native-brief.md"
+}

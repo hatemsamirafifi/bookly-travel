@@ -1,0 +1,85 @@
+[lh-engine-select] armed: root engine v12.8.2 at F:\Travel Website\bookly travel\frontend\node_modules\lighthouse (caller-gated to node-runner.js only)
+[lh-engine-select] caller=F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\node-runner.js request=lighthouse selected=F:\Travel Website\bookly travel\frontend\node_modules\lighthouse\core\index.js v12.8.2
+{"attempt":1,"benchmarkIndex":1148.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1074,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1036.5,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1393,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1362.5,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1215,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1342.5,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1017.5,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1029.5,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1300.5,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1178,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1537.5,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1471,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1558.5,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1277.5,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1215.5,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1169.5,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1481,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1191,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1332,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1624,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1778,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1375.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1665,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1206,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1362.5,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1890,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1878.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/search?q=rome
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1709.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1989,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1717,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1941.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/blog/hidden-gems-florence
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1202,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1226,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1054,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1298,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1257,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1148.5,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1299,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1112,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":959.5,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1326.5,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1313.5,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1098,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1038,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1205,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1124.5,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1075.5,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1142.5,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1330.5,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1295,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1343.5,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1343.5,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1014.5,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":835.5,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":1308.5,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":1323,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":1347,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":1270.5,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":975,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":976,"url":"about:blank","appVisited":false}
+Error: CPU readiness budget (30 samples / 30000ms) exhausted; performance audit must not start
+    at prepareBrowserCpu (file:///F:/Travel%20Website/bookly%20travel/frontend/scripts/lighthouse-runtime-preflight.mjs:48:15)
+    at async module.exports (F:\Travel Website\bookly travel\frontend\scripts\lighthouse-browser-ready.cjs:5:3)
+    at async PuppeteerManager.invokePuppeteerScriptForUrl (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\puppeteer-manager.js:113:5)
+    at async Object.runCommand (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\collect\collect.js:251:7)
+    at async run (F:\Travel Website\bookly travel\frontend\node_modules\@lhci\cli\src\cli.js:100:7)

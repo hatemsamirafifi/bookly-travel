@@ -1,0 +1,8 @@
+{
+  "run": "baseline-resumed",
+  "pid": 26140,
+  "created": "2026-10-17T00:37:10.472356+03:00",
+  "stoppedAt": "2026-10-17T00:47:59.0396406+03:00",
+  "eventBytes": 0,
+  "reason": "No emitted event for10minutes; no source edits in this resumed attempt; bounded root review fix follows"
+}

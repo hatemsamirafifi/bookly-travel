@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-10-17T20:23:44.886Z",
+  "scope": "Retained exact executor-owned (GLM, --variant max) QA helper copies for reproducibility of the delegated performance/environment steps. Capturing these scripts does not imply any pending gate passed. Destination-only derivative of read-only root-final-release-audit.cjs is included, recorded with its own hash. Dispatch/relay console concatenations were not copied; reference the structured result evidence instead. No tokens/auth state/credentials/env dumps are present.",
+  "originalDirectory": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance",
+  "evidenceResults": {
+    "dockerAttempt": "specs/020-tour-detail-experience/evidence/final/performance/opencode-after-load-reduction/root-audits-result.json",
+    "interruptedNative": "specs/020-tour-detail-experience/evidence/final/performance/opencode-native-after-load-reduction/",
+    "engineDownBlock": "specs/020-tour-detail-experience/evidence/final/performance/opencode-native-resumed-20261017/native-audits-result.json",
+    "engineRestoration": "specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/opencode-runtime-ready.json",
+    "latestNativeFail": "specs/020-tour-detail-experience/evidence/final/performance/opencode-native-engine-resumed-20261017/native-audits-result.json"
+  },
+  "hashes": {
+    "opencode-native-final-performance.cjs": {
+      "sha256": "cb483718baad78baf1ecebe4b5fc1df7cf1873388d8dd9d25f3657e12a7433e3",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/native-final-performance.cjs"
+    },
+    "opencode-native-resumed-final-performance.cjs": {
+      "sha256": "4fa3060f3835c80b7a11bbe2e50e8e0b21f0bbe39465be935d0c9dbb8c4d5a12",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/native-resumed-final-performance.cjs"
+    },
+    "opencode-native-engine-resumed-audit.cjs": {
+      "sha256": "e83fde176f096b31bf03b67e2c8506decf333d5bfe6df16c405daa490f9c70c2",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/native-engine-resumed-audit.cjs"
+    },
+    "opencode-check-runtime-parity.cjs": {
+      "sha256": "dda75cef7b8cfd6633a21685d3a1c9d26c821b895d73a6a19f8e442e6b72185f",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/check-runtime-parity.cjs"
+    },
+    "opencode-merge-runtime-provenance.cjs": {
+      "sha256": "d7c6999162363b4e869ffcdbb80ae21a1093c826206eae2e53746a7d597108c8",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/merge-runtime-provenance.cjs"
+    },
+    "opencode-make-engine-resumed-runner.cjs": {
+      "sha256": "b15d330a01fad6b47c81e868333a1116abdcf94fcfc3edcb196e40658821ebad",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/make-engine-resumed-runner.cjs"
+    },
+    "opencode-final-release-audit.cjs": {
+      "sha256": "34dc9eb87b6595b3fadb71eb02d9ba39af5fa1503bb44a8a5180aa31f59123c1",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/opencode-final-release-audit.cjs"
+    },
+    "opencode-env-snapshot.ps1": {
+      "sha256": "f78abebc79eda8edf18bac7467bfa7442563def9932bdb231e62a939d2baec73",
+      "origin": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/delegated-final-performance/env-snapshot.ps1"
+    }
+  }
+}

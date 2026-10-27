@@ -1,0 +1,223 @@
+{
+  "candidateRuntimeEvidence": true,
+  "rootReviewPending": true,
+  "notCiReleaseOrAuditPass": true,
+  "tool": "fresh-parity-before-audit.cjs (refresh-run)",
+  "executor": "opencode/glm-5.3-flash-free --variant max",
+  "generatedAtUtc": "2026-10-18T20:15:28.678Z",
+  "passedReadinessOnly": true,
+  "stopReasons": [],
+  "reference": {
+    "historicalOct17": {
+      "runtimeReady": "specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/opencode-runtime-ready.json (UNCHANGED historical; container={\"node\":\"v20.20.2\",\"buildId\":\"sAEfqK7AIAvMIn5nyjbTK\",\"next\":\"16.2.3\"}; startedAt 2026-10-17T20:02:45.3412223Z; imageTag as prose booklytravel-nextjs:latest)",
+      "containerInspect": "specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/container-inspect-frontend.json (UNCHANGED historical; Id/Image/StartedAt/RestartCount reference)",
+      "acceptedThenIdentity": {
+        "node": "v20.20.2",
+        "buildId": "sAEfqK7AIAvMIn5nyjbTK",
+        "next": "16.2.3",
+        "startedAt": "2026-10-17T20:02:45.3412223Z"
+      }
+    },
+    "failedInitialCheck": {
+      "artifact": "prep/fresh-container-parity-initial-identity-change.json (preserved copy)",
+      "observed": {
+        "identity": {
+          "node": "v20.20.2",
+          "buildId": "F6TXmaijafokZYkc5ATRu",
+          "next": "16.2.3"
+        },
+        "state": {
+          "id": "cc21b897f1f4b01d0a4d92f8b07ff08c719660c21b95c3658f5a78a61b9ad79f",
+          "imageId": "sha256:a254386f360c143a6174b651763a97b4f3b49dfd450ff2e7fa41b4149752573d",
+          "imageTag": "booklytravel-nextjs",
+          "name": "bookly-frontend",
+          "startedAt": "2026-10-18T19:48:26.307022813Z",
+          "restartCount": 0
+        }
+      },
+      "reason": "Stage1 correctly stopped before dispatch: container restart on 2026-10-18T19:48:26Z regenerated BUILD_ID; identity differed from accepted Oct17 runtime evidence",
+      "runnerShaConstantTypoHonest": "0ba555e30dd8b537972780168a3146fcecae481e72b0c6b1dd5a925313def"
+    },
+    "currentFreshIdentity": {
+      "identity": {
+        "node": "v20.20.2",
+        "buildId": "F6TXmaijafokZYkc5ATRu",
+        "next": "16.2.3"
+      },
+      "state": {
+        "id": "cc21b897f1f4b01d0a4d92f8b07ff08c719660c21b95c3658f5a78a61b9ad79f",
+        "imageId": "sha256:a254386f360c143a6174b651763a97b4f3b49dfd450ff2e7fa41b4149752573d",
+        "imageTag": "booklytravel-nextjs",
+        "name": "bookly-frontend",
+        "startedAt": "2026-10-18T19:48:26.307022813Z",
+        "restartCount": 0,
+        "status": "running",
+        "running": true
+      },
+      "source": "root review delta 2026-10-18 actual observation, cross-checked live in this run"
+    }
+  },
+  "container": {
+    "node": "v20.20.2",
+    "buildId": "F6TXmaijafokZYkc5ATRu",
+    "next": "16.2.3"
+  },
+  "containerState": {
+    "id": "cc21b897f1f4b01d0a4d92f8b07ff08c719660c21b95c3658f5a78a61b9ad79f",
+    "imageId": "sha256:a254386f360c143a6174b651763a97b4f3b49dfd450ff2e7fa41b4149752573d",
+    "imageTag": "booklytravel-nextjs",
+    "name": "bookly-frontend",
+    "startedAt": "2026-10-18T19:48:26.307022813Z",
+    "status": "running",
+    "running": true,
+    "restartCount": 0
+  },
+  "sourceParity420": {
+    "file": "root-reviewed-container-source.json (original 420, header buildId old/ignored)",
+    "files": 420,
+    "baselineFiles": 420,
+    "dockerExitCode": 0,
+    "readErrors": 0,
+    "mismatches": 0,
+    "ok": true
+  },
+  "hostParity419": {
+    "file": "candidate-manifest.json (NEW 419)",
+    "root": "F:\\Travel Website\\bookly travel\\frontend",
+    "files": 419,
+    "baselineFiles": 419,
+    "readErrors": 0,
+    "mismatches": 0,
+    "ok": true
+  },
+  "configSha": {
+    "file": "lighthouserc.js",
+    "pinned": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "computed": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672"
+  },
+  "startupEvidence": {
+    "artifact": "prep/current-runtime-startup.txt",
+    "since": "2026-10-18T19:48:26.307022813Z",
+    "tailLimit": 250,
+    "dockerLogExitCode": 0,
+    "nonEmptyLines": 74,
+    "productionReadySeen": true,
+    "listeningSeen": true,
+    "fatalSeen": false,
+    "productionReadyMatches": [
+      "- Local:         http://localhost:3000",
+      "✓ Ready in 797ms"
+    ],
+    "listeningMatches": [
+      "- Local:         http://localhost:3000",
+      "- Network:       http://172.21.0.5:3000"
+    ],
+    "fatalMatches": [],
+    "ok": true
+  },
+  "commands": [
+    {
+      "name": "container-parity-420",
+      "argv": "docker compose exec -T nextjs node -e [stdin=baseline.files 420]",
+      "startedAtUtc": "2026-10-18T20:15:21.177Z",
+      "finishedAtUtc": "2026-10-18T20:15:23.474Z",
+      "dockerExitCode": 0,
+      "spawnError": null,
+      "meta": {
+        "cwd": "F:\\Travel Website\\bookly travel\\backend",
+        "timeoutMs": 120000,
+        "stdoutBytes": 71408,
+        "stderrBytes": 0
+      }
+    },
+    {
+      "name": "container-identity-live",
+      "argv": "docker compose exec -T nextjs node -e [node/BUILD_ID/next]",
+      "startedAtUtc": "2026-10-18T20:15:23.474Z",
+      "finishedAtUtc": "2026-10-18T20:15:24.129Z",
+      "dockerExitCode": 0,
+      "spawnError": null,
+      "meta": {
+        "cwd": "F:\\Travel Website\\bookly travel\\backend",
+        "timeoutMs": 60000
+      }
+    },
+    {
+      "name": "compose-ps-nextjs",
+      "argv": "docker compose ps -q nextjs",
+      "startedAtUtc": "2026-10-18T20:15:24.129Z",
+      "finishedAtUtc": "2026-10-18T20:15:24.553Z",
+      "dockerExitCode": 0,
+      "spawnError": null,
+      "meta": {
+        "cwd": "F:\\Travel Website\\bookly travel\\backend",
+        "timeoutMs": 60000
+      }
+    },
+    {
+      "name": "container-inspect",
+      "argv": "docker inspect cc21b897f1f4",
+      "startedAtUtc": "2026-10-18T20:15:24.553Z",
+      "finishedAtUtc": "2026-10-18T20:15:24.732Z",
+      "dockerExitCode": 0,
+      "spawnError": null,
+      "meta": {
+        "timeoutMs": 60000
+      }
+    },
+    {
+      "name": "docker-logs-bounded-since-start",
+      "argv": "docker logs --since 2026-10-18T19:48:26.307022813Z --tail 250 bookly-frontend",
+      "startedAtUtc": "2026-10-18T20:15:24.732Z",
+      "finishedAtUtc": "2026-10-18T20:15:24.935Z",
+      "dockerExitCode": 0,
+      "spawnError": null,
+      "meta": {
+        "timeoutMs": 60000,
+        "stdoutBytes": 2466,
+        "stderrBytes": 0,
+        "nonEmptyLines": 74
+      }
+    }
+  ],
+  "scriptProvenancePreMutation": {
+    "runner": {
+      "path": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/audit-runner.cjs",
+      "sha256": "0ba555e30dd8b53797e772780168a3146fcecae481e72b0c6b1dd5a925313def",
+      "expectedRootAccepted": "0ba555e30dd8b53797e772780168a3146fcecae481e72b0c6b1dd5a925313def",
+      "expectedLength": 64,
+      "computedLength": 64,
+      "match": true,
+      "note": "checked pre-mutation; corrected constant per root review (first run constant was a shorter typosed value, preserved in fresh-container-parity-initial-identity-change.json)"
+    },
+    "launcher": {
+      "path": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/audit-launch.ps1",
+      "sha256": "4008b933ff27c182059e3059c181fc0eb7662ffb181dbb180a62f5fe58a818dd",
+      "expected": "4008b933ff27c182059e3059c181fc0eb7662ffb181dbb180a62f5fe58a818dd",
+      "match": true,
+      "note": "unchanged this step"
+    }
+  },
+  "logicFix": {
+    "reason": "preservation-gate logic artifact only",
+    "bug": "allOk required preserveInfo.copied=true; the refresh rerun took the alreadyPreservedAtEarlierAttempt path because the failed-initial-proof copies already existed from the crashed first rerun attempt, so the gate reported preserve-initial-proof-failed although preservation itself was satisfied",
+    "measuredSectionsModified": false,
+    "correctedFields": [
+      "stopReasons",
+      "passedReadinessFresh",
+      "passedReadinessOnly (current-runtime-ready.json)"
+    ],
+    "correctedAtUtc": "2026-10-18T20:17:28.959Z",
+    "preservedCopiesVerified": {
+      "json": "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/fresh-container-parity-initial-identity-change.json",
+      "txt": "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/fresh-container-parity-initial-identity-change.txt",
+      "jsonSha256": "7afca9fd1fce7a710dbc63561a624884f619f0b8eb1e911b678efe00450e375d",
+      "txtSha256": "9f4c14827fe6d25f3b96ffc726c4c18e3a4c21020ead26d1c0727cf81ab87968"
+    },
+    "shaBeforePatch": {
+      "parityJson": "5d63db592148c4fe8c2a348844a4bc9d002c78e95336e2f1a28b670fa5f556f7",
+      "parityTxt": "edde87dd69fcafb2db42e2c2e2134a8028af5a4feb6e968a996f31a0c1a18665",
+      "readyJson": "edc87c5523a5daf9a9617a8b6401d36c60b2ce437e95170bf6a57753f396f96e"
+    }
+  }
+}

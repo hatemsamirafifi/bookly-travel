@@ -1,0 +1,164 @@
+{
+  "spec": "020-tour-detail-experience",
+  "stage": "A + A2 + A3 lighthouse-readiness diagnostics/repair (prep complete; 18-report audit NOT run)",
+  "model": "opencode/glm-5.3-flash-free --variant max",
+  "baseHead": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "ledger": "71/74 (only T072-T074 unchecked; unchanged this dispatch; no checks updated)",
+  "sourceBaseline": "419-hash source baseline covers frontend paths only. This dispatch deliberately edits exactly two frontend tooling files (lighthouse-runtime-preflight.mjs, its test). Spec evidence files live outside that baseline. No other frontend source touched.",
+  "stageA_corrections": {
+    "applicabilityOfDiagnosis": {
+      "a_b_experiment": "Proves a LOAD-SENSITIVITY mechanism only: adding 3 owned busy node children moved indices from idle-phase values [1582.5, 1719, 1609.5] to under-load values [1053.5, 1337.5, 1362.5, 1278.5, 1059]; recovery [1611.5, 1793]. NEVER claims this is the uniquely proven cause of any past failure; never claims calibration/hardware mismatch is proven; absence of all tooling bugs is NOT established (only: no invocation divergence found while reading current source).",
+      "counterReadings": "Instantaneous only: % Processor Performance 150-170 at the sampled times (boosting NOT downclocked at those moments). Historical slow-window frequency was never measured. No categorical frequency/governor/Docker/GC/memory rule-out is claimed.",
+      "container": "Inspected cgroup quota absent (NanoCpus=0, CpuQuota=0) for container cc21b897f1f4 only. No broader Docker claim.",
+      "memoryColumn": "INVALID/UNKNOWN. The stage-A counter sampler requested 3 counters but read CounterSamples[3], an invalid 4th positional entry, writing 0 for every available-MB sample. diag-counters.csv memory column must not be read as available memory; no memory-pressure causal inference is drawn from it. Future sampler must use counter path/name lookup (case-insensitive) with validity/status check, never positional guesses. Raw file retained with this caveat.",
+      "timestamps": "Prior native failing samples 959/1160.5/1263/1493/1105.5 occurred 2026-10-17T20:12Z (23:12 Cairo, Oct 17), NOT 2026-10-18. Docker windows (readiness pass 1623/1533; collect fail 688..1349) are also Oct 17. 688 is BELOW the stage-A load-phase minimum (no 'all values fit one band' claim). No +/-40% symmetric interval; no correlation==causation claim. Measured phases/paths quoted verbatim only.",
+      "diagAbComponents": "In diag-ab.mjs the returned fields gc, noGC and total are THREE INDEPENDENT CONSECUTIVE component evaluations inside one evaluate call, not a single gc+noGC pair computed once; preserved verbatim in stage-A raw outputs."
+    },
+    "stageA_runs": [
+      {
+        "kind": "prior native helper failure (transcribed)",
+        "when": "2026-10-17T20:12Z",
+        "samples": [
+          959,
+          1160.5,
+          1263,
+          1493,
+          1105.5
+        ],
+        "result": "old 5-attempt policy: reject, exit 1"
+      },
+      {
+        "kind": "prior delegated Docker (Oct 17, transcribed)",
+        "samples": {
+          "readinessPass": [
+            1623,
+            1533
+          ],
+          "collectHookFail": [
+            688,
+            1104,
+            1161,
+            1242.5,
+            1349
+          ]
+        }
+      },
+      {
+        "kind": "native fixture pass (2026-10-18 00:41 local)",
+        "samples": [
+          1461.5,
+          1872,
+          1817,
+          1817.5,
+          1883.5
+        ],
+        "result": "old policy pass, exit 0"
+      },
+      {
+        "kind": "native real-helper fail (~1min later, no code change)",
+        "samples": [
+          1016,
+          1256.5,
+          1245,
+          1317,
+          1550
+        ],
+        "result": "old policy reject at attempt 5 with sample 5 already at 1550; pair (1317,1550) blocked by 1317<1500"
+      },
+      {
+        "kind": "diag-ab controlled load sensitivity",
+        "detailed": "see above + tmp diag-ab.mjs; official pageFunctions cross-check sample 1419 landed within the same observed spread"
+      }
+    ]
+  },
+  "stageA2": {
+    "extendedLoopDiagnostic": {
+      "command": "node C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/diag-extended.mjs",
+      "conditions": "about:blank only; official lighthouse 12.8.2 pageFunctions.computeBenchmarkIndex; EXACT production-helper launch settings (headless puppeteer-core via Launcher.getFirstInstallation, args --no-sandbox --disable-dev-shm-usage --disable-background-networking); unchanged cpuReady imported from the REAL module; no busy warmup; no artificial load; no app navigation; max 30 samples / 30s monotonic budget",
+      "outcome": "EXIT 1. NO qualifying pair in 30 samples/30s. stoppedByBudget=true. originalFirst5Verdict=false (first5=[928,926,923.5,921.5,929.5]). earliestPassAttempt=null.",
+      "nearMisses": "attempt 10/11 [1485,1570] and 23/24 [1561,1496] fail only because one of the pair is <1500",
+      "honestScope": "This does NOT demonstrate later acceptance, so it does NOT directly confirm the insufficient-settling-budget hypothesis under these conditions. It DOES document repeated initial variability (923.5 by attempt 5 rising to 1570 by attempt 11, then falling back to 1039-1496), consistent with prior runs. Pass within 5 was never observed, so neither of the diagnostic's two positive branches occurred at this time.",
+      "recordingNote": "The 30th sample (1064.5) completed after the 30s budget boundary and is present in the summary samples array but not as a per-attempt log line (diagnostic tool recorded it via the budget-stop branch). It does not qualify under unchanged criteria. Raw transcript: diag-extended.jsonl."
+    },
+    "implementationDecision": "Root-approved clause 2 second branch: repeated initial variability observed across runs plus a clearly justified bar-preserving policy improvement. NOT implemented because later acceptance was demonstrated (it was not). The repair extends the SAME acceptance condition over a longer bounded window; it cannot convert a slow/unstable CPU into a pass.",
+    "appliedRepair": {
+      "file": "frontend/scripts/lighthouse-runtime-preflight.mjs (only file edited besides its test)",
+      "sha256_after": "502963ed96d1669d8b2addb37db22395a505008000dd45e198bcc5b7610eedf2 (A2 intermediate; superseded by helperFileHashAfter after the A3 monotonic-clock correction)",
+      "behavior": "MAX_CPU_ATTEMPTS=30 and CPU_BUDGET_MS=30000, monotonic Date.now deadline checked BEFORE each new attempt and AFTER each completed attempt; deadline always fails closed (throws, page closed in finally). cpuReady kept EXACTLY (same invalid handling, last-2>=1500, ratio<=1.2). Same official benchmark, same launch settings, about:blank-only, app-cold, page.close() cleanup. No sleeps, no CPU warmup, no best-pair substitution, no sample filtering, no deadline fallback-to-success, no environment bypass, no configurable threshold. Attempt cap and deadline, whichever first. Parent 90s watchdog untouched.",
+      "notTouched": "frontend/lighthouserc.js content untouched this dispatch; scripts/lighthouse-browser-ready.cjs untouched (sha256 a6a51071b31317674e9ad2c3ccfcd988d7b057a23aff97fdda4a7919e7325339). Note: lighthouserc.js working-tree diff adds /es and /it tour URLs from other agents' pre-existing uncommitted work (also present at dispatch start) - preserved, not reviewed as mine."
+    },
+    "tests": {
+      "red_before_final_testfile": {
+        "when": "before preflight.mjs edit, after finalizing the test file",
+        "result": "9 tests: 6 pass / 3 fail. Existing 4 cpuReady assertions PASS unchanged. New failures exactly as designed: (1) settles-late browser rejected after 5 attempts (old hard cap), (2) only 5 evaluates instead of 30 under persistent bad values, (3) no deadline concept ('slow or unstable' instead of budget-exhausted). Transcript: tests-red-before.txt",
+        "structuralNote": "The test file was revised between the first red run (same three behavioral failures with same root causes) and this final red run, solely to wire the deterministic fake clock into fake evaluate calls; no source file was edited before this final red capture."
+      },
+      "green_after": {
+        "result": "9/9 pass at A2 (superseded: 10/10 in A3)"
+      },
+      "performanceTools": {
+        "command": "npm run test:performance-tools (node --test scripts/lighthouse-audit.test.mjs scripts/lighthouse-runtime-preflight.test.mjs)",
+        "result": "17/17 at A2 (superseded: 18/18 in A3)"
+      },
+      "lint": {
+        "command": "node node_modules/eslint/bin/eslint.js scripts/lighthouse-runtime-preflight.mjs scripts/lighthouse-runtime-preflight.test.mjs",
+        "result": "exit 0, no findings"
+      }
+    },
+    "realProductionHelperSingleRun": {
+      "command": "node scripts/lighthouse-runtime-preflight.mjs (once, no repeats, no warmup, no app cache warming)",
+      "samples": [
+        1161.5,
+        1247,
+        970,
+        1041.5,
+        964,
+        858.5,
+        989,
+        1126.5,
+        1459.5,
+        1630.5,
+        1498.5,
+        1579,
+        1727
+      ],
+      "result": "exit 0: qualified at attempt 13 with pair (1579, 1727), both >=1500, ratio 1.094 <= 1.2, elapsed ~13s within the 30s budget. Under the old 5-attempt policy this identical run would have been rejected (attempts 3-7 were 970/1041.5/964/858.5/989). This is a positive live demonstration of the repair benefit; it is NOT claimed as proof about the 2026-10-17 failures.",
+      "transcript": "real-helper-single-run.txt"
+    },
+    "remainingTruthfulLimitations": [
+      "Under the extended-loop conditions no pass occurred even with 30 samples/30s; sustained below-bar throughput at some times is real and the repair does not remove it.",
+      "No claim is made that settling-time was the cause of the 2026-10-17 Docker collect failure or the earlier native failure.",
+      "Generalized 18-page audits have not been run; no report exists; assertion bars unchanged; no cache warming of the application occurred at any point."
+    ]
+  },
+  "cleanupAndRestoration": "Owned Chrome instances closed in finally in every diagnostic and in the helper itself (all runs exited cleanly or recorded truthful exits). No OS/power/global/Docker settings changed. Container cc21b897f1f4 untouched and running. No app cache warming. Sampler-jobs stopped/removed in stage A. No .todo edits. No commits/staging/hooks.",
+  "evidenceFiles": [
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/diagnostic-result.json",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/root-cause.md",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/diag-extended.jsonl",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/tests-red-before.txt",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/tests-green-after.txt",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/tests-performance-tools.txt",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/real-helper-single-run.txt",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/preflight.diff",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/preflight-tests.diff",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/tests-clock-red-before.txt",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/tests-clock-green-after.txt",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/candidate-manifest.json",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/candidate-vs-baseline.json",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/runtime-check-20261018.json",
+    "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/ready-for-review.json"
+  ],
+  "testFileHashAfter": "7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1",
+  "nextStep": "Root reviews prepared runner/launcher/manifest (ready-for-review.json, temp-runner.diff) and then dispatches the bounded strict Stage B 18-report run. No collect/assert executed during prep; ledger stays 71/74.",
+  "stageA3_clockCorrection": {
+    "problem": "A2 used Date.now() as the budget clock. Date.now is wall-clock (non-monotonic): NTP/skew adjustments can move the wall clock forward or backward mid-loop, so elapsed-time accounting and the across-attempt baseline are not guaranteed monotonic. Root-directed correction: keep EVERYTHING else identical, time the budget on the true monotonic clock only.",
+    "fix": "frontend/scripts/lighthouse-runtime-preflight.mjs now imports {performance} from node:perf_hooks (the same singleton as globalThis.performance) and times the CPU_BUDGET_MS with performance.now() at exactly the three sites A2 used (start baseline, pre-attempt >= 30000 throw, post-attempt > 30000 throw). MAX_CPU_ATTEMPTS=30, CPU_BUDGET_MS=30000, both pre+post checks, fail-closed messages, cpuReady, benchmark, launch settings, about:blank-only, finally page.close: ALL unchanged and byte-identical to the A2-approved version.",
+    "tests": "full rewrite of the deterministic harness: fake monotonic clock is the ONLY thing mocked (node:test mock.method on performance.now, restored in finally; Date.now untouched by the harness). Added NEW regression test: both samples qualify (1700, 1720) but the 2nd evaluate pushes monotonic elapsed 31000ms > 30000ms => helper must reject /exhausted/i with evaluateCalls=2 and pageCloses=1 (catches removal of the post-evaluation deadline check). Retained: 4 original cpuReady tests byte-identical, settles-late, persistent low/unstable/invalid (30 evaluates), deadline-at-12-evaluates, fast-pass-2-samples, app-URL guard.",
+    "red": "tests-clock-red-before.txt: captured BEFORE the source edit, against the Date.now-based A2 source with the monotonic-mocked harness: 10 tests, 8 pass / 2 fail, both meaningfully 'Missing expected rejection /exhausted/i' — the wall-clock source ignores the mocked monotonic deadline and even ACCEPTS the over-budget qualifying pair. Red clock exit=1.",
+    "green": "node --test scripts/lighthouse-runtime-preflight.test.mjs -> 10/10 pass, exit 0 (tests-clock-green-after.txt). npm run test:performance-tools -> 18/18 pass, exit 0 (10 preflight + 8 audit; tests-performance-tools.txt). eslint on both files: exit 0, no findings. Harness-only fixes (advance signature, fakeBrowser onEvaluate contract) were made between red and green; the SOURCE under test went Date.now -> performance.now between those captures and has not changed since.",
+    "hashes": "After final fixtures: helper 5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf, test 7d9a07cadf73f0d111831048795f25dbcfc6bc2bc4e45391ae95c373c03b3ec1. (Stage A2 recorded hashes 502963ed…/ef032224… are superseded by this A3 pair.)",
+    "retained": "Real-helper single pass at attempt 13 [pair (1579, 1727)] and the failed extended 30/30s diagnostic remain the only live-readiness evidence; neither was rerun in A3. No new CPU benchmark during prep."
+  },
+  "helperFileHashAfter": "5df28a46ae557ee9b35321e90a593411ce2fb8ca452b6344b6ff6dd5bc1736cf"
+}

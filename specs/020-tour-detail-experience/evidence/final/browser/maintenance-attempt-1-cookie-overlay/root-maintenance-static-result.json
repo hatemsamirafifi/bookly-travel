@@ -1,0 +1,30 @@
+{
+  "startedAt": "2026-10-16T22:24:15.253Z",
+  "sourceHash": "6eee1556fea3b5b3ba7d07ce737dfeb2964a793f0cbeacc59ff0863ffcc39a2c",
+  "scope": "Only existing tour-detail browser test maintenance; accepted production source/build and component tests unchanged.",
+  "stages": [
+    {
+      "name": "lint",
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "tests/e2e/tour-detail.spec.ts"
+      ],
+      "startedAt": "2026-10-16T22:24:15.255Z",
+      "finishedAt": "2026-10-16T22:25:23.374Z",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-16T22:25:23.375Z",
+      "finishedAt": "2026-10-16T22:26:49.888Z",
+      "exitCode": 0
+    }
+  ],
+  "passed": true
+}

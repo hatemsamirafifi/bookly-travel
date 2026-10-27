@@ -1,0 +1,62 @@
+US6 T034-T041 locale/route slice — worker completion note (no runtime/CI/merge claim)
+Branch: codex/020-tour-detail-experience. No commits/staging/reset/push by this worker.
+
+FILES (all inside granted ownership; US2/booking/gallery/nav/wishlist/auth untouched)
+Modified:
+- frontend/src/components/tour/TourDetail.tsx (paired fallback notices share one
+  flex flex-wrap gap-2 wrapper; offset ml-2 removed; lang/disclosure logic unchanged)
+- frontend/src/components/tour/TourMeetingPoint.tsx (whitespace-pre-line on the
+  important-information list so multiline entries keep line breaks)
+- frontend/src/components/tour/__tests__/TourDetail.test.tsx (US6 disclosure block)
+- frontend/src/lib/tours/__tests__/detail-localization.test.ts (+5 catalog keys)
+- frontend/src/app/[locale]/(public)/tours/[slug]/page.tsx (localized failure
+  metadata; GoneError renders sync WithdrawnTourNotice; real 404 keeps notFound();
+  recoverable rethrows to the route error boundary; no error.message in UI/metadata)
+- frontend/src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+  (localized 404/410/recoverable/hostile + Page-component behavior; one obsolete
+  assertion corrected, see deviations)
+- frontend/src/components/seo/__tests__/StructuredData.test.tsx (visible/schema
+  agreement only; StructuredData.tsx and utils untouched)
+- frontend/messages/{en,es,it}.json (+5 tour.states keys each, UTF-8)
+- frontend/tests/e2e/helpers/tour-detail-ssr.ts (ControlledSsrStatus union +
+  fetchServedResponse; existing 200 callers unchanged)
+- frontend/tests/e2e/tour-detail.spec.ts (appended route-states describe only)
+- frontend/tests/e2e/a11y/tour-detail-a11y.spec.ts (appended 12-combo + keyboard +
+  reduced-motion describe only)
+Created (route-owned):
+- frontend/src/app/[locale]/(public)/tours/[slug]/loading.tsx (status + detail skeleton)
+- frontend/src/app/[locale]/(public)/tours/[slug]/error.tsx (ErrorState + retry)
+- frontend/src/app/[locale]/(public)/tours/[slug]/not-found.tsx (tour 404, no <main>)
+
+RED (before source changes): 16 failed / 105 passed / 121 total
+  (us6-t034-t035-red-jest.txt + us6-t034-t035-red-summary.txt)
+GREEN (after): focused 150/150 (us6-green-jest.txt); broad tour/lib/seo 283/283/9 suites
+  (us6-green-broad-jest.txt); eslint exit 0 clean (us6-final-eslint.txt);
+  typecheck exit 0 clean (us6-final-typecheck.txt); playwright --list exit 0, 102 tests,
+  all pre-existing titles retained (us6-e2e-list.txt).
+
+DESIGN DECISIONS
+- error.tsx retry prefers installed-docs unstable_retry with reset fallback.
+- Withdrawn strings resolve in async Page into a sync presentational child so the
+  Jest render path stays a plain sync tree; no HTTP-410 renderer is invented.
+- generateMetadata/getTranslations failures fall back to English copy so failure
+  metadata never throws; upstream text never enters metadata/UI.
+- SSR helper keeps (slug, readCurrent) signature; status readings are a union type.
+- E2E uses current-clock fixture builder (no fixed dates) and readiness waits only.
+
+DEVIATIONS (recorded)
+- Corrected one obsolete unit assertion: page.test "returns a noindex Tour Not Found
+  title when the backend detail 404s or fails" encoded the filed bug (English-only
+  for every failure incl. ES 404). Replaced with localized 404-vs-recoverable
+  expectations; old text kept in git history.
+- StructuredData.test.tsx needed a one-brace repair after appending the new block;
+  prior tests byte-identical (verified by read).
+
+REMAINING GAPS (for root/others, not claimed here)
+- Route/policy-lang: cancellation-policy lang forwarding into booking surfaces stays
+  an explicit narrow gap until US2 releases TourBookingController/BookingCard/
+  MobileBookingBar/BookingForm (untouched per ownership).
+- Overlay/runtime: gallery viewer, section-nav-active and wishlist-prompt focus
+  acceptance staged for T069; 12-case browser + full a11y + Lighthouse + backend
+  gates are root-owned; verification.md/tasks ledger updates are root-owned.
+- No full Spec020/US6 runtime, CI, merge or release claim is made.

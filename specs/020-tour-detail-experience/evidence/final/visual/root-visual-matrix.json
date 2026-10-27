@@ -1,0 +1,879 @@
+{
+  "startedAt": "2026-10-17T15:08:47.057Z",
+  "origin": "http://localhost:8080",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "sourceParity": {
+    "files": 420,
+    "mismatches": []
+  },
+  "scope": "Actual built application/public API and Docker CDN; anonymous, no fixture mutations or media adapters. Screenshots require root visual inspection; metrics alone are not manual acceptance.",
+  "cases": [
+    {
+      "locale": "en",
+      "width": 390,
+      "screenshots": [
+        "en-390-top.png",
+        "en-390-full.png",
+        "en-390-reviews.png",
+        "en-390-wishlist.png",
+        "en-390-gallery.png",
+        "en-390-booking.png"
+      ],
+      "metrics": {
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "pageHeight": 4134,
+        "h1": 1,
+        "card": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "bar": {
+          "top": 783,
+          "left": 0,
+          "width": 390,
+          "height": 117
+        },
+        "images": [
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "screenshots": [
+        "en-768-top.png",
+        "en-768-full.png",
+        "en-768-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 768,
+        "viewportWidth": 768,
+        "pageHeight": 3506,
+        "h1": 1,
+        "card": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "bar": {
+          "top": 783,
+          "left": 0,
+          "width": 768,
+          "height": 117
+        },
+        "images": [
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": false
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "en",
+      "width": 1024,
+      "screenshots": [
+        "en-1024-top.png",
+        "en-1024-full.png",
+        "en-1024-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 1024,
+        "viewportWidth": 1024,
+        "pageHeight": 2722,
+        "h1": 1,
+        "card": {
+          "top": 703.5,
+          "left": 693.328125,
+          "width": 298.65625,
+          "height": 538
+        },
+        "bar": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "images": [
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "screenshots": [
+        "en-1440-top.png",
+        "en-1440-full.png",
+        "en-1440-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 1440,
+        "viewportWidth": 1440,
+        "pageHeight": 2834,
+        "h1": 1,
+        "card": {
+          "top": 799.5,
+          "left": 944,
+          "width": 384,
+          "height": 522
+        },
+        "bar": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "images": [
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Hidden Gems of Rome Walking Tour",
+            "lang": "en",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "es",
+      "width": 390,
+      "screenshots": [
+        "es-390-top.png",
+        "es-390-full.png",
+        "es-390-reviews.png",
+        "es-390-wishlist.png",
+        "es-390-gallery.png",
+        "es-390-booking.png"
+      ],
+      "metrics": {
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "pageHeight": 4174,
+        "h1": 1,
+        "card": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "bar": {
+          "top": 767,
+          "left": 0,
+          "width": 390,
+          "height": 133
+        },
+        "images": [
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "es",
+      "width": 768,
+      "screenshots": [
+        "es-768-top.png",
+        "es-768-full.png",
+        "es-768-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 768,
+        "viewportWidth": 768,
+        "pageHeight": 3530,
+        "h1": 1,
+        "card": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "bar": {
+          "top": 783,
+          "left": 0,
+          "width": 768,
+          "height": 117
+        },
+        "images": [
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": false
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "es",
+      "width": 1024,
+      "screenshots": [
+        "es-1024-top.png",
+        "es-1024-full.png",
+        "es-1024-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 1024,
+        "viewportWidth": 1024,
+        "pageHeight": 2722,
+        "h1": 1,
+        "card": {
+          "top": 703.5,
+          "left": 693.328125,
+          "width": 298.65625,
+          "height": 554
+        },
+        "bar": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "images": [
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "es",
+      "width": 1440,
+      "screenshots": [
+        "es-1440-top.png",
+        "es-1440-full.png",
+        "es-1440-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 1440,
+        "viewportWidth": 1440,
+        "pageHeight": 2858,
+        "h1": 1,
+        "card": {
+          "top": 799.5,
+          "left": 944,
+          "width": 384,
+          "height": 522
+        },
+        "bar": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "images": [
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a pie por las joyas ocultas de Roma",
+            "lang": "es",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "it",
+      "width": 390,
+      "screenshots": [
+        "it-390-top.png",
+        "it-390-full.png",
+        "it-390-reviews.png",
+        "it-390-wishlist.png",
+        "it-390-gallery.png",
+        "it-390-booking.png"
+      ],
+      "metrics": {
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "pageHeight": 4213,
+        "h1": 1,
+        "card": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "bar": {
+          "top": 767,
+          "left": 0,
+          "width": 390,
+          "height": 133
+        },
+        "images": [
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "it",
+      "width": 768,
+      "screenshots": [
+        "it-768-top.png",
+        "it-768-full.png",
+        "it-768-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 768,
+        "viewportWidth": 768,
+        "pageHeight": 3554,
+        "h1": 1,
+        "card": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "bar": {
+          "top": 783,
+          "left": 0,
+          "width": 768,
+          "height": 117
+        },
+        "images": [
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": false
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "it",
+      "width": 1024,
+      "screenshots": [
+        "it-1024-top.png",
+        "it-1024-full.png",
+        "it-1024-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 1024,
+        "viewportWidth": 1024,
+        "pageHeight": 2722,
+        "h1": 1,
+        "card": {
+          "top": 703.5,
+          "left": 693.328125,
+          "width": 298.65625,
+          "height": 554
+        },
+        "bar": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "images": [
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    },
+    {
+      "locale": "it",
+      "width": 1440,
+      "screenshots": [
+        "it-1440-top.png",
+        "it-1440-full.png",
+        "it-1440-reviews.png"
+      ],
+      "metrics": {
+        "documentWidth": 1440,
+        "viewportWidth": 1440,
+        "pageHeight": 2834,
+        "h1": 1,
+        "card": {
+          "top": 799.5,
+          "left": 944,
+          "width": 384,
+          "height": 522
+        },
+        "bar": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0
+        },
+        "images": [
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Tour a piedi delle gemme nascoste di Roma",
+            "lang": "it",
+            "loaded": true
+          },
+          {
+            "alt": "Venice Hidden Canals Walking Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Barcelona Gaudí Architecture Masterpieces Tour",
+            "lang": "",
+            "loaded": false
+          },
+          {
+            "alt": "Montmartre Artists Quarter Walking Tour",
+            "lang": "",
+            "loaded": false
+          }
+        ],
+        "mainCount": 1
+      },
+      "runtimeChecksPassed": true
+    }
+  ],
+  "finishedAt": "2026-10-17T15:09:41.656Z",
+  "runtimeChecksPassed": true
+}

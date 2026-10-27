@@ -1,0 +1,23 @@
+T008 SSR harness extraction REWORK — typecheck evidence (static only, NOT runtime acceptance)
+Date: 2026-10-14 (rework pass for root cleanup-correctness review)
+Command (from frontend/): npm run typecheck
+Result: PASS (exit 0, no diagnostics)
+
+> frontend@0.1.0 typecheck
+> tsc --noEmit
+
+Rework scope (frontend/tests/e2e/helpers/tour-detail-ssr.ts only; consumer
+diff stays header-only):
+1. childExited() checks exitCode AND signalCode; used in waitForExit,
+   killOwned, and readiness — a signal-killed child no longer reads as
+   "still running".
+2. Single cleanup boundary over all acquired resources with optional child;
+   listenServer/freePort reject on 'error' instead of hanging; spawn 'error'
+   captured (no unhandled event, real cause in readiness error); readiness
+   fetch bounded with AbortSignal.timeout(5000) inside the 30s poll budget.
+3. stop()/cleanup await owned child exit (SIGTERM->SIGKILL) plus
+   closeAllConnections+close; only ERR_SERVER_NOT_RUNNING is a no-op, other
+   errors propagate; surviving child after SIGKILL throws. Served JSON,
+   status, and fixture headers unchanged.
+Actual production-build SSR runtime smoke is PENDING — root executes it.
+No build run from this job.

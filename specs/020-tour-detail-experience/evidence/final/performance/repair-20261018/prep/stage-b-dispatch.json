@@ -1,0 +1,22 @@
+{
+    "pid":  26492,
+    "outerProcessId":  26492,
+    "startTimeUtc":  "2026-10-18T20:22:50.559Z",
+    "dispatchedAtUtc":  "2026-10-18T20:22:53.673Z",
+    "command":  "powershell.exe -NoProfile -NonInteractive -File C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/audit-launch.ps1",
+    "argumentList":  [
+                         "-NoProfile",
+                         "-NonInteractive",
+                         "-File",
+                         "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/audit-launch.ps1"
+                     ],
+    "windowStyle":  "Hidden",
+    "workingDirectory":  "F:/Travel Website/bookly travel/frontend",
+    "stdoutPath":  "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/stage-b-outer.stdout.txt",
+    "stderrPath":  "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/stage-b-outer.stderr.txt",
+    "tempBase":  "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018",
+    "evidenceBase":  "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018",
+    "runnerSha256":  "72b78d265dacb9d0f2006c4ce903bbcf3096600af835c31b58d38e8ecc58b1c5",
+    "launcherSha256":  "4008b933ff27c182059e3059c181fc0eb7662ffb181dbb180a62f5fe58a818dd",
+    "readinessPassed":  "current-runtime-ready.json passedReadinessOnly=true"
+}

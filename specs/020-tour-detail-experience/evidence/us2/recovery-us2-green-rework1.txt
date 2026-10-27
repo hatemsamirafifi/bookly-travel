@@ -1,0 +1,45 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/__tests__/TourDetail.test.tsx
+
+node.exe : FAIL src/components/tour/__tests__/TourBookingController.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...roller.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ Test suite failed to run
+
+    [96msrc/components/tour/MobileBookingBar.tsx[0m:[93m140[0m:[93m11[0m - [91merror[0m[90m TS17015: 
+[0mExpected corresponding closing tag for JSX fragment.
+
+    [7m140[0m         </div>
+    [7m   [0m [91m          ~~~[0m
+    [96msrc/components/tour/MobileBookingBar.tsx[0m:[93m141[0m:[93m7[0m - [91merror[0m[90m TS1109: 
+[0mExpression expected.
+
+    [7m141[0m       </div>
+    [7m   [0m [91m      ~~[0m
+    [96msrc/components/tour/MobileBookingBar.tsx[0m:[93m191[0m:[93m5[0m - [91merror[0m[90m TS1128: 
+[0mDeclaration or statement expected.
+
+    [7m191[0m     </>
+    [7m   [0m [91m    ~~[0m
+    [96msrc/components/tour/MobileBookingBar.tsx[0m:[93m191[0m:[93m7[0m - [91merror[0m[90m TS1109: 
+[0mExpression expected.
+
+    [7m191[0m     </>
+    [7m   [0m [91m      ~[0m
+    [96msrc/components/tour/MobileBookingBar.tsx[0m:[93m192[0m:[93m3[0m - [91merror[0m[90m TS1109: 
+[0mExpression expected.
+
+    [7m192[0m   );
+    [7m   [0m [91m  ~[0m
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        2.948 s, estimated 4 s
+Ran all test suites within paths "src/components/tour/__tests__/TourBookingController.test.tsx", 
+"src/components/tour/__tests__/TourDetail.test.tsx".
