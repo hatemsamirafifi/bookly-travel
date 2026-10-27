@@ -138,4 +138,55 @@ describe('RegisterForm', () => {
       expect(screen.getByText('This email is already registered.')).toBeInTheDocument();
     });
   });
+
+  // Spec 020 US2/FR-022: the sign-in cross-link preserves the full validated
+  // booking query so returning to login keeps tour/date/count.
+  it('preserves the full booking returnUrl on the sign-in cross-link', () => {
+    const bookingPath = '/en/booking?tour=hidden-gems&participants=3&date=2026-10-20';
+    render(<RegisterForm returnUrl={bookingPath} />);
+    expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute(
+      'href',
+      `/en/auth/login?returnUrl=${encodeURIComponent(bookingPath)}`,
+    );
+  });
+
+  it.each([
+    'https://evil.example/en/booking?tour=x',
+    '/es/booking?tour=x&participants=2&date=2026-10-20',
+    '/en\\evil.example',
+  ])('drops an unsafe cross-locale sign-in returnUrl %s', (returnUrl) => {
+    render(<RegisterForm returnUrl={returnUrl} />);
+    expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute(
+      'href',
+      '/en/auth/login',
+    );
+  });
+
+  // Spec 020 US2/FR-022: successful registration returns to the full booking
+  // query, never a bare locale fallback, when the supplied return is safe.
+  it('redirects to the full booking query on successful registration with a safe returnUrl', async () => {
+    const bookingPath = '/en/booking?tour=hidden-gems&participants=3&date=2026-10-20';
+    mockRegister.mockResolvedValue({
+      data: { id: 1, name: 'Jane', email: 'jane@example.com' },
+      token: 'test-token',
+    });
+
+    render(<RegisterForm returnUrl={bookingPath} />);
+
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'Jane Doe' } });
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jane@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Password123' } });
+
+    fireEvent.submit(screen.getByRole('form'));
+
+    await waitFor(() => {
+      expect(mockSetAuth).toHaveBeenCalled();
+    });
+
+    jest.advanceTimersByTime(1500);
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith(bookingPath);
+    });
+  });
 });

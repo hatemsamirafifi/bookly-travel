@@ -1,0 +1,737 @@
+{
+  "generatedAt": "2026-10-19T20:52:27.831Z",
+  "derivedFrom": "raw LHR JSON files under evidence/final/hero-preload-runtime/performance/reports â€” all values from raw file fields, none from memory. lcpPhasesSimulated values are lantern-simulated audit numbers, NOT observed timings.",
+  "runs": [
+    {
+      "file": "lhr-1792360678890.json",
+      "fetchTime": "2026-10-18T21:57:43.233Z",
+      "url": "http://localhost:8080/en",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1811.5,
+      "categories": {
+        "performance": 0.89,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "body.min-h-full > main#main-content > section.relative > h1.mb-4",
+        "snippet": "<h1 class=\"mb-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl\">",
+        "boundingRect": {
+          "top": 145,
+          "bottom": 225,
+          "left": 16,
+          "right": 396,
+          "width": 380,
+          "height": 80
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 857.853,
+        "Load Delay": 0,
+        "Load Time": 0,
+        "Render Delay": 2501.7200000000003
+      },
+      "lcpImageNetwork": null,
+      "documents": [
+        {
+          "transferSize": 41199,
+          "resourceSize": 169003,
+          "networkEndTime": 1016.4129999997094
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 1135.19,
+        "largestContentfulPaint": 3359.57,
+        "totalBlockingTime": 177.5,
+        "speedIndex": 2614.57,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360714311.json",
+      "fetchTime": "2026-10-18T21:58:21.015Z",
+      "url": "http://localhost:8080/en",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1515.5,
+      "categories": {
+        "performance": 0.87,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.group > a.block > div.relative > img.object-cover",
+        "snippet": "<img alt=\"Louvre Museum Masterpieces Tour\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fparis-louvre.jpg&amp;w…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\">",
+        "boundingRect": {
+          "top": 572,
+          "bottom": 758,
+          "left": 1,
+          "right": 299,
+          "width": 298,
+          "height": 186
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 478.7979,
+        "Load Delay": 1044.284906790055,
+        "Load Time": 1.1788418689852733,
+        "Render Delay": 1750.7331013409596
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fparis-louvre.jpg&w=750&q=75",
+        "priority": "High",
+        "isLinkPreload": true,
+        "rendererStartTime": 187.58399999979883,
+        "networkRequestTime": 188.62899999972433,
+        "networkEndTime": 225.86699999962002,
+        "transferSize": 57,
+        "resourceSize": 57,
+        "mimeType": "text/plain"
+      },
+      "documents": [
+        {
+          "transferSize": 41056,
+          "resourceSize": 168960,
+          "networkEndTime": 154.1820000000298
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 957.6,
+        "largestContentfulPaint": 3274.99,
+        "totalBlockingTime": 264.5,
+        "speedIndex": 1120.23,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360731203.json",
+      "fetchTime": "2026-10-18T21:58:37.866Z",
+      "url": "http://localhost:8080/en",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1925.5,
+      "categories": {
+        "performance": 0.77,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.group > a.block > div.relative > img.object-cover",
+        "snippet": "<img alt=\"Louvre Museum Masterpieces Tour\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fparis-louvre.jpg&amp;w…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\">",
+        "boundingRect": {
+          "top": 572,
+          "bottom": 758,
+          "left": 1,
+          "right": 299,
+          "width": 298,
+          "height": 186
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 472.7296,
+        "Load Delay": 442.7516518039007,
+        "Load Time": 1.7764750027332639,
+        "Render Delay": 2401.566273193367
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Fparis-louvre.jpg&w=750&q=75",
+        "priority": "High",
+        "isLinkPreload": true,
+        "rendererStartTime": 94.70700000040233,
+        "networkRequestTime": 95.25600000005215,
+        "networkEndTime": 273.0659999996424,
+        "transferSize": 57,
+        "resourceSize": 57,
+        "mimeType": "text/plain"
+      },
+      "documents": [
+        {
+          "transferSize": 41056,
+          "resourceSize": 168960,
+          "networkEndTime": 93.39499999955297
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 945.46,
+        "largestContentfulPaint": 3318.82,
+        "totalBlockingTime": 589.27,
+        "speedIndex": 1150.24,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360752017.json",
+      "fetchTime": "2026-10-18T21:59:01.823Z",
+      "url": "http://localhost:8080/en/search?q=rome",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1499,
+      "categories": {
+        "performance": 0.89,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.group > a.block > div.relative > img.object-cover",
+        "snippet": "<img alt=\"Hidden Gems of Rome Walking Tour\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" sizes=\"(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&amp;w=2…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\">",
+        "boundingRect": {
+          "top": 312,
+          "bottom": 548,
+          "left": 17,
+          "right": 395,
+          "width": 378,
+          "height": 236
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 466.48995,
+        "Load Delay": 2424.253660492892,
+        "Load Time": 34.946353755214204,
+        "Render Delay": 695.0248607518929
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&w=750&q=75",
+        "priority": "High",
+        "isLinkPreload": true,
+        "rendererStartTime": 448.42799999937415,
+        "networkRequestTime": 448.9479999989271,
+        "networkEndTime": 454.38399999961257,
+        "transferSize": 1391,
+        "resourceSize": 968,
+        "mimeType": "image/webp"
+      },
+      "documents": [
+        {
+          "transferSize": 30134,
+          "resourceSize": 104453,
+          "networkEndTime": 442.29399999883026
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 932.98,
+        "largestContentfulPaint": 3620.71,
+        "totalBlockingTime": 97,
+        "speedIndex": 1573.83,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360766113.json",
+      "fetchTime": "2026-10-18T21:59:15.953Z",
+      "url": "http://localhost:8080/en/search?q=rome",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1465,
+      "categories": {
+        "performance": 0.9,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.group > a.block > div.relative > img.object-cover",
+        "snippet": "<img alt=\"Hidden Gems of Rome Walking Tour\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&amp;w=2…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\">",
+        "boundingRect": {
+          "top": 312,
+          "bottom": 548,
+          "left": 17,
+          "right": 395,
+          "width": 378,
+          "height": 236
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 468.91825,
+        "Load Delay": 427.88556869653354,
+        "Load Time": 153.72087550241338,
+        "Render Delay": 2154.7709308010535
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&w=750&q=75",
+        "priority": "High",
+        "isLinkPreload": true,
+        "rendererStartTime": 65.25600000005215,
+        "networkRequestTime": 66.01599999982864,
+        "networkEndTime": 77.43599999975413,
+        "transferSize": 1391,
+        "resourceSize": 968,
+        "mimeType": "image/webp"
+      },
+      "documents": [
+        {
+          "transferSize": 28888,
+          "resourceSize": 104080,
+          "networkEndTime": 44.95799999963492
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 937.84,
+        "largestContentfulPaint": 3205.3,
+        "totalBlockingTime": 184.58,
+        "speedIndex": 937.84,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360779559.json",
+      "fetchTime": "2026-10-18T21:59:29.615Z",
+      "url": "http://localhost:8080/en/search?q=rome",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1832.5,
+      "categories": {
+        "performance": 0.96,
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.group > a.block > div.relative > img.object-cover",
+        "snippet": "<img alt=\"Hidden Gems of Rome Walking Tour\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&amp;w=2…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\">",
+        "boundingRect": {
+          "top": 312,
+          "bottom": 548,
+          "left": 17,
+          "right": 395,
+          "width": 378,
+          "height": 236
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 468.60225,
+        "Load Delay": 469.4362792992007,
+        "Load Time": 167.15446287642726,
+        "Render Delay": 1479.2160078243717
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&w=750&q=75",
+        "priority": "High",
+        "isLinkPreload": true,
+        "rendererStartTime": 75.94300000090152,
+        "networkRequestTime": 76.48200000077486,
+        "networkEndTime": 90.22000000067055,
+        "transferSize": 1391,
+        "resourceSize": 968,
+        "mimeType": "image/webp"
+      },
+      "documents": [
+        {
+          "transferSize": 28888,
+          "resourceSize": 104080,
+          "networkEndTime": 44.17300000041723
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 937.2,
+        "largestContentfulPaint": 2584.41,
+        "totalBlockingTime": 121.5,
+        "speedIndex": 937.2,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360796482.json",
+      "fetchTime": "2026-10-18T21:59:44.612Z",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1713.5,
+      "categories": {
+        "performance": 0.8,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.relative > div.flex > button.relative > img.object-cover",
+        "snippet": "<img alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" sizes=\"(min-width: 80rem) 37.75rem, (min-width: 64rem) calc((100vw - 4.5rem) / 2)…\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&amp;w=3…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\">",
+        "boundingRect": {
+          "top": 343,
+          "bottom": 581,
+          "left": 16,
+          "right": 396,
+          "width": 380,
+          "height": 238
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 474.08275000000003,
+        "Load Delay": 2137.5328911644033,
+        "Load Time": 286.91454961813906,
+        "Render Delay": 991.1766842174579
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&w=750&q=75",
+        "priority": "Low",
+        "isLinkPreload": true,
+        "rendererStartTime": 601.1579999998212,
+        "networkRequestTime": 601.9520000005141,
+        "networkEndTime": 668.1720000002533,
+        "transferSize": 1391,
+        "resourceSize": 968,
+        "mimeType": "image/webp"
+      },
+      "documents": [
+        {
+          "transferSize": 40277,
+          "resourceSize": 159391,
+          "networkEndTime": 674.9579999996349
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 948.17,
+        "largestContentfulPaint": 3889.71,
+        "totalBlockingTime": 337.42,
+        "speedIndex": 2211.14,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360813480.json",
+      "fetchTime": "2026-10-18T22:00:00.142Z",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1779.5,
+      "categories": {
+        "performance": 0.84,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.relative > div.flex > button.relative > img.object-cover",
+        "snippet": "<img alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" sizes=\"(min-width: 80rem) 37.75rem, (min-width: 64rem) calc((100vw - 4.5rem) / 2)…\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&amp;w=3…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\">",
+        "boundingRect": {
+          "top": 343,
+          "bottom": 581,
+          "left": 16,
+          "right": 396,
+          "width": 380,
+          "height": 238
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 480.8988,
+        "Load Delay": 2217.210888279992,
+        "Load Time": 285.3177413648841,
+        "Render Delay": 1130.218370355124
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&w=750&q=75",
+        "priority": "Low",
+        "isLinkPreload": true,
+        "rendererStartTime": 437.82699999958277,
+        "networkRequestTime": 438.84499999973923,
+        "networkEndTime": 485.33699999935925,
+        "transferSize": 1391,
+        "resourceSize": 968,
+        "mimeType": "image/webp"
+      },
+      "documents": [
+        {
+          "transferSize": 40277,
+          "resourceSize": 159391,
+          "networkEndTime": 422.0029999995604
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 961.8,
+        "largestContentfulPaint": 4113.65,
+        "totalBlockingTime": 186.1,
+        "speedIndex": 1979.89,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360828570.json",
+      "fetchTime": "2026-10-18T22:00:16.955Z",
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1877.5,
+      "categories": {
+        "performance": 0.86,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 0.92
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.relative > div.flex > button.relative > img.object-cover",
+        "snippet": "<img alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" sizes=\"(min-width: 80rem) 37.75rem, (min-width: 64rem) calc((100vw - 4.5rem) / 2)…\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&amp;w=3…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours…\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\">",
+        "boundingRect": {
+          "top": 343,
+          "bottom": 581,
+          "left": 16,
+          "right": 396,
+          "width": 380,
+          "height": 238
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 470.5126,
+        "Load Delay": 2248.5559819374985,
+        "Load Time": 168.1047932055517,
+        "Render Delay": 1112.62072485695
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg&w=750&q=75",
+        "priority": "Low",
+        "isLinkPreload": true,
+        "rendererStartTime": 412.44799999985844,
+        "networkRequestTime": 413.1389999995008,
+        "networkEndTime": 438.72200000006706,
+        "transferSize": 1391,
+        "resourceSize": 968,
+        "mimeType": "image/webp"
+      },
+      "documents": [
+        {
+          "transferSize": 40277,
+          "resourceSize": 159391,
+          "networkEndTime": 439.4349999995902
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 941.03,
+        "largestContentfulPaint": 3999.79,
+        "totalBlockingTime": 140.5,
+        "speedIndex": 1797.63,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360844058.json",
+      "fetchTime": "2026-10-18T22:00:33.689Z",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1823,
+      "categories": {
+        "performance": 0.89,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.grid > article.group > a.relative > img.object-cover",
+        "snippet": "<img alt=\"Complete Venice Travel Guide 2026\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%2Fvenice-travel-guide…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%…\">",
+        "boundingRect": {
+          "top": 529,
+          "bottom": 765,
+          "left": 17,
+          "right": 395,
+          "width": 378,
+          "height": 236
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 466.1044,
+        "Load Delay": 1012.3111133473706,
+        "Load Time": 2.3724586138800987,
+        "Render Delay": 1643.4730280387498
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%2Fvenice-travel-guide-2026.jpg&w=750&q=75",
+        "priority": "Low",
+        "rendererStartTime": 315.2370000006631,
+        "networkRequestTime": 315.6699999999255,
+        "networkEndTime": 331.39000000059605,
+        "transferSize": 57,
+        "resourceSize": 57,
+        "mimeType": "text/plain"
+      },
+      "documents": [
+        {
+          "transferSize": 26700,
+          "resourceSize": 92307,
+          "networkEndTime": 117.0449999999255
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 974.21,
+        "largestContentfulPaint": 3124.26,
+        "totalBlockingTime": 250.9,
+        "speedIndex": 1047.18,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360858620.json",
+      "fetchTime": "2026-10-18T22:00:48.119Z",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1657.5,
+      "categories": {
+        "performance": 0.93,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.grid > article.group > a.relative > img.object-cover",
+        "snippet": "<img alt=\"Complete Venice Travel Guide 2026\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%2Fvenice-travel-guide…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%…\">",
+        "boundingRect": {
+          "top": 529,
+          "bottom": 765,
+          "left": 17,
+          "right": 395,
+          "width": 378,
+          "height": 236
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 466.31515,
+        "Load Delay": 811.1361085238933,
+        "Load Time": 1.2475635880553,
+        "Render Delay": 1822.0890528880514
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%2Fvenice-travel-guide-2026.jpg&w=750&q=75",
+        "priority": "Low",
+        "rendererStartTime": 261.1630000015721,
+        "networkRequestTime": 262.00200000125915,
+        "networkEndTime": 278.09599999990314,
+        "transferSize": 57,
+        "resourceSize": 57,
+        "mimeType": "text/plain"
+      },
+      "documents": [
+        {
+          "transferSize": 26700,
+          "resourceSize": 92307,
+          "networkEndTime": 100.41500000096858
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 981.63,
+        "largestContentfulPaint": 3100.79,
+        "totalBlockingTime": 69.18,
+        "speedIndex": 981.63,
+        "cumulativeLayoutShift": 0
+      }
+    },
+    {
+      "file": "lhr-1792360875726.json",
+      "fetchTime": "2026-10-18T22:01:03.935Z",
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "lighthouseVersion": "12.8.2",
+      "benchmarkIndex": 1356.5,
+      "categories": {
+        "performance": 0.81,
+        "accessibility": 1,
+        "best-practices": 0.96,
+        "seo": 1
+      },
+      "auditErrorCount": 0,
+      "runtimeErrorAbsent": true,
+      "httpStatusCodeAudit": {
+        "id": "http-status-code",
+        "score": 1
+      },
+      "lcpNode": {
+        "selector": "div.grid > article.group > a.relative > img.object-cover",
+        "snippet": "<img alt=\"Complete Venice Travel Guide 2026\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw\" srcset=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%2Fvenice-travel-guide…\" src=\"http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%…\">",
+        "boundingRect": {
+          "top": 529,
+          "bottom": 765,
+          "left": 17,
+          "right": 395,
+          "width": 378,
+          "height": 236
+        }
+      },
+      "lcpPhasesSimulated": {
+        "TTFB": 481.3555,
+        "Load Delay": 1667.507253820177,
+        "Load Time": 1.2863978579375726,
+        "Render Delay": 1151.2395983218853
+      },
+      "lcpImageNetwork": {
+        "matchedUrl": "http://localhost:8080/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Fblog%2Fvenice-travel-guide-2026.jpg&w=750&q=75",
+        "priority": "High",
+        "rendererStartTime": 475.1039999993518,
+        "networkRequestTime": 475.5690000001341,
+        "networkEndTime": 513.113000000827,
+        "transferSize": 57,
+        "resourceSize": 57,
+        "mimeType": "text/plain"
+      },
+      "documents": [
+        {
+          "transferSize": 26648,
+          "resourceSize": 92307,
+          "networkEndTime": 228.12800000049174
+        }
+      ],
+      "metrics": {
+        "firstContentfulPaint": 1019.36,
+        "largestContentfulPaint": 3301.39,
+        "totalBlockingTime": 456.5,
+        "speedIndex": 1423.41,
+        "cumulativeLayoutShift": 0
+      }
+    }
+  ]
+}

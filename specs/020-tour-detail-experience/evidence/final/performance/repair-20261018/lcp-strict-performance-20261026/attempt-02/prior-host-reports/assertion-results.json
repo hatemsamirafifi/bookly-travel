@@ -1,0 +1,386 @@
+[
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.92,
+    "values": [
+      0.98,
+      0.97,
+      0.92
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "performance",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "accessibility",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "best-practices",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "seo",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.91,
+    "values": [
+      0.91,
+      0.93,
+      0.97
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "performance",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/search?q=rome"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "accessibility",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/search?q=rome"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "best-practices",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/search?q=rome"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "seo",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/search?q=rome"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.89,
+    "values": [
+      0.89,
+      0.89,
+      0.91
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditProperty": "performance",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "accessibility",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "best-practices",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.92,
+    "values": [
+      0.92,
+      0.92,
+      0.92
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "seo",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.94,
+    "values": [
+      0.94,
+      0.94,
+      0.94
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "performance",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/blog/hidden-gems-florence"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "accessibility",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/blog/hidden-gems-florence"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "best-practices",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/blog/hidden-gems-florence"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "seo",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/en/blog/hidden-gems-florence"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.87,
+    "values": [
+      0.89,
+      0.89,
+      0.87
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditProperty": "performance",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.97,
+    "values": [
+      0.97,
+      0.97,
+      0.97
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "accessibility",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "best-practices",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.92,
+    "values": [
+      0.92,
+      0.92,
+      0.92
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "seo",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/es/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.87,
+    "values": [
+      0.87,
+      0.9,
+      0.89
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditProperty": "performance",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.97,
+    "values": [
+      0.97,
+      0.97,
+      0.97
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "accessibility",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 1,
+    "values": [
+      1,
+      1,
+      1
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "best-practices",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.92,
+    "values": [
+      0.92,
+      0.92,
+      0.92
+    ],
+    "operator": ">=",
+    "passed": true,
+    "auditProperty": "seo",
+    "auditId": "categories",
+    "level": "error",
+    "url": "http://localhost:8080/it/tours/hidden-gems-rome-walking-tour"
+  }
+]

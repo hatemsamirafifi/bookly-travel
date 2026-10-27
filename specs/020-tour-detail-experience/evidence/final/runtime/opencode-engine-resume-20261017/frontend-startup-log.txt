@@ -1,0 +1,85 @@
+﻿
+> frontend@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+Γû▓ Next.js 16.2.3 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 27.5s
+  Running TypeScript ...
+  Finished TypeScript in 28.9s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/89) ...
+  Generating static pages using 7 workers (22/89) 
+  Generating static pages using 7 workers (44/89) 
+  Generating static pages using 7 workers (66/89) 
+Γ£ô Generating static pages using 7 workers (89/89) in 4.9s
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /_not-found
+Γö£ ╞Æ /[locale]
+Γö£ ╞Æ /[locale]/[...notFound]
+Γö£ ╞Æ /[locale]/auth/forgot-password
+Γö£ ╞Æ /[locale]/auth/login
+Γö£ ╞Æ /[locale]/auth/partner-register
+Γö£ ╞Æ /[locale]/auth/register
+Γö£ ╞Æ /[locale]/auth/reset-password
+Γö£ ╞Æ /[locale]/auth/verify-email
+Γö£ ╞Æ /[locale]/blog
+Γö£ ╞Æ /[locale]/blog/[slug]
+Γö£ ╞Æ /[locale]/blog/[slug]/preview
+Γö£ ╞Æ /[locale]/blog/category/[slug]
+Γö£ ╞Æ /[locale]/booking
+Γö£ ╞Æ /[locale]/booking/confirmation
+Γö£ ╞Æ /[locale]/categories
+Γö£ ╞Æ /[locale]/categories/[slug]
+Γö£ ╞Æ /[locale]/destinations
+Γö£ ╞Æ /[locale]/destinations/[slug]
+Γö£ ╞Æ /[locale]/my-bookings
+Γö£ ╞Æ /[locale]/my-bookings/[reference]
+Γö£ ╞Æ /[locale]/my-reviews
+Γö£ ╞Æ /[locale]/partner
+Γö£ ╞Æ /[locale]/partner-invite/[token]
+Γö£ ╞Æ /[locale]/partner-register
+Γö£ ╞Æ /[locale]/partner/analytics
+Γö£ ╞Æ /[locale]/partner/bookings
+Γö£ ╞Æ /[locale]/partner/bookings/[reference]
+Γö£ ╞Æ /[locale]/partner/onboarding
+Γö£ ╞Æ /[locale]/partner/profile
+Γö£ ╞Æ /[locale]/partner/reviews
+Γö£ ╞Æ /[locale]/partner/tours
+Γö£ ╞Æ /[locale]/partner/tours/[id]/availability
+Γö£ ╞Æ /[locale]/partner/tours/[id]/edit
+Γö£ ╞Æ /[locale]/partner/tours/[id]/pricing
+Γö£ ╞Æ /[locale]/partner/tours/create
+Γö£ ╞Æ /[locale]/privacy
+Γö£ ╞Æ /[locale]/profile
+Γö£ ╞Æ /[locale]/search
+Γö£ ╞Æ /[locale]/terms
+Γö£ ╞Æ /[locale]/tours/[slug]
+Γö£ ╞Æ /[locale]/wishlist
+Γö£ ╞Æ /api/auth/session
+Γö£ Γùï /robots.txt
+Γöö ╞Æ /v/[reference]
+
+
+╞Æ Proxy (Middleware)
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+
+
+> frontend@0.1.0 start
+> next start
+
+Γû▓ Next.js 16.2.3
+- Local:         http://localhost:3000
+- Network:       http://172.21.0.5:3000
+Γ£ô Ready in 223ms

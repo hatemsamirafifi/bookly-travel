@@ -1,0 +1,2 @@
+All offered dates, non-default selection, shared mobile dialog, 44px target, Escape focus return and resize preserved query.
+{"passed":false,"checks":1,"error":"page.waitForResponse: Timeout 30000ms exceeded while waiting for event \"response\""}

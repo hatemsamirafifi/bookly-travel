@@ -1,0 +1,20 @@
+{
+  "name": "poll-02",
+  "argv": [
+    "docker",
+    "version",
+    "--format={{.Server.Version}}"
+  ],
+  "spawnOptions": {
+    "shell": false,
+    "timeoutMs": 15000,
+    "windowsHide": true
+  },
+  "startedAtUtc": "2026-10-20T19:19:44.690Z",
+  "finishedAtUtc": "2026-10-20T19:19:44.981Z",
+  "durationMs": 291,
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null
+}

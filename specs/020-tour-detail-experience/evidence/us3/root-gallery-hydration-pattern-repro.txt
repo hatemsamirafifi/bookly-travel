@@ -1,0 +1,6 @@
+{
+  "serverHtml": "<div data-testid=\"mosaic\" inert=\"\">tile</div>",
+  "desktopAfterHydrationHasInert": true,
+  "hydrationWarnings": 1,
+  "warning": "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`."
+}

@@ -1,0 +1,4 @@
+ Container bookly-test-meilisearch Starting 
+ Container bookly-test-postgres Starting 
+ Container bookly-test-meilisearch Started 
+ Container bookly-test-postgres Started 

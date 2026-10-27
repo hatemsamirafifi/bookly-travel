@@ -1,0 +1,28 @@
+{
+  "startedAt": "2026-10-16T22:26:50.346Z",
+  "buildProvenance": "root-docker-build-result.json",
+  "scope": "Independent source parity; .dockerignore is correctly absent from the image because it excludes itself. Its host hash is recorded separately.",
+  "dockerignoreHash": "1bef3a4bcdf9b3b98ea5d9d941bcc17471dd12c503843ed1d2b6746002b63792",
+  "testOnlyReview": {
+    "path": "tests/e2e/tour-detail.spec.ts",
+    "reviewedHash": "6eee1556fea3b5b3ba7d07ce737dfeb2964a793f0cbeacc59ff0863ffcc39a2c",
+    "evidence": "../browser/root-maintenance-static-result.json"
+  },
+  "exitCode": 0,
+  "container": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "aYWJOtslhMlpbhucjov3b"
+  },
+  "sourceParity": {
+    "files": 421,
+    "mismatches": [
+      "tests\\e2e\\tour-detail.spec.ts"
+    ]
+  },
+  "hostMismatches": [
+    "tests\\e2e\\tour-detail.spec.ts"
+  ],
+  "passed": false,
+  "finishedAt": "2026-10-16T22:26:51.342Z"
+}

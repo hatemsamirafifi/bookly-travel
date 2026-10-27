@@ -1,0 +1,119 @@
+
+Running 5 tests using 1 worker
+
+[1A[2K(node:24264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/5] [chromium] › tests\e2e\tour-detail.spec.ts:933:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:933:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('€135.00')
+    Expected: visible
+    Error: strict mode violation: getByText('€135.00') resolved to 2 elements:
+        1) <span class="font-semibold text-primary">€135.00</span> aka getByTestId('tour-booking-card-slot').getByText('€135.00')
+        2) <span class="text-text-muted">11/17/2026 · 3 · €135.00</span> aka getByText('/17/2026 · 3 · €135.00')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('€135.00')[22m
+
+
+      953 |
+      954 |       // One display-only estimate for both surfaces: base x 3.
+    > 955 |       await expect(page.getByText(formatCurrency(base * 3, 'EUR', 'en'), { exact: false })).toBeVisible();
+          |                                                                                             ^
+      956 |       // Signed out: continuation routes through safe login with the full query.
+      957 |       const loginHref = await page.getByRole('link', { name: 'Book Now' }).first().getAttribute('href');
+      958 |       const returnUrl = new URL(loginHref!, 'http://bookly.test').searchParams.get('returnUrl');
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:955:93
+
+    Error Context: test-results\tour-detail-Tour-Detail-Pa-23b32--across-card-bar-and-resize-chromium\error-context.md
+
+
+[1A[2K(node:18784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:18784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/5] [chromium] › tests\e2e\tour-detail.spec.ts:1089:7 › Tour Detail Page › US2 SSR exposes all 60 offered dates with no slice
+[1A[2K[3/5] [chromium] › tests\e2e\tour-detail.spec.ts:1111:7 › Tour Detail Page › US2 signed-out SSR preserves the full query through login and registration links
+[1A[2K[4/5] [chromium] › tests\e2e\tour-detail.spec.ts:1138:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date
+[1A[2K  2) [chromium] › tests\e2e\tour-detail.spec.ts:1138:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveValue[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByLabel('Select a Date')
+    Expected: [32m""[39m
+    Error: strict mode violation: getByLabel('Select a Date') resolved to 2 elements:
+        1) <select id="_r_4_" class="w-full rounded-md border border-border bg-surface px-2 py-2 text-sm text-primary">…</select> aka locator('[id="_r_4_"]')
+        2) <select disabled id="_R_2mav5ubt5tivb_" class="w-full rounded-md border border-border bg-surface px-2 py-2 text-sm text-primary">…</select> aka getByLabel('Select a Date').nth(1)
+
+    Call log:
+    [2m  - Expect "toHaveValue" with timeout 5000ms[22m
+    [2m  - waiting for getByLabel('Select a Date')[22m
+
+
+      1153 |
+      1154 |       // Today is listed but strictly rejected: no automatic choice, no link.
+    > 1155 |       await expect(page.getByLabel('Select a Date')).toHaveValue('');
+           |                                                      ^
+      1156 |       await expect(page.getByText('Select an offered date to continue.')).toBeVisible();
+      1157 |       await expect(page.getByRole('link', { name: 'Book Now' })).toHaveCount(0);
+      1158 |
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1155:54
+
+    Error Context: test-results\tour-detail-Tour-Detail-Pa-c4514-pts-an-explicit-future-date-chromium\error-context.md
+
+
+[1A[2K(node:1808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:1808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[5/5] [chromium] › tests\e2e\tour-detail.spec.ts:1168:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface
+[1A[2K  3) [chromium] › tests\e2e\tour-detail.spec.ts:1168:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  getByText('Currently Unavailable').first()
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('Currently Unavailable').first()[22m
+    [2m    13 × locator resolved to <p class="text-sm font-medium text-text-muted">Currently Unavailable</p>[22m
+    [2m       - unexpected value "hidden"[22m
+
+
+      1175 |       await page.goto(`http://127.0.0.1:${harness.nextPort}/en/tours/${slug}`);
+      1176 |
+    > 1177 |       await expect(page.getByText('Currently Unavailable').first()).toBeVisible();
+           |                                                                     ^
+      1178 |       await expect(page.getByRole('link', { name: 'Book Now' })).toHaveCount(0);
+      1179 |       await expect(page.getByTestId('mobile-booking-bar')).toHaveCount(0);
+      1180 |     } finally {
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1177:69
+
+    Error Context: test-results\tour-detail-Tour-Detail-Pa-744d3--checkout-on-either-surface-chromium\error-context.md
+
+
+[1A[2K  3 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:933:7 › Tour Detail Page › US2 signed-out SSR shares a non-default date and count across card, bar and resize 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1138:7 › Tour Detail Page › US2 SSR UTC boundary never books today and accepts an explicit future date 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1168:7 › Tour Detail Page › US2 SSR unavailable tour exposes no enabled checkout on either surface 
+  2 passed (17.8s)

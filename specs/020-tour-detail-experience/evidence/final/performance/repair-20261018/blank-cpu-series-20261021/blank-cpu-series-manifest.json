@@ -1,0 +1,56 @@
+{
+  "type": "copy-provenance-manifest",
+  "generatedAtUtc": "2026-10-21T17:09:04Z",
+  "generatedBy": "OpenCode opencode/glm-5.3-flash-free (bounded interim documentation correction; root reviews)",
+  "sourceDirectory": "C:/Users/HaTeM/.codex/tmp/bookly-spec020/lighthouse-repair-20261018/blank-cpu-series-20261021 (raw originals retained unaltered there; recorded here as plain provenance text, not a link)",
+  "destinationDirectory": "specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/blank-cpu-series-20261021",
+  "mode": "byte-exact copy of the five named files only; no transformation, no truncation, no reformatting",
+  "files": [
+    {
+      "name": "blank-cpu-series.mjs",
+      "sourceBytes": 9227,
+      "destinationBytes": 9227,
+      "sourceSha256": "64143b2280ea2de9c14c43eb2746e2f7bbdd207acfc160483e081b1745843d87",
+      "destinationSha256": "64143b2280ea2de9c14c43eb2746e2f7bbdd207acfc160483e081b1745843d87",
+      "byteIdentical": true
+    },
+    {
+      "name": "run.jsonl",
+      "sourceBytes": 47643,
+      "destinationBytes": 47643,
+      "sourceSha256": "77b6f4a44d20936074680c7441bf04280215443490fca8086960581446345503",
+      "destinationSha256": "77b6f4a44d20936074680c7441bf04280215443490fca8086960581446345503",
+      "byteIdentical": true
+    },
+    {
+      "name": "summary.json",
+      "sourceBytes": 47565,
+      "destinationBytes": 47565,
+      "sourceSha256": "e33b85c565c204fa395cc1416c2efec741febeaa8da7bb5cb16730da5a688bc8",
+      "destinationSha256": "e33b85c565c204fa395cc1416c2efec741febeaa8da7bb5cb16730da5a688bc8",
+      "byteIdentical": true
+    },
+    {
+      "name": "run-err.txt",
+      "sourceBytes": 0,
+      "destinationBytes": 0,
+      "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "destinationSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteIdentical": true
+    },
+    {
+      "name": "root-reviewed-interpretation.json",
+      "sourceBytes": 54650,
+      "destinationBytes": 54650,
+      "sourceSha256": "a247710ccc52cbcce662b1a06c567522a1302186e311d95d0bbdf3e1188288fe",
+      "destinationSha256": "a247710ccc52cbcce662b1a06c567522a1302186e311d95d0bbdf3e1188288fe",
+      "byteIdentical": true
+    }
+  ],
+  "byteIdentical": true,
+  "notes": [
+    "raw originals in the temporary diagnostic directory are retained unaltered",
+    "root-reviewed-interpretation.json corrects post-hoc the diagnostic-internal appVisited summary/round inversion only; helper-emitted sample lines were already correct and are copy-preserving",
+    "diagnostic completion is NOT a performance pass; no page score exists from this series"
+  ]
+}

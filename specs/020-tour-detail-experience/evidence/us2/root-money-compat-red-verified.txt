@@ -1,0 +1,27 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/lib/__tests__/utils.test.ts
+
+FAIL src/lib/__tests__/utils.test.ts
+  ● formatCurrency legacy behavior is preserved › falls back with the currency code for an unrecognized currency
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "XX 90071992547409.81"
+    Received: "XX 90071992547409.82"
+
+      65 |   it('falls back with the currency code for an unrecognized currency', () => {
+      66 |     expect(formatCurrency(100, 'XX', 'en')).toBe('XX 1.00');
+    > 67 |     expect(formatCurrency(Number.MAX_SAFE_INTEGER - 9, 'XX', 'en')).toBe('XX 90071992547409.81');
+         |                                                                     ^
+      68 |   });
+      69 | });
+      70 |
+
+      at Object.<anonymous> (src/lib/__tests__/utils.test.ts:67:69)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 10 passed, 11 total
+Snapshots:   0 total
+Time:        1.659 s
+Ran all test suites within paths "src/lib/__tests__/utils.test.ts".

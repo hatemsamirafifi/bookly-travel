@@ -1,0 +1,6 @@
+
+Test Suites: 4 passed, 4 total
+Tests:       58 passed, 58 total
+Snapshots:   0 total
+Time:        14.777 s
+Ran all test suites within paths "src/components/tour/__tests__/BookingCTA.test.tsx", "src/components/tour/__tests__/MobileBookingAction.test.tsx", "src/components/tour/__tests__/TourBookingController.test.tsx", "src/components/booking/__tests__/BookingForm.test.tsx".

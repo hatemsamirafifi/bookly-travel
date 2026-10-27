@@ -1,0 +1,120 @@
+
+Running 7 tests using 1 worker
+
+[1A[2K(node:23644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/7] [chromium] › tests\e2e\tour-detail.spec.ts:1394:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1394:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected substring: [32m"http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg"[39m
+    Received string:    [31m"http://127.0.0.1:58319/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-gallery-1.jpg&w=3840&q=75"[39m
+
+      1451 |       );
+      1452 |       for (const [index, expectedUrl] of [coverUrl, secondUrl, thirdUrl, fourthUrl].entries()) {
+    > 1453 |         expect(srcs[index]).toContain(encodeURIComponent(expectedUrl));
+           |                             ^
+      1454 |       }
+      1455 |       // Sparse contract, genuine dimensions with ceil-pixel tolerance (not
+      1456 |       // classname-only): the last tile spans the remaining right row, so it
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1453:29
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\gallery-reviewed\tour-detail-Tour-Detail-ga-be4b3-first-order-and-sparse-span-chromium\error-context.md
+
+
+[1A[2K(node:1280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:1280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/7] [chromium] › tests\e2e\tour-detail.spec.ts:1479:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability
+[1A[2K[3/7] [chromium] › tests\e2e\tour-detail.spec.ts:1529:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile
+[1A[2K[4/7] [chromium] › tests\e2e\tour-detail.spec.ts:1585:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input
+[1A[2K[5/7] [chromium] › tests\e2e\tour-detail.spec.ts:1629:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap
+[1A[2K  2) [chromium] › tests\e2e\tour-detail.spec.ts:1629:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  locator('main#main-content').getByTestId('tour-gallery').getByText('This photo is unavailable.')
+    Expected: [32m1[39m
+    Received: [31m5[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveCount" with timeout 5000ms[22m
+    [2m  - waiting for locator('main#main-content').getByTestId('tour-gallery').getByText('This photo is unavailable.')[22m
+    [2m    14 × locator resolved to 5 elements[22m
+    [2m       - unexpected value "5"[22m
+
+
+      1660 |       // support quarters share dimensions within 1px, and the cover spans
+      1661 |       // two quarter columns plus the 8px grid gap within 2px.
+    > 1662 |       await expect(gallery.getByText('This photo is unavailable.')).toHaveCount(1);
+           |                                                                     ^
+      1663 |       const boxes = await tiles.evaluateAll((els) =>
+      1664 |         els.map((el) => {
+      1665 |           const rect = el.getBoundingClientRect();
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1662:69
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\gallery-reviewed\tour-detail-Tour-Detail-ga-81631-hability-through-a-URL-swap-chromium\error-context.md
+
+
+[1A[2K(node:2252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:2252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[6/7] [chromium] › tests\e2e\tour-detail.spec.ts:1739:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR alt keeps actual language while controls follow the page locale
+[1A[2K  3) [chromium] › tests\e2e\tour-detail.spec.ts:1739:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR alt keeps actual language while controls follow the page locale 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('main#main-content').getByTestId('tour-gallery').getByRole('button', { name: 'Ver imagen 1' }).locator('img')
+    Expected: [32m"en"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for locator('main#main-content').getByTestId('tour-gallery').getByRole('button', { name: 'Ver imagen 1' }).locator('img')[22m
+
+
+      1753 |       await expect(page.getByRole('button', { name: 'Ver las 5 fotos' })).toBeVisible();
+      1754 |       const tileImg = gallery.getByRole('button', { name: 'Ver imagen 1' }).locator('img');
+    > 1755 |       await expect(tileImg).toHaveAttribute('lang', 'en');
+           |                             ^
+      1756 |
+      1757 |       await gallery.getByRole('button', { name: 'Ver imagen 1' }).click();
+      1758 |       const dialog = page.getByRole('dialog', { name: 'Galería ampliada' });
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1755:29
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\gallery-reviewed\tour-detail-Tour-Detail-ga-196b4-rols-follow-the-page-locale-chromium\error-context.md
+
+
+[1A[2K(node:21644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:21644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[7/7] [chromium] › tests\e2e\tour-detail.spec.ts:1773:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery keeps a stable box and no page overflow at 390 and 1440
+[1A[2K  3 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1394:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1629:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1739:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR alt keeps actual language while controls follow the page locale 
+  4 passed (33.7s)

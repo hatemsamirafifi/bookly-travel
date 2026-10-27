@@ -1,0 +1,76 @@
+Exact OpenCode tool output; session ses_ebb1e4206ffeFwUxb3RcbF15Yq; call call_01a144e5a66976a1810fc25ea72f4e24; timestamp 1792157273539
+
+FAIL src/components/tour/__tests__/TourGallery.test.tsx
+  ● Console
+
+    console.error
+      An update to Root inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      467 |     } finally {
+      468 |       console.error = originalError;
+    > 469 |       holder.current?.unmount();
+          |                       ^
+      470 |       container.remove();
+      471 |     }
+      472 |   });
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at updateContainerImpl (node_modules/react-dom/cjs/react-dom-client.development.js:23509:9)
+      at ReactDOMHydrationRoot.process.env.NODE_ENV.ReactDOMHydrationRoot.unmount.ReactDOMRoot.unmount [as unmount] (node_modules/react-dom/cjs/react-dom-client.development.js:27910:11)
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:469:23)
+
+  ● TourGallery viewer › keeps a minimum viewer frame height with a very long caption so the photo stays visible
+
+    expect(element).toHaveClass("min-h-[240px]")
+
+    Expected the element to have class:
+      min-h-[240px]
+    Received:
+      relative min-h-0 flex-1 overflow-hidden rounded-lg bg-surface-alt
+
+      424 |     // height 0): the frame must guarantee a minimum visible height while the
+      425 |     // dialog body scrolls; the full caption stays reachable, not truncated.
+    > 426 |     expect(frame).toHaveClass('min-h-[240px]');
+          |                   ^
+      427 |     expect(within(dialog).getByText(longCaption)).toBeInTheDocument();
+      428 |   });
+      429 | });
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourGallery.test.tsx:426:19)
+
+FAIL src/components/ui/__tests__/interactive-primitives.test.tsx
+  ● pads the fullscreen panel with env safe-area insets without a nonexistent token
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /pb-safe/
+    Received string:      "flex h-full max-h-full w-full min-h-0 max-w-none flex-col rounded-none bg-surface pb-safe text-primary shadow-modal"
+
+      137 |   render(<Dialog open onClose={jest.fn()} title="Filters" closeLabel="Close" placement="fullscreen">Body</Dialog>);
+      138 |   const panel = screen.getByRole('dialog', { name: 'Filters' });
+    > 139 |   expect(panel.className).not.toMatch(/pb-safe/);
+          |                               ^
+      140 |   expect(panel.style.paddingTop).toBe('env(safe-area-inset-top)');
+      141 |   expect(panel.style.paddingBottom).toBe('env(safe-area-inset-bottom)');
+      142 | });
+
+      at Object.<anonymous> (src/components/ui/__tests__/interactive-primitives.test.tsx:139:31)
+
+Test Suites: 2 failed, 2 total
+Tests:       2 failed, 37 passed, 39 total
+Snapshots:   0 total
+Time:        4.993 s, estimated 19 s
+Ran all test suites matching src/components/tour/__tests__/TourGallery.test.tsx|src/components/ui/__tests__/interactive-primitives.test.tsx.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

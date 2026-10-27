@@ -1,0 +1,23 @@
+{
+  "scope": "Actual built Next route boundary with controlled503 server response; native browser AXE, no successful API interception",
+  "buildId": "3izO741kD6F5DDJ3N2S0V",
+  "violations": [
+    {
+      "id": "page-has-heading-one",
+      "impact": "moderate",
+      "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+      "nodes": [
+        {
+          "target": [
+            "html"
+          ],
+          "summary": "Fix all of the following:\n  Page must have a level-one heading"
+        }
+      ]
+    }
+  ],
+  "h1Count": 0,
+  "robots": [
+    "noindex"
+  ]
+}

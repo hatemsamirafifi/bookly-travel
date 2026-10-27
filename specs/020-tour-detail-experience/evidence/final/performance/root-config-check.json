@@ -1,0 +1,22 @@
+{
+  "urls": [
+    "http://localhost:3000/en",
+    "http://localhost:3000/en/search?q=rome",
+    "http://localhost:3000/en/tours/hidden-gems-rome-walking-tour",
+    "http://localhost:3000/en/blog/hidden-gems-florence",
+    "http://localhost:3000/es/tours/hidden-gems-rome-walking-tour",
+    "http://localhost:3000/it/tours/hidden-gems-rome-walking-tour"
+  ],
+  "runs": 3,
+  "reports": 18,
+  "performance": [
+    "error",
+    {
+      "minScore": 0.9,
+      "aggregationMethod": "pessimistic"
+    }
+  ],
+  "saveAssets": true,
+  "sourceHash": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+  "scope": "Configuration preparation only; no measured audit or CI acceptance"
+}

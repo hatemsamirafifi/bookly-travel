@@ -1,0 +1,268 @@
+{
+  "startedAt": "2026-10-26T01:09:36.399Z",
+  "scope": "local QA LCP source readiness, Docker overlay rebuild, API/UI verification, and full Linux frontend gates (857 tests / 72 suites); no performance/CI/release claim",
+  "commands": [
+    {
+      "name": "docker-build-overlay",
+      "args": [
+        "docker",
+        "build",
+        "--pull=false",
+        "--network=none",
+        "-f",
+        "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\lcp-context-20261026\\Dockerfile",
+        "-t",
+        "booklytravel-nextjs:spec020-lcp-20261026",
+        "-t",
+        "booklytravel-nextjs:latest",
+        "-t",
+        "booklytravel-nextjs",
+        "C:\\Users\\HaTeM\\.codex\\tmp\\bookly-spec020\\lighthouse-repair-20261018\\lcp-context-20261026"
+      ],
+      "startedAt": "2026-10-26T01:09:36.406Z",
+      "finishedAt": "2026-10-26T01:10:03.898Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "inspect-image",
+      "args": [
+        "docker",
+        "image",
+        "inspect",
+        "booklytravel-nextjs:spec020-lcp-20261026",
+        "--format",
+        "{{json .Id}}"
+      ],
+      "startedAt": "2026-10-26T01:10:03.899Z",
+      "finishedAt": "2026-10-26T01:10:04.036Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "compose-recreate",
+      "args": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--force-recreate",
+        "--renew-anon-volumes",
+        "nextjs"
+      ],
+      "startedAt": "2026-10-26T01:10:04.037Z",
+      "finishedAt": "2026-10-26T01:10:16.477Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "container-identity",
+      "args": [
+        "docker",
+        "inspect",
+        "bookly-frontend",
+        "--format",
+        "{\"id\":{{json .Id}},\"image\":{{json .Image}},\"state\":{{json .State}},\"project\":{{json (index .Config.Labels \"com.docker.compose.project\")}},\"service\":{{json (index .Config.Labels \"com.docker.compose.service\")}}}"
+      ],
+      "startedAt": "2026-10-26T01:11:11.318Z",
+      "finishedAt": "2026-10-26T01:11:11.943Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "container420",
+      "args": [
+        "docker",
+        "exec",
+        "-i",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "(function () {\n  const f = require('node:fs'), c = require('node:crypto'); let data = '';\n  process.stdin.setEncoding('utf8'); process.stdin.on('data', x => data += x);\n  process.stdin.on('end', () => {\n    const files = Object.entries(JSON.parse(data)).map(([rel, expected]) => {\n      try {return {rel, expected, actual: c.createHash('sha256').update(f.readFileSync('/app/' + rel.replace(/\\\\/g, '/'))).digest('hex'), error: null};}\n      catch (e) {return {rel, expected, actual: null, error: e.code || String(e)};}\n    });\n    process.stdout.write(JSON.stringify({node: process.version, next: require('/app/node_modules/next/package.json').version, buildId: f.readFileSync('/app/.next/BUILD_ID', 'utf8').trim(), files}));\n  });\n})();"
+      ],
+      "startedAt": "2026-10-26T01:11:12.412Z",
+      "finishedAt": "2026-10-26T01:11:13.098Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "jest",
+      "args": [
+        "docker",
+        "exec",
+        "--workdir",
+        "/app",
+        "-e",
+        "NODE_ENV=test",
+        "-e",
+        "NEXT_PUBLIC_SITE_URL=",
+        "bookly-frontend",
+        "node",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--json",
+        "--outputFile",
+        "/tmp/spec020-lcp-jest-20261026.json"
+      ],
+      "startedAt": "2026-10-26T01:11:13.317Z",
+      "finishedAt": "2026-10-26T01:11:59.081Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "jest-json",
+      "args": [
+        "docker",
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "-e",
+        "process.stdout.write(require('node:fs').readFileSync('/tmp/spec020-lcp-jest-20261026.json','utf8'))"
+      ],
+      "startedAt": "2026-10-26T01:11:59.082Z",
+      "finishedAt": "2026-10-26T01:11:59.285Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "typescript",
+      "args": [
+        "docker",
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-26T01:11:59.288Z",
+      "finishedAt": "2026-10-26T01:12:15.173Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    },
+    {
+      "name": "eslint",
+      "args": [
+        "docker",
+        "exec",
+        "--workdir",
+        "/app",
+        "bookly-frontend",
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-26T01:12:15.174Z",
+      "finishedAt": "2026-10-26T01:12:41.308Z",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "error": null
+    }
+  ],
+  "passedReadinessOnly": true,
+  "passedGates": true,
+  "newImageId": "sha256:5d0871d62426995f85926382fc7e78a2c53ac15d250129bd32e0603822d1cda6",
+  "rootProbes": [
+    {
+      "url": "http://127.0.0.1:3001/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    {
+      "url": "http://localhost:8080/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    {
+      "url": "http://127.0.0.1:8080/",
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    }
+  ],
+  "apiUiProbes": [
+    {
+      "url": "http://localhost:8080/api/public/tours/hidden-gems-rome-walking-tour?locale=en",
+      "status": 200,
+      "location": null,
+      "bytes": 3375,
+      "bodySha256": "037a877409f053f03667066185770bfac5e8fe2fa6a36d66a30570f64363b53e"
+    },
+    {
+      "url": "http://localhost:8080/en/tours/hidden-gems-rome-walking-tour",
+      "status": 200,
+      "location": null,
+      "bytes": 138103,
+      "bodySha256": "fce95a6a6ec92fab115bde3ac26531c95a4647c492525dbd6f736fd091527dfd"
+    },
+    {
+      "url": "http://localhost:8080/en/blog/hidden-gems-florence",
+      "status": 200,
+      "location": null,
+      "bytes": 90718,
+      "bodySha256": "9cb340c2731218b872fbecf4aace766d1a748ceb4511ca7db984ac64711ba65c"
+    }
+  ],
+  "host419": {
+    "entries": 419,
+    "unique": 419,
+    "readErrors": [],
+    "mismatches": []
+  },
+  "container420": {
+    "entries": 420,
+    "unique": 420,
+    "readErrors": [],
+    "mismatches": []
+  },
+  "container": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "AfUeSl_Iw4WVM4xW7N-hy",
+    "id": "a8fb16cf2eee507696e84b0b8753a0497ce39177d013c89e5978003a1dd6f09e",
+    "image": "sha256:5d0871d62426995f85926382fc7e78a2c53ac15d250129bd32e0603822d1cda6",
+    "startedAt": "2026-10-26T01:10:15.817541876Z"
+  },
+  "jest": {
+    "numTotalTests": 857,
+    "numPassedTests": 857,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 72,
+    "numPassedTestSuites": 72,
+    "numFailedTestSuites": 0,
+    "numRuntimeErrorTestSuites": 0,
+    "success": true,
+    "wasInterrupted": false,
+    "startTime": 1792977076693
+  },
+  "passed": true,
+  "finishedAt": "2026-10-26T01:12:41.309Z"
+}

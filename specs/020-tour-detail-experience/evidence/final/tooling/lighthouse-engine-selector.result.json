@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-10-19T21:23:43.050Z",
+  "selector": {
+    "path": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\tooling\\lighthouse-engine-selector.cjs",
+    "sha256": "b5283ec43f0ddf7aea231f3dce7697c6bde4c23e9774306f1e4632d5bf5666b4",
+    "bytes": 3845
+  },
+  "tempTestDir": "C:\\Users\\HaTeM\\AppData\\Local\\Temp\\opencode\\spec020-engine-selector-test-KgdwU1",
+  "portability": {
+    "toolingDir": "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\tooling",
+    "resolvedRootPath": "F:\\Travel Website\\bookly travel",
+    "fallbackRepoRoot": "F:\\Travel Website\\bookly travel",
+    "markers": {
+      "frontend/package.json": true,
+      "frontend/node_modules/lighthouse/package.json": true,
+      ".git": true
+    }
+  },
+  "pinnedVersion": {
+    "expected": "12.8.2",
+    "installedRootLighthouseVersion": "12.8.2",
+    "nestedLhciLighthouseVersion": "12.1.0",
+    "lhciCliVersion": "0.14.0",
+    "nodeVersion": "v24.14.1",
+    "rootCoreEntryExists": true,
+    "rootCliEntryExists": true,
+    "nodeRunnerExists": true
+  },
+  "actualSelected": {
+    "core": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js",
+    "coreVersion": "12.8.2",
+    "cliResolvedFromInvocation": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\src\\cli.js",
+    "cliVersion": "0.14.0"
+  },
+  "sixResolutionCases": [
+    {
+      "id": "1-allowed-caller-bare-lighthouse",
+      "request": "lighthouse",
+      "expectedInterception": true,
+      "before": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "after": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "passThroughUnchanged": false,
+      "identicalBeforeAfter": false
+    },
+    {
+      "id": "2-unrelated-caller-bare-lighthouse",
+      "request": "lighthouse",
+      "expectedInterception": false,
+      "before": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "after": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "passThroughUnchanged": true,
+      "identicalBeforeAfter": true
+    },
+    {
+      "id": "3-allowed-caller-subpath",
+      "request": "lighthouse/core/index.js",
+      "expectedInterception": false,
+      "before": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "after": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "passThroughUnchanged": true,
+      "identicalBeforeAfter": true
+    },
+    {
+      "id": "4-allowed-caller-with-options",
+      "request": "lighthouse",
+      "expectedInterception": false,
+      "before": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "after": {
+        "ok": true,
+        "value": "F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js"
+      },
+      "passThroughUnchanged": true,
+      "identicalBeforeAfter": true
+    },
+    {
+      "id": "5-missing-parent-bare-lighthouse",
+      "request": "lighthouse",
+      "expectedInterception": false,
+      "before": {
+        "ok": false,
+        "code": "MODULE_NOT_FOUND",
+        "message": "Cannot find module 'lighthouse'"
+      },
+      "after": {
+        "ok": false,
+        "code": "MODULE_NOT_FOUND",
+        "message": "Cannot find module 'lighthouse'"
+      },
+      "passThroughUnchanged": true,
+      "identicalBeforeAfter": true
+    },
+    {
+      "id": "6-unrelated-builtin",
+      "request": "node:path",
+      "expectedInterception": false,
+      "before": {
+        "ok": true,
+        "value": "node:path"
+      },
+      "after": {
+        "ok": true,
+        "value": "node:path"
+      },
+      "passThroughUnchanged": true,
+      "identicalBeforeAfter": true
+    }
+  ],
+  "interceptionEvidence": {
+    "armedSingleLine": "[lh-engine-select] armed: root engine v12.8.2 at F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse (caller-gated to node-runner.js only)",
+    "selectedSingleLine": "[lh-engine-select] caller=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\src\\collect\\node-runner.js request=lighthouse selected=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js v12.8.2",
+    "failClosedLinesCount": 0,
+    "beforeRunnerStderr": "",
+    "afterRunnerStderr": "[lh-engine-select] armed: root engine v12.8.2 at F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse (caller-gated to node-runner.js only)\n[runner] armed-cases-start\n[lh-engine-select] caller=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\src\\collect\\node-runner.js request=lighthouse selected=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js v12.8.2\n[runner] armed-cases-end\n"
+  },
+  "helpInvocation": {
+    "cmdline": "node --require ../specs/020-tour-detail-experience/evidence/final/tooling/lighthouse-engine-selector.cjs node_modules\\@lhci\\cli\\src\\cli.js collect --help",
+    "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+    "exitCode": 0,
+    "signal": null,
+    "startIso": "2026-10-19T21:23:42.517Z",
+    "endIso": "2026-10-19T21:23:43.048Z",
+    "stdoutBytes": 2700,
+    "stderrBytes": 384,
+    "sha256Stdout": "134718064ac867b3f4c7fe0e019a397005121883d8f66ede3c021de56f1debf8",
+    "sha256Stderr": "8e5e6229a2bf5b90ddbc0c44f83578feb318ada55bb1431eb6ed4ef2523a84ac",
+    "stderr": "[lh-engine-select] armed: root engine v12.8.2 at F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse (caller-gated to node-runner.js only)\n[lh-engine-select] caller=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\@lhci\\cli\\src\\collect\\node-runner.js request=lighthouse selected=F:\\Travel Website\\bookly travel\\frontend\\node_modules\\lighthouse\\core\\index.js v12.8.2\n",
+    "stdout": "cli.js collect\n\nRun Lighthouse and save the results to a local folder\n\nOptions:\n  --help                         Show help  [boolean]\n  --version                      Show version number  [boolean]\n  --no-lighthouserc              Disables automatic usage of a .lighthouserc file.  [boolean]\n  --method                       The method of running Lighthouse to use. PSI will send the URL to a Google API and only be able to access URLs publicly available on the internet.  [string] [choices: \"node\", \"psi\"] [default: \"node\"]\n  --headful                      Run with a headful Chrome  [boolean]\n  --additive                     Skips clearing of previous collect data  [boolean]\n  --url                          A URL to run Lighthouse on. Use this flag multiple times to evaluate multiple URLs.\n  --autodiscoverUrlBlocklist     A URL to not include when autodiscovering urls from staticDistDir. Use this flag multiple times to filter multiple URLs.\n  --psiApiKey                    [psi only] The API key to use for PageSpeed Insights runner method.\n  --psiStrategy                  [psi only] The strategy to use for PageSpeed Insights runner method. Use mobile or desktop. The default value is mobile\n  --staticDistDir                The build directory where your HTML files to run Lighthouse on are located.\n  --isSinglePageApplication      If the application is created by Single Page Application, enable redirect to index.html.\n  --chromePath                   The path to the Chrome or Chromium executable to use for collection.  [default: \"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\"]\n  --puppeteerScript              The path to a script that manipulates the browser with puppeteer before running Lighthouse, used for auth.\n  --puppeteerLaunchOptions       The object of puppeteer launch options\n  --startServerCommand           The command to run to start the server.\n  --startServerReadyPattern      String pattern to listen for started server.  [string] [default: \"listen|ready\"]\n  --startServerReadyTimeout      The number of milliseconds to wait for the server to start before continuing  [number] [default: 10000]\n  --settings                     The Lighthouse settings and flags to use when collecting\n  --numberOfRuns, -n             The number of times to run Lighthouse.  [number] [default: 3]\n  --maxAutodiscoverUrls          The maximum number of pages to collect when using the staticDistDir option with no specified URLs. Disable this limit by setting to 0.  [number] [default: 5]\n  --staticDirFileDiscoveryDepth  The maximum depth level of nested folders that Lighthouse will look into to discover URLs. If not set, this will default to 2.  [number] [default: 2]\n",
+    "lighthouseciDirectoryBefore": true,
+    "lighthouseciDirectoryAfter": true
+  },
+  "noPassClaim": "This test exercises module resolution and a help-only CLI invocation only. No audit, no collection, no performance measurement, and no CI pass is claimed."
+}

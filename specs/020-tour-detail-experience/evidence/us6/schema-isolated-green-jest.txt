@@ -1,0 +1,16 @@
+Spec020 US6 isolated TouristTrip lane — FINAL GREEN (after implementation)
+Command: npm test -- --runInBand --watchman=false --runTestsByPath src/components/seo/__tests__/StructuredData.test.tsx src/lib/__tests__/utils.test.ts src/lib/tours/__tests__/booking-selection.test.ts
+Workdir: frontend/ | Node 24.14.1 / npm 11.12.1 observed | jsdom, config unchanged
+Result: 3 suites passed | Tests: 121 passed, 0 failed, 121 total | Snapshots: 0 | Time: ~1.8s
+
+Breakdown:
+- StructuredData.test.tsx: 26 passed (8 pre-existing + 18 new isolated-lane cases incl. it.each expansions)
+- utils.test.ts: 14 passed (all 11 pre-existing formatCurrency regression cases preserved + 3 new helper cases)
+- booking-selection.test.ts: 81 passed, untouched (pure model consumed, never altered)
+
+Red-to-green: initial 12 failed / 13 passed (see schema-isolated-red-jest.txt).
+One rework during green: two date-guard expectations corrected from OutOfStock to
+honest InStock-without-validFrom for stale-but-listed next dates that still leave
+offered futures (documented in schema-isolated-design-rationale.txt); added one
+extra guard (only stale dates, no offered future -> OutOfStock). No production
+rework after that correction.

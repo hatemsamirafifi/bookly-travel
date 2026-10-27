@@ -1,0 +1,56 @@
+{
+  "scope": "Fresh native built Next served through a browser frontend-resource transport adapter on the owned proxy origin. Public/auth/booking/payment/cancel API requests reach the actual owned API without interception. Media-only CDN adapter. This is not Docker deployment/optimizer/performance acceptance.",
+  "checks": [
+    "All offered dates, non-default selection, shared mobile dialog, 44px target, Escape focus return and resize preserved query.",
+    "Real login through register/login cross-links restored the full selection with no create POST.",
+    "Actual revoked-token create401 recovered full query; explicit retry alone created one deterministic booking with authoritative integer total."
+  ],
+  "createRequests": [
+    {
+      "tour_slug": "hidden-gems-rome-walking-tour",
+      "tour_date": "2026-11-17",
+      "participant_count": 4,
+      "locale": "en",
+      "page_load_price": 4500
+    },
+    {
+      "tour_slug": "hidden-gems-rome-walking-tour",
+      "tour_date": "2026-11-17",
+      "participant_count": 4,
+      "locale": "en",
+      "page_load_price": 4500
+    }
+  ],
+  "paymentStatuses": [
+    401
+  ],
+  "origin": "http://localhost:8080",
+  "nativeOrigin": "http://127.0.0.1:50500",
+  "sourceHead": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "buildId": "2b7daSvhEzPFaswVcuN3y",
+  "publicFacts": {
+    "slug": "hidden-gems-rome-walking-tour",
+    "dateCount": 60,
+    "baseCents": 4500,
+    "currency": "EUR",
+    "group": {
+      "min": 1,
+      "max": 20
+    },
+    "picked": "2026-11-16",
+    "mobilePicked": "2026-11-17"
+  },
+  "ownedReference": "BKO-ANVWKQ",
+  "serverTotal": {
+    "amount": 18000,
+    "currency": "EUR"
+  },
+  "passed": false,
+  "error": "expect(locator).toContainText(expected) failed\n\nLocator: getByRole('alert')\nExpected substring: \"The local test payment could not be completed.\"\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <div role=\"alert\" class=\"rounded-lg bg-red-50 p-3 text-sm text-red-700\">The local test payment could not be completed.</div> aka getByText('The local test payment could')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\">Book hidden-gems-rome-walking-tour | Bookly</div> aka getByText('Book hidden-gems-rome-walking')\n\nCall log:\n  - Expect \"to.have.text\" with timeout 5000ms\n  - waiting for getByRole('alert')\n    9 × locator resolved to <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\">Book hidden-gems-rome-walking-tour | Bookly</div>\n      - unexpected value \"Book hidden-gems-rome-walking-tour | Bookly\"\n",
+  "failedUrl": "http://localhost:8080/en/booking?tour=hidden-gems-rome-walking-tour&participants=4&date=2026-11-17",
+  "cleanup": {
+    "reference": "BKO-ANVWKQ",
+    "status": 401,
+    "passed": false
+  }
+}

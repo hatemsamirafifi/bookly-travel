@@ -1,0 +1,94 @@
+{
+  "startedAt": "2026-10-17T15:13:09.961Z",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "conditions": "Serial production audits, no competing build/test/audit. Lighthouse resets browser storage for each cold navigation; server/optimizer filesystem caches are not flushed. The unchanged about:blank CPU readiness hook runs before audits; default Lighthouse mobile throttling remains configured.",
+  "stages": [
+    {
+      "name": "resources",
+      "args": [
+        "stats",
+        "--no-stream",
+        "--format",
+        "{{.Name}} CPU={{.CPUPerc}} memory={{.MemUsage}}"
+      ],
+      "startedAt": "2026-10-17T15:13:10.005Z",
+      "finishedAt": "2026-10-17T15:13:13.172Z",
+      "exitCode": 0
+    },
+    {
+      "name": "chrome-path",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');const p=require('@playwright/test').chromium.executablePath();if(!fs.existsSync(p))throw Error('Installed Chrome missing');process.stdout.write(p)"
+      ],
+      "startedAt": "2026-10-17T15:13:13.265Z",
+      "finishedAt": "2026-10-17T15:13:15.123Z",
+      "exitCode": 0
+    },
+    {
+      "name": "prior-trace-list",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "console.log(JSON.stringify(require('node:fs').readdirSync('/app').filter(p=>/\\.(trace|devtoolslog)\\.json$/.test(p))))"
+      ],
+      "startedAt": "2026-10-17T15:13:15.123Z",
+      "finishedAt": "2026-10-17T15:13:15.914Z",
+      "exitCode": 0
+    },
+    {
+      "name": "preflight-tests",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "-e",
+        "LIGHTHOUSE_BASE_URL=http://nginx",
+        "-e",
+        "CHROME_PATH=/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+        "nextjs",
+        "node",
+        "--test",
+        "scripts/lighthouse-runtime-preflight.test.mjs"
+      ],
+      "startedAt": "2026-10-17T15:13:15.914Z",
+      "finishedAt": "2026-10-17T15:13:17.919Z",
+      "exitCode": 0
+    },
+    {
+      "name": "cpu-preflight",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "-e",
+        "LIGHTHOUSE_BASE_URL=http://nginx",
+        "-e",
+        "CHROME_PATH=/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+        "nextjs",
+        "node",
+        "scripts/lighthouse-runtime-preflight.mjs"
+      ],
+      "startedAt": "2026-10-17T15:13:17.920Z",
+      "finishedAt": "2026-10-17T15:13:37.372Z",
+      "exitCode": 1
+    }
+  ],
+  "chromePath": "/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+  "error": "cpu-preflight exited 1",
+  "passed": false,
+  "finishedAt": "2026-10-17T15:13:37.373Z"
+}

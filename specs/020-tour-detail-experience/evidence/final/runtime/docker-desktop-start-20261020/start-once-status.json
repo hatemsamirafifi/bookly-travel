@@ -1,0 +1,21 @@
+{
+  "name": "start-once",
+  "command": [
+    "docker",
+    "desktop",
+    "start",
+    "--timeout"
+  ],
+  "spawnOptions": {
+    "shell": false,
+    "timeoutMs": 120000,
+    "windowsHide": true
+  },
+  "startedAtUtc": "2026-10-20T19:15:32.934Z",
+  "finishedAtUtc": "2026-10-20T19:15:33.146Z",
+  "durationMs": 212,
+  "exitCode": 125,
+  "signal": null,
+  "timedOut": false,
+  "spawnError": null
+}

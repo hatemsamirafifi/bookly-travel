@@ -1,0 +1,20 @@
+FOCUSED ESLINT (owned file only)
+  frontend> npx eslint tests/e2e/tour-detail.spec.ts
+  RESULT: clean — no output, 0 errors, 0 warnings, 0 suppressions.
+  (One unused-helper warning from the prior pass was already removed by
+  deleting the dead helper, not by suppression; no new warnings introduced
+  by the review revisions.)
+
+WHOLE-PROJECT TYPECHECK (read-only gate for this phase)
+  frontend> npm run typecheck  (tsc --noEmit)
+  RESULT: clean — no output, 0 errors across the whole frontend project,
+  including the revised T053 block (optional timeoutMs parameter, keyboard
+  step, tightened assertions all type-check).
+
+SCOPE PROOF
+  Owned and written: frontend/tests/e2e/tour-detail.spec.ts ONLY (T053
+  describe block revised per root review; existing tests byte-identical).
+  Explicitly untouched: production source (TourSectionNav, booking,
+  wishlist, catalogs, globals.css), route helpers, fixtures, messages, a11y
+  spec, .todo/docs/tasks/verification, configs, agents, dependencies.
+  No commits, no staging.

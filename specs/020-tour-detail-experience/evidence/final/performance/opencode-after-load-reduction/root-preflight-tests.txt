@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: a stable desktop CPU permits the unchanged mobile slowdown
+ok 1 - a stable desktop CPU permits the unchanged mobile slowdown
+  ---
+  duration_ms: 4.34644
+  ...
+# Subtest: a slow or changing CPU must block the performance audit
+ok 2 - a slow or changing CPU must block the performance audit
+  ---
+  duration_ms: 0.452235
+  ...
+# Subtest: startup settling requires two consecutive stable samples
+ok 3 - startup settling requires two consecutive stable samples
+  ---
+  duration_ms: 0.224118
+  ...
+# Subtest: missing or invalid measurements cannot accept the audit
+ok 4 - missing or invalid measurements cannot accept the audit
+  ---
+  duration_ms: 0.288822
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 500.730943

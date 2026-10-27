@@ -1,0 +1,11 @@
+{
+  "source": "frontend\\src\\components\\tour\\TourGallery.tsx",
+  "sha256": "dfe78095027fb19a8915c13d6a062f3e78e29aa17b7bd7d3438dffeec3c77a0e",
+  "scope": "Unintegrated gallery review snapshot; standalone React pattern reproduction, not live built-page acceptance",
+  "findings": [
+    "render-time matchMedia state differs from SSR and can leave desktop inert after hydration",
+    "mosaic and rail each mount cover image with high fetch priority",
+    "viewer arrow handler excludes shared Dialog close button and single-photo counter is omitted",
+    "viewer max-w-5xl center styling does not meet planned fullscreen viewer; sparse geometry needs browser proof"
+  ]
+}

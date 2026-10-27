@@ -1,0 +1,77 @@
+
+Running 6 tests using 1 worker
+
+[1A[2K[1/6] [chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+SPEC020_PASSIVE_NAV_GEOMETRY {"nav":{"top":0,"bottom":54,"height":54},"section":{"top":53.5,"bottom":392,"height":338.5},"heading":{"top":53.5,"bottom":81.5,"height":28},"scrollY":2326,"maxScroll":2676,"clientHeight":900,"innerHeight":900,"visualHeight":900,"scale":1,"dpr":1,"scrollMargin":"54px"}
+
+[1A[2K[2/6] [chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+SPEC020_PASSIVE_NAV_GEOMETRY {"nav":{"top":0,"bottom":54,"height":54},"section":{"top":53.5,"bottom":392,"height":338.5},"heading":{"top":53.5,"bottom":81.5,"height":28},"scrollY":2326,"maxScroll":2676,"clientHeight":900,"innerHeight":900,"visualHeight":900,"scale":1,"dpr":1,"scrollMargin":"54px"}
+
+[1A[2K[3/6] [chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+SPEC020_PASSIVE_NAV_GEOMETRY {"nav":{"top":0,"bottom":54,"height":54},"section":{"top":52.5,"bottom":391,"height":338.5},"heading":{"top":52.5,"bottom":80.5,"height":28},"scrollY":2327,"maxScroll":2676,"clientHeight":900,"innerHeight":900,"visualHeight":900,"scale":1,"dpr":1,"scrollMargin":"54px"}
+
+[1A[2K  1) [chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"[7msettl[27med"[39m
+    Received: [31m"[7mheading-obscur[27med"[39m
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      1974 |         );
+      1975 |       }, { timeout: timeoutMs })
+    > 1976 |       .toBe('settled');
+           |        ^
+      1977 |   }
+      1978 |
+      1979 |   async function noPageHorizontalOverflow(page: Page) {
+        at headingClearOfNav (/app/tests/e2e/tour-detail.spec.ts:1976:8)
+        at /app/tests/e2e/tour-detail.spec.ts:2108:15
+
+    Error Context: ../tmp/spec020-maintenance-focused/tour-detail-Tour-Detail-se-bff6f-sition-without-moving-focus-chromium-repeat2/error-context.md
+
+
+[1A[2K[4/6] [mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+SPEC020_PASSIVE_NAV_GEOMETRY {"nav":{"top":0,"bottom":54,"height":54},"section":{"top":53.5,"bottom":392,"height":338.5},"heading":{"top":53.5,"bottom":81.5,"height":28},"scrollY":2326,"maxScroll":2676,"clientHeight":900,"innerHeight":900,"visualHeight":900,"scale":1,"dpr":2.625,"scrollMargin":"54px"}
+
+[1A[2K[5/6] [mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+SPEC020_PASSIVE_NAV_GEOMETRY {"nav":{"top":0,"bottom":54,"height":54},"section":{"top":52.5,"bottom":391,"height":338.5},"heading":{"top":52.5,"bottom":80.5,"height":28},"scrollY":2327,"maxScroll":2676,"clientHeight":900,"innerHeight":900,"visualHeight":900,"scale":1,"dpr":2.625,"scrollMargin":"54px"}
+
+[1A[2K  2) [mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"[7msettl[27med"[39m
+    Received: [31m"[7mheading-obscur[27med"[39m
+
+    Call Log:
+    - Timeout 10000ms exceeded while waiting on the predicate
+
+      1974 |         );
+      1975 |       }, { timeout: timeoutMs })
+    > 1976 |       .toBe('settled');
+           |        ^
+      1977 |   }
+      1978 |
+      1979 |   async function noPageHorizontalOverflow(page: Page) {
+        at headingClearOfNav (/app/tests/e2e/tour-detail.spec.ts:1976:8)
+        at /app/tests/e2e/tour-detail.spec.ts:2108:15
+
+    Error Context: ../tmp/spec020-maintenance-focused/tour-detail-Tour-Detail-se-bff6f-sition-without-moving-focus-mobile-repeat1/error-context.md
+
+
+[1A[2K[6/6] [mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+[1A[2K[mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus
+SPEC020_PASSIVE_NAV_GEOMETRY {"nav":{"top":0,"bottom":54,"height":54},"section":{"top":53.5,"bottom":392,"height":338.5},"heading":{"top":53.5,"bottom":81.5,"height":28},"scrollY":2326,"maxScroll":2676,"clientHeight":900,"innerHeight":900,"visualHeight":900,"scale":1,"dpr":2.625,"scrollMargin":"54px"}
+
+[1A[2K  2 failed
+    [chromium] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus 
+    [mobile] › tests/e2e/tour-detail.spec.ts:2074:7 › Tour Detail section navigation (Spec 020 US4 T053) › US4 passive scrolling follows reading position without moving focus 
+  4 passed (1.0m)

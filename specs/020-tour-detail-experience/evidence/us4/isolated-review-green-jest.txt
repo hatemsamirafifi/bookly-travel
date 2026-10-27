@@ -1,0 +1,34 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourSectionNav.test.tsx
+  (isolated-review green run: 12 prior tests + 2 root-requested regression tests, fixed island)
+
+RESULT: PASS — 14 passed, 14 total, 0 failed; no act() warnings, no snapshots, no skips.
+
+  Prior 12 (all still green, unchanged behavior asserted):
+  + renders only the supplied present sections as native anchors
+  + marks the current section with aria-current plus a non-color cue
+  + observes only actual present sections and ignores absent entries
+  + follows actual headings: observer entries move the active entry
+  + passive observer updates never take focus and never scroll the page vertically
+  + plain activation keeps the hash, clears the measured sticky nav and focuses the real heading
+  + modifier clicks keep native behavior: no interception, scroll or focus theft
+  + publishes the measured nav height as a scoped offset and restores it on unmount
+  + re-observes when the supplied sections change and drops removed targets
+  + scrolls immediately without animation when reduced motion is preferred
+  + honors an initial deep link into a present section
+  + reveals the active entry horizontally without any vertical scrollIntoView
+
+  New root-requested regressions (were red, now green):
+  + keeps the later visible section active when an earlier one exits alone across
+    delta notifications (N1 facts enters -> active facts; N2 overview exits alone
+    while facts stays silent -> facts STAYS; N3 facts exits + reviews enters ->
+    reviews; focus retained on probe, window.scrollTo uncalled, scrollY unchanged,
+    scrollIntoView uncalled throughout)
+  + measures and observes across empty, present, replacement and empty lifecycles
+    ([] -> no nav/links/observers/props with scope seed intact; ->present ->
+    1 observer + 1 resize pair observing the live nav, scoped props published,
+    3 links, About active; ->replacement -> 2nd observer/resize pair, 1 disconnect
+    each, Reviews link gone; ->[] -> nav/links gone, 2 disconnects each, prior
+    scope values restored including the originally-absent height property)
+
+Time: ~3.1s. Full output retained from the focused jest run above.

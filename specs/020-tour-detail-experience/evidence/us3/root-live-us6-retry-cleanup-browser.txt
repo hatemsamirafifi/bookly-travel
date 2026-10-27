@@ -1,0 +1,51 @@
+
+Running 3 tests using 1 worker
+
+[1A[2K(node:24172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/3] [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+[1A[2K(node:12708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:12708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/3] [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+[1A[2K(node:6576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:6576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/3] [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text 
+
+    Error: route.fulfill: Route is already handled!
+
+       at helpers\tour-detail-ssr.ts:228
+
+      226 |       headers: { Host: 'cdn.bookly.test' },
+      227 |     });
+    > 228 |     await route.fulfill({ response: upstream });
+          |                 ^
+      229 |   });
+      230 | }
+      231 |
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\helpers\tour-detail-ssr.ts:228:17
+
+    Error Context: ..\specs\020-tour-detail-experience\evidence\us3\native-browser-artifacts\us6-retry-cleanup\tour-detail-Tour-Detail-ro-0bdea-thout-leaking-upstream-text-chromium-repeat2\error-context.md
+
+
+[1A[2K  1 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1291:7 › Tour Detail route states (Spec 020 US6) › US6 SSR recoverable failure shows a safe localized retry and recovers without leaking upstream text 
+  2 passed (17.0s)

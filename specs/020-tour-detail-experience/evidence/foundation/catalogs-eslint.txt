@@ -1,0 +1,3 @@
+Command: npx eslint src/lib/tours/__tests__/detail-localization.test.ts
+Workdir: frontend/
+Result: PASS — exited 0 with no findings.

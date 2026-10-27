@@ -123,7 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     if (token) {
       try {
-        await authApi.logout();
+        await authApi.logout(token);
       } catch (e) {
         console.error('Logout failed', e);
       } finally {

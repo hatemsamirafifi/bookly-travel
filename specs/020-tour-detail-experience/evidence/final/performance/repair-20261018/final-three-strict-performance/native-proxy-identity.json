@@ -1,0 +1,14 @@
+{
+  "localhost": {
+    "status": 307,
+    "location": "/en",
+    "bytes": 3,
+    "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+  },
+  "loopbackIp": {
+    "status": 307,
+    "location": "/en",
+    "bytes": 3,
+    "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+  }
+}

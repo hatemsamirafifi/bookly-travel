@@ -1,0 +1,16 @@
+{
+  "args": [
+    "compose",
+    "exec",
+    "-T",
+    "nextjs",
+    "node",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "src/components/tour/__tests__/TourSectionNav.test.tsx"
+  ],
+  "startedAt": "2026-10-17T14:23:37.167Z",
+  "finishedAt": "2026-10-17T14:23:39.926Z",
+  "exitCode": 0
+}

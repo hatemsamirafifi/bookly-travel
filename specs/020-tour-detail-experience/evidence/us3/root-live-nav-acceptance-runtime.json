@@ -1,0 +1,6 @@
+{
+  "base": "http://127.0.0.1:57701",
+  "buildId": "MDBZcRDMEv6ez4wJeEWkH",
+  "startedAt": "2026-10-16T17:21:08.175Z",
+  "scope": "Native production source with controlled server API reads; media-only adapter enabled in targeted tests: true; no production optimizer/performance acceptance inferred."
+}

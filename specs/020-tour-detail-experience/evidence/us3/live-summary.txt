@@ -1,0 +1,36 @@
+Spec020 US3 LIVE gallery integration (worker: codex/020-tour-detail-experience, no commits per LiveReview quota).
+
+OWNED FILES (only these touched + live-* evidence):
+- frontend/src/components/tour/TourDetail.tsx (canonical import/use; cancellationPolicyLocale plumbing)
+- frontend/src/components/tour/__tests__/TourDetail.test.tsx (mock swap to ../TourGallery with prop capture; US3 composition describe)
+- frontend/src/components/tour/ImageGallery.tsx (retired engine -> 16-line thin wrapper delegating to TourGallery)
+- frontend/src/components/tour/__tests__/ImageGallery.test.tsx (wrapper delegation tests)
+- frontend/tests/e2e/tour-detail.spec.ts (T045 browser cases; legacy selector migration; new US3 describe x7)
+- frontend/tests/e2e/a11y/tour-detail-a11y.spec.ts (narrow legacy-selector migration only)
+READ-ONLY respected: TourGallery.tsx+test, Dialog.tsx+test, catalogs, booking/controller, route, helpers, fixtures, all other lanes.
+
+SOURCE DECISIONS:
+- ImageGallery.tsx NOT deleted: required consumer TourContentPreview.tsx (partner, read-only lane) still imports it with {images,title} shape; wrapper keeps that exact prop contract (contentLocale optional) and deletes the duplicate modal/state engine.
+- TourDetail passes cancellationPolicyLocale={tour.content_locale} next to cancellationPolicy into TourBookingController (US2 prop verified read-only at TourBookingController.tsx:32, passed through at :288 to BookingCard lang). No money/controller edits; policy text/linebreaks untouched (US6 whitespace-pre-line test intact).
+- Catalog check (read-only): tour.gallery dialog="Image lightbox" / close="Close lightbox" are UNCHANGED, so only the open trigger and thumbnails retired. The brief's "Tour images/Close image viewer" strings do not exist in catalogs or TourGallery source; mappings below use actual catalog copy.
+
+OBSOLETE SELECTOR MAPPINGS (behavior-equivalent, nothing deleted):
+- 'Open image gallery' (main trigger) -> tile 'View image 1' (tour-detail.spec.ts:303; a11y:123,142); 'Abrir ...' -> /Ver imagen/; 'Apri ...' -> /Vedi immagine/ (a11y:131-136).
+- US4 scenarios table: open -> view1 per locale (en 'View image 1', es 'Ver imagen 1', it 'Vedi immagine 1'); dialog/close keys unchanged.
+- US4 third-thumbnail flow (heroImg mutation assumption) re-derived for canonical: view3 tile opens the viewer at index 3 (counter en '3 of 3'/es '3 de 3'/it '3 di 3'), title-fallback alt with content-locale lang. Old heroImg-mutation lines removed.
+- '[aria-current="true"]' thumbnail assertion retired with thumbnails; replaced by rail counter movement + explicit no-thumbnail-list assertion.
+- Empty-gallery '/Open image/i count 0' kept (canonical empty renders zero buttons).
+- '.aspect-[16/10]' visibility check kept (canonical tiles keep the class).
+
+GATES (exact outputs in sibling live-* files):
+- RED (before source, after test edits): 2 suites failed; 9 failed, 46 passed, 55 total (live-jest-red.txt). Failures: 4x US3 composition (0/1/4/7), caller order, policy-locale, existing US1 order selector, 2x wrapper delegation.
+- GREEN (after source): 2 suites passed; 55 passed, 55 total, no forceExit (live-jest-green.txt).
+- ESLint (6 owned files): exit 0, 0 errors, 0 warnings after removing one unused `page` param (live-eslint.txt).
+- Typecheck (npm run typecheck, whole project): exit 0, 0 errors after `as const` on alt_locale literals (live-typecheck.txt).
+- Playwright discovery: `npx playwright test tests/e2e/tour-detail.spec.ts --list --reporter=line` -> Total: 110 tests in 3 files; 7 new US3 cases listed under chromium+mobile, all pre-existing US1/US2/US4/US6 cases intact (live-playwright-list.txt). Discovery only, NOT runtime proof.
+
+REMAINING RUNTIME GAPS (root owns: fresh build, browser execution, acceptance ledger):
+- All 7 new US3 browser tests + migrated gallery/a11y cases await root execution (needs build + backend/Docker media).
+- Byte-level image-load recovery (failed slot -> decoded pixels) cannot be proven worker-side: every remote URL fails outside Docker (cdn.bookly.test is Docker-only; 127.0.0.1 is outside optimizer remotePatterns). Worker test pins deterministic halves (owned HTTP404 slot, stable count/box/order, identity swap stability, viewer reachability); root Docker run upgrades to loaded bytes via ALLOW_PRIVATE_IMAGE_UPSTREAM + real CDN.
+- Touch test uses real CDP Input.dispatchTouchEvent in an owned hasTouch context with absolute SSR URLs; contexts/harness closed in finally.
+- No gallery runtime pass is claimed until root executes.

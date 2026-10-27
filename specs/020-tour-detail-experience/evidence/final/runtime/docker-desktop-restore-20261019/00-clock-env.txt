@@ -1,0 +1,12 @@
+﻿ce_cmd      = Get-Date / [DateTime]::UtcNow / ConvertTimeBySystemTimeZoneId(Egypt Standard Time)
+utc_now     = 2026-10-19T19:57:14.4853362Z
+cairo_now   = 2026-10-19T22:57:14.502
+local_now   = 2026-10-19T22:57:14.5761585+03:00
+local_tz_id = Egypt Standard Time
+docker_api_version_env = <unset>
+docker_cli_path        = C:\Program Files\Docker\Docker\resources\bin\docker.exe
+docker_cli_versionProbe = Docker version 29.8.2, build 7fc2dff exit=0
+docker_context         = desktop-linux
+
+host_office            = OSTELECOM-x-9fqxp
+task                   = bounded Docker Desktop restart + engine/identity/parity/SSR evidence (NO restart loops beyond ONE)

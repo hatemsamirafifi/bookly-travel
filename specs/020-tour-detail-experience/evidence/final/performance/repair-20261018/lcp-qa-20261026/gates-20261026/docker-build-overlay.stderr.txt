@@ -1,0 +1,53 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 87B 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/booklytravel-nextjs:latest
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B 0.0s done
+#3 DONE 0.4s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/2] FROM docker.io/library/booklytravel-nextjs:latest@sha256:7b38edb3d2303a1e1a027afca29e887aa5696808408d9ecfd6c9aa5b59e063fe
+#5 resolve docker.io/library/booklytravel-nextjs:latest@sha256:7b38edb3d2303a1e1a027afca29e887aa5696808408d9ecfd6c9aa5b59e063fe
+#5 resolve docker.io/library/booklytravel-nextjs:latest@sha256:7b38edb3d2303a1e1a027afca29e887aa5696808408d9ecfd6c9aa5b59e063fe 0.6s done
+#5 ...
+
+#4 [internal] load build context
+#4 transferring context: 38.65kB 0.4s done
+#4 DONE 0.7s
+
+#5 [1/2] FROM docker.io/library/booklytravel-nextjs:latest@sha256:7b38edb3d2303a1e1a027afca29e887aa5696808408d9ecfd6c9aa5b59e063fe
+#5 DONE 7.0s
+
+#6 [2/2] COPY src /app/src
+#6 DONE 2.0s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 6.9s done
+#7 exporting manifest sha256:aa9c3834ae6aa70de2dfe6177cf66894c6b5be260c65cbf0bde8ca8c15666ad8
+#7 exporting manifest sha256:aa9c3834ae6aa70de2dfe6177cf66894c6b5be260c65cbf0bde8ca8c15666ad8 0.2s done
+#7 exporting config sha256:b5aa876393b571403c57a010d59740f99c0fffdd77daca92621dc6cd97ace5e5
+#7 exporting config sha256:b5aa876393b571403c57a010d59740f99c0fffdd77daca92621dc6cd97ace5e5 0.7s done
+#7 exporting attestation manifest sha256:082ad3070e6ebf31d10046617de34aceda250cf0bef4c085623750b5cebd23e1
+#7 exporting attestation manifest sha256:082ad3070e6ebf31d10046617de34aceda250cf0bef4c085623750b5cebd23e1 0.3s done
+#7 exporting manifest list sha256:5d0871d62426995f85926382fc7e78a2c53ac15d250129bd32e0603822d1cda6
+#7 exporting manifest list sha256:5d0871d62426995f85926382fc7e78a2c53ac15d250129bd32e0603822d1cda6 0.3s done
+#7 naming to docker.io/library/booklytravel-nextjs:spec020-lcp-20261026
+#7 naming to docker.io/library/booklytravel-nextjs:spec020-lcp-20261026 0.1s done
+#7 unpacking to docker.io/library/booklytravel-nextjs:spec020-lcp-20261026
+#7 unpacking to docker.io/library/booklytravel-nextjs:spec020-lcp-20261026 2.2s done
+#7 naming to docker.io/library/booklytravel-nextjs:latest
+#7 naming to docker.io/library/booklytravel-nextjs:latest 0.3s done
+#7 unpacking to docker.io/library/booklytravel-nextjs:latest
+#7 unpacking to docker.io/library/booklytravel-nextjs:latest 0.4s done
+#7 DONE 11.8s

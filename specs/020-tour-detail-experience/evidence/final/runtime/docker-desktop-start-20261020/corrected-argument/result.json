@@ -1,0 +1,53 @@
+{
+  "runUtc": "2026-10-20T19:18:46.087Z",
+  "context": "corrected retry: prior 'docker desktop start --timeout' exited 125 ('flag needs an argument: --timeout') before Desktop was launched; corrected argv passes '--timeout=120' as one argument",
+  "prestartProbe": {
+    "exitCode": 1,
+    "stdout": "",
+    "timedOut": false
+  },
+  "startAttempt": {
+    "name": "corrected-start-once",
+    "argv": [
+      "docker",
+      "desktop",
+      "start",
+      "--timeout=120"
+    ],
+    "spawnOptions": {
+      "shell": false,
+      "timeoutMs": 125000,
+      "windowsHide": true
+    },
+    "startedAtUtc": "2026-10-20T19:18:46.280Z",
+    "finishedAtUtc": "2026-10-20T19:19:19.335Z",
+    "durationMs": 33055,
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "spawnError": null
+  },
+  "polling": [
+    {
+      "name": "poll-01",
+      "startedAtUtc": "2026-10-20T19:19:19.338Z",
+      "finishedAtUtc": "2026-10-20T19:19:34.390Z",
+      "durationMs": 15052,
+      "exitCode": null,
+      "stdout": "",
+      "timedOut": true
+    },
+    {
+      "name": "poll-02",
+      "startedAtUtc": "2026-10-20T19:19:44.690Z",
+      "finishedAtUtc": "2026-10-20T19:19:44.981Z",
+      "durationMs": 291,
+      "exitCode": 0,
+      "stdout": "29.8.2",
+      "timedOut": false
+    }
+  ],
+  "outcome": "api-ready",
+  "serverVersion": "29.8.2",
+  "finishedAtUtc": "2026-10-20T19:19:44.984Z"
+}

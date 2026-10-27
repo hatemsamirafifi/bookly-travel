@@ -1,0 +1,33 @@
+US5 isolated interaction slice (T059/T062 + ReviewList prerequisite) — red/green evidence
+Branch: codex/020-tour-detail-experience (no commits, no staging; working tree only)
+
+OWNED FILES (only files modified by this slice):
+- frontend/src/components/wishlist/WishlistButton.tsx
+- frontend/src/components/wishlist/__tests__/WishlistButton.test.tsx
+- frontend/src/components/reviews/ReviewList.tsx
+- frontend/src/components/reviews/__tests__/ReviewList.test.tsx
+
+RED (isolated-red-full.log): Test Suites 2 failed / Tests 15 failed, 9 passed, 24 total.
+All 9 pre-existing tests passed; all 15 new behavioral tests failed for distinct
+behavioral reasons (no missing-module reds, no skips).
+GREEN (isolated-green-full.log): Test Suites 2 passed / Tests 24 passed, 24 total.
+LINT (isolated-lint.txt): npx eslint on the 4 owned files — clean, 0 errors, 0 warnings
+(two intermediate violations fixed during the slice: react-hooks/refs render-write,
+react-hooks/set-state-in-effect prop-sync; final file passes).
+TYPECHECK (isolated-typecheck.txt): 0 errors in the 4 owned files. The only repo-wide
+errors are 2 pre-existing/concurrent unowned errors in
+frontend/src/components/seo/__tests__/StructuredData.test.tsx (TS1128 at 339:1/339:2),
+a file modified by another lane — left untouched per ownership rules.
+
+CATALOG KEYS: all required keys verified present in frontend/messages/en.json (and es/it
+key parity for wishlistButton): traveler.wishlistButton.{save,remove,saved,removed,
+saveFailed,statusFailed,denied,promptTitle,promptBody,signIn,notNow}; common.{loading,
+retry,error}; reviews.{title,loading,load_more,failed_to_load,no_reviews_yet}. No catalog
+edits made. MISSING KEY REPORT: traveler.wishlistButton has no dedicated dialog close
+label for the shared Dialog closeLabel prop — t('notNow') is reused (dismiss parity).
+Recommend adding traveler.wishlistButton.closePrompt (EN/ES/IT); root/catalog owner to add.
+
+GUARD PASSES: clean-code-guard applied (specific 401/403 narrowing, no swallowed errors,
+no new deps, neighbor-matched style); test-guard applied (boundary-only mocks: traveler
+API, auth token/hook, review-api, next-intl; real Dialog lifecycle/focus; behavior
+assertions; test.each only for single-value variants).

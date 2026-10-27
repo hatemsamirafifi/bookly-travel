@@ -1,0 +1,74 @@
+
+Running 70 tests using 1 worker
+
+[1A[2K[1/70] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/70] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[1A[2K[3/70] [chromium-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › pending_payment confirmation never claims a completed booking
+[1A[2K[4/70] [chromium-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › cancelled confirmation never claims a completed booking
+[1A[2K[5/70] [chromium-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › expired confirmation never claims a completed booking
+[1A[2K[6/70] [chromium-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › unexpected_status confirmation never claims a completed booking
+[1A[2K[7/70] [chromium-authed] › tests/e2e/booking.spec.ts:65:7 › Booking Flow › confirmed booking alone displays the success title
+[1A[2K[8/70] [chromium-authed] › tests/e2e/booking.spec.ts:104:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay
+[1A[2K[9/70] [chromium-authed] › tests/e2e/booking.spec.ts:170:10 › Booking Flow › server 409 rejects an initially valid selection without replacing it
+[1A[2K[10/70] [chromium-authed] › tests/e2e/booking.spec.ts:170:10 › Booking Flow › server 422 rejects an initially valid selection without replacing it
+[1A[2K[11/70] [chromium-authed] › tests/e2e/booking.spec.ts:194:7 › Booking Flow › blocks an unoffered date locally without posting
+[1A[2K[12/70] [chromium-authed] › tests/e2e/booking.spec.ts:215:7 › Booking Flow › shows the localized rate limit message
+[1A[2K[13/70] [chromium-authed] › tests/e2e/booking.spec.ts:233:7 › Booking Flow › retains a supplied invalid participant value with a reselection route instead of clamping
+[1A[2K[14/70] [chromium-authed] › tests/e2e/booking.spec.ts:246:7 › Booking Flow › retains a supplied malformed date with a reselection route and blocks submit
+[1A[2K[15/70] [chromium-authed] › tests/e2e/booking.spec.ts:257:7 › Booking Flow › expired session recovers through login with the full selection and no duplicate submit
+[1A[2K[16/70] [chromium-authed] › tests/e2e/checkout.spec.ts:10:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+[1A[2K[17/70] [chromium-authed] › tests/e2e/checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+[1A[2K[18/70] [chromium-authed] › tests/e2e/checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+[1A[2K[19/70] [chromium-authed] › tests/e2e/checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+[1A[2K[20/70] [chromium-authed] › tests/e2e/checkout.spec.ts:55:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+[1A[2K[21/70] [chromium-authed] › tests/e2e/checkout.spec.ts:75:7 › Checkout › booking page loads with tour details
+[1A[2K[22/70] [chromium-authed] › tests/e2e/checkout.spec.ts:86:7 › Checkout › participant selector respects min and max
+[1A[2K[23/70] [chromium-authed] › tests/e2e/checkout.spec.ts:113:7 › Checkout › price breakdown updates with participants
+[1A[2K[24/70] [chromium-authed] › tests/e2e/checkout.spec.ts:135:7 › Checkout › shows error when tour or date missing
+[1A[2K[25/70] [chromium-authed] › tests/e2e/checkout.spec.ts:140:7 › Checkout › responsive layout at 390px
+[1A[2K[26/70] [chromium-authed] › tests/e2e/payment.spec.ts:10:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+[1A[2K[27/70] [chromium-authed] › tests/e2e/payment.spec.ts:56:7 › Payment Flow › booking page shows payment section after confirming booking
+[1A[2K[28/70] [chromium-authed] › tests/e2e/payment.spec.ts:68:7 › Payment Flow › participant selector updates price breakdown
+[1A[2K[29/70] [chromium-authed] › tests/e2e/payment.spec.ts:91:7 › Payment Flow › responsive layout at 390px
+[1A[2K[30/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:67:7 › Wishlist › wishlist page renders
+[1A[2K[31/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:73:7 › Wishlist › wishlist shows empty state or grid
+[1A[2K[32/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:83:7 › Wishlist › owned tour header button toggles saved state with real API and restores it
+[1A[2K[33/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement
+[1A[2K[34/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:167:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement
+[1A[2K[35/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:211:7 › Wishlist › removing the owned tour from the wishlist grid restores its original state
+[1A[2K[36/70] [chromium-authed] › tests/e2e/wishlist.spec.ts:248:7 › Wishlist › owned wishlist item links to its tour detail
+[1A[2K[37/70] [mobile-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › pending_payment confirmation never claims a completed booking
+[1A[2K[38/70] [mobile-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › cancelled confirmation never claims a completed booking
+[1A[2K[39/70] [mobile-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › expired confirmation never claims a completed booking
+[1A[2K[40/70] [mobile-authed] › tests/e2e/booking.spec.ts:43:9 › Booking Flow › unexpected_status confirmation never claims a completed booking
+[1A[2K[41/70] [mobile-authed] › tests/e2e/booking.spec.ts:65:7 › Booking Flow › confirmed booking alone displays the success title
+[1A[2K[42/70] [mobile-authed] › tests/e2e/booking.spec.ts:104:7 › Booking Flow › completes checkout, payment, confirmation, and an idempotent replay
+[1A[2K[43/70] [mobile-authed] › tests/e2e/booking.spec.ts:170:10 › Booking Flow › server 409 rejects an initially valid selection without replacing it
+[1A[2K[44/70] [mobile-authed] › tests/e2e/booking.spec.ts:170:10 › Booking Flow › server 422 rejects an initially valid selection without replacing it
+[1A[2K[45/70] [mobile-authed] › tests/e2e/booking.spec.ts:194:7 › Booking Flow › blocks an unoffered date locally without posting
+[1A[2K[46/70] [mobile-authed] › tests/e2e/booking.spec.ts:215:7 › Booking Flow › shows the localized rate limit message
+[1A[2K[47/70] [mobile-authed] › tests/e2e/booking.spec.ts:233:7 › Booking Flow › retains a supplied invalid participant value with a reselection route instead of clamping
+[1A[2K[48/70] [mobile-authed] › tests/e2e/booking.spec.ts:246:7 › Booking Flow › retains a supplied malformed date with a reselection route and blocks submit
+[1A[2K[49/70] [mobile-authed] › tests/e2e/booking.spec.ts:257:7 › Booking Flow › expired session recovers through login with the full selection and no duplicate submit
+[1A[2K[50/70] [mobile-authed] › tests/e2e/checkout.spec.ts:10:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+[1A[2K[51/70] [mobile-authed] › tests/e2e/checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+[1A[2K[52/70] [mobile-authed] › tests/e2e/checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+[1A[2K[53/70] [mobile-authed] › tests/e2e/checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+[1A[2K[54/70] [mobile-authed] › tests/e2e/checkout.spec.ts:55:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+[1A[2K[55/70] [mobile-authed] › tests/e2e/checkout.spec.ts:75:7 › Checkout › booking page loads with tour details
+[1A[2K[56/70] [mobile-authed] › tests/e2e/checkout.spec.ts:86:7 › Checkout › participant selector respects min and max
+[1A[2K[57/70] [mobile-authed] › tests/e2e/checkout.spec.ts:113:7 › Checkout › price breakdown updates with participants
+[1A[2K[58/70] [mobile-authed] › tests/e2e/checkout.spec.ts:135:7 › Checkout › shows error when tour or date missing
+[1A[2K[59/70] [mobile-authed] › tests/e2e/checkout.spec.ts:140:7 › Checkout › responsive layout at 390px
+[1A[2K[60/70] [mobile-authed] › tests/e2e/payment.spec.ts:10:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+[1A[2K[61/70] [mobile-authed] › tests/e2e/payment.spec.ts:56:7 › Payment Flow › booking page shows payment section after confirming booking
+[1A[2K[62/70] [mobile-authed] › tests/e2e/payment.spec.ts:68:7 › Payment Flow › participant selector updates price breakdown
+[1A[2K[63/70] [mobile-authed] › tests/e2e/payment.spec.ts:91:7 › Payment Flow › responsive layout at 390px
+[1A[2K[64/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:67:7 › Wishlist › wishlist page renders
+[1A[2K[65/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:73:7 › Wishlist › wishlist shows empty state or grid
+[1A[2K[66/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:83:7 › Wishlist › owned tour header button toggles saved state with real API and restores it
+[1A[2K[67/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:119:7 › Wishlist › denied wishlist toggle rolls back with a localized announcement
+[1A[2K[68/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:167:7 › Wishlist › failed wishlist toggle rolls back with a localized announcement
+[1A[2K[69/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:211:7 › Wishlist › removing the owned tour from the wishlist grid restores its original state
+[1A[2K[70/70] [mobile-authed] › tests/e2e/wishlist.spec.ts:248:7 › Wishlist › owned wishlist item links to its tour detail
+[1A[2K  70 passed (3.4m)

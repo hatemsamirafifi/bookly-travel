@@ -1,0 +1,123 @@
+{"attempt":1,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":30,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":1,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":1500,"url":"about:blank","appVisited":false}
+{"attempt":30,"benchmarkIndex":1900,"url":"about:blank","appVisited":false}
+{"attempt":1,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":13,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":14,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":15,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":16,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":17,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":18,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":19,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":20,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":21,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":22,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":23,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":24,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":25,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":26,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":27,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":28,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":29,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":30,"benchmarkIndex":null,"url":"about:blank","appVisited":false}
+{"attempt":1,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":6,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":7,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":8,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":9,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":10,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":11,"benchmarkIndex":1400,"url":"about:blank","appVisited":false}
+{"attempt":12,"benchmarkIndex":1450,"url":"about:blank","appVisited":false}
+{"attempt":1,"benchmarkIndex":1700,"url":"about:blank","appVisited":false}
+{"attempt":1,"benchmarkIndex":1700,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1750,"url":"about:blank","appVisited":false}
+✔ a stable desktop CPU permits the unchanged mobile slowdown (1.5588ms)
+✔ a slow or changing CPU must block the performance audit (0.1593ms)
+✔ startup settling requires two consecutive stable samples (0.1539ms)
+✔ missing or invalid measurements cannot accept the audit (0.1608ms)
+✔ a browser that settles late is accepted while the exact unchanged criteria stay the gate (2.4464ms)
+✔ persistent low, unstable, or invalid values exhaust the bounded budget and always reject (4.7158ms)
+✔ the monotonic-deadline budget stops low sample taking even when attempts remain (0.6566ms)
+✔ a sample whose evaluation pushes monotonic elapsed over the 30s budget must reject even if the pair would qualify (0.3175ms)
+✔ a fast, stable browser still passes on the first qualifying pair without extra samples (0.2667ms)
+✔ an application URL can never be visited by the CPU preflight (0.3901ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 235.1587

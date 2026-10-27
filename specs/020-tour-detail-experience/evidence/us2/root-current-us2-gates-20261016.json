@@ -1,0 +1,35 @@
+{
+  "sourceSha256": {
+    "src/components/auth/LoginForm.tsx": "fc483cdcae9b1573ac270562dbc7c574ca6b3a9b678d603212b59fb065565c11",
+    "src/components/tour/MobileBookingBar.tsx": "05b7deb5d02ce924154547200288d943fa1f6748afb093b45dca84234cc74749",
+    "src/components/booking/BookingForm.tsx": "f4275a3a963b6f66626cbae35e24b4c807fccd03b712ff50abe9b8b9fee6a42d",
+    "src/components/auth/RegisterForm.tsx": "a8dec08bb7bd2b22e111871806bde734c2c19fa9fe7269f4f6a7c5d920c9a281",
+    "src/components/tour/BookingCard.tsx": "a2dffa02bf42ec4ce39a28cbeabde39c5896aa45572ec153c721957395c4624c",
+    "src/components/tour/__tests__/TourBookingController.test.tsx": "4bc771c5316f3bf1a02a22e36f56b42996ad05b437e786a760595298fd0554c0",
+    "src/components/tour/AvailabilityCalendar.tsx": "4f70838551109d045a71917981710a3641532335ec6fb9bdc2e01b3b6eb3bea8",
+    "src/lib/tours/booking-selection.ts": "ed77639a5a08e0aa45defe2b1f5676712c85d5b114417bf80ba4184d522303b7",
+    "src/components/booking/__tests__/BookingForm.test.tsx": "da7432cf205335cd21d5cd76f002fad91d26a13f4bc30a637077b190cb72460b",
+    "src/components/tour/TourBookingController.tsx": "7a73d767e458cb81412ed732c004a78daaa7c0211d6996dec75b841e256e7a6f",
+    "tests/e2e/booking.spec.ts": "49336a304c0b0a859432eff151cfbc484f6147faa0d00feda0a49f624501d8f5",
+    "src/lib/tours/booking-reasons.ts": "0e06f720dca7f01e60a3590dbf426ba8b1700b217b663a0be874e0f7abfbf19a"
+  },
+  "gates": [
+    {
+      "exitCode": 0,
+      "name": "root US2 focused Jest",
+      "tests": 168,
+      "normalExit": true,
+      "suites": 9,
+      "output": "root-current-us2-jest-20261016.txt"
+    },
+    {
+      "name": "root US2 focused ESLint",
+      "exitCode": 0,
+      "output": "root-current-us2-eslint-20261016.txt"
+    }
+  ],
+  "worktree": "uncommitted; human requested no commits during review quota outage",
+  "atUtc": "2026-10-16T14:36:06.6185301Z",
+  "head": "b04650350e834ce84d7eb728e07f05fd4e67b076",
+  "remaining": "Fresh combined build/typecheck and current-source browser validation pending; no full US2 acceptance from these focused gates"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "poll-01",
+  "argv": [
+    "docker",
+    "version",
+    "--format={{.Server.Version}}"
+  ],
+  "spawnOptions": {
+    "shell": false,
+    "timeoutMs": 15000,
+    "windowsHide": true
+  },
+  "startedAtUtc": "2026-10-20T19:19:19.338Z",
+  "finishedAtUtc": "2026-10-20T19:19:34.390Z",
+  "durationMs": 15052,
+  "exitCode": null,
+  "signal": "SIGTERM",
+  "timedOut": true,
+  "spawnError": {
+    "code": "ETIMEDOUT",
+    "message": "spawnSync docker ETIMEDOUT"
+  }
+}

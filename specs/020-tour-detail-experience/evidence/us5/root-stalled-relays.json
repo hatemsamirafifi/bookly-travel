@@ -1,0 +1,18 @@
+[
+  {
+    "run": "root-review",
+    "pid": 24496,
+    "created": "2026-10-17T00:13:05.743713+03:00",
+    "lastEvent": "2026-10-16T21:19:55.3330000+00:00",
+    "stoppedAt": "2026-10-17T00:37:08.3674609+03:00",
+    "reason": "No new event for over15minutes; preserve edits and retry one approved-model lane serially"
+  },
+  {
+    "run": "baseline",
+    "pid": 25848,
+    "created": "2026-10-17T00:15:59.450431+03:00",
+    "lastEvent": "2026-10-16T21:19:50.1580000+00:00",
+    "stoppedAt": "2026-10-17T00:37:08.6597411+03:00",
+    "reason": "No new event for over15minutes; preserve edits and retry one approved-model lane serially"
+  }
+]

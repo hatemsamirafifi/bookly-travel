@@ -1,0 +1,36 @@
+
+Running 16 tests using 1 worker
+
+[1A[2K(node:27852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:27852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/16] [setup] › tests\e2e\auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/16] [setup] › tests\e2e\partner.setup.ts:19:6 › authenticate as partner
+[1A[2K(node:28020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:28020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/16] [chromium-authed] › tests\e2e\checkout.spec.ts:10:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+[1A[2K[4/16] [chromium-authed] › tests\e2e\checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+[1A[2K[5/16] [chromium-authed] › tests\e2e\checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+[1A[2K[6/16] [chromium-authed] › tests\e2e\checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+[1A[2K[7/16] [chromium-authed] › tests\e2e\checkout.spec.ts:55:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+[1A[2K[8/16] [chromium-authed] › tests\e2e\checkout.spec.ts:75:7 › Checkout › booking page loads with tour details
+[1A[2K[9/16] [chromium-authed] › tests\e2e\checkout.spec.ts:86:7 › Checkout › participant selector respects min and max
+[1A[2K[10/16] [chromium-authed] › tests\e2e\checkout.spec.ts:113:7 › Checkout › price breakdown updates with participants
+[1A[2K[11/16] [chromium-authed] › tests\e2e\checkout.spec.ts:135:7 › Checkout › shows error when tour or date missing
+[1A[2K[12/16] [chromium-authed] › tests\e2e\checkout.spec.ts:140:7 › Checkout › responsive layout at 390px
+[1A[2K[13/16] [chromium-authed] › tests\e2e\payment.spec.ts:10:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+[1A[2K[14/16] [chromium-authed] › tests\e2e\payment.spec.ts:56:7 › Payment Flow › booking page shows payment section after confirming booking
+[1A[2K[15/16] [chromium-authed] › tests\e2e\payment.spec.ts:68:7 › Payment Flow › participant selector updates price breakdown
+[1A[2K[16/16] [chromium-authed] › tests\e2e\payment.spec.ts:91:7 › Payment Flow › responsive layout at 390px
+[1A[2K  16 passed (17.7s)

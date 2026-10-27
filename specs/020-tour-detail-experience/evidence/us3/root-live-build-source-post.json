@@ -1,0 +1,1346 @@
+[
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\proxy.ts",
+    "Hash": "CE42CB2BC37B348140CB658A4BAAEA7984A579CDDBDBB80925ADF1CACC83EAC2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\favicon.ico",
+    "Hash": "2B8AD2D33455A8F736FC3A8EBF8F0BDEA8848AD4C0DB48A2833BD0F9CD775932"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\globals.css",
+    "Hash": "BE12992A016811E8EAB9B62CCF8E2940C38FCE827276DD5686A1E21F92EF22B0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\not-found.tsx",
+    "Hash": "BC5BF96BFD3AE9A1F53873FEF9F9D036BF3667D03F9D00A67CF358CC83E0EB88"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\robots.ts",
+    "Hash": "E452F1CF26336070A97EE7B89D14C257A25D1ABCAF55AC92A052729282AFB335"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\api\\auth\\session\\route.ts",
+    "Hash": "DF23E70832783AA83D9F26C17598867A6DFB2482CFDE8806C72128FF4DDD6CF0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\v\\[reference]\\page.tsx",
+    "Hash": "D49406C152DC66AF76684CF782777B5510C7B4C3BC91304A027CFC7F4518B349"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\v\\[reference]\\__tests__\\page.test.tsx",
+    "Hash": "23FD8C71ABB973FF185F32E07DD244F93E09DB26A2EE9CA7C448FC67C1601252"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\layout.tsx",
+    "Hash": "EC1FDD0C0CEE5C3388871CA7F379EC09129AB6F34547C6045D4ED9E9DE41101E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\not-found.tsx",
+    "Hash": "69BF2503A01E61C25C4B9D10AEF0D0E5C43294106B619E04FD44309C7A1A927D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\layout.tsx",
+    "Hash": "4EDF5A59B0781CC2041AE37EDFD8B16040720510B955534BF315603A627946C2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\auth\\forgot-password\\page.tsx",
+    "Hash": "B2CC1EEF2B964A9B08A1FE981BD6FBFE6A256E43CDFD5C37FCEAB82044DAFBC1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\auth\\login\\page.tsx",
+    "Hash": "9C4BDDB8B53B6A9C92FFF0A1262F8682B673B2613D2C24AC34BDBBEB344B3FB6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\auth\\partner-register\\page.tsx",
+    "Hash": "AF132ADADCBE833877E0F00BA1326E38B1A7B4CEF5C1D0D0FDB4563F4671F7B3"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\auth\\register\\page.tsx",
+    "Hash": "09C49560D1828FE52B7F90FC7421264FB1C62B239A0772E808B869DE4E0EB551"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\auth\\reset-password\\page.tsx",
+    "Hash": "E7A05ACC1F4C55A8552E7A9AC28056C793E4D4CCFA8C38ED09A12118E5A72196"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\auth\\verify-email\\page.tsx",
+    "Hash": "7C858FCF47130F76C6C8AC5094F514A6ADC3E8D27CAA26728113CA9D91BF6CB6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\partner-invite\\[token]\\page.tsx",
+    "Hash": "14D82336AC526D9FDC54FD3A85DF29AFD69624A85A26D752DD7E92E6DDA327E2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(auth)\\partner-register\\page.tsx",
+    "Hash": "0CD40FE10DF7E240CE80A0466FDDE7309A7D6DC0456E5A6BEADCE7F33AD0FB40"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\layout.tsx",
+    "Hash": "C896652F33F4C249C1A9593051E6C91F07916C65F3ADCDFF10A68969785F7D40"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\page.tsx",
+    "Hash": "E69766833410835C3F7C445674B3B6423CB794F7B2341FB63E89BB9AADE4606C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\analytics\\page.tsx",
+    "Hash": "EB37D40DADF51DEF898962E5D730D6FEAC3D96E721237D008EB03DA3B29CD1AD"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\bookings\\page.tsx",
+    "Hash": "E4DAAA7067DB37E74F9B6AA3E155E92CA075862945D4915D37C3C90A5CBD36DA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\bookings\\[reference]\\page.tsx",
+    "Hash": "0A08D4D241DF14D0BC14734AB01ECD4B1ECAB459DE0E1D0FC15D361A1A76F639"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\onboarding\\page.tsx",
+    "Hash": "F7665428157D2F598827C8440DC5549E43087C9A0B6CF61A36FE564345B9D2D5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\profile\\page.tsx",
+    "Hash": "3F2341AB9D1C55FC7872A9C32D40681BDB621F91A8DFC2187155C8A4A70ED0D6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\reviews\\page.tsx",
+    "Hash": "9608747E5B6DA0E66A413F187B5FEBF1FED5261F07FC3FAD9AD09715442A999F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\tours\\page.tsx",
+    "Hash": "F729CB523307F7091D69D2DFAB7A85F0DBB264F24AF7BB2B353A58C9564EAE25"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\tours\\create\\page.tsx",
+    "Hash": "4D339B98811C0FA83813B4EAF3AA35C0D6BA6B03852A33A8D7C8BFAE7148E26B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\tours\\[id]\\availability\\page.tsx",
+    "Hash": "F13E44A4F0339316D60F1E0DEF7778269A2A40920C2103B1188787E6CD18EE77"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\tours\\[id]\\edit\\page.tsx",
+    "Hash": "86F20EC5FEAD1AEED457AAE10F27CC20E737E69FF34C4137716583735E17AF0D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\tours\\[id]\\edit\\__tests__\\page.test.tsx",
+    "Hash": "33B5529E1D5D2F5358CF0847AADA38854F285797776334D787C17708CE07BA2A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\tours\\[id]\\pricing\\page.tsx",
+    "Hash": "7B32B63E5B8DCB9C394F782B206DDD410808B9174C8015F886856092D2599795"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(partner)\\partner\\__tests__\\page.test.tsx",
+    "Hash": "814E16978DC745D17F9FC797A6DC94ED54D1C058901D79CA7312146C3D778D02"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\layout.tsx",
+    "Hash": "C56830FC574815C7373B7E13A7BF0582788E302BF2C537442D5254C0852B4812"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\page.tsx",
+    "Hash": "6917078688E959B64E7847AF1DD5D0A7210F20964137A73E242170EA0C5CA935"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\blog\\page.tsx",
+    "Hash": "69B83BDF3171D45F3A67B543E89A3C15109196FEEEE9CC7CD1EC51EAB054D345"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\blog\\category\\[slug]\\loading.tsx",
+    "Hash": "42E792EF2CAC1E83C6EF913575B2ED9FC4DF0252F8D4DA1E3FD4CD1CD7B2DA13"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\blog\\category\\[slug]\\page.tsx",
+    "Hash": "5B70102B1BB7DBA133F9704A7349E5F67B1D42D90625C67D7D73F9307754817F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\blog\\[slug]\\page.tsx",
+    "Hash": "83014861A90717CFF142B5B8F9D1582CFE97CA933CED19AD6E67DC5E4FB83DE0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\blog\\[slug]\\preview\\page.tsx",
+    "Hash": "33134A82DC342F617E7E62D0D4AA50E9D63305111878F9B39EB2D5C76DC89FB5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\booking\\page.tsx",
+    "Hash": "80DE2DDEED2B6C9FC941495A4C3E48403193F8EBFC7A90C94E724DB11F5FEE6F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\booking\\confirmation\\page.tsx",
+    "Hash": "A8CBE48AB74D537875B3C48361FEEC5A604CF9E31450B302D825037DDECC75CA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\categories\\page.tsx",
+    "Hash": "7BDDBC2C8D087DB90C9CF1283C94D8B0307EC96C196E81AE1341781B4C1F7FCF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\categories\\[slug]\\page.tsx",
+    "Hash": "1725C53BE4D4C619097803DABDDA3601758476526B693CCA07FC1822ADC56009"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\destinations\\page.tsx",
+    "Hash": "1604736655C2F4774CEB852BE1628282A5ED47BE34FF09E632FB2AF160F65EC3"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\destinations\\[slug]\\page.tsx",
+    "Hash": "51B90E3EBEDB1AC7BD5B74850A2C9F3C5CA509560CA5A550EA0F142815F15D16"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\privacy\\page.tsx",
+    "Hash": "F9C1EF67191543EA13B659D45FAC8D2A160D1E590919C24BB1A1CD91EB882975"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\search\\loading.tsx",
+    "Hash": "E749F27F842997182C6EC52782986E40EEA2BB761921F9E7FF78DEC117D8C160"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\search\\page.tsx",
+    "Hash": "ADEDEDB1906ED036ED5B63EC82CC5763C77D0FBC1C47F12D5A3F5B776E40B771"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\terms\\page.tsx",
+    "Hash": "D9F8ED542FC3712F4287CDB785191A1390116D353004D79E3A3AEB6594C64BFB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\tours\\[slug]\\error.tsx",
+    "Hash": "17DB521B2D92FD644D54060ECBB482FA269E44197AEE0B67FB3131CCCCD6591A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\tours\\[slug]\\loading.tsx",
+    "Hash": "4C4C5A738832E0D1787A8AFC19253F90435B90A0ACD664EF39AD8413B85D44D6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\tours\\[slug]\\not-found.tsx",
+    "Hash": "B50B646E63835F995EA07B165192BC1AE8ECF174CB3D383F8FD25F72858457FB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\tours\\[slug]\\page.tsx",
+    "Hash": "E3EA9DC65E48A156D413FD2F3387EDF88C4579DF5F04EA6C5D67C4B2E9084DCD"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\tours\\[slug]\\__tests__\\page.test.tsx",
+    "Hash": "B2CBC7CCF5D08E91E63534DBECD7E76D4BB80FC840D13399452A1B00E0B042A5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(public)\\__tests__\\page.test.tsx",
+    "Hash": "C6656E3878CFDD5F1E0C21CFFE1B379CD62A688C5BEED96EA567B86A5E4E0A90"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\layout.tsx",
+    "Hash": "4D8733DE98A381EBD154C0FA4E9BFEF4371612189D5D4F760D17137794D94430"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\my-bookings\\page.tsx",
+    "Hash": "08F691A503E4140E9FF0701112CE255B74DE883D9A4FC264F972057666D1E39B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\my-bookings\\[reference]\\client.tsx",
+    "Hash": "09760182AC8A56797AD704F873A73E2AB77565EE7CDB8FB429FB10CE0730B1AA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\my-bookings\\[reference]\\page.tsx",
+    "Hash": "5F63B48FB83CF78F7C82114C09F91B0B8A940DF24EA054969A41FC40AACBC321"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\my-reviews\\page.tsx",
+    "Hash": "FA41FE1EBE26F35E0215DA920CB9C599D9473CDACA63C049461DFA2268628BF9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\profile\\page.tsx",
+    "Hash": "CDE69B3F623BE1B81971A1CEE331EA7A715042E974AE3FF4D20070F93D93EFF6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\(traveler)\\wishlist\\page.tsx",
+    "Hash": "18C18D99395E1BC34FB9290C3214EFBE27FAA0F4A1CFA8790357702859E56D7D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\app\\[locale]\\[...notFound]\\page.tsx",
+    "Hash": "B1C361A6BA76B241A3F9B4DE03ACA3861FDD91C5FAC5AAD010807C9263AA60E4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\admin\\AdminReviewPanel.tsx",
+    "Hash": "F12B8E905E0C6E0ACBEC167C37E27256324D6D1AADF20AC0A5A50C80494A4AF1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\admin\\__tests__\\AdminReviewPanel.test.tsx",
+    "Hash": "6596FA792366ABB9D037008BB72A41A03D434BE689FF065AD5D373483F226B78"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\AuthGuard.tsx",
+    "Hash": "65CCF12C75D427BCCE6F11DDB641B8432534D4018650269E2F9CEE020DDFDF43"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\AuthPageShell.tsx",
+    "Hash": "02FA9579A0A7DB3D22C8DD2E38A89F29685715939787812703719320AD41F574"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\ForgotPasswordForm.tsx",
+    "Hash": "C466F03B566C26C0E19B681DDEE07FDE7BA7D014FDEC4AA4AE449D11F3CB0E87"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\GuestConversionPrompt.tsx",
+    "Hash": "03BB04918D3EF9907F496EF1C57FA41F022EC20A6C7C0C37DC1F64FFD6206AB2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\LoginForm.tsx",
+    "Hash": "FC483CDCAE9B1573AC270562DBC7C574CA6B3A9B678D603212B59FB065565C11"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\PartnerAuthGuard.tsx",
+    "Hash": "D735AC4A2A46AD8B17BDB013CCFE845D14B9E61AB70BA8E56EFD576156E6FCE8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\PartnerRegisterForm.tsx",
+    "Hash": "5ED87654BCDC0D3B7497BF23BEF340A9F64F2D9EF9B63F3EB535E213AA29CDA2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\RegisterForm.tsx",
+    "Hash": "A8DEC08BB7BD2B22E111871806BDE734C2C19FA9FE7269F4F6A7C5D920C9A281"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\ResetPasswordForm.tsx",
+    "Hash": "8C1A99070747222F21EDE1AEF9C36973B5EBAF7BACFC41B0F0E53AE6CD56785E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\VerifyEmailClient.tsx",
+    "Hash": "FAD0F8FC878B61812FBEA753B5D2A47D9B6898A2AADCCE7367F163401FC85B97"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\__tests__\\LoginForm.test.tsx",
+    "Hash": "6E4597D2B0F343F5C7115C2B4DA1A090264E29675BDF05547EC4162EF3AD06C4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\auth\\__tests__\\RegisterForm.test.tsx",
+    "Hash": "17A25732877A907993DF0BBFEFAD0839B0D9DF6C1F8A931871251D5EC861B04B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\AuthorByline.tsx",
+    "Hash": "35445D2AE15EAC2B579E2319AD6756AE7450E8E014EECA6154910AC39BE53496"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogCard.tsx",
+    "Hash": "777075D106196FC81DD5B5AEF6699844A14E0A7116CEC4BE7500EE3503EC11A1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogDetail.tsx",
+    "Hash": "EC328D9C6CC4B2C909B420446779363D3F4D32BA7B91B151981BA566D33954AE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogDetailSkeleton.tsx",
+    "Hash": "7577BBA0DF2E79447846B742AEB4841297EEAEC5FA722568D677524314141C71"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogFeaturedHero.tsx",
+    "Hash": "630AA5C38702D066442B88D3FBFDB755C9466D986B9C8C5DCA361660DF903195"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogList.tsx",
+    "Hash": "79C4F2B8F6C42509BCD97E836F51AD785421B5CD88DCE6E6E01E6967041A2EEF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogListSkeleton.tsx",
+    "Hash": "3B55C788D17AE15E1B7D2F1A7C31BFC07213D0F49540B9AA3B74A635433CF058"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\BlogUnavailable.tsx",
+    "Hash": "830B69F3F2229A8FAE1A1B33980BEC294F8F868534040095C325E864BA87C571"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\RelatedPosts.tsx",
+    "Hash": "4F83087CA173BDE2354F41180D89632616D7724FD065DB4B300BD6DFF4CA1003"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\RelatedTours.tsx",
+    "Hash": "C3FF1EFDC23A7EAB1FD9426B45CB0A2469DA8E7AA3F167D61C0A99D8E94C3493"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\blog\\__tests__\\BlogCard.test.tsx",
+    "Hash": "4AFC562B5D4B3D6356DA336C901874077798E7C32208C0B738705DAE6C1B4175"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\BookingConfirmation.tsx",
+    "Hash": "FB2BE4876151F313EC034EB3143EF198D20C637A4317D138E5D32A54E41AC12B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\BookingForm.tsx",
+    "Hash": "564BF8D9E38A8CA2E6642C6EDD762C003ADB45CFA643FE22703127DBD056BE8E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\DateConfirmation.tsx",
+    "Hash": "C0AFB583B08750F901496490D66CE924D0DEAC6371F7D910F4E8677DEDDA0574"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\DeterministicPaymentForm.tsx",
+    "Hash": "CCE013911DDBACFB8CD9F55F8F04991048B802E66CBF7FD2A2155E2FBEAAAB1A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\ParticipantSelector.tsx",
+    "Hash": "6AE48676EA55DAC7EF2F963FFABCBF1357292E4C36401AB803A419B184EB811B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\PaymentStatus.tsx",
+    "Hash": "BAC3EE4B5680C62746ACC7BA835377B5EB0E5F2BFA0C370986563FC2618CAD71"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\PriceBreakdown.tsx",
+    "Hash": "02781AD78A3D40F9BAA35252575307BF7F0BC91F2B603B9069CA96D692F8F6D8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\PriceChangeModal.tsx",
+    "Hash": "D66355380977B7B7AA2B879A260A0B28AB4773E48F98DC7CB03E9E96DF2F32BF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\StripePaymentForm.tsx",
+    "Hash": "6C460E05522C4F087997B97727E1482CAE17B4F0F4B3B9D1FFC99C83C63A5126"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\__tests__\\BookingForm.test.tsx",
+    "Hash": "72314E0D4BB175730772E304ABED549B9F10D6F4FC2B49E08D685E1071886E7A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\__tests__\\PaymentStatus.test.tsx",
+    "Hash": "593572E27F48990A8F389052AA410B2C408EA4DC543E577F36496939C0FD80F3"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\booking\\__tests__\\StripePaymentForm.test.tsx",
+    "Hash": "3F7AD9C96911483977F48308CE23BA409A0B26FCD5807926A110C74C3819D559"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\bookings\\BookingDetailView.tsx",
+    "Hash": "313CBAEF649549964EF5D0FD9CC4AE054E057BDAB2E9033C1BFD96CC4A158EBF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\bookings\\BookingFilters.tsx",
+    "Hash": "818FE527457E7CD58B1E7B082697A78D9173BD007A4ACDD801F8F73EB55FE951"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\bookings\\BookingStatusTimeline.tsx",
+    "Hash": "9CEA7E166BC82F6551C0BA32E753BBB9151B26C80391264F407D7F0FDCC50763"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\bookings\\CancelBookingModal.tsx",
+    "Hash": "1CC6FD1280570D1B050CD851C51F6D20ECDF184F01B5CCFAF48CADFFB82C58AE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\bookings\\PaymentReceipt.tsx",
+    "Hash": "D130565060700F796A1314A2A7745918688E9D5ED82BD835E7F5E9132985771B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\home\\CategoryGrid.tsx",
+    "Hash": "4246A6E2D8FE7725B7A64EF74F001E257E6113B916E49EE4484DF3FB46EF8FAB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\home\\DestinationShowcase.tsx",
+    "Hash": "CC0F3C5D9C679E0B5C6550A8530F8033D5E74971EE0C30BC660B8BACAFD83A8B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\home\\FeaturedTours.tsx",
+    "Hash": "1CE0FB4634A442242A0FD5D2EFFC73CAC44572937EAD4AC235788ACBE4F9574A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\home\\HeroSection.tsx",
+    "Hash": "4CA51448B7A91AD9F6F8E987DDF1420954C892AD6229D617F19B64DC1C5477D8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\home\\__tests__\\FeaturedTours.test.tsx",
+    "Hash": "276D006646F231B457C2D286E6D20CB5F3A9A4B88FAE9CCFD14BDD162A3C7DE6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\Footer.tsx",
+    "Hash": "66AB590FBD4955B105FDCB202459AE0C5DE742789160070E56F2A65630067874"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\Header.tsx",
+    "Hash": "176BD2171D31CE026B17A0C0499A059B45A93BD0463F402A0C2274CC3B79ABF8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\LocaleSwitcher.tsx",
+    "Hash": "D493286BF7DF98E0B2190BCB94878CE5AD5BC0CD7554A37659F504D5E14CDEC4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\MobileNavPanel.tsx",
+    "Hash": "4B463E2856EFB6745B8B61597C22CD52CB89B61E403CE1C11249F139A06D9AB5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\UserMenuDropdown.tsx",
+    "Hash": "2CFC8D1C5AFDC32B71DEBA6879FBE57B2BDAD0EF0AADF2AC04EABC3F0424301B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\__tests__\\Header.test.tsx",
+    "Hash": "055A03323223B2D87C905B3809578DD3C6D4896AB80A4976830ED56E9CD21D88"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\layout\\__tests__\\partner-shell.test.tsx",
+    "Hash": "F06E1A7AF1B9801C6D8C6EB2CB8F8E40A3FDE5310E7EA3B9299871746D638349"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\BookingCard.tsx",
+    "Hash": "CBBA7ADC78747E6BE733C9902B396CE9EBD7772110FB0F24EEDA918DDAB20E6E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\BookingList.tsx",
+    "Hash": "399509F9DCAD79B16F7EFB37EBCF8179CC3CCE1BFB73685AEF8B50FC6820696F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\BookingStatusBadge.tsx",
+    "Hash": "79C91E8B5211E0165B4AA5E015EC1DCE41161A3EEA6EE0600AD97DA6767DEDEA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\CancelBookingButton.tsx",
+    "Hash": "9134FB1D5BB072B789F636371C2A5CDAD88CA37F3E7530E4535310E6A328F01B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\__tests__\\BookingCard.test.tsx",
+    "Hash": "3CB384429DF976173ADEBA9F2F0B034C36881001AE1FF942276F415F5E936C9B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\__tests__\\BookingList.test.tsx",
+    "Hash": "FE1C71846D8BE2498EBB4CCABD0C04DB4C207D40B59F723A84FE84BFC564F9B0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\my-bookings\\__tests__\\CancelBookingButton.test.tsx",
+    "Hash": "E7BE45BFB94E183396302D0347F5D997212882FDA43CF9292E6B0D54F139A20B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\OnboardingStatusBanner.tsx",
+    "Hash": "3D4185EE3ABBBBA5636013F735278D8707BF864CDBDFD48BF9B3CC63DD44513B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\PartnerInviteForm.tsx",
+    "Hash": "50CA4C0299A859AA62157678E6E0CE98F60B821E0696723FD64F0F0CB7572A05"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\PartnerRegistrationForm.tsx",
+    "Hash": "F680B0B253EC3EA84303986F7DE0FA06986FC1A2F7EFD3DE53133BB31D161AEA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\ResubmissionForm.tsx",
+    "Hash": "DF61854B003642867DB1ABA59BF7EE75AAF1E3CD24014CBA42E4004C7EE3BA47"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\analytics\\AnalyticsSummary.tsx",
+    "Hash": "5DC390C2337DFB999175E681085D278FAC41D519E4A7F3A6059D3EBE2345BF60"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\analytics\\BookingsChart.tsx",
+    "Hash": "F5801A8E2D215365893ED16AB066B2D7299768E12BDDC41E59F1C8608F8874CA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\analytics\\index.ts",
+    "Hash": "4C686C8D5A5D42755226E87DD11374BEA8BD75C17661377B9064B4A237C93E89"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\analytics\\__tests__\\AnalyticsSummary.test.tsx",
+    "Hash": "08ABA01E5A6490CB8D519C32ED50DB8871251B7FB99E0DDEF09BD64A43D82FA0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\analytics\\__tests__\\BookingsChart.test.tsx",
+    "Hash": "F09BDBBB5434A510AF9454C936306D8648CF1C461D1827A0A2DC04B7794EAEB0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\bookings\\BookingDetail.tsx",
+    "Hash": "D5047DCA90884DA948398D1F47E5B75BEE2A7213CC31F7A516D1474113FC6D8D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\bookings\\BookingFilters.tsx",
+    "Hash": "760DD5CAB81E402CD07EF2EA5C86E64EE79CF2E38908E628645C33319B0EDE79"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\bookings\\BookingList.tsx",
+    "Hash": "936A0DD08616467FB552FA2A2A6A7C8D5036A0919C45FB101EE68670D0DAC855"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\bookings\\index.ts",
+    "Hash": "84DA746F545E6880A042AF25BAF4C1C57C8DD39E01F682C55B6719A1A50DEF47"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\layout\\index.ts",
+    "Hash": "26F9C3092D5B39C6AB0A3AA59650AE6E09FAFF42900AAEBF0B16E21F24C2E060"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\layout\\MobileDrawer.tsx",
+    "Hash": "69669C9A35F58394B4DB4B146D678E2D5DB7AA49C83E55E7304D0DE95EE9B069"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\layout\\NotificationBell.tsx",
+    "Hash": "212A6173F2F998E940EA2D532B857D17B74CD3923194D7EAE9CF252FC2807134"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\layout\\PartnerHeader.tsx",
+    "Hash": "0330C27DA88C8C0A72B8FAA660762A9EE6F1C4673F751EEFFC79DEB9AEDB51B8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\layout\\PartnerSidebar.tsx",
+    "Hash": "B3B8CF08C4BD0149DBC34AD08C3BAF554B54CF9FE304C92510DBA3F25F58CC4A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\layout\\PartnerSkeleton.tsx",
+    "Hash": "8B567AAD60CC22290697BDF0AFDF1FDF6F2097209FF05CB3E68902EA0D2C9C1F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\profile\\index.ts",
+    "Hash": "F44ACA06F3333AF2CBDE00E6349A61211398F986F2FD83C1DF7AF62AF4460219"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\profile\\NotificationSettings.tsx",
+    "Hash": "E5909BF0FDAF411154EB975B81FFA113EB3E97BF7C74DB795193673A45E3EA3A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\profile\\PayoutForm.tsx",
+    "Hash": "1DB204A239DCF77BB7A7DF61A46C02138CDA0105282CE6509D30DECC40A93BEC"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\profile\\ProfileForm.tsx",
+    "Hash": "9B64A306F4273C2BF35BE45E888AFA8268A42B3067348CC0BE624C02A847FA23"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\reviews\\index.ts",
+    "Hash": "B0891084267758D6D4D35F292AEC9F635CF9ED523F37DB93A32950AF867EA3DE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\reviews\\PartnerReviewsDashboard.tsx",
+    "Hash": "0BFEFE07664C3D13FC3857FCE06474408627E91413F705EAB9C6DED986506F42"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\reviews\\ReviewList.tsx",
+    "Hash": "A15FE63BB0599F923D6A3CD0B6F03151CDD507D8856EA32DBADEDA2182ACDDB7"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\reviews\\ReviewResponseForm.tsx",
+    "Hash": "1C559888643C73E0A1E0A26CCEE85E822E6F4336610D83C344CEC8697B3A9A5C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\AvailabilityCalendar.tsx",
+    "Hash": "8F76E823DBD9C1FED37F1250EB4E7FCE2CC65F1856AF1FEC57A5B467A6C33036"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\ImageUploader.tsx",
+    "Hash": "71FCB8DF940CC3482F54BEAF336FED657FFDA2AD0ED608F2FB8F1958ABC2F945"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\index.ts",
+    "Hash": "036B12F9C3526B79795192FD9FC3765E1867055E7EE1B8C8505724FE58D1E8F3"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\ItineraryEditor.tsx",
+    "Hash": "2B86F4BD24FA1516F48E027201F6B71C631BC212E5625C05E08BD734B5234AB8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\PricingTierForm.tsx",
+    "Hash": "E6C68F58BD06A122203D28DD92CC0691888F7B4E34383579822413ED73325809"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\TourCard.tsx",
+    "Hash": "6C8B482A1F86EA654DC0F4EEDFF05298CA8EF14C3217D0035F378ACEDA9782BE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\TourContentPreview.tsx",
+    "Hash": "76CB9CD4799E960208B399D05D675AD8C89072FEA074DBB3ACCC9A8E5B535411"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\TourList.tsx",
+    "Hash": "870902DF7C4BA4188F5405F0D31D292EE50AE4B978F4CD19ED0BD7E8EB45A01E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\TourWizard.tsx",
+    "Hash": "77D9590943F64F4A7D79ECF4EF739AEFFACEF4B5A6ADA0D961FA1A29F58B4B45"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\AvailabilityCalendar.test.tsx",
+    "Hash": "EA589D04A781616379FF3566681218FEEB1DB334BCEBBBE3FB91A9764272C4F5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\ImageUploader.test.tsx",
+    "Hash": "9C158099EF3E2A51AA2BC3B936A119A7E9B80FEBA524F79482229D8004539F0B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\ItineraryEditor.test.tsx",
+    "Hash": "589BACF5D07C761B84934681A22847820E78A1936011BA987FEEEA19666D2373"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\PricingTierForm.test.tsx",
+    "Hash": "27A037DE8512FE84033F78222B49C73686DB078CF86914ECD3930719DDDD5C58"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\TourCard.test.tsx",
+    "Hash": "26BFE912FEBF42D9F7639F50513C3B143F3A7E4B9A68AD22A8DD599EC7F8CCCE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\TourContentPreview.test.tsx",
+    "Hash": "14FF061AE7CBFDD30D16FC19C27E19A36BB0330312B2BD92EDE50FF8B712A412"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\TourWizard.locale.test.tsx",
+    "Hash": "C1D97DA2AD2D23B02E49A4B8DA2C95F8030A6A241F5BA6F32371ADB50A724DC1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\tours\\__tests__\\TourWizard.test.tsx",
+    "Hash": "16517C968DFE58220CFF8E68BF84FFDDCAE9B5E106E66049AF40E9A7134886AE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\partner\\__tests__\\PartnerReviewsDashboard.test.tsx",
+    "Hash": "B0C16601B911BF09387A87F7B5F3656BFD3AD90E03321F5ACB23077EFF29C93D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\profile\\PasswordChangeForm.tsx",
+    "Hash": "2E2A60C37A4E53DE74F1729E6FD632BFC4EE1ACB52C25CBE2224D376935965EA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\profile\\PreferencesForm.tsx",
+    "Hash": "656F92ED89942C51F9EB87C86FFF9B4D45A724585A3E2D5C1CBF9F30CEC18BB2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\profile\\ProfileForm.tsx",
+    "Hash": "1D346294736B11F1598484CB2931DF4D7ECC51B361C482CC5D66C1EC5EC60ED6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\profile\\ProfileSettings.tsx",
+    "Hash": "C57EAFF94FCCD51B4ADF390BE1207DDAFF580079D2725F6F7F64082228BB3F15"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\profile\\__tests__\\PasswordChangeForm.test.tsx",
+    "Hash": "FDF6D70595B3BB7452320D6DD19161A082CC662D9AA5B7373A2523E8157A9C48"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\AggregateRating.tsx",
+    "Hash": "1D29FDC9A13A15586616C17EBE381A4BF56269EC26579E22BF251A777B420C67"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\MyReviewCard.tsx",
+    "Hash": "F91AE2EDDF4C9A9E427AA16AB9E63B6EEB42B95F70322B7A1BD55076A95BE16F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\MyReviewsList.tsx",
+    "Hash": "1C3761F055F8B8D95998C962BE2830E1E39B08F5D163DA3C6EA83BC34EE77BAA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\ReviewCard.tsx",
+    "Hash": "036E94E81C79A089AF3AFCD9547759D8B8523F901B99630CF1B0950F03BEF89F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\ReviewForm.tsx",
+    "Hash": "6045178A39A4CF0F91A5F7582B2B08A118B02748E0E9ACCF7D756C5D3C5ED481"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\ReviewList.tsx",
+    "Hash": "C5DB02EDF6A29153C2FF7FAFF96237C086128A5DDFCA78072B383DDBB8DCB6D6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\StarRating.tsx",
+    "Hash": "4F7F9B877C65C198B8256032D7C7329A8789CA9AA33D219A1BCE53EE63FCC789"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\__tests__\\AggregateRating.test.tsx",
+    "Hash": "316387198E60C0717B6AAAC6D25778CCA1C66B2253DEA459C72636B06F28E349"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\__tests__\\ReviewForm.test.tsx",
+    "Hash": "A09A1465950F9E27EAF5F8CDC5C41AE1CEE04AF6AE1E410C4828E51A88C08729"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\__tests__\\ReviewList.test.tsx",
+    "Hash": "FDBFD68E5B6E50FA7806CAA2EEE224CFE719EDB2D1E5700108E54328C19A885B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\reviews\\__tests__\\StarRating.test.tsx",
+    "Hash": "206BFE5678C03EEE921233F34C7C115C1A560F88AB674A013D29B652F94452A8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\FilterPanel.tsx",
+    "Hash": "A9DC5628EF652579BF152024C409EB3B6A4FDCD5E0F7BAEADA899A4E4CF88CA4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\ListingPage.tsx",
+    "Hash": "B41DB3C228838DDA77942D07BC2599CCCF5025DD03952472170A2C28BDF0D293"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\Pagination.tsx",
+    "Hash": "A377DC2B77C346DAC8CBE95296BB091A3AAB30A0210FDC2AB5B0FCAB05FA333E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\SearchBar.tsx",
+    "Hash": "04F9779129FFCC9D54AFA35B2595BDFFF3A8ED1B1DC3CEF0D260131FFDFF247E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\SearchResults.tsx",
+    "Hash": "2D597644B6698B8E13C0F98A61D05215FCF7E99358487BF2CE2AE6F777AB278E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\SearchUnavailable.tsx",
+    "Hash": "07AD057B5A24E47345ECD333CBDEF6BE073393E8B5451A4DB153A6E2B27CB0D3"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\SortDropdown.tsx",
+    "Hash": "A85DB62A6D945BDC8F569775EFE83BE035FF543F4A1FDCE4E31B1DA6373F0A96"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\TourCard.tsx",
+    "Hash": "3FF6738BA5032335D77C668EC444896A4FC93C82BA0277402258CE7736740552"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\__tests__\\Pagination.test.tsx",
+    "Hash": "06A15385809DC8376FEB810D358AF47AD9BD0CE5BE1D9A5FE878DA7F84F76C78"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\search\\__tests__\\TourCard.test.tsx",
+    "Hash": "9C42FAB873EA5632C60868F58C028F23DCE8C857BAD5307910890EDDA392C402"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\seo\\StructuredData.tsx",
+    "Hash": "71AE3BE3433103DE45B643EBD07B8C4CF30DB3479D7D05312964196F392B41A1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\seo\\__tests__\\StructuredData.test.tsx",
+    "Hash": "F4661C27FC53A1D291D8EE53BCC8D0C49661D417FA09B65AD0560ABC221875F5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\shared\\CookieConsent.tsx",
+    "Hash": "232E789F588CC43EFE6273B19BE86DC92DAE6181EEB5A204C2AFD0EA5348F036"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\shared\\ErrorBoundary.tsx",
+    "Hash": "03EE6338925AC6915237E26EC019F57D5D84630A3AAD7766FE9EDF65AB55F597"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\shared\\ErrorFallback.tsx",
+    "Hash": "308E2948E84E8F9A385D9C6330F361A383DF245543F88801D3F256A4925638D6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\shared\\Skeleton.tsx",
+    "Hash": "81BA18D4EBEA76AECD347966651CC9D7A2404A582CA9ACAC7BF8D6B6DDEA74FE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\shared\\__tests__\\ErrorBoundary.test.tsx",
+    "Hash": "BC691B69AB326E0D032CC19DDE09DCE82BF740D35FA6CF70C85FC11A38217C97"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\AvailabilityCalendar.tsx",
+    "Hash": "4F70838551109D045A71917981710A3641532335EC6FB9BDC2E01B3B6EB3BEA8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\BookingCard.tsx",
+    "Hash": "3055A3F29C912F7DDB06DA90B6AC4BC8109198B1BC5DE446770D0E054209D57E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\BookingCTA.tsx",
+    "Hash": "6F3C40134C52B209EEA429287CA7AB499D5BBB6D5E7294BEACD77F6A537C09F1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\ImageGallery.tsx",
+    "Hash": "DBEB5F9C3FE2989740A9D8BF0E8552177562F81F2F2B3847DCB294FB7B66A80C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\MobileBookingAction.tsx",
+    "Hash": "45DB611CD473891CD6AA8D414FBFADE81C44B320EECA819A70F3A049D91C99D4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\MobileBookingBar.tsx",
+    "Hash": "05B7DEB5D02CE924154547200288D943FA1F6748AFB093B45DCA84234CC74749"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\OperatorSummary.tsx",
+    "Hash": "E6DC8536396AE21CC44D9328120260B8DBF2CFC934ADFC1E9FB6534990304397"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\RelatedTours.tsx",
+    "Hash": "1230E2E036A8CE854A61F8D707570330B11CD64B4612244A65424D47499EAA63"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\ReviewList.tsx",
+    "Hash": "B4C5F625A4AC1F5CE700C4DF44FF142208734EE8D4D6AC9A89F0981A6F70A73A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourBookingController.tsx",
+    "Hash": "BB0E58D699FA5F6497C21B9C84DF8290D3F350F0D974B20FC01CF0C1C1283902"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourDetail.tsx",
+    "Hash": "E57BC991D562DBC7C3218482439146993BD14E98E4C1556AD1B4C456627DDCCB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourFacts.tsx",
+    "Hash": "032927508467F46BFCC29C78A9E64F8F5D40A83DB94E67DFCDD2A0CAD4F08170"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourGallery.tsx",
+    "Hash": "AA2EF725CBF2C0C7A67A5804801569D5E6142EF549D52B54ABF7E190095D1E1D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourHeader.tsx",
+    "Hash": "1325A8362E9573320DF6C3434C52FF327D7F5C401E2B6ED85062E0AC7CFB6BCF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourHighlights.tsx",
+    "Hash": "66A9ABF91CEB669E1C359AD54E0E378F83011542D28649C57971DF19284F801E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourInclusions.tsx",
+    "Hash": "F3090F4B0979D2EFAD6492ABDF70457A8BEA54F0DDDB488F39BADBEAD78A99ED"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourItinerary.tsx",
+    "Hash": "EE39768943413FFB8118D1CFF04ED84EF48DED8E304C65798D72D2A35433E61C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourMeetingPoint.tsx",
+    "Hash": "558612EBCE2A3A90534CE2B7DC30B4D2DD17E0B68EC0F20BD565E4168FAD0A0C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourOverview.tsx",
+    "Hash": "BE305954CF8500FE2850F6FF48D5E242E2E691775C054D0B5919B3583AA28726"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\TourSectionNav.tsx",
+    "Hash": "9AF549A2F12C1884E1750F65BC43B4B05514FC97B5017CC491277176271F62E6"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\AvailabilityCalendar.test.tsx",
+    "Hash": "2639A7C68E16A7C395DCE3FB9C60263A4D1A376DDCFC47F9DB6CD4AFB6E5F3D8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\BookingCTA.test.tsx",
+    "Hash": "3C0EFE2B00B43BFA9CB70EE2ACAA1F2F790004141F249CC3B29AA55ECB71C190"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\ImageGallery.test.tsx",
+    "Hash": "129907385D3668177D9E3905A805619B3705DA94E7E367A80EC9C31EFBD68546"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\MobileBookingAction.test.tsx",
+    "Hash": "164C369F3765375C5FC81FAEEC034FB8898AE6048D3FF6810313EF53811461AB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\OperatorSummary.test.tsx",
+    "Hash": "079674DF64BD7102A4D5DD273071756D9DD03D3529C1C4F190B9FD16CEFB42C2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\TourBookingController.test.tsx",
+    "Hash": "2F72C799CB2F41849B644EA90496CB40662CA7A6B72F1F5B90E58FCEFC1A8D60"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\TourDetail.test.tsx",
+    "Hash": "5ECDD2F3079E78AC56FBDF2BF6A4CCC68A4C2D8B1560DCE61DF071FD428C14C9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\TourGallery.test.tsx",
+    "Hash": "3E68199B52479862A2D8F4B68BB2530EBB0066B0DC2BC1540EF6377800C4D8EC"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\TourOverview.test.tsx",
+    "Hash": "747904B55ADEDE6E9DACBA7CB65F917E4A1F934D0FD3EC4BD532030B5D4AE457"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\TourSectionNav.test.tsx",
+    "Hash": "DCB3B58004CFF5DF142B5275009402E6675C4034D08B9944EC4603685FAC24B8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\tour\\__tests__\\TourSections.test.tsx",
+    "Hash": "02D12D3F4A128EB03AEA16C2C64E44F10D74E0D76249E3333364842C7EDD9B0B"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\traveler\\TravelerPageShell.tsx",
+    "Hash": "39D1776021ECDCACDC8ACF6ABEC32992C858BD419DA7CF8E8601DB2105FB5623"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Accordion.tsx",
+    "Hash": "02CF395AFEE40052A76B083E425CF61A9A0D65DEA14200B17DEFCAEC06571ABE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Breadcrumbs.tsx",
+    "Hash": "DCC3EACB6BD2B60AB533BA95A7FA98CF3DFF3609321D0C95621A3E26D607C33A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\button.tsx",
+    "Hash": "BD90FF1E35A449CCF5842E0311A7343A4C7BB44C9E2A5A1640D0510303F2A55F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\CarouselRail.tsx",
+    "Hash": "A6CB10C24BC6741DEB9F859775798DC1D5BED45288838384D11C21599A875CB9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Chip.tsx",
+    "Hash": "E119F8563AA994A1182AAABBC458BA55215923A1554C282D203D414EBB79DC6E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Container.tsx",
+    "Hash": "A1E569E7D3DDE592608020A8072A4972C446DC58ECC6F9E918AA1632C4D3468F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Dialog.tsx",
+    "Hash": "D5014E3F6DC1FC3B6EBBDECE36CBBEF039750F97323B2F223FB83C2EECB79D66"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Drawer.tsx",
+    "Hash": "6E4A0C31AC6C576397C68DC8294426D6F8D6A96B93B416090540733CE66BFA25"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\EmptyState.tsx",
+    "Hash": "7734735D15023CDEF9F5E277457557989F1BB20CC172A52C162E3BFF32806F49"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\ErrorState.tsx",
+    "Hash": "48D12A58EA81325709EAB18BE951CD7614FBCA73EF8BBBD896DCB9368700053C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\IconButton.tsx",
+    "Hash": "F86410A38C815FE94CBE4EF25F0AEE33C1351E7DA2CE8C091E9F69578C1CACE1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\input.tsx",
+    "Hash": "049F47EF2535C2320413B30534CC031AAC33A79B022E14E2E33E9CE541072BDD"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\label.tsx",
+    "Hash": "8856212FB2BAD75A2E0062B6C3A8D1ABB7C825D326D32ACF60CBE6A689467AF8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\LoadingSkeleton.tsx",
+    "Hash": "3BDE52FF091E29982C0AC79C83E65CB475A87B7A02A097865DA3F18B81D45287"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\RatingBadge.tsx",
+    "Hash": "AABD9AC4788B1659DE225E4D12252ABE176BED7577861726EFB0E79566E3D8AF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\SectionHeading.tsx",
+    "Hash": "29AB6AEE4841A9BE5621952D80284E69DDE7E7C239E276722522D0E8AECD450E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\select.tsx",
+    "Hash": "6CBB5A88A148CEF8D6BE59A4CB07D31152A7AC93247044CF3B1C037C68833DFB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\StarRating.tsx",
+    "Hash": "030862199DB54825B26A88D6C0EE372AE018EF68141D9A2D34D8E666CCA9D042"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\switch.tsx",
+    "Hash": "68C375DF2AF4D7455D6CA49665EFF478A5E037556238981C0695273EB66B2F11"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Tabs.tsx",
+    "Hash": "01863CA4A1C123713C7CC000C544D04B68F40758F4E90C45EDC1D0ACF934C724"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\textarea.tsx",
+    "Hash": "5EB79EDECD35201CF9069FA300E41BA9EDE8A9193BAE86B1CFA23F168CBFE280"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\Toast.tsx",
+    "Hash": "D9E0AC0AE2A496AFED3216035BE05B7BAC910DDE73FF7416835E586A21DC02ED"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\__tests__\\Breadcrumbs.test.tsx",
+    "Hash": "3C848DCD2720EC2E439016E254A07739E8AA269E8E49A68569618DD3301772AB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\__tests__\\design-system.test.tsx",
+    "Hash": "9674A62E1B03D3A633322E9E2F72368A2AB68EF0E26762D89502348F19B831E1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\__tests__\\feedback-primitives.test.tsx",
+    "Hash": "AFEA8986870ECDBCDAE1C4105AD0117979C163073C46241E3965D281B9125FC3"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\__tests__\\form-primitives.test.tsx",
+    "Hash": "D16669D67F7098DBA1BE62050894D2EE09EE557BFDD11817B5B6A99742C661AA"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\ui\\__tests__\\interactive-primitives.test.tsx",
+    "Hash": "5905D9F5C8A5441842A3415E3DE2B920DE6B17EE3EB70EF8FFAB1752A19B18B9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\wishlist\\WishlistButton.tsx",
+    "Hash": "FDC9A5C74F12AA7C0E4B98B8266D0E8ED6DD2088989AC3C8FFBADB0AC84CE198"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\wishlist\\WishlistGrid.tsx",
+    "Hash": "F94A78053E5AFE41B5E37C540557746CEE86BA909B3BC655D15F0F977332A133"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\components\\wishlist\\__tests__\\WishlistButton.test.tsx",
+    "Hash": "00BE68E54A4E3301B30D4CA24548FEF21CDD69AEEA6A0E122ADE84711B2531A4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useBookingDetail.ts",
+    "Hash": "847E35ADBD53509BAA2D637F41825573E76E77581B5AEF517F5048E39875B5D0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useBookings.ts",
+    "Hash": "24F94B34157B47FECC6C337683B6CB4900AC526C049016179367606AF6A916C7"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useCancelBooking.ts",
+    "Hash": "BD79A4920E5DC20097E8C82081638E76BBE2E13789535D1DEEA15FF1F5DB3C99"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useChangePassword.ts",
+    "Hash": "4622F4D36465E3F1CBFEB9C73176F5EFB55B837F9FC0EF1415ABD228AAE725DD"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useMyReviews.ts",
+    "Hash": "1B596FC018D48748E72631B638355FFD20D330BC126891C2BB5895857FDCDE58"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\usePartnerAnalytics.ts",
+    "Hash": "C7CE089298C83744D4922ABC90DA143349B771E82B13693FD999AAF78B27F7FC"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useProfile.ts",
+    "Hash": "7528BEBFDF1FA363247AD48879F15C1BE576B7A706C886F08101567CE3EA0B42"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\useWishlist.ts",
+    "Hash": "87214EEC4EAD01F605335548637FE284F3D52747FA6392F431472F7265A03B60"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\hooks\\__tests__\\usePartnerAnalytics.test.tsx",
+    "Hash": "9DD00C3F2AF4D9ABA131E257B427F525115874CB62F6810E3FC9C678F5C5D951"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\i18n\\request.ts",
+    "Hash": "5C69FA09E258A566EC6FD7762E71C2691950571C9AB65F19A5C49F19E778BC1E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\i18n\\routing.ts",
+    "Hash": "9386E270D6AEDABC7F6212E67F4A559B6D667631E1D764558AF8E9ABE29EB88A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\design-tokens.ts",
+    "Hash": "8126B6018CF0DF812B0B385B6A917938BCAC4CEBE669C724C9C569A2BFE87CA9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\images.ts",
+    "Hash": "A6A61CB7FAC00F02AA25592E4C8DA04A65BD730A5757B64574980AF93CB64E27"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\query-provider.tsx",
+    "Hash": "F37098FF5D98DD5B89E325D3490CC9DF7DD1A54C7DDEE12CCAEEBC76D28CB0FD"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\utils.ts",
+    "Hash": "7E078E9384FA74DBCEB33603EE021BA06F4A2F8A63E6388A3B59FE47C1470A1C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\auth.ts",
+    "Hash": "036543F647B9DFC5E57FD3DA9318477BF212B71C15553F30799B287C68058EC4"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\blog.ts",
+    "Hash": "5B3CEF82E50EEBE9179F3C3771A01AF569F0E8B736E861A749AEF7D1EBE3622C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\bookings.ts",
+    "Hash": "0E5E30047328E01F539C5D90F9E6CBCD6C675114D17B63D43DCE68B4BA5AA22C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\categories.ts",
+    "Hash": "8FEB373CB06900B9FCDF5A62CA6B82014E8B653E04CC7C39BBB161DEBBBAF295"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\client.ts",
+    "Hash": "39EC3E60DFE4A9E49D8BE89590A90A0F31AE5040F3E4E98296A5D60512D61E93"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\destinations.ts",
+    "Hash": "D79F2F52C129D8EA29C77C8E800BE9FEDBBAA0D8178BED53E8D4E3C465F745DD"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\homepage.ts",
+    "Hash": "2139B97C14D1ED5BB6F9CEA9B900581B741560099B74DFFAA06CC0D11AC2EC3C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\my-bookings.ts",
+    "Hash": "FCA4CAAB72C5266C6ACE46E2EB5E4956EAF3612DA3E14ECD3ED9C079AF8A58BF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\partner.ts",
+    "Hash": "1E02DF9453F5C7B9A8BCF337A65DC3DBF6EEF4CF3414017701F2395A1EB3940D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\search.ts",
+    "Hash": "6BA0B802977626CD2B36C5388838C0EE05BBD229D2F21B4F33950768686C9C8F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\tours.ts",
+    "Hash": "C03FC39F4B0FA7DE3A24B7712D9A3AC2D0E9C08375756BCFC95F782760EF178A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\traveler.ts",
+    "Hash": "9E4B872B51900B836F25407155B7993E1F507819781A44D0592A2F3BC6755824"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\types.ts",
+    "Hash": "E90B308E3B2D3AC233F9B49306AB9E01FD99BD204E608D901066FC5FAFC6586F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\__tests__\\client.test.ts",
+    "Hash": "C4CA8C3514D397581EB9770C498381068662FBB8F3CF4B2161CAC78B41D70DA0"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\api\\__tests__\\search.test.ts",
+    "Hash": "977E2B71D95374D0F6877FE56406F0300690524FFC3E0BCCCCACA61B2704E3D8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\auth\\return-url.ts",
+    "Hash": "7FE46091C3B9E4CE1BD64C95B7B42B7ED8D65E2DD1C61E63FDAD4403AC0FA0A7"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\auth\\token.ts",
+    "Hash": "3CF995A6FA0AAA2C8C8F411F4B5280B644FA845B7563665D8EEE600C057AD618"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\auth\\__tests__\\return-url.test.ts",
+    "Hash": "DA5A769BDD56DD1E533ECA32BB6C71804611C90671291E501AF74CDBCF585BD1"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\useAuth.tsx",
+    "Hash": "3AFB9DA993A00008E322C68185FCF0EE2F6375A5D1585810B8E6D9135AEA1A4A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\useCheckout.ts",
+    "Hash": "EA8586CCEB1A2F0FDB8E7F9725F2441D978487D19374A2E05F1A0A6E47AC86FE"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\useFilters.ts",
+    "Hash": "6A0E3E12B506B3D6832A814B0BED9D5E73CB011A586B42C947B88E31FCA2C778"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\useFocusTrap.ts",
+    "Hash": "91C366022FA62246E569E0A8AA6C3C00DED45A58D79009EE7F9D4124B6396AB9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\usePartnerRealtime.ts",
+    "Hash": "7B4EFB7E9F2352AB48961BE8E49FDAFB1FA719AF94FD85987C0A7CD5B3AC8EA5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\useTour.ts",
+    "Hash": "1B66240D239F9A0D8F805010B6A4C4D30745FC9E955227B6C92436127FD93E6E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\useTours.ts",
+    "Hash": "0ADE202690DB770AA61BF20D827D4415261E0EFED06EA2AC8550B85B96F26200"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\hooks\\__tests__\\useFilters.test.tsx",
+    "Hash": "17E7A14F4C17CF5EAF5886B6B703DCDB0F275CBB73997136A0EAF422242F4B7C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\reviews\\review-api.ts",
+    "Hash": "D41159753963EF2695458A212D520CEDFF358FAB00CBED905D7D69F97338F053"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\stores\\checkout-store.ts",
+    "Hash": "7772AFACA0ACC75C0D8943F25F96C8EB1B85914DA0607AB4B2D675460AD5F186"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\stores\\tourWizard.ts",
+    "Hash": "68355980700257B48410DE9048E24C1EA1989EAE5BFB4511F2F4C5953D713676"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\stores\\__tests__\\tourWizard.test.ts",
+    "Hash": "5E7FCC20C5AB434B87A174FA15729D5CFAD3C8992FCFC27DD0BC107832E8CF65"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\stripe\\stripe-client.ts",
+    "Hash": "201741FDB4E4B6E7D590BEA435220FEC0F11A3F12C441230351624F36FB1BF5E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\tours\\booking-reasons.ts",
+    "Hash": "0E06F720DCA7F01E60A3590DBF426BA8B1700B217B663A0BE874E0F7ABFBF19A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\tours\\booking-selection.ts",
+    "Hash": "ED77639A5A08E0AA45DEFE2B1F5676712C85D5B114417BF80BA4184D522303B7"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\tours\\detail-presentation.ts",
+    "Hash": "550B0F68F04910E713E10DB31EA815B4A3AD096094D8E3798ED27A5F18AD36DF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\tours\\__tests__\\booking-selection.test.ts",
+    "Hash": "6C2997AB8C831689203D29E42AB4D471C96D8CB4EC658F4B95D0EBD588F03511"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\tours\\__tests__\\detail-localization.test.ts",
+    "Hash": "5B7DDB6979307A32CEE474303FEEBACC13EE1389C70A106688054E31AD42906F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\tours\\__tests__\\detail-presentation.test.ts",
+    "Hash": "0E15F82B31506C3F72BFB87A9FC7638325EA2C2A98078CBE83D905EDAE87C91A"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\auth.ts",
+    "Hash": "0B43F80B739E9837A32355A240D0F8F4015A38C277ACB9DC0CC762E63301CFEF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\booking.ts",
+    "Hash": "F4CB617DCB9F031227E989E6561099E0EF6317C36D6E5A884694C09D41287A0C"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\partner.ts",
+    "Hash": "A51EAAA3524015D74B0B47BB1DA719741DC4C3490F95295C12AFCC785E9BD2C9"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\profile.ts",
+    "Hash": "7BB58BA734B9BF2F60656D9762BFA68C0D6EE36714FA9E7B785972718AB2178E"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\review.ts",
+    "Hash": "6950D924A2B6DED2AFDCF7158003FA41180F477255576847685619E435D5CD3F"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\search.ts",
+    "Hash": "B8EAEC443537AE6F13F274DB5F4F5D385C8FF27222EB040E8F10EAC228A26C45"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\validators\\__tests__\\partner.test.ts",
+    "Hash": "C7D42AE9716849D9CB4ACEAE02613C4A6BCF7C1A1BF1FCFAA42D0AB6A1C02EEB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\lib\\__tests__\\utils.test.ts",
+    "Hash": "DA976206F683624007B52251A8801C51C5CF4A66CD20F2421567C1846E6E4665"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\test-utils\\catalogIntl.tsx",
+    "Hash": "BE4F85FE2495E8A8D9FBEADC7D74B706FB03A96060FB2DDAAF0642712E2B79C2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\types\\partner.ts",
+    "Hash": "7519134E4449A366F1C62E68845872C8279E742F969B1AC937C9C5E815BB84FF"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\types\\tour.ts",
+    "Hash": "698E5C3671AEB5BBDC7510B7A65FB032270ED406ED4934966CFF8BF4EFF16CB5"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\src\\types\\traveler.ts",
+    "Hash": "682D2F31C72A5B62509ACFEF67B37671EAE321DDA364434EF6748F12C76F95B2"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\messages\\en.json",
+    "Hash": "954DA0BFF652A7BDDAA8AE6D91A50350FFC41961934CE09CEF2F5D63E6BC1A80"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\messages\\es.json",
+    "Hash": "DCE9DC1F0DD705BAFCD1D728CE87B753DB6508ED0B5C2A5105A0EEA1755E5E27"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\messages\\it.json",
+    "Hash": "790E429ED9B9D8A77A452598A4AAE9C67043A9DB24DBCA7EE668F6E2957887D8"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\next.config.ts",
+    "Hash": "404C27CBEAB144C79D9EA246AC092DCD1F25A916694B1BA14307391A6FB62DBB"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\package.json",
+    "Hash": "0ABA9B572479DB9A9698FE7C1CC2041C0EFFDB87FB47EB757E9AC6DE3DBD996D"
+  },
+  {
+    "Path": "F:\\Travel Website\\bookly travel\\frontend\\package-lock.json",
+    "Hash": "E0818CE9B96D6A87B30C8BBB10E72BC1A97953F291C5378BE29D686B305FC17C"
+  }
+]

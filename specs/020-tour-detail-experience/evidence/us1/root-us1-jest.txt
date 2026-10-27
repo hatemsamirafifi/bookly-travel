@@ -1,0 +1,10 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourOverview.test.tsx src/components/tour/__tests__/TourSections.test.tsx src/components/tour/__tests__/TourDetail.test.tsx src/lib/tours/__tests__/detail-presentation.test.ts src/components/ui/__tests__/Breadcrumbs.test.tsx src/components/ui/__tests__/design-system.test.tsx src/components/ui/__tests__/interactive-primitives.test.tsx src/components/ui/__tests__/form-primitives.test.tsx src/components/ui/__tests__/feedback-primitives.test.tsx
+
+
+Test Suites: 9 passed, 9 total
+Tests:       99 passed, 99 total
+Snapshots:   0 total
+Time:        24.997 s
+Ran all test suites within paths "src/components/tour/__tests__/TourOverview.test.tsx", "src/components/tour/__tests__/TourSections.test.tsx", "src/components/tour/__tests__/TourDetail.test.tsx", "src/lib/tours/__tests__/detail-presentation.test.ts", "src/components/ui/__tests__/Breadcrumbs.test.tsx", "src/components/ui/__tests__/design-system.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx", "src/components/ui/__tests__/form-primitives.test.tsx", "src/components/ui/__tests__/feedback-primitives.test.tsx".

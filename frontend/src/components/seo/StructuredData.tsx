@@ -1,4 +1,14 @@
 import type { TourDetail, TourImage } from '@/lib/api/types';
+import {
+  areGroupBoundsValid,
+  getEstimateCents,
+  getOfferedFutureDates,
+  isBookableAvailability,
+  isOfferedFutureDate,
+  isPositiveSafeInteger,
+  isSupportedCurrency,
+} from '@/lib/tours/booking-selection';
+import { formatExactCentsDecimal } from '@/lib/utils';
 
 function serializeJsonLd(value: unknown): string {
   // JSON-LD is embedded in an HTML script element. Escaping '<' prevents
@@ -8,6 +18,9 @@ function serializeJsonLd(value: unknown): string {
 
 export function getSafeAbsoluteImageUrls(images: Pick<TourImage, 'url'>[], baseUrl: string): string[] {
   return Array.from(new Set(images.flatMap((image) => {
+    // Blank or whitespace-only URLs are absent media, not photos: resolving
+    // them against the base would fabricate the homepage URL as an image.
+    if (image.url.trim() === '') return [];
     try {
       const url = new URL(image.url, baseUrl);
       return url.protocol === 'https:' || url.protocol === 'http:' ? [url.href] : [];
@@ -31,10 +44,24 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
     tour.description?.substring(0, 300),
     tour.meeting_point?.trim() ? `${meetingPointLabel}: ${tour.meeting_point.trim()}` : null,
   ].filter(Boolean).join(' · ');
-  const available = !tour.availability.is_unavailable
-    && !!tour.availability.next_available_date
-    && tour.availability.available_dates.includes(tour.availability.next_available_date)
-    && tour.pricing.base_price.amount > 0;
+  const availableDates = tour.availability;
+  // Only supported, safe cents become an Offer. Formatting never validates pricing.
+  const priceValid = isPositiveSafeInteger(tour.pricing.base_price.amount)
+    && isSupportedCurrency(tour.pricing.base_price.currency);
+  // Missing next-date metadata does not prevent explicit selection of another
+  // offered future; validFrom itself must never be inferred.
+  const todayUtc = new Date().toISOString().slice(0, 10);
+  const boundsValid = areGroupBoundsValid(tour.group_size.min, tour.group_size.max);
+  const minimumEstimateSafe = boundsValid
+    && getEstimateCents(tour.pricing, tour.group_size.min) !== null;
+  const offeredFutureDates = getOfferedFutureDates(availableDates, todayUtc);
+  const available = priceValid
+    && isBookableAvailability(availableDates)
+    && boundsValid
+    && minimumEstimateSafe
+    && offeredFutureDates.length > 0;
+  const nextValid = available
+    && isOfferedFutureDate(availableDates.next_available_date, availableDates, todayUtc);
   const meetingPoint = tour.meeting_point?.trim() ? tour.meeting_point.trim() : '';
 
   const schema = {
@@ -53,16 +80,16 @@ export function TouristTripSchema({ tour, locale }: TouristTripSchemaProps) {
       inLanguage: tour.content_locale,
     },
     ...(meetingPoint ? { tripOrigin: { '@type': 'Place', name: meetingPoint } } : {}),
-    ...(tour.pricing.base_price.amount > 0 ? { offers: {
+    ...(priceValid ? { offers: {
       '@type': 'Offer',
-      price: (tour.pricing.base_price.amount / 100).toFixed(2),
+      price: formatExactCentsDecimal(tour.pricing.base_price.amount),
       priceCurrency: tour.pricing.base_price.currency,
       availability: available
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      validFrom: available ? tour.availability.next_available_date : undefined,
+      validFrom: nextValid ? tour.availability.next_available_date : undefined,
     } } : {}),
-    ...(tour.reviews.count > 0 && tour.reviews.average_rating > 0 && tour.reviews.average_rating <= 5 ? { aggregateRating: {
+    ...(isPositiveSafeInteger(tour.reviews.count) && Number.isFinite(tour.reviews.average_rating) && tour.reviews.average_rating > 0 && tour.reviews.average_rating <= 5 ? { aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: tour.reviews.average_rating.toFixed(1),
       reviewCount: tour.reviews.count,

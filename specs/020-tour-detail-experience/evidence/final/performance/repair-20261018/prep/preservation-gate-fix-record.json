@@ -1,0 +1,55 @@
+{
+  "logicFix": {
+    "reason": "preservation-gate logic artifact only",
+    "bug": "allOk required preserveInfo.copied=true; the refresh rerun took the alreadyPreservedAtEarlierAttempt path because the failed-initial-proof copies already existed from the crashed first rerun attempt, so the gate reported preserve-initial-proof-failed although preservation itself was satisfied",
+    "measuredSectionsModified": false,
+    "correctedFields": [
+      "stopReasons",
+      "passedReadinessFresh",
+      "passedReadinessOnly (current-runtime-ready.json)"
+    ],
+    "correctedAtUtc": "2026-10-18T20:17:28.959Z",
+    "preservedCopiesVerified": {
+      "json": "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/fresh-container-parity-initial-identity-change.json",
+      "txt": "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/fresh-container-parity-initial-identity-change.txt",
+      "jsonSha256": "7afca9fd1fce7a710dbc63561a624884f619f0b8eb1e911b678efe00450e375d",
+      "txtSha256": "9f4c14827fe6d25f3b96ffc726c4c18e3a4c21020ead26d1c0727cf81ab87968"
+    },
+    "shaBeforePatch": {
+      "parityJson": "5d63db592148c4fe8c2a348844a4bc9d002c78e95336e2f1a28b670fa5f556f7",
+      "parityTxt": "edde87dd69fcafb2db42e2c2e2134a8028af5a4feb6e968a996f31a0c1a18665",
+      "readyJson": "edc87c5523a5daf9a9617a8b6401d36c60b2ce437e95170bf6a57753f396f96e"
+    }
+  },
+  "summary": {
+    "patched": [
+      "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/fresh-container-parity.json",
+      "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/fresh-container-parity.txt",
+      "F:/Travel Website/bookly travel/specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/prep/current-runtime-ready.json"
+    ],
+    "before": {
+      "parityStopReasons": [
+        "preserve-initial-proof-failed"
+      ],
+      "parityPassedReadinessFresh": false,
+      "readyPassedReadinessOnly": false
+    },
+    "after": {
+      "parityStopReasons": [],
+      "parityPassedReadinessFresh": true,
+      "readyPassedReadinessOnly": true
+    },
+    "shas": {
+      "parityJsonBefore": "5d63db592148c4fe8c2a348844a4bc9d002c78e95336e2f1a28b670fa5f556f7",
+      "parityJsonAfter": "db6866ad3c36dabe2c107fa34a413619c8b4eba8fb6e21671fd521c2b397d888",
+      "parityTxtBefore": "edde87dd69fcafb2db42e2c2e2134a8028af5a4feb6e968a996f31a0c1a18665",
+      "parityTxtAfter": "fa8656b1317373138f85fb4670783b8a9338225602a0ec3842710cfb13e579ef",
+      "readyJsonBefore": "edc87c5523a5daf9a9617a8b6401d36c60b2ce437e95170bf6a57753f396f96e",
+      "readyJsonAfter": "e0e0850b54b41283a01c384e75eeaab717a41efd05e929945692b1201967b3e3"
+    },
+    "initialCopiesShas": {
+      "json": "7afca9fd1fce7a710dbc63561a624884f619f0b8eb1e911b678efe00450e375d",
+      "txt": "9f4c14827fe6d25f3b96ffc726c4c18e3a4c21020ead26d1c0727cf81ab87968"
+    }
+  }
+}

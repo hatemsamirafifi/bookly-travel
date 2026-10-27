@@ -1,0 +1,189 @@
+
+Running 7 tests using 1 worker
+
+[1A[2K(node:10904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:10904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/7] [chromium] › tests\e2e\tour-detail.spec.ts:1362:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span
+[1A[2K  1) [chromium] › tests\e2e\tour-detail.spec.ts:1362:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    [1mMatcher error[22m: [31mreceived[39m value must not be null nor undefined
+
+    Received has value: [31mundefined[39m
+
+      1418 |       );
+      1419 |       for (const [index, expectedUrl] of [coverUrl, secondUrl, thirdUrl, fourthUrl].entries()) {
+    > 1420 |         expect(srcs[index]).toContain(encodeURIComponent(expectedUrl));
+           |                             ^
+      1421 |       }
+      1422 |       await expect(tiles.nth(3)).toHaveClass(/lg:col-span-2/);
+      1423 |       await expect(page.getByRole('button', { name: /See all/ })).toHaveCount(0);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1420:29
+
+    Error Context: test-results\tour-detail-Tour-Detail-ga-be4b3-first-order-and-sparse-span-chromium\error-context.md
+
+
+[1A[2K(node:14760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:14760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/7] [chromium] › tests\e2e\tour-detail.spec.ts:1429:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability
+[1A[2K  2) [chromium] › tests\e2e\tour-detail.spec.ts:1429:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByTestId('tour-gallery').getByRole('button', { name: /View image \d+/ })
+    Expected: [32m7[39m
+    Received: [31m5[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveCount" with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('tour-gallery').getByRole('button', { name: /View image \d+/ })[22m
+    [2m    14 × locator resolved to 5 elements[22m
+    [2m       - unexpected value "5"[22m
+
+
+      1442 |       const gallery = page.getByTestId('tour-gallery');
+      1443 |       await expect(gallery).toBeVisible();
+    > 1444 |       await expect(gallery.getByRole('button', { name: /View image \d+/ })).toHaveCount(7);
+           |                                                                             ^
+      1445 |
+      1446 |       const seeAll = page.getByRole('button', { name: 'See all 7 photos' });
+      1447 |       await expect(seeAll).toBeVisible();
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1444:77
+
+    Error Context: test-results\tour-detail-Tour-Detail-ga-1c487-th-full-viewer-reachability-chromium\error-context.md
+
+
+[1A[2K(node:23044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[3/7] [chromium] › tests\e2e\tour-detail.spec.ts:1468:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile
+[1A[2K  3) [chromium] › tests\e2e\tour-detail.spec.ts:1468:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveAttribute[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('dialog', { name: 'Image lightbox' }).locator('img')
+    Expected: [32m"US3 photo 3"[39m
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toHaveAttribute" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('dialog', { name: 'Image lightbox' }).locator('img')[22m
+
+
+      1493 |       expect(box!.width).toBe(1440);
+      1494 |       expect(box!.height).toBe(900);
+    > 1495 |       await expect(dialog.locator('img')).toHaveAttribute('alt', 'US3 photo 3');
+           |                                           ^
+      1496 |       await expect(dialog.getByText('3 of 5')).toBeVisible();
+      1497 |
+      1498 |       // One dialog only: no nested locks. Background is locked and inert.
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1495:43
+
+    Error Context: test-results\tour-detail-Tour-Detail-ga-938e8-focus-and-restores-the-tile-chromium\error-context.md
+
+
+[1A[2K(node:24328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:24328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[4/7] [chromium] › tests\e2e\tour-detail.spec.ts:1524:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input
+[1A[2K  4) [chromium] › tests\e2e\tour-detail.spec.ts:1524:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByTestId('tour-gallery')
+    Expected: visible
+    Error: strict mode violation: getByTestId('tour-gallery') resolved to 2 elements:
+        1) <div class="relative" data-testid="tour-gallery">…</div> aka locator('#main-content').getByTestId('tour-gallery')
+        2) <div class="relative" data-testid="tour-gallery">…</div> aka getByText('1 of 5See all 5 photos', { exact: true })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('tour-gallery')[22m
+
+
+      1532 |       await touchPage.goto(`http://127.0.0.1:${harness.nextPort}/en/tours/${slug}`);
+      1533 |       const gallery = touchPage.getByTestId('tour-gallery');
+    > 1534 |       await expect(gallery).toBeVisible();
+           |                             ^
+      1535 |       await expect(gallery.getByRole('list', { name: /thumbnail/i })).toHaveCount(0);
+      1536 |       const counter = gallery.getByText(/^\d+ of \d+$/);
+      1537 |       await expect(counter).toHaveText('1 of 5');
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1534:29
+
+    Error Context: test-results\tour-detail-Tour-Detail-ga-6c71c-unter-with-real-touch-input-chromium\error-context.md
+
+
+[1A[2K(node:15180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:15180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[5/7] [chromium] › tests\e2e\tour-detail.spec.ts:1563:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap
+[1A[2K  5) [chromium] › tests\e2e\tour-detail.spec.ts:1563:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByTestId('tour-gallery').getByText('This photo is unavailable.')
+    Expected: [32m1[39m
+    Received: [31m5[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveCount" with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('tour-gallery').getByText('This photo is unavailable.')[22m
+    [2m    2 × locator resolved to 4 elements[22m
+    [2m      - unexpected value "4"[22m
+    [2m    12 × locator resolved to 5 elements[22m
+    [2m       - unexpected value "5"[22m
+
+
+      1587 |       // Exactly one honest placeholder; every slot keeps a nonzero stable
+      1588 |       // box (mosaic rows differ by design, so at most two heights).
+    > 1589 |       await expect(gallery.getByText('This photo is unavailable.')).toHaveCount(1);
+           |                                                                     ^
+      1590 |       const heights = await tiles.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height));
+      1591 |       expect(heights.every((height) => height > 0)).toBe(true);
+      1592 |       expect(new Set(heights.map((height) => Math.round(height))).size).toBeLessThanOrEqual(2);
+        at F:\Travel Website\bookly travel\frontend\tests\e2e\tour-detail.spec.ts:1589:69
+
+    Error Context: test-results\tour-detail-Tour-Detail-ga-81631-hability-through-a-URL-swap-chromium\error-context.md
+
+
+[1A[2K[31mTesting stopped early after 5 maximum allowed failures.[39m
+
+[1A[2K  5 failed
+    [chromium] › tests\e2e\tour-detail.spec.ts:1362:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR gallery covers 0, 1 and 4 photos with full count, cover-first order and sparse span 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1429:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR seven photos expose See all beyond five with full viewer reachability 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1468:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR viewer fills the viewport, navigates from close without moving focus, and restores the tile 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1524:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR mobile rail touch drag advances the counter with real touch input 
+    [chromium] › tests\e2e\tour-detail.spec.ts:1563:7 › Tour Detail gallery (Spec 020 US3) › US3 SSR broken slot keeps stable count, dimensions and reachability through a URL swap 
+  2 did not run
+  1 error was not a part of any test, see above for details

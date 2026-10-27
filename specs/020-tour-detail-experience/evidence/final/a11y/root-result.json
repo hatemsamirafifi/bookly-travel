@@ -1,0 +1,43 @@
+{
+  "startedAt": "2026-10-17T15:03:30.622Z",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "sourceParity": {
+    "files": 420,
+    "mismatches": []
+  },
+  "scope": "Real built Docker app/API/owned fixtures plus explicitly controlled failure/SSR boundaries; no native media adapter",
+  "stages": [
+    {
+      "name": "integrated-accessibility",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "tests/e2e/a11y/tour-detail-a11y.spec.ts",
+        "tests/e2e/a11y/shared-shell-a11y.spec.ts",
+        "tests/e2e/a11y/checkout-a11y.spec.ts",
+        "tests/e2e/a11y/wishlist-a11y.spec.ts",
+        "tests/e2e/a11y/auth-nav-a11y.spec.ts",
+        "--project=a11y",
+        "--project=a11y-authed",
+        "--workers=1",
+        "--reporter=line",
+        "--output=/tmp/spec020-final-a11y-integrated-accessibility"
+      ],
+      "startedAt": "2026-10-17T15:03:30.623Z",
+      "finishedAt": "2026-10-17T15:08:18.315Z",
+      "exitCode": 0,
+      "containerArtifacts": "/tmp/spec020-final-a11y-integrated-accessibility"
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-10-17T15:08:18.317Z"
+}

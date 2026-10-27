@@ -1,0 +1,10 @@
+
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/booking/__tests__/BookingForm.test.tsx src/components/tour/__tests__/TourBookingController.test.tsx src/lib/auth/__tests__/return-url.test.ts
+
+
+Test Suites: 3 passed, 3 total
+Tests:       58 passed, 58 total
+Snapshots:   0 total
+Time:        4.479 s, estimated 5 s
+Ran all test suites within paths "src/components/booking/__tests__/BookingForm.test.tsx", "src/components/tour/__tests__/TourBookingController.test.tsx", "src/lib/auth/__tests__/return-url.test.ts".

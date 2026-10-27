@@ -1,0 +1,12 @@
+[
+  {
+    "fixture": "auth.setup.ts",
+    "http_status": 200,
+    "token_issued": true
+  },
+  {
+    "fixture": "partner.setup.ts",
+    "http_status": 200,
+    "token_issued": true
+  }
+]

@@ -1,0 +1,71 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourBookingController.test.tsx
+
+  console.error
+    Error: Not implemented: navigation (except hash changes)
+        at module.exports (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at navigateFetch (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+        at exports.navigate (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+        at Timeout._onTimeout (F:\Travel Website\bookly travel\frontend\node_modules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7) {
+      type: 'not implemented'
+    }
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at navigateFetch (node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+      at exports.navigate (node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+      at Timeout._onTimeout (node_modules/jsdom/lib/jsdom/living/nodes/HTMLHyperlinkElementUtils-impl.js:80:7)
+
+node.exe : FAIL src/components/tour/__tests__/TourBookingController.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...roller.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ● TourBookingController shared selection › blocks a stale registration continuation click with the same day recheck 
+as Book Now
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      680 |     today = dates[0];
+      681 |     const staleRegister = within(slot).getByRole('link', { name: /create account/i });
+    > 682 |     expect(fireEvent.click(staleRegister)).toBe(false);
+          |                                            ^
+      683 |
+      684 |     expect(
+      685 |       screen.getByText('Available dates changed since the page loaded. Select a date again.'),
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:682:44)
+
+  ● TourBookingController shared selection › marks the supplied cancellation policy with its content language without 
+changing control language
+
+    expect(element).toHaveAttribute("lang", "en") // element.getAttribute("lang") === "en"
+
+    Expected the element to have attribute:
+      lang="en"
+    Received:
+      null
+
+      713 |     // the surrounding controls stay in the page language.
+      714 |     const policy = within(slot).getByText(/Free cancellation up to 24 hours/);
+    > 715 |     expect(policy).toHaveAttribute('lang', 'en');
+          |                    ^
+      716 |     expect(policy.className).toContain('whitespace-pre-line');
+      717 |     expect(within(slot).getByText('Total estimado', { exact: false })).toBeInTheDocument();
+      718 |   });
+
+      at Object.<anonymous> (src/components/tour/__tests__/TourBookingController.test.tsx:715:20)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 26 passed, 28 total
+Snapshots:   0 total
+Time:        5.922 s
+Ran all test suites within paths "src/components/tour/__tests__/TourBookingController.test.tsx".

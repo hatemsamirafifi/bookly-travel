@@ -1,0 +1,33 @@
+﻿Listing tests:
+  [setup] › auth.setup.ts:23:6 › authenticate as traveler
+  [setup] › partner.setup.ts:19:6 › authenticate as partner
+  [chromium-authed] › checkout.spec.ts:10:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+  [chromium-authed] › checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+  [chromium-authed] › checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+  [chromium-authed] › checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+  [chromium-authed] › checkout.spec.ts:55:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+  [chromium-authed] › checkout.spec.ts:75:7 › Checkout › booking page loads with tour details
+  [chromium-authed] › checkout.spec.ts:86:7 › Checkout › participant selector respects min and max
+  [chromium-authed] › checkout.spec.ts:113:7 › Checkout › price breakdown updates with participants
+  [chromium-authed] › checkout.spec.ts:135:7 › Checkout › shows error when tour or date missing
+  [chromium-authed] › checkout.spec.ts:140:7 › Checkout › responsive layout at 390px
+  [chromium-authed] › payment.spec.ts:10:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+  [chromium-authed] › payment.spec.ts:56:7 › Payment Flow › booking page shows payment section after confirming booking
+  [chromium-authed] › payment.spec.ts:68:7 › Payment Flow › participant selector updates price breakdown
+  [chromium-authed] › payment.spec.ts:91:7 › Payment Flow › responsive layout at 390px
+  [mobile-authed] › checkout.spec.ts:10:7 › Checkout › price drift requires explicit acceptance of the backend price before payment
+  [mobile-authed] › checkout.spec.ts:42:9 › Checkout › en checkout shows the localized tour summary before payment
+  [mobile-authed] › checkout.spec.ts:42:9 › Checkout › es checkout shows the localized tour summary before payment
+  [mobile-authed] › checkout.spec.ts:42:9 › Checkout › it checkout shows the localized tour summary before payment
+  [mobile-authed] › checkout.spec.ts:55:7 › Checkout › failed cancellation of a drifted booking keeps the decision visible
+  [mobile-authed] › checkout.spec.ts:75:7 › Checkout › booking page loads with tour details
+  [mobile-authed] › checkout.spec.ts:86:7 › Checkout › participant selector respects min and max
+  [mobile-authed] › checkout.spec.ts:113:7 › Checkout › price breakdown updates with participants
+  [mobile-authed] › checkout.spec.ts:135:7 › Checkout › shows error when tour or date missing
+  [mobile-authed] › checkout.spec.ts:140:7 › Checkout › responsive layout at 390px
+  [mobile-authed] › payment.spec.ts:10:7 › Payment Flow › deterministic payment failure can be retried without recreating the booking
+  [mobile-authed] › payment.spec.ts:56:7 › Payment Flow › booking page shows payment section after confirming booking
+  [mobile-authed] › payment.spec.ts:68:7 › Payment Flow › participant selector updates price breakdown
+  [mobile-authed] › payment.spec.ts:91:7 › Payment Flow › responsive layout at 390px
+  [a11y-authed] › a11y\checkout-a11y.spec.ts:5:5 › checkout page should not have accessibility violations
+Total: 31 tests in 5 files

@@ -1,0 +1,9 @@
+{
+  "recordedAt": "2026-10-17T13:49:47.876Z",
+  "scope": "Resumed session: no browser CLI was active; the persisted writable-container test correction and all420 accepted files were rechecked separately.",
+  "extraHostFiles": [],
+  "proxyStatus": 200,
+  "directStatus": 200,
+  "containerIdentity": "a25006cd828524eb30d120e43d5fb0971c4d2c5e7048452b12df4028eb245c16 sha256:8fb8e05d4ed2467fa38559647c9639c22ae752a76e852af70b4e3df0a8a53d6e 2026-10-16T22:13:55.750036112Z",
+  "passed": true
+}

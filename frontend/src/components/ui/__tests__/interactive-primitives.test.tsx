@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { renderToString } from 'react-dom/server';
@@ -108,4 +108,68 @@ it('ignores hidden and disabled controls when wrapping dialog focus', () => {
 
 it('can be server-rendered while initially open without accessing the portal DOM', () => {
   expect(() => renderToString(<Dialog open onClose={jest.fn()} title="Filters" closeLabel="Close">Filters</Dialog>)).not.toThrow();
+});
+
+it('keeps the default centered card geometry without a placement', () => {
+  render(<Dialog open onClose={jest.fn()} title="Filters" closeLabel="Close">Body</Dialog>);
+  const panel = screen.getByRole('dialog', { name: 'Filters' });
+  expect(panel).toHaveClass('max-w-lg');
+  const overlay = panel.parentElement;
+  expect(overlay).not.toBeNull();
+  expect(overlay).toHaveClass('fixed', 'inset-0', 'p-4');
+});
+
+it('renders a viewport-filling fullscreen panel with a flexible scrolling body', () => {
+  render(<Dialog open onClose={jest.fn()} title="Filters" closeLabel="Close" placement="fullscreen">Body</Dialog>);
+  const panel = screen.getByRole('dialog', { name: 'Filters' });
+  expect(panel).toHaveClass('h-full', 'w-full', 'max-w-none', 'rounded-none');
+  expect(panel).not.toHaveClass('max-w-lg');
+  const overlay = panel.parentElement;
+  expect(overlay).not.toBeNull();
+  expect(overlay).toHaveClass('fixed', 'inset-0');
+  expect(overlay).not.toHaveClass('p-4');
+  const body = within(panel).getByText('Body').closest('div');
+  expect(body).not.toBeNull();
+  expect(body).toHaveClass('flex-1', 'min-h-0', 'overflow-y-auto');
+});
+
+it('pads the fullscreen panel with env safe-area insets without a nonexistent token', () => {
+  render(<Dialog open onClose={jest.fn()} title="Filters" closeLabel="Close" placement="fullscreen">Body</Dialog>);
+  const panel = screen.getByRole('dialog', { name: 'Filters' });
+  expect(panel.className).not.toMatch(/pb-safe/);
+  expect(panel).toHaveClass('pt-[env(safe-area-inset-top)]', 'pb-[env(safe-area-inset-bottom)]');
+});
+it('keeps shared focus, Escape and scroll-lock behavior for the fullscreen placement', () => {
+  function Example() {
+    const [open, setOpen] = useState(false);
+    return <><button onClick={() => setOpen(true)}>Open</button><Dialog open={open} onClose={() => setOpen(false)} title="Gallery" closeLabel="Close gallery" placement="fullscreen"><button>Last action</button></Dialog></>;
+  }
+  render(<Example />);
+  const trigger = screen.getByRole('button', { name: 'Open' });
+  trigger.focus();
+  fireEvent.click(trigger);
+  expect(screen.getByRole('button', { name: 'Close gallery' })).toHaveFocus();
+  expect(document.body.style.overflow).toBe('hidden');
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  expect(trigger).toHaveFocus();
+  expect(document.body.style.overflow).toBe('');
+});
+
+it('wires an optional caller description without changing default semantics', () => {
+  const { rerender } = render(
+    <Dialog open onClose={jest.fn()} title="Sign in to save" closeLabel="Not now" descriptionId="prompt-body">
+      <p id="prompt-body">Create an account or sign in.</p>
+    </Dialog>,
+  );
+  const dialog = screen.getByRole('dialog', { name: 'Sign in to save' });
+  expect(dialog).toHaveAttribute('aria-describedby', 'prompt-body');
+  expect(dialog).toHaveAccessibleDescription('Create an account or sign in.');
+
+  rerender(
+    <Dialog open onClose={jest.fn()} title="Sign in to save" closeLabel="Not now">
+      <p>Create an account or sign in.</p>
+    </Dialog>,
+  );
+  expect(screen.getByRole('dialog', { name: 'Sign in to save' })).not.toHaveAttribute('aria-describedby');
 });

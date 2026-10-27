@@ -1,0 +1,17 @@
+FOCUSED ESLINT (owned files only)
+  frontend> npx eslint src/components/tour/TourSectionNav.tsx src/components/tour/__tests__/TourSectionNav.test.tsx
+  RESULT: clean — no output, 0 errors, 0 warnings.
+  (Two react-hooks/set-state-in-effect errors found mid-pass were fixed by restructure, not suppression:
+   section-set reset moved to render-phase adjustment; initial deep-link honored inside the
+   IntersectionObserver subscription callback. A final react-hooks/exhaustive-deps warning was fixed
+   by deriving observed ids inside the effect from the stable idsKey string.)
+
+FULL TYPECHECK (whole frontend project, read-only gate for this slice)
+  frontend> npm run typecheck  (tsc --noEmit)
+  RESULT: owned files clean. Exactly one failure, in an UNOWNED file:
+    src/components/seo/__tests__/StructuredData.test.tsx(339,1): error TS1128: Declaration or statement expected.
+    src/components/seo/__tests__/StructuredData.test.tsx(339,2): error TS1128: Declaration or statement expected.
+  PROVENANCE: that file is `M` (modified) in the working tree by another worker (US6/schema slice);
+  this slice did not read, write, or depend on it. Reported precisely per isolation rules; not repaired,
+  not modified, not claimed as baseline. No errors reference TourSectionNav*, globals.css, TourDetail*,
+  or any US4-owned path.

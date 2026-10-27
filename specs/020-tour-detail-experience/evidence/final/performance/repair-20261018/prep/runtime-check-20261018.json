@@ -1,0 +1,35 @@
+{
+  "verifiedAtUtc": "2026-10-17T22:35:09.400Z",
+  "containerId": "cc21b897f1f4",
+  "state": "running",
+  "restartCount": 0,
+  "startedAt": "2026-10-17T20:02:45.3412223Z",
+  "image": "sha256:a254386f360c143a6174b651763a97b4f3b49dfd450ff2e7fa41b4149752573d",
+  "cpuLimits": {
+    "NanoCpus": 0,
+    "CpuQuota": 0
+  },
+  "buildId": "sAEfqK7AIAvMIn5nyjbTK",
+  "nodeVersion": "v20.20.2",
+  "nextVersion": "16.2.3",
+  "compareAgainst": "specs/020-tour-detail-experience/evidence/final/runtime/opencode-engine-resume-20261017/opencode-runtime-ready.json",
+  "runtimeReadyFacts": {
+    "container": {
+      "buildId": "sAEfqK7AIAvMIn5nyjbTK",
+      "node": "v20.20.2",
+      "next": "16.2.3"
+    },
+    "sourceParity420": {
+      "files": 420,
+      "mismatches": []
+    },
+    "hostParity419": {
+      "files": 419,
+      "mismatches": []
+    },
+    "passedReadinessOnly": true,
+    "executedAtUtc": "2026-10-17T20:10:22.760Z"
+  },
+  "method": "docker inspect + file/version reads only; no app route visits, no cache warming, no rebuild or settings changes",
+  "sourceParityNote": "HISTORICAL parity values from the Oct-17 resume gate; the Stage B executor rehashes the 420-container manifest itself before launch (root will instruct the exact method); today only the same container/image/startedAt/BUILD_ID/node/next identity was verified read-only."
+}

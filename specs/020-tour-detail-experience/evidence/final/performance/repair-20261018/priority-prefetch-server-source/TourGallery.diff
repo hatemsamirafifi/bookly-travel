@@ -1,0 +1,11 @@
+--- TourGallery.before
++++ TourGallery.after
+@@ -225,4 +225,7 @@
+                 fill
+                 sizes={tileSizes(total, position)}
+                 className="object-cover"
+-                {...(position === 0 ? { preload: true } : { loading: 'lazy' as const })}
++                {...(position === 0 ? { preload: true, fetchPriority: 'high' as const } : { loading: 'lazy' as const })}
+                 onError={() => markFailed(image)}
+                 {...(hasSuppliedBlur(image) ? getImagePlaceholderProps(image) : {})}
+               />

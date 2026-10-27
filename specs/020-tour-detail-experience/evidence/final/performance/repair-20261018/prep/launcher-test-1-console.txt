@@ -1,0 +1,11 @@
+﻿== launcher-test-1: fast success in folder with spaces (fail-closed launcher, root delta rerun) ==
+command: powershell.exe -NoProfile -NonInteractive -File audit-launch.ps1 -RunnerPath <fixture with spaces> -LogDir launcher-tests\\log\\test-1-access -TimeoutMs 20000
+  startNode: C:\Program Files\nodejs\node.exe
+  startArguments: "C:\Users\HaTeM\.codex\tmp\bookly-spec020\lighthouse-repair-20261018\launcher-tests\space folder with spaces\success-fixture.cjs"
+  launcherExitCode: 0 (observed)
+  elapsedMs: 468 (allowed up to 20000; prompt under 5000ms -> PASS; proves no unconditional watchdog wait)
+  rec: pid=24872 timedOut=False exitedInTime=True childExit=0 cleanupIssue= killOutcome=not-needed recElapsed=124 identityCaptured=True stdoutDrained=True
+  stdoutTranscript: LAUNCHER-FIXTURE-SUCCESS arguments-clean
+  stderrEmptyAsExpected: True
+  note: success path never enters cleanup; killOutcome=not-needed is honest here
+  RESULT: TEST-1 PASS

@@ -2,6 +2,7 @@ import { access, readdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { performance } from 'node:perf_hooks';
 
 const require = createRequire(import.meta.url);
 const puppeteer = require('puppeteer-core');
@@ -22,6 +23,9 @@ async function chromePath() {
 
 // Check the desktop CPU baseline before applying Lighthouse's unchanged 4x
 // mobile slowdown. Only about:blank is visited; application caches stay cold.
+const MAX_CPU_ATTEMPTS = 30;
+const CPU_BUDGET_MS = 30000;
+
 export function cpuReady(samples) {
   if (!Array.isArray(samples) || samples.some((value) => !Number.isFinite(value) || value <= 0)) return false;
   const pair = samples.slice(-2);
@@ -32,10 +36,17 @@ export function cpuReady(samples) {
 export async function prepareBrowserCpu(browser) {
   const page = await browser.newPage();
   try {
+    const startedAt = performance.now();
     const samples = [];
-    for (let attempt = 1; attempt <= 5; attempt++) {
+    for (let attempt = 1; attempt <= MAX_CPU_ATTEMPTS; attempt++) {
+      if (performance.now() - startedAt >= CPU_BUDGET_MS) {
+        throw new Error(`CPU readiness budget (${MAX_CPU_ATTEMPTS} samples / ${CPU_BUDGET_MS}ms) exhausted; performance audit must not start`);
+      }
       if (page.url() !== 'about:blank') throw new Error('CPU preflight must not visit the application');
       const benchmarkIndex = await page.evaluate(pageFunctions.computeBenchmarkIndex);
+      if (performance.now() - startedAt > CPU_BUDGET_MS) {
+        throw new Error(`CPU readiness budget (${MAX_CPU_ATTEMPTS} samples / ${CPU_BUDGET_MS}ms) exhausted; performance audit must not start`);
+      }
       samples.push(benchmarkIndex);
       console.log(JSON.stringify({ attempt, benchmarkIndex, url: page.url(), appVisited: false }));
       if (cpuReady(samples)) return;

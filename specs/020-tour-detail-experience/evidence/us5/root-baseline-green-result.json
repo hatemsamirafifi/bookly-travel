@@ -1,0 +1,11 @@
+{
+  "args": [
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "src/components/wishlist/__tests__/WishlistButton.test.tsx",
+    "src/components/ui/__tests__/interactive-primitives.test.tsx"
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-16T21:50:29.512Z"
+}

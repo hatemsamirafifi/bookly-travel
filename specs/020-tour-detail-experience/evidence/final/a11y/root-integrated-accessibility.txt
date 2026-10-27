@@ -1,0 +1,38 @@
+
+Running 34 tests using 1 worker
+
+[1A[2K[1/34] [setup] › tests/e2e/auth.setup.ts:23:6 › authenticate as traveler
+[1A[2K[2/34] [setup] › tests/e2e/partner.setup.ts:19:6 › authenticate as partner
+[1A[2K[3/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 390px
+[1A[2K[4/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 768px
+[1A[2K[5/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 1024px
+[1A[2K[6/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › en shared auth shell and open search pass Axe at 1440px
+[1A[2K[7/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 390px
+[1A[2K[8/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 768px
+[1A[2K[9/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 1024px
+[1A[2K[10/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › es shared auth shell and open search pass Axe at 1440px
+[1A[2K[11/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 390px
+[1A[2K[12/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 768px
+[1A[2K[13/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 1024px
+[1A[2K[14/34] [a11y] › tests/e2e/a11y/shared-shell-a11y.spec.ts:9:9 › it shared auth shell and open search pass Axe at 1440px
+[1A[2K[15/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:11:7 › en recoverable tour failure has a page heading and accessible retry
+[1A[2K[16/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:11:7 › es recoverable tour failure has a page heading and accessible retry
+[1A[2K[17/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:11:7 › it recoverable tour failure has a page heading and accessible retry
+[1A[2K[18/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:32:7 › en tour detail with loaded reviews should not have accessibility violations
+[1A[2K[19/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:32:7 › es tour detail with loaded reviews should not have accessibility violations
+[1A[2K[20/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:32:7 › it tour detail with loaded reviews should not have accessibility violations
+[1A[2K[21/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:54:7 › Spec019 tour content language and media controls › en tour detail has no axe violations across responsive widths
+[1A[2K[22/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:66:7 › Spec019 tour content language and media controls › gallery layout width has no axe violations
+[1A[2K[23/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:75:7 › Spec019 tour content language and media controls › es and it tour detail have no axe violations at spot widths
+[1A[2K[24/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:87:7 › Spec019 tour content language and media controls › difficulty and guide languages are labeled; codes stay stable across page language
+[1A[2K[25/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:134:7 › Spec019 tour content language and media controls › image alt language is separated from page-control language
+[1A[2K[26/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:165:7 › Spec019 tour content language and media controls › lightbox dialog traps focus, closes on escape and restores trigger focus
+[1A[2K[27/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:204:7 › Spec020 US6 locale, width and interaction acceptance › EN/ES/IT x 390/768/1024/1440 with loaded reviews has no axe violations
+[1A[2K[28/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:232:7 › Spec020 US6 locale, width and interaction acceptance › long-overview disclosure is fully keyboard operable with announced state
+[1A[2K[29/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:264:7 › Spec020 US6 locale, width and interaction acceptance › page stays readable and operable with reduced motion preferred
+[1A[2K[30/34] [a11y] › tests/e2e/a11y/tour-detail-a11y.spec.ts:284:7 › Spec020 US5 wishlist prompt dialog › sign-in prompt dialog is described, modal and focus-safe with no axe violations
+[1A[2K[31/34] [a11y-authed] › tests/e2e/a11y/auth-nav-a11y.spec.ts:5:7 › Auth Navigation Accessibility › user menu dropdown has no accessibility violations
+[1A[2K[32/34] [a11y-authed] › tests/e2e/a11y/auth-nav-a11y.spec.ts:16:7 › Auth Navigation Accessibility › mobile navigation panel has no accessibility violations
+[1A[2K[33/34] [a11y-authed] › tests/e2e/a11y/checkout-a11y.spec.ts:5:5 › checkout page should not have accessibility violations
+[1A[2K[34/34] [a11y-authed] › tests/e2e/a11y/wishlist-a11y.spec.ts:5:7 › Wishlist Accessibility › wishlist page has no accessibility violations
+[1A[2K  34 passed (4.7m)

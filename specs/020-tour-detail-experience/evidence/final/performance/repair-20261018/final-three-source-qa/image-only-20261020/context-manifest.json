@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-10-20T19:25:45.526Z",
+  "task": "offline-QA-image-build (image-only-20261020)",
+  "frontendRoot": "F:\\Travel Website\\bookly travel\\frontend",
+  "tempContextDir": "C:\\Users\\HaTeM\\AppData\\Local\\Temp\\opencode\\bookly-perf3-20261020\\image-only-20261020\\context",
+  "baseTag": "booklytravel-nextjs:spec020-preload-be653d72",
+  "baseImageIdRequired": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+  "baseImageIdVerified": "sha256:834f6e3234360ff29d62b042e1070011f4a80e28d8c199ab0a49ec2b86c7d7b9",
+  "targetTag": "booklytravel-nextjs:spec020-perf3-20261020-0c8211-fbb1",
+  "guards": [
+    {
+      "file": "src/components/tour/TourGallery.tsx",
+      "expectedSha256": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+      "sourceSha256": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+      "copiedSha256": "0c8211cce3610e41e63fae8dbf025c91b2747a60ab70f2295fa482fd52d3de3e",
+      "match": true,
+      "copiedToContext": true
+    },
+    {
+      "file": "src/components/layout/Footer.tsx",
+      "expectedSha256": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+      "sourceSha256": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+      "copiedSha256": "fbb1c8f1818bd538bab21251d8576d3a75560237215ef384cb01d7e34ff2c857",
+      "match": true,
+      "copiedToContext": true
+    },
+    {
+      "file": "src/components/blog/BlogDetail.tsx",
+      "expectedSha256": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+      "sourceSha256": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+      "copiedSha256": "4b47531473264950ed409c9398f974be84bd69d0a1e4ce7229d098026e67f969",
+      "match": true,
+      "copiedToContext": true
+    }
+  ],
+  "relatedPosts": {
+    "file": "src/components/blog/RelatedPosts.tsx",
+    "expectedSha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+    "actualSha256": "4f83087ca173bde2354f41180d89632616d7724fd065db4b300bd6dff4ca1003",
+    "verifiedOriginal": true,
+    "copied": false,
+    "edited": false
+  },
+  "contextFileCount": 3,
+  "dockerfile": {
+    "path": "C:\\Users\\HaTeM\\AppData\\Local\\Temp\\opencode\\bookly-perf3-20261020\\image-only-20261020\\Dockerfile",
+    "sha256": "e1f86b66ecaf5057c2d3f85cb97c5c6e1575acd8f4bef6fe05260b93966646ed",
+    "content": "FROM booklytravel-nextjs:spec020-preload-be653d72\nCOPY src/components/tour/TourGallery.tsx /app/src/components/tour/TourGallery.tsx\nCOPY src/components/layout/Footer.tsx /app/src/components/layout/Footer.tsx\nCOPY src/components/blog/BlogDetail.tsx /app/src/components/blog/BlogDetail.tsx\n"
+  }
+}

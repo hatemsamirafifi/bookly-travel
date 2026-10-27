@@ -1,0 +1,45 @@
+Spec020 T009 shared localization catalog — new/updated keys (EN/ES/IT)
+Branch: codex/020-tour-detail-experience
+Date (UTC): 2026-10-14
+Owner scope: frontend/messages/en.json, es.json, it.json
+
+NEW KEYS (16, all present/nonempty in all three catalogs):
+tour.overview.readMore | placeholders: (none)
+tour.overview.readLess | placeholders: (none)
+tour.gallery.seeAll | placeholders: {count}
+tour.gallery.counter | placeholders: {current},{total}
+tour.gallery.empty | placeholders: (none)
+tour.gallery.imageFailed | placeholders: (none)
+tour.booking.estimatedTotal | placeholders: (none)
+tour.booking.invalidDate | placeholders: (none)
+tour.booking.invalidCount | placeholders: {min},{max}
+tour.booking.dateChanged | placeholders: (none)
+tour.authRecovery.continueNotice | placeholders: (none)
+tour.authRecovery.sessionExpired | placeholders: (none)
+tour.states.withdrawnTitle | placeholders: (none)
+tour.states.withdrawnDescription | placeholders: (none)
+traveler.wishlistButton.saved | placeholders: (none)
+traveler.wishlistButton.saveFailed | placeholders: (none)
+
+REUSED EXISTING KEYS (no changes, for root carry-forward):
+tour.sectionNavigation (reading-nav label)
+tour.gallery.open/dialog/close/previous/next/thumbnails/view {number} (viewer controls)
+tour.contentFallback, tour.itineraryFallback (independent fallback notices)
+tour.unavailable/unavailableHint, tour.selectDate, tour.nextAvailable,
+tour.perPerson, tour.participants, tour.bookNow, tour.allowedRange {min,max},
+tour.selected, tour.groupRange {min,max}
+booking.errors.loadFailed/soldOut/invalidDetails/rateLimit/generic,
+booking.priceChangeModal.title/body/from/to/confirm/cancel,
+booking.total/date/participants/selectPrompt
+traveler.wishlistButton.save/remove/promptTitle/promptBody/signIn/notNow,
+traveler.wishlist.loadError/removeError
+reviews.no_reviews_yet, reviews.failed_to_load
+common.loading/retry/error/back
+notFound.title/subtitle/goHome/browseTours
+
+CONSTRAINTS HONORED:
+- All existing keys preserved; valid JSON hierarchy kept (verified via node JSON.parse).
+- No fees, cancellation promises, trust scores, stock photos, availability or
+  currency-support claims in new copy. Estimate is labelled "Estimated total"
+  only; auth recovery states nothing is booked until confirm; withdrawn states
+  archived unbookability only.

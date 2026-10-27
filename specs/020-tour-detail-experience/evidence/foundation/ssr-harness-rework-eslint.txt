@@ -1,0 +1,5 @@
+T008 SSR harness extraction REWORK — focused ESLint evidence (static only)
+Date: 2026-10-14 (rework pass for root cleanup-correctness review)
+Command (from frontend/): npx eslint tests/e2e/helpers/tour-detail-ssr.ts tests/e2e/tour-detail.spec.ts
+Result: PASS (exit 0, no warnings/errors, empty output)
+Scope: the two T008-owned files only. No other files linted or changed.

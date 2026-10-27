@@ -1,0 +1,390 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: tour-detail.spec.ts >> Tour Detail section navigation (Spec 020 US4 T053) >> US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+- Location: tests\e2e\tour-detail.spec.ts:2222:7
+
+# Error details
+
+```
+Test timeout of 180000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e4]:
+      - link "Bookly" [ref=e5] [cursor=pointer]:
+        - /url: /en
+      - navigation "Main navigation" [ref=e6]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: /en
+        - link "Search tours" [ref=e8] [cursor=pointer]:
+          - /url: /en/search
+        - link "Categories" [ref=e9] [cursor=pointer]:
+          - /url: /en/categories
+        - link "Destinations" [ref=e10] [cursor=pointer]:
+          - /url: /en/destinations
+      - generic [ref=e11]:
+        - button "Search tours" [ref=e12]:
+          - img [ref=e13]
+        - combobox "Switch language" [ref=e18]:
+          - option "English" [selected]
+          - option "Español"
+          - option "Italiano"
+        - link "Sign In" [ref=e19] [cursor=pointer]:
+          - /url: /en/auth/login
+          - generic [ref=e20]: Sign In
+        - link "Sign Up" [ref=e21] [cursor=pointer]:
+          - /url: /en/auth/register
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - navigation "Breadcrumbs" [ref=e25]:
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - link "Home" [ref=e28] [cursor=pointer]:
+                - /url: /en
+            - listitem [ref=e29]:
+              - generic [ref=e30]: /
+              - link "Walking Tours" [ref=e31] [cursor=pointer]:
+                - /url: /en/categories/walking
+            - listitem [ref=e32]:
+              - generic [ref=e33]: /
+              - generic [ref=e34]: Hidden Gems of Rome Walking Tour
+        - heading "Hidden Gems of Rome Walking Tour" [level=1] [ref=e35]
+        - generic [ref=e37]:
+          - img [ref=e38]
+          - text: Rome, Italy
+        - generic [ref=e41]:
+          - 'generic "Rating: 4.5 out of 5" [ref=e42]':
+            - img [ref=e43]
+            - generic [ref=e45]: "4.5"
+            - generic [ref=e46]: "Rating: 4.5 out of 5"
+          - link "(2 Reviews)" [ref=e47] [cursor=pointer]:
+            - /url: "#reviews"
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - button "View image 1" [ref=e50]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e51]
+          - button "View image 2" [ref=e52]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e53]
+          - button "View image 3" [ref=e54]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e55]
+          - button "View image 4" [ref=e56]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e57]
+          - button "View image 5" [ref=e58]:
+            - img "Hidden Gems of Rome Walking Tour" [ref=e59]
+        - button "See all 5 photos" [ref=e60]
+      - navigation "Tour sections" [ref=e61]:
+        - generic [ref=e62]:
+          - link "About This Tour" [ref=e63] [cursor=pointer]:
+            - /url: "#overview"
+          - link "Tour facts" [ref=e64] [cursor=pointer]:
+            - /url: "#facts"
+          - link "Highlights" [ref=e65] [cursor=pointer]:
+            - /url: "#highlights"
+          - link "Itinerary" [ref=e66] [cursor=pointer]:
+            - /url: "#itinerary"
+          - link "What's Included" [ref=e67] [cursor=pointer]:
+            - /url: "#included"
+          - link "What's Excluded" [ref=e68] [cursor=pointer]:
+            - /url: "#excluded"
+          - link "Meeting Point" [ref=e69] [cursor=pointer]:
+            - /url: "#meeting"
+          - link "Cancellation Policy" [ref=e70] [cursor=pointer]:
+            - /url: "#cancellation"
+          - link "Important information" [ref=e71] [cursor=pointer]:
+            - /url: "#important"
+          - link "Tour operator" [ref=e72] [cursor=pointer]:
+            - /url: "#operator"
+          - link "Reviews" [ref=e73] [cursor=pointer]:
+            - /url: "#reviews"
+          - link "More experiences to explore" [ref=e74] [cursor=pointer]:
+            - /url: "#related"
+      - generic [ref=e75]:
+        - article [ref=e76]:
+          - generic [ref=e77]:
+            - heading "About This Tour" [level=2] [ref=e78]
+            - generic [ref=e79]: Discover the secret corners of Rome that most tourists never see. From hidden courtyards to local artisan shops, this tour takes you off the beaten path through the Eternal City.
+          - generic [ref=e80]:
+            - heading "Tour facts" [active] [level=2] [ref=e81]
+            - generic [ref=e82]:
+              - generic [ref=e83]:
+                - term [ref=e84]: Duration
+                - definition [ref=e85]: 3 hours
+              - generic [ref=e86]:
+                - term [ref=e87]: Group size
+                - definition [ref=e88]: 1–20 travelers
+              - generic [ref=e89]:
+                - term [ref=e90]: Difficulty
+                - definition [ref=e91]: Moderate
+            - paragraph [ref=e92]:
+              - generic [ref=e93]: "Live guide:"
+              - text: German, English, Spanish
+          - generic [ref=e94]:
+            - heading "Highlights" [level=2] [ref=e95]
+            - list [ref=e96]:
+              - listitem [ref=e97]:
+                - img [ref=e98]
+                - text: Hidden courtyards
+              - listitem [ref=e100]:
+                - img [ref=e101]
+                - text: Local artisan shops
+              - listitem [ref=e103]:
+                - img [ref=e104]
+                - text: Ancient Roman stories
+              - listitem [ref=e106]:
+                - img [ref=e107]
+                - text: Off the beaten path
+          - generic [ref=e109]:
+            - heading "Itinerary" [level=2] [ref=e110]
+            - list [ref=e111]:
+              - listitem [ref=e112]:
+                - 'heading "Day 1: Hidden courtyards walk" [level=3] [ref=e113]'
+                - paragraph [ref=e114]: Walk the secret corners of Rome.
+              - listitem [ref=e115]:
+                - 'heading "Day 2: Artisan quarter" [level=3] [ref=e116]'
+                - paragraph [ref=e117]: Meet local artisans.
+          - generic [ref=e118]:
+            - heading "What's Included" [level=3] [ref=e122]:
+              - button "What's Included" [ref=e123]:
+                - text: What's Included
+                - img [ref=e124]
+            - heading "What's Excluded" [level=3] [ref=e129]:
+              - button "What's Excluded" [ref=e130]:
+                - text: What's Excluded
+                - img [ref=e131]
+          - generic [ref=e133]:
+            - heading "Meeting Point" [level=2] [ref=e134]
+            - paragraph [ref=e135]:
+              - img [ref=e136]
+              - text: Colosseum main entrance
+          - generic [ref=e139]:
+            - heading "Cancellation Policy" [level=2] [ref=e140]
+            - paragraph [ref=e141]: Free cancellation up to 24 hours before the tour.
+          - generic [ref=e142]:
+            - heading "Important information" [level=2] [ref=e143]
+            - list [ref=e144]:
+              - listitem [ref=e145]: Bring your passport
+          - region "Tour operator" [ref=e146]:
+            - heading "Tour operator" [level=2] [ref=e147]
+            - paragraph [ref=e148]: Rome Walks
+            - paragraph [ref=e149]:
+              - generic [ref=e150]: Verified operator
+            - paragraph [ref=e151]: Local guides.
+            - generic [ref=e152]:
+              - generic [ref=e153]: 3 tours
+              - generic [ref=e154]: 8 reviews
+          - generic [ref=e156]:
+            - heading "Reviews" [level=3] [ref=e157]
+            - generic [ref=e159]:
+              - generic "Average rating 4.5 out of 5" [ref=e160]: "4.5"
+              - generic [ref=e161]:
+                - radiogroup "Star rating" [ref=e162]:
+                  - radio "1 star" [disabled] [ref=e163]:
+                    - img [ref=e164]
+                  - radio "2 stars" [disabled] [ref=e166]:
+                    - img [ref=e167]
+                  - radio "3 stars" [disabled] [ref=e169]:
+                    - img [ref=e170]
+                  - radio "4 stars" [disabled] [ref=e172]:
+                    - img [ref=e173]
+                  - radio "5 stars" [checked] [disabled] [ref=e175]:
+                    - img [ref=e176]
+                - paragraph [ref=e178]: 2 reviews
+            - generic [ref=e179]:
+              - generic [ref=e180]:
+                - generic [ref=e181]:
+                  - generic [ref=e182]: Test
+                  - generic [ref=e183]: Edited
+                - generic [ref=e184]:
+                  - radiogroup "Star rating" [ref=e185]:
+                    - radio "1 star" [disabled] [ref=e186]:
+                      - img [ref=e187]
+                    - radio "2 stars" [disabled] [ref=e189]:
+                      - img [ref=e190]
+                    - radio "3 stars" [disabled] [ref=e192]:
+                      - img [ref=e193]
+                    - radio "4 stars" [checked] [disabled] [ref=e195]:
+                      - img [ref=e196]
+                    - radio "5 stars" [disabled] [ref=e198]:
+                      - img [ref=e199]
+                  - generic [ref=e201]: September 28, 2026
+                - paragraph [ref=e202]: Updated comment value here.
+              - generic [ref=e203]:
+                - generic [ref=e205]: Test
+                - generic [ref=e206]:
+                  - radiogroup "Star rating" [ref=e207]:
+                    - radio "1 star" [disabled] [ref=e208]:
+                      - img [ref=e209]
+                    - radio "2 stars" [disabled] [ref=e211]:
+                      - img [ref=e212]
+                    - radio "3 stars" [disabled] [ref=e214]:
+                      - img [ref=e215]
+                    - radio "4 stars" [disabled] [ref=e217]:
+                      - img [ref=e218]
+                    - radio "5 stars" [checked] [disabled] [ref=e220]:
+                      - img [ref=e221]
+                  - generic [ref=e223]: September 12, 2026
+                - paragraph [ref=e224]: A wonderful hidden-gems walk through Rome — highly recommended!
+        - complementary [ref=e225]:
+          - generic [ref=e227]:
+            - generic [ref=e228]:
+              - generic [ref=e229]:
+                - text: €45.00
+                - generic [ref=e230]: / person
+              - button "Save to wishlist" [ref=e231]:
+                - generic [ref=e232]: ♡
+            - generic [ref=e233]:
+              - generic [ref=e234]: Select a Date
+              - generic [ref=e235]:
+                - paragraph [ref=e236]: Next available
+                - paragraph [ref=e237]: 10/17/2026
+              - combobox "Select a Date" [ref=e238]:
+                - option "Select a Date"
+                - option "10/17/2026" [selected]
+                - option "10/18/2026"
+                - option "10/19/2026"
+                - option "10/20/2026"
+                - option "10/21/2026"
+                - option "10/22/2026"
+                - option "10/23/2026"
+                - option "10/24/2026"
+                - option "10/25/2026"
+                - option "10/26/2026"
+                - option "10/27/2026"
+                - option "10/28/2026"
+                - option "10/29/2026"
+                - option "10/30/2026"
+                - option "10/31/2026"
+                - option "11/01/2026"
+                - option "11/02/2026"
+                - option "11/03/2026"
+                - option "11/04/2026"
+                - option "11/05/2026"
+                - option "11/06/2026"
+                - option "11/07/2026"
+                - option "11/08/2026"
+                - option "11/09/2026"
+                - option "11/10/2026"
+                - option "11/11/2026"
+                - option "11/12/2026"
+                - option "11/13/2026"
+                - option "11/14/2026"
+                - option "11/15/2026"
+                - option "11/16/2026"
+                - option "11/17/2026"
+                - option "11/18/2026"
+                - option "11/19/2026"
+                - option "11/20/2026"
+                - option "11/21/2026"
+                - option "11/22/2026"
+                - option "11/23/2026"
+                - option "11/24/2026"
+                - option "11/25/2026"
+                - option "11/26/2026"
+                - option "11/27/2026"
+                - option "11/28/2026"
+                - option "11/29/2026"
+                - option "11/30/2026"
+                - option "12/01/2026"
+                - option "12/02/2026"
+                - option "12/03/2026"
+                - option "12/04/2026"
+                - option "12/05/2026"
+                - option "12/06/2026"
+                - option "12/07/2026"
+                - option "12/08/2026"
+                - option "12/09/2026"
+                - option "12/10/2026"
+                - option "12/11/2026"
+                - option "12/12/2026"
+                - option "12/13/2026"
+                - option "12/14/2026"
+                - option "12/15/2026"
+            - generic [ref=e239]:
+              - generic [ref=e240]: Participants
+              - group "Participants" [ref=e241]:
+                - button "Decrease participants" [disabled] [ref=e242]: "-"
+                - status [ref=e243]: "1"
+                - button "Increase participants" [ref=e244]: +
+                - generic [ref=e245]: 1–20 allowed
+            - paragraph [ref=e246]: "Estimated total: €45.00"
+            - paragraph [ref=e247]: Free cancellation up to 24 hours before the tour.
+            - generic [ref=e248]:
+              - paragraph [ref=e249]: Sign in to continue booking. Your tour, date, traveler count and language are kept, and nothing is booked until you confirm.
+              - link "Book Now" [ref=e250] [cursor=pointer]:
+                - /url: /en/auth/login?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems-rome-walking-tour%26participants%3D1%26date%3D2026-10-17
+              - link "Create account" [ref=e251] [cursor=pointer]:
+                - /url: /en/auth/register?returnUrl=%2Fen%2Fbooking%3Ftour%3Dhidden-gems-rome-walking-tour%26participants%3D1%26date%3D2026-10-17
+      - region "More experiences to explore" [ref=e252]:
+        - heading "More experiences to explore" [level=2] [ref=e253]
+        - generic [ref=e255]:
+          - 'link "Roman Forum Small Group Rome, Italy 2 hours Roman Forum Small Group Rating: 4.8 out of 5 (4.8) (11 reviews) Walking Tours €39.00" [ref=e256] [cursor=pointer]':
+            - /url: /en/tours/roman-forum-small-group
+            - img "Roman Forum Small Group" [ref=e258]
+            - generic [ref=e259]:
+              - generic [ref=e260]:
+                - generic [ref=e261]: Rome, Italy
+                - generic [ref=e262]: ·
+                - generic [ref=e263]: 2 hours
+              - heading "Roman Forum Small Group" [level=2] [ref=e264]
+              - generic [ref=e265]:
+                - generic [ref=e266]:
+                  - 'img "Rating: 4.8 out of 5" [ref=e267]':
+                    - img [ref=e268]
+                    - img [ref=e270]
+                    - img [ref=e272]
+                    - img [ref=e274]
+                    - img [ref=e276]
+                  - generic [ref=e278]: (4.8)
+                - generic [ref=e279]: (11 reviews)
+              - generic [ref=e280]:
+                - generic [ref=e281]: Walking Tours
+                - generic [ref=e282]: €39.00
+          - button "Save to wishlist" [ref=e284]:
+            - generic [ref=e285]: ♡
+  - contentinfo [ref=e286]:
+    - generic [ref=e287]:
+      - generic [ref=e288]:
+        - img "Bookly Travel — Book smarter. Travel better." [ref=e291]
+        - generic [ref=e292]:
+          - paragraph [ref=e293]: Explore
+          - list [ref=e294]:
+            - listitem [ref=e295]:
+              - link "Search tours" [ref=e296] [cursor=pointer]:
+                - /url: /en/search
+            - listitem [ref=e297]:
+              - link "Categories" [ref=e298] [cursor=pointer]:
+                - /url: /en/categories
+            - listitem [ref=e299]:
+              - link "Destinations" [ref=e300] [cursor=pointer]:
+                - /url: /en/destinations
+        - generic [ref=e301]:
+          - paragraph [ref=e302]: Company
+          - list [ref=e303]:
+            - listitem [ref=e304]:
+              - link "Privacy policy" [ref=e305] [cursor=pointer]:
+                - /url: /en/privacy
+            - listitem [ref=e306]:
+              - link "Terms of service" [ref=e307] [cursor=pointer]:
+                - /url: /en/terms
+      - generic [ref=e308]:
+        - generic [ref=e309]: © 2026 Bookly. All rights reserved.
+        - combobox "Switch language" [ref=e311]:
+          - option "English" [selected]
+          - option "Español"
+          - option "Italiano"
+  - complementary "Cookie consent"
+  - alert [ref=e312]
+```

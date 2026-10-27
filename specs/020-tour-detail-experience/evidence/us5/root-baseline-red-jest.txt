@@ -1,0 +1,24 @@
+FAIL src/components/wishlist/__tests__/WishlistButton.test.tsx
+  ● WishlistButton › waits for the saved baseline before allowing a debounced removal
+
+    expect(element).toBeDisabled()
+
+    Received element is not disabled:
+      <button aria-label="Save to wishlist" aria-pressed="false" class="h-10 w-10 min-h-11 min-w-11 inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/95 text-lg shadow-sm transition hover:border-[#FFB800] disabled:opacity-60" data-testid="wishlist-button" data-tour-id="42" type="button" />
+
+      136 |
+      137 |     const button = screen.getByTestId('wishlist-button');
+    > 138 |     expect(button).toBeDisabled();
+          |                    ^
+      139 |     expect(button).toHaveAttribute('aria-pressed', 'mixed');
+      140 |     expect(button).toHaveAttribute('aria-busy', 'true');
+      141 |     fireEvent.click(button);
+
+      at Object.<anonymous> (src/components/wishlist/__tests__/WishlistButton.test.tsx:138:20)
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 42 passed, 43 total
+Snapshots:   0 total
+Time:        2.9 s
+Ran all test suites within paths "src/components/wishlist/__tests__/WishlistButton.test.tsx", "src/components/ui/__tests__/interactive-primitives.test.tsx".

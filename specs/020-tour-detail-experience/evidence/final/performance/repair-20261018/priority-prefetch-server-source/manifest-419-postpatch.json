@@ -1,0 +1,14 @@
+{
+  "totalKeys": 419,
+  "unchanged": 415,
+  "changedCount": 4,
+  "changedKeys": [
+    "src\\components\\blog\\BlogDetail.tsx",
+    "src\\components\\blog\\RelatedPosts.tsx",
+    "src\\components\\layout\\Footer.tsx",
+    "src\\components\\tour\\TourGallery.tsx"
+  ],
+  "readErrorCount": 0,
+  "readErrors": [],
+  "expectedExactlyFour": true
+}

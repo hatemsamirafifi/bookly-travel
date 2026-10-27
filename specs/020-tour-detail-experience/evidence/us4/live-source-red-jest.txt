@@ -1,0 +1,24 @@
+COMMAND
+  frontend> npm test -- --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourBookingController.test.tsx src/components/tour/__tests__/TourDetail.test.tsx
+  (live-source red run: 2 new tests against unmodified source; all prior tests untouched)
+
+RESULT: FAIL — 2 failed, 83 passed, 85 total (behavioral red, no missing-module failures)
+
+FAIL 1 — TourBookingController shared selection › keeps the bookable card desktop-only while exposing the unavailable card on mobile
+  Unavailable slot still carries the mobile-hiding class:
+    Expected element not to have class "hidden";
+    received "hidden lg:block lg:sticky lg:top-20".
+  Root cause proven: the card wrapper hides on mobile unconditionally, so the
+  existing localized unavailable copy (present in DOM) is invisible below lg —
+  the exact mobile-unavailable gap from the browser red (root-live-us2-public-browser.txt:
+  'Currently Unavailable' resolved hidden at 390px).
+
+FAIL 2 — TourDetail › scopes navigation and present-section anchors under the tour-detail marker
+  container.querySelector('[data-tour-detail]') is null.
+  Root cause proven: no marker exists, so the nav offset cannot be scoped to
+  the detail page and the sidebar cannot inherit a page-local variable.
+
+All 83 prior tests pass (controller 28 + detail remainder + shared suites).
+The jsdom "Not implemented: navigation" console notice is pre-existing
+anchor-click noise from the suite, not a failure.
+Time: ~10.6s. Full failure text retained from the focused jest run above.

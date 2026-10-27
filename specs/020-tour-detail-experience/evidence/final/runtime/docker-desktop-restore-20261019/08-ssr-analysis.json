@@ -1,0 +1,145 @@
+﻿{
+    "analyzedAtUtc":  "2026-10-19T20:26:39.2831733Z",
+    "htmlFile":  "08-ssr-en-tour-raw.html",
+    "htmlByteChars":  159304,
+    "counts":  {
+                   "fetchPriority":  4,
+                   "headClose":  1,
+                   "srcset":  9,
+                   "BAILOUT":  0,
+                   "linkPreloadTag":  2,
+                   "asImage":  1,
+                   "Suspense":  1,
+                   "bodyClose":  1,
+                   "imgTotal":  10,
+                   "bodyOpen":  1,
+                   "headOpen":  2,
+                   "scriptTotal":  46,
+                   "linkRelPreloadAny":  2,
+                   "rscPayloadTotal":  19
+               },
+    "boundary":  {
+                     "scriptIndexesBeforeHeadEnd":  [
+                                                        399,
+                                                        469,
+                                                        539,
+                                                        609,
+                                                        679,
+                                                        759,
+                                                        829,
+                                                        899,
+                                                        969,
+                                                        1039,
+                                                        1109,
+                                                        1179,
+                                                        1249,
+                                                        1319,
+                                                        1431
+                                                    ],
+                     "bodyStartIndex":  1511,
+                     "firstFiveScriptIndexesAfterHeadEnd":  [
+                                                                8088,
+                                                                8162,
+                                                                8346,
+                                                                8406,
+                                                                11385
+                                                            ],
+                     "headStartIndex":  110,
+                     "headEndIndex":  1504,
+                     "imgIndexesInBodyMarkup":  [
+                                                    2243,
+                                                    6593,
+                                                    109721,
+                                                    111886,
+                                                    114131,
+                                                    116376,
+                                                    118621,
+                                                    146453,
+                                                    150793,
+                                                    155170
+                                                ],
+                     "imgIndexesInHeadMarkup":  [
+
+                                                ],
+                     "bodyEndIndex":  159290
+                 },
+    "firstImgIndex":  2243,
+    "firstImgIsInHeadMarkup":  false,
+    "firstImgIsInBodyMarkup":  true,
+    "imgSnippets":  [
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"\" loading=\"eager\" width=\"1453\" height=\"308\" decoding=\"async\" data-nimg=\"1\" class=\"h-auto w-32 sm:w-40 xl:w-44\" style=\"color:transparent\" src=\"/brand/bookly-travel-logo.webp\"/\u003e\u003c/a\u003e\u003cnav class=\"hidden items-center gap-6 xl:flex\" aria-label=\"Main navigat",
+                            "index":  2243
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Bookly Travel — Book smarter. Travel better.\" loading=\"lazy\" width=\"1453\" height=\"427\" decoding=\"async\" data-nimg=\"1\" class=\"h-auto w-full\" style=\"color:transparent\" src=\"/brand/bookly-travel-slogan.png\"/\u003e\u003c/div\u003e\u003c/div\u003e\u003cdiv\u003e\u003cp class=\"mb-3 text-sm font-",
+                            "index":  6593
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent\" sizes=\"(min-width: 80rem) 37.75rem, (min-width: 64rem)",
+                            "index":  109721
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent\" sizes=\"(min-width: 80rem) 18.625rem, (m",
+                            "index":  111886
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent\" sizes=\"(min-width: 80rem) 18.625rem, (m",
+                            "index":  114131
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent\" sizes=\"(min-width: 80rem) 18.625rem, (m",
+                            "index":  116376
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Hidden Gems of Rome Walking Tour\" lang=\"en\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent\" sizes=\"(min-width: 80rem) 18.625rem, (m",
+                            "index":  118621
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Venice Hidden Canals Walking Tour\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:trans",
+                            "index":  146453
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Barcelona Gaudí Architecture Masterpieces Tour\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:",
+                            "index":  150793
+                        },
+                        {
+                            "inHeadMarkup":  false,
+                            "snippet":  "\u003cimg alt=\"Montmartre Artists Quarter Walking Tour\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" class=\"object-cover transition-transform duration-300 group-hover:scale-105\" style=\"position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color",
+                            "index":  155170
+                        }
+                    ],
+    "preloadLinks":  [
+                         {
+                             "inHeadMarkup":  true,
+                             "snippet":  "\u003clink rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/15rp_y8t3y2p6.js\"/\u003e\u003cscript src=\"/_next/static/chunks/0nf7f.m_5vzju.js\" async=\"\"\u003e\u003c/script\u003e\u003cscript src=\"/_next/static/chunks/0nwnj.jo41.5k.js\" async=\"\"\u003e\u003c/script\u003e\u003cscript src=\"/_next/static/chunks/0a8gcdte55hy1.js\" async=\"\"\u003e\u003c",
+                             "index":  301
+                         },
+                         {
+                             "inHeadMarkup":  false,
+                             "snippet":  "\u003clink rel=\"preload\" as=\"image\" imageSrcSet=\"/_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg\u0026amp;w=32\u0026amp;q=75 32w, /_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.jpg\u0026amp;w=48\u0026amp;q=75 48w, /_next/image?url=http%3A%2F%2Fcdn.bookly.test%2Ftours%2Frome-cover.j",
+                             "index":  99739
+                         }
+                     ],
+    "suspenseContexts":  [
+                             {
+                                 "inHeadMarkup":  false,
+                                 "snippet":  "chunks/0itxfpf~fqxct.js\\\"],\\\"OutletBoundary\\\"]\\nd:\\\"$Sreact.suspense\\\"\\n10:I[97367,[\\\"/_next/static/chunks/12uh03h0b.6j~.js\\\",\\\"/_next/static/chunks/0itxfpf~fqxct.js\\\"],\\\"ViewportBoundary\\\"]\\n12:I[973",
+                                 "index":  9485
+                             }
+                         ],
+    "BAILOUTIndexes":  [
+
+                       ],
+    "rscPayloadFirstIndex":  8414,
+    "positionsNote":  "0-based char indexes in saved raw SSR html; inHeadMarkup = index \u003c \u003c/head\u003e index; img-in-body-markup = real markup (before the RSC payload script strings)"
+}

@@ -10,4 +10,23 @@ describe('safeAuthReturnUrl', () => {
       expect(safeAuthReturnUrl('en', candidate)).toBe('/en/');
     },
   );
+
+  // Spec 020 US2: the full selected booking query survives the login round
+  // trip unchanged so date/count/locale restoration starts from real state.
+  it('preserves a complete same-locale booking query with tour, count and date', () => {
+    const bookingPath = '/en/booking?tour=hidden-gems-rome-walking-tour&participants=3&date=2026-10-20';
+    expect(safeAuthReturnUrl('en', bookingPath)).toBe(bookingPath);
+  });
+
+  it('rejects a cross-locale booking path instead of leaking it across locales', () => {
+    expect(
+      safeAuthReturnUrl('en', '/es/booking?tour=x&participants=2&date=2026-10-20'),
+    ).toBe('/en/');
+  });
+
+  it('rejects a backslash booking path', () => {
+    expect(
+      safeAuthReturnUrl('en', '/en\\booking?tour=x&participants=2&date=2026-10-20'),
+    ).toBe('/en/');
+  });
 });

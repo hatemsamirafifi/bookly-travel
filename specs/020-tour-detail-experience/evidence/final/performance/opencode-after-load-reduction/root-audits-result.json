@@ -1,0 +1,173 @@
+{
+  "startedAt": "2026-10-17T15:32:08.814Z",
+  "runtime": {
+    "node": "v20.20.2",
+    "next": "16.2.3",
+    "buildId": "PWRC5Senrh_71s0M1xvjU"
+  },
+  "conditions": "Serial production audits, no competing build/test/audit. Lighthouse resets browser storage for each cold navigation; server/optimizer filesystem caches are not flushed. The unchanged about:blank CPU readiness hook runs before audits; default Lighthouse mobile throttling remains configured.",
+  "stages": [
+    {
+      "name": "resources",
+      "args": [
+        "stats",
+        "--no-stream",
+        "--format",
+        "{{.Name}} CPU={{.CPUPerc}} memory={{.MemUsage}}"
+      ],
+      "startedAt": "2026-10-17T15:32:08.815Z",
+      "finishedAt": "2026-10-17T15:32:11.160Z",
+      "exitCode": 0
+    },
+    {
+      "name": "chrome-path",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');const p=require('@playwright/test').chromium.executablePath();if(!fs.existsSync(p))throw Error('Installed Chrome missing');process.stdout.write(p)"
+      ],
+      "startedAt": "2026-10-17T15:32:11.161Z",
+      "finishedAt": "2026-10-17T15:32:13.175Z",
+      "exitCode": 0
+    },
+    {
+      "name": "prior-trace-list",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "console.log(JSON.stringify(require('node:fs').readdirSync('/app').filter(p=>/\\.(trace|devtoolslog)\\.json$/.test(p))))"
+      ],
+      "startedAt": "2026-10-17T15:32:13.175Z",
+      "finishedAt": "2026-10-17T15:32:13.920Z",
+      "exitCode": 0
+    },
+    {
+      "name": "preflight-tests",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "-e",
+        "LIGHTHOUSE_BASE_URL=http://nginx",
+        "-e",
+        "CHROME_PATH=/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+        "nextjs",
+        "node",
+        "--test",
+        "scripts/lighthouse-runtime-preflight.test.mjs"
+      ],
+      "startedAt": "2026-10-17T15:32:13.920Z",
+      "finishedAt": "2026-10-17T15:32:15.052Z",
+      "exitCode": 0
+    },
+    {
+      "name": "cpu-preflight",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "-e",
+        "LIGHTHOUSE_BASE_URL=http://nginx",
+        "-e",
+        "CHROME_PATH=/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+        "nextjs",
+        "node",
+        "scripts/lighthouse-runtime-preflight.mjs"
+      ],
+      "startedAt": "2026-10-17T15:32:15.052Z",
+      "finishedAt": "2026-10-17T15:32:25.426Z",
+      "exitCode": 0
+    },
+    {
+      "name": "prior-reports-copy",
+      "args": [
+        "cp",
+        "bookly-frontend:/app/.lighthouseci",
+        "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\opencode-after-load-reduction\\prior-container-reports"
+      ],
+      "startedAt": "2026-10-17T15:32:25.426Z",
+      "finishedAt": "2026-10-17T15:32:26.351Z",
+      "exitCode": 0
+    },
+    {
+      "name": "collect",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "-e",
+        "LIGHTHOUSE_BASE_URL=http://nginx",
+        "-e",
+        "CHROME_PATH=/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+        "nextjs",
+        "node",
+        "node_modules/@lhci/cli/src/cli.js",
+        "collect",
+        "--config=lighthouserc.js"
+      ],
+      "startedAt": "2026-10-17T15:32:26.352Z",
+      "finishedAt": "2026-10-17T15:32:35.181Z",
+      "exitCode": 1
+    },
+    {
+      "name": "assert",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "-e",
+        "LIGHTHOUSE_BASE_URL=http://nginx",
+        "-e",
+        "CHROME_PATH=/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+        "nextjs",
+        "node",
+        "node_modules/@lhci/cli/src/cli.js",
+        "assert",
+        "--config=lighthouserc.js"
+      ],
+      "startedAt": "2026-10-17T15:32:35.181Z",
+      "finishedAt": "2026-10-17T15:32:36.267Z",
+      "exitCode": 0
+    },
+    {
+      "name": "reports-copy",
+      "args": [
+        "cp",
+        "bookly-frontend:/app/.lighthouseci",
+        "F:\\Travel Website\\bookly travel\\specs\\020-tour-detail-experience\\evidence\\final\\performance\\opencode-after-load-reduction\\reports"
+      ],
+      "startedAt": "2026-10-17T15:32:36.267Z",
+      "finishedAt": "2026-10-17T15:32:36.499Z",
+      "exitCode": 0
+    },
+    {
+      "name": "trace-list",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "console.log(JSON.stringify(require('node:fs').readdirSync('/app').filter(p=>/\\.(trace|devtoolslog)\\.json$/.test(p))))"
+      ],
+      "startedAt": "2026-10-17T15:32:36.499Z",
+      "finishedAt": "2026-10-17T15:32:37.236Z",
+      "exitCode": 0
+    }
+  ],
+  "chromePath": "/root/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome",
+  "generatedAssets": [],
+  "reports": [],
+  "summary": [],
+  "passed": false,
+  "finishedAt": "2026-10-17T15:32:37.238Z"
+}

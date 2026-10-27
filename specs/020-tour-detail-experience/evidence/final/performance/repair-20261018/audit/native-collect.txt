@@ -1,0 +1,44 @@
+{"attempt":1,"benchmarkIndex":1309,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1708.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1527.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1706.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1973,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/search?q=rome
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1889,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1480.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1362,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":1646,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":1950,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1402.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1957.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":2021.5,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/en/blog/hidden-gems-florence
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1389,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1591,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1904,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/es/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+{"attempt":1,"benchmarkIndex":1185,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1822.5,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":1930,"url":"about:blank","appVisited":false}
+Running Lighthouse 3 time(s) on http://localhost:8080/it/tours/hidden-gems-rome-walking-tour
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Done running Lighthouse!

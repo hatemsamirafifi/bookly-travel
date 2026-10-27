@@ -1,0 +1,4 @@
+Command: npm run typecheck
+Workdir: frontend/
+Result: PASS — tsc --noEmit exited 0 with no output.
+Scope: whole frontend project including new detail-localization.test.ts.

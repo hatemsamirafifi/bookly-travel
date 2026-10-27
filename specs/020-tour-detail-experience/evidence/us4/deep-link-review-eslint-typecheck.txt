@@ -1,0 +1,17 @@
+FOCUSED ESLINT (owned source + owned test only)
+  frontend> npx eslint src/components/tour/TourSectionNav.tsx src/components/tour/__tests__/TourSectionNav.test.tsx
+  RESULT: clean — no output, 0 errors, 0 warnings, 0 suppressions.
+
+WHOLE-PROJECT TYPECHECK (read-only gate)
+  frontend> npm run typecheck  (tsc --noEmit)
+  RESULT: owned files clean (no errors reference TourSectionNav.*).
+  Unrelated concurrent-lane errors, reported precisely, NOT repaired (out of
+  scope; files untouched by this slice):
+    src/components/tour/__tests__/TourSections.test.tsx(43,35), (62,33), (67,41):
+      error TS2739/TS2322 — test props missing 'tourId, reviewAverage' from
+      type 'TourHeaderProps' (US5-owned TourHeader contract evolution).
+    src/components/tour/BookingCard.tsx(180,3), (205,3): error TS2300/TS2687/TS2717
+      — duplicate identifier 'tourId' with mismatched modifiers/types;
+      (247,10): error TS2304 — cannot find name 'WishlistButton'
+      (booking-lane work in progress in the shared tree).
+  No errors reference this slice's owned files. No other-file edits made.

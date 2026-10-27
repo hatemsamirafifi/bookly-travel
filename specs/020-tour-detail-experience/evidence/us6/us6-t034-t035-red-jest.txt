@@ -1,0 +1,381 @@
+﻿
+> frontend@0.1.0 test
+> jest --runInBand --watchman=false --runTestsByPath src/components/tour/__tests__/TourDetail.test.tsx src/lib/tours/__tests__/detail-localization.test.ts src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+
+node.exe : FAIL src/components/tour/__tests__/TourDetail.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\HaTeM\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL src/compon...Detail.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ΓùÅ TourDetail ΓÇ║ US6 language disclosure (Spec 020) ΓÇ║ shows paired fallback notices in one shared gap layout in 
+es
+
+    expect(element).toHaveClass("gap-2")
+
+    Expected the element to have class:
+      gap-2
+    Received:
+      mx-auto w-full max-w-content px-gutter py-8 pb-24 lg:pb-8
+
+      608 |       // layout gap instead of offset margins on the second notice.
+      609 |       expect(contentElement.parentElement).toBe(itineraryElement.parentElement);
+    > 610 |       expect(contentElement.parentElement).toHaveClass('gap-2');
+          |                                            ^
+      611 |       expect(itineraryElement).not.toHaveClass('ml-2');
+      612 |     });
+      613 |
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:610:44
+
+  ΓùÅ TourDetail ΓÇ║ US6 language disclosure (Spec 020) ΓÇ║ shows paired fallback notices in one shared gap layout in 
+it
+
+    expect(element).toHaveClass("gap-2")
+
+    Expected the element to have class:
+      gap-2
+    Received:
+      mx-auto w-full max-w-content px-gutter py-8 pb-24 lg:pb-8
+
+      608 |       // layout gap instead of offset margins on the second notice.
+      609 |       expect(contentElement.parentElement).toBe(itineraryElement.parentElement);
+    > 610 |       expect(contentElement.parentElement).toHaveClass('gap-2');
+          |                                            ^
+      611 |       expect(itineraryElement).not.toHaveClass('ml-2');
+      612 |     });
+      613 |
+
+      at src/components/tour/__tests__/TourDetail.test.tsx:610:44
+
+FAIL src/lib/tours/__tests__/detail-localization.test.ts
+  ΓùÅ spec020 detail localization catalog parity ΓÇ║ provides tour.states.loadingMessage as a nonempty message in en, 
+es and it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "string"
+    Received: "undefined"
+
+      71 |       for (const { messages } of catalogs) {
+      72 |         const value = getByPath(messages, path);
+    > 73 |         expect(typeof value).toBe('string');
+         |                              ^
+      74 |         expect((value as string).trim().length).toBeGreaterThan(0);
+      75 |       }
+      76 |     },
+
+      at src/lib/tours/__tests__/detail-localization.test.ts:73:30
+
+  ΓùÅ spec020 detail localization catalog parity ΓÇ║ provides tour.states.errorTitle as a nonempty message in en, es 
+and it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "string"
+    Received: "undefined"
+
+      71 |       for (const { messages } of catalogs) {
+      72 |         const value = getByPath(messages, path);
+    > 73 |         expect(typeof value).toBe('string');
+         |                              ^
+      74 |         expect((value as string).trim().length).toBeGreaterThan(0);
+      75 |       }
+      76 |     },
+
+      at src/lib/tours/__tests__/detail-localization.test.ts:73:30
+
+  ΓùÅ spec020 detail localization catalog parity ΓÇ║ provides tour.states.errorDescription as a nonempty message in 
+en, es and it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "string"
+    Received: "undefined"
+
+      71 |       for (const { messages } of catalogs) {
+      72 |         const value = getByPath(messages, path);
+    > 73 |         expect(typeof value).toBe('string');
+         |                              ^
+      74 |         expect((value as string).trim().length).toBeGreaterThan(0);
+      75 |       }
+      76 |     },
+
+      at src/lib/tours/__tests__/detail-localization.test.ts:73:30
+
+  ΓùÅ spec020 detail localization catalog parity ΓÇ║ provides tour.states.notFoundTitle as a nonempty message in en, 
+es and it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "string"
+    Received: "undefined"
+
+      71 |       for (const { messages } of catalogs) {
+      72 |         const value = getByPath(messages, path);
+    > 73 |         expect(typeof value).toBe('string');
+         |                              ^
+      74 |         expect((value as string).trim().length).toBeGreaterThan(0);
+      75 |       }
+      76 |     },
+
+      at src/lib/tours/__tests__/detail-localization.test.ts:73:30
+
+  ΓùÅ spec020 detail localization catalog parity ΓÇ║ provides tour.states.notFoundDescription as a nonempty message in 
+en, es and it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "string"
+    Received: "undefined"
+
+      71 |       for (const { messages } of catalogs) {
+      72 |         const value = getByPath(messages, path);
+    > 73 |         expect(typeof value).toBe('string');
+         |                              ^
+      74 |         expect((value as string).trim().length).toBeGreaterThan(0);
+      75 |       }
+      76 |     },
+
+      at src/lib/tours/__tests__/detail-localization.test.ts:73:30
+
+FAIL src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx
+  ΓùÅ returns localized noindex metadata distinguishing 404 from recoverable failures
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "Tour no encontrado | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      122 |   (getTourDetail as jest.Mock).mockRejectedValue(new NotFoundError('Tour not found.'));
+      123 |   const missing = await generateMetadata({ params: Promise.resolve({ locale: 'es', slug: 'absent-tour' }) 
+});
+    > 124 |   expect(missing).toMatchObject({ title: 'Tour no encontrado | Bookly', robots: { index: false } });
+          |                   ^
+      125 |
+      126 |   (getTourDetail as jest.Mock).mockRejectedValue(new Error('upstream unavailable'));
+      127 |   const failed = await generateMetadata({ params: Promise.resolve({ locale: 'en', slug: 'example' }) });
+
+      at Object.<anonymous> (F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:124:19)
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ localizes the 404 metadata title in en with noindex
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "Tour not found | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      143 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'absent-tour' }) });
+      144 |
+    > 145 |     expect(metadata).toMatchObject({ title, robots: { index: false } });
+          |                      ^
+      146 |     expect(metadata.openGraph).toBeUndefined();
+      147 |   });
+      148 |
+
+      at F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:145:22
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ localizes the 404 metadata title in es with noindex
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "Tour no encontrado | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      143 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'absent-tour' }) });
+      144 |
+    > 145 |     expect(metadata).toMatchObject({ title, robots: { index: false } });
+          |                      ^
+      146 |     expect(metadata.openGraph).toBeUndefined();
+      147 |   });
+      148 |
+
+      at F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:145:22
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ localizes the 404 metadata title in it with noindex
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "Tour non trovato | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      143 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'absent-tour' }) });
+      144 |
+    > 145 |     expect(metadata).toMatchObject({ title, robots: { index: false } });
+          |                      ^
+      146 |     expect(metadata.openGraph).toBeUndefined();
+      147 |   });
+      148 |
+
+      at F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:145:22
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ marks a known archived tour as withdrawn with noindex in en
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "This tour is no longer available | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      156 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'archived-tour' }) 
+});
+      157 |
+    > 158 |     expect(metadata).toMatchObject({ title, robots: { index: false } });
+          |                      ^
+      159 |     expect(metadata.openGraph).toBeUndefined();
+      160 |     expect(JSON.stringify(metadata)).not.toContain('Tour archived.');
+      161 |   });
+
+      at F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:158:22
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ marks a known archived tour as withdrawn with noindex in es
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "Este tour ya no est├í disponible | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      156 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'archived-tour' }) 
+});
+      157 |
+    > 158 |     expect(metadata).toMatchObject({ title, robots: { index: false } });
+          |                      ^
+      159 |     expect(metadata.openGraph).toBeUndefined();
+      160 |     expect(JSON.stringify(metadata)).not.toContain('Tour archived.');
+      161 |   });
+
+      at F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:158:22
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ marks a known archived tour as withdrawn with noindex in it
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "Questo tour non ├¿ pi├╣ disponibile | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      156 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'archived-tour' }) 
+});
+      157 |
+    > 158 |     expect(metadata).toMatchObject({ title, robots: { index: false } });
+          |                      ^
+      159 |     expect(metadata.openGraph).toBeUndefined();
+      160 |     expect(JSON.stringify(metadata)).not.toContain('Tour archived.');
+      161 |   });
+
+      at F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:158:22
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ uses a localized recoverable error title without blaming the tour or 
+leaking upstream text
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "robots": Object {
+          "index": false,
+        },
+    -   "title": "No se pudo cargar este tour | Bookly",
+    +   "title": "Tour Not Found | Bookly",
+      }
+
+      166 |     const metadata = await generateMetadata({ params: Promise.resolve({ locale: 'es', slug: 'example' }) 
+});
+      167 |
+    > 168 |     expect(metadata).toMatchObject({ title: 'No se pudo cargar este tour | Bookly', robots: { index: false 
+} });
+          |                      ^
+      169 |     expect(metadata.title).not.toContain('Tour Not Found');
+      170 |     expect(JSON.stringify(metadata)).not.toContain('SECRET-XYZ-PRIVATE');
+      171 |     expect(metadata.openGraph).toBeUndefined();
+
+      at Object.<anonymous> (F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:168:22)
+
+  ΓùÅ US6 localized route states (Spec 020) ΓÇ║ renders a localized withdrawn state with no booking for a known 
+archived tour
+
+    GoneError: Tour archived.
+
+      190 |
+      191 |   it('renders a localized withdrawn state with no booking for a known archived tour', async () => {
+    > 192 |     (getTourDetail as jest.Mock).mockRejectedValue(new GoneError('Tour archived.'));
+          |                                                    ^
+      193 |
+      194 |     const element = await Page({ params: Promise.resolve({ locale: 'es', slug: 'archived-tour' }) });
+      195 |     expect(mockedNotFound).not.toHaveBeenCalled();
+
+      at Object.<anonymous> (F:\Travel Website\bookly 
+travel\frontend\src\app\[locale]\(public)../../../tours/[slug]/__tests__/page.test.tsx:192:52)
+
+Test Suites: 3 failed, 3 total
+Tests:       16 failed, 105 passed, 121 total
+Snapshots:   0 total
+Time:        3.344 s
+Ran all test suites within paths "src/components/tour/__tests__/TourDetail.test.tsx", 
+"src/lib/tours/__tests__/detail-localization.test.ts", 
+"src/app/[locale]/(public)/tours/[slug]/__tests__/page.test.tsx".

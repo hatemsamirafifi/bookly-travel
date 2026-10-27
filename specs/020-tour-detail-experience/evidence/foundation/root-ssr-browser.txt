@@ -1,0 +1,14 @@
+
+Running 2 tests using 1 worker
+
+
+
+[1A[2K(node:21964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K(node:21964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1A[2K[1/2] [chromium] › tests\e2e\tour-detail.spec.ts:15:7 › Tour Detail Page › controlled legacy-shaped empty and adopted-day SSR responses invent no photos or review claims
+[1A[2K[2/2] [chromium] › tests\e2e\tour-detail.spec.ts:66:7 › Tour Detail Page › ES/IT SSR pages replace disclosed English fallback with ready localized content
+[1A[2K  2 passed (24.0s)

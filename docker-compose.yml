@@ -31,12 +31,12 @@ services:
     command: sh -c "rm -rf /app/.next/* && npm run build && npm start"
     ports:
       - "3001:3000"
-    volumes:
-      # Production code comes from the image; Windows source binds make cold
-      # requests slow. Rebuild this service after changing frontend source.
-      - ./frontend/.env.local:/app/.env.local:ro
-      - /app/node_modules
-      - /app/.next
+    # Read local settings into the environment without a Windows bind mount.
+    env_file:
+      - ./frontend/.env.local
+    # Source and dependencies come from the image. A node_modules volume
+    # duplicates dependencies on first start and can retain stale packages.
+    # The production build is recreated on each start in the container.
     environment:
       # SSR/ISR requests inside the Docker network use the internal hostname.
       - API_INTERNAL_URL=http://nginx
@@ -201,6 +201,7 @@ services:
     image: postgres:15-alpine
     container_name: bookly-postgres
     restart: unless-stopped
+    stop_grace_period: 2m
     environment:
       - POSTGRES_DB=bookly
       - POSTGRES_USER=bookly
@@ -209,6 +210,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U bookly"]
+      start_period: 5m
       interval: 10s
       timeout: 5s
       retries: 5
@@ -252,5 +254,7 @@ networks:
 volumes:
   backend_vendor:
   postgres_data:
+    # Keep the original booklytravel_postgres_data volume for recovery.
+    name: booklytravel_postgres_local_20261023
   redis_data:
   meilisearch_data:

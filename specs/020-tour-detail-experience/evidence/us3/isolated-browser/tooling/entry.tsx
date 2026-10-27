@@ -1,0 +1,1 @@
+import React from 'react';import{createRoot}from'react-dom/client';import Gallery from'F:/Travel Website/bookly travel/frontend/src/components/tour/TourGallery';const root=createRoot(document.getElementById('root'));window.mountGallery=images=>root.render(<Gallery key={images.length} images={images} title="Owned Rome fixture gallery" contentLocale="en"/>);

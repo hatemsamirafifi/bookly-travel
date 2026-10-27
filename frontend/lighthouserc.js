@@ -10,6 +10,8 @@ module.exports = {
         '/en/search?q=rome',
         '/en/tours/hidden-gems-rome-walking-tour',
         '/en/blog/hidden-gems-florence',
+        '/es/tours/hidden-gems-rome-walking-tour',
+        '/it/tours/hidden-gems-rome-walking-tour',
       ].map((path) => `${process.env.LIGHTHOUSE_BASE_URL || 'http://localhost:3000'}${path}`),
       numberOfRuns: 3,
       // Keep CPU/GC traces for diagnosing cold-navigation failures.

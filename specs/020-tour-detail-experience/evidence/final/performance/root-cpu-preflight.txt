@@ -1,0 +1,6 @@
+{"attempt":1,"benchmarkIndex":790.5,"url":"about:blank","appVisited":false}
+{"attempt":2,"benchmarkIndex":1015,"url":"about:blank","appVisited":false}
+{"attempt":3,"benchmarkIndex":802,"url":"about:blank","appVisited":false}
+{"attempt":4,"benchmarkIndex":598.5,"url":"about:blank","appVisited":false}
+{"attempt":5,"benchmarkIndex":664,"url":"about:blank","appVisited":false}
+CPU baseline is slow or unstable; performance audit must not start

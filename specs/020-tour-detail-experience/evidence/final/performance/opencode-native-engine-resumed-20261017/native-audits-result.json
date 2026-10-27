@@ -1,0 +1,158 @@
+{
+  "startedAt": "2026-10-17T20:12:34.840Z",
+  "executor": "opencode/glm-5.3-flash-free --variant max",
+  "runtime": {
+    "node": "v20.20.2",
+    "buildId": "sAEfqK7AIAvMIn5nyjbTK",
+    "next": "16.2.3"
+  },
+  "conditions": "Serial production audits of the verified Docker app (proxy http://localhost:8080) with measurement browser/Node on the native host: installed Google Chrome via CHROME_PATH, native Node v24.14.1 spawning the installed frontend dependencies. No rebuild/restart/fixture refetch/cache warming. The unchanged about:blank CPU readiness hook runs before each URL with the same browser as the real audits; default Lighthouse mobile throttling remains configured.",
+  "stages": [
+    {
+      "name": "runtime-identity",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "nextjs",
+        "node",
+        "-e",
+        "const fs=require('node:fs');console.log(JSON.stringify({node:process.version,buildId:fs.readFileSync('/app/.next/BUILD_ID','utf8').trim(),next:require('/app/node_modules/next/package.json').version}))"
+      ],
+      "startedAt": "2026-10-17T20:12:35.171Z",
+      "finishedAt": "2026-10-17T20:12:35.769Z",
+      "exitCode": 0
+    },
+    {
+      "name": "container-state",
+      "args": [
+        "inspect",
+        "-f",
+        "{{.Id}} started={{.State.StartedAt}}",
+        "bookly-frontend"
+      ],
+      "startedAt": "2026-10-17T20:12:35.769Z",
+      "finishedAt": "2026-10-17T20:12:35.950Z",
+      "exitCode": 0
+    },
+    {
+      "name": "prior-reports-preserve",
+      "exitCode": 0,
+      "detail": [
+        "assertion-results.json",
+        "lhr-1791815553315.html",
+        "lhr-1791815553315.json",
+        "lhr-1791815565683.html",
+        "lhr-1791815565683.json",
+        "lhr-1791815577737.html",
+        "lhr-1791815577737.json",
+        "lhr-1791815593583.html",
+        "lhr-1791815593583.json",
+        "lhr-1791815605031.html",
+        "lhr-1791815605031.json",
+        "lhr-1791815616828.html",
+        "lhr-1791815616828.json",
+        "lhr-1791815632588.html",
+        "lhr-1791815632588.json",
+        "lhr-1791815646456.html",
+        "lhr-1791815646456.json",
+        "lhr-1791815659280.html",
+        "lhr-1791815659280.json",
+        "lhr-1791815676002.html",
+        "lhr-1791815676002.json",
+        "lhr-1791815687701.html",
+        "lhr-1791815687701.json",
+        "lhr-1791815699522.html",
+        "lhr-1791815699522.json"
+      ]
+    },
+    {
+      "name": "preflight-tests",
+      "args": [
+        "--test",
+        "scripts/lighthouse-runtime-preflight.test.mjs"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 22332,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 120000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-17T20:12:36.568Z",
+      "finishedAt": "2026-10-17T20:12:55.346Z",
+      "exitCode": 0
+    },
+    {
+      "name": "cpu-preflight",
+      "args": [
+        "scripts/lighthouse-runtime-preflight.mjs"
+      ],
+      "execPath": "C:\\Program Files\\nodejs\\node.exe",
+      "childPid": 7200,
+      "cwd": "F:\\Travel Website\\bookly travel\\frontend",
+      "env": {
+        "LIGHTHOUSE_BASE_URL": "http://localhost:8080",
+        "CHROME_PATH": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      },
+      "timeoutMs": 90000,
+      "timedOut": false,
+      "killNote": null,
+      "startedAt": "2026-10-17T20:12:55.346Z",
+      "finishedAt": "2026-10-17T20:13:03.003Z",
+      "exitCode": 1
+    }
+  ],
+  "sourceParityBefore": {
+    "files": 419,
+    "mismatches": []
+  },
+  "identity": {
+    "expected": {
+      "node": "v20.20.2",
+      "buildId": "sAEfqK7AIAvMIn5nyjbTK",
+      "next": "16.2.3"
+    },
+    "observed": {
+      "node": "v20.20.2",
+      "buildId": "sAEfqK7AIAvMIn5nyjbTK",
+      "next": "16.2.3"
+    }
+  },
+  "containerState": "cc21b897f1f4b01d0a4d92f8b07ff08c719660c21b95c3658f5a78a61b9ad79f started=2026-10-17T20:02:45.3412223Z",
+  "proxyIdentity": {
+    "localhost": {
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    },
+    "loopbackIp": {
+      "status": 307,
+      "location": "/en",
+      "bytes": 3,
+      "bodySha256": "7a4ba3ba0fb8f6c383745e0d6ffec1c1fab910193a75b3db89f26d0fd5f7d428"
+    }
+  },
+  "hashes": {
+    "lighthouserc.js": "2a0bc3e1bbf27ab2f8b418a2cee9347b6c8e5ec5db31142a570183ee755d7672",
+    "scripts/lighthouse-runtime-preflight.mjs": "5c7330d3db5e87b992aab605a70332a5825b48d831aca74490848f4603511611",
+    "scripts/lighthouse-browser-ready.cjs": "a6a51071b31317674e9ad2c3ccfcd988d7b057a23aff97fdda4a7919e7325339",
+    "package.json": "0aba9b572479db9a9698fe7c1cc2041c0effdb87fb47eb757e9ac6de3dbd996d",
+    "package-lock.json": "e0818ce9b96d6a87b30c8bbb10e72bc1a97953f291c5378be29d686b305fc17c"
+  },
+  "priorAssets": [],
+  "cpuPreflightSamples": [
+    959,
+    1160.5,
+    1263,
+    1493,
+    1105.5
+  ],
+  "error": "cpu-preflight exited 1; samples [959,1160.5,1263,1493,1105.5]",
+  "passed": false,
+  "finishedAt": "2026-10-17T20:13:03.004Z"
+}

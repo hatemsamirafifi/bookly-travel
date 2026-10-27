@@ -1,0 +1,1 @@
+{"reference":"BKO-ANVWKQ","status":"cancelled","scope":"Exact-owned deterministic diagnostic fixture only; existing confirm\/cancel actions; financial audit retained"}

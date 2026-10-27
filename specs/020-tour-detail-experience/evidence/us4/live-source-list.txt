@@ -1,0 +1,20 @@
+COMMAND (discovery only — no browser, build, or API executed by this phase)
+  frontend> npx playwright test tests/e2e/tour-detail.spec.ts --list --grep "T053"
+  Full-file discovery separately confirmed: Total: 126 tests in 3 files
+  (all pre-existing US1/US2/US3/US6/gallery/route-state titles intact).
+
+T053 block discovered in both chromium and mobile projects (8 titles each):
+  tour-detail.spec.ts:1881 › US4 full tour activates first, middle and last entries with focused headings clear of the sticky nav
+  tour-detail.spec.ts:1934 › US4 sparse tour exposes only present entries and activates them
+  tour-detail.spec.ts:1956 › US4 passive scrolling follows reading position without moving focus
+  tour-detail.spec.ts:1988 › US4 narrow rail reveals the active entry without moving the page vertically
+  tour-detail.spec.ts:2044 › US4 long locale labels survive resize with reachable entries and no page overflow
+  tour-detail.spec.ts:2077 › US4 reduced motion targets the reading position immediately
+  tour-detail.spec.ts:2101 › US4 initial deep link restores the reading target
+  tour-detail.spec.ts:2130 › US4 sticky booking card clears the measured nav obstruction at 200% nav text size
+RESULT: Total: 18 tests in 3 files (16 T053 + 2 setup).
+
+NOTE: T053 line numbers moved since the prior phase (1754→1881) because the
+US3 worker is actively editing regions above this block in the same file.
+This lane made zero edits to tour-detail.spec.ts or the SSR harness;
+discovery only, per the read-only directive.

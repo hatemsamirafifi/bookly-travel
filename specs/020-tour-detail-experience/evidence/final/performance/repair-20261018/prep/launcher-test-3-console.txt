@@ -1,0 +1,11 @@
+﻿== launcher-test-3: slow owned child (30s timer), launcher timeout 1000ms (fail-closed launcher, root delta rerun) ==
+command: powershell.exe -NoProfile -NonInteractive -File audit-launch.ps1 -RunnerPath <slow fixture> -LogDir launcher-tests\\log\\test-3-out -TimeoutMs 1000
+  launcherExitCode: 124 (observed; nonzero; NOT the child code)
+  elapsedMs: 1777 (prompt under harness cap ~10s; proves no 30s or 40min wait)
+  rec: pid=10012 timedOut=True exitedInTime=False identityCaptured=True capturedStartBeforeWait=10/17/2026 10:57:57 PM
+  kill: attempted=True outcome=killed-owned-tree-success killExitCode=0 killOutput=SUCCESS: The process with PID 7128 (child process of PID 10012) has been terminated. SUCCESS: The process with PID 10012 (child process of PID 23080) has been terminated.
+  cleanup: issue= childExitAfterKill=1 recElapsedMs=1386
+  failClosedOwnership: Test-OwnedAlive authorizes kill ONLY on capturedStart present + capturedName present and equal to node + capturedNodePath present + live process StartTime/name/path all matching exactly; PID alone never authorizes a kill; caller additionally requires identityCaptured=true before cleanup with reason codes: captured-start-missing-fail-closed, captured-name-missing-fail-closed, captured-name-not-node-fail-closed, captured-node-path-missing-fail-closed, process-path-unavailable-fail-closed, start-time-mismatch, process-name-mismatch, process-path-mismatch
+  explicit125Guard: any cleanupIssue together with a null launcherExit yields explicit exit 125 (no plausible 0/null); timed-out-but-unowned children are never killed even after PID-based lookup would match
+  noSurvivorVerification: CLEAN (marker absent; 0 launcher-tests nodes remaining; recorded killed tree pids 7128, 10012, 23080 all dead) - see launcher-test-3-survivor-verification.txt
+  RESULT: TEST-3 PASS
