@@ -2,17 +2,17 @@
 
 namespace App\Domains\Payment\Actions;
 
-use App\Domains\Booking\Models\Booking;
-use App\Domains\Partner\Models\Partner;
-use App\Domains\Payment\Events\PaymentFailed;
-use App\Domains\Payment\Events\PaymentRefunded;
-use App\Domains\Payment\Events\PaymentSucceeded;
-use App\Domains\Payment\Models\Payment;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleAccountUpdated;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleDisputeClosed;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleDisputeCreated;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleInvoiceFinalized;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleInvoicePaid;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleInvoicePaymentFailed;
+use App\Domains\Payment\Actions\WebhookHandlers\HandlePaymentFailed;
+use App\Domains\Payment\Actions\WebhookHandlers\HandlePaymentSucceeded;
+use App\Domains\Payment\Actions\WebhookHandlers\HandleRefunded;
 use App\Domains\Payment\Models\StripeWebhookEvent;
-use App\Domains\Payment\Services\LedgerService;
-use App\Domains\Payment\Services\StripeAccountAuditService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Stripe\Event;
 use Stripe\Webhook;
@@ -20,8 +20,15 @@ use Stripe\Webhook;
 class ProcessStripeWebhookAction
 {
     public function __construct(
-        private readonly LedgerService $ledger,
-        private readonly StripeAccountAuditService $accountAudit,
+        private readonly HandlePaymentSucceeded $handlePaymentSucceeded,
+        private readonly HandlePaymentFailed $handlePaymentFailed,
+        private readonly HandleRefunded $handleRefunded,
+        private readonly HandleDisputeCreated $handleDisputeCreated,
+        private readonly HandleDisputeClosed $handleDisputeClosed,
+        private readonly HandleAccountUpdated $handleAccountUpdated,
+        private readonly HandleInvoicePaid $handleInvoicePaid,
+        private readonly HandleInvoicePaymentFailed $handleInvoicePaymentFailed,
+        private readonly HandleInvoiceFinalized $handleInvoiceFinalized,
     ) {}
 
     public function execute(string $payload, string $signature): void
@@ -32,9 +39,6 @@ class ProcessStripeWebhookAction
             config('services.stripe.webhook_secret'),
         );
 
-        // Dedup + state mutation run inside the txn; domain events are collected
-        // and dispatched AFTER the commit so listeners (queued email, ledger)
-        // only fire on committed state.
         $toDispatch = DB::transaction(function () use ($event, $payload) {
             $hash = hash('sha256', $payload);
 
@@ -53,7 +57,7 @@ class ProcessStripeWebhookAction
                 return [];
             }
 
-            return $this->processEvent($event, $event->id);
+            return $this->handleEvent($event, $event->id);
         });
 
         foreach ($toDispatch as $domainEvent) {
@@ -61,443 +65,20 @@ class ProcessStripeWebhookAction
         }
     }
 
-    private function processEvent(Event $event, string $eventId): array
+    private function handleEvent(Event $event, string $eventId): array
     {
         return match ($event->type) {
-            'payment_intent.succeeded' => $this->handlePaymentSucceeded($event, $eventId),
-            'payment_intent.payment_failed' => $this->handlePaymentFailed($event, $eventId),
-            'charge.refunded' => $this->handleRefunded($event, $eventId),
-            'charge.dispute.created' => $this->handleDisputeCreated($event, $eventId),
-            'charge.dispute.closed' => $this->handleDisputeClosed($event, $eventId),
-            'account.updated' => $this->handleAccountUpdated($event, $eventId),
-            'invoice.paid' => $this->handleInvoicePaid($event, $eventId),
-            'invoice.payment_failed' => $this->handleInvoicePaymentFailed($event, $eventId),
-            'invoice.finalized' => $this->handleInvoiceFinalized($event, $eventId),
+            'payment_intent.succeeded' => $this->handlePaymentSucceeded->execute($event, $eventId),
+            'payment_intent.payment_failed' => $this->handlePaymentFailed->execute($event, $eventId),
+            'charge.refunded' => $this->handleRefunded->execute($event, $eventId),
+            'charge.dispute.created' => $this->handleDisputeCreated->execute($event, $eventId),
+            'charge.dispute.closed' => $this->handleDisputeClosed->execute($event, $eventId),
+            'account.updated' => $this->handleAccountUpdated->execute($event, $eventId),
+            'invoice.paid' => $this->handleInvoicePaid->execute($event, $eventId),
+            'invoice.payment_failed' => $this->handleInvoicePaymentFailed->execute($event, $eventId),
+            'invoice.finalized' => $this->handleInvoiceFinalized->execute($event, $eventId),
             default => $this->handleUnsupportedEvent($event),
         };
-    }
-
-    private function handlePaymentSucceeded(Event $event, string $eventId): array
-    {
-        $intent = data_get($event, 'data.object');
-        $intentId = $intent->id;
-
-        $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
-        if (! $payment) {
-            Log::warning('Payment not found for intent', ['intent_id' => $intentId]);
-
-            return [];
-        }
-
-        [$last4, $brand] = $this->extractCardDetails($intent);
-
-        $updated = Payment::where('id', $payment->id)
-            ->where('status', 'pending')
-            ->update([
-                'status' => 'succeeded',
-                'card_last_four' => $last4,
-                'card_brand' => $brand,
-            ]);
-
-        if (! $updated) {
-            Log::info('Payment not in pending state — skipping succeeded handler', [
-                'payment_id' => $payment->id,
-                'intent_id' => $intentId,
-            ]);
-
-            return [];
-        }
-
-        $payment->refresh();
-
-        $this->markProcessed($eventId);
-
-        return [new PaymentSucceeded($payment, $payment->booking)];
-    }
-
-    private function handlePaymentFailed(Event $event, string $eventId): array
-    {
-        $intent = data_get($event, 'data.object');
-        $intentId = $intent->id;
-
-        $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
-        if (! $payment) {
-            Log::warning('Payment not found for failed intent', ['intent_id' => $intentId]);
-
-            return [];
-        }
-
-        $updated = Payment::where('id', $payment->id)
-            ->where('status', 'pending')
-            ->update(['status' => 'failed']);
-
-        if (! $updated) {
-            Log::info('Payment not in pending state — skipping failed handler', [
-                'payment_id' => $payment->id,
-                'intent_id' => $intentId,
-            ]);
-
-            return [];
-        }
-
-        $payment->refresh();
-
-        $this->markProcessed($eventId);
-
-        return [new PaymentFailed($payment, $payment->booking)];
-    }
-
-    private function handleRefunded(Event $event, string $eventId): array
-    {
-        $charge = data_get($event, 'data.object');
-        $intentId = $charge->payment_intent;
-
-        // Look for the local refund Payment row first (action-led refund). If a
-        // refund was issued from the Stripe dashboard, no local refund row
-        // exists — create one so the ledger reflects the external credit.
-        $refundPayment = Payment::where('stripe_payment_intent_id', $intentId)
-            ->where('type', 'refund')
-            ->first();
-
-        $chargePayment = Payment::where('stripe_payment_intent_id', $intentId)
-            ->where('type', 'charge')
-            ->first();
-        if (! $chargePayment) {
-            Log::warning('Charge payment not found for refund', ['intent_id' => $intentId]);
-
-            return [];
-        }
-
-        if (! $refundPayment) {
-            $refundPayment = $this->createExternalRefundPayment($charge, $chargePayment);
-        }
-
-        // Idempotent per F2: recordRefund no-ops on a duplicate credit entry.
-        $this->ledger->recordRefund($refundPayment);
-
-        $updated = Payment::where('id', $chargePayment->id)
-            ->where('status', 'succeeded')
-            ->update(['status' => 'refunded']);
-
-        if ($updated) {
-            $this->markProcessed($eventId);
-        } else {
-            Log::info('Charge payment not in succeeded state — refund recorded but status unchanged', [
-                'payment_id' => $chargePayment->id,
-                'intent_id' => $intentId,
-            ]);
-        }
-
-        $refundPayment->refresh();
-        $chargePayment->refresh();
-
-        return [new PaymentRefunded($refundPayment, $chargePayment->booking)];
-    }
-
-    private function createExternalRefundPayment(object $charge, Payment $chargePayment): Payment
-    {
-        $amount = data_get($charge, 'refunds.data.0.amount') ?? $chargePayment->amount;
-        $currency = strtoupper(data_get($charge, 'currency') ?? $chargePayment->currency);
-        $refundId = data_get($charge, 'refunds.data.0.id');
-
-        return Payment::create([
-            'booking_id' => $chargePayment->booking_id,
-            'stripe_payment_intent_id' => $chargePayment->stripe_payment_intent_id,
-            'stripe_refund_id' => $refundId,
-            'type' => 'refund',
-            'amount' => $amount,
-            'currency' => $currency,
-            'status' => 'refunded',
-        ]);
-    }
-
-    /**
-     * Null-safe extraction of the card last4 + brand from the first charge on
-     * the PaymentIntent. Guards empty charge lists and non-card payment
-     * methods (e.g. wallet/redirect) so a malformed payload never throws.
-     */
-    private function extractCardDetails(object $intent): array
-    {
-        $charges = data_get($intent, 'charges.data') ?? [];
-        $firstCharge = $charges[0] ?? null;
-        $card = data_get($firstCharge, 'payment_method_details.card');
-
-        return [
-            $card->last4 ?? null,
-            $card->brand ?? null,
-        ];
-    }
-
-    private function handleDisputeCreated(Event $event, string $eventId): array
-    {
-        $dispute = data_get($event, 'data.object');
-        $intentId = $dispute->payment_intent;
-
-        $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
-        if (! $payment) {
-            Log::warning('Payment not found for dispute', ['intent_id' => $intentId]);
-
-            return [];
-        }
-
-        $updated = Payment::where('id', $payment->id)
-            ->where('status', 'succeeded')
-            ->update(['status' => 'disputed']);
-
-        if (! $updated) {
-            Log::info('Payment not in succeeded state — skipping dispute handler', [
-                'payment_id' => $payment->id,
-                'intent_id' => $intentId,
-            ]);
-
-            return [];
-        }
-
-        $payment->refresh();
-        $payment->booking->update(['status' => Booking::STATUS_CONFIRMED]);
-
-        $this->markProcessed($eventId);
-
-        Log::error('ADMIN ALERT: Dispute created for payment — admin review required', [
-            'booking_reference' => $payment->booking->reference,
-            'payment_intent_id' => $intentId,
-            'dispute_id' => $dispute->id,
-            'dispute_reason' => $dispute->reason,
-            'amount' => $payment->amount,
-            'currency' => $payment->currency,
-        ]);
-
-        $this->notifyAdminOfDispute($payment, $dispute);
-
-        return [];
-    }
-
-    private function notifyAdminOfDispute(Payment $payment, object $dispute): void
-    {
-        $webhookUrl = config('services.slack.admin_webhook_url');
-        if (! $webhookUrl) {
-            return;
-        }
-
-        try {
-            $response = Http::timeout(5)->post($webhookUrl, [
-                'text' => sprintf(
-                    ':warning: *Bookly Alert* — Dispute created for booking `%s`.'
-                    . ' Admin must review.'
-                    . "\n*Amount*: %d %s  |  *Reason*: %s",
-                    $payment->booking->reference,
-                    $payment->amount,
-                    $payment->currency,
-                    $dispute->reason,
-                ),
-            ]);
-
-            if (! $response->successful()) {
-                Log::error('Slack webhook returned non-success status', [
-                    'stripe_event_id' => $dispute->id,
-                    'booking_reference' => $payment->booking->reference,
-                    'response_status' => $response->status(),
-                    'response_body' => $response->body(),
-                ]);
-            }
-        } catch (\Throwable $e) {
-            Log::error('Slack webhook call failed', [
-                'stripe_event_id' => $dispute->id,
-                'booking_reference' => $payment->booking->reference,
-                'exception' => $e->getMessage(),
-            ]);
-        }
-    }
-
-    private function handleDisputeClosed(Event $event, string $eventId): array
-    {
-        $dispute = data_get($event, 'data.object');
-        $intentId = $dispute->payment_intent;
-
-        $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
-        if (! $payment) {
-            Log::warning('Payment not found for dispute closure', ['intent_id' => $intentId]);
-
-            return [];
-        }
-
-        if ($dispute->status === 'won') {
-            $updated = Payment::where('id', $payment->id)
-                ->where('status', 'disputed')
-                ->update(['status' => 'succeeded']);
-        } else {
-            $updated = Payment::where('id', $payment->id)
-                ->where('status', 'disputed')
-                ->update(['status' => 'refunded']);
-        }
-
-        if (! $updated) {
-            Log::info('Payment not in disputed state — skipping dispute-closed handler', [
-                'payment_id' => $payment->id,
-                'intent_id' => $intentId,
-            ]);
-
-            return [];
-        }
-
-        $payment->refresh();
-
-        if ($dispute->status === 'won') {
-            $payment->booking->update(['status' => Booking::STATUS_CONFIRMED]);
-        } else {
-            $payment->booking->update(['status' => Booking::STATUS_CANCELLED]);
-        }
-
-        $this->markProcessed($eventId);
-
-        return [];
-    }
-
-    private function handleAccountUpdated(Event $event, string $eventId): array
-    {
-        $account = data_get($event, 'data.object');
-        $accountId = $account->id;
-
-        $partner = Partner::where('stripe_account_id', $accountId)->first();
-        if (! $partner) {
-            Log::info('Partner not found for connected account update', ['stripe_account_id' => $accountId]);
-            $this->markProcessed($eventId);
-
-            return [];
-        }
-
-        $onboardingCompleted = (bool) ($account->details_submitted && $account->payouts_enabled);
-        $before = $this->accountAudit->snapshot($partner);
-
-        $partner->update([
-            'stripe_charges_enabled' => (bool) $account->charges_enabled,
-            'stripe_payouts_enabled' => (bool) $account->payouts_enabled,
-            'stripe_details_submitted' => (bool) $account->details_submitted,
-            'stripe_onboarding_completed' => $onboardingCompleted,
-        ]);
-        $partner->refresh();
-        $this->accountAudit->recordWebhookChange($partner, $before, $eventId);
-
-        Log::info('Updated partner Stripe account status via webhook', [
-            'partner_id' => $partner->id,
-            'stripe_account_id' => $accountId,
-            'charges_enabled' => (bool) $account->charges_enabled,
-            'payouts_enabled' => (bool) $account->payouts_enabled,
-        ]);
-
-        $this->markProcessed($eventId);
-
-        return [];
-    }
-
-    private function handleInvoicePaid(Event $event, string $eventId): array
-    {
-        $invoice = data_get($event, 'data.object');
-        $bookingReference = data_get($invoice, 'metadata.booking_reference');
-
-        if (! $bookingReference) {
-            $this->markProcessed($eventId);
-
-            return [];
-        }
-
-        $booking = Booking::where('reference', $bookingReference)->first();
-        if (! $booking) {
-            Log::warning('Booking not found for invoice.paid webhook', ['reference' => $bookingReference]);
-            $this->markProcessed($eventId);
-
-            return [];
-        }
-
-        $paymentIntentId = data_get($invoice, 'payment_intent');
-
-        $payment = Payment::firstOrCreate(
-            ['stripe_payment_intent_id' => $paymentIntentId ?? ('in_' . $invoice->id)],
-            [
-                'booking_id' => $booking->id,
-                'type' => 'charge',
-                'amount' => (int) $invoice->amount_paid,
-                'currency' => strtoupper($invoice->currency),
-                'status' => 'succeeded',
-                'metadata' => [
-                    'invoice_id' => $invoice->id,
-                    'hosted_invoice_url' => $invoice->hosted_invoice_url,
-                    'invoice_pdf' => $invoice->invoice_pdf,
-                ],
-            ]
-        );
-
-        if ($payment->status !== 'succeeded') {
-            $payment->update(['status' => 'succeeded']);
-        }
-
-        $booking->update([
-            'status' => Booking::STATUS_CONFIRMED,
-            'stripe_payment_intent_id' => $paymentIntentId ?? ('in_' . $invoice->id),
-            'stripe_invoice_id' => $invoice->id,
-            'stripe_invoice_url' => $invoice->hosted_invoice_url,
-            'stripe_invoice_pdf' => $invoice->invoice_pdf,
-            'stripe_invoice_status' => $invoice->status ?? 'paid',
-        ]);
-
-        $this->ledger->recordCharge($payment);
-        $this->markProcessed($eventId);
-
-        return [new PaymentSucceeded($payment, $booking)];
-    }
-
-    private function handleInvoicePaymentFailed(Event $event, string $eventId): array
-    {
-        $invoice = data_get($event, 'data.object');
-        $bookingReference = data_get($invoice, 'metadata.booking_reference');
-
-        if ($bookingReference) {
-            $booking = Booking::where('reference', $bookingReference)->first();
-            if ($booking) {
-                $booking->update([
-                    'stripe_invoice_id' => $invoice->id,
-                    'stripe_invoice_status' => $invoice->status ?? 'open',
-                ]);
-                Log::warning('Invoice payment failed for booking', [
-                    'reference' => $bookingReference,
-                    'invoice_id' => $invoice->id,
-                ]);
-            }
-        }
-
-        $this->markProcessed($eventId);
-
-        return [];
-    }
-
-    private function handleInvoiceFinalized(Event $event, string $eventId): array
-    {
-        $invoice = data_get($event, 'data.object');
-        $bookingReference = data_get($invoice, 'metadata.booking_reference');
-
-        if ($bookingReference) {
-            Booking::where('reference', $bookingReference)->update([
-                'stripe_invoice_id' => $invoice->id,
-                'stripe_invoice_url' => $invoice->hosted_invoice_url,
-                'stripe_invoice_pdf' => $invoice->invoice_pdf,
-                'stripe_invoice_status' => $invoice->status ?? 'open',
-            ]);
-            Log::info('Invoice finalized for booking', [
-                'reference' => $bookingReference,
-                'invoice_id' => $invoice->id,
-                'hosted_invoice_url' => $invoice->hosted_invoice_url,
-            ]);
-        }
-
-        $this->markProcessed($eventId);
-
-        return [];
-    }
-
-    private function markProcessed(string $eventId): void
-    {
-        StripeWebhookEvent::where('stripe_event_id', $eventId)
-            ->update(['processing_status' => 'processed', 'processed_at' => now()]);
     }
 
     /** @return array{} */

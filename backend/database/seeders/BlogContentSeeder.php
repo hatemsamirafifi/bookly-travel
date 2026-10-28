@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
-use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -255,7 +254,7 @@ class BlogContentSeeder extends Seeder
         ?BlogCategory $category,
         array $data
     ): BlogPost {
-        if (!$category) {
+        if (! $category) {
             $category = BlogCategory::where('slug', 'city-guides')->first();
         }
 

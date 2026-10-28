@@ -5,6 +5,7 @@ namespace App\Domains\Search\Controllers\Public;
 use App\Domains\Search\Actions\SearchToursAction;
 use App\Http\Requests\Public\Search\SearchToursRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class SearchController
 {
@@ -14,7 +15,11 @@ class SearchController
 
     public function search(SearchToursRequest $request): JsonResponse
     {
-        $results = $this->searchToursAction->execute($request->validated());
+        $key = 'search.' . md5(json_encode($request->validated()));
+
+        $results = Cache::remember($key, 300, function () use ($request) {
+            return $this->searchToursAction->execute($request->validated());
+        });
 
         return response()->json($results);
     }

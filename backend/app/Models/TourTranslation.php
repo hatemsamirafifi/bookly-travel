@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property string $locale
@@ -20,6 +21,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class TourTranslation extends Model
 {
+    protected static function booted(): void
+    {
+        static::saved(function (TourTranslation $translation) {
+            $slug = Tour::where('id', $translation->tour_id)->value('slug');
+            if ($slug) {
+                Cache::forget("tour.{$slug}.{$translation->locale}");
+            }
+        });
+
+        static::deleted(function (TourTranslation $translation) {
+            $slug = Tour::where('id', $translation->tour_id)->value('slug');
+            if ($slug) {
+                Cache::forget("tour.{$slug}.{$translation->locale}");
+            }
+        });
+    }
+
     protected $touches = ['tour'];
 
     protected $fillable = [

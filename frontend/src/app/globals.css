@@ -21,7 +21,7 @@
   --color-error:        #C62828;
   --color-trust:        #11845B;
   --color-success:      var(--color-trust);
-  --color-warning:      #9A5B00;
+  --color-warning:      #8A5200;
   --color-text-inverse: #FFFFFF;
   --color-text-on-dark: #DDE5EE;
   --color-overlay:      rgb(10 37 64 / 0.6);

@@ -120,15 +120,19 @@ it('exposes only safe absolute gallery URLs and invents no photo when the galler
 });
 
 // Corrected T035: the previous assertion encoded the bug (English-only
-// not-found for every failure). A 404 localizes the not-found title; any
-// other failure is recoverable and must not claim "Not Found".
-it('returns localized noindex metadata distinguishing 404 from recoverable failures', async () => {
+// not-found for every failure). A 404 now hard-aborts from the metadata
+// phase via notFound() (streaming shell would otherwise lock in HTTP 200);
+// any other failure is recoverable and must not claim "Not Found".
+it('routes a real 404 through notFound and keeps recoverable failures as localized noindex metadata', async () => {
   (getTourDetail as jest.Mock).mockRejectedValue(new NotFoundError('Tour not found.'));
-  const missing = await generateMetadata({ params: Promise.resolve({ locale: 'es', slug: 'absent-tour' }) });
-  expect(missing).toMatchObject({ title: 'Tour no encontrado | Bookly', robots: { index: false } });
+  await expect(generateMetadata({ params: Promise.resolve({ locale: 'es', slug: 'absent-tour' }) }))
+    .rejects.toThrow('NEXT_NOT_FOUND');
+  expect(mockedNotFound).toHaveBeenCalledTimes(1);
 
+  mockedNotFound.mockClear();
   (getTourDetail as jest.Mock).mockRejectedValue(new Error('upstream unavailable'));
   const failed = await generateMetadata({ params: Promise.resolve({ locale: 'en', slug: 'example' }) });
+  expect(mockedNotFound).not.toHaveBeenCalled();
   expect(failed).toMatchObject({ title: 'This tour could not be loaded | Bookly', robots: { index: false } });
 });
 
@@ -138,16 +142,15 @@ describe('US6 localized route states (Spec 020)', () => {
   });
 
   it.each([
-    ['en', 'Tour not found | Bookly'],
-    ['es', 'Tour no encontrado | Bookly'],
-    ['it', 'Tour non trovato | Bookly'],
-  ] as const)('localizes the 404 metadata title in %s with noindex', async (locale, title) => {
+    ['en'],
+    ['es'],
+    ['it'],
+  ] as const)('routes the 404 to the locale-level not-found boundary in %s (hard 404 before streaming)', async (locale) => {
     (getTourDetail as jest.Mock).mockRejectedValue(new NotFoundError('Tour not found.'));
 
-    const metadata = await generateMetadata({ params: Promise.resolve({ locale, slug: 'absent-tour' }) });
-
-    expect(metadata).toMatchObject({ title, robots: { index: false } });
-    expect(metadata.openGraph).toBeUndefined();
+    await expect(generateMetadata({ params: Promise.resolve({ locale, slug: 'absent-tour' }) }))
+      .rejects.toThrow('NEXT_NOT_FOUND');
+    expect(mockedNotFound).toHaveBeenCalledTimes(1);
   });
 
   it.each([

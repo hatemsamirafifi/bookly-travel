@@ -39,6 +39,12 @@ class Review extends Model
         static::deleting(function () {
             return false;
         });
+        static::saved(function (Review $review) {
+            $slug = Tour::where('id', $review->tour_id)->value('slug');
+            if ($slug) {
+                Tour::clearDetailCache($slug);
+            }
+        });
     }
 
     public function booking(): BelongsTo

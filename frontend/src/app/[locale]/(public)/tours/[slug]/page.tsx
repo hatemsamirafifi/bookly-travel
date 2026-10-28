@@ -64,7 +64,13 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
       return localizedFailureMetadata(locale, 'withdrawn');
     }
     if (e instanceof NotFoundError) {
-      return localizedFailureMetadata(locale, 'not-found');
+      // A real 404 must abort the request from the metadata phase, BEFORE the
+      // route's loading.tsx shell flushes: once a Suspense boundary streams,
+      // the 200 status is already on the wire and cannot become 404 (Next.js
+      // streaming contract). notFound() is documented as callable from
+      // generateMetadata and renders the locale-level not-found boundary with
+      // a hard 404 status.
+      notFound();
     }
     return localizedFailureMetadata(locale, 'error');
   }

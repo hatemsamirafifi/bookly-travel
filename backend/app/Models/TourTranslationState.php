@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property string $locale
@@ -14,6 +15,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class TourTranslationState extends Model
 {
+    protected static function booted(): void
+    {
+        static::saved(function (TourTranslationState $state) {
+            $slug = Tour::where('id', $state->tour_id)->value('slug');
+            if ($slug) {
+                Cache::forget("tour.{$slug}.{$state->locale}");
+            }
+        });
+    }
+
     /**
      * Operational internals never leave the server: revision hashes and
      * error categories stay queryable but are hidden from serialization.

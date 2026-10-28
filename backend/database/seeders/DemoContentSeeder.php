@@ -6,8 +6,6 @@ use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerProfile;
 use App\Domains\Partner\Models\PartnerSettings;
-use App\Domains\Partner\Models\PricingTier;
-use App\Domains\Partner\Models\TourMedia;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
@@ -24,7 +22,7 @@ class DemoContentSeeder extends Seeder
     {
         $this->seedMoreCategories();
         $this->seedMorePartners();
-        
+
         $this->command->info('✓ Added demo tours, destinations, and partners');
     }
 
@@ -349,7 +347,7 @@ class DemoContentSeeder extends Seeder
 
     private function createTourWithDetails(Partner $partner, ?Category $category, array $tourData, array $translations): Tour
     {
-        if (!$category) {
+        if (! $category) {
             $category = Category::where('slug', 'walking')->first();
         }
 

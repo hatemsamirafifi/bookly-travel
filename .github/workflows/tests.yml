@@ -195,7 +195,7 @@ jobs:
   # Frontend E2E Tests (Playwright)
   # -------------------------------------------------------------------
   frontend-e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -258,7 +258,7 @@ jobs:
 
   frontend-e2e-result:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 2
     needs: [frontend-e2e]
     if: ${{ always() }}

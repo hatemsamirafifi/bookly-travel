@@ -62,15 +62,16 @@ for (const locale of locales) {
         await page.goto(path);
         await inspectPage(page, `${name}-${locale}-${width}`);
         if (name === 'tour') {
-          const open = page.getByRole('button', { name: messages[locale].tour.gallery.open, exact: true });
-          await open.focus();
+          const viewLabel = messages[locale].tour.gallery.view.replace('{number}', '1');
+          const trigger = page.getByRole('button', { name: viewLabel, exact: true });
+          await trigger.focus();
           await page.keyboard.press('Enter');
           const dialog = page.getByRole('dialog', { name: messages[locale].tour.gallery.dialog });
           await expect(dialog).toBeVisible();
           await expect(dialog.getByRole('button', { name: messages[locale].tour.gallery.close })).toBeFocused();
           await page.keyboard.press('Escape');
           await expect(dialog).toHaveCount(0);
-          await expect(open).toBeFocused();
+          await expect(trigger).toBeFocused();
         }
       }
       if (width === 390) {
