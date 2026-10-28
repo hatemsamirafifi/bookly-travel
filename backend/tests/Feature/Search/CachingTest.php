@@ -25,6 +25,7 @@ function createCachingTour(array $attributes = []): Tour
         'slug' => 'test-tour-' . uniqid(),
         'location' => 'Rome, Italy',
         'duration_minutes' => 120,
+        'duration_label' => '2 hours',
         'group_size_min' => 1,
         'group_size_max' => 10,
         'price_amount' => 5000,
@@ -36,6 +37,18 @@ function createCachingTour(array $attributes = []): Tour
             'locale' => 'en',
             'title' => 'Test Tour Title ' . $tour->slug,
             'description' => 'Test Tour Description',
+        ]);
+    }
+
+    // A tour with no availability rules has no upcoming dates, fails
+    // `isPubliclyBookable()`, and is therefore excluded from search results
+    // (`shouldBeSearchable`). Seed one concrete upcoming date so the tour is
+    // genuinely discoverable by the search endpoint.
+    if (! $tour->availabilityRules()->exists()) {
+        $tour->availabilityRules()->create([
+            'rule_type' => 'specific_date',
+            'start_date' => now()->addDays(7)->toDateString(),
+            'capacity' => 10,
         ]);
     }
 
@@ -54,21 +67,12 @@ it('caches search results for identical queries', function () {
         'status' => 'published',
     ]);
 
-    $response = $this->postJson('/api/public/search/tours', [
-        'query' => 'rome',
-        'locale' => 'en',
-        'per_page' => 10,
-    ]);
-
+    $response = $this->getJson('/api/public/search/tours?locale=en&q=rome');
     $response->assertOk();
     expect($response->json('data'))->toHaveCount(1);
 
     // Second request should hit cache
-    $response2 = $this->postJson('/api/public/search/tours', [
-        'query' => 'rome',
-        'locale' => 'en',
-        'per_page' => 10,
-    ]);
+    $response2 = $this->getJson('/api/public/search/tours?locale=en&q=rome');
 
     $response2->assertOk();
     expect($response2->json('data'))->toHaveCount(1);
@@ -82,12 +86,12 @@ it('caches category listing', function () {
         );
     }
 
-    $response = $this->getJson('/api/public/categories');
+    $response = $this->getJson('/api/public/categories?locale=en');
     $response->assertOk();
     expect($response->json('data'))->toBeArray();
 
     // Second request should hit cache
-    $response2 = $this->getJson('/api/public/categories');
+    $response2 = $this->getJson('/api/public/categories?locale=en');
     $response2->assertOk();
     expect($response2->json('data'))->toBeArray();
 });
@@ -103,11 +107,11 @@ it('caches destination listing', function () {
         ]);
     }
 
-    $response = $this->getJson('/api/public/destinations');
+    $response = $this->getJson('/api/public/destinations?locale=en');
     $response->assertOk();
     expect($response->json('data'))->toBeArray();
 
-    $response2 = $this->getJson('/api/public/destinations');
+    $response2 = $this->getJson('/api/public/destinations?locale=en');
     $response2->assertOk();
     expect($response2->json('data'))->toBeArray();
 });
@@ -126,7 +130,10 @@ it('caches homepage data', function () {
 
     $response = $this->getJson('/api/public/homepage?locale=en');
     $response->assertOk();
-    expect($response->json('data'))->toHaveKeys(['featured_tours', 'popular_categories', 'featured_destinations', 'meta']);
+    // The homepage contract nests the three content lists under `data` and
+    // keeps SEO copy in the top-level `meta` key (not inside `data`).
+    expect($response->json('data'))->toHaveKeys(['featured_tours', 'popular_categories', 'featured_destinations']);
+    expect($response->json('meta.seo'))->toHaveKeys(['meta_title', 'meta_description']);
 });
 
 it('caches tour detail by slug and locale', function () {

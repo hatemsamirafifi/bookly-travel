@@ -40,7 +40,7 @@ class Review extends Model
             return false;
         });
         static::saved(function (Review $review) {
-            $slug = $review->tour?->slug ?? Tour::where('id', $review->tour_id)->value('slug');
+            $slug = Tour::where('id', $review->tour_id)->value('slug');
             if ($slug) {
                 Tour::clearDetailCache($slug);
             }

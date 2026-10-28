@@ -24,14 +24,14 @@ class TourTranslation extends Model
     protected static function booted(): void
     {
         static::saved(function (TourTranslation $translation) {
-            $slug = $translation->tour?->slug ?? Tour::where('id', $translation->tour_id)->value('slug');
+            $slug = Tour::where('id', $translation->tour_id)->value('slug');
             if ($slug) {
                 Cache::forget("tour.{$slug}.{$translation->locale}");
             }
         });
 
         static::deleted(function (TourTranslation $translation) {
-            $slug = $translation->tour?->slug ?? Tour::where('id', $translation->tour_id)->value('slug');
+            $slug = Tour::where('id', $translation->tour_id)->value('slug');
             if ($slug) {
                 Cache::forget("tour.{$slug}.{$translation->locale}");
             }

@@ -18,7 +18,7 @@ class TourTranslationState extends Model
     protected static function booted(): void
     {
         static::saved(function (TourTranslationState $state) {
-            $slug = $state->tour?->slug ?? Tour::where('id', $state->tour_id)->value('slug');
+            $slug = Tour::where('id', $state->tour_id)->value('slug');
             if ($slug) {
                 Cache::forget("tour.{$slug}.{$state->locale}");
             }
