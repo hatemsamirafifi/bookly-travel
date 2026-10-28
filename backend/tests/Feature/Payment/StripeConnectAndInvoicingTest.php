@@ -18,9 +18,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Stripe\ApiRequestor;
-use Stripe\Event as StripeEvent;
 use Stripe\HttpClient\ClientInterface;
-use Stripe\Webhook;
 
 uses(RefreshDatabase::class);
 
@@ -143,15 +141,16 @@ it('updates and governance-audits partner status via account.updated webhook', f
         ],
     ]);
 
-    $mockEvent = StripeEvent::constructFrom(json_decode($payload, true));
+    // Sign the payload exactly like Stripe does instead of mocking
+    // Webhook::constructEvent() — alias mocks poison the whole PHP
+    // process and make every later real Stripe\Webhook call fatal.
+    config(['services.stripe.webhook_secret' => 'whsec_connect']);
 
-    // Mock Webhook::constructEvent
-    Mockery::mock('alias:' . Webhook::class)
-        ->shouldReceive('constructEvent')
-        ->andReturn($mockEvent);
+    $timestamp = time();
+    $signature = hash_hmac('sha256', "{$timestamp}.{$payload}", 'whsec_connect');
 
     $action = app(ProcessStripeWebhookAction::class);
-    $action->execute($payload, 'sig_dummy');
+    $action->execute($payload, "t={$timestamp},v1={$signature}");
 
     $partner->refresh();
     expect($partner->stripe_charges_enabled)->toBeTrue()
@@ -352,14 +351,13 @@ it('confirms booking and creates ledger charge on invoice.paid webhook', functio
         ],
     ]);
 
-    $mockEvent = StripeEvent::constructFrom(json_decode($payload, true));
+    config(['services.stripe.webhook_secret' => 'whsec_connect']);
 
-    Mockery::mock('alias:' . Webhook::class)
-        ->shouldReceive('constructEvent')
-        ->andReturn($mockEvent);
+    $timestamp = time();
+    $signature = hash_hmac('sha256', "{$timestamp}.{$payload}", 'whsec_connect');
 
     $action = app(ProcessStripeWebhookAction::class);
-    $action->execute($payload, 'sig_dummy');
+    $action->execute($payload, "t={$timestamp},v1={$signature}");
 
     $booking->refresh();
     expect($booking->status)->toBe(Booking::STATUS_CONFIRMED);
