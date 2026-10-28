@@ -1,7 +1,9 @@
 import { expect } from '@playwright/test';
 import type { BrowserContext } from '@playwright/test';
-import { createServer, type Server } from 'node:http';
+import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { spawn, type ChildProcess } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import type { AddressInfo } from 'node:net';
 import type { TourDetail } from '@/lib/api/types';
 
@@ -107,6 +109,76 @@ export type SsrReading = TourDetail | ControlledSsrStatus;
 function isControlledStatus(value: SsrReading): value is ControlledSsrStatus {
   return typeof value === 'object' && value !== null && typeof (value as { status?: unknown }).status === 'number';
 }
+
+// Fixture media served by the Docker CDN (docker/cdn/tours, aliased as
+// cdn.bookly.test). Native harness runs redirect connections for that host to
+// this mock (see cdn-host-redirect.cjs), so it serves the same bytes the
+// Docker CDN would; unknown media paths 404 exactly like the real CDN.
+const CDN_FIXTURE_DIR = path.resolve(__dirname, '..', '..', '..', '..', 'docker', 'cdn', 'tours');
+const CDN_MEDIA_TYPES: Record<string, string> = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
+};
+
+async function serveCdnMedia(url: string, res: ServerResponse): Promise<void> {
+  let pathname: string;
+  try {
+    pathname = decodeURIComponent(new URL(url, 'http://127.0.0.1').pathname);
+  } catch {
+    res.writeHead(400).end();
+    return;
+  }
+  const file = path.basename(pathname);
+  if (!/^[A-Za-z0-9._-]+$/.test(file)) {
+    res.writeHead(404).end();
+    return;
+  }
+  const mediaType = CDN_MEDIA_TYPES[path.extname(file).toLowerCase()];
+  if (!mediaType) {
+    res.writeHead(404).end();
+    return;
+  }
+  try {
+    const bytes = await readFile(path.join(CDN_FIXTURE_DIR, file));
+    res.writeHead(200, { 'Content-Type': mediaType, 'Content-Length': String(bytes.byteLength) });
+    res.end(bytes);
+  } catch {
+    res.writeHead(404).end();
+  }
+}
+
+// The tour page loads reviews client-side through the same-origin /api
+// rewrite (API_INTERNAL_URL), but review content is seeded in the real
+// backend the suite already asserts against. Relay those reads to the
+// application stack (PLAYWRIGHT_BASE_URL, e.g. the Docker nginx) so the
+// harness page renders the same reviews the test fetched from the real API;
+// without an upstream the mock keeps the historical 404 behavior.
+async function relayTourReviews(url: string, res: ServerResponse): Promise<void> {
+  const upstreamBase = process.env.PLAYWRIGHT_BASE_URL;
+  if (!upstreamBase) {
+    res.writeHead(404, { 'Content-Type': 'application/json' }).end('{}');
+    return;
+  }
+  try {
+    const upstream = await fetch(`${upstreamBase}${url}`, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(10000),
+    });
+    const body = Buffer.from(await upstream.arrayBuffer());
+    res.writeHead(upstream.status, {
+      'Content-Type': upstream.headers.get('content-type') ?? 'application/json',
+      'Cache-Control': 'no-store',
+      'Content-Length': String(body.byteLength),
+    });
+    res.end(body);
+  } catch {
+    res.writeHead(502, { 'Content-Type': 'application/json' }).end('{}');
+  }
+}
+
 // Local SSR harness (Spec 019 US2, extended Spec 020 US6): page routes fetch
 // from the server during SSR, so browser route mocking cannot intercept them.
 // An isolated Next process plus a local API fixture server exercise the real
@@ -139,8 +211,27 @@ export async function startSsrHarness(slug: string, readCurrent: () => SsrReadin
     await cleanup();
   };
   try {
-    mock = createServer((req, res) => {
-      if (!req.url?.startsWith(`/api/public/tours/${slug}`)) {
+    const handleMockRequest = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
+      const url = req.url ?? '/';
+      if (req.method === 'GET' && url.startsWith('/tours/')) {
+        await serveCdnMedia(url, res);
+        return;
+      }
+      if (req.method === 'GET' && url.startsWith(`/api/public/tours/${slug}/reviews`)) {
+        // The reviews list is client-side content the fixture does not carry.
+        // Relay it to the real application stack only when the controlled
+        // tour itself claims reviews (count > 0); fixtures that declare zero
+        // reviews keep the historical 404, so the page invents no review
+        // claims (Spec 020 US2 controlled fixtures).
+        const current = readCurrent();
+        if (!isControlledStatus(current) && current.reviews.count > 0) {
+          await relayTourReviews(url, res);
+        } else {
+          res.writeHead(404, { 'Content-Type': 'application/json' }).end('{}');
+        }
+        return;
+      }
+      if (!url.startsWith(`/api/public/tours/${slug}`)) {
         res.writeHead(404).end();
         return;
       }
@@ -152,15 +243,42 @@ export async function startSsrHarness(slug: string, readCurrent: () => SsrReadin
       }
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify({ data: current }));
+    };
+    mock = createServer((req, res) => {
+      void handleMockRequest(req, res).catch(() => {
+        if (!res.headersSent) {
+          res.writeHead(502);
+        }
+        res.end();
+      });
     });
     await listenServer(mock, 0, '127.0.0.1');
     const mockPort = (mock.address() as AddressInfo).port;
     const nextPort = await freePort();
-    const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', String(nextPort), '-H', '127.0.0.1'], {
-      cwd: process.cwd(),
-      env: { ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${mockPort}`, NEXT_TELEMETRY_DISABLED: '1' },
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
+    const child = spawn(
+      process.execPath,
+      [
+        '--require',
+        path.resolve(__dirname, 'cdn-host-redirect.cjs'),
+        'node_modules/next/dist/bin/next',
+        'start',
+        '-p',
+        String(nextPort),
+        '-H',
+        '127.0.0.1',
+      ],
+      {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          API_INTERNAL_URL: `http://127.0.0.1:${mockPort}`,
+          ALLOW_PRIVATE_IMAGE_UPSTREAM: 'true',
+          BOOKLY_MOCK_PORT: String(mockPort),
+          NEXT_TELEMETRY_DISABLED: '1',
+        },
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    );
     next = child;
     let startupOutput = '';
     let spawnError: Error | null = null;

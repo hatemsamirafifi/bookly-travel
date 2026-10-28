@@ -1078,7 +1078,47 @@ test.describe('Tour Detail Page', () => {
 
       // Sticky geometry: beside practical content and reviews the card holds
       // the shared nav offset and stays bounded by the article column.
-      await page.locator('#reviews').scrollIntoViewIfNeeded();
+      // Media and review content finish loading asynchronously, so the card
+      // can still settle for a few frames after the first scroll; poll the
+      // offset until the stuck geometry is stable instead of measuring a
+      // single potentially mid-shift frame.
+      const tokenGapPx = await page.evaluate(() => {
+        const root = getComputedStyle(document.documentElement);
+        const raw = root.getPropertyValue('--spacing-inline').trim();
+        const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        const value = parseFloat(raw);
+        return raw.endsWith('rem') ? value * rootPx : value;
+      });
+      expect(tokenGapPx).toBeGreaterThan(0);
+      await expect
+        .poll(async () => {
+          // Scroll to the deepest position where the booking card can still
+          // sit at its sticky top: the aside ends before the article does, so
+          // scrolling past the aside end pins the card above the nav offset.
+          // Keep #reviews on screen (its top at 80% of the viewport height)
+          // so the geometry is measured beside practical content and reviews
+          // as the scenario describes. Re-compute every attempt because media
+          // and review content finish loading asynchronously.
+          await page.evaluate(() => {
+            const card = document.querySelector('[data-testid="tour-booking-card-slot"]');
+            const aside = card instanceof HTMLElement ? card.closest('aside') : null;
+            const reviews = document.getElementById('reviews');
+            if (!card || !aside || !reviews) return;
+            const stickyTop = Number.parseFloat(getComputedStyle(card).top) || 0;
+            const cardHeight = card.getBoundingClientRect().height;
+            const asideBottom = aside.getBoundingClientRect().bottom + window.scrollY;
+            const reviewsTop = reviews.getBoundingClientRect().top + window.scrollY;
+            const deepest = asideBottom - cardHeight - stickyTop - 60;
+            const shallowest = reviewsTop - window.innerHeight * 0.8;
+            window.scrollTo(0, Math.min(Math.max(shallowest, 0), Math.max(deepest, 0)));
+          });
+          const cardBox = await page.locator('main#main-content').getByTestId('tour-booking-card-slot').boundingBox();
+          const stuckNavBox = await page.getByRole('navigation', { name: 'Tour sections' }).boundingBox();
+          expect(cardBox).not.toBeNull();
+          expect(stuckNavBox).not.toBeNull();
+          return Math.abs(cardBox!.y - (stuckNavBox!.y + stuckNavBox!.height + tokenGapPx));
+        }, { timeout: 15000 })
+        .toBeLessThanOrEqual(2);
       const cardBox = await page.locator('main#main-content').getByTestId('tour-booking-card-slot').boundingBox();
       const asideBox = await page
         .locator('main#main-content aside', { has: page.getByTestId('tour-booking-card-slot') })
@@ -1088,19 +1128,6 @@ test.describe('Tour Detail Page', () => {
       // Measured offset (migrated from the old hardcoded 80px): the card sits
       // one shared token gap below the live sticky nav, read from real
       // computed styles and card geometry. Tight bound preserved, not loosened.
-      const stuckNavBox = await page.getByRole('navigation', { name: 'Tour sections' }).boundingBox();
-      expect(stuckNavBox).not.toBeNull();
-      const tokenGapPx = await page.evaluate(() => {
-        const root = getComputedStyle(document.documentElement);
-        const raw = root.getPropertyValue('--spacing-inline').trim();
-        const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        const value = parseFloat(raw);
-        return raw.endsWith('rem') ? value * rootPx : value;
-      });
-      expect(tokenGapPx).toBeGreaterThan(0);
-      expect(
-        Math.abs(cardBox!.y - (stuckNavBox!.y + stuckNavBox!.height + tokenGapPx)),
-      ).toBeLessThanOrEqual(2);
       expect(cardBox!.y + cardBox!.height).toBeLessThanOrEqual(asideBox!.y + asideBox!.height + 2);
 
       // Back to mobile: the bar still shows the identical selection.

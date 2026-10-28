@@ -1,0 +1,23 @@
+#!/bin/sh
+# Pre-commit hook: prevent accidental secret commits
+
+SECRETS_PATTERN='(STRIPE_SECRET|GEMINI_API_KEY|APP_KEY|sk_test_|pk_test_|AQ\.)[=:][[:space:]]*[A-Za-z0-9_\-]{20,}'
+
+if git diff --cached --diff-filter=ACM | grep -Eq "$SECRETS_PATTERN"; then
+  echo "❌ ERROR: Possible secrets detected in staged changes!"
+  echo "   Please use environment-specific values, not hardcoded keys."
+  echo "   Run 'php artisan key:generate' for a new APP_KEY."
+  exit 1
+fi
+
+# Also check for common file names that should never be committed
+for f in $(git diff --cached --name-only --diff-filter=ACM); do
+  case "$f" in
+    .env|.env.*|*.key|*.pem|*.p12)
+      echo "❌ ERROR: $f should not be committed"
+      exit 1
+      ;;
+  esac
+done
+
+exit 0
