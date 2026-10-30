@@ -177,3 +177,42 @@ it('denies the moderation gate for an admin lacking the moderate_reviews flag (F
         ->and($adminNoFlag->can('viewAny', Review::class))->toBeFalse()
         ->and($this->admin->can('manage', $review))->toBeTrue();
 });
+
+it('hides a flagged review directly via the Filament hide action and writes governance audit', function () {
+    $review = makeReview('flagged');
+
+    expect($review->canTransitionTo('hidden'))->toBeTrue();
+
+    Livewire::test(ReviewResource\Pages\ListReviews::class)
+        ->callTableAction('hide', $review, ['reason' => 'Inappropriate content'])
+        ->assertHasNoTableActionErrors();
+
+    expect($review->fresh()->status)->toBe(ReviewStatus::Hidden->value);
+
+    $log = GovernanceAuditLog::where('action', 'review.hide')->where('target_id', $review->id)->first();
+    expect($log)->not->toBeNull()
+        ->and($log->actor_id)->toBe($this->admin->id)
+        ->and($log->metadata['reason'])->toBe('Inappropriate content');
+});
+
+it('renders the Review Infolist including partner response empty state with HTTP 200', function () {
+    $review = makeReview('visible');
+
+    Livewire::test(ReviewResource\Pages\ViewReview::class, ['record' => $review->getRouteKey()])
+        ->assertSuccessful()
+        ->assertSee('A review for moderation')
+        ->assertSee('No response submitted by partner.');
+});
+
+it('renders the Review Infolist with partner response text when present', function () {
+    $review = makeReview('visible');
+    \App\Domains\Partner\Models\ReviewResponse::create([
+        'review_id' => $review->id,
+        'partner_id' => $review->tour->partner_id,
+        'response_text' => 'Thank you for your feedback! We look forward to hosting you again.',
+    ]);
+
+    Livewire::test(ReviewResource\Pages\ViewReview::class, ['record' => $review->getRouteKey()])
+        ->assertSuccessful()
+        ->assertSee('Thank you for your feedback! We look forward to hosting you again.');
+});

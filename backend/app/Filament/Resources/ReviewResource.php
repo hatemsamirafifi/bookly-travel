@@ -221,10 +221,23 @@ class ReviewResource extends Resource
                                 'flagged' => 'danger',
                                 default => 'gray',
                             }),
-                        Infolists\Components\TextEntry::make('comment')->label('Comment')->wrap(),
+                        Infolists\Components\TextEntry::make('comment')->label('Comment')->columnSpanFull(),
                         Infolists\Components\TextEntry::make('created_at')->label('Submitted')->dateTime(),
                     ])
                     ->columns(3),
+                Infolists\Components\Section::make('Partner Response')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('reviewResponse.response_text')
+                            ->label('Response Text')
+                            ->placeholder('No response submitted by partner.')
+                            ->columnSpanFull(),
+                        Infolists\Components\TextEntry::make('reviewResponse.created_at')
+                            ->label('Responded At')
+                            ->dateTime()
+                            ->placeholder('—'),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
                 Infolists\Components\Section::make('Moderation Audit')
                     ->schema([
                         Infolists\Components\RepeatableEntry::make('auditTrails')

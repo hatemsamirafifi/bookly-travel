@@ -37,6 +37,7 @@ class AdminUserSeeder extends Seeder
             'manage_users' => true,
             'manage_settings' => true,
             'manage_cms' => true,
+            'manage_blog' => true,
             'view_audit_log' => true,
         ];
 
