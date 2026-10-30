@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Admin\Policies\AuthAuditLogPolicy;
 use App\Domains\Admin\Policies\BookingPolicy;
+use App\Domains\Admin\Policies\CategoryPolicy;
 use App\Domains\Admin\Policies\GovernanceAuditPolicy;
 use App\Domains\Admin\Policies\PartnerPolicy;
 use App\Domains\Admin\Policies\StaticPagePolicy;
@@ -22,6 +24,8 @@ use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Services\DeterministicPaymentGateway;
 use App\Domains\Payment\Services\StripeService;
 use App\Domains\Reviews\Models\Review;
+use App\Models\AuthAuditLog;
+use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use App\Policies\ReviewPolicy;
@@ -71,9 +75,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Partner::class, PartnerPolicy::class);
         Gate::policy(Booking::class, BookingPolicy::class);
         Gate::policy(GovernanceAuditLog::class, GovernanceAuditPolicy::class);
+        Gate::policy(AuthAuditLog::class, AuthAuditLogPolicy::class);
         Gate::policy(StaticPage::class, StaticPagePolicy::class);
         Gate::policy(BlogPost::class, BlogPostPolicy::class);
         Gate::policy(BlogCategory::class, BlogCategoryPolicy::class);
+        Gate::policy(Category::class, CategoryPolicy::class);
 
         // Spec 013 governance morph maps: GovernanceAuditLog stores actor/target
         // types as these aliases (data-model.md §1/§7). `setting` is a plain

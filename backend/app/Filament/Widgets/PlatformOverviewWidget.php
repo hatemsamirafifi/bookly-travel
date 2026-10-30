@@ -15,6 +15,14 @@ class PlatformOverviewWidget extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    public static function canView(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof \App\Models\User
+            && app(\App\Domains\Admin\Services\AdminAuthorizationService::class)->can($user, 'view_all_analytics');
+    }
+
     protected function getStats(): array
     {
         $todayBookings = Booking::whereDate('created_at', today())->count();

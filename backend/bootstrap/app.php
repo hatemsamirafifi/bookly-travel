@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Partner\Middleware\PartnerRoleMiddleware;
+use App\Http\Middleware\AdminPermissionMiddleware;
 use App\Http\Middleware\RateLimitSearchMiddleware;
 use App\Http\Middleware\RefreshTokenExpiry;
 use App\Http\Middleware\RoleMiddleware;
@@ -41,6 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'partner' => PartnerRoleMiddleware::class,
+            'admin.can' => AdminPermissionMiddleware::class,
             // Spec 006 — emits the contract 429 body + X-RateLimit-* headers +
             // localized message for the public search & discovery surface only.
             'rate.limit' => RateLimitSearchMiddleware::class,

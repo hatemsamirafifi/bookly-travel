@@ -25,6 +25,14 @@ class AuditLogResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Audit Logs';
 
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof \App\Models\User
+            && app(\App\Domains\Admin\Services\AdminAuthorizationService::class)->can($user, 'view_audit_log');
+    }
+
     public static function table(Table $table): Table
     {
         return $table

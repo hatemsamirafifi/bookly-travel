@@ -108,3 +108,38 @@ it('resolves per-action flags independently', function () {
         ->and($toursOnly->can('approve', $this->partner))->toBeFalse()
         ->and($toursOnly->can('transition', $this->booking))->toBeFalse();
 });
+
+it('enforces granular permission flags on admin API routes', function () {
+    $adminNoFlags = User::factory()->admin()->create();
+
+    actingAs($adminNoFlags, 'sanctum')->getJson('/api/admin/audit/bookings')->assertForbidden();
+    actingAs($adminNoFlags, 'sanctum')->getJson('/api/admin/financial-ledger')->assertForbidden();
+    actingAs($adminNoFlags, 'sanctum')->getJson('/api/admin/reviews')->assertForbidden();
+
+    $auditAdmin = adminWithFlags(['view_audit_log' => true]);
+    actingAs($auditAdmin, 'sanctum')->getJson('/api/admin/audit/bookings')->assertSuccessful();
+    actingAs($auditAdmin, 'sanctum')->getJson('/api/admin/financial-ledger')->assertForbidden();
+
+    $financeAdmin = adminWithFlags(['view_all_analytics' => true]);
+    actingAs($financeAdmin, 'sanctum')->getJson('/api/admin/financial-ledger')->assertSuccessful();
+    actingAs($financeAdmin, 'sanctum')->getJson('/api/admin/audit/bookings')->assertForbidden();
+
+    $reviewAdmin = adminWithFlags(['moderate_reviews' => true]);
+    actingAs($reviewAdmin, 'sanctum')->getJson('/api/admin/reviews')->assertSuccessful();
+});
+
+it('protects AuditLogResource and PlatformOverviewWidget with granular permissions', function () {
+    $adminNoFlags = User::factory()->admin()->create();
+    actingAs($adminNoFlags);
+
+    $this->get('/admin/audit-logs')->assertForbidden();
+    expect(\App\Filament\Widgets\PlatformOverviewWidget::canView())->toBeFalse();
+
+    $analyticsAdmin = adminWithFlags(['view_all_analytics' => true]);
+    actingAs($analyticsAdmin);
+    expect(\App\Filament\Widgets\PlatformOverviewWidget::canView())->toBeTrue();
+
+    $auditAdmin = adminWithFlags(['view_audit_log' => true]);
+    actingAs($auditAdmin);
+    $this->get('/admin/audit-logs')->assertSuccessful();
+});
