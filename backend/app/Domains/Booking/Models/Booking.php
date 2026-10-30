@@ -211,6 +211,9 @@ class Booking extends Model
                 self::STATUS_CANCELLATION_REQUESTED,
                 self::STATUS_CANCELLED,
             ],
+            self::STATUS_CANCELLATION_REQUESTED => [
+                self::STATUS_CANCELLED,
+            ],
             self::STATUS_PENDING_PAYMENT => [
                 self::STATUS_EXPIRED,
             ],

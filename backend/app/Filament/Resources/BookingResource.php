@@ -137,7 +137,7 @@ class BookingResource extends Resource
                     ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_CANCELLATION_REQUESTED))
                     ->action(function (Booking $record) {
                         app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLATION_REQUESTED);
-                        Notification::make()->title('Cancellation requested — refund routed to payments')->warning()->send();
+                        Notification::make()->title('Cancellation requested — status recorded; refund must be handled in payment provider.')->warning()->send();
                     }),
                 Tables\Actions\Action::make('cancel')
                     ->label('Cancel Booking')
@@ -157,7 +157,7 @@ class BookingResource extends Resource
                             app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLED);
                             $record->update(['cancellation_reason' => $data['cancellation_reason']]);
                         });
-                        Notification::make()->title('Booking cancelled — refund routed to payments')->danger()->send();
+                        Notification::make()->title('Booking cancelled — status recorded; refund must be handled in payment provider.')->danger()->send();
                     }),
             ])
             ->bulkActions([])
@@ -224,8 +224,7 @@ class BookingResource extends Resource
                     ->schema([
                         Infolists\Components\TextEntry::make('idempotency_key')
                             ->label('Idempotency Key')
-                            ->copyable()
-                            ->toggleable(isToggledHiddenByDefault: true),
+                            ->copyable(),
                         Infolists\Components\TextEntry::make('cancellation_reason')
                             ->label('Cancellation Reason')
                             ->placeholder('—'),
