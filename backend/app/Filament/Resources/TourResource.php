@@ -40,6 +40,96 @@ class TourResource extends Resource
         return 'warning';
     }
 
+    public static function form(Forms\Form $form): Forms\Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Section::make('General Information')
+                    ->schema([
+                        Forms\Components\TextInput::make('slug')
+                            ->required()
+                            ->unique(Tour::class, 'slug', ignoreRecord: true)
+                            ->maxLength(160),
+                        Forms\Components\Select::make('category_id')
+                            ->relationship('category', 'name')
+                            ->required()
+                            ->searchable()
+                            ->preload(),
+                        Forms\Components\Select::make('partner_id')
+                            ->relationship('partner', 'id')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => optional($record->profile)->company_name ?? "Partner #{$record->id}")
+                            ->searchable()
+                            ->preload(),
+                        Forms\Components\Select::make('status')
+                            ->options([
+                                'draft' => 'Draft',
+                                'pending_review' => 'Pending Review',
+                                'published' => 'Published',
+                                'rejected' => 'Rejected',
+                                'archived' => 'Archived',
+                            ])
+                            ->default('draft')
+                            ->required(),
+                        Forms\Components\TextInput::make('location')
+                            ->required()
+                            ->maxLength(150),
+                        Forms\Components\TextInput::make('location_slug')
+                            ->maxLength(150),
+                        Forms\Components\TextInput::make('price_amount')
+                            ->label('Price in Cents (e.g. 8500 = €85.00)')
+                            ->numeric()
+                            ->required(),
+                        Forms\Components\TextInput::make('duration_minutes')
+                            ->numeric()
+                            ->default(120),
+                        Forms\Components\TextInput::make('duration_label')
+                            ->default('2 hours'),
+                        Forms\Components\TextInput::make('group_size_min')
+                            ->numeric()
+                            ->default(1),
+                        Forms\Components\TextInput::make('group_size_max')
+                            ->numeric()
+                            ->default(15),
+                        Forms\Components\Toggle::make('is_featured')
+                            ->label('Featured'),
+                        Forms\Components\FileUpload::make('cover_image_url')
+                            ->label('Cover Image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('tours')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                Forms\Components\Section::make('Translations')
+                    ->schema([
+                        Forms\Components\Repeater::make('translations')
+                            ->relationship('translations')
+                            ->schema([
+                                Forms\Components\Select::make('locale')
+                                    ->options([
+                                        'en' => 'English',
+                                        'es' => 'Spanish',
+                                        'it' => 'Italian',
+                                    ])
+                                    ->required(),
+                                Forms\Components\TextInput::make('title')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\Textarea::make('description')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+                                Forms\Components\Textarea::make('meeting_point')
+                                    ->rows(2),
+                                Forms\Components\Textarea::make('cancellation_policy')
+                                    ->rows(2),
+                            ])
+                            ->columns(2)
+                            ->columnSpanFull()
+                            ->defaultItems(1),
+                    ]),
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -47,6 +137,10 @@ class TourResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
+                Tables\Columns\ImageColumn::make('cover_image_url')
+                    ->label('Cover')
+                    ->disk('public')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('translations.title')
                     ->label('Title')
                     ->searchable()
@@ -107,6 +201,7 @@ class TourResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->label('Publish')
                     ->icon('heroicon-o-check-circle')
@@ -114,7 +209,7 @@ class TourResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Publish Tour')
                     ->modalDescription('This tour will become visible to travelers on the public site.')
-                    ->visible(fn (Tour $record) => auth()->user()?->can('publish', $record) && in_array($record->status, ['pending_review', 'rejected']))
+                    ->visible(fn (Tour $record) => auth()->user()?->can('publish', $record) && $record->status === 'pending_review')
                     ->action(function (Tour $record) {
                         app(ApproveTourAction::class)->execute(auth()->user(), $record);
                         Notification::make()->title('Tour published')->success()->send();
@@ -318,7 +413,9 @@ class TourResource extends Resource
     {
         return [
             'index' => Pages\ListTours::route('/'),
+            'create' => Pages\CreateTour::route('/create'),
             'view' => Pages\ViewTour::route('/{record}'),
+            'edit' => Pages\EditTour::route('/{record}/edit'),
         ];
     }
 }

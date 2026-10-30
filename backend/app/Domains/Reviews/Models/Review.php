@@ -93,7 +93,7 @@ class Review extends Model
         $allowed = [
             'visible' => ['hidden'],
             'hidden' => ['visible'],
-            'flagged' => ['visible'],
+            'flagged' => ['visible', 'hidden'],
         ];
 
         return in_array($to, $allowed[$this->status] ?? [], true);

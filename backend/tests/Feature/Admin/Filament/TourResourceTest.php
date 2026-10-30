@@ -299,3 +299,10 @@ it('T036 keeps publish authorization tied to manage-tours on the real record', f
     expect($tour->fresh()->status)->toBe('pending_review')
         ->and(GovernanceAuditLog::where('target_id', $tour->id)->exists())->toBeFalse();
 });
+
+it('hides the publish action for rejected tours to enforce the review workflow', function () {
+    $tour = t036FilSeedTour('rejected');
+
+    Livewire::test(TourResource\Pages\ListTours::class)
+        ->assertTableActionHidden('publish', $tour);
+});
