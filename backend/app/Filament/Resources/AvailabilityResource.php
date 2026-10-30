@@ -27,6 +27,12 @@ class AvailabilityResource extends Resource
 {
     protected static ?string $model = Tour::class;
 
+    protected static ?string $navigationLabel = 'Availability';
+
+    protected static ?string $modelLabel = 'Availability';
+
+    protected static ?string $pluralModelLabel = 'Availability';
+
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?string $navigationGroup = 'Operations';

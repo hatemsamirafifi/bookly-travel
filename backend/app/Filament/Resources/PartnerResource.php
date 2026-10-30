@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PartnerResource extends Resource
 {
@@ -28,6 +29,12 @@ class PartnerResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getRecordTitle(?Model $record): ?string
+    {
+        /** @var Partner|null $record */
+        return $record?->profile?->company_name ?? $record?->user?->name ?? ($record ? "Partner #{$record->id}" : null);
+    }
 
     public static function getNavigationBadge(): ?string
     {
