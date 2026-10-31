@@ -464,3 +464,4 @@ The following capabilities were noted during the audit as missing from the platf
    - If business requirements ever dictate allowing admins to trigger financial refunds directly from the dashboard, this must be built as a two-person authorization workflow or high-privilege action integrating with `ProcessRefundAction`.
 4. **Admin User & Permission Management UI:**
    - Admin users and their capability flags are currently seeded or configured via CLI/database. A future `AdminUserResource` would allow super-admins to invite staff and toggle granular permissions through Filament.
+
