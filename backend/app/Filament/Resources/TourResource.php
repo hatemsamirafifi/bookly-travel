@@ -24,7 +24,7 @@ class TourResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-map';
 
-    protected static ?string $navigationGroup = 'Platform';
+    protected static ?string $navigationGroup = 'Marketplace Operations';
 
     protected static ?int $navigationSort = 2;
 

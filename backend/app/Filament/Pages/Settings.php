@@ -31,7 +31,7 @@ class Settings extends Page
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationGroup = 'Platform';
+    protected static ?string $navigationGroup = 'Administration & Governance';
 
     protected static ?int $navigationSort = 2;
 

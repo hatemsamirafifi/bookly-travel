@@ -31,7 +31,7 @@ class StaticPageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Platform';
+    protected static ?string $navigationGroup = 'Content & CMS';
 
     protected static ?int $navigationSort = 1;
 

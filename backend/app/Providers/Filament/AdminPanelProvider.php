@@ -45,13 +45,17 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('favicon.ico'))
             ->navigationGroups([
                 NavigationGroup::make()
-                    ->label('Platform'),
+                    ->label('Overview'),
                 NavigationGroup::make()
-                    ->label('Operations'),
+                    ->label('Marketplace Operations'),
                 NavigationGroup::make()
-                    ->label('Monitoring'),
+                    ->label('Finance'),
                 NavigationGroup::make()
-                    ->label('Content'),
+                    ->label('Content & CMS'),
+                NavigationGroup::make()
+                    ->label('Media & Storage'),
+                NavigationGroup::make()
+                    ->label('Administration & Governance'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

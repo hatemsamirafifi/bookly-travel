@@ -20,7 +20,7 @@ class BlogCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationGroup = 'Content';
+    protected static ?string $navigationGroup = 'Content & CMS';
 
     protected static ?int $navigationSort = 2;
 

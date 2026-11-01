@@ -21,7 +21,7 @@ class GovernanceAuditResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
 
-    protected static ?string $navigationGroup = 'Monitoring';
+    protected static ?string $navigationGroup = 'Administration & Governance';
 
     protected static ?int $navigationSort = 1;
 
