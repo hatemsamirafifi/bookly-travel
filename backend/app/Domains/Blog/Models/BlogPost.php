@@ -123,6 +123,21 @@ class BlogPost extends Model
         return $this->status === self::STATUS_DRAFT;
     }
 
+    /**
+     * Return the exact stored value for a locale, without falling back.
+     */
+    public function rawContentFor(string $field, string $locale): ?string
+    {
+        $values = $this->{$field} ?? [];
+        if (! is_array($values)) {
+            return null;
+        }
+
+        $value = $values[$locale] ?? null;
+
+        return is_string($value) && trim($value) !== '' ? $value : null;
+    }
+
     public function contentFor(string $field, string $locale): ?string
     {
         $values = $this->{$field} ?? [];

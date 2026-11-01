@@ -47,11 +47,11 @@ class EditBlogPost extends EditRecord
         $locales = ['en', 'es', 'it'];
 
         foreach ($locales as $loc) {
-            $data["title_{$loc}"] = $record->contentFor('title', $loc) ?? '';
-            $data["excerpt_{$loc}"] = $record->contentFor('excerpt', $loc) ?? '';
-            $data["body_{$loc}"] = $record->contentFor('body', $loc) ?? '';
-            $data["meta_title_{$loc}"] = $record->contentFor('meta_title', $loc) ?? '';
-            $data["meta_description_{$loc}"] = $record->contentFor('meta_description', $loc) ?? '';
+            $data["title_{$loc}"] = $record->rawContentFor('title', $loc) ?? '';
+            $data["excerpt_{$loc}"] = $record->rawContentFor('excerpt', $loc) ?? '';
+            $data["body_{$loc}"] = $record->rawContentFor('body', $loc) ?? '';
+            $data["meta_title_{$loc}"] = $record->rawContentFor('meta_title', $loc) ?? '';
+            $data["meta_description_{$loc}"] = $record->rawContentFor('meta_description', $loc) ?? '';
         }
 
         $data['related_tours'] = $record->relatedTours()->orderBy('blog_post_tours.sort_order', 'asc')->get()->map(function ($tour) {
@@ -68,43 +68,65 @@ class EditBlogPost extends EditRecord
     {
         $actor = auth()->user();
 
-        $locales = ['en', 'es', 'it'];
-        $title = [];
-        $excerpt = [];
-        $body = [];
-        $metaTitle = [];
-        $metaDescription = [];
+        /** @var BlogPost $record */
+        $localized = $this->extractLocalizedFields($record, $data);
 
-        foreach ($locales as $loc) {
-            if (isset($data["title_{$loc}"])) {
-                $title[$loc] = $data["title_{$loc}"];
-                unset($data["title_{$loc}"]);
+        $data = array_merge($data, $localized);
+
+        return app(UpdateBlogPostAction::class)->execute($actor, $data, $record);
+    }
+
+    /**
+     * Convert flat `field_locale` form keys into localized maps.
+     *
+     * Empty ES/IT inputs must never overwrite an existing translation (and must
+     * never inherit the English text that previously leaked into the form).
+     * English is always written so the editor can intentionally clear it.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, array<string, mixed>>
+     */
+    private function extractLocalizedFields(BlogPost $record, array &$data): array
+    {
+        $fieldMap = [
+            'title' => 'title',
+            'excerpt' => 'excerpt',
+            'body' => 'body',
+            'meta_title' => 'meta_title',
+            'meta_description' => 'meta_description',
+        ];
+
+        $localized = [];
+
+        foreach ($fieldMap as $field => $prefix) {
+            $values = $record->{$field} ?? [];
+            if (! is_array($values)) {
+                $values = [];
             }
-            if (isset($data["excerpt_{$loc}"])) {
-                $excerpt[$loc] = $data["excerpt_{$loc}"];
-                unset($data["excerpt_{$loc}"]);
+
+            foreach (BlogPost::LOCALES as $locale) {
+                $key = "{$prefix}_{$locale}";
+
+                if (! array_key_exists($key, $data)) {
+                    continue;
+                }
+
+                $value = $data[$key];
+                unset($data[$key]);
+
+                if ($locale === 'en') {
+                    $values[$locale] = is_string($value) ? $value : '';
+                    continue;
+                }
+
+                if (is_string($value) && trim($value) !== '') {
+                    $values[$locale] = $value;
+                }
             }
-            if (isset($data["body_{$loc}"])) {
-                $body[$loc] = $data["body_{$loc}"];
-                unset($data["body_{$loc}"]);
-            }
-            if (isset($data["meta_title_{$loc}"])) {
-                $metaTitle[$loc] = $data["meta_title_{$loc}"];
-                unset($data["meta_title_{$loc}"]);
-            }
-            if (isset($data["meta_description_{$loc}"])) {
-                $metaDescription[$loc] = $data["meta_description_{$loc}"];
-                unset($data["meta_description_{$loc}"]);
-            }
+
+            $localized[$field] = $values;
         }
 
-        $data['title'] = $title;
-        $data['excerpt'] = $excerpt;
-        $data['body'] = $body;
-        $data['meta_title'] = $metaTitle;
-        $data['meta_description'] = $metaDescription;
-
-        /** @var BlogPost $record */
-        return app(UpdateBlogPostAction::class)->execute($actor, $data, $record);
+        return $localized;
     }
 }

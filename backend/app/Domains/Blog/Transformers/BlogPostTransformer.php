@@ -10,12 +10,13 @@ class BlogPostTransformer
     public function transform(BlogPost $post, string $locale): array
     {
         $hasRequestedLocale = $this->hasLocaleContent($post, $locale);
+        $effectiveLocale = $hasRequestedLocale ? $locale : 'en';
         $translationWarning = (! $hasRequestedLocale && $locale !== 'en') ? 'partial_translation' : null;
 
-        $title = $post->contentFor('title', $locale) ?? '';
-        $excerpt = $post->contentFor('excerpt', $locale);
+        $title = $post->contentFor('title', $effectiveLocale) ?? '';
+        $excerpt = $post->contentFor('excerpt', $effectiveLocale);
         if (blank($excerpt)) {
-            $body = $post->contentFor('body', $locale) ?? '';
+            $body = $post->contentFor('body', $effectiveLocale) ?? '';
             $excerpt = Str::limit(strip_tags($body), 160);
         }
 
@@ -38,7 +39,7 @@ class BlogPostTransformer
             'cover_image_blur' => null,
             'published_at' => $post->published_at?->toIso8601String(),
             'is_featured' => (bool) $post->is_featured,
-            'reading_time' => $post->readingTime($locale),
+            'reading_time' => $post->readingTime($effectiveLocale),
             'translation_warning' => $translationWarning,
             'category' => $post->category ? [
                 'slug' => $post->category->slug,
@@ -56,6 +57,10 @@ class BlogPostTransformer
         $titles = $post->title ?? [];
         $bodies = $post->body ?? [];
 
-        return ! empty($titles[$locale]) || ! empty($bodies[$locale]);
+        $title = is_array($titles) ? ($titles[$locale] ?? '') : '';
+        $body = is_array($bodies) ? ($bodies[$locale] ?? '') : '';
+
+        return ! empty(trim(strip_tags((string) $title)))
+            && ! empty(trim(strip_tags((string) $body)));
     }
 }

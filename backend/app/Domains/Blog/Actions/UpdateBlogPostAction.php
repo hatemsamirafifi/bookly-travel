@@ -7,6 +7,7 @@ use App\Domains\Blog\Jobs\InvalidateBlogCacheJob;
 use App\Domains\Blog\Jobs\PublishScheduledBlogPostJob;
 use App\Domains\Blog\Jobs\RegenerateSitemapJob;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,8 @@ use Illuminate\Validation\ValidationException;
 class UpdateBlogPostAction
 {
     public function __construct(
-        private readonly GovernanceAuditService $auditService
+        private readonly GovernanceAuditService $auditService,
+        private readonly HtmlSanitizerService $htmlSanitizer,
     ) {}
 
     /**
@@ -31,6 +33,8 @@ class UpdateBlogPostAction
         return DB::transaction(function () use ($actor, $data, $post) {
             $isCreate = $post === null;
             $beforeState = $post ? $post->toArray() : null;
+
+            $data = $this->sanitizeContent($data);
 
             // Generate slug if not provided and EN title is available
             if (empty($data['slug']) && ! empty($data['title']['en'])) {
@@ -172,5 +176,56 @@ class UpdateBlogPostAction
 
             return $post;
         });
+    }
+
+    /**
+     * Sanitize rich-text bodies and strip HTML from scalar localized fields.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function sanitizeContent(array $data): array
+    {
+        foreach (['title', 'excerpt', 'meta_title', 'meta_description'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = $this->stripTagsFromLocalizedField($data[$field]);
+            }
+        }
+
+        if (array_key_exists('body', $data)) {
+            $data['body'] = match (true) {
+                is_array($data['body']) => $this->htmlSanitizer->sanitizeLocalizedMap($data['body']),
+                is_string($data['body']) => $this->htmlSanitizer->sanitize($data['body']),
+                default => $data['body'],
+            };
+        }
+
+        return $data;
+    }
+
+    private function stripTagsFromLocalizedField(mixed $value): mixed
+    {
+        if (is_string($value)) {
+            return $this->stripHtml($value);
+        }
+
+        if (! is_array($value)) {
+            return $value;
+        }
+
+        $clean = [];
+
+        foreach ($value as $locale => $localized) {
+            $clean[$locale] = is_string($localized) ? $this->stripHtml($localized) : $localized;
+        }
+
+        return $clean;
+    }
+
+    private function stripHtml(string $value): string
+    {
+        $withoutScriptBlocks = preg_replace('/<(script|style)\b[^>]*>.*?<\/\1>/is', '', $value);
+
+        return trim(strip_tags($withoutScriptBlocks ?? $value));
     }
 }

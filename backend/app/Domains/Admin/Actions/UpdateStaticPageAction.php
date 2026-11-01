@@ -4,6 +4,7 @@ namespace App\Domains\Admin\Actions;
 
 use App\Domains\Admin\Models\StaticPage;
 use App\Domains\Admin\Services\GovernanceAuditService;
+use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,10 @@ use Illuminate\Support\Facades\DB;
  */
 class UpdateStaticPageAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit) {}
+    public function __construct(
+        private readonly GovernanceAuditService $audit,
+        private readonly HtmlSanitizerService $htmlSanitizer,
+    ) {}
 
     /**
      * @param  array  $data  slug, title (locale=>string), body (locale=>string),
@@ -37,10 +41,17 @@ class UpdateStaticPageAction
         return DB::transaction(function () use ($actor, $page, $data, $publish, $before) {
             $willPublish = $publish || ($data['status'] ?? null) === StaticPage::STATUS_PUBLISHED;
 
+            $body = $data['body'] ?? $page->body;
+            $body = match (true) {
+                is_array($body) => $this->htmlSanitizer->sanitizeLocalizedMap($body),
+                is_string($body) => $this->htmlSanitizer->sanitize($body),
+                default => $body,
+            };
+
             $page->fill([
                 'slug' => $data['slug'] ?? $page->slug,
                 'title' => $data['title'] ?? $page->title,
-                'body' => $data['body'] ?? $page->body,
+                'body' => $body,
                 'meta_description' => array_key_exists('meta_description', $data)
                     ? $data['meta_description']
                     : $page->meta_description,
