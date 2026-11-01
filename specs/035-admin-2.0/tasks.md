@@ -19,8 +19,8 @@
 - [x] **T-B04 (P1):** Add Pest tests for Dashboard date filters/charts, `TravelerResource`, and upgraded Partner/Tour/Booking/Review workflows.
 
 ## Phase C — Financial Administration & Read-Only Ledger
-- [ ] **T-C01 (P1):** Implement `FinancialOverviewService`, `FinancialOverviewPage`, read-only `PaymentResource`, read-only `FinancialLedgerResource` (with date/type/booking/payment/partner filters and authorized export), and `ReconciliationReportPage`.
-- [ ] **T-C02 (P1):** Add Pest tests (`FinancialAdminFilamentTest`) verifying read-only immutability, minor-unit accuracy, reconciliation detection, and permission gating.
+- [x] **T-C01 (P1):** Implement `FinancialOverviewService`, `FinancialOverviewPage`, read-only `PaymentResource`, read-only `FinancialLedgerResource` (with date/type/booking/payment/partner filters and authorized export), and `ReconciliationReportPage`.
+- [x] **T-C02 (P1):** Add Pest tests (`FinancialAdminFilamentTest`) verifying read-only immutability, minor-unit accuracy, reconciliation detection, and permission gating.
 
 ## Phase D & E — Media Infrastructure & Unified Media Library
 - [ ] **T-D01 (P1):** Create additive migration for `media_folders`, `media_assets`, `media_tags`, `media_asset_tag`, and `media_usages`; create Eloquent models (`MediaFolder`, `MediaAsset`, `MediaTag`, `MediaUsage`).
