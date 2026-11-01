@@ -110,6 +110,26 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->hasMany(AuthAuditLog::class);
     }
 
+    /**
+     * Bookings placed by this traveler account.
+     *
+     * @return HasMany<\App\Domains\Booking\Models\Booking, $this>
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Booking\Models\Booking::class, 'traveler_id');
+    }
+
+    /**
+     * Reviews submitted by this traveler account.
+     *
+     * @return HasMany<\App\Domains\Reviews\Models\Review, $this>
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Reviews\Models\Review::class, 'traveler_id');
+    }
+
     public function partner()
     {
         return $this->hasOne(Partner::class);

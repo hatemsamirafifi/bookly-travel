@@ -58,6 +58,17 @@ class Partner extends Model
         return $this->hasOne(PartnerProfile::class);
     }
 
+    /**
+     * Governance audit entries targeting this partner (morph map `partner`).
+     *
+     * @return HasMany<\App\Domains\Admin\Models\GovernanceAuditLog, $this>
+     */
+    public function governanceAuditLogs(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Admin\Models\GovernanceAuditLog::class, 'target_id')
+            ->where('target_type', 'partner');
+    }
+
     public function settings(): HasOne
     {
         return $this->hasOne(PartnerSettings::class);

@@ -7,16 +7,16 @@
 ---
 
 ## Phase A — Foundation, RBAC, Admin Users & 6-Group Navigation
-- [ ] **T-A01 (P0):** Create additive migration for `admin_roles`, `admin_role_user`, and `users` status/suspension columns (`status`, `suspended_at`, `suspension_reason`) + `AdminRole` model and seeder for default role templates (`Super Admin`, `Operations Manager`, `Content Manager`, `Finance Manager`, `Support Agent`, `Moderator`, `Analyst`).
-- [ ] **T-A02 (P0):** Extend `AdminAuthorizationService`, `User::canAccessPanel()`, and `AdminPermissionMiddleware` to evaluate role + direct permission flags, enforce active user status, block privilege escalation (`assertCanGrant`), and protect the last active Super Admin.
-- [ ] **T-A03 (P0):** Implement `ManageAdminUserAction` and `ManageAdminRoleAction` with session/Sanctum token revocation and `GovernanceAuditService` logging; build `AdminUserResource` and `AdminRoleResource`; reorganize `AdminPanelProvider` into the 6 permission-aware navigation groups.
-- [ ] **T-A04 (P0):** Add Pest feature & Filament tests (`AdminUserManagementTest`, `RolePermissionEscalationTest`) verifying RBAC, anti-escalation, last-Super-Admin protection, and navigation visibility.
+- [x] **T-A01 (P0):** Create additive migration for `admin_roles`, `admin_role_user`, and `users` status/suspension columns (`status`, `suspended_at`, `suspension_reason`) + `AdminRole` model and seeder for default role templates (`Super Admin`, `Operations Manager`, `Content Manager`, `Finance Manager`, `Support Agent`, `Moderator`, `Analyst`).
+- [x] **T-A02 (P0):** Extend `AdminAuthorizationService`, `User::canAccessPanel()`, and `AdminPermissionMiddleware` to evaluate role + direct permission flags, enforce active user status, block privilege escalation (`assertCanGrant`), and protect the last active Super Admin.
+- [x] **T-A03 (P0):** Implement `ManageAdminUserAction` and `ManageAdminRoleAction` with session/Sanctum token revocation and `GovernanceAuditService` logging; build `AdminUserResource` and `AdminRoleResource`; reorganize `AdminPanelProvider` into the 6 permission-aware navigation groups.
+- [x] **T-A04 (P0):** Add Pest feature & Filament tests (`AdminUserManagementTest`, `RolePermissionEscalationTest`) verifying RBAC, anti-escalation, last-Super-Admin protection, and navigation visibility.
 
 ## Phase B — Core Marketplace Administration & Analytics Dashboard
-- [ ] **T-B01 (P1):** Implement `DashboardAnalyticsService` with date-range filtering (`Today`, `Yesterday`, `7d`, `30d`, `90d`, `Custom`) and cached aggregates; upgrade `Dashboard.php`, `PlatformOverviewWidget`, and add chart/ranking widgets (Bookings/Revenue over time, Status distribution, Top tours/partners, Traveler/Partner growth, Tour publishing activity).
-- [ ] **T-B02 (P1):** Implement `TravelerResource` (`ListTravelers`, `ViewTraveler`, `EditTraveler`), `TravelerPolicy`, `SuspendTravelerAction`, and `ReactivateTravelerAction` with booking/payment/review/notification infolists and audit logging.
-- [ ] **T-B03 (P1):** Upgrade `PartnerResource` (booking/review performance & activity history), `TourResource` (`ArchiveTourAction`, booking performance, audit trail, `DestinationResource`), `BookingResource` (voucher status, refund tracking, notifications, authorized export), and `ReviewResource` (`FlagReviewAction`, moderation resolution).
-- [ ] **T-B04 (P1):** Add Pest tests for Dashboard date filters/charts, `TravelerResource`, and upgraded Partner/Tour/Booking/Review workflows.
+- [x] **T-B01 (P1):** Implement `DashboardAnalyticsService` with date-range filtering (`Today`, `Yesterday`, `7d`, `30d`, `90d`, `Custom`) and cached aggregates; upgrade `Dashboard.php`, `PlatformOverviewWidget`, and add chart/ranking widgets (Bookings/Revenue over time, Status distribution, Top tours/partners, Traveler/Partner growth, Tour publishing activity).
+- [x] **T-B02 (P1):** Implement `TravelerResource` (`ListTravelers`, `ViewTraveler`, `EditTraveler`), `TravelerPolicy`, `SuspendTravelerAction`, and `ReactivateTravelerAction` with booking/payment/review/notification infolists and audit logging.
+- [x] **T-B03 (P1):** Upgrade `PartnerResource` (booking/review performance & activity history), `TourResource` (`ArchiveTourAction`, booking performance, audit trail, `DestinationResource`), `BookingResource` (voucher status, refund tracking, notifications, authorized export), and `ReviewResource` (`FlagReviewAction`, moderation resolution).
+- [x] **T-B04 (P1):** Add Pest tests for Dashboard date filters/charts, `TravelerResource`, and upgraded Partner/Tour/Booking/Review workflows.
 
 ## Phase C — Financial Administration & Read-Only Ledger
 - [ ] **T-C01 (P1):** Implement `FinancialOverviewService`, `FinancialOverviewPage`, read-only `PaymentResource`, read-only `FinancialLedgerResource` (with date/type/booking/payment/partner filters and authorized export), and `ReconciliationReportPage`.

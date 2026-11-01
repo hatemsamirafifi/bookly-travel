@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Reviews\Actions\FlagReviewAction;
 use App\Domains\Reviews\Actions\HideReviewAction;
 use App\Domains\Reviews\Actions\ReinstateReviewAction;
 use App\Domains\Reviews\Models\Review;
@@ -110,6 +111,24 @@ class ReviewResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('flag')
+                    ->label('Flag')
+                    ->icon('heroicon-o-flag')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Flag Review')
+                    ->modalDescription('Flagging drops this review from the public rating aggregate while it is investigated; the review is retained.')
+                    ->form([
+                        Forms\Components\Textarea::make('reason')
+                            ->label('Reason')
+                            ->required()
+                            ->maxLength(500),
+                    ])
+                    ->visible(fn (Review $record) => auth()->user()?->can('manage', $record) && $record->status === 'visible')
+                    ->action(function (Review $record, array $data) {
+                        app(FlagReviewAction::class)->execute($record, (int) auth()->id(), $data['reason']);
+                        Notification::make()->title('Review flagged')->warning()->send();
+                    }),
                 Tables\Actions\Action::make('hide')
                     ->label('Hide')
                     ->icon('heroicon-o-eye-slash')

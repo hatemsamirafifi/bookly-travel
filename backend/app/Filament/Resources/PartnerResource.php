@@ -244,6 +244,63 @@ class PartnerResource extends Resource
                             ->dateTime(),
                     ])
                     ->columns(3),
+                Infolists\Components\Section::make('Performance')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('tours_count')
+                            ->label('Tours')
+                            ->getStateUsing(fn (Partner $record): int => $record->tours()->count()),
+                        Infolists\Components\TextEntry::make('bookings_total_count')
+                            ->label('Total Bookings')
+                            ->getStateUsing(function (Partner $record): int {
+                                return \App\Domains\Booking\Models\Booking::query()
+                                    ->whereIn('tour_id', $record->tours()->select('id'))
+                                    ->count();
+                            }),
+                        Infolists\Components\TextEntry::make('bookings_revenue')
+                            ->label('Booked Revenue')
+                            ->getStateUsing(function (Partner $record): string {
+                                $revenue = (int) \App\Domains\Booking\Models\Booking::query()
+                                    ->whereIn('tour_id', $record->tours()->select('id'))
+                                    ->whereIn('status', [
+                                        \App\Domains\Booking\Models\Booking::STATUS_CONFIRMED,
+                                        \App\Domains\Booking\Models\Booking::STATUS_COMPLETED,
+                                        \App\Domains\Booking\Models\Booking::STATUS_CANCELLATION_REQUESTED,
+                                    ])
+                                    ->sum('total_price');
+
+                                return $revenue === 0 ? '—' : (string) \App\Models\Tour::formatPrice($revenue, 'EUR');
+                            }),
+                        Infolists\Components\TextEntry::make('reviews_average_rating')
+                            ->label('Avg Review Rating')
+                            ->getStateUsing(function (Partner $record): ?float {
+                                $avg = \App\Domains\Reviews\Models\Review::query()
+                                    ->whereIn('tour_id', $record->tours()->select('id'))
+                                    ->where('status', 'visible')
+                                    ->avg('rating');
+
+                                return $avg === null ? null : round((float) $avg, 2);
+                            })
+                            ->placeholder('No reviews yet'),
+                    ])
+                    ->columns(4)
+                    ->collapsible(),
+                Infolists\Components\Section::make('Governance Audit')
+                    ->schema([
+                        Infolists\Components\RepeatableEntry::make('governanceAuditLogs')
+                            ->schema([
+                                Infolists\Components\TextEntry::make('action')
+                                    ->label('Action')
+                                    ->badge(),
+                                Infolists\Components\TextEntry::make('actor.email')
+                                    ->label('Admin Actor')
+                                    ->placeholder('System'),
+                                Infolists\Components\TextEntry::make('created_at')
+                                    ->label('When')
+                                    ->dateTime(),
+                            ])
+                            ->columns(3),
+                    ])
+                    ->collapsible(),
             ]);
     }
 

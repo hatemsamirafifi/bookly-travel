@@ -578,6 +578,17 @@ class Tour extends Model
     }
 
     /**
+     * Governance audit entries targeting this tour (morph map `tour`).
+     *
+     * @return HasMany<\App\Domains\Admin\Models\GovernanceAuditLog, $this>
+     */
+    public function governanceAuditLogs(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Admin\Models\GovernanceAuditLog::class, 'target_id')
+            ->where('target_type', 'tour');
+    }
+
+    /**
      * Per-star review distribution for the tour-detail response
      * (tour-detail-api.md:65), keyed "5".."1". Counts the same review set
      * the aggregate rating uses (visible + flagged), so the distribution

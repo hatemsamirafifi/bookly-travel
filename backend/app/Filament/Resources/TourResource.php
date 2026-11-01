@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Domains\Admin\Actions\ApproveTourAction;
 use App\Domains\Admin\Actions\RejectTourAction;
+use App\Domains\Admin\Actions\ArchiveTourAction;
 use App\Domains\Admin\Actions\UnpublishTourAction;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Partner\Services\TourTranslationService;
@@ -244,6 +245,25 @@ class TourResource extends Resource
                         app(UnpublishTourAction::class)->execute(auth()->user(), $record);
                         Notification::make()->title('Tour unpublished')->warning()->send();
                     }),
+                Tables\Actions\Action::make('archive')
+                    ->label('Archive')
+                    ->icon('heroicon-o-archive-box')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Archive Tour')
+                    ->modalDescription('Archiving permanently delists this tour from public search and discovery. The action is irreversible.')
+                    ->form([
+                        Forms\Components\Textarea::make('reason')
+                            ->label('Archive Reason')
+                            ->required()
+                            ->maxLength(500)
+                            ->placeholder('Explain why this tour is being archived...'),
+                    ])
+                    ->visible(fn (Tour $record) => auth()->user()?->can('unpublish', $record) && $record->status === 'published')
+                    ->action(function (Tour $record, array $data) {
+                        app(ArchiveTourAction::class)->execute(auth()->user(), $record, $data['reason']);
+                        Notification::make()->title('Tour archived')->danger()->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('bulk_publish')
@@ -322,6 +342,51 @@ class TourResource extends Resource
                             ->formatStateUsing(fn ($state) => $state ? Tour::formatPrice((int) $state, 'EUR') : '—'),
                     ])
                     ->columns(3),
+                Infolists\Components\Section::make('Performance')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('bookings_total_count')
+                            ->label('Total Bookings')
+                            ->getStateUsing(fn (Tour $record): int => $record->bookings()->count()),
+                        Infolists\Components\TextEntry::make('bookings_confirmed_count')
+                            ->label('Confirmed Bookings')
+                            ->getStateUsing(fn (Tour $record): int => $record->bookings()->where('status', 'confirmed')->count()),
+                        Infolists\Components\TextEntry::make('bookings_revenue')
+                            ->label('Booked Revenue')
+                            ->getStateUsing(function (Tour $record): string {
+                                $revenue = (int) $record->bookings()
+                                    ->whereIn('status', [
+                                        \App\Domains\Booking\Models\Booking::STATUS_CONFIRMED,
+                                        \App\Domains\Booking\Models\Booking::STATUS_COMPLETED,
+                                        \App\Domains\Booking\Models\Booking::STATUS_CANCELLATION_REQUESTED,
+                                    ])
+                                    ->sum('total_price');
+
+                                return $revenue === 0 ? '—' : (string) Tour::formatPrice($revenue, 'EUR');
+                            }),
+                    ])
+                    ->columns(3)
+                    ->collapsible(),
+                Infolists\Components\Section::make('Governance Audit')
+                    ->schema([
+                        Infolists\Components\RepeatableEntry::make('governanceAuditLogs')
+                            ->schema([
+                                Infolists\Components\TextEntry::make('action')
+                                    ->label('Action')
+                                    ->badge(),
+                                Infolists\Components\TextEntry::make('actor.email')
+                                    ->label('Admin Actor')
+                                    ->placeholder('System'),
+                                Infolists\Components\TextEntry::make('after_state.status')
+                                    ->label('After Status')
+                                    ->badge()
+                                    ->placeholder('—'),
+                                Infolists\Components\TextEntry::make('created_at')
+                                    ->label('When')
+                                    ->dateTime(),
+                            ])
+                            ->columns(4),
+                    ])
+                    ->collapsible(),
                 Infolists\Components\Section::make('English source (required)')
                     ->schema([
                         Infolists\Components\TextEntry::make('english_source_title')
