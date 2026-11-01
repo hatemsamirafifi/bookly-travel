@@ -15,6 +15,10 @@ use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Policies\BlogCategoryPolicy;
 use App\Domains\Blog\Policies\BlogPostPolicy;
+use App\Domains\Media\Models\MediaAsset;
+use App\Domains\Media\Models\MediaFolder;
+use App\Domains\Media\Models\MediaTag;
+use App\Domains\Media\Policies\MediaAssetPolicy;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Models\Partner;
@@ -80,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(BlogPost::class, BlogPostPolicy::class);
         Gate::policy(BlogCategory::class, BlogCategoryPolicy::class);
         Gate::policy(Category::class, CategoryPolicy::class);
+        Gate::policy(MediaAsset::class, MediaAssetPolicy::class);
 
         // Spec 013 governance morph maps: GovernanceAuditLog stores actor/target
         // types as these aliases (data-model.md §1/§7). `setting` is a plain
@@ -95,6 +100,9 @@ class AppServiceProvider extends ServiceProvider
             'invitation' => PartnerInvitation::class,
             'blog_post' => BlogPost::class,
             'blog_category' => BlogCategory::class,
+            'media_asset' => MediaAsset::class,
+            'media_folder' => MediaFolder::class,
+            'media_tag' => MediaTag::class,
         ]);
 
         // Register rate limiters so they are available during testing

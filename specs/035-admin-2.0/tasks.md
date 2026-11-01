@@ -23,10 +23,10 @@
 - [x] **T-C02 (P1):** Add Pest tests (`FinancialAdminFilamentTest`) verifying read-only immutability, minor-unit accuracy, reconciliation detection, and permission gating.
 
 ## Phase D & E — Media Infrastructure & Unified Media Library
-- [ ] **T-D01 (P1):** Create additive migration for `media_folders`, `media_assets`, `media_tags`, `media_asset_tag`, and `media_usages`; create Eloquent models (`MediaFolder`, `MediaAsset`, `MediaTag`, `MediaUsage`).
-- [ ] **T-D02 (P1):** Implement `MediaStorageService` (R2 + local/test disk abstraction, safe UUID keys, path traversal prevention), `UploadMediaAssetAction` (MIME/magic-byte, extension, size, dimension validation), `ProcessMediaAssetJob` (async thumbnail/dimension extraction), `MediaUsageTrackerService`, and `DeleteMediaAssetAction` (blocking deletion of referenced assets without replacement).
-- [ ] **T-E01 (P1):** Build `MediaAssetResource` (grid/list view, search/filters, upload modal, metadata/alt-text editor, tag management, usage reference inspection, soft-delete/restore) and reusable `MediaPicker` Filament form component.
-- [ ] **T-E02 (P1):** Add Pest feature, Filament, and security tests (`MediaLibraryTest`, `MediaSecurityTest`) covering MIME spoofing rejection, usage tracking, safe replacement, and picker integration.
+- [x] **T-D01 (P1):** Create additive migration for `media_folders`, `media_assets`, `media_tags`, `media_asset_tag`, and `media_usages`; create Eloquent models (`MediaFolder`, `MediaAsset`, `MediaTag`, `MediaUsage`).
+- [x] **T-D02 (P1):** Implement `MediaStorageService` (R2 + local/test disk abstraction, safe UUID keys, path traversal prevention), `UploadMediaAssetAction` (MIME/magic-byte, extension, size, dimension validation), `ProcessMediaAssetJob` (async thumbnail/dimension extraction), `MediaUsageTrackerService`, and `DeleteMediaAssetAction` (blocking deletion of referenced assets without replacement).
+- [x] **T-E01 (P1):** Build `MediaAssetResource` (grid/list view, search/filters, upload modal, metadata/alt-text editor, tag management, usage reference inspection, soft-delete/restore) and reusable `MediaPicker` Filament form component.
+- [x] **T-E02 (P1):** Add Pest feature, Filament, and security tests (`MediaLibraryTest`, `MediaSecurityTest`) covering MIME spoofing rejection, usage tracking, safe replacement, and picker integration.
 
 ## Phase F — R2 File Manager & Storage Analytics
 - [ ] **T-F01 (P1):** Implement `FileManagerService` (folder create/rename/move with cycle & conflict guards, file upload/download/rename/move/copy/soft-delete/restore) and `StorageAnalyticsService` (usage by type/category, largest/recent files).
