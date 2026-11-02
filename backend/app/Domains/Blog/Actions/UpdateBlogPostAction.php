@@ -9,6 +9,7 @@ use App\Domains\Blog\Jobs\RegenerateSitemapJob;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\CMS\Services\ContentRevisionService;
 use App\Domains\CMS\Services\HtmlSanitizerService;
+use App\Domains\Translation\Services\AutoTranslationService;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class UpdateBlogPostAction
         private readonly GovernanceAuditService $auditService,
         private readonly ContentRevisionService $revisionService,
         private readonly HtmlSanitizerService $htmlSanitizer,
+        private readonly AutoTranslationService $translations,
     ) {}
 
     /**
@@ -111,6 +113,15 @@ class UpdateBlogPostAction
 
             if ($isCreate) {
                 $post = new BlogPost;
+            } else {
+                foreach (['title', 'excerpt', 'body', 'meta_title', 'meta_description'] as $localizedField) {
+                    if (isset($data[$localizedField]) && is_array($data[$localizedField])) {
+                        $existing = $post->getAttribute($localizedField);
+                        if (is_array($existing)) {
+                            $data[$localizedField] = array_merge($existing, $data[$localizedField]);
+                        }
+                    }
+                }
             }
 
             // Extract related tours relation if provided
@@ -173,6 +184,11 @@ class UpdateBlogPostAction
                 $actor,
                 ucfirst($actionType) . ' blog post: ' . $post->slug,
             );
+
+            // Phase H: reconcile field-level translation state and dispatch
+            // workers for anything that needs (re)translating.
+            $manualEdits = $this->translations->detectManualEdits($beforeState ?? [], $post);
+            $this->translations->syncAndDispatch($post, $actor, $manualEdits);
 
             // Invalidate cache
             InvalidateBlogCacheJob::dispatch();

@@ -4,7 +4,9 @@ namespace App\Filament\Resources\StaticPageResource\Pages;
 
 use App\Domains\Admin\Actions\UpdateStaticPageAction;
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Translation\Services\AutoTranslationService;
 use App\Filament\Resources\StaticPageResource;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +21,36 @@ use Illuminate\Database\Eloquent\Model;
 class EditStaticPage extends EditRecord
 {
     protected static string $resource = StaticPageResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        $dispatch = fn (bool $forceOverwriteManual): int => count(
+            app(AutoTranslationService::class)->syncAndDispatch(
+                $this->getRecord(),
+                auth()->user(),
+                forceOverwriteManual: $forceOverwriteManual,
+            )
+        );
+
+        return [
+            Actions\Action::make('translate_missing_fields')
+                ->label('Translate Missing Fields')
+                ->icon('heroicon-o-language')
+                ->color('gray')
+                ->action(fn () => $dispatch(false)),
+            Actions\Action::make('retranslate_outdated_fields')
+                ->label('Retranslate Outdated Fields')
+                ->icon('heroicon-o-arrow-path')
+                ->color('gray')
+                ->action(fn () => $dispatch(false)),
+            Actions\Action::make('force_retranslate_all')
+                ->label('Force Retranslate All')
+                ->icon('heroicon-o-bolt')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->action(fn () => $dispatch(true)),
+        ];
+    }
 
     /**
      * Populate the per-locale form fields from the record's JSONB columns.

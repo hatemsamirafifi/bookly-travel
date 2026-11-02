@@ -28,6 +28,8 @@ use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerInvitation;
 use App\Domains\Partner\Services\GeminiTourTranslator;
+use App\Domains\Translation\Contracts\ContentTranslatorContract;
+use App\Domains\Translation\Services\GeminiContentTranslator;
 use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Services\DeterministicPaymentGateway;
 use App\Domains\Payment\Services\StripeService;
@@ -52,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(TourContentTranslator::class, GeminiTourTranslator::class);
+
+        // Admin 2.0 Phase H: field-level content translation engine
+        $this->app->bind(ContentTranslatorContract::class, GeminiContentTranslator::class);
 
         $this->app->singleton(PaymentGateway::class, function ($app): PaymentGateway {
             $gateway = config('services.payment.gateway', 'stripe');

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BlogPostResource\Pages;
 use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
 use App\Domains\Blog\Actions\UpdateBlogPostAction;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Translation\Services\AutoTranslationService;
 use App\Filament\Resources\BlogPostResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -17,7 +18,9 @@ class EditBlogPost extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [
+        $translateActions = $this->translationHeaderActions();
+
+        return array_merge([
             Actions\Action::make('generate_preview')
                 ->label('Preview Article')
                 ->icon('heroicon-o-eye')
@@ -36,7 +39,41 @@ class EditBlogPost extends EditRecord
                         ->success()
                         ->send();
                 }),
-            Actions\DeleteAction::make(),
+        ], $translateActions, [Actions\DeleteAction::make()]);
+    }
+
+    /**
+     * Phase H: field-level translation enqueue/refresh actions.
+     *
+     * @return array<Actions\Action>
+     */
+    private function translationHeaderActions(): array
+    {
+        $dispatch = fn (bool $forceOverwriteManual): int => count(
+            app(AutoTranslationService::class)->syncAndDispatch(
+                $this->getRecord(),
+                auth()->user(),
+                forceOverwriteManual: $forceOverwriteManual,
+            )
+        );
+
+        return [
+            Actions\Action::make('translate_missing_fields')
+                ->label('Translate Missing Fields')
+                ->icon('heroicon-o-language')
+                ->color('gray')
+                ->action(fn () => $dispatch(false)),
+            Actions\Action::make('retranslate_outdated_fields')
+                ->label('Retranslate Outdated Fields')
+                ->icon('heroicon-o-arrow-path')
+                ->color('gray')
+                ->action(fn () => $dispatch(false)),
+            Actions\Action::make('force_retranslate_all')
+                ->label('Force Retranslate All')
+                ->icon('heroicon-o-bolt')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->action(fn () => $dispatch(true)),
         ];
     }
 

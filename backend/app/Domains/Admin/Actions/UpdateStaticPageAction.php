@@ -6,6 +6,7 @@ use App\Domains\Admin\Models\StaticPage;
 use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\CMS\Services\ContentRevisionService;
 use App\Domains\CMS\Services\HtmlSanitizerService;
+use App\Domains\Translation\Services\AutoTranslationService;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,7 @@ class UpdateStaticPageAction
         private readonly GovernanceAuditService $audit,
         private readonly ContentRevisionService $revisions,
         private readonly HtmlSanitizerService $htmlSanitizer,
+        private readonly AutoTranslationService $translations,
     ) {}
 
     /**
@@ -103,6 +105,11 @@ class UpdateStaticPageAction
                 $actor,
                 ($action === 'cms.publish' ? 'Publish static page: ' : 'Update static page: ') . $page->slug,
             );
+
+            // Phase H: reconcile field-level translation state and dispatch
+            // workers for anything that needs (re)translating.
+            $manualEdits = $this->translations->detectManualEdits($before, $page);
+            $this->translations->syncAndDispatch($page, $actor, $manualEdits);
 
             return $page;
         });
