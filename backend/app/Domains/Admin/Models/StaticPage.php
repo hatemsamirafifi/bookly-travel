@@ -96,6 +96,7 @@ class StaticPage extends Model
 
     /**
      * Return the exact stored value for a locale, without falling back.
+     * Whitespace-only or empty HTML values are treated as missing.
      */
     public function rawContentFor(string $field, string $locale): ?string
     {
@@ -106,7 +107,20 @@ class StaticPage extends Model
 
         $value = $values[$locale] ?? null;
 
-        return is_string($value) && trim($value) !== '' ? $value : null;
+        return is_string($value) && trim(strip_tags($value)) !== '' ? $value : null;
+    }
+
+    /**
+     * Whether a locale has both non-empty title and body for public rendering.
+     */
+    public function hasCompleteLocale(string $locale): bool
+    {
+        if ($locale === 'en') {
+            return true;
+        }
+
+        return $this->rawContentFor('title', $locale) !== null
+            && $this->rawContentFor('body', $locale) !== null;
     }
 
     public function isPublished(): bool
@@ -128,18 +142,21 @@ class StaticPage extends Model
     }
 
     /**
-     * Return the value for a locale, falling back to the first available
-     * locale's value so a page never renders empty for a supported language.
+     * Return the value for a locale, falling back to English first and then the
+     * first available locale's non-empty value.
      */
     private function localized(?array $values, string $locale): ?string
     {
         if (! is_array($values)) {
             return null;
         }
-        if (Arr::has($values, $locale) && filled($values[$locale])) {
+        if (Arr::has($values, $locale) && is_string($values[$locale]) && trim(strip_tags($values[$locale])) !== '') {
             return $values[$locale];
         }
+        if (Arr::has($values, 'en') && is_string($values['en']) && trim(strip_tags($values['en'])) !== '') {
+            return $values['en'];
+        }
 
-        return collect($values)->first(fn ($value) => filled($value));
+        return collect($values)->first(fn ($value) => is_string($value) && trim(strip_tags($value)) !== '');
     }
 }

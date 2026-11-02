@@ -3,6 +3,7 @@
 namespace App\Domains\CMS\Controllers\Public;
 
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,12 +12,16 @@ use Illuminate\Http\Request;
  * Public static-page JSON API (Admin 2.0 Phase G, T-G05).
  *
  * `GET /api/public/pages/{slug}?locale=es` returns the published page in the
- * requested platform locale. Missing translations fall back (English first,
- * then any value) and are flagged in `translation_warning`. Meta fields are
- * omitted from the payload when no value is stored.
+ * requested platform locale. Missing or partial translations fall back
+ * atomically to English and are flagged in `translation_warning`. Meta fields
+ * are omitted from the payload when no value is stored.
  */
 final class StaticPageController extends Controller
 {
+    public function __construct(
+        private readonly HtmlSanitizerService $sanitizer,
+    ) {}
+
     public function show(Request $request, string $slug): JsonResponse
     {
         $locale = $request->query('locale', 'en');
@@ -37,25 +42,28 @@ final class StaticPageController extends Controller
             return response()->json(['message' => 'Page not found.'], 404);
         }
 
-        $content = $page->contentFor($locale);
-        $exactContent = $page->rawContentFor('title', $locale) !== null
-            || $page->rawContentFor('body', $locale) !== null;
+        $exactContent = $page->hasCompleteLocale($locale);
+        $effectiveLocale = $exactContent ? $locale : 'en';
+        $content = $page->contentFor($effectiveLocale);
+        $sanitizedBody = $content->body !== null
+            ? $this->sanitizer->sanitize($content->body)
+            : null;
 
         $payload = [
             'slug' => $page->slug,
             'locale' => $locale,
             'title' => $content->title,
-            'body' => $content->body,
+            'body' => $sanitizedBody,
             'published_at' => $page->published_at?->toIso8601String(),
         ];
 
-        $metaTitle = $page->rawContentFor('meta_title', $locale)
+        $metaTitle = $page->rawContentFor('meta_title', $effectiveLocale)
             ?? $page->rawContentFor('meta_title', 'en');
         if ($metaTitle !== null) {
             $payload['meta_title'] = $metaTitle;
         }
 
-        $metaDescription = $page->rawContentFor('meta_description', $locale)
+        $metaDescription = $page->rawContentFor('meta_description', $effectiveLocale)
             ?? $page->rawContentFor('meta_description', 'en');
         if ($metaDescription !== null) {
             $payload['meta_description'] = $metaDescription;

@@ -214,3 +214,95 @@ it('serves the requested locale without a warning when title and body are both t
 
     expect($response->json('data.body'))->toContain('Cuerpo completo');
 });
+
+it('falls back to English and sets translation_warning when static page has ES body but missing ES title', function () {
+    $page = StaticPage::create([
+        'slug' => 'static-missing-es-title',
+        'status' => StaticPage::STATUS_PUBLISHED,
+        'title' => ['en' => 'English Static Title'],
+        'body' => ['en' => '<p>English static body.</p>', 'es' => '<p>Cuerpo estático español.</p>'],
+        'meta_title' => ['en' => 'English Meta Title', 'es' => 'Meta Título Español'],
+        'meta_description' => ['en' => 'English Meta Description', 'es' => 'Meta Descripción Española'],
+    ]);
+
+    $response = $this->getJson("/api/public/pages/{$page->slug}?locale=es");
+
+    $response->assertOk()
+        ->assertJsonPath('data.title', 'English Static Title')
+        ->assertJsonPath('data.body', '<p>English static body.</p>')
+        ->assertJsonPath('data.meta_title', 'English Meta Title')
+        ->assertJsonPath('data.meta_description', 'English Meta Description')
+        ->assertJsonStructure(['data' => ['translation_warning']]);
+
+    expect($response->json('data.translation_warning'))->not->toBeNull();
+});
+
+it('falls back to English and sets translation_warning when static page has ES title but missing or empty HTML ES body', function () {
+    $page = StaticPage::create([
+        'slug' => 'static-missing-es-body',
+        'status' => StaticPage::STATUS_PUBLISHED,
+        'title' => ['en' => 'English Static Title', 'es' => 'Título Estático Español'],
+        'body' => ['en' => '<p>English static body.</p>', 'es' => '<p>   </p>'],
+        'meta_title' => ['en' => 'English Meta Title', 'es' => 'Meta Título Español'],
+        'meta_description' => ['en' => 'English Meta Description', 'es' => 'Meta Descripción Española'],
+    ]);
+
+    $response = $this->getJson("/api/public/pages/{$page->slug}?locale=es");
+
+    $response->assertOk()
+        ->assertJsonPath('data.title', 'English Static Title')
+        ->assertJsonPath('data.body', '<p>English static body.</p>')
+        ->assertJsonPath('data.meta_title', 'English Meta Title')
+        ->assertJsonPath('data.meta_description', 'English Meta Description')
+        ->assertJsonStructure(['data' => ['translation_warning']]);
+
+    expect($response->json('data.translation_warning'))->not->toBeNull();
+});
+
+it('serves complete ES and IT static page translations without translation_warning', function () {
+    $page = StaticPage::create([
+        'slug' => 'static-complete-locales',
+        'status' => StaticPage::STATUS_PUBLISHED,
+        'title' => [
+            'en' => 'About Bookly',
+            'es' => 'Sobre Bookly',
+            'it' => 'Chi Siamo Bookly',
+        ],
+        'body' => [
+            'en' => '<p>English body.</p>',
+            'es' => '<p>Cuerpo español.</p>',
+            'it' => '<p>Corpo italiano.</p>',
+        ],
+    ]);
+
+    $esResponse = $this->getJson("/api/public/pages/{$page->slug}?locale=es");
+    $esResponse->assertOk()
+        ->assertJsonPath('data.title', 'Sobre Bookly')
+        ->assertJsonPath('data.body', '<p>Cuerpo español.</p>')
+        ->assertJsonMissingPath('data.translation_warning');
+
+    $itResponse = $this->getJson("/api/public/pages/{$page->slug}?locale=it");
+    $itResponse->assertOk()
+        ->assertJsonPath('data.title', 'Chi Siamo Bookly')
+        ->assertJsonPath('data.body', '<p>Corpo italiano.</p>')
+        ->assertJsonMissingPath('data.translation_warning');
+});
+
+it('sanitizes legacy unsanitized HTML at read time on the public static page API', function () {
+    $page = StaticPage::create([
+        'slug' => 'static-legacy-xss',
+        'status' => StaticPage::STATUS_PUBLISHED,
+        'title' => ['en' => 'Legacy Static Page'],
+        'body' => ['en' => '<p>Safe static content.</p><script>alert(1)</script><img src="https://example.com/a.png" onerror="alert(1)"><iframe src="https://evil.test"></iframe>'],
+    ]);
+
+    $response = $this->getJson("/api/public/pages/{$page->slug}?locale=en");
+
+    $response->assertOk();
+    expect($response->json('data.body'))
+        ->toContain('<p>Safe static content.</p>')
+        ->not->toContain('<script')
+        ->not->toContain('onerror')
+        ->not->toContain('<iframe');
+});
+
