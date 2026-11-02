@@ -29,8 +29,8 @@
 - [x] **T-E02 (P1):** Add Pest feature, Filament, and security tests (`MediaLibraryTest`, `MediaSecurityTest`) covering MIME spoofing rejection, usage tracking, safe replacement, and picker integration.
 
 ## Phase F — R2 File Manager & Storage Analytics
-- [ ] **T-F01 (P1):** Implement `FileManagerService` (folder create/rename/move with cycle & conflict guards, file upload/download/rename/move/copy/soft-delete/restore) and `StorageAnalyticsService` (usage by type/category, largest/recent files).
-- [ ] **T-F02 (P1):** Build `FileManagerPage` and `StorageAnalyticsPage` in Filament with granular file permissions and `GovernanceAuditService` logging for destructive actions; add Pest tests (`FileManagerTest`).
+- [x] **T-F01 (P1):** Implement `FileManagerService` (folder create/rename/move with cycle & conflict guards, file upload/download/rename/move/copy/soft-delete/restore) and `StorageAnalyticsService` (usage by type/category, largest/recent files).
+- [x] **T-F02 (P1):** Build `FileManagerPage` and `StorageAnalyticsPage` in Filament with granular file permissions and `GovernanceAuditService` logging for destructive actions; add Pest tests (`FileManagerTest`).
 
 ## Phase G — CMS, Self-Hosted HugeRTE, Sanitization, Static Pages, Blog, Revisions & Scheduling
 - [ ] **T-G01 (P1):** Create additive migration for `content_revisions`, `blog_tags`, `blog_post_tags`, and new CMS columns on `blog_posts` (`og_image_url`, `media_asset_id`, `version`) and `static_pages` (`meta_title`, `featured_image_url`, `og_image_url`, `scheduled_at`, `version`).

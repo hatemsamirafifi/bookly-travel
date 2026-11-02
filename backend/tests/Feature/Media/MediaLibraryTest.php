@@ -34,11 +34,13 @@ function makeMediaAdmin(array $flags = ['manage_media' => true, 'delete_media' =
     return $admin->fresh();
 }
 
-function pdfUpload(string $name = 'terms.pdf'): UploadedFile
-{
-    $content = "%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n";
+if (! function_exists('pdfUpload')) {
+    function pdfUpload(string $name = 'terms.pdf', string $body = '1 0 obj << /Type /Catalog >> endobj'): UploadedFile
+    {
+        $content = "%PDF-1.4\n{$body}\n%%EOF\n";
 
-    return UploadedFile::fake()->createWithContent($name, $content);
+        return UploadedFile::fake()->createWithContent($name, $content);
+    }
 }
 
 test('a valid PNG upload stores the file, checksum, job, and audit trail', function () {
