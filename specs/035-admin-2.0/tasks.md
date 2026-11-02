@@ -55,3 +55,15 @@
 - [x] **T-J01 (P0):** Add and execute Playwright E2E tests (`frontend/tests/e2e/admin-2.0.spec.ts`) covering all 20 admin workflows and run full backend (`pest`, `pint`, `phpstan`) and frontend (`jest`, `tsc`, `eslint`) gates.
 - [x] **T-J02 (P0):** Produce final evidence-based reports (`docs/reports/admin-2.0-test-report.md`, `docs/reports/admin-2.0-final-regression.md`, `docs/reports/admin-2.0-release-readiness.md`).
 
+## Post-Audit Remediation & Verification (Findings F-001 through F-008)
+- [x] **F-001 (HIGH):** Enforce static page atomic language fallback and read-time HTML sanitization via `HtmlSanitizerService` in `StaticPageController`. (`commit 79c87fb`)
+- [x] **F-002 (HIGH):** Preserve secondary locale (ES/IT) translations on blank form save in `CreateStaticPage`, `EditStaticPage`, and `UpdateStaticPageAction`. (`commit 679e240`)
+- [x] **F-003 (HIGH):** Enforce translation field-state public eligibility gating via `isLocaleEligible()` across `StaticPage` and `BlogPost`. (`commit 9a04c7a`)
+- [x] **F-004 (HIGH):** Expand Playwright E2E suite to 15 operational workflows and execute against isolated server on `http://127.0.0.1:18080` (15/15 passed). (`commit 170ba67`)
+- [x] **F-005 (MEDIUM):** Integrate relational `TourTranslation` and `TourTranslationState` with `AutoTranslationService` and Tour Filament pages. (`commit f29baff`)
+- [x] **F-006 (MEDIUM):** Complete media editor and revision integration, modal isolation, and optimistic concurrency locking. (`commit 8e4d803`)
+- [x] **F-008 (MEDIUM):** Resolve admin Pint code styling (711 files 0 issues) and PHPStan / Larastan level 5 errors (363 files 0 errors). (`commit 178657c`)
+- [x] **F-007 (LOW):** Normalize trailing newlines in phase reports (`commit 87ffaa6`) and provide pre-merge collision prevention documentation.
+- [x] **Audit v2 Reports:** Generate comprehensive v2 release readiness reports (`docs/reports/admin-2.0-remediation-report.md`, `docs/reports/admin-2.0-security-reverification.md`, `docs/reports/admin-2.0-playwright-e2e-report.md`, `docs/reports/admin-2.0-final-regression-v2.md`, `docs/reports/admin-2.0-merge-readiness-v2.md`).
+
+
