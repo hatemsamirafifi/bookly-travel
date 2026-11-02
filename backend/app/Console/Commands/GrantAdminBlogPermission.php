@@ -76,7 +76,7 @@ class GrantAdminBlogPermission extends Command
         foreach ($admins as $admin) {
             $maskedEmail = $this->maskEmail($admin->email);
             $permission = $admin->adminPermission;
-            $currentFlags = $permission?->flags ?? [];
+            $currentFlags = $permission->flags ?? [];
 
             if (! empty($currentFlags['manage_blog'])) {
                 $this->line(" - Admin #{$admin->id} ({$maskedEmail}): already has manage_blog permission (no-op).");

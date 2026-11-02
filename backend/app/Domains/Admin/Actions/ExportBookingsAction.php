@@ -2,8 +2,8 @@
 
 namespace App\Domains\Admin\Actions;
 
-use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Admin\Services\AdminAuthorizationService;
+use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Booking\Models\Booking;
 use App\Models\Tour;
 use App\Models\User;
@@ -25,7 +25,6 @@ class ExportBookingsAction
 
     public function __construct(
         private readonly GovernanceAuditService $audit,
-        private readonly AdminAuthorizationService $authz,
     ) {}
 
     public function toCsv(User $actor, array $filters = []): string
@@ -45,7 +44,7 @@ class ExportBookingsAction
                 foreach (array_keys($columns) as $key) {
                     $values[] = match ($key) {
                         'traveler_email' => (string) ($booking->traveler->email ?? ''),
-                        'tour_title' => (string) ($booking->tour?->displayTitle() ?? $booking->tour?->slug ?? ''),
+                        'tour_title' => (string) ($booking->tour?->displayTitle() ?? $booking->tour->slug ?? ''),
                         'total_price' => Tour::formatPrice((int) $booking->total_price, (string) $booking->currency),
                         'status' => (string) $booking->status,
                         'created_at' => (string) optional($booking->created_at)->toDateTimeString(),
@@ -111,7 +110,7 @@ class ExportBookingsAction
 
     private function filename(): string
     {
-        return 'bookings-export-'.now()->format('Ymd-His').'.csv';
+        return 'bookings-export-' . now()->format('Ymd-His') . '.csv';
     }
 
     public static function isAuthorized(User $user): bool
@@ -128,7 +127,7 @@ class ExportBookingsAction
 
     /**
      * @return array<string, string> header => description (used by tests
-     *                                  and by BookingResource's export header action).
+     *                               and by BookingResource's export header action).
      */
     public static function columns(): array
     {

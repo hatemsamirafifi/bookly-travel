@@ -22,4 +22,3 @@ class AdminPermissionMiddleware
         return $next($request);
     }
 }
-

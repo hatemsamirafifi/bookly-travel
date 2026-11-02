@@ -1,19 +1,22 @@
 <?php
 
+use App\Domains\Admin\Actions\UpdateStaticPageAction;
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
+use App\Domains\Blog\Actions\UpdateBlogPostAction;
 use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Models\BlogTag;
 use App\Domains\CMS\Models\ContentRevision;
 use App\Domains\CMS\Services\ContentRevisionService;
+use App\Filament\Resources\BlogTagResource;
 use App\Filament\Resources\StaticPageResource\Pages\EditStaticPage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 
-use function Pest\Laravel\artisan;
 use function Pest\Laravel\actingAs;
-use function Pest\Livewire\livewire;
+use function Pest\Laravel\artisan;
 
 uses(RefreshDatabase::class);
 
@@ -65,7 +68,7 @@ beforeEach(function () {
 it('records a version history snapshot when an admin publishes a static page', function () {
     $page = makeCmsContentPage(['slug' => 'about-us']);
 
-    $updated = app(\App\Domains\Admin\Actions\UpdateStaticPageAction::class)->execute(
+    $updated = app(UpdateStaticPageAction::class)->execute(
         $this->cmsAdmin,
         $page,
         ['slug' => 'about-us', 'title' => $page->title, 'body' => $page->body, 'meta_description' => $page->meta_description],
@@ -88,7 +91,7 @@ it('records a version history snapshot when an admin publishes a static page', f
 it('records a version history snapshot when a blog post is updated', function () {
     $post = makeBlogPost(['slug' => 'rome-guide']);
 
-    app(\App\Domains\Blog\Actions\UpdateBlogPostAction::class)->execute(
+    app(UpdateBlogPostAction::class)->execute(
         $this->cmsAdmin,
         ['slug' => 'rome-guide', 'title' => ['en' => 'Best of Rome', 'es' => 'Lo mejor de Roma', 'it' => 'Il meglio di Roma'], 'body' => $post->body],
         $post,
@@ -108,7 +111,7 @@ it('records a version history snapshot when a blog post is updated', function ()
 it('appends versions on each save and keeps lock_version in sync with revisions', function () {
     $page = makeCmsContentPage();
 
-    $action = app(\App\Domains\Admin\Actions\UpdateStaticPageAction::class);
+    $action = app(UpdateStaticPageAction::class);
     $base = ['slug' => $page->slug, 'meta_description' => $page->meta_description, 'body' => $page->body];
     $action->execute($this->cmsAdmin, $page, array_merge($base, ['title' => [
         'en' => 'First title',
@@ -295,7 +298,7 @@ it('stores blog tags with per-locale names', function () {
 it('api-serves blog tag names through the form merge helper', function () {
     actingAs($this->cmsAdmin);
 
-    $merged = \App\Filament\Resources\BlogTagResource::mergeLocalizedNames([
+    $merged = BlogTagResource::mergeLocalizedNames([
         'name_en' => 'Sailing',
         'name_es' => 'Navegación',
         'name_it' => null,
@@ -356,7 +359,7 @@ it('saves a static page normally when the lock_version still matches', function 
 it('serves a draft static page through a signed preview token', function () {
     $page = makeCmsContentPage(['status' => StaticPage::STATUS_DRAFT]);
 
-    $token = app(\App\Domains\Blog\Actions\GeneratePreviewTokenAction::class)
+    $token = app(GeneratePreviewTokenAction::class)
         ->execute($page->slug)['token'];
 
     $this->get('/api/public/pages/' . $page->slug . '?preview_token=' . rawurlencode($token))
@@ -372,7 +375,7 @@ it('returns 404 for a draft static page with an invalid or mismatched preview to
     $this->get('/api/public/pages/' . $page->slug . '?preview_token=' . rawurlencode('forged|1|abc'))
         ->assertStatus(404);
 
-    $foreignToken = app(\App\Domains\Blog\Actions\GeneratePreviewTokenAction::class)
+    $foreignToken = app(GeneratePreviewTokenAction::class)
         ->execute('another-page')['token'];
 
     $this->get('/api/public/pages/' . $page->slug . '?preview_token=' . rawurlencode($foreignToken))

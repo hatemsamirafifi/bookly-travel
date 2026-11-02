@@ -154,6 +154,7 @@ class UpdateStaticPageAction
         foreach ($incoming as $locale => $value) {
             if ($value === null && $locale !== 'en') {
                 unset($merged[$locale]);
+
                 continue;
             }
 

@@ -157,7 +157,7 @@ class TranslationHealthCheckService
 
         foreach ($pairs as $pair) {
             $result = $this->retryFailed((string) $pair->translatable_type, (int) $pair->translatable_id);
-            $queued += (int) ($result['queued'] ?? 0);
+            $queued += $result['queued'];
         }
 
         return ['queued' => $queued];

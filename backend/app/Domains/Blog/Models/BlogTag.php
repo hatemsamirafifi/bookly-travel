@@ -34,7 +34,7 @@ class BlogTag extends Model
      */
     public function rawNameFor(string $locale): ?string
     {
-        $values = is_array($this->name) ? $this->name : [];
+        $values = $this->name;
         $value = $values[$locale] ?? null;
 
         return is_string($value) && trim($value) !== '' ? $value : null;
@@ -45,7 +45,7 @@ class BlogTag extends Model
      */
     public function contentFor(string $locale): ?string
     {
-        $values = is_array($this->name) ? $this->name : [];
+        $values = $this->name;
 
         if (isset($values[$locale]) && filled($values[$locale])) {
             return (string) $values[$locale];

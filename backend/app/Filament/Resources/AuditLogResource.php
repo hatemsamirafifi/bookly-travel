@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Filament\Resources\AuditLogResource\Pages;
 use App\Models\AuthAuditLog;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,8 +31,8 @@ class AuditLogResource extends Resource
     {
         $user = auth()->user();
 
-        return $user instanceof \App\Models\User
-            && app(\App\Domains\Admin\Services\AdminAuthorizationService::class)->can($user, 'view_audit_log');
+        return $user instanceof User
+            && app(AdminAuthorizationService::class)->can($user, 'view_audit_log');
     }
 
     public static function table(Table $table): Table

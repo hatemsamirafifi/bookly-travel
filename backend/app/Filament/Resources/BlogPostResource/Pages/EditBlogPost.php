@@ -115,7 +115,6 @@ class EditBlogPost extends EditRecord
         $actor = auth()->user();
 
         /** @var BlogPost $record */
-
         if (isset($data['loaded_lock_version'])
             && (int) $data['loaded_lock_version'] !== (int) $record->fresh()->lock_version) {
             throw ValidationException::withMessages([
@@ -172,6 +171,7 @@ class EditBlogPost extends EditRecord
 
                 if ($locale === 'en') {
                     $values[$locale] = is_string($value) ? $value : '';
+
                     continue;
                 }
 

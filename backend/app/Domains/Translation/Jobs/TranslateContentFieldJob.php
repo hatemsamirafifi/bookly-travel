@@ -164,7 +164,7 @@ class TranslateContentFieldJob implements ShouldQueue
                     'locale' => $this->locale,
                     'title' => $this->fieldName === 'title'
                         ? $cleanTitle
-                        : (string) ($enRow?->title ?? $model->slug),
+                        : (string) ($enRow->title ?? $model->slug),
                     'description' => $this->fieldName === 'description'
                         ? $translated
                         : $enRow?->description,

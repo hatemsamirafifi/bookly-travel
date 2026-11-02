@@ -34,7 +34,7 @@ class FileManagerService
         }
 
         $parent = $parentId !== null ? MediaFolder::query()->findOrFail($parentId) : null;
-        $path = ($parent?->path ?? '') . '/' . $slug;
+        $path = ($parent->path ?? '') . '/' . $slug;
 
         $exists = MediaFolder::query()
             ->where('parent_id', $parent?->getKey())
@@ -118,7 +118,7 @@ class FileManagerService
         $before = ['parent_id' => $folder->parent_id, 'path' => $folder->path];
 
         $oldPath = $folder->path;
-        $newPath = ($newParent?->path ?? '') . '/' . $folder->slug;
+        $newPath = ($newParent->path ?? '') . '/' . $folder->slug;
 
         $descendantPaths = $this->descendantPaths($folder);
 
@@ -174,6 +174,7 @@ class FileManagerService
 
     public function copyAsset(User $actor, MediaAsset $asset, ?int $targetFolderId = null): MediaAsset
     {
+        /** @var MediaFolder|null $target */
         $target = $targetFolderId !== null
             ? MediaFolder::query()->findOrFail($targetFolderId)
             : $asset->folder;
@@ -182,7 +183,7 @@ class FileManagerService
 
         $uuid = (string) Str::uuid();
         $targetId = $target?->getKey();
-        $storageKey = (($target?->path ?? '/uploads') . '/' . $uuid . '.' . $asset->extension);
+        $storageKey = (($target->path ?? '/uploads') . '/' . $uuid . '.' . $asset->extension);
         $storageKey = '/' . ltrim(str_replace('\\', '/', $storageKey), '/');
 
         $disk->copy($asset->storage_key, $storageKey);
@@ -268,6 +269,17 @@ class FileManagerService
         }
 
         return $name;
+    }
+
+    private function parentPath(MediaFolder $folder): string
+    {
+        if ($folder->parent_id === null) {
+            return '';
+        }
+
+        $parent = MediaFolder::query()->find($folder->parent_id);
+
+        return $parent instanceof MediaFolder ? (string) $parent->path : '';
     }
 
     /**

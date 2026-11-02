@@ -25,14 +25,14 @@ it('sanitizes unsafe rich HTML when saving a blog post', function () {
     $admin = makeAdmin();
 
     $payload = '<h2>Heading</h2>'
-        .'<p>Safe <strong>bold</strong> and <em>italic</em>.</p>'
-        .'<ul><li>Item</li></ul>'
-        .'<a href="https://example.com">Link</a>'
-        .'<script>alert(1)</script>'
-        .'<img src="https://example.com/x.png" onerror="alert(1)">'
-        .'<a href="javascript:alert(1)">Click</a>'
-        .'<svg onload="alert(1)"></svg>'
-        .'<iframe src="https://evil.test"></iframe>';
+        . '<p>Safe <strong>bold</strong> and <em>italic</em>.</p>'
+        . '<ul><li>Item</li></ul>'
+        . '<a href="https://example.com">Link</a>'
+        . '<script>alert(1)</script>'
+        . '<img src="https://example.com/x.png" onerror="alert(1)">'
+        . '<a href="javascript:alert(1)">Click</a>'
+        . '<svg onload="alert(1)"></svg>'
+        . '<iframe src="https://evil.test"></iframe>';
 
     $post = app(UpdateBlogPostAction::class)->execute($admin, [
         'author_id' => $admin->id,
@@ -77,11 +77,11 @@ it('sanitizes unsafe rich HTML when saving a static page', function () {
     ]);
 
     $payload = '<p>Safe <strong>bold</strong>.</p>'
-        .'<script>alert(1)</script>'
-        .'<img src="https://example.com/x.png" onerror="alert(1)">'
-        .'<a href="javascript:alert(1)">Click</a>'
-        .'<svg onload="alert(1)"></svg>'
-        .'<iframe src="https://evil.test"></iframe>';
+        . '<script>alert(1)</script>'
+        . '<img src="https://example.com/x.png" onerror="alert(1)">'
+        . '<a href="javascript:alert(1)">Click</a>'
+        . '<svg onload="alert(1)"></svg>'
+        . '<iframe src="https://evil.test"></iframe>';
 
     app(UpdateStaticPageAction::class)->execute($admin, $page, [
         'slug' => $page->slug,
@@ -170,7 +170,7 @@ it('falls back to English and flags a title-only Spanish translation', function 
         ->assertJsonPath('data.title', 'Full English Title')
         ->assertJsonPath(
             'data.seo.canonical_url',
-            config('app.url', 'https://bookly.com')."/es/blog/{$post->slug}"
+            config('app.url', 'https://bookly.com') . "/es/blog/{$post->slug}"
         );
 
     expect($response->json('data.body'))
@@ -212,7 +212,7 @@ it('serves the requested locale without a warning when title and body are both t
         ->assertJsonPath('data.title', 'Titulo completo')
         ->assertJsonPath(
             'data.seo.canonical_url',
-            config('app.url', 'https://bookly.com')."/es/blog/{$post->slug}"
+            config('app.url', 'https://bookly.com') . "/es/blog/{$post->slug}"
         );
 
     expect($response->json('data.body'))->toContain('Cuerpo completo');
@@ -615,6 +615,3 @@ it('enforces TranslationFieldState eligibility on public static pages across out
             ->assertJsonMissingPath('data.translation_warning');
     }
 });
-
-
-

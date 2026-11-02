@@ -3,6 +3,7 @@
 namespace App\Domains\Admin\Services;
 
 use App\Models\User;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -22,9 +23,9 @@ class TravelerModerationService
     /**
      * Suspend a traveler account.
      *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException 403 for a
-     *                                                           non-admin actor, 422 when the target is not a traveler
-     *                                                           or `reason` is empty.
+     * @throws HttpResponseException 403 for a
+     *                               non-admin actor, 422 when the target is not a traveler
+     *                               or `reason` is empty.
      */
     public function suspend(User $actor, User $traveler, string $reason): User
     {
@@ -69,8 +70,8 @@ class TravelerModerationService
     /**
      * Reactivate a suspended traveler account.
      *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException 403 for a
-     *                                                           non-admin actor, 422 when the target is not a traveler.
+     * @throws HttpResponseException 403 for a
+     *                               non-admin actor, 422 when the target is not a traveler.
      */
     public function reactivate(User $actor, User $traveler): User
     {

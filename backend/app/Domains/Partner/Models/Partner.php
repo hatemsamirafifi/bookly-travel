@@ -2,6 +2,7 @@
 
 namespace App\Domains\Partner\Models;
 
+use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Enums\PartnerStatus;
 use App\Models\Tour;
 use App\Models\User;
@@ -61,11 +62,11 @@ class Partner extends Model
     /**
      * Governance audit entries targeting this partner (morph map `partner`).
      *
-     * @return HasMany<\App\Domains\Admin\Models\GovernanceAuditLog, $this>
+     * @return HasMany<GovernanceAuditLog, $this>
      */
     public function governanceAuditLogs(): HasMany
     {
-        return $this->hasMany(\App\Domains\Admin\Models\GovernanceAuditLog::class, 'target_id')
+        return $this->hasMany(GovernanceAuditLog::class, 'target_id')
             ->where('target_type', 'partner');
     }
 

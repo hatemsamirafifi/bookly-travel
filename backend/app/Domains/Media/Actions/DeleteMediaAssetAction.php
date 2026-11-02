@@ -5,6 +5,7 @@ namespace App\Domains\Media\Actions;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Media\Models\MediaAsset;
+use App\Domains\Media\Models\MediaUsage;
 use App\Domains\Media\Services\MediaUsageTrackerService;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -27,7 +28,7 @@ class DeleteMediaAssetAction
     ) {}
 
     /**
-     * @param  Collection<int, \App\Domains\Media\Models\MediaUsage>|null  $usages  Pre-loaded usage details.
+     * @param  Collection<int, MediaUsage>|null  $usages  Pre-loaded usage details.
      */
     public function perform(
         MediaAsset $asset,

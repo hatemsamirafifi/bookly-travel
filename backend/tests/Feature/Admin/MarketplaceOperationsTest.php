@@ -8,12 +8,14 @@ use App\Domains\Admin\Services\TravelerModerationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Payment\Services\ApplicationFeeCalculator;
+use App\Domains\Reviews\Actions\FlagReviewAction;
 use App\Domains\Reviews\Models\Review;
 use App\Domains\Reviews\Models\ReviewAuditTrail;
 use App\Filament\Resources\BookingResource\Pages\ListBookings;
 use App\Filament\Resources\DestinationResource;
 use App\Filament\Resources\DestinationResource\Pages\CreateDestination;
 use App\Filament\Resources\DestinationResource\Pages\EditDestination;
+use App\Filament\Resources\ReviewResource\Pages\ListReviews;
 use App\Filament\Resources\TourResource\Pages\ListTours;
 use App\Filament\Resources\TravelerResource;
 use App\Filament\Resources\TravelerResource\Pages\ListTravelers;
@@ -26,9 +28,10 @@ use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use function Pest\Laravel\actingAs;
+
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 uses(RefreshDatabase::class);
 
@@ -69,7 +72,7 @@ if (! function_exists('marketOpsTour')) {
         $tour = Tour::create([
             'partner_id' => $partner->id,
             'category_id' => Category::firstOrCreate(['slug' => 'test'], ['name' => 'Test'])->id,
-            'slug' => 'marketops-'.Str::slug($location).'-'.uniqid(),
+            'slug' => 'marketops-' . Str::slug($location) . '-' . uniqid(),
             'location' => $location,
             'duration_minutes' => 120,
             'duration_label' => '2 hours',
@@ -81,8 +84,8 @@ if (! function_exists('marketOpsTour')) {
 
         $tour->translations()->create([
             'locale' => 'en',
-            'title' => str($location)->before(',')->toString().' Market Ops Tour',
-            'description' => 'Market-ops description for the '.$location.' tour.',
+            'title' => str($location)->before(',')->toString() . ' Market Ops Tour',
+            'description' => 'Market-ops description for the ' . $location . ' tour.',
             'itinerary' => [['day' => 1, 'title' => 'Arrival', 'stops' => []]],
         ]);
 
@@ -446,7 +449,7 @@ it('flags a visible review, drops it from the aggregate and audits it (T-B03)', 
         'locale' => 'en',
     ]);
 
-    $flagged = app(\App\Domains\Reviews\Actions\FlagReviewAction::class)->execute($review->fresh(), $admin->id, 'Suspected competitor astroturfing.');
+    $flagged = app(FlagReviewAction::class)->execute($review->fresh(), $admin->id, 'Suspected competitor astroturfing.');
 
     expect($flagged->fresh()->status)->toBe('flagged');
 
@@ -483,7 +486,7 @@ it('only flags visible reviews and requires a real admin actor (T-B03)', functio
         'locale' => 'en',
     ]);
 
-    expect(fn () => app(\App\Domains\Reviews\Actions\FlagReviewAction::class)->execute($hidden, $admin->id, 'nope'))
+    expect(fn () => app(FlagReviewAction::class)->execute($hidden, $admin->id, 'nope'))
         ->toThrow(HttpException::class, 'Only visible reviews can be flagged.');
 
     $visibleBooking = marketOpsBooking($traveler, $tour, 7100, Booking::STATUS_CONFIRMED);
@@ -497,7 +500,7 @@ it('only flags visible reviews and requires a real admin actor (T-B03)', functio
         'locale' => 'en',
     ]);
 
-    expect(fn () => app(\App\Domains\Reviews\Actions\FlagReviewAction::class)->execute($visible, 999999999, 'nope'))
+    expect(fn () => app(FlagReviewAction::class)->execute($visible, 999999999, 'nope'))
         ->toThrow(HttpException::class, 'Admin actor not found.');
 });
 
@@ -518,7 +521,7 @@ it('flags a visible review via the Filament review table action (T-B03)', functi
         'locale' => 'en',
     ]);
 
-    Livewire::test(\App\Filament\Resources\ReviewResource\Pages\ListReviews::class)
+    Livewire::test(ListReviews::class)
         ->callTableAction('flag', $review, ['reason' => 'Manual review needed.'])
         ->assertHasNoTableActionErrors();
 

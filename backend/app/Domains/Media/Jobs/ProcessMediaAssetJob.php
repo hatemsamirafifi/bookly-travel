@@ -124,7 +124,7 @@ class ProcessMediaAssetJob implements ShouldQueue
                 default => false,
             };
 
-            if ($image === false || $image === null) {
+            if ($image === false) {
                 return false;
             }
 

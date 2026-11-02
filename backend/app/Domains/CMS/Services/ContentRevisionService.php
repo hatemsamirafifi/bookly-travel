@@ -47,16 +47,16 @@ class ContentRevisionService
         $revision = ContentRevision::create([
             'revisionable_type' => $record->getMorphClass(),
             'revisionable_id' => $record->getKey(),
-            'version_number' => ($latest?->version_number ?? 0) + 1,
+            'version_number' => ($latest->version_number ?? 0) + 1,
             'snapshot' => $snapshot,
-            'diff' => $this->diff($latest?->snapshot ?? [], $snapshot),
+            'diff' => $this->diff($latest->snapshot ?? [], $snapshot),
             'change_summary' => $changeSummary,
             'actor_id' => $actor?->id,
         ]);
 
         if ($this->hasLockVersionColumn($connectionName, $record->getTable())) {
             $next = (int) ($record->lock_version ?? 0) + 1;
-            $record->lock_version = $next;
+            $record->setAttribute('lock_version', $next);
 
             $record->getConnection()->table($record->getTable())
                 ->where($record->getKeyName(), $record->getKey())

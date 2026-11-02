@@ -2,8 +2,9 @@
 
 namespace App\Domains\Admin\Services;
 
+use App\Domains\Admin\Models\AdminRole;
 use App\Models\User;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Central admin authorization (Spec 013, extended by Spec 035 T-A02).
@@ -56,7 +57,7 @@ class AdminAuthorizationService
     {
         $effective = array_fill_keys(self::FLAGS, false);
 
-        $direct = $user->adminPermission?->flags ?? [];
+        $direct = $user->adminPermission->flags ?? [];
 
         foreach (self::FLAGS as $flag) {
             if (! empty($direct[$flag])) {
@@ -100,12 +101,12 @@ class AdminAuthorizationService
     }
 
     /**
-     * @return Collection<int, \App\Domains\Admin\Models\AdminRole>
+     * @return Collection<int, AdminRole>
      */
     private function rolesFor(User $user): Collection
     {
-        return $user->relationLoaded('adminRoles')
-            ? $user->adminRoles
-            : $user->adminRoles()->get();
+        $user->loadMissing('adminRoles');
+
+        return $user->adminRoles;
     }
 }

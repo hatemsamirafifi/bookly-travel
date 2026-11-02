@@ -35,7 +35,7 @@ class ContentRevisionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'change_summary';
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(Form $form): Form
     {
         return $form->schema([
             Placeholder::make('revisionable'),
@@ -68,7 +68,7 @@ class ContentRevisionResource extends Resource
                     ->sortable(),
             ])
             ->actions([
-                Tables\Actions\Action::make('restore')
+                Action::make('restore')
                     ->label('Restore')
                     ->icon('heroicon-o-arrow-uturn-left')
                     ->requiresConfirmation()

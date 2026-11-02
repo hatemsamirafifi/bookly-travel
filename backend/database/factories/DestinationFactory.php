@@ -14,13 +14,13 @@ class DestinationFactory extends Factory
 
     public function definition(): array
     {
-        $name = 'Destination '.$this->faker->unique()->words(2, true);
+        $name = 'Destination ' . $this->faker->unique()->words(2, true);
 
         return [
             'name' => $name,
             'slug' => str($name)->slug(),
             'description' => $this->faker->sentence(),
-            'image_url' => 'https://cdn.example.test/destinations/'.$this->faker->uuid().'.jpg',
+            'image_url' => 'https://cdn.example.test/destinations/' . $this->faker->uuid() . '.jpg',
             'display_order' => 0,
             'is_active' => true,
         ];

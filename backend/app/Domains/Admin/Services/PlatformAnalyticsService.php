@@ -139,7 +139,7 @@ class PlatformAnalyticsService
     public function topTours(int $limit = 5): array
     {
         $rows = Booking::query()
-            ->selectRaw('tours.id as tour_id, tours.slug, tour_translations.title, COUNT(*) as bookings, '.self::REVENUE_CASE_SQL.' as revenue')
+            ->selectRaw('tours.id as tour_id, tours.slug, tour_translations.title, COUNT(*) as bookings, ' . self::REVENUE_CASE_SQL . ' as revenue')
             ->join('tours', 'tours.id', '=', 'bookings.tour_id')
             ->join('tour_translations', function ($join) {
                 $join->on('tour_translations.tour_id', '=', 'tours.id')
@@ -165,7 +165,7 @@ class PlatformAnalyticsService
     public function topPartners(int $limit = 5): array
     {
         $rows = Booking::query()
-            ->selectRaw('partners.id as partner_id, partner_profiles.company_name, users.name as contact_name, COUNT(*) as bookings, '.self::REVENUE_CASE_SQL.' as revenue')
+            ->selectRaw('partners.id as partner_id, partner_profiles.company_name, users.name as contact_name, COUNT(*) as bookings, ' . self::REVENUE_CASE_SQL . ' as revenue')
             ->join('tours', 'tours.id', '=', 'bookings.tour_id')
             ->join('partners', 'partners.id', '=', 'tours.partner_id')
             ->leftJoin('partner_profiles', 'partner_profiles.partner_id', '=', 'partners.id')
@@ -189,7 +189,7 @@ class PlatformAnalyticsService
     public function topDestinations(int $limit = 5): array
     {
         $rows = Booking::query()
-            ->selectRaw('tours.location, tours.location_slug, COUNT(*) as bookings, '.self::REVENUE_CASE_SQL.' as revenue')
+            ->selectRaw('tours.location, tours.location_slug, COUNT(*) as bookings, ' . self::REVENUE_CASE_SQL . ' as revenue')
             ->join('tours', 'tours.id', '=', 'bookings.tour_id')
             ->groupBy('tours.location', 'tours.location_slug')
             ->orderByDesc('bookings')
@@ -205,7 +205,7 @@ class PlatformAnalyticsService
     }
 
     /**
-     * @return array<string, int|float>
+     * @return array<string, float|int|string>
      */
     private function computeKpis(Carbon $start, Carbon $end, string $preset): array
     {

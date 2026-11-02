@@ -11,6 +11,7 @@ use App\Domains\Media\Models\MediaUsage;
 use App\Domains\Media\Services\MediaUsageTrackerService;
 use App\Filament\Resources\MediaAssetResource\Pages\ListMediaAssets;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
@@ -185,7 +186,7 @@ test('forced deletion requires permission, clears usages, and writes the audit l
 
     // An admin without media permissions may not force-delete.
     expect(fn () => $delete->perform($asset, $editor, force: true))
-        ->toThrow(\Illuminate\Auth\Access\AuthorizationException::class)
+        ->toThrow(AuthorizationException::class)
         ->and(MediaAsset::count())->toBe(1);
 
     $delete->perform($asset, $admin, force: true);

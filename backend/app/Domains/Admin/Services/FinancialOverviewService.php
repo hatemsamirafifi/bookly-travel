@@ -224,7 +224,7 @@ class FinancialOverviewService
             foreach ($rows as $entry) {
                 fputcsv($handle, [
                     $entry->id,
-                    $entry->booking?->reference ?? '',
+                    $entry->booking->reference ?? '',
                     $entry->payment_id,
                     $entry->entry_type,
                     $entry->amount,
@@ -273,6 +273,7 @@ class FinancialOverviewService
 
     /**
      * @param  array<string, mixed>  $filters
+     * @return Builder<FinancialLedgerEntry>
      */
     private function ledgerQuery(array $filters): Builder
     {

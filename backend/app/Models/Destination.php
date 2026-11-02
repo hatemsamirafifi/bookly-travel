@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 /**
@@ -35,7 +36,7 @@ class Destination extends Model
     /**
      * Tours whose `location_slug` points at this destination.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Tour, $this>
+     * @return HasMany<Tour, $this>
      */
     public function tours()
     {
@@ -45,7 +46,7 @@ class Destination extends Model
     /**
      * Published tours attached to this destination.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Tour, $this>
+     * @return HasMany<Tour, $this>
      */
     public function publishedTours()
     {

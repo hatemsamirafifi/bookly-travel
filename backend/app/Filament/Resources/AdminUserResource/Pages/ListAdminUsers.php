@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\AdminUserResource\Pages;
 
-use App\Domains\Admin\Services\AdminUserService;
 use App\Filament\Resources\AdminUserResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;

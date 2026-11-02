@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Domains\Admin\Models\AdminPermission;
 use App\Domains\Admin\Models\AdminRole;
 use App\Domains\Blog\Models\AuthorProfile;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Reviews\Models\Review;
 use App\Domains\Wishlist\Models\Wishlist;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -113,21 +115,21 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     /**
      * Bookings placed by this traveler account.
      *
-     * @return HasMany<\App\Domains\Booking\Models\Booking, $this>
+     * @return HasMany<Booking, $this>
      */
     public function bookings(): HasMany
     {
-        return $this->hasMany(\App\Domains\Booking\Models\Booking::class, 'traveler_id');
+        return $this->hasMany(Booking::class, 'traveler_id');
     }
 
     /**
      * Reviews submitted by this traveler account.
      *
-     * @return HasMany<\App\Domains\Reviews\Models\Review, $this>
+     * @return HasMany<Review, $this>
      */
     public function reviews(): HasMany
     {
-        return $this->hasMany(\App\Domains\Reviews\Models\Review::class, 'traveler_id');
+        return $this->hasMany(Review::class, 'traveler_id');
     }
 
     public function partner()

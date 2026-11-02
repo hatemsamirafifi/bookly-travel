@@ -114,7 +114,6 @@ class EditStaticPage extends EditRecord
     {
         $actor = auth()->user();
         /** @var StaticPage $record */
-
         if (isset($data['loaded_lock_version'])
             && (int) $data['loaded_lock_version'] !== (int) $record->fresh()->lock_version) {
             throw ValidationException::withMessages([
@@ -186,6 +185,7 @@ class EditStaticPage extends EditRecord
 
             if ($locale === 'en') {
                 $values['en'] = is_string($value) ? $value : '';
+
                 continue;
             }
 

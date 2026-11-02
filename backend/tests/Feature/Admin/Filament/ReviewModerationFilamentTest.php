@@ -3,6 +3,7 @@
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Models\ReviewResponse;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Reviews\Models\Review;
 use App\Enums\ReviewStatus;
@@ -206,7 +207,7 @@ it('renders the Review Infolist including partner response empty state with HTTP
 
 it('renders the Review Infolist with partner response text when present', function () {
     $review = makeReview('visible');
-    \App\Domains\Partner\Models\ReviewResponse::create([
+    ReviewResponse::create([
         'review_id' => $review->id,
         'partner_id' => $review->tour->partner_id,
         'response_text' => 'Thank you for your feedback! We look forward to hosting you again.',

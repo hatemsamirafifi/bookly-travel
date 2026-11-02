@@ -6,7 +6,6 @@ use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Media\Actions\UploadMediaAssetAction;
 use App\Domains\Media\Models\MediaAsset;
 use App\Domains\Media\Models\MediaFolder;
-use App\Domains\Media\Models\MediaUsage;
 use App\Domains\Media\Services\FileManagerService;
 use App\Domains\Media\Services\MediaUsageTrackerService;
 use App\Domains\Media\Services\StorageAnalyticsService;

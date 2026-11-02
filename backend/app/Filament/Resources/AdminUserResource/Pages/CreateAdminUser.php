@@ -4,13 +4,14 @@ namespace App\Filament\Resources\AdminUserResource\Pages;
 
 use App\Domains\Admin\Services\AdminUserService;
 use App\Filament\Resources\AdminUserResource;
+use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAdminUser extends CreateRecord
 {
     protected static string $resource = AdminUserResource::class;
 
-    protected function handleRecordCreation(array $data): \App\Models\User
+    protected function handleRecordCreation(array $data): User
     {
         return app(AdminUserService::class)->createAdmin(auth()->user(), [
             'name' => $data['name'],

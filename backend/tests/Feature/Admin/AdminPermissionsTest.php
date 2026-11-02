@@ -3,6 +3,7 @@
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Filament\Widgets\PlatformOverviewWidget;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
@@ -133,11 +134,11 @@ it('protects AuditLogResource and PlatformOverviewWidget with granular permissio
     actingAs($adminNoFlags);
 
     $this->get('/admin/audit-logs')->assertForbidden();
-    expect(\App\Filament\Widgets\PlatformOverviewWidget::canView())->toBeFalse();
+    expect(PlatformOverviewWidget::canView())->toBeFalse();
 
     $analyticsAdmin = adminWithFlags(['view_all_analytics' => true]);
     actingAs($analyticsAdmin);
-    expect(\App\Filament\Widgets\PlatformOverviewWidget::canView())->toBeTrue();
+    expect(PlatformOverviewWidget::canView())->toBeTrue();
 
     $auditAdmin = adminWithFlags(['view_audit_log' => true]);
     actingAs($auditAdmin);

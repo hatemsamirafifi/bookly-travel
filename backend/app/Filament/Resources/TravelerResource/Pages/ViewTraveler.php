@@ -6,6 +6,7 @@ use App\Domains\Admin\Services\TravelerModerationService;
 use App\Filament\Resources\TravelerResource;
 use App\Models\User;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\IconPosition;
 
@@ -45,7 +46,7 @@ class ViewTraveler extends ViewRecord
                 ->modalHeading('Suspend Traveler')
                 ->modalDescription('Suspension immediately revokes every active API token for this traveler.')
                 ->form([
-                    \Filament\Forms\Components\Textarea::make('reason')
+                    Textarea::make('reason')
                         ->label('Suspension Reason')
                         ->required()
                         ->maxLength(500),

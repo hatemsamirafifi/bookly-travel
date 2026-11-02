@@ -109,7 +109,7 @@ class AutoTranslationService
      *
      * @param  array<string, array<string, bool>>  $manuallyEditedLocalesFields  e.g. ['es' => ['title' => true, 'body' => true]]
      * @param  bool  $forceOverwriteManual  Ignore the manual origin (admin opt-in "force re-translate")
-     * @return array<string, array<string, string>>  dispatched jobs grouped as [locale][field] = queued
+     * @return array<string, array<string, string>> dispatched jobs grouped as [locale][field] = queued
      */
     public function syncAndDispatch(Model $model, ?User $actor = null, array $manuallyEditedLocalesFields = [], bool $forceOverwriteManual = false): array
     {
@@ -307,9 +307,6 @@ class AutoTranslationService
         );
     }
 
-    /**
-     * @param  mixed  $value
-     */
     private function isBlank(mixed $value): bool
     {
         return trim((string) $value) === '';

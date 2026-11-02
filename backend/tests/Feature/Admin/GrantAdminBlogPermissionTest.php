@@ -111,4 +111,3 @@ it('does not grant permission to non-admin accounts even if specified', function
 
     expect(AdminPermission::where('user_id', $traveler->id)->exists())->toBeFalse();
 });
-

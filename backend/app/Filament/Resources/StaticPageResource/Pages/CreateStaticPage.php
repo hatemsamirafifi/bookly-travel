@@ -59,6 +59,7 @@ class CreateStaticPage extends CreateRecord
 
             if ($locale === 'en') {
                 $out['en'] = is_string($value) ? $value : '';
+
                 continue;
             }
 

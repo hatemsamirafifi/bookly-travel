@@ -9,8 +9,8 @@ use App\Domains\Media\Models\MediaFolder;
 use App\Domains\Media\Services\MediaStorageService;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UploadMediaAssetAction
 {
@@ -23,8 +23,8 @@ class UploadMediaAssetAction
      * Validate, store, and register a media asset upload.
      *
      * @param  array<string, mixed>  $attributes  Extra fillable attributes
-     *                                              (alt_text, title, caption,
-     *                                              visibility, focal_point).
+     *                                            (alt_text, title, caption,
+     *                                            visibility, focal_point).
      */
     public function perform(
         UploadedFile $file,
@@ -36,7 +36,7 @@ class UploadMediaAssetAction
 
         $uuid = (string) Str::uuid();
         $disk = (string) config('filesystems.media_disk', 'public');
-        $directory = $folder?->path ?? 'uploads';
+        $directory = $folder->path ?? 'uploads';
         $extension = $meta['extension'];
         $storageKey = "{$directory}/{$uuid}.{$extension}";
 
@@ -54,7 +54,7 @@ class UploadMediaAssetAction
             'filename' => $meta['original_name_safe'],
             'extension' => $extension,
             'mime_type' => $meta['mime_type'],
-            'size_bytes' => $file->getSize() ?? 0,
+            'size_bytes' => (int) $file->getSize(),
             'width' => $meta['width'],
             'height' => $meta['height'],
             'checksum_sha256' => hash_file('sha256', $file->getRealPath()),

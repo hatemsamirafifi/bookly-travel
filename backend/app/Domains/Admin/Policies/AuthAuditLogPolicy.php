@@ -44,4 +44,3 @@ class AuthAuditLogPolicy
         return false;
     }
 }
-

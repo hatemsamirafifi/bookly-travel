@@ -2,6 +2,7 @@
 
 namespace App\Domains\Admin\Services;
 
+use App\Domains\Admin\Models\AdminPermission;
 use App\Domains\Admin\Models\AdminRole;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +95,7 @@ class AdminUserService
             $target->save();
 
             if (array_key_exists('flags', $data)) {
-                $this->syncFlags($target, $data['flags'] ?? []);
+                $this->syncFlags($target, $data['flags']);
             }
 
             if ($newRoles !== null) {
@@ -237,6 +238,7 @@ class AdminUserService
             $normalised[$flag] = (bool) ($flags[$flag] ?? false);
         }
 
+        /** @var AdminPermission $permission */
         $permission = $user->adminPermission()->firstOrNew([]);
         $permission->flags = $normalised;
         $permission->save();
@@ -289,7 +291,7 @@ class AdminUserService
             'email' => $user->email,
             'status' => $user->status ?? 'active',
             'suspended_at' => $user->suspended_at?->toIso8601String(),
-            'flags' => $user->adminPermission?->flags ?? [],
+            'flags' => $user->adminPermission->flags ?? [],
             'roles' => $this->roleSlugs($user),
         ];
     }
@@ -299,7 +301,7 @@ class AdminUserService
      */
     private function grantedFlags(User $user): array
     {
-        return array_keys(array_filter($user->adminPermission?->flags ?? []));
+        return array_keys(array_filter($user->adminPermission->flags ?? []));
     }
 
     /**
