@@ -2,11 +2,15 @@
 
 use App\Domains\Blog\Actions\UpdateBlogPostAction;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Translation\Contracts\ContentTranslatorContract;
 use App\Domains\Translation\Jobs\TranslateContentFieldJob;
 use App\Domains\Translation\Models\TranslationFieldState;
 use App\Domains\Translation\Services\AutoTranslationService;
 use App\Domains\Translation\Services\TranslationHealthCheckService;
+use App\Models\Tour;
+use App\Models\TourTranslation;
+use App\Models\TourTranslationState;
 use App\Models\User;
 use Illuminate\Support\Facades\Queue;
 
@@ -303,4 +307,90 @@ it('aggregates translation health counts across model types for the dashboard', 
 
     expect(translationState('blog_post', $postB, 'es', 'body')->status)
         ->toBe(TranslationFieldState::STATUS_QUEUED);
+});
+
+// 7. F-005: Relational Tour translation integration (create, update, manual edit protection, and retry).
+it('translates relational TourTranslation rows, syncs TourTranslationState, preserves manual edits, and retries failures', function () {
+    swapTranslationEngine();
+    $admin = makeTranslationAdmin();
+
+    $tour = makeSearchableTour('published');
+    TourTranslation::query()->where('tour_id', $tour->id)->whereIn('locale', ['es', 'it'])->delete();
+    TourTranslationState::query()->where('tour_id', $tour->id)->delete();
+
+    $enTranslation = TourTranslation::query()->updateOrCreate(
+        ['tour_id' => $tour->id, 'locale' => 'en'],
+        [
+            'title' => 'Amalfi Coast Sunset Boat Cruise',
+            'description' => '<p>Sail along the dramatic cliffs of Positano and Amalfi at golden hour.</p>',
+        ],
+    );
+
+    $service = app(AutoTranslationService::class);
+    $service->syncAndDispatch($tour->fresh('translations'), $admin);
+
+    $esRow = TourTranslation::query()->where('tour_id', $tour->id)->where('locale', 'es')->first();
+    $itRow = TourTranslation::query()->where('tour_id', $tour->id)->where('locale', 'it')->first();
+
+    expect($esRow)->not->toBeNull()
+        ->and($esRow->title)->toBe('Traducción title para el contenido de destino')
+        ->and($esRow->description)->toBe('<p>Traducido description en el cuerpo del contenido</p>')
+        ->and($itRow)->not->toBeNull()
+        ->and($itRow->title)->toBe('Traducción title para el contenido de destino')
+        ->and($itRow->description)->toBe('<p>Traducido description en el cuerpo del contenido</p>');
+
+    // TourTranslationState is synced to ready with matching source_hash & translated_hash
+    $esTourState = TourTranslationState::query()->where('tour_id', $tour->id)->where('locale', 'es')->first();
+    expect($esTourState)->not->toBeNull()
+        ->and($esTourState->status)->toBe('ready')
+        ->and(app(TourTranslationService::class)->publicStatus($tour->fresh(['translations', 'translationStates']), 'es'))->toBe('ready');
+
+    // Manual edit on ES title is preserved when EN title later changes
+    $beforeSnapshot = $service->snapshotLocalizedAttributes($tour->fresh('translations'));
+    $esRow->update(['title' => 'Crucero Manual por la Costa Amalfitana']);
+    $tourAfterManual = $tour->fresh('translations');
+    $manualEdits = $service->detectManualEdits($beforeSnapshot, $tourAfterManual);
+
+    expect($manualEdits['es']['title'] ?? false)->toBeTrue();
+    $service->syncAndDispatch($tourAfterManual, $admin, $manualEdits);
+
+    $esTitleState = TranslationFieldState::query()
+        ->where('translatable_type', 'tour')
+        ->where('translatable_id', $tour->id)
+        ->where('locale', 'es')
+        ->where('field_name', 'title')
+        ->firstOrFail();
+    expect($esTitleState->origin)->toBe(TranslationFieldState::ORIGIN_MANUAL)
+        ->and($esTitleState->status)->toBe(TranslationFieldState::STATUS_MANUALLY_EDITED);
+
+    // Update English title and description -> ES manual title becomes needs_review and is not overwritten,
+    // while IT title and ES/IT description are re-translated.
+    $enTranslation->update([
+        'title' => 'Updated Amalfi Coast Private Yacht Experience',
+        'description' => '<p>Updated English itinerary and coastal cruise description.</p>',
+    ]);
+    $service->syncAndDispatch($tour->fresh('translations'), $admin);
+
+    expect($esRow->fresh()->title)->toBe('Crucero Manual por la Costa Amalfitana')
+        ->and($esTitleState->fresh()->status)->toBe(TranslationFieldState::STATUS_NEEDS_REVIEW);
+
+    // Simulate a failed field and verify retryFailed('tour', $tour->id) re-queues only the failed field
+    swapTranslationEngine(['description' => 'empty']);
+    $enTranslation->update([
+        'description' => '<p>Third English description revision that triggers a validator failure.</p>',
+    ]);
+    $service->syncAndDispatch($tour->fresh('translations'), $admin);
+
+    $esDescState = TranslationFieldState::query()
+        ->where('translatable_type', 'tour')
+        ->where('translatable_id', $tour->id)
+        ->where('locale', 'es')
+        ->where('field_name', 'description')
+        ->firstOrFail();
+    expect($esDescState->status)->toBe(TranslationFieldState::STATUS_FAILED);
+
+    Queue::fake();
+    $retryResult = app(TranslationHealthCheckService::class)->retryFailed('tour', $tour->id);
+    expect($retryResult['queued'])->toBe(2)
+        ->and(Queue::pushed(TranslateContentFieldJob::class)->count())->toBe(2);
 });

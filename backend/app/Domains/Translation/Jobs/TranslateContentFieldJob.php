@@ -2,10 +2,14 @@
 
 namespace App\Domains\Translation\Jobs;
 
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Translation\Contracts\ContentTranslatorContract;
 use App\Domains\Translation\Models\TranslationFieldState;
 use App\Domains\Translation\Services\AutoTranslationService;
 use App\Domains\Translation\Services\TranslationQualityValidator;
+use App\Models\Tour;
+use App\Models\TourTranslation;
+use App\Models\TourTranslationState;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +18,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Single-field translation worker (Admin 2.0 Phase H, T-H04).
@@ -116,6 +121,10 @@ class TranslateContentFieldJob implements ShouldQueue
             $state->last_error_message = $needsReview ? $judgement['error_message'] : null;
             $state->last_translated_at = now();
             $state->save();
+
+            if ($model instanceof Tour) {
+                $this->syncTourTranslationState($model, $service);
+            }
         });
     }
 
@@ -136,6 +145,50 @@ class TranslateContentFieldJob implements ShouldQueue
 
     private function writeTranslatedField(Model $model, string $translated): void
     {
+        if ($model instanceof Tour) {
+            $enRow = TourTranslation::query()
+                ->where('tour_id', $model->id)
+                ->where('locale', 'en')
+                ->first();
+
+            $row = TourTranslation::query()
+                ->where('tour_id', $model->id)
+                ->where('locale', $this->locale)
+                ->first();
+
+            $cleanTitle = Str::limit(trim(strip_tags($translated)), 120, '');
+
+            if ($row === null) {
+                $row = new TourTranslation([
+                    'tour_id' => $model->id,
+                    'locale' => $this->locale,
+                    'title' => $this->fieldName === 'title'
+                        ? $cleanTitle
+                        : (string) ($enRow?->title ?? $model->slug),
+                    'description' => $this->fieldName === 'description'
+                        ? $translated
+                        : $enRow?->description,
+                    'highlights' => $enRow?->highlights,
+                    'inclusions' => $enRow?->inclusions,
+                    'exclusions' => $enRow?->exclusions,
+                    'meeting_point' => $enRow?->meeting_point,
+                    'cancellation_policy' => $enRow?->cancellation_policy,
+                    'itinerary' => $enRow?->itinerary,
+                    'important_information' => $enRow?->important_information,
+                ]);
+            } else {
+                $row->setAttribute(
+                    $this->fieldName,
+                    $this->fieldName === 'title' ? $cleanTitle : $translated,
+                );
+            }
+
+            $row->save();
+            $model->unsetRelation('translations');
+
+            return;
+        }
+
         $current = $model->getAttribute($this->fieldName);
 
         $payload = is_array($current) ? $current : [];
@@ -145,11 +198,77 @@ class TranslateContentFieldJob implements ShouldQueue
         $model->save();
     }
 
+    private function syncTourTranslationState(Tour $tour, AutoTranslationService $service): void
+    {
+        $enRow = TourTranslation::query()
+            ->where('tour_id', $tour->id)
+            ->where('locale', 'en')
+            ->first();
+
+        if ($enRow === null || trim((string) $enRow->title) === '') {
+            return;
+        }
+
+        $fields = array_keys($service->translatableField(Tour::class));
+        $states = TranslationFieldState::query()
+            ->where('translatable_type', $tour->getMorphClass())
+            ->where('translatable_id', $tour->getKey())
+            ->where('locale', $this->locale)
+            ->get()
+            ->keyBy('field_name');
+
+        foreach ($fields as $fieldName) {
+            $enText = $service->englishValue($tour, $fieldName);
+            if ($enText === null) {
+                continue;
+            }
+
+            $fieldState = $states->get($fieldName);
+            if ($fieldState === null || ! in_array($fieldState->status, [
+                TranslationFieldState::STATUS_COMPLETED,
+                TranslationFieldState::STATUS_MANUALLY_EDITED,
+                TranslationFieldState::STATUS_NEEDS_REVIEW,
+            ], true)) {
+                return;
+            }
+        }
+
+        $tourHash = app(TourTranslationService::class)->sourceHash($enRow);
+
+        TourTranslationState::query()->updateOrCreate(
+            ['tour_id' => $tour->id, 'locale' => $this->locale],
+            [
+                'source_hash' => $tourHash,
+                'translated_hash' => $tourHash,
+                'status' => 'ready',
+                'last_error_code' => null,
+            ],
+        );
+    }
+
     private function failState(TranslationFieldState $state, string $code, string $message): void
     {
         $state->status = TranslationFieldState::STATUS_FAILED;
         $state->last_error_code = $code;
         $state->last_error_message = $message;
         $state->save();
+
+        if ($this->translatableType === 'tour' || $this->translatableType === Tour::class) {
+            $enRow = TourTranslation::query()
+                ->where('tour_id', $this->translatableId)
+                ->where('locale', 'en')
+                ->first();
+
+            if ($enRow !== null) {
+                TourTranslationState::query()->updateOrCreate(
+                    ['tour_id' => $this->translatableId, 'locale' => $this->locale],
+                    [
+                        'source_hash' => app(TourTranslationService::class)->sourceHash($enRow),
+                        'status' => 'failed',
+                        'last_error_code' => $code,
+                    ],
+                );
+            }
+        }
     }
 }

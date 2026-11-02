@@ -8,9 +8,11 @@ use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Models\BlogTag;
+use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Translation\Jobs\TranslateContentFieldJob;
 use App\Domains\Translation\Models\TranslationFieldState;
 use App\Models\Tour;
+use App\Models\TourTranslationState;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -211,9 +213,33 @@ class AutoTranslationService
 
                 $dispatched[$locale][$fieldName] = 'queued';
             }
+
+            if ($model instanceof Tour) {
+                $this->syncTourLocaleState($model, $locale, ! empty($dispatched[$locale]));
+            }
         }
 
         return $dispatched;
+    }
+
+    /**
+     * Snapshot translatable localized fields of a model (JSONB or relational Tour)
+     * into `[$field => [$locale => $value]]` for `detectManualEdits()`.
+     *
+     * @return array<string, array<string, string|null>>
+     */
+    public function snapshotLocalizedAttributes(Model $model): array
+    {
+        $snapshot = [];
+
+        foreach ($this->translatableField($model::class) as $fieldName => $isHtml) {
+            $snapshot[$fieldName] = [];
+            foreach (array_merge(['en'], self::TARGET_LOCALES) as $locale) {
+                $snapshot[$fieldName][$locale] = $this->localizedValue($model, $fieldName, $locale);
+            }
+        }
+
+        return $snapshot;
     }
 
     /**
@@ -291,6 +317,16 @@ class AutoTranslationService
 
     private function localizedValue(Model $model, string $field, string $locale): ?string
     {
+        if ($model instanceof Tour) {
+            $translations = $model->relationLoaded('translations')
+                ? $model->translations
+                : $model->translations()->get();
+            $row = $translations->firstWhere('locale', $locale);
+            $value = $row?->getAttribute($field);
+
+            return is_string($value) ? $value : null;
+        }
+
         $raw = $model->getAttribute($field);
 
         if (is_array($raw) && isset($raw[$locale]) && is_string($raw[$locale])) {
@@ -301,7 +337,7 @@ class AutoTranslationService
     }
 
     /**
-     * @param  array<string, array<string, mixed>>  $attributes
+     * @param  array<string, mixed>  $attributes
      */
     private function localizedValueFrom(array $attributes, string $field, string $locale): ?string
     {
@@ -311,6 +347,82 @@ class AutoTranslationService
             return $raw[$locale];
         }
 
+        $byLocale = $attributes[$locale] ?? null;
+        if (is_array($byLocale) && isset($byLocale[$field]) && is_string($byLocale[$field])) {
+            return $byLocale[$field];
+        }
+
         return null;
+    }
+
+    private function syncTourLocaleState(Tour $tour, string $locale, bool $hasQueuedFields): void
+    {
+        $enRow = $tour->translations()->where('locale', 'en')->first();
+        if ($enRow === null || trim((string) $enRow->title) === '') {
+            return;
+        }
+
+        $tourHash = app(TourTranslationService::class)->sourceHash($enRow);
+        $targetRow = $tour->translations()->where('locale', $locale)->first();
+
+        if ($hasQueuedFields) {
+            // A synchronous queue may already have completed the jobs.
+            $existing = TourTranslationState::query()
+                ->where('tour_id', $tour->id)
+                ->where('locale', $locale)
+                ->first();
+
+            if ($existing !== null && $existing->status === 'ready' && $existing->translated_hash === $tourHash) {
+                return;
+            }
+
+            TourTranslationState::query()->updateOrCreate(
+                ['tour_id' => $tour->id, 'locale' => $locale],
+                [
+                    'source_hash' => $tourHash,
+                    'status' => $targetRow !== null ? 'stale' : 'pending',
+                    'last_error_code' => null,
+                ],
+            );
+
+            return;
+        }
+
+        if ($targetRow === null || trim((string) $targetRow->title) === '') {
+            return;
+        }
+
+        $fields = array_keys($this->translatableField(Tour::class));
+        $states = TranslationFieldState::query()
+            ->where('translatable_type', $tour->getMorphClass())
+            ->where('translatable_id', $tour->getKey())
+            ->where('locale', $locale)
+            ->get()
+            ->keyBy('field_name');
+
+        foreach ($fields as $fieldName) {
+            $enText = $this->englishValue($tour, $fieldName);
+            if ($enText === null) {
+                continue;
+            }
+
+            $fieldState = $states->get($fieldName);
+            if ($fieldState === null || ! in_array($fieldState->status, [
+                TranslationFieldState::STATUS_COMPLETED,
+                TranslationFieldState::STATUS_MANUALLY_EDITED,
+            ], true)) {
+                return;
+            }
+        }
+
+        TourTranslationState::query()->updateOrCreate(
+            ['tour_id' => $tour->id, 'locale' => $locale],
+            [
+                'source_hash' => $tourHash,
+                'translated_hash' => $tourHash,
+                'status' => 'ready',
+                'last_error_code' => null,
+            ],
+        );
     }
 }
