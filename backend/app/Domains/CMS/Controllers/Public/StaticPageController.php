@@ -33,16 +33,21 @@ final class StaticPageController extends Controller
             ], 422);
         }
 
-        $page = StaticPage::query()
+        $query = StaticPage::query()
             ->where('slug', $slug)
-            ->where('status', StaticPage::STATUS_PUBLISHED)
-            ->first();
+            ->where('status', StaticPage::STATUS_PUBLISHED);
+
+        if ($locale !== 'en') {
+            $query->with('translationFieldStates');
+        }
+
+        $page = $query->first();
 
         if (! $page) {
             return response()->json(['message' => 'Page not found.'], 404);
         }
 
-        $exactContent = $page->hasCompleteLocale($locale);
+        $exactContent = $page->isLocaleEligible($locale);
         $effectiveLocale = $exactContent ? $locale : 'en';
         $content = $page->contentFor($effectiveLocale);
         $sanitizedBody = $content->body !== null

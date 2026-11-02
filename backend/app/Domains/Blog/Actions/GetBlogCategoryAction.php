@@ -55,9 +55,14 @@ final class GetBlogCategoryAction
         $cacheKey = "bookly:blog:category:{$slug}:{$locale}:{$cacheHash}";
 
         return BlogCache::remember(['blog', 'blog_categories'], $cacheKey, 300, function () use ($category, $perPage, $page, $locale) {
+            $relations = ['author', 'authorProfile.user', 'category'];
+            if ($locale !== 'en') {
+                $relations[] = 'translationFieldStates';
+            }
+
             $query = BlogPost::query()
                 ->published()
-                ->with(['author', 'authorProfile.user', 'category'])
+                ->with($relations)
                 ->where('blog_category_id', $category->id)
                 ->orderByDesc('published_at');
 

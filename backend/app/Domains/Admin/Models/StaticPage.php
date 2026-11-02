@@ -4,6 +4,7 @@ namespace App\Domains\Admin\Models;
 
 use App\Domains\CMS\Models\ContentRevision;
 use App\Domains\Media\Models\MediaAsset;
+use App\Domains\Translation\Models\TranslationFieldState;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -83,6 +84,14 @@ class StaticPage extends Model
             ->orderByDesc('version_number');
     }
 
+    /**
+     * @return MorphMany<TranslationFieldState, $this>
+     */
+    public function translationFieldStates(): MorphMany
+    {
+        return $this->morphMany(TranslationFieldState::class, 'translatable');
+    }
+
     public function governanceAuditLogs(): HasMany
     {
         return $this->hasMany(GovernanceAuditLog::class, 'target_id')
@@ -121,6 +130,61 @@ class StaticPage extends Model
 
         return $this->rawContentFor('title', $locale) !== null
             && $this->rawContentFor('body', $locale) !== null;
+    }
+
+    /**
+     * Whether a locale is eligible for public rendering based on both non-empty
+     * required fields (`title` + `body`) and `TranslationFieldState` freshness.
+     */
+    public function isLocaleEligible(string $locale): bool
+    {
+        if ($locale === 'en') {
+            return true;
+        }
+
+        if (! $this->hasCompleteLocale($locale)) {
+            return false;
+        }
+
+        $states = $this->relationLoaded('translationFieldStates')
+            ? $this->translationFieldStates
+            : $this->translationFieldStates()->where('locale', $locale)->get();
+
+        $localeStates = $states
+            ->where('locale', $locale)
+            ->keyBy('field_name');
+
+        if ($localeStates->isEmpty()) {
+            return true;
+        }
+
+        foreach (['title', 'body'] as $field) {
+            /** @var TranslationFieldState|null $state */
+            $state = $localeStates->get($field);
+
+            if ($state === null) {
+                continue;
+            }
+
+            if (! in_array($state->status, [
+                TranslationFieldState::STATUS_COMPLETED,
+                TranslationFieldState::STATUS_MANUALLY_EDITED,
+            ], true)) {
+                return false;
+            }
+
+            $currentEnHash = hash('sha256', trim((string) ($this->rawContentFor($field, 'en') ?? '')));
+
+            if ($state->translated_source_hash !== null && $state->translated_source_hash !== $currentEnHash) {
+                return false;
+            }
+
+            if ($state->source_hash !== null && $state->source_hash !== $currentEnHash) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function isPublished(): bool

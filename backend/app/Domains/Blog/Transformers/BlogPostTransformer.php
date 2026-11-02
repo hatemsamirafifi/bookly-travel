@@ -9,7 +9,7 @@ class BlogPostTransformer
 {
     public function transform(BlogPost $post, string $locale): array
     {
-        $hasRequestedLocale = $this->hasLocaleContent($post, $locale);
+        $hasRequestedLocale = $post->isLocaleEligible($locale);
         $effectiveLocale = $hasRequestedLocale ? $locale : 'en';
         $translationWarning = (! $hasRequestedLocale && $locale !== 'en') ? 'partial_translation' : null;
 
@@ -24,7 +24,7 @@ class BlogPostTransformer
             ? $post->author->authorProfile
             : $post->authorProfile;
 
-        $authorDisplayName = $authorProfile?->contentFor('display_name', $locale)
+        $authorDisplayName = $authorProfile?->contentFor('display_name', $effectiveLocale)
             ?? $post->author->name
             ?? 'Bookly Editorial';
 
@@ -50,17 +50,5 @@ class BlogPostTransformer
                 'avatar_url' => $authorAvatarUrl,
             ],
         ];
-    }
-
-    private function hasLocaleContent(BlogPost $post, string $locale): bool
-    {
-        $titles = $post->title ?? [];
-        $bodies = $post->body ?? [];
-
-        $title = is_array($titles) ? ($titles[$locale] ?? '') : '';
-        $body = is_array($bodies) ? ($bodies[$locale] ?? '') : '';
-
-        return ! empty(trim(strip_tags((string) $title)))
-            && ! empty(trim(strip_tags((string) $body)));
     }
 }

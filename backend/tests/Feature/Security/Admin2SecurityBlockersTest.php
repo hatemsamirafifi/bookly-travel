@@ -5,6 +5,7 @@ use App\Domains\Admin\Models\StaticPage;
 use App\Domains\Blog\Actions\UpdateBlogPostAction;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Transformers\BlogPostDetailTransformer;
+use App\Domains\Translation\Models\TranslationFieldState;
 use App\Filament\Resources\BlogPostResource\Pages\EditBlogPost;
 use App\Filament\Resources\StaticPageResource\Pages\CreateStaticPage;
 use App\Filament\Resources\StaticPageResource\Pages\EditStaticPage;
@@ -450,5 +451,170 @@ it('preserves omitted locales when calling UpdateStaticPageAction with partial l
         ->and($page->body)->not->toHaveKey('es')
         ->and($page->title['it'])->toBe('Titolo Azione Italiano');
 });
+
+it('falls back to English on blog detail and list when TranslationFieldState is outdated, failed, needs_review, or has stale source hash', function (string $ineligibleStatus, bool $staleHash) {
+    $enTitle = 'Fresh English Blog Title';
+    $enBody = '<p>Fresh English blog body content.</p>';
+    $enTitleHash = hash('sha256', trim($enTitle));
+    $enBodyHash = hash('sha256', trim($enBody));
+
+    $post = makeBlogPost([
+        'slug' => 'blog-state-' . $ineligibleStatus . ($staleHash ? '-stale' : ''),
+        'title' => ['en' => $enTitle, 'es' => 'Título español desactualizado'],
+        'body' => ['en' => $enBody, 'es' => '<p>Cuerpo español desactualizado.</p>'],
+        'excerpt' => ['en' => 'Fresh English excerpt.', 'es' => 'Resumen español.'],
+    ]);
+
+    TranslationFieldState::create([
+        'translatable_type' => $post->getMorphClass(),
+        'translatable_id' => $post->id,
+        'locale' => 'es',
+        'field_name' => 'title',
+        'status' => TranslationFieldState::STATUS_COMPLETED,
+        'origin' => TranslationFieldState::ORIGIN_AUTO,
+        'source_hash' => $enTitleHash,
+        'translated_source_hash' => $enTitleHash,
+    ]);
+
+    TranslationFieldState::create([
+        'translatable_type' => $post->getMorphClass(),
+        'translatable_id' => $post->id,
+        'locale' => 'es',
+        'field_name' => 'body',
+        'status' => $ineligibleStatus,
+        'origin' => TranslationFieldState::ORIGIN_AUTO,
+        'source_hash' => $enBodyHash,
+        'translated_source_hash' => $staleHash ? hash('sha256', 'old-english-body') : $enBodyHash,
+    ]);
+
+    $detailResponse = $this->getJson("/api/public/blog/{$post->slug}?locale=es");
+    $detailResponse->assertOk()
+        ->assertJsonPath('data.title', $enTitle)
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
+    expect($detailResponse->json('data.body'))->toContain('Fresh English blog body content.');
+
+    $listResponse = $this->getJson('/api/public/blog?locale=es');
+    $listResponse->assertOk();
+    $card = collect($listResponse->json('data'))->firstWhere('slug', $post->slug);
+    expect($card)->not->toBeNull()
+        ->and($card['title'])->toBe($enTitle)
+        ->and($card['translation_warning'])->toBe('partial_translation');
+})->with([
+    'outdated status' => [TranslationFieldState::STATUS_OUTDATED, false],
+    'failed status' => [TranslationFieldState::STATUS_FAILED, false],
+    'needs_review status' => [TranslationFieldState::STATUS_NEEDS_REVIEW, false],
+    'completed with stale source hash' => [TranslationFieldState::STATUS_COMPLETED, true],
+]);
+
+it('renders requested locale without warning on blog detail and list when TranslationFieldState is completed or manually_edited with matching source hash', function (string $eligibleStatus) {
+    $enTitle = 'Matching English Blog Title';
+    $enBody = '<p>Matching English blog body.</p>';
+    $enTitleHash = hash('sha256', trim($enTitle));
+    $enBodyHash = hash('sha256', trim($enBody));
+
+    $post = makeBlogPost([
+        'slug' => 'blog-eligible-' . $eligibleStatus,
+        'title' => ['en' => $enTitle, 'es' => 'Título Español Elegible'],
+        'body' => ['en' => $enBody, 'es' => '<p>Cuerpo español elegible.</p>'],
+        'excerpt' => ['en' => 'English excerpt.', 'es' => 'Resumen español elegible.'],
+    ]);
+
+    foreach (['title' => $enTitleHash, 'body' => $enBodyHash] as $field => $hash) {
+        TranslationFieldState::create([
+            'translatable_type' => $post->getMorphClass(),
+            'translatable_id' => $post->id,
+            'locale' => 'es',
+            'field_name' => $field,
+            'status' => $eligibleStatus,
+            'origin' => $eligibleStatus === TranslationFieldState::STATUS_MANUALLY_EDITED
+                ? TranslationFieldState::ORIGIN_MANUAL
+                : TranslationFieldState::ORIGIN_AUTO,
+            'source_hash' => $hash,
+            'translated_source_hash' => $hash,
+        ]);
+    }
+
+    $detailResponse = $this->getJson("/api/public/blog/{$post->slug}?locale=es");
+    $detailResponse->assertOk()
+        ->assertJsonPath('data.title', 'Título Español Elegible')
+        ->assertJsonPath('data.translation_warning', null);
+    expect($detailResponse->json('data.body'))->toContain('Cuerpo español elegible.');
+
+    $listResponse = $this->getJson('/api/public/blog?locale=es');
+    $listResponse->assertOk();
+    $card = collect($listResponse->json('data'))->firstWhere('slug', $post->slug);
+    expect($card)->not->toBeNull()
+        ->and($card['title'])->toBe('Título Español Elegible')
+        ->and($card['translation_warning'])->toBeNull();
+})->with([
+    'completed status' => [TranslationFieldState::STATUS_COMPLETED],
+    'manually_edited status' => [TranslationFieldState::STATUS_MANUALLY_EDITED],
+]);
+
+it('enforces TranslationFieldState eligibility on public static pages across outdated, failed, needs_review, completed, and manually_edited states', function () {
+    $enTitle = 'Static English Source Title';
+    $enBody = '<p>Static English source body.</p>';
+    $enTitleHash = hash('sha256', trim($enTitle));
+    $enBodyHash = hash('sha256', trim($enBody));
+
+    $page = StaticPage::create([
+        'slug' => 'static-field-state-eligibility',
+        'status' => StaticPage::STATUS_PUBLISHED,
+        'title' => ['en' => $enTitle, 'es' => 'Título Estático Español'],
+        'body' => ['en' => $enBody, 'es' => '<p>Cuerpo estático español.</p>'],
+    ]);
+
+    $titleState = TranslationFieldState::create([
+        'translatable_type' => $page->getMorphClass(),
+        'translatable_id' => $page->id,
+        'locale' => 'es',
+        'field_name' => 'title',
+        'status' => TranslationFieldState::STATUS_COMPLETED,
+        'origin' => TranslationFieldState::ORIGIN_AUTO,
+        'source_hash' => $enTitleHash,
+        'translated_source_hash' => $enTitleHash,
+    ]);
+
+    $bodyState = TranslationFieldState::create([
+        'translatable_type' => $page->getMorphClass(),
+        'translatable_id' => $page->id,
+        'locale' => 'es',
+        'field_name' => 'body',
+        'status' => TranslationFieldState::STATUS_OUTDATED,
+        'origin' => TranslationFieldState::ORIGIN_AUTO,
+        'source_hash' => $enBodyHash,
+        'translated_source_hash' => hash('sha256', 'old-english-static-body'),
+    ]);
+
+    foreach ([
+        TranslationFieldState::STATUS_OUTDATED,
+        TranslationFieldState::STATUS_FAILED,
+        TranslationFieldState::STATUS_NEEDS_REVIEW,
+    ] as $badStatus) {
+        $bodyState->update([
+            'status' => $badStatus,
+            'translated_source_hash' => $enBodyHash,
+        ]);
+
+        $res = $this->getJson("/api/public/pages/{$page->slug}?locale=es");
+        $res->assertOk()
+            ->assertJsonPath('data.title', $enTitle)
+            ->assertJsonStructure(['data' => ['translation_warning']]);
+    }
+
+    foreach ([
+        TranslationFieldState::STATUS_COMPLETED,
+        TranslationFieldState::STATUS_MANUALLY_EDITED,
+    ] as $goodStatus) {
+        $titleState->update(['status' => $goodStatus, 'translated_source_hash' => $enTitleHash]);
+        $bodyState->update(['status' => $goodStatus, 'translated_source_hash' => $enBodyHash]);
+
+        $res = $this->getJson("/api/public/pages/{$page->slug}?locale=es");
+        $res->assertOk()
+            ->assertJsonPath('data.title', 'Título Estático Español')
+            ->assertJsonMissingPath('data.translation_warning');
+    }
+});
+
 
 

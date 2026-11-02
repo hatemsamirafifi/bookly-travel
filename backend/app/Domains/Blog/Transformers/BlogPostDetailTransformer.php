@@ -17,7 +17,7 @@ class BlogPostDetailTransformer
 
     public function transform(BlogPost $post, string $locale, ?Collection $relatedPosts = null): array
     {
-        $hasRequestedLocale = $this->hasLocaleContent($post, $locale);
+        $hasRequestedLocale = $post->isLocaleEligible($locale);
         $effectiveLocale = $hasRequestedLocale ? $locale : 'en';
         $translationWarning = (! $hasRequestedLocale && $locale !== 'en') ? 'partial_translation' : null;
 
@@ -32,11 +32,11 @@ class BlogPostDetailTransformer
             ? $post->author->authorProfile
             : $post->authorProfile;
 
-        $authorDisplayName = $authorProfile?->contentFor('display_name', $locale)
+        $authorDisplayName = $authorProfile?->contentFor('display_name', $effectiveLocale)
             ?? $post->author->name
             ?? 'Bookly Editorial';
 
-        $authorBio = $authorProfile?->contentFor('bio', $locale);
+        $authorBio = $authorProfile?->contentFor('bio', $effectiveLocale);
         $authorAvatarUrl = $authorProfile?->avatar_url;
 
         $seo = $this->buildSeoMetadata($post, $effectiveLocale, $locale, $title, $excerpt);
@@ -121,17 +121,5 @@ class BlogPostDetailTransformer
             'canonical_url' => $canonicalUrl,
             'hreflang' => $hreflang,
         ];
-    }
-
-    private function hasLocaleContent(BlogPost $post, string $locale): bool
-    {
-        $titles = $post->title ?? [];
-        $bodies = $post->body ?? [];
-
-        $title = is_array($titles) ? ($titles[$locale] ?? '') : '';
-        $body = is_array($bodies) ? ($bodies[$locale] ?? '') : '';
-
-        return ! empty(trim(strip_tags((string) $title)))
-            && ! empty(trim(strip_tags((string) $body)));
     }
 }
