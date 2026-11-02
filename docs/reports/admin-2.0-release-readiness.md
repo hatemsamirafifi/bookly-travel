@@ -18,3 +18,4 @@
 | **4. Blocker 3 — Partial Translation Exposure** | Public Blog & Static Page APIs enforce whole-language completeness (`title` + `body`) and return `translation_warning = 'partial_translation'` | **PASS** | [`Admin2SecurityBlockersTest.php`](file:///f:/Travel%20Website/bookly-admin-2.0/backend/tests/Feature/Security/Admin2SecurityBlockersTest.php), [`CmsAndRevisionsTest.php`](file:///f:/Travel%20Website/bookly-admin-2.0/backend/tests/Feature/CMS/CmsAndRevisionsTest.php) |
 | **5. Phases A–J Complete** | All 20 Admin 2.0 functional areas implemented, tested, and documented | **PASS** | [`tasks.md`](file:///f:/Travel%20Website/bookly-admin-2.0/specs/035-admin-2.0/tasks.md) (`100% [x]`) |
 | **6. No Unauthorized Push or Merge** | `feature/admin-2.0` kept local in `../bookly-admin-2.0` awaiting owner review | **PASS** | Verified via `git status` & `git log` |
+
