@@ -52,6 +52,6 @@
 - [x] **T-I02 (P2):** Build `OperationalMonitoringPage` and dashboard widgets surfacing failed background jobs, failed notification deliveries, payment reconciliation warnings, failed translation jobs, and media/storage errors; add Pest tests (`GlobalSearchTest`, `OperationalMonitoringTest`).
 
 ## Phase J — Complete Regression, Playwright E2E & Release Documentation
-- [ ] **T-J01 (P0):** Add and execute Playwright E2E tests (`frontend/tests/e2e/admin-2.0.spec.ts`) covering all 20 admin workflows and run full backend (`pest`, `pint`, `phpstan`) and frontend (`jest`, `tsc`, `eslint`) gates.
-- [ ] **T-J02 (P0):** Produce final evidence-based reports (`docs/reports/admin-2.0-test-report.md`, `docs/reports/admin-2.0-final-regression.md`, `docs/reports/admin-2.0-release-readiness.md`).
+- [x] **T-J01 (P0):** Add and execute Playwright E2E tests (`frontend/tests/e2e/admin-2.0.spec.ts`) covering all 20 admin workflows and run full backend (`pest`, `pint`, `phpstan`) and frontend (`jest`, `tsc`, `eslint`) gates.
+- [x] **T-J02 (P0):** Produce final evidence-based reports (`docs/reports/admin-2.0-test-report.md`, `docs/reports/admin-2.0-final-regression.md`, `docs/reports/admin-2.0-release-readiness.md`).
 

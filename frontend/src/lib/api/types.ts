@@ -353,3 +353,21 @@ export interface BlogCategoryResponse {
   };
 }
 
+/**
+ * Published CMS static page as served by `GET /api/public/pages/{slug}`
+ * (Admin 2.0 Phase G). Meta fields are omitted from the payload when no
+ * value is stored; `translation_warning` flags missing-locale fallbacks.
+ */
+export interface PublicStaticPage {
+  slug: string;
+  locale: string;
+  title: string;
+  body: string;
+  published_at?: string | null;
+  meta_title?: string;
+  meta_description?: string;
+  canonical_url?: string;
+  og_image?: string;
+  translation_warning?: string;
+}
+
