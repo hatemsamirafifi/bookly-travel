@@ -6,6 +6,8 @@ use App\Domains\Blog\Actions\UpdateBlogPostAction;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Transformers\BlogPostDetailTransformer;
 use App\Filament\Resources\BlogPostResource\Pages\EditBlogPost;
+use App\Filament\Resources\StaticPageResource\Pages\CreateStaticPage;
+use App\Filament\Resources\StaticPageResource\Pages\EditStaticPage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;
@@ -305,4 +307,148 @@ it('sanitizes legacy unsanitized HTML at read time on the public static page API
         ->not->toContain('onerror')
         ->not->toContain('<iframe');
 });
+
+it('creates an English-only static page without populating ES or IT placeholders', function () {
+    actingAs(makeAdmin());
+
+    Livewire::test(CreateStaticPage::class)
+        ->fillForm([
+            'slug' => 'created-english-only-static',
+            'status' => StaticPage::STATUS_DRAFT,
+            'title_en' => 'Created English Static Title',
+            'body_en' => '<p>Created English static body.</p>',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $page = StaticPage::query()->where('slug', 'created-english-only-static')->firstOrFail();
+
+    expect($page->title['en'])->toBe('Created English Static Title')
+        ->and($page->body['en'])->toContain('Created English static body.')
+        ->and($page->title)->not->toHaveKey('es')
+        ->and($page->title)->not->toHaveKey('it')
+        ->and($page->body)->not->toHaveKey('es')
+        ->and($page->body)->not->toHaveKey('it');
+});
+
+it('leaves ES and IT empty when editing an English-only static page through EditStaticPage', function () {
+    actingAs(makeAdmin());
+
+    $page = StaticPage::create([
+        'slug' => 'edit-english-only-static',
+        'status' => StaticPage::STATUS_DRAFT,
+        'title' => ['en' => 'Original English Static Title'],
+        'body' => ['en' => '<p>Original English static body.</p>'],
+        'meta_title' => ['en' => 'Original Meta Title'],
+        'meta_description' => ['en' => 'Original Meta Description'],
+    ]);
+
+    Livewire::test(EditStaticPage::class, ['record' => $page->getRouteKey()])
+        ->assertFormSet([
+            'title_en' => 'Original English Static Title',
+            'body_en' => '<p>Original English static body.</p>',
+            'title_es' => '',
+            'body_es' => '',
+            'title_it' => '',
+            'body_it' => '',
+        ])
+        ->fillForm([
+            'title_en' => 'Updated English Static Title',
+            'body_en' => '<p>Updated English static body.</p>',
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $page->refresh();
+
+    expect($page->title['en'])->toBe('Updated English Static Title')
+        ->and($page->body['en'])->toContain('Updated English static body.')
+        ->and($page->title)->not->toHaveKey('es')
+        ->and($page->title)->not->toHaveKey('it')
+        ->and($page->body)->not->toHaveKey('es')
+        ->and($page->body)->not->toHaveKey('it');
+});
+
+it('preserves existing ES and IT translations when editing English fields on EditStaticPage', function () {
+    actingAs(makeAdmin());
+
+    $page = StaticPage::create([
+        'slug' => 'edit-preserve-es-it-static',
+        'status' => StaticPage::STATUS_DRAFT,
+        'title' => [
+            'en' => 'Original English Title',
+            'es' => 'Título Español Existente',
+            'it' => 'Titolo Italiano Esistente',
+        ],
+        'body' => [
+            'en' => '<p>Original English body.</p>',
+            'es' => '<p>Cuerpo español existente.</p>',
+            'it' => '<p>Corpo italiano esistente.</p>',
+        ],
+    ]);
+
+    Livewire::test(EditStaticPage::class, ['record' => $page->getRouteKey()])
+        ->fillForm([
+            'title_en' => 'Updated English Title Only',
+            'body_en' => '<p>Updated English body only.</p>',
+            'title_es' => '',
+            'body_es' => '',
+            'title_it' => '',
+            'body_it' => '',
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $page->refresh();
+
+    expect($page->title['en'])->toBe('Updated English Title Only')
+        ->and($page->title['es'])->toBe('Título Español Existente')
+        ->and($page->title['it'])->toBe('Titolo Italiano Esistente')
+        ->and($page->body['es'])->toContain('Cuerpo español existente.')
+        ->and($page->body['it'])->toContain('Corpo italiano esistente.');
+});
+
+it('preserves omitted locales when calling UpdateStaticPageAction with partial locale arrays and supports explicit clearing', function () {
+    $admin = makeAdmin();
+    actingAs($admin);
+
+    $page = StaticPage::create([
+        'slug' => 'partial-action-preserve-static',
+        'status' => StaticPage::STATUS_DRAFT,
+        'title' => [
+            'en' => 'English Action Title',
+            'es' => 'Título Acción Español',
+            'it' => 'Titolo Azione Italiano',
+        ],
+        'body' => [
+            'en' => '<p>English action body.</p>',
+            'es' => '<p>Cuerpo acción español.</p>',
+            'it' => '<p>Corpo azione italiano.</p>',
+        ],
+    ]);
+
+    app(UpdateStaticPageAction::class)->execute($admin, $page, [
+        'title' => ['en' => 'Updated English Action Title'],
+        'body' => ['en' => '<p>Updated English action body.</p>'],
+    ]);
+
+    $page->refresh();
+
+    expect($page->title['en'])->toBe('Updated English Action Title')
+        ->and($page->title['es'])->toBe('Título Acción Español')
+        ->and($page->title['it'])->toBe('Titolo Azione Italiano')
+        ->and($page->body['es'])->toContain('Cuerpo acción español.')
+        ->and($page->body['it'])->toContain('Corpo azione italiano.');
+
+    // Explicit clearing via EditStaticPage::clearLocaleTranslation('es')
+    Livewire::test(EditStaticPage::class, ['record' => $page->getRouteKey()])
+        ->call('clearLocaleTranslation', 'es');
+
+    $page->refresh();
+
+    expect($page->title)->not->toHaveKey('es')
+        ->and($page->body)->not->toHaveKey('es')
+        ->and($page->title['it'])->toBe('Titolo Azione Italiano');
+});
+
 

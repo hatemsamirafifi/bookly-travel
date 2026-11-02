@@ -55,7 +55,16 @@ class CreateStaticPage extends CreateRecord
     {
         $out = [];
         foreach (StaticPage::LOCALES as $locale) {
-            $out[$locale] = $data["{$field}_{$locale}"] ?? '';
+            $value = $data["{$field}_{$locale}"] ?? null;
+
+            if ($locale === 'en') {
+                $out['en'] = is_string($value) ? $value : '';
+                continue;
+            }
+
+            if (is_string($value) && trim(strip_tags($value)) !== '') {
+                $out[$locale] = $value;
+            }
         }
 
         return $out;

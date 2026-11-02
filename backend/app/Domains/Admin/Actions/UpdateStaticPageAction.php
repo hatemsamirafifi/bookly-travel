@@ -48,25 +48,47 @@ class UpdateStaticPageAction
         return DB::transaction(function () use ($actor, $page, $data, $publish, $before) {
             $willPublish = $publish || ($data['status'] ?? null) === StaticPage::STATUS_PUBLISHED;
 
-            $body = $data['body'] ?? $page->body;
-            $body = match (true) {
-                is_array($body) => $this->htmlSanitizer->sanitizeLocalizedMap($body),
-                is_string($body) => $this->htmlSanitizer->sanitize($body),
-                default => $body,
+            $title = array_key_exists('title', $data)
+                ? $this->mergeLocalizedField(
+                    $page->title,
+                    is_array($data['title']) ? $this->htmlSanitizer->sanitizeLocalizedMap($data['title']) : $data['title']
+                )
+                : $page->title;
+
+            $rawBody = array_key_exists('body', $data) ? $data['body'] : $page->body;
+            $sanitizedBody = match (true) {
+                is_array($rawBody) => $this->htmlSanitizer->sanitizeLocalizedMap($rawBody),
+                is_string($rawBody) => $this->htmlSanitizer->sanitize($rawBody),
+                default => $rawBody,
             };
+            $body = array_key_exists('body', $data) && is_array($sanitizedBody)
+                ? $this->mergeLocalizedField($page->body, $sanitizedBody)
+                : $sanitizedBody;
+
+            $metaDescription = array_key_exists('meta_description', $data)
+                ? $this->mergeLocalizedField(
+                    $page->meta_description,
+                    is_array($data['meta_description'])
+                        ? $this->htmlSanitizer->sanitizeLocalizedMap($data['meta_description'])
+                        : $data['meta_description']
+                )
+                : $page->meta_description;
+
+            $metaTitle = array_key_exists('meta_title', $data)
+                ? $this->mergeLocalizedField(
+                    $page->meta_title,
+                    is_array($data['meta_title'])
+                        ? $this->htmlSanitizer->sanitizeLocalizedMap($data['meta_title'])
+                        : $data['meta_title']
+                )
+                : $page->meta_title;
 
             $page->fill([
                 'slug' => $data['slug'] ?? $page->slug,
-                'title' => $data['title'] ?? $page->title,
+                'title' => $title,
                 'body' => $body,
-                'meta_description' => array_key_exists('meta_description', $data)
-                    ? $data['meta_description']
-                    : $page->meta_description,
-                'meta_title' => array_key_exists('meta_title', $data)
-                    ? $this->htmlSanitizer->sanitizeLocalizedMap(
-                        is_array($data['meta_title']) ? $data['meta_title'] : []
-                    )
-                    : $page->meta_title,
+                'meta_description' => $metaDescription,
+                'meta_title' => $metaTitle,
                 'canonical_url' => array_key_exists('canonical_url', $data)
                     ? $data['canonical_url']
                     : $page->canonical_url,
@@ -113,5 +135,31 @@ class UpdateStaticPageAction
 
             return $page;
         });
+    }
+
+    /**
+     * Merge incoming locale keys onto the existing localized array so omitted
+     * locales are preserved while explicit `null` values clear non-English keys.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function mergeLocalizedField(mixed $existing, mixed $incoming): ?array
+    {
+        if (! is_array($incoming)) {
+            return is_array($existing) ? $existing : null;
+        }
+
+        $merged = is_array($existing) ? $existing : [];
+
+        foreach ($incoming as $locale => $value) {
+            if ($value === null && $locale !== 'en') {
+                unset($merged[$locale]);
+                continue;
+            }
+
+            $merged[$locale] = $value;
+        }
+
+        return $merged;
     }
 }

@@ -88,14 +88,15 @@ class EditStaticPage extends EditRecord
     protected function handleRecordUpdate(Model $record, array $data, array $hidden = []): Model
     {
         $actor = auth()->user();
+        /** @var StaticPage $record */
         $publish = ($data['status'] ?? null) === StaticPage::STATUS_PUBLISHED;
 
         $cmsData = [
             'slug' => $data['slug'] ?? $record->slug,
-            'title' => $this->collectLocale($data, 'title'),
-            'body' => $this->collectLocale($data, 'body'),
-            'meta_description' => $this->collectLocale($data, 'meta_description'),
-            'meta_title' => $this->collectLocale($data, 'meta_title'),
+            'title' => $this->extractLocalizedField($record, $data, 'title'),
+            'body' => $this->extractLocalizedField($record, $data, 'body'),
+            'meta_description' => $this->extractLocalizedField($record, $data, 'meta_description'),
+            'meta_title' => $this->extractLocalizedField($record, $data, 'meta_title'),
             'canonical_url' => $data['canonical_url'] ?? $record->canonical_url,
             'scheduled_at' => $data['scheduled_at'] ?? $record->scheduled_at,
             'status' => $data['status'] ?? $record->status,
@@ -105,15 +106,61 @@ class EditStaticPage extends EditRecord
     }
 
     /**
-     * @return array<string, string>
+     * Explicitly clear all localized fields for a target non-English locale.
      */
-    private function collectLocale(array $data, string $field): array
+    public function clearLocaleTranslation(string $locale): void
     {
-        $out = [];
-        foreach (StaticPage::LOCALES as $locale) {
-            $out[$locale] = $data["{$field}_{$locale}"] ?? '';
+        if (! in_array($locale, ['es', 'it'], true)) {
+            return;
         }
 
-        return $out;
+        /** @var StaticPage $record */
+        $record = $this->getRecord();
+        $actor = auth()->user();
+
+        app(UpdateStaticPageAction::class)->execute($actor, $record, [
+            'title' => [$locale => null],
+            'body' => [$locale => null],
+            'meta_description' => [$locale => null],
+            'meta_title' => [$locale => null],
+        ]);
+    }
+
+    /**
+     * Extract per-locale values from Filament form data while preserving existing
+     * non-English translations when the ES/IT tabs are left blank.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, string>
+     */
+    private function extractLocalizedField(StaticPage $record, array $data, string $field): array
+    {
+        $values = $record->{$field} ?? [];
+        if (! is_array($values)) {
+            $values = [];
+        }
+
+        foreach (StaticPage::LOCALES as $locale) {
+            $key = "{$field}_{$locale}";
+
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
+            $value = $data[$key];
+
+            if ($locale === 'en') {
+                $values['en'] = is_string($value) ? $value : '';
+                continue;
+            }
+
+            if (is_string($value) && trim(strip_tags($value)) !== '') {
+                $values[$locale] = $value;
+            } elseif (isset($values[$locale]) && trim(strip_tags((string) $values[$locale])) === '') {
+                unset($values[$locale]);
+            }
+        }
+
+        return $values;
     }
 }
