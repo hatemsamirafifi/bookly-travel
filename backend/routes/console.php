@@ -38,3 +38,9 @@ Schedule::command('partner-invitations:expire')
     ->daily()
     ->name('expire-partner-invitations')
     ->withoutOverlapping();
+
+// T-G02: publish due scheduled CMS content (static pages + blog posts)
+Schedule::command('cms:publish-scheduled')
+    ->everyMinute()
+    ->name('publish-scheduled-cms-content')
+    ->withoutOverlapping();

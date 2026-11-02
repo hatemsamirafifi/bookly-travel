@@ -31,13 +31,18 @@ class EditStaticPage extends EditRecord
         $record = $this->getRecord();
 
         foreach (StaticPage::LOCALES as $locale) {
-            $data["title_{$locale}"] = $record->title[$locale] ?? '';
-            $data["body_{$locale}"] = $record->body[$locale] ?? '';
-            $data["meta_description_{$locale}"] = $record->meta_description[$locale] ?? '';
+            // rawContentFor never falls back to English: a page without an ES/IT
+            // translation shows the admin an empty ES/IT field, never the EN text.
+            $data["title_{$locale}"] = (string) ($record->rawContentFor('title', $locale) ?? '');
+            $data["body_{$locale}"] = (string) ($record->rawContentFor('body', $locale) ?? '');
+            $data["meta_description_{$locale}"] = (string) ($record->rawContentFor('meta_description', $locale) ?? '');
+            $data["meta_title_{$locale}"] = (string) ($record->rawContentFor('meta_title', $locale) ?? '');
         }
 
         $data['slug'] = $record->slug;
         $data['status'] = $record->status;
+        $data['canonical_url'] = $record->canonical_url;
+        $data['scheduled_at'] = $record->scheduled_at;
 
         return $data;
     }
@@ -58,6 +63,9 @@ class EditStaticPage extends EditRecord
             'title' => $this->collectLocale($data, 'title'),
             'body' => $this->collectLocale($data, 'body'),
             'meta_description' => $this->collectLocale($data, 'meta_description'),
+            'meta_title' => $this->collectLocale($data, 'meta_title'),
+            'canonical_url' => $data['canonical_url'] ?? $record->canonical_url,
+            'scheduled_at' => $data['scheduled_at'] ?? $record->scheduled_at,
             'status' => $data['status'] ?? $record->status,
         ];
 

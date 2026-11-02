@@ -2,10 +2,13 @@
 
 namespace App\Domains\Admin\Models;
 
+use App\Domains\CMS\Models\ContentRevision;
+use App\Domains\Media\Models\MediaAsset;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 
 /**
@@ -31,7 +34,11 @@ class StaticPage extends Model
         'title',
         'body',
         'meta_description',
+        'meta_title',
+        'canonical_url',
+        'og_image_media_id',
         'updated_by',
+        'scheduled_at',
         'published_at',
     ];
 
@@ -39,8 +46,12 @@ class StaticPage extends Model
         'title' => 'array',
         'body' => 'array',
         'meta_description' => 'array',
+        'meta_title' => 'array',
+        'og_image_media_id' => 'integer',
         'updated_by' => 'integer',
+        'scheduled_at' => 'datetime',
         'published_at' => 'datetime',
+        'lock_version' => 'integer',
     ];
 
     /**
@@ -53,6 +64,25 @@ class StaticPage extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    /**
+     * @return BelongsTo<MediaAsset, $this>
+     */
+    public function ogImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'og_image_media_id');
+    }
+
+    /**
+     * Append-only version history (newest first).
+     *
+     * @return MorphMany<ContentRevision, $this>
+     */
+    public function revisions(): MorphMany
+    {
+        return $this->morphMany(ContentRevision::class, 'revisionable')
+            ->orderByDesc('version_number');
+    }
+
     public function governanceAuditLogs(): HasMany
     {
         return $this->hasMany(GovernanceAuditLog::class, 'target_id')
@@ -62,6 +92,21 @@ class StaticPage extends Model
     public function scopePublished($query)
     {
         return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    /**
+     * Return the exact stored value for a locale, without falling back.
+     */
+    public function rawContentFor(string $field, string $locale): ?string
+    {
+        $values = $this->{$field} ?? [];
+        if (! is_array($values)) {
+            return null;
+        }
+
+        $value = $values[$locale] ?? null;
+
+        return is_string($value) && trim($value) !== '' ? $value : null;
     }
 
     public function isPublished(): bool

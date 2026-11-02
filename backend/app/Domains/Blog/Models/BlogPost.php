@@ -2,6 +2,8 @@
 
 namespace App\Domains\Blog\Models;
 
+use App\Domains\CMS\Models\ContentRevision;
+use App\Domains\Media\Models\MediaAsset;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class BlogPost extends Model
 {
@@ -33,6 +36,9 @@ class BlogPost extends Model
         'meta_description',
         'meta_title',
         'cover_image_url',
+        'cover_media_id',
+        'og_image_media_id',
+        'canonical_url',
         'is_featured',
         'scheduled_at',
         'published_at',
@@ -51,6 +57,9 @@ class BlogPost extends Model
         'published_at' => 'datetime',
         'author_id' => 'integer',
         'blog_category_id' => 'integer',
+        'cover_media_id' => 'integer',
+        'og_image_media_id' => 'integer',
+        'lock_version' => 'integer',
     ];
 
     /**
@@ -92,6 +101,41 @@ class BlogPost extends Model
             'author_id', // Local key on blog_posts table (BlogPost::author_id)
             'id' // Local key on users table (User::id)
         );
+    }
+
+    /**
+     * @return BelongsToMany<BlogTag, $this>
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(BlogTag::class, 'blog_post_tags');
+    }
+
+    /**
+     * Append-only version history (newest first).
+     *
+     * @return MorphMany<ContentRevision, $this>
+     */
+    public function revisions(): MorphMany
+    {
+        return $this->morphMany(ContentRevision::class, 'revisionable')
+            ->orderByDesc('version_number');
+    }
+
+    /**
+     * @return BelongsTo<MediaAsset, $this>
+     */
+    public function coverMedia(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'cover_media_id');
+    }
+
+    /**
+     * @return BelongsTo<MediaAsset, $this>
+     */
+    public function ogImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'og_image_media_id');
     }
 
     public function scopePublished(Builder $query): Builder

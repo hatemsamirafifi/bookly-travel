@@ -3,7 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Models\StaticPage;
+use App\Filament\Components\HugeRteEditor;
 use App\Filament\Resources\StaticPageResource\Pages;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -60,14 +62,24 @@ class StaticPageResource extends Resource
                 ...static::localizedSchema('title', fn (string $locale) => TextInput::make("title_{$locale}")
                     ->label(ucfirst($locale) . ' Title')
                     ->maxLength(255)),
-                ...static::localizedSchema('body', fn (string $locale) => Textarea::make("body_{$locale}")
+                ...static::localizedSchema('body', fn (string $locale) => HugeRteEditor::make("body_{$locale}")
                     ->label(ucfirst($locale) . ' Body')
-                    ->rows(8)
                     ->columnSpanFull()),
                 ...static::localizedSchema('meta_description', fn (string $locale) => Textarea::make("meta_description_{$locale}")
                     ->label(ucfirst($locale) . ' Meta Description')
                     ->rows(2)
                     ->maxLength(255)),
+                ...static::localizedSchema('meta_title', fn (string $locale) => TextInput::make("meta_title_{$locale}")
+                    ->label(ucfirst($locale) . ' Meta Title')
+                    ->maxLength(255)),
+                TextInput::make('canonical_url')
+                    ->label('Canonical URL')
+                    ->url()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+                DateTimePicker::make('scheduled_at')
+                    ->label('Scheduled Publication')
+                    ->helperText('Optional future release date/time.'),
             ]);
     }
 
@@ -158,6 +170,7 @@ class StaticPageResource extends Resource
     {
         return [
             'index' => Pages\ListStaticPages::route('/'),
+            'create' => Pages\CreateStaticPage::route('/create'),
             'edit' => Pages\EditStaticPage::route('/{record}/edit'),
             'view' => Pages\ViewStaticPage::route('/{record}'),
         ];

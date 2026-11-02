@@ -4,12 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
 use App\Domains\Blog\Models\BlogPost;
+use App\Filament\Components\HugeRteEditor;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\Tour;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -93,7 +93,7 @@ class BlogPostResource extends Resource
                             ->label('Excerpt (EN)')
                             ->rows(3)
                             ->maxLength(500),
-                        RichEditor::make('body_en')
+                        HugeRteEditor::make('body_en')
                             ->label('Body (EN)')
                             ->required()
                             ->columnSpanFull(),
@@ -117,7 +117,7 @@ class BlogPostResource extends Resource
                             ->label('Excerpt (ES)')
                             ->rows(3)
                             ->maxLength(500),
-                        RichEditor::make('body_es')
+                        HugeRteEditor::make('body_es')
                             ->label('Body (ES)')
                             ->columnSpanFull(),
                         TextInput::make('meta_title_es')
@@ -140,7 +140,7 @@ class BlogPostResource extends Resource
                             ->label('Excerpt (IT)')
                             ->rows(3)
                             ->maxLength(500),
-                        RichEditor::make('body_it')
+                        HugeRteEditor::make('body_it')
                             ->label('Body (IT)')
                             ->columnSpanFull(),
                         TextInput::make('meta_title_it')

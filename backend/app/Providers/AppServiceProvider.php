@@ -11,10 +11,14 @@ use App\Domains\Admin\Policies\GovernanceAuditPolicy;
 use App\Domains\Admin\Policies\PartnerPolicy;
 use App\Domains\Admin\Policies\StaticPagePolicy;
 use App\Domains\Admin\Policies\TourPolicy;
+use App\Domains\Admin\Policies\ContentRevisionPolicy;
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Models\BlogTag;
+use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Blog\Policies\BlogCategoryPolicy;
 use App\Domains\Blog\Policies\BlogPostPolicy;
+use App\Domains\CMS\Models\ContentRevision;
 use App\Domains\Media\Models\MediaAsset;
 use App\Domains\Media\Models\MediaFolder;
 use App\Domains\Media\Models\MediaTag;
@@ -81,6 +85,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(GovernanceAuditLog::class, GovernanceAuditPolicy::class);
         Gate::policy(AuthAuditLog::class, AuthAuditLogPolicy::class);
         Gate::policy(StaticPage::class, StaticPagePolicy::class);
+        Gate::policy(ContentRevision::class, ContentRevisionPolicy::class);
         Gate::policy(BlogPost::class, BlogPostPolicy::class);
         Gate::policy(BlogCategory::class, BlogCategoryPolicy::class);
         Gate::policy(Category::class, CategoryPolicy::class);
@@ -103,6 +108,9 @@ class AppServiceProvider extends ServiceProvider
             'media_asset' => MediaAsset::class,
             'media_folder' => MediaFolder::class,
             'media_tag' => MediaTag::class,
+            'content_revision' => ContentRevision::class,
+            'blog_tag' => BlogTag::class,
+            'author_profile' => AuthorProfile::class,
         ]);
 
         // Register rate limiters so they are available during testing

@@ -7,6 +7,7 @@ use App\Domains\Blog\Jobs\InvalidateBlogCacheJob;
 use App\Domains\Blog\Jobs\PublishScheduledBlogPostJob;
 use App\Domains\Blog\Jobs\RegenerateSitemapJob;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\CMS\Services\ContentRevisionService;
 use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -18,6 +19,7 @@ class UpdateBlogPostAction
 {
     public function __construct(
         private readonly GovernanceAuditService $auditService,
+        private readonly ContentRevisionService $revisionService,
         private readonly HtmlSanitizerService $htmlSanitizer,
     ) {}
 
@@ -163,6 +165,13 @@ class UpdateBlogPostAction
                     'status' => $post->status,
                     'slug' => $post->slug,
                 ]
+            );
+
+            // Immutable content version history (Admin 2.0 Phase G, T-G03)
+            $this->revisionService->recordRevision(
+                $post,
+                $actor,
+                ucfirst($actionType) . ' blog post: ' . $post->slug,
             );
 
             // Invalidate cache

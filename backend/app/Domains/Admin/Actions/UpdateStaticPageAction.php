@@ -4,6 +4,7 @@ namespace App\Domains\Admin\Actions;
 
 use App\Domains\Admin\Models\StaticPage;
 use App\Domains\Admin\Services\GovernanceAuditService;
+use App\Domains\CMS\Services\ContentRevisionService;
 use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class UpdateStaticPageAction
 {
     public function __construct(
         private readonly GovernanceAuditService $audit,
+        private readonly ContentRevisionService $revisions,
         private readonly HtmlSanitizerService $htmlSanitizer,
     ) {}
 
@@ -36,6 +38,9 @@ class UpdateStaticPageAction
             'title' => $page->title,
             'body' => $page->body,
             'meta_description' => $page->meta_description,
+            'meta_title' => $page->meta_title,
+            'canonical_url' => $page->canonical_url,
+            'scheduled_at' => $page->scheduled_at?->toIso8601String(),
         ];
 
         return DB::transaction(function () use ($actor, $page, $data, $publish, $before) {
@@ -55,6 +60,17 @@ class UpdateStaticPageAction
                 'meta_description' => array_key_exists('meta_description', $data)
                     ? $data['meta_description']
                     : $page->meta_description,
+                'meta_title' => array_key_exists('meta_title', $data)
+                    ? $this->htmlSanitizer->sanitizeLocalizedMap(
+                        is_array($data['meta_title']) ? $data['meta_title'] : []
+                    )
+                    : $page->meta_title,
+                'canonical_url' => array_key_exists('canonical_url', $data)
+                    ? $data['canonical_url']
+                    : $page->canonical_url,
+                'scheduled_at' => array_key_exists('scheduled_at', $data)
+                    ? $data['scheduled_at']
+                    : $page->scheduled_at,
                 'updated_by' => $actor->id,
             ]);
 
@@ -81,6 +97,12 @@ class UpdateStaticPageAction
             ];
 
             $this->audit->log($actor, $action, $page, $before, $after);
+
+            $this->revisions->recordRevision(
+                $page,
+                $actor,
+                ($action === 'cms.publish' ? 'Publish static page: ' : 'Update static page: ') . $page->slug,
+            );
 
             return $page;
         });
