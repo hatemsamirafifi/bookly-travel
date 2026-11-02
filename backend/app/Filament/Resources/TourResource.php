@@ -3,10 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Actions\ApproveTourAction;
-use App\Domains\Admin\Actions\RejectTourAction;
 use App\Domains\Admin\Actions\ArchiveTourAction;
+use App\Domains\Admin\Actions\RejectTourAction;
 use App\Domains\Admin\Actions\UnpublishTourAction;
 use App\Domains\Admin\Services\AdminAuthorizationService;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Filament\Resources\TourResource\Pages;
 use App\Models\Tour;
@@ -18,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 
 class TourResource extends Resource
 {
@@ -39,6 +41,31 @@ class TourResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'warning';
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'manage_tours');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['slug', 'location'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->slug;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Location' => $record->location,
+            'Status' => $record->status,
+        ];
     }
 
     public static function form(Forms\Form $form): Forms\Form
@@ -355,9 +382,9 @@ class TourResource extends Resource
                             ->getStateUsing(function (Tour $record): string {
                                 $revenue = (int) $record->bookings()
                                     ->whereIn('status', [
-                                        \App\Domains\Booking\Models\Booking::STATUS_CONFIRMED,
-                                        \App\Domains\Booking\Models\Booking::STATUS_COMPLETED,
-                                        \App\Domains\Booking\Models\Booking::STATUS_CANCELLATION_REQUESTED,
+                                        Booking::STATUS_CONFIRMED,
+                                        Booking::STATUS_COMPLETED,
+                                        Booking::STATUS_CANCELLATION_REQUESTED,
                                     ])
                                     ->sum('total_price');
 

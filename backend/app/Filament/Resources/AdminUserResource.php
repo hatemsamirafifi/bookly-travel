@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Models\AdminRole;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Admin\Services\AdminUserService;
 use App\Filament\Resources\AdminUserResource\Pages;
 use App\Models\User;
-use App\Models\Country;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -35,6 +35,30 @@ class AdminUserResource extends Resource
     public static function canViewAny(): bool
     {
         return static::canManageUsers();
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->name;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Email' => $record->email,
+            'Role' => $record->role,
+            'Status' => $record->status,
+        ];
     }
 
     public static function canCreate(): bool
@@ -120,7 +144,7 @@ class AdminUserResource extends Resource
                     ->schema([
                         Forms\Components\CheckboxList::make('roles')
                             ->label('Assign roles')
-                            ->options(fn (): array => \App\Domains\Admin\Models\AdminRole::query()
+                            ->options(fn (): array => AdminRole::query()
                                 ->orderBy('name')
                                 ->pluck('name', 'id')
                                 ->all())

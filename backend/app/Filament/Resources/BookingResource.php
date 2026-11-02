@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Actions\TransitionBookingStatusAction;
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Filament\Resources\BookingResource\Pages;
 use Filament\Forms\Components\DatePicker;
@@ -13,6 +14,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class BookingResource extends Resource
@@ -26,6 +28,33 @@ class BookingResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'reference';
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'manage_bookings');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['reference', 'traveler.name', 'traveler.email'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        /** @var Booking $record */
+        return (string) $record->reference;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Booking $record */
+        return [
+            'Status' => $record->status,
+            'Tour date' => $record->tour_date,
+        ];
+    }
 
     public static function table(Table $table): Table
     {

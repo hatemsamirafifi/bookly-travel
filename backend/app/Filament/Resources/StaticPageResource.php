@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Filament\Components\HugeRteEditor;
 use App\Filament\Resources\StaticPageResource\Pages;
 use Filament\Forms\Components\DateTimePicker;
@@ -16,6 +17,7 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * CMS / static-page management (Spec 013, US9, FR-015, ST-013-012/013).
@@ -40,6 +42,30 @@ class StaticPageResource extends Resource
     protected static ?string $slug = 'static-pages';
 
     protected static ?string $recordTitleAttribute = 'slug';
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'manage_cms');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['slug'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->slug;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Status' => $record->status,
+        ];
+    }
 
     public static function form(Form $form): Form
     {

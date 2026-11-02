@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Domains\Admin\Services\TravelerModerationService;
 use App\Domains\Booking\Models\Booking;
+use App\Domains\Payment\Models\Payment;
 use App\Filament\Resources\TravelerResource\Pages;
 use App\Models\Tour;
 use App\Models\User;
@@ -72,11 +73,11 @@ class TravelerResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_spend')
                     ->label('Total Spend')
-                    ->getStateUsing(fn (User $record): string => \App\Models\Tour::formatPrice(
+                    ->getStateUsing(fn (User $record): string => Tour::formatPrice(
                         (int) $record->bookings()->whereIn('status', [
-                            \App\Domains\Booking\Models\Booking::STATUS_CONFIRMED,
-                            \App\Domains\Booking\Models\Booking::STATUS_COMPLETED,
-                            \App\Domains\Booking\Models\Booking::STATUS_CANCELLATION_REQUESTED,
+                            Booking::STATUS_CONFIRMED,
+                            Booking::STATUS_COMPLETED,
+                            Booking::STATUS_CANCELLATION_REQUESTED,
                         ])->sum('total_price'),
                         'EUR',
                     )),
@@ -137,9 +138,9 @@ class TravelerResource extends Resource
     {
         /** @var array<int, string> $revenueStatuses */
         $revenueStatuses = [
-            \App\Domains\Booking\Models\Booking::STATUS_CONFIRMED,
-            \App\Domains\Booking\Models\Booking::STATUS_COMPLETED,
-            \App\Domains\Booking\Models\Booking::STATUS_CANCELLATION_REQUESTED,
+            Booking::STATUS_CONFIRMED,
+            Booking::STATUS_COMPLETED,
+            Booking::STATUS_CANCELLATION_REQUESTED,
         ];
 
         return $infolist
@@ -196,13 +197,13 @@ class TravelerResource extends Resource
                         Infolists\Components\TextEntry::make('latest_payment_amount')
                             ->label('Latest Payment Amount')
                             ->default(function (User $record): ?string {
-                                /** @var \App\Domains\Payment\Models\Payment|null $payment */
-                                $payment = \App\Domains\Payment\Models\Payment::query()
+                                /** @var Payment|null $payment */
+                                $payment = Payment::query()
                                     ->whereHas('booking', fn ($q) => $q->where('traveler_id', $record->id))
                                     ->latest('id')
                                     ->first();
 
-                                return $payment === null ? null : \App\Models\Tour::formatPrice((int) $payment->amount, $payment->currency);
+                                return $payment === null ? null : Tour::formatPrice((int) $payment->amount, $payment->currency);
                             })
                             ->placeholder('No payments yet'),
                     ])
@@ -257,6 +258,29 @@ class TravelerResource extends Resource
         $user = static::currentActor();
 
         return $user !== null && TravelerModerationService::isAuthorized($user);
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->name;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Email' => $record->email,
+            'Status' => $record->status,
+        ];
     }
 
     public static function canView(Model $record): bool

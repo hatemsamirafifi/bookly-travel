@@ -5,6 +5,7 @@ namespace App\Domains\Translation\Services;
 use App\Domains\Translation\Jobs\TranslateContentFieldJob;
 use App\Domains\Translation\Models\TranslationFieldState;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Translation health monitoring + recovery (Admin 2.0 Phase H, T-H06).
@@ -66,7 +67,7 @@ class TranslationHealthCheckService
     public function platformSummary(): array
     {
         $grouped = TranslationFieldState::query()
-            ->select('translatable_type', 'status', \Illuminate\Support\Facades\DB::raw('COUNT(*) as aggregate'))
+            ->select('translatable_type', 'status', DB::raw('COUNT(*) as aggregate'))
             ->groupBy('translatable_type', 'status')
             ->get();
 
@@ -133,6 +134,33 @@ class TranslationHealthCheckService
         }
 
         return ['queued' => $failed->count()];
+    }
+
+    /**
+     * Re-dispatch every FAILED translation field across the platform, up to
+     * $limit distinct records. Used by the Operational Monitoring page.
+     *
+     * @return array{queued: int}
+     */
+    public function retryAllFailures(int $limit = 50): array
+    {
+        $pairs = TranslationFieldState::query()
+            ->select('translatable_type', 'translatable_id')
+            ->where('status', TranslationFieldState::STATUS_FAILED)
+            ->groupBy('translatable_type', 'translatable_id')
+            ->orderBy('translatable_type')
+            ->orderBy('translatable_id')
+            ->limit($limit)
+            ->get();
+
+        $queued = 0;
+
+        foreach ($pairs as $pair) {
+            $result = $this->retryFailed((string) $pair->translatable_type, (int) $pair->translatable_id);
+            $queued += (int) ($result['queued'] ?? 0);
+        }
+
+        return ['queued' => $queued];
     }
 
     /**

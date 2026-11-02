@@ -298,8 +298,9 @@ it('aggregates translation health counts across model types for the dashboard', 
 
     $jobs = Queue::pushed(TranslateContentFieldJob::class);
 
-    expect($jobs->count())->toBe(2)
-        ->and($jobs->pluck('fieldName')->map(fn ($v) => $v)->unique())->each->toBe('body')
-        ->and(translationState('blog_post', $postB, 'es', 'body')->status)
+    expect($jobs->map(fn ($job) => [$job->locale, $job->fieldName])->all())
+        ->toBe([['es', 'body'], ['it', 'body']]);
+
+    expect(translationState('blog_post', $postB, 'es', 'body')->status)
         ->toBe(TranslationFieldState::STATUS_QUEUED);
 });

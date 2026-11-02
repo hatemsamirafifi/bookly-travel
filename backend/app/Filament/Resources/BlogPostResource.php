@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
 use App\Domains\Blog\Models\BlogPost;
 use App\Filament\Components\HugeRteEditor;
@@ -23,6 +24,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class BlogPostResource extends Resource
 {
@@ -37,6 +39,30 @@ class BlogPostResource extends Resource
     protected static ?string $slug = 'blog-posts';
 
     protected static ?string $recordTitleAttribute = 'slug';
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'manage_blog');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['slug'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->slug;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Status' => $record->status,
+        ];
+    }
 
     public static function form(Form $form): Form
     {

@@ -45,6 +45,29 @@ class PaymentResource extends Resource
         return self::canViewFinancials(auth()->user());
     }
 
+    public static function canGloballySearch(): bool
+    {
+        return self::canViewAny();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['stripe_payment_intent_id', 'stripe_refund_id', 'booking.reference'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->stripe_payment_intent_id;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Status' => $record->status,
+            'Booking' => $record->booking?->reference,
+        ];
+    }
+
     /**
      * Finance readers hold `view_finances` OR the analytics-wide
      * `view_all_analytics` flag.

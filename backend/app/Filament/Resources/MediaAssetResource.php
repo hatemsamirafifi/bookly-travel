@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class MediaAssetResource extends Resource
 {
@@ -204,6 +205,29 @@ class MediaAssetResource extends Resource
         return $authz->can($user, 'manage_media')
             || $authz->can($user, 'manage_cms')
             || $authz->can($user, 'manage_blog');
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        return static::canViewAny();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['original_filename', 'filename', 'storage_key'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return (string) $record->original_filename;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Processing status' => $record->processing_status,
+            'Size' => static::humanSize((int) $record->size_bytes),
+        ];
     }
 
     private static function currentUser(): ?User

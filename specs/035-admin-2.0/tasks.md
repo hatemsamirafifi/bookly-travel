@@ -48,8 +48,8 @@
 - [x] **T-H06 (P0):** Add comprehensive Pest & Filament tests (`AutoTranslationEngineTest`, `TranslationHealthCheckTest`, `TranslationDashboardFilamentTest`) covering all 17 translation verification requirements.
 
 ## Phase I — Global Search & Operational Monitoring
-- [ ] **T-I01 (P2):** Configure permission-aware Global Search across all 9 admin resources (Travelers, Partners, Tours, Bookings, Reviews, Blog Posts, Static Pages, Media Assets, Admin Users).
-- [ ] **T-I02 (P2):** Build `OperationalMonitoringPage` and dashboard widgets surfacing failed background jobs, failed notification deliveries, payment reconciliation warnings, failed translation jobs, and media/storage errors; add Pest tests (`GlobalSearchTest`, `OperationalMonitoringTest`).
+- [x] **T-I01 (P2):** Configure permission-aware Global Search across all 9 admin resources (Travelers, Partners, Tours, Bookings, Reviews, Blog Posts, Static Pages, Media Assets, Admin Users).
+- [x] **T-I02 (P2):** Build `OperationalMonitoringPage` and dashboard widgets surfacing failed background jobs, failed notification deliveries, payment reconciliation warnings, failed translation jobs, and media/storage errors; add Pest tests (`GlobalSearchTest`, `OperationalMonitoringTest`).
 
 ## Phase J — Complete Regression, Playwright E2E & Release Documentation
 - [ ] **T-J01 (P0):** Add and execute Playwright E2E tests (`frontend/tests/e2e/admin-2.0.spec.ts`) covering all 20 admin workflows and run full backend (`pest`, `pint`, `phpstan`) and frontend (`jest`, `tsc`, `eslint`) gates.
