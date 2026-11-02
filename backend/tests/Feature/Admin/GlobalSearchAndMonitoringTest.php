@@ -12,6 +12,7 @@ use App\Filament\Resources\BookingResource;
 use App\Filament\Resources\MediaAssetResource;
 use App\Filament\Resources\PartnerResource;
 use App\Filament\Resources\PaymentResource;
+use App\Filament\Resources\ReviewResource;
 use App\Filament\Resources\StaticPageResource;
 use App\Filament\Resources\TourResource;
 use App\Models\User;
@@ -78,6 +79,7 @@ it('declares global search attributes, titles and details for every resource', f
         StaticPageResource::class,
         MediaAssetResource::class,
         AdminUserResource::class,
+        ReviewResource::class,
     ] as $resource) {
         expect($resource::getGloballySearchableAttributes())->not->toBeEmpty();
         expect(
@@ -85,6 +87,35 @@ it('declares global search attributes, titles and details for every resource', f
             && method_exists($resource, 'getGlobalSearchResultDetails')
         )->toBeTrue();
     }
+});
+
+it('gates review global search behind moderate_reviews', function () {
+    $moderator = opsAdmin(['moderate_reviews' => true]);
+    actingAs($moderator);
+    expect(ReviewResource::canGloballySearch())->toBeTrue();
+
+    $nonModerator = opsAdmin(['manage_tours' => true]);
+    actingAs($nonModerator);
+    expect(ReviewResource::canGloballySearch())->toBeFalse();
+});
+
+it('declares review global search attributes, title and details', function () {
+    expect(ReviewResource::getGloballySearchableAttributes())->toBe([
+        'comment',
+        'tour.slug',
+        'traveler.name',
+    ])->and(method_exists(ReviewResource::class, 'getGlobalSearchResultTitle'))->toBeTrue()
+        ->and(method_exists(ReviewResource::class, 'getGlobalSearchResultDetails'))->toBeTrue();
+
+    [, $review] = createReviewForEditTest();
+
+    expect(ReviewResource::getGlobalSearchResultTitle($review))
+        ->toContain((string) $review->id)
+        ->toContain((string) $review->tour->slug)
+        ->and(ReviewResource::getGlobalSearchResultDetails($review))->toBe([
+            'Rating' => $review->rating,
+            'Status' => $review->status,
+        ]);
 });
 
 it('aggregates operational health counts and recent failed jobs', function () {

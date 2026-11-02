@@ -4,11 +4,14 @@ namespace App\Filament\Resources\StaticPageResource\Pages;
 
 use App\Domains\Admin\Actions\UpdateStaticPageAction;
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
 use App\Domains\Translation\Services\AutoTranslationService;
 use App\Filament\Resources\StaticPageResource;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Edits + publishes a localized static page (Spec 013, US9, FR-015).
@@ -33,6 +36,23 @@ class EditStaticPage extends EditRecord
         );
 
         return [
+            Actions\Action::make('preview_page')
+                ->label('Preview Page')
+                ->icon('heroicon-o-eye')
+                ->color('gray')
+                ->action(function () {
+                    /** @var StaticPage $record */
+                    $record = $this->getRecord();
+                    $tokenData = app(GeneratePreviewTokenAction::class)->execute($record->slug);
+                    $previewUrl = config('app.frontend_url', 'http://localhost:3000')
+                        . "/en/{$record->slug}?preview_token=" . rawurlencode($tokenData['token']);
+
+                    Notification::make()
+                        ->title('Preview Link Active (30 mins)')
+                        ->body($previewUrl)
+                        ->success()
+                        ->send();
+                }),
             Actions\Action::make('translate_missing_fields')
                 ->label('Translate Missing Fields')
                 ->icon('heroicon-o-language')
@@ -75,6 +95,7 @@ class EditStaticPage extends EditRecord
         $data['status'] = $record->status;
         $data['canonical_url'] = $record->canonical_url;
         $data['scheduled_at'] = $record->scheduled_at;
+        $data['loaded_lock_version'] = (int) $record->lock_version;
 
         return $data;
     }
@@ -83,12 +104,26 @@ class EditStaticPage extends EditRecord
      * Reassemble the flat per-locale fields into JSONB arrays and persist via
      * the audited action (rather than a bare model save).
      *
+     * Guards against concurrent edits with optimistic locking: the hidden
+     * `loaded_lock_version` is compared to the fresh `lock_version` before
+     * persisting, failing validation when another administrator saved first.
+     *
      * @param  array<string, mixed>  $data
      */
     protected function handleRecordUpdate(Model $record, array $data, array $hidden = []): Model
     {
         $actor = auth()->user();
         /** @var StaticPage $record */
+
+        if (isset($data['loaded_lock_version'])
+            && (int) $data['loaded_lock_version'] !== (int) $record->fresh()->lock_version) {
+            throw ValidationException::withMessages([
+                'lock_version' => ['This record was modified by another administrator. Please reload and try again.'],
+            ]);
+        }
+
+        unset($data['loaded_lock_version']);
+
         $publish = ($data['status'] ?? null) === StaticPage::STATUS_PUBLISHED;
 
         $cmsData = [

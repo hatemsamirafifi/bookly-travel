@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Reviews\Actions\FlagReviewAction;
 use App\Domains\Reviews\Actions\HideReviewAction;
 use App\Domains\Reviews\Actions\ReinstateReviewAction;
@@ -16,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 
 class ReviewResource extends Resource
 {
@@ -37,6 +39,31 @@ class ReviewResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'danger';
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'moderate_reviews');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['comment', 'tour.slug', 'traveler.name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return "Review #{$record->id} — " . (string) ($record->tour?->slug ?? '');
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Rating' => $record->rating,
+            'Status' => $record->status,
+        ];
     }
 
     public static function table(Table $table): Table

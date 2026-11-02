@@ -4,9 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Domains\Admin\Models\StaticPage;
 use App\Domains\Admin\Services\AdminAuthorizationService;
+use App\Domains\Translation\Models\TranslationFieldState;
 use App\Filament\Components\HugeRteEditor;
+use App\Filament\Components\MediaPicker;
 use App\Filament\Resources\StaticPageResource\Pages;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -85,28 +88,59 @@ class StaticPageResource extends Resource
                     ])
                     ->default('draft')
                     ->required(),
+                Hidden::make('loaded_lock_version'),
                 ...static::localizedSchema('title', fn (string $locale) => TextInput::make("title_{$locale}")
                     ->label(ucfirst($locale) . ' Title')
-                    ->maxLength(255)),
+                    ->maxLength(255)
+                    ->helperText(static::localizedStatusHint($locale, 'title'))),
                 ...static::localizedSchema('body', fn (string $locale) => HugeRteEditor::make("body_{$locale}")
                     ->label(ucfirst($locale) . ' Body')
-                    ->columnSpanFull()),
+                    ->columnSpanFull()
+                    ->helperText(static::localizedStatusHint($locale, 'body'))),
                 ...static::localizedSchema('meta_description', fn (string $locale) => Textarea::make("meta_description_{$locale}")
                     ->label(ucfirst($locale) . ' Meta Description')
                     ->rows(2)
-                    ->maxLength(255)),
+                    ->maxLength(255)
+                    ->helperText(static::localizedStatusHint($locale, 'meta_description'))),
                 ...static::localizedSchema('meta_title', fn (string $locale) => TextInput::make("meta_title_{$locale}")
                     ->label(ucfirst($locale) . ' Meta Title')
-                    ->maxLength(255)),
+                    ->maxLength(255)
+                    ->helperText(static::localizedStatusHint($locale, 'meta_title'))),
                 TextInput::make('canonical_url')
                     ->label('Canonical URL')
                     ->url()
                     ->maxLength(255)
                     ->columnSpanFull(),
+                MediaPicker::make('og_image_media_id')
+                    ->storesAttribute('id'),
                 DateTimePicker::make('scheduled_at')
                     ->label('Scheduled Publication')
                     ->helperText('Optional future release date/time.'),
             ]);
+    }
+
+    /**
+     * Badge-like per-field translation status hint for a locale's input;
+     * nothing on create pages (no record) and nothing for EN fields.
+     */
+    private static function localizedStatusHint(string $locale, string $field): \Closure
+    {
+        return fn (?Model $record = null): ?string => match (true) {
+            $record === null, $locale === 'en' => null,
+            default => strtoupper($locale) . ': ' . static::fieldTranslationStatus($record, $field, $locale),
+        };
+    }
+
+    private static function fieldTranslationStatus(Model $record, string $field, string $locale): string
+    {
+        $status = TranslationFieldState::query()
+            ->where('translatable_type', $record->getMorphClass())
+            ->where('translatable_id', $record->getKey())
+            ->where('locale', $locale)
+            ->where('field_name', $field)
+            ->value('status');
+
+        return $status ?? TranslationFieldState::STATUS_MISSING;
     }
 
     /**

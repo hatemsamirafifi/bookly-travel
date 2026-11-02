@@ -6,6 +6,7 @@ use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Models\BlogTag;
 use App\Domains\CMS\Models\ContentRevision;
 use App\Domains\CMS\Services\ContentRevisionService;
+use App\Filament\Resources\StaticPageResource\Pages\EditStaticPage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -315,4 +316,65 @@ it('creates author profiles with localized fields', function () {
     expect($profile->contentFor('display_name', 'it'))->toBe('Ada Marlow')
         ->and($profile->contentFor('bio', 'it'))->toBe('Scrittrice di viaggi.')
         ->and($profile->contentFor('bio', 'es'))->toBe('Travel writer.');
+});
+
+//
+// Group 7: editor lock_version conflicts
+//
+
+it('rejects a static-page save when the page changed under the editing session', function () {
+    $page = makeCmsContentPage();
+
+    $edit = Livewire::test(EditStaticPage::class, ['record' => $page->getRouteKey()]);
+
+    DB::table('static_pages')->where('id', $page->id)->increment('lock_version');
+
+    $edit->fillForm(['title_en' => 'Concurrent Edit Title'])
+        ->call('save')
+        ->assertHasErrors(['lock_version']);
+
+    expect($page->refresh()->lock_version)->toBe(1)
+        ->and($page->title['en'])->toBe('Privacy Policy');
+});
+
+it('saves a static page normally when the lock_version still matches', function () {
+    $page = makeCmsContentPage();
+
+    Livewire::test(EditStaticPage::class, ['record' => $page->getRouteKey()])
+        ->fillForm(['title_en' => 'Fresh Edit Title'])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($page->refresh()->lock_version)->toBe(1)
+        ->and($page->title['en'])->toBe('Fresh Edit Title');
+});
+
+//
+// Group 8: signed preview access to draft static pages
+//
+
+it('serves a draft static page through a signed preview token', function () {
+    $page = makeCmsContentPage(['status' => StaticPage::STATUS_DRAFT]);
+
+    $token = app(\App\Domains\Blog\Actions\GeneratePreviewTokenAction::class)
+        ->execute($page->slug)['token'];
+
+    $this->get('/api/public/pages/' . $page->slug . '?preview_token=' . rawurlencode($token))
+        ->assertStatus(200)
+        ->assertJsonPath('data.slug', $page->slug)
+        ->assertJsonPath('data.title', 'Privacy Policy')
+        ->assertJsonPath('data.body', 'We respect your data.');
+});
+
+it('returns 404 for a draft static page with an invalid or mismatched preview token', function () {
+    $page = makeCmsContentPage(['status' => StaticPage::STATUS_DRAFT]);
+
+    $this->get('/api/public/pages/' . $page->slug . '?preview_token=' . rawurlencode('forged|1|abc'))
+        ->assertStatus(404);
+
+    $foreignToken = app(\App\Domains\Blog\Actions\GeneratePreviewTokenAction::class)
+        ->execute('another-page')['token'];
+
+    $this->get('/api/public/pages/' . $page->slug . '?preview_token=' . rawurlencode($foreignToken))
+        ->assertStatus(404);
 });

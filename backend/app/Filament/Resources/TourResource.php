@@ -9,6 +9,7 @@ use App\Domains\Admin\Actions\UnpublishTourAction;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Services\TourTranslationService;
+use App\Filament\Components\HugeRteEditor;
 use App\Filament\Resources\TourResource\Pages;
 use App\Models\Tour;
 use Filament\Forms;
@@ -143,8 +144,7 @@ class TourResource extends Resource
                                 Forms\Components\TextInput::make('title')
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\Textarea::make('description')
-                                    ->rows(3)
+                                HugeRteEditor::make('description')
                                     ->columnSpanFull(),
                                 Forms\Components\Textarea::make('meeting_point')
                                     ->rows(2),

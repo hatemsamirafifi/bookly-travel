@@ -5,11 +5,14 @@ namespace App\Filament\Resources;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Blog\Actions\GeneratePreviewTokenAction;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Translation\Models\TranslationFieldState;
 use App\Filament\Components\HugeRteEditor;
+use App\Filament\Components\MediaPicker;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\Tour;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -107,6 +110,11 @@ class BlogPostResource extends Resource
                             ->image()
                             ->directory('blog/covers')
                             ->columnSpanFull(),
+                        MediaPicker::make('cover_media_id')
+                            ->storesAttribute('id'),
+                        MediaPicker::make('og_image_media_id')
+                            ->storesAttribute('id'),
+                        Hidden::make('loaded_lock_version'),
                     ])->columns(2),
 
                 Section::make('Content — English (Primary)')
@@ -138,21 +146,26 @@ class BlogPostResource extends Resource
                     ->schema([
                         TextInput::make('title_es')
                             ->label('Title (ES)')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'title', 'es')),
                         Textarea::make('excerpt_es')
                             ->label('Excerpt (ES)')
                             ->rows(3)
-                            ->maxLength(500),
+                            ->maxLength(500)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'excerpt', 'es')),
                         HugeRteEditor::make('body_es')
                             ->label('Body (ES)')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'body', 'es')),
                         TextInput::make('meta_title_es')
                             ->label('Meta Title (ES)')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'meta_title', 'es')),
                         Textarea::make('meta_description_es')
                             ->label('Meta Description (ES)')
                             ->rows(2)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'meta_description', 'es')),
                     ]),
 
                 Section::make('Content — Italian (Italiano)')
@@ -161,21 +174,26 @@ class BlogPostResource extends Resource
                     ->schema([
                         TextInput::make('title_it')
                             ->label('Title (IT)')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'title', 'it')),
                         Textarea::make('excerpt_it')
                             ->label('Excerpt (IT)')
                             ->rows(3)
-                            ->maxLength(500),
+                            ->maxLength(500)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'excerpt', 'it')),
                         HugeRteEditor::make('body_it')
                             ->label('Body (IT)')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'body', 'it')),
                         TextInput::make('meta_title_it')
                             ->label('Meta Title (IT)')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'meta_title', 'it')),
                         Textarea::make('meta_description_it')
                             ->label('Meta Description (IT)')
                             ->rows(2)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->helperText(fn (?Model $record = null): ?string => static::translationStatusHint($record, 'meta_description', 'it')),
                     ]),
 
                 Section::make('Related Tours')
@@ -271,5 +289,25 @@ class BlogPostResource extends Resource
             'edit' => Pages\EditBlogPost::route('/{record}/edit'),
             'view' => Pages\ViewBlogPost::route('/{record}'),
         ];
+    }
+
+    /**
+     * Badge-like per-field translation pipeline status shown under the ES/IT
+     * inputs; nothing on create pages (no record).
+     */
+    private static function translationStatusHint(?Model $record, string $field, string $locale): ?string
+    {
+        if ($record === null) {
+            return null;
+        }
+
+        $status = TranslationFieldState::query()
+            ->where('translatable_type', $record->getMorphClass())
+            ->where('translatable_id', $record->getKey())
+            ->where('locale', $locale)
+            ->where('field_name', $field)
+            ->value('status');
+
+        return strtoupper($locale) . ': ' . ($status ?? TranslationFieldState::STATUS_MISSING);
     }
 }

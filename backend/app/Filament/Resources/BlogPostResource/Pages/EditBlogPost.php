@@ -11,6 +11,7 @@ use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\ValidationException;
 
 class EditBlogPost extends EditRecord
 {
@@ -98,14 +99,32 @@ class EditBlogPost extends EditRecord
             ];
         })->toArray();
 
+        $data['loaded_lock_version'] = (int) $record->lock_version;
+
         return $data;
     }
 
+    /**
+     * Persists via the audited action, guarding against concurrent edits with
+     * optimistic locking: the hidden `loaded_lock_version` is compared to the
+     * fresh `lock_version` before persisting, failing validation when another
+     * administrator saved first.
+     */
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $actor = auth()->user();
 
         /** @var BlogPost $record */
+
+        if (isset($data['loaded_lock_version'])
+            && (int) $data['loaded_lock_version'] !== (int) $record->fresh()->lock_version) {
+            throw ValidationException::withMessages([
+                'lock_version' => ['This record was modified by another administrator. Please reload and try again.'],
+            ]);
+        }
+
+        unset($data['loaded_lock_version']);
+
         $localized = $this->extractLocalizedFields($record, $data);
 
         $data = array_merge($data, $localized);
