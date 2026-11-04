@@ -77,4 +77,38 @@ test.describe('Homepage', () => {
     await expect(partnerLink).toHaveAttribute('href', '/en/partner-register');
     await expect(partnerLink).toBeVisible();
   });
+
+  test('category chip navigates to filtered search with the category pre-applied', async ({ page }) => {
+    await page.goto('/en');
+    await expect(page.locator('section[aria-label="Tour Categories"]')).toBeVisible();
+    const firstChip = page.locator('section[aria-label="Tour Categories"] a').first();
+    await expect(firstChip).toBeVisible();
+
+    const chipHref = await firstChip.getAttribute('href');
+    expect(chipHref).toMatch(/^\/en\/search\?category=/);
+    const expectedSlug = new URLSearchParams(chipHref!.split('?')[1] ?? '').get('category');
+    expect(expectedSlug).toBeTruthy();
+
+    await firstChip.click();
+    await expect(page).toHaveURL(/\/en\/search\?category=/);
+    expect(new URL(page.url()).searchParams.get('category')).toBe(expectedSlug);
+
+    // The applied category surfaces in the active-filters region above results.
+    const activeChips = page.locator('div[role="region"][aria-label*="filter" i]');
+    await expect(activeChips).toBeVisible();
+
+    // At least one result card renders, or the page honestly reports no tours
+    // for this category (mirrors the non-brittle assertions in search.spec.ts).
+    const firstResult = page.locator('a[href*="/tours/"]').first();
+    const emptyState = page.getByRole('heading', { name: 'No tours found' });
+    await expect(firstResult.or(emptyState)).toBeVisible({ timeout: 10000 });
+  });
+
+  test('bookly value panel displays marketplace guarantees', async ({ page }) => {
+    await page.goto('/en');
+    const valuePanel = page.locator('section[aria-labelledby="value-panel-heading"]');
+    await expect(valuePanel).toBeVisible();
+    await expect(valuePanel.getByText('Verified Local Guides')).toBeVisible();
+    await expect(valuePanel.getByText('Secure Instant Booking')).toBeVisible();
+  });
 });

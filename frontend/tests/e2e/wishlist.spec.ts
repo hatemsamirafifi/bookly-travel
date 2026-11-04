@@ -272,3 +272,80 @@ test.describe('Wishlist', () => {
     }
   });
 });
+
+test.describe('Guest Wishlist Lifecycle', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test.beforeEach(async ({ context }) => {
+    await context.addCookies([
+      { name: 'bookly_cookie_consent', value: 'true', domain: 'localhost', path: '/' },
+      { name: 'bookly_cookie_consent', value: 'true', domain: 'nginx', path: '/' },
+      { name: 'bookly_cookie_consent', value: 'true', domain: '127.0.0.1', path: '/' },
+    ]);
+  });
+
+  test('guest wishlist bookmarks tour to localStorage and persists across page reload', async ({ page }) => {
+    await page.goto('/en/search');
+    const firstHeart = page.locator('button[data-testid="wishlist-button"]').first();
+    await expect(firstHeart).toBeVisible();
+    await firstHeart.click();
+    await expect(firstHeart).toHaveAttribute('aria-pressed', 'true');
+
+    // Verify stored in localStorage
+    const stored = await page.evaluate(() => localStorage.getItem('bookly_guest_wishlist'));
+    expect(stored).toBeTruthy();
+    const parsed = JSON.parse(stored || '{}');
+    expect(parsed.tour_ids.length).toBeGreaterThan(0);
+
+    // Reload page and verify still active
+    await page.reload({ waitUntil: 'networkidle' });
+    const reloadedHeart = page.locator('button[data-testid="wishlist-button"]').first();
+    await expect(reloadedHeart).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('guest favorites merge into the account on login and localStorage is cleared', async ({ page }) => {
+    await page.goto('/en/search');
+    const firstHeart = page.locator('button[data-testid="wishlist-button"]').first();
+    await expect(firstHeart).toBeVisible();
+    await firstHeart.click();
+    await expect(firstHeart).toHaveAttribute('aria-pressed', 'true');
+
+    const stored = await page.evaluate(() => localStorage.getItem('bookly_guest_wishlist'));
+    expect(stored).toBeTruthy();
+    expect(JSON.parse(stored || '{}').tour_ids.length).toBeGreaterThan(0);
+
+    // Exactly ONE login flow in this test: the backend `auth` rate limiter is
+    // shared, so reuse this page context for the whole lifecycle. Arm the merge
+    // listener BEFORE navigating so the trigger fired by LoginForm is not missed.
+    const mergeResponsePromise = page.waitForResponse(
+      (resp) =>
+        resp.url().includes('/api/public/traveler/wishlist/merge') &&
+        resp.request().method() === 'POST',
+      { timeout: 30000 },
+    );
+    await page.goto('/en/auth/login');
+    await page.locator('input[name="email"]').waitFor({ state: 'visible', timeout: 30000 });
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="password"]', 'Password123!');
+    await page.click('button[type="submit"]');
+
+    const mergeResponse = await mergeResponsePromise;
+    expect(mergeResponse.status()).toBe(200);
+    const mergePayload = await mergeResponse.json();
+    expect(mergePayload.status).toBe('success');
+    // merged_count can legitimately be 0 if the seeded account already holds
+    // the bookmarked tour; the total always covers the guest item either way.
+    expect(mergePayload.merged_count).toBeGreaterThanOrEqual(0);
+    expect(mergePayload.total_wishlist_count).toBeGreaterThanOrEqual(1);
+
+    // A successful merge purges the guest store.
+    await expect.poll(async () => page.evaluate(() => localStorage.getItem('bookly_guest_wishlist'))).toBeNull();
+
+    // The bookmarked tour is now backed by the account wishlist.
+    await page.goto('/en/search');
+    await expect(page.locator('button[data-testid="wishlist-button"]').first()).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+});

@@ -275,7 +275,7 @@ test.describe('Search Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/en/search');
 
-    const filterButton = page.getByRole('button', { name: 'Filters', exact: true });
+    const filterButton = page.getByRole('button', { name: /^Filters(?: \(\d+\))?$/ });
     await expect(filterButton).toBeVisible();
     await expect(page.getByRole('dialog', { name: 'Search filters' })).not.toBeVisible();
     await filterButton.click();
@@ -301,6 +301,41 @@ test.describe('Search Page', () => {
     if (await menuToggle.isVisible()) {
       await menuToggle.click();
       await expect(page.getByRole('link', { name: /search/i }).first()).toBeVisible();
+    }
+  });
+
+  test('mobile filter drawer stages selections, commits on confirm, and preserves URL state', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/en/search');
+
+    const filterButton = page.getByRole('button', { name: /^Filters(?: \(\d+\))?$/ });
+    await expect(filterButton).toBeVisible();
+    await filterButton.click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+
+    // Look for category radio if present
+    const categoryOption = dialog.locator('input[name="drawer-category"]').first();
+    if (await categoryOption.isVisible()) {
+      await categoryOption.click();
+
+      // Verify staged - URL should NOT have changed yet
+      expect(page.url()).not.toMatch(/category=/);
+
+      // Tap confirm button "Show [N] Tours"
+      const confirmButton = dialog.getByRole('button', { name: /Show \d+ Tours/i });
+      await confirmButton.click();
+
+      // Drawer should close
+      await expect(dialog).not.toBeVisible();
+
+      // URL should now contain category parameter
+      await expect(page).toHaveURL(/category=/);
+
+      // Active filter chip should appear
+      const chips = page.locator('div[role="region"][aria-label*="filter" i]');
+      await expect(chips).toBeVisible();
     }
   });
 });
