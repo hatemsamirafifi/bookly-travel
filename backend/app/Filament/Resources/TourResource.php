@@ -88,7 +88,8 @@ class TourResource extends Resource
                             ->relationship('partner', 'id')
                             ->getOptionLabelFromRecordUsing(fn ($record) => optional($record->profile)->company_name ?? "Partner #{$record->id}")
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->required(),
                         Forms\Components\Select::make('status')
                             ->options([
                                 'draft' => 'Draft',
