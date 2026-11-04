@@ -32,6 +32,10 @@ export default function TourCard({ tour, locale, imagePriority = false }: TourCa
       )
     : null;
 
+  const coverUrl = tour.cover_image_url
+    ? tour.cover_image_url.replace(/^https?:\/\/[^\/]+\/storage\//i, '/storage/')
+    : null;
+
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-xs transition duration-200 hover:shadow-md">
       <Link
@@ -40,11 +44,12 @@ export default function TourCard({ tour, locale, imagePriority = false }: TourCa
       >
         {/* Cover image container standardized on 4:3 ratio */}
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-alt">
-          {tour.cover_image_url ? (
+          {coverUrl ? (
             <ImageWithFallback
-              src={tour.cover_image_url}
+              src={coverUrl}
               alt={tour.title}
               fill
+              priority={imagePriority}
               loading={imagePriority ? 'eager' : 'lazy'}
               fetchPriority={imagePriority ? 'high' : undefined}
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"

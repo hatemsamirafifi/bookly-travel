@@ -95,7 +95,7 @@ export default function MobileFilterDrawer({ filterData, totalResults = 0 }: Mob
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs transition-opacity lg:hidden"
+          className="fixed inset-0 z-60 bg-black/50 backdrop-blur-xs transition-opacity lg:hidden"
           onClick={handleClose}
           aria-hidden="true"
         />
@@ -108,7 +108,7 @@ export default function MobileFilterDrawer({ filterData, totalResults = 0 }: Mob
           role="dialog"
           aria-modal="true"
           aria-label={t('filterPanelLabel') || 'Filter search results'}
-          className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-surface shadow-2xl transition-transform lg:hidden"
+          className="fixed inset-y-0 right-0 z-60 flex w-full max-w-sm flex-col bg-surface shadow-2xl transition-transform lg:hidden"
         >
           {/* Header */}
           <div className="flex min-h-14 items-center justify-between border-b border-border px-4 py-3">

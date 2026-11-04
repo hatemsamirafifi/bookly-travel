@@ -67,6 +67,10 @@ class TourCardTransformer
             return '';
         }
 
+        if (preg_match('#^https?://[^/]+/storage/(.*)$#i', $url, $matches)) {
+            return '/storage/' . ltrim($matches[1], '/');
+        }
+
         if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, '/')) {
             return $url;
         }

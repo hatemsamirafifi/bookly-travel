@@ -18,13 +18,7 @@ export function useWishlist(tourId: number | string) {
   const { user } = useAuth();
   const isAuthenticated = Boolean(user);
 
-  const [isSaved, setIsSaved] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    if (!isAuthenticated) {
-      return isGuestWishlisted(numericId);
-    }
-    return false;
-  });
+  const [isSaved, setIsSaved] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

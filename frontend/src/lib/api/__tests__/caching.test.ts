@@ -1,5 +1,5 @@
 import { apiClient } from '../client';
-import { getTourDetail } from '../tours';
+
 
 describe('API Caching', () => {
   beforeEach(() => {

@@ -164,7 +164,7 @@ test.describe('Search Page', () => {
   test('clearing filters retains the search term', async ({ page }) => {
     await page.goto('/en/search?q=tour&category=adventure');
     await showFilters(page);
-    await page.getByRole('button', { name: /^Clear all/ }).click();
+    await page.getByRole('button', { name: /^Clear all/ }).first().click();
     await expect(page).toHaveURL(/\/en\/search\?q=tour$/);
   });
 
@@ -204,7 +204,7 @@ test.describe('Search Page', () => {
     await page.goto('/en/search?category=adventure');
     await showFilters(page);
 
-    const clearButton = page.getByRole('button', { name: /^Clear all/ });
+    const clearButton = page.getByRole('button', { name: /^Clear all/ }).first();
     await expect(clearButton).toBeVisible();
 
     await clearButton.click();
@@ -275,6 +275,11 @@ test.describe('Search Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/en/search');
 
+    const declineCookie = page.locator('#rcc-decline-button');
+    if (await declineCookie.isVisible()) {
+      await declineCookie.click();
+    }
+
     const filterButton = page.getByRole('button', { name: /^Filters(?: \(\d+\))?$/ });
     await expect(filterButton).toBeVisible();
     await expect(page.getByRole('dialog', { name: 'Search filters' })).not.toBeVisible();
@@ -296,6 +301,11 @@ test.describe('Search Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/en/search');
 
+    const declineCookie = page.locator('#rcc-decline-button');
+    if (await declineCookie.isVisible()) {
+      await declineCookie.click();
+    }
+
     // Look for a hamburger/toggle button that appears on mobile
     const menuToggle = page.getByRole('button', { name: /menu|toggle|open menu/i }).first();
     if (await menuToggle.isVisible()) {
@@ -306,6 +316,9 @@ test.describe('Search Page', () => {
 
   test('mobile filter drawer stages selections, commits on confirm, and preserves URL state', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
+    await page.context().addCookies([
+      { name: 'bookly_cookie_consent', value: 'true', url: 'http://localhost:8080' },
+    ]);
     await page.goto('/en/search');
 
     const filterButton = page.getByRole('button', { name: /^Filters(?: \(\d+\))?$/ });

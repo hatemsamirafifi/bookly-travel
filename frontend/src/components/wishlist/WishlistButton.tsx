@@ -41,7 +41,7 @@ export default function WishlistButton({ tourId, locale, initialSaved = false, c
   const [completedStatusRead, setCompletedStatusRead] = useState<string | null>(null);
 
   const tokenValue = getAuthToken();
-  const sessionKey = user ? `user:${user.id}` : tokenValue ? `token:${tokenValue}` : 'anonymous';
+  const sessionKey = tokenValue ? `token:${tokenValue}` : user ? `user:${user.id}` : 'anonymous';
   const identityKey = `${String(tourId)}::${sessionKey}`;
   const statusReadKey = JSON.stringify([identityKey, statusAttempt]);
   const statusReadComplete = completedStatusRead === statusReadKey;
