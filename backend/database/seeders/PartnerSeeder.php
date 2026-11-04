@@ -15,6 +15,7 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
 use App\Models\User;
+use App\Support\DemoMediaDeployer;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,6 +29,8 @@ class PartnerSeeder extends Seeder
      */
     public function run(): void
     {
+        DemoMediaDeployer::deployAll();
+
         // Create partner user
         $user = User::firstOrCreate(
             ['email' => 'partner@bookly.test'],
@@ -99,7 +102,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 20,
             'price_amount' => 4500, // €45.00 in cents
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-cover.jpg',
+            'cover_image_url' => 'tours/rome-cover.jpg',
             'is_featured' => true,
             'published_at' => now()->subDays(30),
             'price_from' => 45.00,
@@ -144,7 +147,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 12,
             'price_amount' => 8500, // €85.00 in cents
             'status' => 'pending_review',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/trastevere-cover.jpg',
+            'cover_image_url' => 'tours/trastevere-cover.jpg',
             'is_featured' => false,
             'submitted_at' => now()->subDays(2),
             'price_from' => 85.00,
@@ -171,7 +174,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 15,
             'price_amount' => 5500, // €55.00 in cents
             'status' => 'draft',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-night-cover.jpg',
+            'cover_image_url' => 'tours/rome-night-cover.jpg',
             'is_featured' => false,
             'price_from' => 55.00,
             'currency' => 'EUR',
@@ -220,15 +223,15 @@ class PartnerSeeder extends Seeder
     private function seedCategories(): void
     {
         $categories = [
-            ['name' => 'Walking Tours', 'slug' => 'walking', 'description' => 'Explore cities on foot with expert guides', 'display_order' => 1, 'is_active' => true],
-            ['name' => 'Food & Wine', 'slug' => 'food', 'description' => 'Taste local cuisine and discover culinary traditions', 'display_order' => 2, 'is_active' => true],
-            ['name' => 'Adventure', 'slug' => 'adventure', 'description' => 'Thrilling outdoor experiences and activities', 'display_order' => 3, 'is_active' => true],
-            ['name' => 'Cultural', 'slug' => 'cultural', 'description' => 'Immerse yourself in art, history, and local traditions', 'display_order' => 4, 'is_active' => true],
-            ['name' => 'Water Sports', 'slug' => 'water-sports', 'description' => 'Diving, sailing, and water adventures', 'display_order' => 5, 'is_active' => true],
+            ['name' => 'Walking Tours', 'slug' => 'walking', 'description' => 'Explore cities on foot with expert guides', 'image_url' => 'categories/walking.jpg', 'display_order' => 1, 'is_active' => true],
+            ['name' => 'Food & Wine', 'slug' => 'food', 'description' => 'Taste local cuisine and discover culinary traditions', 'image_url' => 'categories/food.jpg', 'display_order' => 2, 'is_active' => true],
+            ['name' => 'Adventure', 'slug' => 'adventure', 'description' => 'Thrilling outdoor experiences and activities', 'image_url' => 'categories/adventure.jpg', 'display_order' => 3, 'is_active' => true],
+            ['name' => 'Cultural', 'slug' => 'cultural', 'description' => 'Immerse yourself in art, history, and local traditions', 'image_url' => 'categories/cultural.jpg', 'display_order' => 4, 'is_active' => true],
+            ['name' => 'Water Sports', 'slug' => 'water-sports', 'description' => 'Diving, sailing, and water adventures', 'image_url' => 'categories/water-sports.jpg', 'display_order' => 5, 'is_active' => true],
         ];
 
         foreach ($categories as $cat) {
-            Category::firstOrCreate(
+            Category::updateOrCreate(
                 ['slug' => $cat['slug']],
                 $cat
             );
