@@ -27,7 +27,7 @@ class CategoryController
                     'slug' => (string) $cat->slug,
                     'name' => (string) $cat->name,
                     'description' => $cat->description === '' ? null : (string) $cat->description,
-                    'image_url' => $cat->image_url === '' ? null : (string) $cat->image_url,
+                    'image_url' => $this->formatImageUrl($cat->image_url),
                     'tour_count' => (int) $cat->getAttribute('tours_count'),
                 ])
                 ->values()
@@ -51,5 +51,18 @@ class CategoryController
         });
 
         return response()->json($result);
+    }
+
+    private function formatImageUrl(?string $url): ?string
+    {
+        if (blank($url)) {
+            return null;
+        }
+
+        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, '/')) {
+            return $url;
+        }
+
+        return '/storage/' . ltrim($url, '/');
     }
 }

@@ -24,8 +24,11 @@ use App\Domains\Search\Actions\IndexTourAction;
 use App\Domains\Search\Actions\RemoveFromIndexAction;
 use App\Events\BookingEmailDeliveryFailed;
 use App\Listeners\NotifyAdminOnEmailDeliveryFailure;
+use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -133,6 +136,30 @@ class EventServiceProvider extends ServiceProvider
                 }
             });
         });
+
+        // Spec 021: homepage cache invalidation. Admin edits to tours,
+        // categories, or tour translations must appear immediately instead of
+        // waiting out the 10-minute homepage TTL. TourTranslation saves are
+        // included because titles live there and the touch relationship
+        // propagates via a raw update that fires no Eloquent events on Tour.
+        // The flush mirrors InvalidateBlogCacheJob: try a tag-based flush
+        // inside try/catch (non-taggable stores fall through) and NEVER call
+        // plain Cache::flush() — it would wipe sessions, rate limits, etc.
+        $flushHomepageCache = function (): void {
+            try {
+                Cache::tags(['homepage'])->flush();
+            } catch (Throwable) {
+                // Store doesn't support tags — nothing safe to fall back to
+                // for a tag flush.
+            }
+        };
+
+        Tour::saved($flushHomepageCache);
+        Tour::deleted($flushHomepageCache);
+        TourTranslation::saved($flushHomepageCache);
+        TourTranslation::deleted($flushHomepageCache);
+        Category::saved($flushHomepageCache);
+        Category::deleted($flushHomepageCache);
     }
 
     /**

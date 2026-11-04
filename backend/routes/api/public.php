@@ -217,6 +217,7 @@ Route::middleware(['auth:sanctum', 'throttle:traveler'])->prefix('traveler')->gr
         Route::post('/', [WishlistController::class, 'store']);
         Route::delete('{tour_id}', [WishlistController::class, 'destroy']);
         Route::get('status', [WishlistController::class, 'status']);
+        Route::post('merge', [WishlistController::class, 'merge']);
     });
 
     Route::get('reviews', [App\Domains\Traveler\Controllers\Public\ReviewController::class, 'index']);

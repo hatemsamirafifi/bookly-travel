@@ -20,6 +20,7 @@ export interface TourCard {
     max: number;
   };
   next_available_date: string | null;
+  badge?: 'featured' | 'best-seller' | 'new' | null;
 }
 
 export interface TourDetail extends Pick<TourCard, 'id' | 'slug' | 'title' | 'location' | 'rating' | 'group_size'> {
@@ -272,11 +273,19 @@ export interface SearchResponse {
   };
 }
 
+export interface CuratedRail {
+  id: string;
+  slug: string;
+  title: string;
+  tours: TourCard[];
+}
+
 export interface HomepageData {
   data: {
     featured_tours: TourCard[];
     popular_categories: Category[];
     featured_destinations: Destination[];
+    curated_rails?: CuratedRail[];
   };
   meta: {
     seo: {
@@ -290,6 +299,7 @@ export interface BlogCategorySummary {
   slug: string;
   name: string;
   description?: string | null;
+  image_url?: string | null;
 }
 
 export interface BlogAuthorSummary {
@@ -343,6 +353,7 @@ export interface BlogCategoryResponse {
     name: string;
     slug: string;
     description?: string | null;
+    image_url?: string | null;
     posts: BlogPostCard[];
   };
   meta: {
