@@ -25,6 +25,7 @@ final class GetBlogCategoryAction
      *         name: string,
      *         slug: string,
      *         description: ?string,
+     *         image_url: ?string,
      *         posts: list<array<string, mixed>>
      *     },
      *     meta: array{
@@ -80,6 +81,7 @@ final class GetBlogCategoryAction
                     'name' => $category->name,
                     'slug' => $category->slug,
                     'description' => $category->description,
+                    'image_url' => BlogPostTransformer::formatImageUrl($category->image_url),
                     'posts' => $transformedItems,
                 ],
                 'meta' => [

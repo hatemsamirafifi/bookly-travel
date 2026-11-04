@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Domains\Blog\Models\BlogCategory;
 use App\Filament\Resources\BlogCategoryResource\Pages;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -11,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -46,6 +48,12 @@ class BlogCategoryResource extends Resource
                     ->rows(3)
                     ->maxLength(500)
                     ->columnSpanFull(),
+                FileUpload::make('image_url')
+                    ->label('Category Image')
+                    ->image()
+                    ->disk('public')
+                    ->directory('blog-categories')
+                    ->columnSpanFull(),
                 TextInput::make('display_order')
                     ->label('Display Order')
                     ->numeric()
@@ -61,6 +69,10 @@ class BlogCategoryResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('image_url')
+                    ->label('Image')
+                    ->disk('public')
+                    ->circular(),
                 TextColumn::make('name')
                     ->label('Name')
                     ->searchable()

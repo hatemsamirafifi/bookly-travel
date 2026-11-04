@@ -53,6 +53,10 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Content & CMS'),
                 NavigationGroup::make()
+                    ->label('Content'),
+                NavigationGroup::make()
+                    ->label('Demo Content'),
+                NavigationGroup::make()
                     ->label('Media & Storage'),
                 NavigationGroup::make()
                     ->label('Administration & Governance'),

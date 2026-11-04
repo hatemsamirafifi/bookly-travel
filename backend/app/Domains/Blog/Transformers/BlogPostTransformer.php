@@ -35,7 +35,7 @@ class BlogPostTransformer
             'slug' => $post->slug,
             'title' => $title,
             'excerpt' => $excerpt,
-            'cover_image_url' => $post->cover_image_url,
+            'cover_image_url' => self::formatImageUrl($post->cover_image_url),
             'cover_image_blur' => null,
             'published_at' => $post->published_at?->toIso8601String(),
             'is_featured' => (bool) $post->is_featured,
@@ -44,11 +44,25 @@ class BlogPostTransformer
             'category' => $post->category ? [
                 'slug' => $post->category->slug,
                 'name' => $post->category->name,
+                'image_url' => self::formatImageUrl($post->category->image_url),
             ] : null,
             'author' => [
                 'display_name' => $authorDisplayName,
                 'avatar_url' => $authorAvatarUrl,
             ],
         ];
+    }
+
+    public static function formatImageUrl(?string $url): ?string
+    {
+        if (blank($url)) {
+            return null;
+        }
+
+        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, '/')) {
+            return $url;
+        }
+
+        return '/storage/' . ltrim($url, '/');
     }
 }

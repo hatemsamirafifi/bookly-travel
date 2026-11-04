@@ -108,6 +108,7 @@ class BlogPostResource extends Resource
                         FileUpload::make('cover_image_url')
                             ->label('Cover Image')
                             ->image()
+                            ->disk('public')
                             ->directory('blog/covers')
                             ->columnSpanFull(),
                         MediaPicker::make('cover_media_id')
@@ -226,6 +227,7 @@ class BlogPostResource extends Resource
             ->columns([
                 ImageColumn::make('cover_image_url')
                     ->label('Cover')
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('title')
                     ->label('Title')

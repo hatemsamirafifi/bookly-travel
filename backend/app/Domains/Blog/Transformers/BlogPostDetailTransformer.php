@@ -66,7 +66,7 @@ class BlogPostDetailTransformer
             'title' => $title,
             'body' => $body,
             'excerpt' => $excerpt,
-            'cover_image_url' => $post->cover_image_url,
+            'cover_image_url' => BlogPostTransformer::formatImageUrl($post->cover_image_url),
             'cover_image_blur' => null,
             'published_at' => $post->published_at?->toIso8601String(),
             'updated_at' => $post->updated_at?->toIso8601String(),
@@ -76,6 +76,7 @@ class BlogPostDetailTransformer
             'category' => $post->category ? [
                 'slug' => $post->category->slug,
                 'name' => $post->category->name,
+                'image_url' => BlogPostTransformer::formatImageUrl($post->category->image_url),
             ] : null,
             'author' => [
                 'display_name' => $authorDisplayName,
