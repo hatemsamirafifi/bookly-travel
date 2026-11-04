@@ -155,7 +155,15 @@
       "halfDay": "Mezza Giornata (≤4h)",
       "fullDay": "Giornata Intera (4-8h)",
       "multiDay": "Multi-Giorno (>8h)"
-    }
+    },
+    "activeFilters": "Filtri attivi",
+    "showToursCount": "Mostra {count} tour",
+    "reset": "Reimposta",
+    "from": "Da",
+    "newRating": "Nuovo",
+    "badgeFeatured": "In evidenza",
+    "badgeBestSeller": "Più venduto",
+    "badgeNew": "Nuovo"
   },
   "listing": {
     "categoryTitle": "Tour di {name}",
@@ -252,6 +260,8 @@
     "heroTitle": "Scopri e Prenota Tour Incredibili",
     "heroSubtitle": "Esplora tour e attività dei partner Bookly. Trova qui la tua prossima esperienza.",
     "loadError": "Impossibile caricare la pagina iniziale. Riprova più tardi.",
+    "loadErrorHint": "Puoi comunque cercare tour e destinazioni usando la barra di ricerca qui sopra.",
+    "retry": "Riprova",
     "featuredTours": "Tour in Evidenza",
     "viewAll": "Vedi tutti",
     "popularCategories": "Categorie Popolari",
@@ -264,7 +274,15 @@
     "partnerDescription": "Pubblica i tuoi tour su Bookly e gestisci le offerte in un unico posto.",
     "partnerAction": "Diventa partner",
     "tourCount": "{count} tour",
-    "tourCount_plural": "{count} tour"
+    "tourCount_plural": "{count} tour",
+    "noImageAvailable": "Nessuna immagine disponibile",
+    "guaranteeVerifiedTitle": "Guide locali verificate",
+    "guaranteeVerifiedDesc": "Tour autentici guidati da esperti locali certificati.",
+    "guaranteeConfirmationTitle": "Prenotazione immediata sicura",
+    "guaranteeConfirmationDesc": "Conferma istantanea con protezione completa dell'acquirente.",
+    "guaranteeSupportTitle": "Assistenza viaggiatori 24/7",
+    "guaranteeSupportDesc": "Team di supporto dedicato pronto ad assisterti in qualsiasi momento.",
+    "valueTitle": "Garanzie del marketplace Bookly"
   },
   "locale": {
     "switch": "Cambia lingua",
@@ -560,7 +578,11 @@
       "saveFailed": "Impossibile aggiornare la tua lista dei desideri. Riprova.",
       "removed": "Rimosso dalla tua lista dei desideri.",
       "statusFailed": "Non è stato possibile verificare se questo tour è salvato. Riprova.",
-      "denied": "Non puoi aggiornare questa lista dei desideri."
+      "denied": "Non puoi aggiornare questa lista dei desideri.",
+      "savedWith": "{title} salvato nella lista desideri",
+      "removedWith": "{title} rimosso dalla lista desideri",
+      "saveAria": "Salva {title} nella lista desideri",
+      "removeAria": "Rimuovi {title} dalla lista desideri"
     },
     "myReviews": {
       "loadError": "Impossibile caricare le recensioni.",

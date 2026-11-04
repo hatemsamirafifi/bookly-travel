@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import type { Category } from '@/lib/api/types';
-import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 
 interface CategoryGridProps {
   categories: Category[];
@@ -9,42 +9,46 @@ interface CategoryGridProps {
   title?: string;
 }
 
-export default async function CategoryGrid({ categories, locale, title }: CategoryGridProps) {
-  if (categories.length === 0) return null;
-  const t = await getTranslations({ locale, namespace: 'home' });
+export default function CategoryGrid({ categories, locale, title }: CategoryGridProps) {
+  const t = useTranslations('home');
+  if (!categories || categories.length === 0) return null;
+  const sectionTitle = title ?? t('popularCategories');
 
   return (
-    <section className="bg-white py-12">
+    <section className="bg-surface py-12 border-b border-border/40" aria-label={sectionTitle}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-8 text-2xl font-bold text-bookly-navy">{title ?? t('popularCategories')}</h2>
+        <h2 className="mb-6 text-xl font-bold text-bookly-navy sm:text-2xl">{sectionTitle}</h2>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {categories.map((cat) => (
             <Link
               key={cat.slug}
-              href={`/${locale}/categories/${cat.slug}`}
-              className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+              href={`/${locale}/search?category=${encodeURIComponent(cat.slug)}`}
+              className="group relative overflow-hidden rounded-xl border border-border bg-surface-alt shadow-sm transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             >
-              <div className="relative aspect-[4/3] bg-gray-100">
+              <div className="relative aspect-[4/3] bg-surface-alt">
                 {cat.image_url ? (
-                  <Image
+                  <ImageWithFallback
                     src={cat.image_url}
                     alt={cat.name}
                     fill
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                    className="object-cover transition-transform group-hover:scale-105"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-gray-400">
-                    <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <div className="flex h-full flex-col items-center justify-center p-3 text-center text-text-muted">
+                    <svg className="mb-1 h-6 w-6 text-text-muted/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
+                    <span className="text-xs">{t('noImageAvailable')}</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <h3 className="text-sm font-semibold text-white">{cat.name}</h3>
-                  <p className="text-xs text-gray-200">{t(cat.tour_count === 1 ? 'tourCount' : 'tourCount_plural', { count: cat.tour_count })}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                  <h3 className="text-sm font-semibold leading-snug">{cat.name}</h3>
+                  <p className="text-xs text-gray-200 mt-0.5">
+                    {t(cat.tour_count === 1 ? 'tourCount' : 'tourCount_plural', { count: cat.tour_count })}
+                  </p>
                 </div>
               </div>
             </Link>

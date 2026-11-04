@@ -1,14 +1,19 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { getHomepageData } from '@/lib/api/homepage';
 import { getBlogPosts } from '@/lib/api/blog';
-import BlogCard from '@/components/blog/BlogCard';
 import { OrganizationSchema } from '@/components/seo/StructuredData';
 import HeroSection from '@/components/home/HeroSection';
-import FeaturedTours from '@/components/home/FeaturedTours';
+import CategoryChips from '@/components/home/CategoryChips';
+import BooklyValuePanel from '@/components/home/BooklyValuePanel';
 import CategoryGrid from '@/components/home/CategoryGrid';
+import FeaturedTours from '@/components/home/FeaturedTours';
 import DestinationShowcase from '@/components/home/DestinationShowcase';
+import ThemedTourRails from '@/components/home/ThemedTourRails';
+import BlogInspiration from '@/components/home/BlogInspiration';
+import PartnerAcquisitionPanel from '@/components/home/PartnerAcquisitionPanel';
+import CatalogRecoveryAlert from '@/components/home/CatalogRecoveryAlert';
+import HomeErrorBoundary from '@/components/home/HomeErrorBoundary';
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -45,60 +50,69 @@ export default async function HomePage({ params }: HomePageProps) {
     getHomepageData(locale),
     getBlogPosts(locale, { per_page: 3 }),
   ]);
+
   if (homeResult.status === 'rejected') {
     return (
       <div className="min-h-screen">
         <HeroSection title={t('heroTitle')} subtitle={t('heroSubtitle')} />
-        <div className="py-12 text-center text-text-muted" role="alert">
-          {t('loadError')}
-        </div>
+        <CatalogRecoveryAlert />
       </div>
     );
   }
 
-  // The homepage response is wrapped in a `data` envelope
-  // (category-destination-api.md:128-130); the featured tours, categories,
-  // and destinations live under data.data, SEO under data.meta.
+  // The homepage response envelope: tours, categories, destinations, rails under data.data
   const home = homeResult.value.data;
   const articles = blogResult.status === 'fulfilled' ? blogResult.value.data : [];
 
   return (
     <>
       <OrganizationSchema locale={locale} />
+      {/* 1. "Where to?" Search Hero */}
       <HeroSection title={t('heroTitle')} subtitle={t('heroSubtitle')} />
-      <FeaturedTours tours={home.featured_tours} locale={locale} />
-      <CategoryGrid categories={home.popular_categories} locale={locale} />
-      <DestinationShowcase destinations={home.featured_destinations} locale={locale} />
-      {articles.length > 0 && (
-        <section className="bg-surface py-12" aria-labelledby="home-editorial-title">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 flex items-center justify-between gap-4">
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">{t('editorialEyebrow')}</p>
-                <h2 id="home-editorial-title" className="text-2xl font-bold text-bookly-navy">{t('editorialTitle')}</h2>
-              </div>
-              <Link href={`/${locale}/blog`} className="text-sm font-semibold text-bookly-navy underline-offset-4 hover:underline focus-visible:underline">
-                {t('viewAllArticles')}
-              </Link>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {articles.map((post) => <BlogCard key={post.id} post={post} locale={locale} />)}
-            </div>
-          </div>
-        </section>
+
+      {/* 2. Tour-Category Chips */}
+      {home.popular_categories && home.popular_categories.length > 0 && (
+        <HomeErrorBoundary sectionName="CategoryChips">
+          <CategoryChips categories={home.popular_categories} locale={locale} />
+        </HomeErrorBoundary>
       )}
-      <section className="border-t border-border bg-surface-alt py-12" aria-labelledby="home-partner-title">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div className="max-w-2xl">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">{t('partnerEyebrow')}</p>
-            <h2 id="home-partner-title" className="text-2xl font-bold text-bookly-navy">{t('partnerTitle')}</h2>
-            <p className="mt-2 text-text-muted">{t('partnerDescription')}</p>
-          </div>
-          <Link href={`/${locale}/partner-register`} className="inline-flex min-h-11 items-center justify-center self-start rounded-xl border border-bookly-navy px-5 py-3 text-sm font-semibold text-bookly-navy transition-colors hover:bg-bookly-navy hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
-            {t('partnerAction')}
-          </Link>
-        </div>
-      </section>
+
+      {/* 3. Bookly Value Panel */}
+      <HomeErrorBoundary sectionName="BooklyValuePanel">
+        <BooklyValuePanel locale={locale} />
+      </HomeErrorBoundary>
+
+      {/* 4. Popular Categories Grid */}
+      <HomeErrorBoundary sectionName="CategoryGrid">
+        <CategoryGrid categories={home.popular_categories} locale={locale} />
+      </HomeErrorBoundary>
+
+      {/* 5. Featured Tours Snap Rail */}
+      <HomeErrorBoundary sectionName="FeaturedTours">
+        <FeaturedTours tours={home.featured_tours} locale={locale} />
+      </HomeErrorBoundary>
+
+      {/* 6. Top Destinations Showcase */}
+      <HomeErrorBoundary sectionName="DestinationShowcase">
+        <DestinationShowcase destinations={home.featured_destinations} locale={locale} />
+      </HomeErrorBoundary>
+
+      {/* 7. Themed / Seasonal Curated Rails */}
+      {home.curated_rails && home.curated_rails.length > 0 && (
+        <HomeErrorBoundary sectionName="ThemedTourRails">
+          <ThemedTourRails rails={home.curated_rails} locale={locale} />
+        </HomeErrorBoundary>
+      )}
+
+      {/* 8. Blog Inspiration Articles */}
+      <HomeErrorBoundary sectionName="BlogInspiration">
+        <BlogInspiration articles={articles} locale={locale} />
+      </HomeErrorBoundary>
+
+      {/* 9. Partner Acquisition Invitation */}
+      <HomeErrorBoundary sectionName="PartnerAcquisitionPanel">
+        <PartnerAcquisitionPanel locale={locale} />
+      </HomeErrorBoundary>
     </>
   );
 }

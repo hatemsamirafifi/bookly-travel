@@ -25,6 +25,18 @@ jest.mock('@/components/home/DestinationShowcase', () => ({
   __esModule: true,
   default: ({ destinations }: { destinations: unknown[] }) => <div data-testid="destinations" data-count={destinations.length} />,
 }));
+jest.mock('@/components/home/CategoryChips', () => ({
+  __esModule: true,
+  default: () => <div data-testid="category-chips" />,
+}));
+jest.mock('@/components/home/BooklyValuePanel', () => ({
+  __esModule: true,
+  default: () => <div data-testid="value-panel" />,
+}));
+jest.mock('@/components/home/ThemedTourRails', () => ({
+  __esModule: true,
+  default: () => <div data-testid="themed-rails" />,
+}));
 jest.mock('@/components/blog/BlogCard', () => ({
   __esModule: true,
   default: ({ post }: { post: { title: string } }) => <article>{post.title}</article>,

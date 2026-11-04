@@ -155,7 +155,15 @@
       "halfDay": "Half Day (≤4h)",
       "fullDay": "Full Day (4-8h)",
       "multiDay": "Multi-Day (>8h)"
-    }
+    },
+    "activeFilters": "Active filters",
+    "showToursCount": "Show {count} Tours",
+    "reset": "Reset",
+    "from": "From",
+    "newRating": "New",
+    "badgeFeatured": "Featured",
+    "badgeBestSeller": "Best Seller",
+    "badgeNew": "New"
   },
   "listing": {
     "categoryTitle": "{name} tours",
@@ -252,6 +260,8 @@
     "heroTitle": "Discover & Book Amazing Tours",
     "heroSubtitle": "Explore tours and activities from Bookly partners. Find your next experience here.",
     "loadError": "Unable to load homepage content. Please try again later.",
+    "loadErrorHint": "You can still search for tours and destinations using the search bar above.",
+    "retry": "Try again",
     "featuredTours": "Featured Tours",
     "viewAll": "View all",
     "popularCategories": "Popular Categories",
@@ -264,7 +274,15 @@
     "partnerDescription": "Bring your tours to Bookly and manage your offerings in one place.",
     "partnerAction": "Become a partner",
     "tourCount": "{count} tour",
-    "tourCount_plural": "{count} tours"
+    "tourCount_plural": "{count} tours",
+    "noImageAvailable": "No image available",
+    "guaranteeVerifiedTitle": "Verified Local Guides",
+    "guaranteeVerifiedDesc": "Authentic tours led by certified local experts.",
+    "guaranteeConfirmationTitle": "Secure Instant Booking",
+    "guaranteeConfirmationDesc": "Instant confirmation with full buyer protection.",
+    "guaranteeSupportTitle": "24/7 Traveler Care",
+    "guaranteeSupportDesc": "Dedicated support team ready to assist anytime.",
+    "valueTitle": "Bookly Marketplace Guarantees"
   },
   "locale": {
     "switch": "Switch language",
@@ -560,7 +578,11 @@
       "saveFailed": "Could not update your wishlist. Try again.",
       "removed": "Removed from your wishlist.",
       "statusFailed": "Could not check whether this tour is saved. Try again.",
-      "denied": "You cannot update this wishlist."
+      "denied": "You cannot update this wishlist.",
+      "savedWith": "{title} saved to wishlist",
+      "removedWith": "{title} removed from wishlist",
+      "saveAria": "Save {title} to wishlist",
+      "removeAria": "Remove {title} from wishlist"
     },
     "myReviews": {
       "loadError": "Reviews could not be loaded.",
