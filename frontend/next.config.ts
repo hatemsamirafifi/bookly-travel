@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**' },
       // Local fixture CDN (http only inside Docker; see docker/nginx/nginx.conf).
       { protocol: 'http', hostname: 'cdn.bookly.test' },
+      { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'http', hostname: 'localhost', port: '8080' },
+      { protocol: 'http', hostname: 'localhost', port: '8000' },
+      { protocol: 'http', hostname: 'nginx' },
     ],
     // The fixture CDN resolves to a private Docker-network IP. The optimizer
     // refuses private upstream IPs by default, so local Docker stacks opt in
@@ -41,6 +45,10 @@ const nextConfig: NextConfig = {
       {
         source: '/api/:path*',
         destination: `${process.env.API_INTERNAL_URL || 'http://nginx'}/api/:path*`,
+      },
+      {
+        source: '/storage/:path*',
+        destination: `${process.env.API_INTERNAL_URL || 'http://nginx'}/storage/:path*`,
       },
     ];
   },

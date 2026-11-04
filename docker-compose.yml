@@ -65,6 +65,7 @@ services:
     volumes:
       - ./backend/.env:/var/www/html/.env:ro
       - ./backend/storage:/var/www/html/storage
+      - ./docker/cdn:/var/cdn:ro
       # Keep locked PHP dependencies on Linux; Windows bind-mount stat/read
       # latency otherwise affects cold FPM requests and every scheduler boot.
       - backend_vendor:/var/www/html/vendor
@@ -111,6 +112,7 @@ services:
     volumes:
       - ./backend/.env:/var/www/html/.env:ro
       - ./backend/storage:/var/www/html/storage
+      - ./docker/cdn:/var/cdn:ro
       - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql
@@ -152,6 +154,7 @@ services:
     volumes:
       - ./backend/.env:/var/www/html/.env:ro
       - ./backend/storage:/var/www/html/storage
+      - ./docker/cdn:/var/cdn:ro
       - backend_vendor:/var/www/html/vendor
     environment:
       - DB_CONNECTION=pgsql
