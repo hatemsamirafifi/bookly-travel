@@ -17,4 +17,3 @@ class AdminRoleSeeder extends Seeder
         AdminRole::ensureSystemRoles();
     }
 }
-

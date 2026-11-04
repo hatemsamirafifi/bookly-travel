@@ -69,7 +69,7 @@ it('provides complete view data for demo content management', function () {
         'status' => 'published',
     ]);
 
-    $page = new DemoContentManager();
+    $page = new DemoContentManager;
     $data = $page->getViewData();
 
     expect($data)->toHaveKeys(['tours', 'categories', 'blogPosts', 'stats'])

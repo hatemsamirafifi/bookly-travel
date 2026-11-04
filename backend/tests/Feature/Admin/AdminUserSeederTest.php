@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 uses(RefreshDatabase::class);
 
 it('seeds default admin user with all flags in testing environment', function () {
-    $seeder = new AdminUserSeeder();
+    $seeder = new AdminUserSeeder;
     $seeder->run();
 
     $admin = User::where('email', 'admin@bookly.test')->first();
@@ -26,7 +26,7 @@ it('refuses to seed in non-local environment if password is default or missing',
     putenv('ADMIN_EMAIL=security-admin@bookly.com');
     putenv('ADMIN_PASSWORD=password'); // known default
 
-    expect(fn () => (new AdminUserSeeder())->run())
+    expect(fn () => (new AdminUserSeeder)->run())
         ->toThrow(RuntimeException::class, 'without a secure ADMIN_PASSWORD');
 })->after(function () {
     app()['env'] = 'testing';
@@ -40,7 +40,7 @@ it('refuses to seed in non-local environment if email uses test domain', functio
     putenv('ADMIN_EMAIL=admin@bookly.test');
     putenv('ADMIN_PASSWORD=SuperSecureP@ssw0rd2026!');
 
-    expect(fn () => (new AdminUserSeeder())->run())
+    expect(fn () => (new AdminUserSeeder)->run())
         ->toThrow(RuntimeException::class, 'with a test domain (@bookly.test)');
 })->after(function () {
     app()['env'] = 'testing';
@@ -54,7 +54,7 @@ it('successfully seeds in non-local environment with valid email and strong pass
     putenv('ADMIN_EMAIL=ops-admin@bookly.travel');
     putenv('ADMIN_PASSWORD=StrongStagingP@ssw0rd2026!');
 
-    $seeder = new AdminUserSeeder();
+    $seeder = new AdminUserSeeder;
     $seeder->run();
 
     $admin = User::where('email', 'ops-admin@bookly.travel')->first();
@@ -67,4 +67,3 @@ it('successfully seeds in non-local environment with valid email and strong pass
     putenv('ADMIN_EMAIL');
     putenv('ADMIN_PASSWORD');
 });
-

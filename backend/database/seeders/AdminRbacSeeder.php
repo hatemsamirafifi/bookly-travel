@@ -7,7 +7,4 @@ namespace Database\Seeders;
  *
  * Resolves references to AdminRbacSeeder across audit documentation and runbooks.
  */
-class AdminRbacSeeder extends AdminRoleSeeder
-{
-}
-
+class AdminRbacSeeder extends AdminRoleSeeder {}
