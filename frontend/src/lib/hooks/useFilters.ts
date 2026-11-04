@@ -71,7 +71,7 @@ export function useFilters() {
   );
 
   const setMultipleFilters = useCallback(
-    (updates: Partial<FilterState>) => {
+    (updates: Partial<Record<keyof FilterState, string | null | undefined>>) => {
       const sp = new URLSearchParams(searchParams.toString());
       for (const [key, value] of Object.entries(updates)) {
         if (value) {
