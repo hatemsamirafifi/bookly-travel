@@ -33,6 +33,26 @@ class TourPolicy
         return $this->can($user);
     }
 
+    public function create(User $user): bool
+    {
+        return $this->can($user);
+    }
+
+    public function update(User $user, Tour $tour): bool
+    {
+        return $this->can($user);
+    }
+
+    public function delete(User $user, Tour $tour): bool
+    {
+        return $this->can($user);
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $this->can($user);
+    }
+
     public function publish(User $user, Tour $tour): bool
     {
         return $this->can($user);

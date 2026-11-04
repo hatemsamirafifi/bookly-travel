@@ -179,3 +179,4 @@ Both mandatory release conditions have been fully satisfied, verified with isola
 1. Missing dependency files are permanently tracked in Git.
 2. Production permission backfill is safely encapsulated in a targeted, idempotent Artisan command ready for deployment.
 3. The complete admin regression suite passes at 100% (168 tests, 700 assertions).
+
