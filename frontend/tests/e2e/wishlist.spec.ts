@@ -1,6 +1,7 @@
 import { test, expect, type APIRequestContext, type Page } from '@playwright/test';
 
 test.describe('Wishlist', () => {
+  test.describe.configure({ mode: 'serial' });
   // Auth is provided by the `-authed` Playwright projects via a shared
   // storageState (tests/e2e/auth.setup.ts logs in once). No per-test login —
   // that would re-hit the backend `auth` rate limiter (10/min/IP) and the old

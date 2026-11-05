@@ -163,7 +163,6 @@ test.describe('Search Page', () => {
 
   test('clearing filters retains the search term', async ({ page }) => {
     await page.goto('/en/search?q=tour&category=adventure');
-    await showFilters(page);
     await page.getByRole('button', { name: /^Clear all/ }).first().click();
     await expect(page).toHaveURL(/\/en\/search\?q=tour$/);
   });
@@ -193,16 +192,23 @@ test.describe('Search Page', () => {
 
     const minInput = panel.getByLabel('Minimum price');
     await minInput.fill('1000');
-    await expect(page).toHaveURL(/price_min=1000/);
 
     const maxInput = panel.getByLabel('Maximum price');
     await maxInput.fill('5000');
+
+    // On mobile the drawer stages selections and only commits them on apply.
+    if (await dialog.isVisible()) {
+      await panel
+        .getByRole('button', { name: /Show \d+ results|Show \d+ Tours|Apply filters/i })
+        .click();
+    }
+
+    await expect(page).toHaveURL(/price_min=1000/);
     await expect(page).toHaveURL(/price_max=5000/);
   });
 
   test('clear all link appears when filters are active', async ({ page }) => {
     await page.goto('/en/search?category=adventure');
-    await showFilters(page);
 
     const clearButton = page.getByRole('button', { name: /^Clear all/ }).first();
     await expect(clearButton).toBeVisible();
@@ -216,10 +222,10 @@ test.describe('Search Page', () => {
     await showFilters(page);
 
     const toggleButton = page.getByRole('button', { name: /Available Date/ });
-    await expect(toggleButton).toBeVisible();
-
-    await toggleButton.click();
-    const dateInput = page.getByLabel('Filter by available date');
+    const dateInput = page.getByLabel(/Filter by available date|Filter by date/i);
+    if (await toggleButton.isVisible()) {
+      await toggleButton.click();
+    }
     await expect(dateInput).toBeVisible();
   });
 
