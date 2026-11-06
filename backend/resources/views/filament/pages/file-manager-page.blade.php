@@ -7,7 +7,7 @@
                class="font-medium {{ $breadcrumbTrail === [] ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400 mt-0' }}">
                 Root
             </a>
-            @forelse ($breadcrumbTrail as $crumb)
+            @foreach ($breadcrumbTrail as $crumb)
                 <span class="text-gray-400">/</span>
                 @if ($crumb->getKey() === ($breadcrumbTrail[count($breadcrumbTrail) - 1]?->getKey() ?? null))
                     <span class="font-semibold" data-current-folder>{{ $crumb->name }}</span>
@@ -16,7 +16,7 @@
                         {{ $crumb->name }}
                     </a>
                 @endif
-            @endforelse
+            @endforeach
         </div>
 
         <div class="flex flex-wrap gap-2 text-xs" data-storage-kpis>
