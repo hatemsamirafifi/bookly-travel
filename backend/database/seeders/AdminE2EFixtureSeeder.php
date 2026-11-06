@@ -21,6 +21,7 @@ use App\Models\Tour;
 use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -32,15 +33,41 @@ class AdminE2EFixtureSeeder extends Seeder
      * Provisions the reproducible test fixtures required by the
      * browser Playwright test suite (frontend/tests/e2e/admin-2.0.spec.ts).
      *
-     * Environment Guard:
-     * Strictly restricted to non-production, non-staging environments.
+     * Environment & Database Guard:
+     * Strictly positively authorized:
+     * 1. Application environment must be explicitly 'testing'.
+     * 2. Opt-in flag (ALLOW_ADMIN_E2E_FIXTURES=true) must be enabled.
+     * 3. Target database must be disposable and designated for testing (name contains 'test'/'testing').
      */
     public function run(): void
     {
-        if (app()->environment(['production', 'staging'])) {
+        // 1. Strict positive environment check: must be explicitly 'testing'
+        if (app()->environment() !== 'testing') {
+            throw new \RuntimeException(sprintf(
+                'AdminE2EFixtureSeeder is strictly prohibited from running outside the testing environment. Current environment: "%s".',
+                app()->environment()
+            ));
+        }
+
+        // 2. Strict opt-in configuration flag check
+        $optIn = (bool) config('app.allow_admin_e2e_fixtures');
+        if (! $optIn) {
             throw new \RuntimeException(
-                'AdminE2EFixtureSeeder is strictly prohibited from executing in production or staging environments.'
+                'AdminE2EFixtureSeeder requires explicit authorization via ALLOW_ADMIN_E2E_FIXTURES=true or config("app.allow_admin_e2e_fixtures").'
             );
+        }
+
+        // 3. Verification that target database is disposable and designated for testing
+        $connection = config('database.default', 'pgsql');
+        $databaseName = (string) (config("database.connections.{$connection}.database") ?: DB::connection()->getDatabaseName());
+        $isDisposableTestDb = Str::contains(Str::lower($databaseName), ['test', 'testing', ':memory:', 'sqlite_memory'])
+            || Str::endsWith(Str::lower($databaseName), ['_test', '_testing']);
+
+        if (! $isDisposableTestDb) {
+            throw new \RuntimeException(sprintf(
+                'AdminE2EFixtureSeeder refused to run: database "%s" is not designated as a disposable test database (must contain "test" or "testing").',
+                $databaseName
+            ));
         }
 
         // 1. System roles + Super Admin

@@ -141,4 +141,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin E2E Fixtures Opt-In
+    |--------------------------------------------------------------------------
+    |
+    | Governs whether the AdminE2EFixtureSeeder is permitted to run.
+    | Strictly requires APP_ENV=testing and a designated disposable test database.
+    |
+    */
+
+    'allow_admin_e2e_fixtures' => (bool) env('ALLOW_ADMIN_E2E_FIXTURES', false),
+
 ];
