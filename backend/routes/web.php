@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HugeRteMediaController;
+use Illuminate\Support\Facades\Route;
 
 // Health check for API readiness
 Route::get('/', function () {
