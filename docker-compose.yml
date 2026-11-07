@@ -179,7 +179,10 @@ services:
 
   # Nginx Reverse Proxy
   nginx:
-    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    image: bookly-nginx:official-hugerte
     container_name: bookly-nginx
     restart: unless-stopped
     ports:
