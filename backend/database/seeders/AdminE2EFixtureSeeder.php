@@ -327,7 +327,7 @@ class AdminE2EFixtureSeeder extends Seeder
                 'author_id' => $admin->id,
                 'blog_category_id' => $blogCategory->id,
                 'status' => BlogPost::STATUS_PUBLISHED,
-                'published_at' => now()->subHours(2),
+                'published_at' => now()->subMonths(6),
                 'title' => ['en' => 'E2E Sanitized Travel Guide'],
                 'excerpt' => ['en' => 'Safe travel guide excerpt.'],
                 'body' => ['en' => '<p>Initial safe guide body.</p>'],
@@ -342,7 +342,7 @@ class AdminE2EFixtureSeeder extends Seeder
                 'author_id' => $admin->id,
                 'blog_category_id' => $blogCategory->id,
                 'status' => BlogPost::STATUS_PUBLISHED,
-                'published_at' => now()->subHours(3),
+                'published_at' => now()->subMonths(7),
                 'title' => [
                     'en' => 'English Fallback Blog Title',
                     'es' => 'Título Español Obsoleto',
@@ -379,9 +379,21 @@ class AdminE2EFixtureSeeder extends Seeder
             [
                 'status' => StaticPage::STATUS_PUBLISHED,
                 'published_at' => now()->subDays(1),
-                'title' => ['en' => 'Privacy Policy', 'es' => 'Política de Privacidad'],
-                'body' => ['en' => '<p>We respect your data.</p>', 'es' => '<p>Respetamos tus datos.</p>'],
-                'meta_description' => ['en' => 'Privacy Policy meta'],
+                'title' => [
+                    'en' => 'Privacy Policy',
+                    'es' => 'Política de Privacidad',
+                    'it' => 'Informativa sulla Privacy',
+                ],
+                'body' => [
+                    'en' => '<p>We respect your data.</p><h2>Information We Collect</h2><p>Data.</p><h2>How We Use Information</h2><p>Usage.</p><h2>Third-Party Services</h2><p>Third parties.</p><h2>Your Privacy Rights</h2><p>Rights.</p><h2>Contact Us</h2><p>Support.</p>',
+                    'es' => '<p>Respetamos tus datos.</p><h2>Información que Recopilamos</h2><p>Datos.</p><h2>Cómo Usamos la Información</h2><p>Uso.</p><h2>Servicios de Terceros</h2><p>Terceros.</p><h2>Sus Derechos de Privacidad</h2><p>Derechos.</p><h2>Contáctenos</h2><p>Soporte.</p>',
+                    'it' => '<p>Rispettiamo i tuoi dati.</p><h2>Informazioni Raccolte</h2><p>Dati.</p><h2>Come Utilizziamo le Informazioni</h2><p>Utilizzo.</p><h2>Servizi di Terze Parti</h2><p>Terze parti.</p><h2>I Tuoi Diritti sulla Privacy</h2><p>Diritti.</p><h2>Contattaci</h2><p>Supporto.</p>',
+                ],
+                'meta_description' => [
+                    'en' => 'Privacy Policy meta',
+                    'es' => 'Política de Privacidad meta',
+                    'it' => 'Informativa sulla Privacy meta',
+                ],
                 'updated_by' => $admin->id,
             ]
         );

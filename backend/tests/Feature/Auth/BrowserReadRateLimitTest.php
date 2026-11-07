@@ -20,7 +20,9 @@ it('allows a higher browser read budget only in an opted-in local stack', functi
     'local default' => ['local', 120, 120],
     'local browser stack' => ['local', 6000, 6000],
     'local cannot lower the normal budget' => ['local', 0, 120],
+    'testing default' => ['testing', 120, 120],
+    'testing browser stack' => ['testing', 6000, 6000],
+    'testing cannot lower the normal budget' => ['testing', 0, 120],
     'production ignores browser override' => ['production', 6000, 120],
     'staging ignores browser override' => ['staging', 6000, 120],
-    'PHP tests keep normal limits' => ['testing', 6000, 120],
 ]);

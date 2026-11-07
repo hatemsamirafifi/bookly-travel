@@ -129,7 +129,9 @@ class AppServiceProvider extends ServiceProvider
             // intentional per-test logins (auth-guards, auth-navigation)
             // cannot trip the shared-IP limiter mid-run; production and
             // staging keep the strict limit unchanged.
-            $limit = app()->environment('local') ? 60 : 10;
+            $limit = app()->environment(['local', 'testing'])
+                ? max(60, (int) config('app.browser_test_read_rate_limit'))
+                : 10;
 
             return Limit::perMinute($limit)->by($request->ip());
         });
@@ -176,7 +178,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('booking.get', function (Request $request) {
-            $limit = app()->environment('local')
+            $limit = app()->environment(['local', 'testing'])
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
 
@@ -184,7 +186,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('traveler', function (Request $request) {
-            $limit = app()->environment('local')
+            $limit = app()->environment(['local', 'testing'])
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
 
