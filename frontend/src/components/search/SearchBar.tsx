@@ -23,9 +23,14 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
   }, [initialQuery]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const trimmed = query.trim();
+      const formData = new FormData(e.currentTarget);
+      const formValue = formData.get('q');
+      const rawQuery = typeof formValue === 'string' ? formValue : query;
+      const trimmed = rawQuery.trim();
+      setQuery(rawQuery);
+
       startTransition(() => {
         const sp = new URLSearchParams(searchParams ? searchParams.toString() : '');
         if (trimmed) {
@@ -43,6 +48,8 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
 
   return (
     <form
+      action={`/${locale}/search`}
+      method="GET"
       onSubmit={handleSubmit}
       role="search"
       aria-busy={isPending}
@@ -54,6 +61,7 @@ export default function SearchBar({ initialQuery = '', compact = false }: Search
       <div className="relative">
         <input
           id="search-input"
+          name="q"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
