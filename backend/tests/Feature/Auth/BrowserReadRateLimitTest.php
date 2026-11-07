@@ -3,9 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\RateLimiter;
-use Tests\TestCase;
-
-uses(TestCase::class);
 
 it('strictly preserves read rate limits across environments and guards against fixture opt-in outside testing/local', function (string $environment, bool $fixtureOptIn, int $configuredLimit, int $expectedLimit) {
     app()['env'] = $environment;
