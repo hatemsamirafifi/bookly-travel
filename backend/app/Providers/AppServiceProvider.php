@@ -129,7 +129,9 @@ class AppServiceProvider extends ServiceProvider
             // intentional per-test logins (auth-guards, auth-navigation)
             // cannot trip the shared-IP limiter mid-run; production,
             // staging, and unit tests keep the strict limit unchanged.
-            $isBrowserStack = app()->environment('local') || (bool) config('app.allow_admin_e2e_fixtures');
+            // Browser stack is strictly limited to local or testing with explicit opt-in.
+            $isBrowserStack = app()->environment('local')
+                || (app()->environment('testing') && (bool) config('app.allow_admin_e2e_fixtures'));
             $limit = $isBrowserStack
                 ? max(60, (int) config('app.browser_test_read_rate_limit'))
                 : 10;
@@ -179,7 +181,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('booking.get', function (Request $request) {
-            $isBrowserStack = app()->environment('local') || (bool) config('app.allow_admin_e2e_fixtures');
+            $isBrowserStack = app()->environment('local')
+                || (app()->environment('testing') && (bool) config('app.allow_admin_e2e_fixtures'));
             $limit = $isBrowserStack
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
@@ -188,7 +191,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('traveler', function (Request $request) {
-            $isBrowserStack = app()->environment('local') || (bool) config('app.allow_admin_e2e_fixtures');
+            $isBrowserStack = app()->environment('local')
+                || (app()->environment('testing') && (bool) config('app.allow_admin_e2e_fixtures'));
             $limit = $isBrowserStack
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
