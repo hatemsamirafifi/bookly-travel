@@ -23,6 +23,10 @@ test.describe('@admin-hugerte-official', () => {
       page.waitForURL('**/admin', { timeout: 30000 }),
       page.getByRole('button', { name: /sign in/i }).click(),
     ]);
+    const mediaResponse = await page.request.get('/admin/hugerte/media', { headers: { Accept: 'application/json' } });
+    expect(mediaResponse.status()).toBe(200);
+    expect(Array.isArray((await mediaResponse.json()).assets)).toBe(true);
+
     await page.goto('/admin/blog-posts/create');
 
     await expect(page.locator('.tox-tinymce').first()).toBeVisible({ timeout: 30000 });
