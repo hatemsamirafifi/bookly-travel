@@ -20,9 +20,21 @@ it('allows a higher browser read budget only in an opted-in local stack', functi
     'local default' => ['local', 120, 120],
     'local browser stack' => ['local', 6000, 6000],
     'local cannot lower the normal budget' => ['local', 0, 120],
-    'testing default' => ['testing', 120, 120],
-    'testing browser stack' => ['testing', 6000, 6000],
-    'testing cannot lower the normal budget' => ['testing', 0, 120],
     'production ignores browser override' => ['production', 6000, 120],
     'staging ignores browser override' => ['staging', 6000, 120],
+    'PHP tests keep normal limits' => ['testing', 6000, 120],
 ]);
+
+it('allows higher read budget in testing environment when allow_admin_e2e_fixtures is opted in', function () {
+    app()->instance('env', 'testing');
+    config([
+        'app.browser_test_read_rate_limit' => 6000,
+        'app.allow_admin_e2e_fixtures' => true,
+    ]);
+    $request = Request::create('/api/public/auth/me');
+
+    foreach (['traveler', 'booking.get'] as $name) {
+        $limiter = RateLimiter::limiter($name);
+        expect($limiter($request)->maxAttempts)->toBe(6000);
+    }
+});

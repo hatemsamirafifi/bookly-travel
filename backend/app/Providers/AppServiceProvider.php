@@ -125,11 +125,12 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('auth', function (Request $request) {
             // 10/min/IP is the production brute-force budget (FR-014). Local
-            // and testing environments raise it so the E2E suite's few
+            // and browser test environments raise it so the E2E suite's few
             // intentional per-test logins (auth-guards, auth-navigation)
-            // cannot trip the shared-IP limiter mid-run; production and
-            // staging keep the strict limit unchanged.
-            $limit = app()->environment(['local', 'testing'])
+            // cannot trip the shared-IP limiter mid-run; production,
+            // staging, and unit tests keep the strict limit unchanged.
+            $isBrowserStack = app()->environment('local') || (bool) config('app.allow_admin_e2e_fixtures');
+            $limit = $isBrowserStack
                 ? max(60, (int) config('app.browser_test_read_rate_limit'))
                 : 10;
 
@@ -178,7 +179,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('booking.get', function (Request $request) {
-            $limit = app()->environment(['local', 'testing'])
+            $isBrowserStack = app()->environment('local') || (bool) config('app.allow_admin_e2e_fixtures');
+            $limit = $isBrowserStack
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
 
@@ -186,7 +188,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('traveler', function (Request $request) {
-            $limit = app()->environment(['local', 'testing'])
+            $isBrowserStack = app()->environment('local') || (bool) config('app.allow_admin_e2e_fixtures');
+            $limit = $isBrowserStack
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
 
