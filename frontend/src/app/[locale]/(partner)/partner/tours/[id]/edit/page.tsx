@@ -234,6 +234,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [categoryId, setCategoryId] = useState(1);
   const [location, setLocation] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [coverImageDirty, setCoverImageDirty] = useState(false);
   const [media, setMedia] = useState<TourMedia[]>([]);
   const [mediaDirty, setMediaDirty] = useState(false);
   // FR021/US4: a pending over-long English alt draft stays local inside the
@@ -295,6 +296,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       setCategoryId(t.category_id);
       setLocation(t.location);
       setCoverImageUrl(t.cover_image_url || '');
+      setCoverImageDirty(false);
       setMedia((t.media ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((item) => ({
         ...item, is_cover: item.url === t.cover_image_url,
       })));
@@ -466,7 +468,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         body: JSON.stringify({
           category_id: categoryId,
           location,
-          cover_image_url: coverImageUrl || null,
+          ...(coverImageDirty ? { cover_image_url: coverImageUrl || null } : {}),
           guide_languages: [...new Set(guideLanguagesInput.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean))],
           group_size_min: groupSizeMin,
           group_size_max: groupSizeMax,
@@ -509,6 +511,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       }
 
       setSuccessMsg(saveSucceededMsg);
+      setCoverImageDirty(false);
+      setMediaDirty(false);
+      setDifficultyDirty(false);
       fetchTour();
     } catch {
       // Field errors render localized inline + in the focused summary;
@@ -788,7 +793,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 id="edit-cover-image-url"
                 type="text"
                 value={coverImageUrl}
-                onChange={(e) => setCoverImageUrl(e.target.value)}
+                onChange={(e) => {
+                  setCoverImageUrl(e.target.value);
+                  setCoverImageDirty(true);
+                }}
                 placeholder="https://example.com/image.jpg"
                 className="px-3 py-2 text-sm border rounded-lg bg-white outline-none"
               />
@@ -901,7 +909,15 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               media={media}
               title={translationData.en.title}
               onValidityChange={setMediaAltValid}
-              onChange={(next) => { setMedia(next); setMediaDirty(true); setCoverImageUrl(next.find((item) => item.is_cover)?.url ?? ''); }}
+              onChange={(next) => {
+                setMedia(next);
+                setMediaDirty(true);
+                const nextCover = next.find((item) => item.is_cover)?.url;
+                if (nextCover !== undefined) {
+                  setCoverImageUrl(nextCover);
+                  setCoverImageDirty(true);
+                }
+              }}
             />
           </div>
         </aside>

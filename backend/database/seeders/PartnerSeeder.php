@@ -102,7 +102,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 20,
             'price_amount' => 4500, // €45.00 in cents
             'status' => 'published',
-            'cover_image_url' => 'tours/rome-cover.jpg',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-cover.jpg',
             'is_featured' => true,
             'published_at' => now()->subDays(30),
             'price_from' => 45.00,
@@ -147,7 +147,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 12,
             'price_amount' => 8500, // €85.00 in cents
             'status' => 'pending_review',
-            'cover_image_url' => 'tours/trastevere-cover.jpg',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/trastevere-cover.jpg',
             'is_featured' => false,
             'submitted_at' => now()->subDays(2),
             'price_from' => 85.00,
@@ -174,7 +174,7 @@ class PartnerSeeder extends Seeder
             'group_size_max' => 15,
             'price_amount' => 5500, // €55.00 in cents
             'status' => 'draft',
-            'cover_image_url' => 'tours/rome-night-cover.jpg',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-night-cover.jpg',
             'is_featured' => false,
             'price_from' => 55.00,
             'currency' => 'EUR',

@@ -80,4 +80,18 @@ describe('useFilters', () => {
 
     expect(mockPush).toHaveBeenCalledWith('/en/search?q=Rome', { scroll: false });
   });
+
+  it('preserves both filters when consecutive setFilter calls happen before searchParams re-render', () => {
+    const { result } = renderHook(() => useFilters());
+
+    act(() => {
+      result.current.setFilter('price_min', '1000');
+      result.current.setFilter('price_max', '5000');
+    });
+
+    expect(mockPush).toHaveBeenLastCalledWith(
+      '/en/search?price_min=1000&price_max=5000',
+      { scroll: false }
+    );
+  });
 });

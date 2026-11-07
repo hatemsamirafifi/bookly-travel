@@ -193,6 +193,11 @@ test.describe('Search Page', () => {
     const minInput = panel.getByLabel('Minimum price');
     await minInput.fill('1000');
 
+    // On desktop, the sidebar directly navigates; verify URL reflects the minimum price
+    if (!await dialog.isVisible()) {
+      await expect(page).toHaveURL(/price_min=1000/);
+    }
+
     const maxInput = panel.getByLabel('Maximum price');
     await maxInput.fill('5000');
 
