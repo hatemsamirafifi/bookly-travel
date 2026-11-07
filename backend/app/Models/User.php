@@ -3,14 +3,18 @@
 namespace App\Models;
 
 use App\Domains\Admin\Models\AdminPermission;
+use App\Domains\Admin\Models\AdminRole;
 use App\Domains\Blog\Models\AuthorProfile;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Reviews\Models\Review;
 use App\Domains\Wishlist\Models\Wishlist;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,6 +52,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'locked_until',
         'last_lockout_email_sent_at',
         'last_login_at',
+        'status',
+        'suspended_at',
+        'suspension_reason',
     ];
 
     /**
@@ -63,6 +70,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'locked_until' => 'datetime',
             'last_lockout_email_sent_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'suspended_at' => 'datetime',
             'marketing_emails' => 'boolean',
             'password' => 'hashed',
         ];
@@ -104,6 +112,26 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->hasMany(AuthAuditLog::class);
     }
 
+    /**
+     * Bookings placed by this traveler account.
+     *
+     * @return HasMany<Booking, $this>
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'traveler_id');
+    }
+
+    /**
+     * Reviews submitted by this traveler account.
+     *
+     * @return HasMany<Review, $this>
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'traveler_id');
+    }
+
     public function partner()
     {
         return $this->hasOne(Partner::class);
@@ -116,6 +144,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function adminPermission(): HasOne
     {
         return $this->hasOne(AdminPermission::class);
+    }
+
+    /**
+     * Role templates assigned to this admin user (Spec 035, T-A01).
+     */
+    public function adminRoles(): BelongsToMany
+    {
+        return $this->belongsToMany(AdminRole::class, 'admin_role_user', 'user_id', 'admin_role_id')
+            ->withTimestamps();
     }
 
     /**
@@ -133,6 +170,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin'
+            && ($this->status ?? 'active') === 'active';
     }
 }

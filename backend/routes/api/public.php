@@ -7,6 +7,7 @@ use App\Domains\Booking\Controllers\Public\BookingController;
 use App\Domains\Booking\Controllers\Public\TravelerBookingController;
 use App\Domains\Booking\Controllers\Public\VerificationController;
 use App\Domains\Booking\Controllers\Public\VoucherController;
+use App\Domains\CMS\Controllers\Public\StaticPageController;
 use App\Domains\Partner\Controllers\Public\PartnerInvitationController;
 use App\Domains\Partner\Controllers\Public\PartnerRegistrationController;
 use App\Domains\Payment\Controllers\Public\DeterministicPaymentController;
@@ -216,6 +217,7 @@ Route::middleware(['auth:sanctum', 'throttle:traveler'])->prefix('traveler')->gr
         Route::post('/', [WishlistController::class, 'store']);
         Route::delete('{tour_id}', [WishlistController::class, 'destroy']);
         Route::get('status', [WishlistController::class, 'status']);
+        Route::post('merge', [WishlistController::class, 'merge']);
     });
 
     Route::get('reviews', [App\Domains\Traveler\Controllers\Public\ReviewController::class, 'index']);
@@ -235,4 +237,16 @@ Route::prefix('blog')->group(function () {
         ->middleware('throttle:blog_detail');
     Route::get('{slug}', [BlogPostController::class, 'show'])
         ->middleware('throttle:blog_detail');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Static Pages API Routes (Admin 2.0 Phase G, T-G05)
+|--------------------------------------------------------------------------
+| Public localized CMS pages: GET /api/public/pages/{slug}?locale=en.
+| Only published pages are exposed; missing translations fall back with a
+| translation warning. throttle:blog (120/min/IP) guards bulk enumeration.
+*/
+Route::prefix('pages')->middleware('throttle:blog')->group(function () {
+    Route::get('{slug}', [StaticPageController::class, 'show']);
 });

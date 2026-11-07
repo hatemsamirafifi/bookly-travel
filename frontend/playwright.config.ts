@@ -55,7 +55,7 @@ export default defineConfig({
   // (CPU cores) many routes compile concurrently and queue on the dev server's
   // single thread, blowing the 5s expect timeout on otherwise-correct pages.
   // Serial workers let each route compile once and stay warm for later tests.
-  workers: process.env.CI || isDockerContainer ? 1 : undefined,
+  workers: process.env.CI || isDockerContainer || !process.env.PLAYWRIGHT_WORKERS ? 1 : parseInt(process.env.PLAYWRIGHT_WORKERS, 10),
   // Dev-mode cold compiles (frontend route + first backend API call) can take
   // longer than Playwright's 5s default on the first visit of a route, which
   // made correct pages time out before hydrating. 20s tolerates the cold visit

@@ -31,6 +31,7 @@ runs:
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan migrate --force
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan db:seed --force
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan db:seed --class=AdminUserSeeder --force
+        docker compose -f docker-compose.ci.yml exec -T laravel php artisan db:seed --class=AdminE2EFixtureSeeder --force
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan filament:assets
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan storage:link
         docker compose -f docker-compose.ci.yml exec -T laravel php artisan tinker --execute='app(\App\Domains\Search\Actions\ConfigureSearchIndexAction::class)->execute();'

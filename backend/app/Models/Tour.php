@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityException;
 use App\Domains\Partner\Models\AvailabilityRule;
@@ -575,6 +576,17 @@ class Tour extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Governance audit entries targeting this tour (morph map `tour`).
+     *
+     * @return HasMany<GovernanceAuditLog, $this>
+     */
+    public function governanceAuditLogs(): HasMany
+    {
+        return $this->hasMany(GovernanceAuditLog::class, 'target_id')
+            ->where('target_type', 'tour');
     }
 
     /**

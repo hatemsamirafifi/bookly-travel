@@ -7,6 +7,9 @@ use App\Domains\Blog\Jobs\InvalidateBlogCacheJob;
 use App\Domains\Blog\Jobs\PublishScheduledBlogPostJob;
 use App\Domains\Blog\Jobs\RegenerateSitemapJob;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\CMS\Services\ContentRevisionService;
+use App\Domains\CMS\Services\HtmlSanitizerService;
+use App\Domains\Translation\Services\AutoTranslationService;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +19,10 @@ use Illuminate\Validation\ValidationException;
 class UpdateBlogPostAction
 {
     public function __construct(
-        private readonly GovernanceAuditService $auditService
+        private readonly GovernanceAuditService $auditService,
+        private readonly ContentRevisionService $revisionService,
+        private readonly HtmlSanitizerService $htmlSanitizer,
+        private readonly AutoTranslationService $translations,
     ) {}
 
     /**
@@ -31,6 +37,8 @@ class UpdateBlogPostAction
         return DB::transaction(function () use ($actor, $data, $post) {
             $isCreate = $post === null;
             $beforeState = $post ? $post->toArray() : null;
+
+            $data = $this->sanitizeContent($data);
 
             // Generate slug if not provided and EN title is available
             if (empty($data['slug']) && ! empty($data['title']['en'])) {
@@ -105,6 +113,15 @@ class UpdateBlogPostAction
 
             if ($isCreate) {
                 $post = new BlogPost;
+            } else {
+                foreach (['title', 'excerpt', 'body', 'meta_title', 'meta_description'] as $localizedField) {
+                    if (isset($data[$localizedField]) && is_array($data[$localizedField])) {
+                        $existing = $post->getAttribute($localizedField);
+                        if (is_array($existing)) {
+                            $data[$localizedField] = array_merge($existing, $data[$localizedField]);
+                        }
+                    }
+                }
             }
 
             // Extract related tours relation if provided
@@ -161,6 +178,18 @@ class UpdateBlogPostAction
                 ]
             );
 
+            // Immutable content version history (Admin 2.0 Phase G, T-G03)
+            $this->revisionService->recordRevision(
+                $post,
+                $actor,
+                ucfirst($actionType) . ' blog post: ' . $post->slug,
+            );
+
+            // Phase H: reconcile field-level translation state and dispatch
+            // workers for anything that needs (re)translating.
+            $manualEdits = $this->translations->detectManualEdits($beforeState ?? [], $post);
+            $this->translations->syncAndDispatch($post, $actor, $manualEdits);
+
             // Invalidate cache
             InvalidateBlogCacheJob::dispatch();
             RegenerateSitemapJob::dispatch();
@@ -172,5 +201,56 @@ class UpdateBlogPostAction
 
             return $post;
         });
+    }
+
+    /**
+     * Sanitize rich-text bodies and strip HTML from scalar localized fields.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function sanitizeContent(array $data): array
+    {
+        foreach (['title', 'excerpt', 'meta_title', 'meta_description'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = $this->stripTagsFromLocalizedField($data[$field]);
+            }
+        }
+
+        if (array_key_exists('body', $data)) {
+            $data['body'] = match (true) {
+                is_array($data['body']) => $this->htmlSanitizer->sanitizeLocalizedMap($data['body']),
+                is_string($data['body']) => $this->htmlSanitizer->sanitize($data['body']),
+                default => $data['body'],
+            };
+        }
+
+        return $data;
+    }
+
+    private function stripTagsFromLocalizedField(mixed $value): mixed
+    {
+        if (is_string($value)) {
+            return $this->stripHtml($value);
+        }
+
+        if (! is_array($value)) {
+            return $value;
+        }
+
+        $clean = [];
+
+        foreach ($value as $locale => $localized) {
+            $clean[$locale] = is_string($localized) ? $this->stripHtml($localized) : $localized;
+        }
+
+        return $clean;
+    }
+
+    private function stripHtml(string $value): string
+    {
+        $withoutScriptBlocks = preg_replace('/<(script|style)\b[^>]*>.*?<\/\1>/is', '', $value);
+
+        return trim(strip_tags($withoutScriptBlocks ?? $value));
     }
 }

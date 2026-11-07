@@ -118,6 +118,15 @@ export function removeTravelerWishlistItem(tourId: string | number) {
   });
 }
 
+export function mergeTravelerWishlist(tourIds: number[]) {
+  return apiClient<{ status: string; merged_count: number; total_wishlist_count: number }>('/api/public/traveler/wishlist/merge', {
+    method: 'POST',
+    requireCsrf: true,
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ tour_ids: tourIds }),
+  });
+}
+
 export function getTravelerReviews(page = 1) {
   return apiClient<PaginatedTravelerResponse<TravelerReview>>(`/api/public/traveler/reviews?page=${page}&per_page=10`, {
     headers: authHeaders(),

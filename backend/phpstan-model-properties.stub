@@ -20,6 +20,20 @@ namespace App\Domains\Admin\Models;
 
 /**
  * @property int $id
+ * @property string $slug
+ * @property string $name
+ * @property string|null $description
+ * @property array<array-key, mixed> $permissions
+ * @property bool $is_system
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
+class AdminRole extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Admin\Models;
+
+/**
+ * @property int $id
  * @property string $actor_type
  * @property int|null $actor_id
  * @property string $action
@@ -141,6 +155,10 @@ namespace App\Domains\Booking\Models;
  * @property int|null $guest_identity_id
  * @property \Carbon\Carbon|null $voucher_generated_at
  * @property string|null $voucher_content_hash
+ * @property int|null $partner_id
+ * @property string|null $slug
+ * @property int|string|null $bookings
+ * @property int|float|string|null $revenue
  * @property \Carbon\Carbon|null $start_time
  * @property-read \App\Models\User|null $traveler
  * @property-read \App\Models\GuestIdentity|null $guestIdentity
@@ -469,6 +487,61 @@ namespace App\Domains\Wishlist\Models;
  */
 class Wishlist extends \Illuminate\Database\Eloquent\Model {}
 
+namespace App\Domains\CMS\Models;
+
+/**
+ * @property int $id
+ * @property string $revisable_type
+ * @property int $revisable_id
+ * @property int $version_number
+ * @property array<array-key, mixed> $snapshot
+ * @property int|null $author_id
+ * @property string|null $note
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
+class ContentRevision extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Media\Models;
+
+/**
+ * @property int $id
+ * @property string $storage_disk
+ * @property string $storage_key
+ * @property string $filename
+ * @property string $mime_type
+ * @property int $size_bytes
+ * @property int|null $width
+ * @property int|null $height
+ * @property int|null $folder_id
+ * @property int|null $uploaded_by
+ * @property array<array-key, mixed>|null $metadata
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property int|string|null $count
+ * @property int|string|null $bytes
+ * @property int|string|null $largest
+ */
+class MediaAsset extends \Illuminate\Database\Eloquent\Model {}
+
+namespace App\Domains\Translation\Models;
+
+/**
+ * @property int $id
+ * @property string $translatable_type
+ * @property int $translatable_id
+ * @property string $field_name
+ * @property string $locale
+ * @property string $status
+ * @property string|null $source_hash
+ * @property string|null $translated_hash
+ * @property string|null $last_error_code
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property int|string|null $aggregate
+ */
+class TranslationFieldState extends \Illuminate\Database\Eloquent\Model {}
+
 namespace App\Models;
 
 /**
@@ -607,6 +680,9 @@ namespace App\Models;
  * @property string $password
  * @property string $role
  * @property string $locale
+ * @property string|null $status
+ * @property \Carbon\Carbon|null $suspended_at
+ * @property string|null $suspension_reason
  * @property int $failed_login_count
  * @property \Carbon\Carbon|null $locked_until
  * @property \Carbon\Carbon|null $last_login_at
@@ -627,6 +703,7 @@ namespace App\Models;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AuthAuditLog> $auditLogs
  * @property-read \App\Domains\Partner\Models\Partner|null $partner
  * @property-read \App\Domains\Admin\Models\AdminPermission|null $adminPermission
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Admin\Models\AdminRole> $adminRoles
  * @property-read \App\Domains\Blog\Models\AuthorProfile|null $authorProfile
  */
 class User extends \Illuminate\Database\Eloquent\Model {}

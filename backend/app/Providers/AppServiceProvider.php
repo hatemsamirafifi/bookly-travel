@@ -4,16 +4,26 @@ namespace App\Providers;
 
 use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Admin\Models\StaticPage;
+use App\Domains\Admin\Policies\AuthAuditLogPolicy;
 use App\Domains\Admin\Policies\BookingPolicy;
+use App\Domains\Admin\Policies\CategoryPolicy;
+use App\Domains\Admin\Policies\ContentRevisionPolicy;
 use App\Domains\Admin\Policies\GovernanceAuditPolicy;
 use App\Domains\Admin\Policies\PartnerPolicy;
 use App\Domains\Admin\Policies\StaticPagePolicy;
 use App\Domains\Admin\Policies\TourPolicy;
+use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Models\BlogTag;
 use App\Domains\Blog\Policies\BlogCategoryPolicy;
 use App\Domains\Blog\Policies\BlogPostPolicy;
 use App\Domains\Booking\Models\Booking;
+use App\Domains\CMS\Models\ContentRevision;
+use App\Domains\Media\Models\MediaAsset;
+use App\Domains\Media\Models\MediaFolder;
+use App\Domains\Media\Models\MediaTag;
+use App\Domains\Media\Policies\MediaAssetPolicy;
 use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Models\PartnerInvitation;
@@ -22,6 +32,10 @@ use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Services\DeterministicPaymentGateway;
 use App\Domains\Payment\Services\StripeService;
 use App\Domains\Reviews\Models\Review;
+use App\Domains\Translation\Contracts\ContentTranslatorContract;
+use App\Domains\Translation\Services\GeminiContentTranslator;
+use App\Models\AuthAuditLog;
+use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
 use App\Policies\ReviewPolicy;
@@ -40,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(TourContentTranslator::class, GeminiTourTranslator::class);
+
+        // Admin 2.0 Phase H: field-level content translation engine
+        $this->app->bind(ContentTranslatorContract::class, GeminiContentTranslator::class);
 
         $this->app->singleton(PaymentGateway::class, function ($app): PaymentGateway {
             $gateway = config('services.payment.gateway', 'stripe');
@@ -71,9 +88,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Partner::class, PartnerPolicy::class);
         Gate::policy(Booking::class, BookingPolicy::class);
         Gate::policy(GovernanceAuditLog::class, GovernanceAuditPolicy::class);
+        Gate::policy(AuthAuditLog::class, AuthAuditLogPolicy::class);
         Gate::policy(StaticPage::class, StaticPagePolicy::class);
+        Gate::policy(ContentRevision::class, ContentRevisionPolicy::class);
         Gate::policy(BlogPost::class, BlogPostPolicy::class);
         Gate::policy(BlogCategory::class, BlogCategoryPolicy::class);
+        Gate::policy(Category::class, CategoryPolicy::class);
+        Gate::policy(MediaAsset::class, MediaAssetPolicy::class);
 
         // Spec 013 governance morph maps: GovernanceAuditLog stores actor/target
         // types as these aliases (data-model.md §1/§7). `setting` is a plain
@@ -89,6 +110,12 @@ class AppServiceProvider extends ServiceProvider
             'invitation' => PartnerInvitation::class,
             'blog_post' => BlogPost::class,
             'blog_category' => BlogCategory::class,
+            'media_asset' => MediaAsset::class,
+            'media_folder' => MediaFolder::class,
+            'media_tag' => MediaTag::class,
+            'content_revision' => ContentRevision::class,
+            'blog_tag' => BlogTag::class,
+            'author_profile' => AuthorProfile::class,
         ]);
 
         // Register rate limiters so they are available during testing
@@ -98,11 +125,16 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('auth', function (Request $request) {
             // 10/min/IP is the production brute-force budget (FR-014). Local
-            // and testing environments raise it so the E2E suite's few
+            // and browser test environments raise it so the E2E suite's few
             // intentional per-test logins (auth-guards, auth-navigation)
-            // cannot trip the shared-IP limiter mid-run; production and
-            // staging keep the strict limit unchanged.
-            $limit = app()->environment('local') ? 60 : 10;
+            // cannot trip the shared-IP limiter mid-run; production,
+            // staging, and unit tests keep the strict limit unchanged.
+            // Browser stack is strictly limited to local or testing with explicit opt-in.
+            $isBrowserStack = app()->environment('local')
+                || (app()->environment('testing') && (bool) config('app.allow_admin_e2e_fixtures'));
+            $limit = $isBrowserStack
+                ? max(60, (int) config('app.browser_test_read_rate_limit'))
+                : 10;
 
             return Limit::perMinute($limit)->by($request->ip());
         });
@@ -149,7 +181,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('booking.get', function (Request $request) {
-            $limit = app()->environment('local')
+            $isBrowserStack = app()->environment('local')
+                || (app()->environment('testing') && (bool) config('app.allow_admin_e2e_fixtures'));
+            $limit = $isBrowserStack
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
 
@@ -157,7 +191,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('traveler', function (Request $request) {
-            $limit = app()->environment('local')
+            $isBrowserStack = app()->environment('local')
+                || (app()->environment('testing') && (bool) config('app.allow_admin_e2e_fixtures'));
+            $limit = $isBrowserStack
                 ? max(120, (int) config('app.browser_test_read_rate_limit'))
                 : 120;
 

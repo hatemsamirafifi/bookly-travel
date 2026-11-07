@@ -163,8 +163,7 @@ test.describe('Search Page', () => {
 
   test('clearing filters retains the search term', async ({ page }) => {
     await page.goto('/en/search?q=tour&category=adventure');
-    await showFilters(page);
-    await page.getByRole('button', { name: /^Clear all/ }).click();
+    await page.getByRole('button', { name: /^Clear all/ }).first().click();
     await expect(page).toHaveURL(/\/en\/search\?q=tour$/);
   });
 
@@ -193,18 +192,30 @@ test.describe('Search Page', () => {
 
     const minInput = panel.getByLabel('Minimum price');
     await minInput.fill('1000');
-    await expect(page).toHaveURL(/price_min=1000/);
+
+    // On desktop, the sidebar directly navigates; verify URL reflects the minimum price
+    if (!await dialog.isVisible()) {
+      await expect(page).toHaveURL(/price_min=1000/);
+    }
 
     const maxInput = panel.getByLabel('Maximum price');
     await maxInput.fill('5000');
+
+    // On mobile the drawer stages selections and only commits them on apply.
+    if (await dialog.isVisible()) {
+      await panel
+        .getByRole('button', { name: /Show \d+ results|Show \d+ Tours|Apply filters/i })
+        .click();
+    }
+
+    await expect(page).toHaveURL(/price_min=1000/);
     await expect(page).toHaveURL(/price_max=5000/);
   });
 
   test('clear all link appears when filters are active', async ({ page }) => {
     await page.goto('/en/search?category=adventure');
-    await showFilters(page);
 
-    const clearButton = page.getByRole('button', { name: /^Clear all/ });
+    const clearButton = page.getByRole('button', { name: /^Clear all/ }).first();
     await expect(clearButton).toBeVisible();
 
     await clearButton.click();
@@ -216,10 +227,10 @@ test.describe('Search Page', () => {
     await showFilters(page);
 
     const toggleButton = page.getByRole('button', { name: /Available Date/ });
-    await expect(toggleButton).toBeVisible();
-
-    await toggleButton.click();
-    const dateInput = page.getByLabel('Filter by available date');
+    const dateInput = page.getByLabel(/Filter by available date|Filter by date/i);
+    if (await toggleButton.isVisible()) {
+      await toggleButton.click();
+    }
     await expect(dateInput).toBeVisible();
   });
 
@@ -275,7 +286,12 @@ test.describe('Search Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/en/search');
 
-    const filterButton = page.getByRole('button', { name: 'Filters', exact: true });
+    const declineCookie = page.locator('#rcc-decline-button');
+    if (await declineCookie.isVisible()) {
+      await declineCookie.click();
+    }
+
+    const filterButton = page.getByRole('button', { name: /^Filters(?: \(\d+\))?$/ });
     await expect(filterButton).toBeVisible();
     await expect(page.getByRole('dialog', { name: 'Search filters' })).not.toBeVisible();
     await filterButton.click();
@@ -296,11 +312,54 @@ test.describe('Search Page', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/en/search');
 
+    const declineCookie = page.locator('#rcc-decline-button');
+    if (await declineCookie.isVisible()) {
+      await declineCookie.click();
+    }
+
     // Look for a hamburger/toggle button that appears on mobile
     const menuToggle = page.getByRole('button', { name: /menu|toggle|open menu/i }).first();
     if (await menuToggle.isVisible()) {
       await menuToggle.click();
       await expect(page.getByRole('link', { name: /search/i }).first()).toBeVisible();
+    }
+  });
+
+  test('mobile filter drawer stages selections, commits on confirm, and preserves URL state', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.context().addCookies([
+      { name: 'bookly_cookie_consent', value: 'true', url: 'http://localhost:8080' },
+    ]);
+    await page.goto('/en/search');
+
+    const filterButton = page.getByRole('button', { name: /^Filters(?: \(\d+\))?$/ });
+    await expect(filterButton).toBeVisible();
+    await filterButton.click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+
+    // Look for category radio if present
+    const categoryOption = dialog.locator('input[name="drawer-category"]').first();
+    if (await categoryOption.isVisible()) {
+      await categoryOption.click();
+
+      // Verify staged - URL should NOT have changed yet
+      expect(page.url()).not.toMatch(/category=/);
+
+      // Tap confirm button "Show [N] Tours"
+      const confirmButton = dialog.getByRole('button', { name: /Show \d+ Tours/i });
+      await confirmButton.click();
+
+      // Drawer should close
+      await expect(dialog).not.toBeVisible();
+
+      // URL should now contain category parameter
+      await expect(page).toHaveURL(/category=/);
+
+      // Active filter chip should appear
+      const chips = page.locator('div[role="region"][aria-label*="filter" i]');
+      await expect(chips).toBeVisible();
     }
   });
 });

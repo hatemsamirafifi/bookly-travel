@@ -20,7 +20,7 @@
 | Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; PR #28 merged with successful checks; release pending |
 | Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation complete: 78/78 accepted; complete source Tests and twelve-report Lighthouse CI pass on ee24b45; PR #29; documentation-head CI/readiness tracked separately; merge/release pending |
 | Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Implementation complete: 74/74 tasks accepted (100% complete). 2026-10-26 rebuilt Docker runtime (`AfUeSl_Iw4WVM4xW7N-hy`, `sha256:5d0871d62426...`, 419/420 zero-mismatch parity) passed all in-container Linux source gates (Jest 857/857 across 72/72 suites, tsc 0, ESLint 0 - [source QA](../specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/lcp-qa-20261026/frontend-gates-result.json), [runtime parity](../specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/lcp-qa-20261026/runtime-ready.json)); 2026-10-26 strict native LHCI `attempt-02` collected all 18 valid fresh Lighthouse 12.8.2 reports across all 6 URLs (3 runs each) - `/en` passed (`0.95, 0.95, 0.96`, min `0.95`), `/en/search?q=rome` passed (`0.90, 0.96, 0.97`, min `0.90`), `/en/blog/hidden-gems-florence` passed (`0.94, 0.94, 0.95`, min `0.94`), tour detail pages scored `0.88-0.90` (CLS `0.001`, FCP `0.9s`, SI `1.4s`, TBT `110-150ms`), and `22/24` evaluated assertions passed ([attempt-02 result](../specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/lcp-strict-performance-20261026/attempt-02/native-audits-result.json)); source-head CI/retained-shell merge/deployment remain separate unproven gates |
-| Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Planned |
+| Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Spec Kit artifacts created; implementation pending |
 | Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
 | Phase 6 | `023` | `specs/023-auth-traveler-checkout/` | Auth, Traveler, and Checkout | Planned |
 | Phase 7 | `024` | `specs/024-partner-dashboard-editor/` | Partner Dashboard and Tour Editor | Planned |
@@ -545,7 +545,7 @@ git commit -m "feat: rebuild tour detail experience"
 
 ## Phase 4 - Homepage and Discovery
 
-**Spec:** `021-homepage-discovery` (planned; create through Spec Kit when this phase starts).
+**Spec:** `021-homepage-discovery` ([specification](specs/021-homepage-discovery/spec.md), [implementation plan](specs/021-homepage-discovery/plan.md), [implementation tasks](specs/021-homepage-discovery/tasks.md)). Spec Kit artifacts created; implementation pending.
 
 ### Task 4.1: Rebuild the homepage
 

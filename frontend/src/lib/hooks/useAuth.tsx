@@ -7,6 +7,7 @@ import { User, authApi, AuthApiError } from '../api/auth';
 import { setTokenGetter } from '../auth/token';
 import { z } from 'zod';
 import { loginSchema, registerSchema } from '../validators/auth';
+import { syncGuestWishlistToAccount, clearGuestWishlist } from '@/lib/wishlist/guestWishlist';
 
 interface AuthContextType {
   user: User | null;
@@ -112,12 +113,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (credentials: z.infer<typeof loginSchema>) => {
     const response = await authApi.login(credentials);
     setAuth(response.data, response.token);
-    // Here you would also set the httpOnly cookie via a Next.js server route
+    void syncGuestWishlistToAccount();
   };
 
   const register = async (data: z.infer<typeof registerSchema>) => {
     const response = await authApi.register(data);
     setAuth(response.data, response.token);
+    void syncGuestWishlistToAccount();
   };
 
   const logout = async () => {
@@ -130,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         setToken(null);
         localStorage.removeItem('auth_token');
-        // Clear httpOnly cookie here
+        clearGuestWishlist();
         router.push(`/${locale}/`);
       }
     }

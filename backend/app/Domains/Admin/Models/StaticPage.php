@@ -2,10 +2,14 @@
 
 namespace App\Domains\Admin\Models;
 
+use App\Domains\CMS\Models\ContentRevision;
+use App\Domains\Media\Models\MediaAsset;
+use App\Domains\Translation\Models\TranslationFieldState;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 
 /**
@@ -31,7 +35,11 @@ class StaticPage extends Model
         'title',
         'body',
         'meta_description',
+        'meta_title',
+        'canonical_url',
+        'og_image_media_id',
         'updated_by',
+        'scheduled_at',
         'published_at',
     ];
 
@@ -39,8 +47,12 @@ class StaticPage extends Model
         'title' => 'array',
         'body' => 'array',
         'meta_description' => 'array',
+        'meta_title' => 'array',
+        'og_image_media_id' => 'integer',
         'updated_by' => 'integer',
+        'scheduled_at' => 'datetime',
         'published_at' => 'datetime',
+        'lock_version' => 'integer',
     ];
 
     /**
@@ -53,6 +65,33 @@ class StaticPage extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    /**
+     * @return BelongsTo<MediaAsset, $this>
+     */
+    public function ogImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'og_image_media_id');
+    }
+
+    /**
+     * Append-only version history (newest first).
+     *
+     * @return MorphMany<ContentRevision, $this>
+     */
+    public function revisions(): MorphMany
+    {
+        return $this->morphMany(ContentRevision::class, 'revisionable')
+            ->orderByDesc('version_number');
+    }
+
+    /**
+     * @return MorphMany<TranslationFieldState, $this>
+     */
+    public function translationFieldStates(): MorphMany
+    {
+        return $this->morphMany(TranslationFieldState::class, 'translatable');
+    }
+
     public function governanceAuditLogs(): HasMany
     {
         return $this->hasMany(GovernanceAuditLog::class, 'target_id')
@@ -62,6 +101,90 @@ class StaticPage extends Model
     public function scopePublished($query)
     {
         return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    /**
+     * Return the exact stored value for a locale, without falling back.
+     * Whitespace-only or empty HTML values are treated as missing.
+     */
+    public function rawContentFor(string $field, string $locale): ?string
+    {
+        $values = $this->{$field} ?? [];
+        if (! is_array($values)) {
+            return null;
+        }
+
+        $value = $values[$locale] ?? null;
+
+        return is_string($value) && trim(strip_tags($value)) !== '' ? $value : null;
+    }
+
+    /**
+     * Whether a locale has both non-empty title and body for public rendering.
+     */
+    public function hasCompleteLocale(string $locale): bool
+    {
+        if ($locale === 'en') {
+            return true;
+        }
+
+        return $this->rawContentFor('title', $locale) !== null
+            && $this->rawContentFor('body', $locale) !== null;
+    }
+
+    /**
+     * Whether a locale is eligible for public rendering based on both non-empty
+     * required fields (`title` + `body`) and `TranslationFieldState` freshness.
+     */
+    public function isLocaleEligible(string $locale): bool
+    {
+        if ($locale === 'en') {
+            return true;
+        }
+
+        if (! $this->hasCompleteLocale($locale)) {
+            return false;
+        }
+
+        $states = $this->relationLoaded('translationFieldStates')
+            ? $this->translationFieldStates
+            : $this->translationFieldStates()->where('locale', $locale)->get();
+
+        $localeStates = $states
+            ->where('locale', $locale)
+            ->keyBy('field_name');
+
+        if ($localeStates->isEmpty()) {
+            return true;
+        }
+
+        foreach (['title', 'body'] as $field) {
+            /** @var TranslationFieldState|null $state */
+            $state = $localeStates->get($field);
+
+            if ($state === null) {
+                continue;
+            }
+
+            if (! in_array($state->status, [
+                TranslationFieldState::STATUS_COMPLETED,
+                TranslationFieldState::STATUS_MANUALLY_EDITED,
+            ], true)) {
+                return false;
+            }
+
+            $currentEnHash = hash('sha256', trim((string) ($this->rawContentFor($field, 'en') ?? '')));
+
+            if ($state->translated_source_hash !== null && $state->translated_source_hash !== $currentEnHash) {
+                return false;
+            }
+
+            if ($state->source_hash !== null && $state->source_hash !== $currentEnHash) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function isPublished(): bool
@@ -83,18 +206,21 @@ class StaticPage extends Model
     }
 
     /**
-     * Return the value for a locale, falling back to the first available
-     * locale's value so a page never renders empty for a supported language.
+     * Return the value for a locale, falling back to English first and then the
+     * first available locale's non-empty value.
      */
     private function localized(?array $values, string $locale): ?string
     {
         if (! is_array($values)) {
             return null;
         }
-        if (Arr::has($values, $locale) && filled($values[$locale])) {
+        if (Arr::has($values, $locale) && is_string($values[$locale]) && trim(strip_tags($values[$locale])) !== '') {
             return $values[$locale];
         }
+        if (Arr::has($values, 'en') && is_string($values['en']) && trim(strip_tags($values['en'])) !== '') {
+            return $values['en'];
+        }
 
-        return collect($values)->first(fn ($value) => filled($value));
+        return collect($values)->first(fn ($value) => is_string($value) && trim(strip_tags($value)) !== '');
     }
 }

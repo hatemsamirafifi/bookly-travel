@@ -9,13 +9,14 @@ class BlogPostTransformer
 {
     public function transform(BlogPost $post, string $locale): array
     {
-        $hasRequestedLocale = $this->hasLocaleContent($post, $locale);
+        $hasRequestedLocale = $post->isLocaleEligible($locale);
+        $effectiveLocale = $hasRequestedLocale ? $locale : 'en';
         $translationWarning = (! $hasRequestedLocale && $locale !== 'en') ? 'partial_translation' : null;
 
-        $title = $post->contentFor('title', $locale) ?? '';
-        $excerpt = $post->contentFor('excerpt', $locale);
+        $title = $post->contentFor('title', $effectiveLocale) ?? '';
+        $excerpt = $post->contentFor('excerpt', $effectiveLocale);
         if (blank($excerpt)) {
-            $body = $post->contentFor('body', $locale) ?? '';
+            $body = $post->contentFor('body', $effectiveLocale) ?? '';
             $excerpt = Str::limit(strip_tags($body), 160);
         }
 
@@ -23,7 +24,7 @@ class BlogPostTransformer
             ? $post->author->authorProfile
             : $post->authorProfile;
 
-        $authorDisplayName = $authorProfile?->contentFor('display_name', $locale)
+        $authorDisplayName = $authorProfile?->contentFor('display_name', $effectiveLocale)
             ?? $post->author->name
             ?? 'Bookly Editorial';
 
@@ -34,15 +35,16 @@ class BlogPostTransformer
             'slug' => $post->slug,
             'title' => $title,
             'excerpt' => $excerpt,
-            'cover_image_url' => $post->cover_image_url,
+            'cover_image_url' => self::formatImageUrl($post->cover_image_url),
             'cover_image_blur' => null,
             'published_at' => $post->published_at?->toIso8601String(),
             'is_featured' => (bool) $post->is_featured,
-            'reading_time' => $post->readingTime($locale),
+            'reading_time' => $post->readingTime($effectiveLocale),
             'translation_warning' => $translationWarning,
             'category' => $post->category ? [
                 'slug' => $post->category->slug,
                 'name' => $post->category->name,
+                'image_url' => self::formatImageUrl($post->category->image_url),
             ] : null,
             'author' => [
                 'display_name' => $authorDisplayName,
@@ -51,11 +53,20 @@ class BlogPostTransformer
         ];
     }
 
-    private function hasLocaleContent(BlogPost $post, string $locale): bool
+    public static function formatImageUrl(?string $url): ?string
     {
-        $titles = $post->title ?? [];
-        $bodies = $post->body ?? [];
+        if (blank($url)) {
+            return null;
+        }
 
-        return ! empty($titles[$locale]) || ! empty($bodies[$locale]);
+        if (preg_match('#^https?://[^/]+/storage/(.*)$#i', $url, $matches)) {
+            return '/storage/' . ltrim($matches[1], '/');
+        }
+
+        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, '/')) {
+            return $url;
+        }
+
+        return '/storage/' . ltrim($url, '/');
     }
 }

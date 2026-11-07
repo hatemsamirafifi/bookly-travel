@@ -16,6 +16,7 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->category = Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
     $this->admin = User::factory()->admin()->create();
+    $this->admin->adminPermission()->create(['flags' => ['view_audit_log' => true]]);
     $this->traveler = User::factory()->traveler()->create();
     $this->partner = makePartner();
 

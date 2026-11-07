@@ -3,11 +3,11 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: bookly
+      POSTGRES_DB: bookly_test
       POSTGRES_USER: bookly
       POSTGRES_PASSWORD: secret
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bookly"]
+      test: ["CMD-SHELL", "pg_isready -U bookly -d bookly_test"]
       interval: 2s
       timeout: 5s
       retries: 30
@@ -35,12 +35,13 @@ services:
       - ./backend:/var/www/html
       - vendor:/var/www/html/vendor
     environment:
-      APP_ENV: local
+      APP_ENV: testing
+      ALLOW_ADMIN_E2E_FIXTURES: "true"
       BROWSER_TEST_READ_RATE_LIMIT: 6000
       APP_URL: http://localhost:8080
       DB_CONNECTION: pgsql
       DB_HOST: postgres
-      DB_DATABASE: bookly
+      DB_DATABASE: bookly_test
       DB_USERNAME: bookly
       DB_PASSWORD: secret
       REDIS_HOST: redis

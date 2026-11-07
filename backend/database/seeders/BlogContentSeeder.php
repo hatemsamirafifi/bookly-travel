@@ -6,6 +6,7 @@ use App\Domains\Blog\Models\AuthorProfile;
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
 use App\Models\User;
+use App\Support\DemoMediaDeployer;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,34 +14,61 @@ class BlogContentSeeder extends Seeder
 {
     public function run(): void
     {
+        DemoMediaDeployer::deployAll();
+
         // Create blog categories
-        $travelTips = BlogCategory::firstOrCreate(
+        $travelTips = BlogCategory::updateOrCreate(
             ['slug' => 'travel-tips'],
             [
                 'name' => 'Travel Tips',
                 'description' => 'Expert advice for smarter travel',
+                'image_url' => 'blog-categories/travel-tips.jpg',
                 'is_active' => true,
                 'display_order' => 3,
             ]
         );
 
-        $adventure = BlogCategory::firstOrCreate(
+        $adventure = BlogCategory::updateOrCreate(
             ['slug' => 'adventure'],
             [
                 'name' => 'Adventure',
                 'description' => 'Thrilling experiences and outdoor activities',
+                'image_url' => 'blog-categories/adventure.jpg',
                 'is_active' => true,
                 'display_order' => 4,
             ]
         );
 
-        $culture = BlogCategory::firstOrCreate(
+        $culture = BlogCategory::updateOrCreate(
             ['slug' => 'culture-history'],
             [
                 'name' => 'Culture & History',
                 'description' => 'Deep dives into local heritage',
+                'image_url' => 'blog-categories/culture-history.jpg',
                 'is_active' => true,
                 'display_order' => 5,
+            ]
+        );
+
+        $cityGuides = BlogCategory::updateOrCreate(
+            ['slug' => 'city-guides'],
+            [
+                'name' => 'City Guides',
+                'description' => 'Comprehensive guides to top destinations',
+                'image_url' => 'blog-categories/city-guides.jpg',
+                'is_active' => true,
+                'display_order' => 1,
+            ]
+        );
+
+        $foodAndWine = BlogCategory::updateOrCreate(
+            ['slug' => 'food-and-wine'],
+            [
+                'name' => 'Food & Wine',
+                'description' => 'Savor local cuisines and culinary secrets',
+                'image_url' => 'blog-categories/food-and-wine.jpg',
+                'is_active' => true,
+                'display_order' => 2,
             ]
         );
 
@@ -269,7 +297,7 @@ class BlogContentSeeder extends Seeder
                 'body' => $data['body'],
                 'is_featured' => $data['is_featured'] ?? false,
                 'published_at' => $data['published_at'],
-                'cover_image_url' => 'http://cdn.bookly.test/blog/' . $slug . '.jpg',
+                'cover_image_url' => 'blog/covers/' . $slug . '.jpg',
             ]
         );
     }

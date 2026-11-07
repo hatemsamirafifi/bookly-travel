@@ -1,5 +1,6 @@
 // Set required environment variables before any imports
 process.env.NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+process.env.NEXT_PUBLIC_SITE_URL = 'https://bookly.com';
 
 import '@testing-library/jest-dom';
 

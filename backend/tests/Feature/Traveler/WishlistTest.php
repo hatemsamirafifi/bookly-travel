@@ -134,3 +134,53 @@ it('returns 401 for unauthenticated wishlist requests', function () {
     postJson('/api/public/traveler/wishlist', ['tour_id' => $this->tour->id])->assertStatus(401);
     deleteJson('/api/public/traveler/wishlist/' . $this->tour->id)->assertStatus(401);
 });
+
+it('merges guest wishlist tour ids with silent deduplication', function () {
+    $secondTour = Tour::create([
+        'partner_id' => makePartner()->id,
+        'category_id' => $this->category->id,
+        'slug' => 'wishlist-merge-tour-' . uniqid(),
+        'location' => 'Rome, Italy',
+        'duration_minutes' => 240,
+        'duration_label' => '4 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 8,
+        'price_amount' => 6500,
+        'status' => 'published',
+        'cover_image_url' => 'https://cdn.bookly.com/tours/43/cover.jpg',
+    ]);
+
+    Wishlist::create([
+        'user_id' => $this->traveler->id,
+        'tour_id' => $this->tour->id,
+    ]);
+
+    $response = postJson('/api/public/traveler/wishlist/merge', [
+        'tour_ids' => [$this->tour->id, $secondTour->id],
+    ], [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('status', 'success')
+        ->assertJsonPath('merged_count', 1)
+        ->assertJsonPath('total_wishlist_count', 2);
+
+    expect(Wishlist::where('user_id', $this->traveler->id)->count())->toBe(2);
+});
+
+it('rejects unauthenticated or invalid wishlist merge requests', function () {
+    postJson('/api/public/traveler/wishlist/merge')->assertUnauthorized();
+
+    postJson('/api/public/traveler/wishlist/merge', [], [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertJsonValidationErrors(['tour_ids']);
+});
+
+it('rejects wishlist merge payloads exceeding the maximum size', function () {
+    postJson('/api/public/traveler/wishlist/merge', [
+        'tour_ids' => range(1, 201),
+    ], [
+        'Authorization' => 'Bearer ' . $this->token,
+    ])->assertJsonValidationErrors(['tour_ids']);
+});

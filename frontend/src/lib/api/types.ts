@@ -20,6 +20,7 @@ export interface TourCard {
     max: number;
   };
   next_available_date: string | null;
+  badge?: 'featured' | 'best-seller' | 'new' | null;
 }
 
 export interface TourDetail extends Pick<TourCard, 'id' | 'slug' | 'title' | 'location' | 'rating' | 'group_size'> {
@@ -272,11 +273,19 @@ export interface SearchResponse {
   };
 }
 
+export interface CuratedRail {
+  id: string;
+  slug: string;
+  title: string;
+  tours: TourCard[];
+}
+
 export interface HomepageData {
   data: {
     featured_tours: TourCard[];
     popular_categories: Category[];
     featured_destinations: Destination[];
+    curated_rails?: CuratedRail[];
   };
   meta: {
     seo: {
@@ -290,6 +299,7 @@ export interface BlogCategorySummary {
   slug: string;
   name: string;
   description?: string | null;
+  image_url?: string | null;
 }
 
 export interface BlogAuthorSummary {
@@ -343,6 +353,7 @@ export interface BlogCategoryResponse {
     name: string;
     slug: string;
     description?: string | null;
+    image_url?: string | null;
     posts: BlogPostCard[];
   };
   meta: {
@@ -351,5 +362,23 @@ export interface BlogCategoryResponse {
     per_page: number;
     total: number;
   };
+}
+
+/**
+ * Published CMS static page as served by `GET /api/public/pages/{slug}`
+ * (Admin 2.0 Phase G). Meta fields are omitted from the payload when no
+ * value is stored; `translation_warning` flags missing-locale fallbacks.
+ */
+export interface PublicStaticPage {
+  slug: string;
+  locale: string;
+  title: string;
+  body: string;
+  published_at?: string | null;
+  meta_title?: string;
+  meta_description?: string;
+  canonical_url?: string;
+  og_image?: string;
+  translation_warning?: string;
 }
 

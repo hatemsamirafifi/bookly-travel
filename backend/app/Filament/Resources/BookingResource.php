@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Admin\Actions\TransitionBookingStatusAction;
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Filament\Resources\BookingResource\Pages;
 use Filament\Forms\Components\DatePicker;
@@ -13,6 +14,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class BookingResource extends Resource
@@ -21,11 +23,38 @@ class BookingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
-    protected static ?string $navigationGroup = 'Operations';
+    protected static ?string $navigationGroup = 'Marketplace Operations';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'reference';
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'manage_bookings');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['reference', 'traveler.name', 'traveler.email'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        /** @var Booking $record */
+        return (string) $record->reference;
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Booking $record */
+        return [
+            'Status' => $record->status,
+            'Tour date' => $record->tour_date,
+        ];
+    }
 
     public static function table(Table $table): Table
     {
@@ -137,7 +166,7 @@ class BookingResource extends Resource
                     ->visible(fn (Booking $record) => auth()->user()?->can('transition', $record) && $record->canTransitionTo(Booking::STATUS_CANCELLATION_REQUESTED))
                     ->action(function (Booking $record) {
                         app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLATION_REQUESTED);
-                        Notification::make()->title('Cancellation requested — refund routed to payments')->warning()->send();
+                        Notification::make()->title('Cancellation requested — status recorded; refund must be handled in payment provider.')->warning()->send();
                     }),
                 Tables\Actions\Action::make('cancel')
                     ->label('Cancel Booking')
@@ -157,7 +186,7 @@ class BookingResource extends Resource
                             app(TransitionBookingStatusAction::class)->execute(auth()->user(), $record, Booking::STATUS_CANCELLED);
                             $record->update(['cancellation_reason' => $data['cancellation_reason']]);
                         });
-                        Notification::make()->title('Booking cancelled — refund routed to payments')->danger()->send();
+                        Notification::make()->title('Booking cancelled — status recorded; refund must be handled in payment provider.')->danger()->send();
                     }),
             ])
             ->bulkActions([])
@@ -224,8 +253,7 @@ class BookingResource extends Resource
                     ->schema([
                         Infolists\Components\TextEntry::make('idempotency_key')
                             ->label('Idempotency Key')
-                            ->copyable()
-                            ->toggleable(isToggledHiddenByDefault: true),
+                            ->copyable(),
                         Infolists\Components\TextEntry::make('cancellation_reason')
                             ->label('Cancellation Reason')
                             ->placeholder('—'),

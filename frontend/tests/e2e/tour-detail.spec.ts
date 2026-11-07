@@ -684,7 +684,9 @@ test.describe('Tour Detail Page', () => {
             : null;
         const restore = await apiPut(authedPage, `/api/partner/tours/${tourId}`, {
           media: snapshot.media,
-          cover_image_url: snapshot.coverUrl,
+          ...(snapshot.coverUrl && /^https?:\/\//i.test(snapshot.coverUrl)
+            ? { cover_image_url: snapshot.coverUrl }
+            : {}),
           ...(restoreDifficulty === null ? {} : { difficulty_level: restoreDifficulty }),
           guide_languages: snapshot.guides,
         });

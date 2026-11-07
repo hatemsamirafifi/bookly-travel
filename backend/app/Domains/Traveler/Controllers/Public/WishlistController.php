@@ -6,6 +6,7 @@ use App\Domains\Wishlist\Actions\AddToWishlistAction;
 use App\Domains\Wishlist\Actions\GetWishlistAction;
 use App\Domains\Wishlist\Actions\GetWishlistStatusAction;
 use App\Domains\Wishlist\Actions\RemoveFromWishlistAction;
+use App\Domains\Wishlist\Models\Wishlist;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -71,5 +72,38 @@ class WishlistController
         );
 
         return response()->json($result);
+    }
+
+    public function merge(Request $request, AddToWishlistAction $action): JsonResponse
+    {
+        $validated = $request->validate([
+            'tour_ids' => 'required|array|max:200',
+            'tour_ids.*' => 'integer|min:1',
+        ]);
+
+        $userId = (int) $request->user()->id;
+        $mergedCount = 0;
+
+        foreach ($validated['tour_ids'] as $tourId) {
+            try {
+                $action->execute(
+                    userId: $userId,
+                    tourId: $tourId,
+                );
+                $mergedCount++;
+            } catch (ConflictHttpException) {
+                // Tour is already in the wishlist, deduplicate silently
+            } catch (NotFoundHttpException|UnprocessableEntityHttpException) {
+                // Ignore missing tours or invalid references gracefully
+            }
+        }
+
+        $totalWishlistCount = Wishlist::where('user_id', $userId)->count();
+
+        return response()->json([
+            'status' => 'success',
+            'merged_count' => $mergedCount,
+            'total_wishlist_count' => $totalWishlistCount,
+        ]);
     }
 }

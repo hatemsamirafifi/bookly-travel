@@ -2,10 +2,12 @@
 
 namespace App\Filament\Widgets;
 
+use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Tour;
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -14,6 +16,14 @@ class PlatformOverviewWidget extends BaseWidget
     protected static ?int $sort = 1;
 
     protected int|string|array $columnSpan = 'full';
+
+    public static function canView(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof User
+            && app(AdminAuthorizationService::class)->can($user, 'view_all_analytics');
+    }
 
     protected function getStats(): array
     {

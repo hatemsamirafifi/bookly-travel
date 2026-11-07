@@ -148,3 +148,30 @@ it('denies the transition gate for non-admin users and grants it for a manage_bo
     expect($traveler->can('transition', $booking))->toBeFalse()
         ->and($this->admin->can('transition', $booking))->toBeTrue();
 });
+
+it('transitions a cancellation_requested booking to cancelled and sets cancelled_at', function () {
+    $booking = makeBookingWithStatus(Booking::STATUS_CANCELLATION_REQUESTED);
+
+    expect($booking->canTransitionTo(Booking::STATUS_CANCELLED))->toBeTrue();
+
+    $booking = app(TransitionBookingStatusAction::class)->execute($this->admin, $booking, Booking::STATUS_CANCELLED);
+
+    expect($booking->fresh()->status)->toBe(Booking::STATUS_CANCELLED)
+        ->and($booking->fresh()->cancelled_at)->not->toBeNull();
+
+    $log = GovernanceAuditLog::where('action', 'booking.transition')->where('target_id', $booking->id)->latest('id')->first();
+    expect($log)->not->toBeNull()
+        ->and($log->before_state)->toMatchArray(['status' => 'cancellation_requested'])
+        ->and($log->after_state)->toMatchArray(['status' => 'cancelled'])
+        ->and($log->metadata['financial'])->toBeTrue();
+});
+
+it('blocks disallowed transitions from cancellation_requested', function () {
+    $booking = makeBookingWithStatus(Booking::STATUS_CANCELLATION_REQUESTED);
+
+    expect($booking->canTransitionTo(Booking::STATUS_COMPLETED))->toBeFalse()
+        ->and($booking->canTransitionTo(Booking::STATUS_EXPIRED))->toBeFalse()
+        ->and($booking->canTransitionTo(Booking::STATUS_NO_SHOW))->toBeFalse()
+        ->and(fn () => app(TransitionBookingStatusAction::class)->execute($this->admin, $booking, Booking::STATUS_COMPLETED))
+        ->toThrow(HttpException::class);
+});

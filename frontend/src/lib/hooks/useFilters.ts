@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams, useParams, usePathname } from 'next/navigation';
 
 export interface FilterState {
@@ -52,9 +52,19 @@ export function useFilters() {
     return count;
   }, [filters]);
 
+  // Ref to track in-flight search params across rapid sequential setFilter calls
+  // before Next.js re-renders with the updated searchParams.
+  const pendingParamsRef = useRef<URLSearchParams | null>(null);
+
+  useEffect(() => {
+    pendingParamsRef.current = null;
+  }, [searchParams]);
+
   const setFilter = useCallback(
     (key: keyof FilterState, value: string | null) => {
-      const sp = new URLSearchParams(searchParams.toString());
+      const sp = pendingParamsRef.current
+        ? new URLSearchParams(pendingParamsRef.current.toString())
+        : new URLSearchParams(searchParams.toString());
       if (value) {
         sp.set(key, value);
       } else {
@@ -64,6 +74,7 @@ export function useFilters() {
       if (key !== 'page') {
         sp.delete('page');
       }
+      pendingParamsRef.current = sp;
       const qs = sp.toString();
       router.push(`${basePath}${qs ? `?${qs}` : ''}`, { scroll: false });
     },
@@ -71,8 +82,10 @@ export function useFilters() {
   );
 
   const setMultipleFilters = useCallback(
-    (updates: Partial<FilterState>) => {
-      const sp = new URLSearchParams(searchParams.toString());
+    (updates: Partial<Record<keyof FilterState, string | null | undefined>>) => {
+      const sp = pendingParamsRef.current
+        ? new URLSearchParams(pendingParamsRef.current.toString())
+        : new URLSearchParams(searchParams.toString());
       for (const [key, value] of Object.entries(updates)) {
         if (value) {
           sp.set(key, value);
@@ -81,6 +94,7 @@ export function useFilters() {
         }
       }
       sp.delete('page');
+      pendingParamsRef.current = sp;
       const qs = sp.toString();
       router.push(`${basePath}${qs ? `?${qs}` : ''}`, { scroll: false });
     },
@@ -88,6 +102,7 @@ export function useFilters() {
   );
 
   const clearAll = useCallback(() => {
+    pendingParamsRef.current = null;
     const query = searchParams.get('q');
     const params = new URLSearchParams();
     if (query) params.set('q', query);

@@ -6,7 +6,9 @@ import { getTranslations } from 'next-intl/server';
 import SearchBar from '@/components/search/SearchBar';
 import SearchResults from '@/components/search/SearchResults';
 import Pagination from '@/components/search/Pagination';
-import FilterPanel from '@/components/search/FilterPanel';
+import FilterSidebar from '@/components/search/FilterSidebar';
+import MobileFilterDrawer from '@/components/search/MobileFilterDrawer';
+import ActiveFilterChips from '@/components/search/ActiveFilterChips';
 import SortDropdown from '@/components/search/SortDropdown';
 import SearchUnavailable from '@/components/search/SearchUnavailable';
 
@@ -76,10 +78,27 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
     error = t('loadError');
   }
 
+  // Build lookup labels for ActiveFilterChips
+  const categoryLabels: Record<string, string> = {};
+  if (data?.filters?.categories) {
+    data.filters.categories.forEach((c) => {
+      categoryLabels[c.slug] = c.name;
+    });
+  }
+  const locationLabels: Record<string, string> = {};
+  if (data?.filters?.locations) {
+    data.filters.locations.forEach((l) => {
+      const key = l.slug ?? l.name;
+      locationLabels[key] = l.name;
+    });
+  }
+
   return (
-    <div className="min-h-screen bg-surface-alt">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface-alt py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="sr-only">{t('pageTitle')}</h1>
+
+        {/* Global Search Bar */}
         <div className="mb-8 flex justify-center">
           <SearchBar initialQuery={query} />
         </div>
@@ -87,34 +106,51 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
         {error && isServiceUnavailable ? (
           <SearchUnavailable retryAfter={retryAfterSeconds} />
         ) : error ? (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-8 text-center" role="alert">
-            <p className="text-red-600">{error}</p>
+          <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center" role="alert">
+            <p className="text-red-700 font-medium">{error}</p>
           </div>
         ) : data ? (
-          <div className="flex flex-col gap-6 lg:flex-row">
-            {/* Sidebar filters */}
-            <div className="shrink-0">
-              <FilterPanel filterData={data.filters} />
-            </div>
+          <div className="flex flex-col gap-8 lg:flex-row">
+            {/* Desktop Left Sidebar */}
+            <FilterSidebar filterData={data.filters} />
 
-            {/* Results */}
+            {/* Main Content Area */}
             <div className="flex-1 min-w-0">
+              {/* Mobile trigger bar and sort controls */}
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                {query && (
-                  <p className="text-sm text-gray-500">
-                    {t(data.meta.total === 1 ? 'resultsFor' : 'resultsFor_plural', { total: data.meta.total, query })}
-                  </p>
-                )}
-                {!query && (
-                  <p className="text-sm text-gray-500">
-                    {t(data.meta.total === 1 ? 'toursAvailable' : 'toursAvailable_plural', { total: data.meta.total })}
-                  </p>
-                )}
-                <SortDropdown />
+                <div className="flex items-center gap-3">
+                  <MobileFilterDrawer filterData={data.filters} totalResults={data.meta.total} />
+                  {query ? (
+                    <p className="text-sm font-medium text-text-muted">
+                      {t(data.meta.total === 1 ? 'resultsFor' : 'resultsFor_plural', {
+                        total: data.meta.total,
+                        query,
+                      })}
+                    </p>
+                  ) : (
+                    <p className="text-sm font-medium text-text-muted">
+                      {t(data.meta.total === 1 ? 'toursAvailable' : 'toursAvailable_plural', {
+                        total: data.meta.total,
+                      })}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <SortDropdown />
+                </div>
               </div>
 
+              {/* Active Filter Chips */}
+              <ActiveFilterChips categoryLabels={categoryLabels} locationLabels={locationLabels} />
+
+              {/* Tour Results Grid */}
               <SearchResults tours={data.data} locale={locale} />
-              <Pagination currentPage={data.meta.current_page} lastPage={data.meta.last_page} />
+
+              {/* Pagination */}
+              <div className="mt-8">
+                <Pagination currentPage={data.meta.current_page} lastPage={data.meta.last_page} />
+              </div>
             </div>
           </div>
         ) : null}

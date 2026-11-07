@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Admin\Services\AdminAuthorizationService;
+use App\Domains\Reviews\Actions\FlagReviewAction;
 use App\Domains\Reviews\Actions\HideReviewAction;
 use App\Domains\Reviews\Actions\ReinstateReviewAction;
 use App\Domains\Reviews\Models\Review;
@@ -15,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 
 class ReviewResource extends Resource
 {
@@ -22,7 +25,7 @@ class ReviewResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
-    protected static ?string $navigationGroup = 'Operations';
+    protected static ?string $navigationGroup = 'Marketplace Operations';
 
     protected static ?int $navigationSort = 2;
 
@@ -36,6 +39,31 @@ class ReviewResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'danger';
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'moderate_reviews');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['comment', 'tour.slug', 'traveler.name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return "Review #{$record->id} — " . (string) ($record->tour?->slug ?? '');
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Rating' => $record->rating,
+            'Status' => $record->status,
+        ];
     }
 
     public static function table(Table $table): Table
@@ -110,6 +138,24 @@ class ReviewResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('flag')
+                    ->label('Flag')
+                    ->icon('heroicon-o-flag')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Flag Review')
+                    ->modalDescription('Flagging drops this review from the public rating aggregate while it is investigated; the review is retained.')
+                    ->form([
+                        Forms\Components\Textarea::make('reason')
+                            ->label('Reason')
+                            ->required()
+                            ->maxLength(500),
+                    ])
+                    ->visible(fn (Review $record) => auth()->user()?->can('manage', $record) && $record->status === 'visible')
+                    ->action(function (Review $record, array $data) {
+                        app(FlagReviewAction::class)->execute($record, (int) auth()->id(), $data['reason']);
+                        Notification::make()->title('Review flagged')->warning()->send();
+                    }),
                 Tables\Actions\Action::make('hide')
                     ->label('Hide')
                     ->icon('heroicon-o-eye-slash')
@@ -221,10 +267,23 @@ class ReviewResource extends Resource
                                 'flagged' => 'danger',
                                 default => 'gray',
                             }),
-                        Infolists\Components\TextEntry::make('comment')->label('Comment')->wrap(),
+                        Infolists\Components\TextEntry::make('comment')->label('Comment')->columnSpanFull(),
                         Infolists\Components\TextEntry::make('created_at')->label('Submitted')->dateTime(),
                     ])
                     ->columns(3),
+                Infolists\Components\Section::make('Partner Response')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('reviewResponse.response_text')
+                            ->label('Response Text')
+                            ->placeholder('No response submitted by partner.')
+                            ->columnSpanFull(),
+                        Infolists\Components\TextEntry::make('reviewResponse.created_at')
+                            ->label('Responded At')
+                            ->dateTime()
+                            ->placeholder('—'),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
                 Infolists\Components\Section::make('Moderation Audit')
                     ->schema([
                         Infolists\Components\RepeatableEntry::make('auditTrails')

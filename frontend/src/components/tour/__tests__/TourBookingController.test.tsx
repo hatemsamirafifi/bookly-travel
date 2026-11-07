@@ -325,6 +325,7 @@ describe('TourBookingController shared selection', () => {
         groupMin={tour.group_size.min}
         groupMax={tour.group_size.max}
         todayUtc="2026-11-01"
+        getTodayUtc={() => '2026-11-01'}
         tourId={2}
       />,
     );

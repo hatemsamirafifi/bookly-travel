@@ -2,6 +2,9 @@
 
 namespace App\Domains\Blog\Models;
 
+use App\Domains\CMS\Models\ContentRevision;
+use App\Domains\Media\Models\MediaAsset;
+use App\Domains\Translation\Models\TranslationFieldState;
 use App\Models\Tour;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class BlogPost extends Model
 {
@@ -33,6 +37,9 @@ class BlogPost extends Model
         'meta_description',
         'meta_title',
         'cover_image_url',
+        'cover_media_id',
+        'og_image_media_id',
+        'canonical_url',
         'is_featured',
         'scheduled_at',
         'published_at',
@@ -51,6 +58,9 @@ class BlogPost extends Model
         'published_at' => 'datetime',
         'author_id' => 'integer',
         'blog_category_id' => 'integer',
+        'cover_media_id' => 'integer',
+        'og_image_media_id' => 'integer',
+        'lock_version' => 'integer',
     ];
 
     /**
@@ -94,6 +104,49 @@ class BlogPost extends Model
         );
     }
 
+    /**
+     * @return BelongsToMany<BlogTag, $this>
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(BlogTag::class, 'blog_post_tags');
+    }
+
+    /**
+     * Append-only version history (newest first).
+     *
+     * @return MorphMany<ContentRevision, $this>
+     */
+    public function revisions(): MorphMany
+    {
+        return $this->morphMany(ContentRevision::class, 'revisionable')
+            ->orderByDesc('version_number');
+    }
+
+    /**
+     * @return MorphMany<TranslationFieldState, $this>
+     */
+    public function translationFieldStates(): MorphMany
+    {
+        return $this->morphMany(TranslationFieldState::class, 'translatable');
+    }
+
+    /**
+     * @return BelongsTo<MediaAsset, $this>
+     */
+    public function coverMedia(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'cover_media_id');
+    }
+
+    /**
+     * @return BelongsTo<MediaAsset, $this>
+     */
+    public function ogImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'og_image_media_id');
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_PUBLISHED)
@@ -121,6 +174,76 @@ class BlogPost extends Model
     public function isDraft(): bool
     {
         return $this->status === self::STATUS_DRAFT;
+    }
+
+    /**
+     * Return the exact stored value for a locale, without falling back.
+     */
+    public function rawContentFor(string $field, string $locale): ?string
+    {
+        $values = $this->{$field} ?? [];
+        if (! is_array($values)) {
+            return null;
+        }
+
+        $value = $values[$locale] ?? null;
+
+        return is_string($value) && trim(strip_tags($value)) !== '' ? $value : null;
+    }
+
+    /**
+     * Whether a locale is eligible for public rendering based on both non-empty
+     * required fields (`title` + `body`) and `TranslationFieldState` freshness.
+     */
+    public function isLocaleEligible(string $locale): bool
+    {
+        if ($locale === 'en') {
+            return true;
+        }
+
+        if ($this->rawContentFor('title', $locale) === null || $this->rawContentFor('body', $locale) === null) {
+            return false;
+        }
+
+        $states = $this->relationLoaded('translationFieldStates')
+            ? $this->translationFieldStates
+            : $this->translationFieldStates()->where('locale', $locale)->get();
+
+        $localeStates = $states
+            ->where('locale', $locale)
+            ->keyBy('field_name');
+
+        if ($localeStates->isEmpty()) {
+            return true;
+        }
+
+        foreach (['title', 'body'] as $field) {
+            /** @var TranslationFieldState|null $state */
+            $state = $localeStates->get($field);
+
+            if ($state === null) {
+                continue;
+            }
+
+            if (! in_array($state->status, [
+                TranslationFieldState::STATUS_COMPLETED,
+                TranslationFieldState::STATUS_MANUALLY_EDITED,
+            ], true)) {
+                return false;
+            }
+
+            $currentEnHash = hash('sha256', trim((string) ($this->rawContentFor($field, 'en') ?? '')));
+
+            if ($state->translated_source_hash !== null && $state->translated_source_hash !== $currentEnHash) {
+                return false;
+            }
+
+            if ($state->source_hash !== null && $state->source_hash !== $currentEnHash) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function contentFor(string $field, string $locale): ?string

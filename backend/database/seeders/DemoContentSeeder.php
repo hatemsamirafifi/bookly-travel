@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
 use App\Models\User;
+use App\Support\DemoMediaDeployer;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +21,8 @@ class DemoContentSeeder extends Seeder
      */
     public function run(): void
     {
+        DemoMediaDeployer::deployAll();
+
         $this->seedMoreCategories();
         $this->seedMorePartners();
 
@@ -33,7 +36,7 @@ class DemoContentSeeder extends Seeder
                 'name' => 'Beach & Water Sports',
                 'slug' => 'beach-water',
                 'description' => 'Enjoy beaches, snorkeling, diving, and water activities',
-                'image_url' => 'http://cdn.bookly.test/categories/beach.jpg',
+                'image_url' => 'categories/beach-water.jpg',
                 'display_order' => 6,
                 'is_active' => true,
             ],
@@ -41,7 +44,7 @@ class DemoContentSeeder extends Seeder
                 'name' => 'Museums & Art',
                 'slug' => 'museums-art',
                 'description' => 'Explore world-class museums and art galleries',
-                'image_url' => 'http://cdn.bookly.test/categories/museums.jpg',
+                'image_url' => 'categories/museums-art.jpg',
                 'display_order' => 7,
                 'is_active' => true,
             ],
@@ -49,14 +52,14 @@ class DemoContentSeeder extends Seeder
                 'name' => 'Nature & Wildlife',
                 'slug' => 'nature-wildlife',
                 'description' => 'Discover natural wonders and wildlife experiences',
-                'image_url' => 'http://cdn.bookly.test/categories/nature.jpg',
+                'image_url' => 'categories/nature-wildlife.jpg',
                 'display_order' => 8,
                 'is_active' => true,
             ],
         ];
 
         foreach ($categories as $category) {
-            Category::firstOrCreate(
+            Category::updateOrCreate(
                 ['slug' => $category['slug']],
                 $category
             );
@@ -187,7 +190,7 @@ class DemoContentSeeder extends Seeder
             'group_size_max' => 6,
             'price_amount' => 12000,
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/venice-gondola.jpg',
+            'cover_image_url' => 'tours/venice-gondola.jpg',
             'is_featured' => true,
             'published_at' => now()->subDays(15),
         ], [
@@ -213,7 +216,7 @@ class DemoContentSeeder extends Seeder
             'group_size_max' => 15,
             'price_amount' => 5500,
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/venice-walking.jpg',
+            'cover_image_url' => 'tours/venice-walking.jpg',
             'is_featured' => false,
             'published_at' => now()->subDays(10),
         ], [
@@ -245,7 +248,7 @@ class DemoContentSeeder extends Seeder
             'group_size_max' => 18,
             'price_amount' => 6500,
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/barcelona-gaudi.jpg',
+            'cover_image_url' => 'tours/barcelona-gaudi.jpg',
             'is_featured' => true,
             'published_at' => now()->subDays(20),
         ], [
@@ -271,7 +274,7 @@ class DemoContentSeeder extends Seeder
             'group_size_max' => 12,
             'price_amount' => 7500,
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/barcelona-tapas.jpg',
+            'cover_image_url' => 'tours/barcelona-tapas.jpg',
             'is_featured' => false,
             'published_at' => now()->subDays(8),
         ], [
@@ -303,7 +306,7 @@ class DemoContentSeeder extends Seeder
             'group_size_max' => 20,
             'price_amount' => 8900,
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/paris-louvre.jpg',
+            'cover_image_url' => 'tours/paris-louvre.jpg',
             'is_featured' => true,
             'published_at' => now()->subDays(25),
         ], [
@@ -329,7 +332,7 @@ class DemoContentSeeder extends Seeder
             'group_size_max' => 15,
             'price_amount' => 4900,
             'status' => 'published',
-            'cover_image_url' => 'http://cdn.bookly.test/tours/paris-montmartre.jpg',
+            'cover_image_url' => 'tours/paris-montmartre.jpg',
             'is_featured' => false,
             'published_at' => now()->subDays(12),
         ], [
@@ -351,7 +354,7 @@ class DemoContentSeeder extends Seeder
             $category = Category::where('slug', 'walking')->first();
         }
 
-        $tour = Tour::firstOrCreate(
+        $tour = Tour::updateOrCreate(
             ['slug' => $tourData['slug']],
             array_merge($tourData, [
                 'partner_id' => $partner->id,
@@ -362,7 +365,7 @@ class DemoContentSeeder extends Seeder
         );
 
         foreach ($translations as $locale => $translation) {
-            TourTranslation::firstOrCreate(
+            TourTranslation::updateOrCreate(
                 [
                     'tour_id' => $tour->id,
                     'locale' => $locale,

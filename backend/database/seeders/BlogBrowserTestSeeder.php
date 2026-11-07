@@ -18,6 +18,7 @@ class BlogBrowserTestSeeder extends Seeder
             [
                 'name' => 'City Guides',
                 'description' => 'Comprehensive destination breakdowns and insider walks.',
+                'image_url' => 'blog-categories/city-guides.jpg',
                 'is_active' => true,
                 'display_order' => 1,
             ],
@@ -28,6 +29,7 @@ class BlogBrowserTestSeeder extends Seeder
             [
                 'name' => 'Food & Wine',
                 'description' => 'Local food and wine recommendations.',
+                'image_url' => 'blog-categories/food-and-wine.jpg',
                 'is_active' => true,
                 'display_order' => 2,
             ],
@@ -130,7 +132,7 @@ class BlogBrowserTestSeeder extends Seeder
                 'excerpt' => array_fill_keys(BlogPost::LOCALES, 'Travel guide.'),
                 'meta_title' => null,
                 'meta_description' => null,
-                'cover_image_url' => null,
+                'cover_image_url' => 'blog/covers/' . $slug . '.jpg',
                 'is_featured' => false,
                 'scheduled_at' => null,
                 'author_id' => $author->id,

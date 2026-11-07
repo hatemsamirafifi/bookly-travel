@@ -3,6 +3,7 @@
 namespace App\Domains\Blog\Transformers;
 
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -16,12 +17,13 @@ class BlogPostDetailTransformer
 
     public function transform(BlogPost $post, string $locale, ?Collection $relatedPosts = null): array
     {
-        $hasRequestedLocale = $this->hasLocaleContent($post, $locale);
+        $hasRequestedLocale = $post->isLocaleEligible($locale);
+        $effectiveLocale = $hasRequestedLocale ? $locale : 'en';
         $translationWarning = (! $hasRequestedLocale && $locale !== 'en') ? 'partial_translation' : null;
 
-        $title = $post->contentFor('title', $locale) ?? '';
-        $body = $post->contentFor('body', $locale) ?? '';
-        $excerpt = $post->contentFor('excerpt', $locale);
+        $title = $post->contentFor('title', $effectiveLocale) ?? '';
+        $body = app(HtmlSanitizerService::class)->sanitize($post->contentFor('body', $effectiveLocale));
+        $excerpt = $post->contentFor('excerpt', $effectiveLocale);
         if (blank($excerpt)) {
             $excerpt = Str::limit(strip_tags($body), 160);
         }
@@ -30,14 +32,14 @@ class BlogPostDetailTransformer
             ? $post->author->authorProfile
             : $post->authorProfile;
 
-        $authorDisplayName = $authorProfile?->contentFor('display_name', $locale)
+        $authorDisplayName = $authorProfile?->contentFor('display_name', $effectiveLocale)
             ?? $post->author->name
             ?? 'Bookly Editorial';
 
-        $authorBio = $authorProfile?->contentFor('bio', $locale);
+        $authorBio = $authorProfile?->contentFor('bio', $effectiveLocale);
         $authorAvatarUrl = $authorProfile?->avatar_url;
 
-        $seo = $this->buildSeoMetadata($post, $locale, $title, $excerpt);
+        $seo = $this->buildSeoMetadata($post, $effectiveLocale, $locale, $title, $excerpt);
 
         $relatedToursData = [];
         if ($post->relationLoaded('relatedTours')) {
@@ -64,16 +66,17 @@ class BlogPostDetailTransformer
             'title' => $title,
             'body' => $body,
             'excerpt' => $excerpt,
-            'cover_image_url' => $post->cover_image_url,
+            'cover_image_url' => BlogPostTransformer::formatImageUrl($post->cover_image_url),
             'cover_image_blur' => null,
             'published_at' => $post->published_at?->toIso8601String(),
             'updated_at' => $post->updated_at?->toIso8601String(),
             'is_featured' => (bool) $post->is_featured,
-            'reading_time' => $post->readingTime($locale),
+            'reading_time' => $post->readingTime($effectiveLocale),
             'translation_warning' => $translationWarning,
             'category' => $post->category ? [
                 'slug' => $post->category->slug,
                 'name' => $post->category->name,
+                'image_url' => BlogPostTransformer::formatImageUrl($post->category->image_url),
             ] : null,
             'author' => [
                 'display_name' => $authorDisplayName,
@@ -86,10 +89,15 @@ class BlogPostDetailTransformer
         ];
     }
 
-    protected function buildSeoMetadata(BlogPost $post, string $locale, string $title, ?string $excerpt): array
-    {
-        $metaTitleCustom = $post->contentFor('meta_title', $locale);
-        $metaDescCustom = $post->contentFor('meta_description', $locale);
+    protected function buildSeoMetadata(
+        BlogPost $post,
+        string $contentLocale,
+        string $urlLocale,
+        string $title,
+        ?string $excerpt,
+    ): array {
+        $metaTitleCustom = $post->contentFor('meta_title', $contentLocale);
+        $metaDescCustom = $post->contentFor('meta_description', $contentLocale);
 
         $metaTitle = ! blank($metaTitleCustom)
             ? $metaTitleCustom
@@ -100,7 +108,7 @@ class BlogPostDetailTransformer
             : ($excerpt ?? 'Explore travel guides, tips, and insights on Bookly.');
 
         $baseUrl = config('app.url', 'https://bookly.com');
-        $canonicalUrl = "{$baseUrl}/{$locale}/blog/{$post->slug}";
+        $canonicalUrl = "{$baseUrl}/{$urlLocale}/blog/{$post->slug}";
 
         $hreflang = [];
         $locales = config('app.supported_locales', BlogPost::LOCALES);
@@ -114,13 +122,5 @@ class BlogPostDetailTransformer
             'canonical_url' => $canonicalUrl,
             'hreflang' => $hreflang,
         ];
-    }
-
-    private function hasLocaleContent(BlogPost $post, string $locale): bool
-    {
-        $titles = $post->title ?? [];
-        $bodies = $post->body ?? [];
-
-        return ! empty($titles[$locale]) || ! empty($bodies[$locale]);
     }
 }

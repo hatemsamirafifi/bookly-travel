@@ -45,9 +45,14 @@ final class ListBlogPostsAction
         $cacheKey = "bookly:blog:list:{$locale}:{$cacheHash}";
 
         return BlogCache::remember(['blog', 'blog_list'], $cacheKey, 300, function () use ($categorySlug, $perPage, $page, $locale) {
+            $relations = ['author', 'authorProfile.user', 'category'];
+            if ($locale !== 'en') {
+                $relations[] = 'translationFieldStates';
+            }
+
             $query = BlogPost::query()
                 ->published()
-                ->with(['author', 'authorProfile.user', 'category'])
+                ->with($relations)
                 ->orderByDesc('published_at');
 
             if ($categorySlug !== null && is_string($categorySlug) && $categorySlug !== '') {

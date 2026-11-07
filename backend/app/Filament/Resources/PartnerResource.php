@@ -7,8 +7,12 @@ use App\Domains\Admin\Actions\InvitePartnerAction;
 use App\Domains\Admin\Actions\ReinstatePartnerAction;
 use App\Domains\Admin\Actions\RejectPartnerAction;
 use App\Domains\Admin\Actions\SuspendPartnerAction;
+use App\Domains\Admin\Services\AdminAuthorizationService;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Reviews\Models\Review;
 use App\Filament\Resources\PartnerResource\Pages;
+use App\Models\Tour;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
@@ -16,6 +20,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PartnerResource extends Resource
 {
@@ -23,11 +28,17 @@ class PartnerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?string $navigationGroup = 'Platform';
+    protected static ?string $navigationGroup = 'Marketplace Operations';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getRecordTitle(?Model $record): ?string
+    {
+        /** @var Partner|null $record */
+        return $record?->profile?->company_name ?? $record?->user?->name ?? ($record ? "Partner #{$record->id}" : null);
+    }
 
     public static function getNavigationBadge(): ?string
     {
@@ -37,6 +48,35 @@ class PartnerResource extends Resource
     public static function getNavigationBadgeColor(): ?string
     {
         return 'warning';
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && app(AdminAuthorizationService::class)->can($user, 'manage_partners');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['user.name', 'user.email', 'profile.company_name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        /** @var Partner $record */
+        return (string) ($record->profile?->company_name
+            ?? $record->user?->name
+            ?? "Partner #{$record->id}");
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Partner $record */
+        return [
+            'Contact' => $record->user?->email,
+            'Onboarding status' => $record->onboarding_status,
+        ];
     }
 
     public static function table(Table $table): Table
@@ -237,6 +277,63 @@ class PartnerResource extends Resource
                             ->dateTime(),
                     ])
                     ->columns(3),
+                Infolists\Components\Section::make('Performance')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('tours_count')
+                            ->label('Tours')
+                            ->getStateUsing(fn (Partner $record): int => $record->tours()->count()),
+                        Infolists\Components\TextEntry::make('bookings_total_count')
+                            ->label('Total Bookings')
+                            ->getStateUsing(function (Partner $record): int {
+                                return Booking::query()
+                                    ->whereIn('tour_id', $record->tours()->select('id'))
+                                    ->count();
+                            }),
+                        Infolists\Components\TextEntry::make('bookings_revenue')
+                            ->label('Booked Revenue')
+                            ->getStateUsing(function (Partner $record): string {
+                                $revenue = (int) Booking::query()
+                                    ->whereIn('tour_id', $record->tours()->select('id'))
+                                    ->whereIn('status', [
+                                        Booking::STATUS_CONFIRMED,
+                                        Booking::STATUS_COMPLETED,
+                                        Booking::STATUS_CANCELLATION_REQUESTED,
+                                    ])
+                                    ->sum('total_price');
+
+                                return $revenue === 0 ? '—' : (string) Tour::formatPrice($revenue, 'EUR');
+                            }),
+                        Infolists\Components\TextEntry::make('reviews_average_rating')
+                            ->label('Avg Review Rating')
+                            ->getStateUsing(function (Partner $record): ?float {
+                                $avg = Review::query()
+                                    ->whereIn('tour_id', $record->tours()->select('id'))
+                                    ->where('status', 'visible')
+                                    ->avg('rating');
+
+                                return $avg === null ? null : round((float) $avg, 2);
+                            })
+                            ->placeholder('No reviews yet'),
+                    ])
+                    ->columns(4)
+                    ->collapsible(),
+                Infolists\Components\Section::make('Governance Audit')
+                    ->schema([
+                        Infolists\Components\RepeatableEntry::make('governanceAuditLogs')
+                            ->schema([
+                                Infolists\Components\TextEntry::make('action')
+                                    ->label('Action')
+                                    ->badge(),
+                                Infolists\Components\TextEntry::make('actor.email')
+                                    ->label('Admin Actor')
+                                    ->placeholder('System'),
+                                Infolists\Components\TextEntry::make('created_at')
+                                    ->label('When')
+                                    ->dateTime(),
+                            ])
+                            ->columns(3),
+                    ])
+                    ->collapsible(),
             ]);
     }
 

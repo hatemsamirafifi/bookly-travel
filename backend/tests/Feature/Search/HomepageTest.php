@@ -19,6 +19,7 @@ it('returns homepage data wrapped in the data envelope (L3)', function () {
                 ->has('featured_tours')
                 ->has('popular_categories')
                 ->has('featured_destinations')
+                ->has('curated_rails')
             )
             ->has('meta', fn (AssertableJson $meta) => $meta->has('seo', fn (AssertableJson $seo) => $seo
                 ->has('meta_title')
@@ -158,3 +159,70 @@ it('returns translated homepage metadata in all three locales', function (string
     'es' => ['es', 'Bookly — Descubre y Reserva Tours Increíbles', 'Explora tours y actividades de los socios de Bookly. Encuentra aquí tu próxima experiencia.'],
     'it' => ['it', 'Bookly — Scopri e Prenota Tour Incredibili', 'Esplora tour e attività dei partner Bookly. Trova qui la tua prossima esperienza.'],
 ]);
+
+it('returns curated_rails for eligible themes and omits empty rails (FR-001, FR-007)', function () {
+    $category = Category::create(['name' => 'Adventures', 'slug' => 'outdoor-adventures', 'is_active' => true, 'display_order' => 1]);
+
+    $tour = Tour::create([
+        'category_id' => $category->id,
+        'partner_id' => makePartner()->id,
+        'slug' => 'outdoor-adventure-tour',
+        'location' => 'Interlaken',
+        'location_slug' => 'interlaken',
+        'duration_minutes' => 180,
+        'duration_label' => '3 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 10,
+        'price_amount' => 7500,
+        'status' => 'published',
+        'is_featured' => false,
+    ]);
+    AvailabilityRule::create([
+        'tour_id' => $tour->id, 'rule_type' => 'recurring',
+        'days_of_week' => [0, 1, 2, 3, 4, 5, 6], 'capacity' => 10,
+    ]);
+    TourTranslation::create([
+        'tour_id' => $tour->id, 'locale' => 'en', 'title' => 'Alpine Paragliding Adventure',
+        'description' => 'Fly over lakes and mountains', 'highlights' => [], 'inclusions' => [], 'exclusions' => [],
+    ]);
+
+    $response = getJson('/api/public/homepage?locale=en')
+        ->assertOk();
+
+    $rails = $response->json('data.curated_rails');
+    expect($rails)->toBeArray();
+    expect(count($rails))->toBeGreaterThanOrEqual(1);
+    expect($rails[0]['id'])->toBe('outdoor-adventures');
+    expect($rails[0]['tours'][0]['title'])->toBe('Alpine Paragliding Adventure');
+});
+
+it('reflects tour changes without waiting for the homepage cache TTL', function () {
+    $category = Category::create(['name' => 'Cat', 'slug' => 'cat-invalidate', 'is_active' => true, 'display_order' => 1]);
+
+    $tour = Tour::create([
+        'category_id' => $category->id, 'partner_id' => makePartner()->id,
+        'slug' => 'invalidation-featured-tour', 'location' => 'Rome, Italy', 'location_slug' => 'rome',
+        'duration_minutes' => 300, 'duration_label' => '5 hours',
+        'group_size_min' => 1, 'group_size_max' => 15,
+        'price_amount' => 5000, 'status' => 'published', 'is_featured' => true,
+    ]);
+    AvailabilityRule::create([
+        'tour_id' => $tour->id, 'rule_type' => 'recurring',
+        'days_of_week' => [0, 1, 2, 3, 4, 5, 6], 'capacity' => 10,
+    ]);
+    $translation = TourTranslation::create([
+        'tour_id' => $tour->id, 'locale' => 'en', 'title' => 'Stale Featured Title',
+        'description' => 'Cached before the update', 'highlights' => [], 'inclusions' => [], 'exclusions' => [],
+    ]);
+
+    getJson('/api/public/homepage?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.featured_tours.0.title', 'Stale Featured Title');
+
+    $updatedTitle = 'Fresh Featured Title ' . uniqid();
+    $translation->update(['title' => $updatedTitle]);
+
+    getJson('/api/public/homepage?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.featured_tours.0.title', $updatedTitle);
+});

@@ -3,6 +3,7 @@
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\Partner;
+use App\Filament\Widgets\PlatformOverviewWidget;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\User;
@@ -107,4 +108,39 @@ it('resolves per-action flags independently', function () {
     expect($toursOnly->can('publish', $this->tour))->toBeTrue()
         ->and($toursOnly->can('approve', $this->partner))->toBeFalse()
         ->and($toursOnly->can('transition', $this->booking))->toBeFalse();
+});
+
+it('enforces granular permission flags on admin API routes', function () {
+    $adminNoFlags = User::factory()->admin()->create();
+
+    actingAs($adminNoFlags, 'sanctum')->getJson('/api/admin/audit/bookings')->assertForbidden();
+    actingAs($adminNoFlags, 'sanctum')->getJson('/api/admin/financial-ledger')->assertForbidden();
+    actingAs($adminNoFlags, 'sanctum')->getJson('/api/admin/reviews')->assertForbidden();
+
+    $auditAdmin = adminWithFlags(['view_audit_log' => true]);
+    actingAs($auditAdmin, 'sanctum')->getJson('/api/admin/audit/bookings')->assertSuccessful();
+    actingAs($auditAdmin, 'sanctum')->getJson('/api/admin/financial-ledger')->assertForbidden();
+
+    $financeAdmin = adminWithFlags(['view_all_analytics' => true]);
+    actingAs($financeAdmin, 'sanctum')->getJson('/api/admin/financial-ledger')->assertSuccessful();
+    actingAs($financeAdmin, 'sanctum')->getJson('/api/admin/audit/bookings')->assertForbidden();
+
+    $reviewAdmin = adminWithFlags(['moderate_reviews' => true]);
+    actingAs($reviewAdmin, 'sanctum')->getJson('/api/admin/reviews')->assertSuccessful();
+});
+
+it('protects AuditLogResource and PlatformOverviewWidget with granular permissions', function () {
+    $adminNoFlags = User::factory()->admin()->create();
+    actingAs($adminNoFlags);
+
+    $this->get('/admin/audit-logs')->assertForbidden();
+    expect(PlatformOverviewWidget::canView())->toBeFalse();
+
+    $analyticsAdmin = adminWithFlags(['view_all_analytics' => true]);
+    actingAs($analyticsAdmin);
+    expect(PlatformOverviewWidget::canView())->toBeTrue();
+
+    $auditAdmin = adminWithFlags(['view_audit_log' => true]);
+    actingAs($auditAdmin);
+    $this->get('/admin/audit-logs')->assertSuccessful();
 });

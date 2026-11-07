@@ -7,6 +7,11 @@ jest.mock('next-intl', () => ({
     if (key === 'nextAvailable') return `Next: ${values?.date}`;
     if (key === 'reviewCount_one') return `${values?.count} review`;
     if (key === 'reviewCount') return `${values?.count} reviews`;
+    if (key === 'badgeFeatured') return 'Featured';
+    if (key === 'badgeBestSeller') return 'Best Seller';
+    if (key === 'badgeNew') return 'New';
+    if (key === 'from') return 'From';
+    if (key === 'newRating') return 'New';
     return key;
   },
 }));
@@ -20,10 +25,10 @@ jest.mock('next/image', () => ({
   },
 }));
 
-jest.mock('@/components/wishlist/WishlistButton', () => ({
+jest.mock('@/components/shared/WishlistHeartButton', () => ({
   __esModule: true,
   default: ({ tourId, compact }: { tourId: number; compact: boolean }) => (
-    <button data-testid="wishlist-button" data-tour-id={tourId} data-compact={compact}>
+    <button data-testid="wishlist-button" data-tour-id={tourId} data-compact={compact ? 'true' : 'false'}>
       ♡
     </button>
   ),
@@ -45,6 +50,7 @@ const tour: TourCardType = {
   cover_image_url: 'https://cdn.test/tour-cover.jpg',
   group_size: { min: 1, max: 10 },
   next_available_date: '2026-07-15',
+  badge: 'featured',
 };
 
 describe('TourCard', () => {
@@ -69,6 +75,16 @@ describe('TourCard', () => {
     expect(screen.getByText('Florence Food Walk')).toBeInTheDocument();
     expect(screen.getByText('Florence, Italy')).toBeInTheDocument();
     expect(screen.getByText('3 hours')).toBeInTheDocument();
+  });
+
+  it('renders badge when present', () => {
+    render(<TourCard tour={tour} locale="en" />);
+    expect(screen.getByText('Featured')).toBeInTheDocument();
+  });
+
+  it('renders best-seller badge variant', () => {
+    render(<TourCard tour={{ ...tour, badge: 'best-seller' }} locale="en" />);
+    expect(screen.getByText('Best Seller')).toBeInTheDocument();
   });
 
   it('renders price and category', () => {
@@ -112,7 +128,7 @@ describe('TourCard', () => {
     expect(screen.getByText('Florence Food Walk')).toBeInTheDocument();
   });
 
-  it('renders wishlist button', () => {
+  it('renders wishlist button independent of tour link', () => {
     render(<TourCard tour={tour} locale="en" />);
 
     const btn = screen.getByTestId('wishlist-button');
@@ -126,5 +142,6 @@ describe('TourCard', () => {
     render(<TourCard tour={{ ...tour, rating: { average: 0, count: 0 } }} locale="en" />);
     expect(screen.queryByLabelText(/Rating:/)).not.toBeInTheDocument();
     expect(screen.queryByText(/reviews/)).not.toBeInTheDocument();
+    expect(screen.getByText('New')).toBeInTheDocument();
   });
 });

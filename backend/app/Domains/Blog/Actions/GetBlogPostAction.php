@@ -16,12 +16,17 @@ class GetBlogPostAction
 
     public function execute(string $slug, string $locale): array
     {
-        $post = BlogPost::with([
+        $relations = [
             'category',
             'author.authorProfile',
             'relatedTours.translations',
             'relatedTours.category',
-        ])
+        ];
+        if ($locale !== 'en') {
+            $relations[] = 'translationFieldStates';
+        }
+
+        $post = BlogPost::with($relations)
             ->where('slug', $slug)
             ->first();
 
@@ -53,21 +58,26 @@ class GetBlogPostAction
             throw new NotFoundHttpException('Blog post not found.');
         }
 
-        $relatedPosts = $this->resolveRelatedPosts($post);
+        $relatedPosts = $this->resolveRelatedPosts($post, $locale);
 
         return [
             'data' => $this->transformer->transform($post, $locale, $relatedPosts),
         ];
     }
 
-    protected function resolveRelatedPosts(BlogPost $post): Collection
+    protected function resolveRelatedPosts(BlogPost $post, string $locale = 'en'): Collection
     {
+        $relations = ['category', 'author.authorProfile'];
+        if ($locale !== 'en') {
+            $relations[] = 'translationFieldStates';
+        }
+
         $sameCategoryPosts = collect();
         if ($post->blog_category_id) {
             $sameCategoryPosts = BlogPost::published()
                 ->where('id', '!=', $post->id)
                 ->where('blog_category_id', $post->blog_category_id)
-                ->with(['category', 'author.authorProfile'])
+                ->with($relations)
                 ->orderByDesc('published_at')
                 ->take(3)
                 ->get();
@@ -82,7 +92,7 @@ class GetBlogPostAction
 
         $backfillPosts = BlogPost::published()
             ->whereNotIn('id', $excludedIds)
-            ->with(['category', 'author.authorProfile'])
+            ->with($relations)
             ->orderByDesc('published_at')
             ->take($needed)
             ->get();

@@ -34,7 +34,7 @@ class TourCardTransformer
                 'average' => $tour->averageRating(),
                 'count' => $tour->reviewCount(),
             ],
-            'cover_image_url' => $tour->cover_image_url ?? '',
+            'cover_image_url' => self::formatImageUrl($tour->cover_image_url),
             'group_size' => [
                 'min' => $tour->group_size_min,
                 'max' => $tour->group_size_max,
@@ -59,5 +59,22 @@ class TourCardTransformer
         }
 
         return null;
+    }
+
+    public static function formatImageUrl(?string $url): string
+    {
+        if (blank($url)) {
+            return '';
+        }
+
+        if (preg_match('#^https?://[^/]+/storage/(.*)$#i', $url, $matches)) {
+            return '/storage/' . ltrim($matches[1], '/');
+        }
+
+        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://') || str_starts_with($url, '/')) {
+            return $url;
+        }
+
+        return '/storage/' . ltrim($url, '/');
     }
 }

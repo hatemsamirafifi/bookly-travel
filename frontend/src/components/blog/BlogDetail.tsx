@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { BlogPostDetail } from '@/lib/api/types';
 import { getImagePlaceholderProps } from '@/lib/images';
+import { sanitizeHtml } from '@/lib/sanitizeHtml';
 import AuthorByline from './AuthorByline';
 import RelatedTours from './RelatedTours';
 import RelatedPosts from './RelatedPosts';
@@ -83,7 +84,7 @@ export default function BlogDetail({ post, locale, isPreview }: BlogDetailProps)
 
       <div
         className="prose prose-lg max-w-none text-gray-800 prose-headings:text-[#0A2540] prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-img:rounded-xl"
-        dangerouslySetInnerHTML={{ __html: post.body }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.body) }}
       />
 
       <RelatedTours tours={post.related_tours} locale={locale} />
