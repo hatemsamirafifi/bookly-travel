@@ -57,6 +57,11 @@ async function expectAdminResourceTable(page: Page, path: string): Promise<void>
 }
 
 test.describe.serial('@admin-2.0', () => {
+  test.skip(
+    ({ isMobile }) => isMobile,
+    'Admin 2.0 Filament panel is verified on desktop; responsive viewports are exercised explicitly in test 15.'
+  );
+
   test('1. Admin authentication and session access with all six navigation groups', async ({
     page,
   }) => {
