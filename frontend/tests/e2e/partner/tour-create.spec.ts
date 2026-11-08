@@ -10,27 +10,46 @@ import {
 } from './tour-content-helpers';
 
 async function fillTourDescription(page: Page, text: string) {
-  const isHugeRte = await page.evaluate((val) => {
-    interface TestEditor {
-      setContent(html: string): void;
-      fire?(e: string): void;
-      dispatch?(e: string): void;
+  // Wait for either HugeRTE to initialize or fallback textarea to stay ready
+  await page.waitForFunction(
+    (val) => {
+      interface TestEditor {
+        setContent(html: string): void;
+        fire?(e: string): void;
+        dispatch?(e: string): void;
+        initialized?: boolean;
+      }
+      const win = window as unknown as { hugerte?: { get: (id?: string) => TestEditor | TestEditor[] | null } };
+      const res = win.hugerte?.get('description') || (typeof win.hugerte?.get === 'function' ? win.hugerte.get() : null);
+      const editor = Array.isArray(res) ? res[0] : res;
+      if (editor && typeof editor.setContent === 'function' && editor.initialized) {
+        editor.setContent(val);
+        if (typeof editor.fire === 'function') {
+          editor.fire('change');
+          editor.fire('input');
+          editor.fire('setcontent');
+        }
+        if (typeof editor.dispatch === 'function') {
+          editor.dispatch('change');
+        }
+        const ta = document.getElementById('description') as HTMLTextAreaElement | null;
+        if (ta) {
+          ta.value = val;
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+          ta.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        return true;
+      }
+      return false;
+    },
+    text,
+    { timeout: 10000 }
+  ).catch(async () => {
+    const ta = page.locator('textarea#description');
+    if (await ta.isVisible()) {
+      await ta.fill(text);
     }
-    const win = window as unknown as { hugerte?: { get: (id?: string) => TestEditor | TestEditor[] | null } };
-    const res = win.hugerte?.get('description') || (typeof win.hugerte?.get === 'function' ? win.hugerte.get() : null);
-    const editor = Array.isArray(res) ? res[0] : res;
-    if (editor && typeof editor.setContent === 'function') {
-      editor.setContent(val);
-      if (typeof editor.fire === 'function') editor.fire('change');
-      if (typeof editor.dispatch === 'function') editor.dispatch('change');
-      return true;
-    }
-    return false;
-  }, text);
-
-  if (!isHugeRte) {
-    await page.getByLabel('Description').fill(text);
-  }
+  });
 }
 
 test.describe('Partner Tour Creation', () => {

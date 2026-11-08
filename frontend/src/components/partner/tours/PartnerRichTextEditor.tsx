@@ -220,12 +220,14 @@ export function PartnerRichTextEditor({
           suffix: '.min',
           height: minHeight,
           min_height: 250,
-          resize: true,
+          resize: false,
+          statusbar: false,
+          element_path: false,
           menubar: 'edit view insert format tools table help',
           plugins:
-            'advlist anchor autolink autoresize charmap code codesample directionality emoticons fullscreen image link lists nonbreaking preview searchreplace table visualblocks wordcount',
+            'advlist anchor autolink autoresize charmap code codesample directionality emoticons fullscreen image link lists nonbreaking preview searchreplace table visualblocks',
           toolbar:
-            'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | blockquote codesample | searchreplace preview code fullscreen | wordcount',
+            'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | blockquote codesample | searchreplace preview code fullscreen',
           toolbar_mode: 'sliding',
           skin: isDark ? 'oxide-dark' : 'oxide',
           content_css: isDark ? 'dark' : 'default',
