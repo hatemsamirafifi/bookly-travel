@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Media;
 
-use App\Domains\Admin\Models\GovernanceAuditLog;
-use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\CMS\Services\HtmlSanitizerService;

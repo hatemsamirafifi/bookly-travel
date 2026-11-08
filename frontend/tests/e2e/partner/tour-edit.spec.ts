@@ -525,7 +525,7 @@ test.describe('Partner Tour Edit - Real API (Spec 019 US1)', () => {
     expect(reread.status).toBe(200);
     expect(ownedEnRow(reread.json).meeting_point).toBe('Snapshot point');
     expect(ownedEnRow(reread.json).title).toBe('Nested title wins');
-    expect(ownedEnRow(reread.json).description?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
+    expect(((ownedEnRow(reread.json).description as string | undefined) ?? '').replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
     expect(ownedEnRow(reread.json).inclusions).toEqual(['Owned inclusion']);
     const restoredData = (reread.json as { data: { media: unknown; translation_statuses: { es: string } } }).data;
     expect(restoredData.media).toEqual(snapshotMedia);

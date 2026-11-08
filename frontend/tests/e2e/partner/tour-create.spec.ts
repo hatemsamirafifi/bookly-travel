@@ -217,7 +217,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     expect(getResult.status).toBe(200);
     const en = ownedEnRow(getResult.json);
     expect(en.title).toBe(title);
-    expect(en.description?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
+    expect((en.description as string | undefined)?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
     expect(en.highlights).toEqual(['Old-town route']);
     expect(en.inclusions).toEqual(['Live guide']);
     expect(en.exclusions).toEqual(['Lunch']);
@@ -318,7 +318,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     expect(retainedRules[0].days_of_week).toContain(1);
     const retainedEn = ownedEnRow(retained.json);
     expect(retainedEn.title).toBe(title);
-    expect(retainedEn.description?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
+    expect((retainedEn.description as string | undefined)?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
     expect(retainedEn.meeting_point).toBe('Colosseum Main Entrance');
     expect(retainedEn.highlights).toEqual(['Old-town route']);
     const retainedItinerary = retainedEn.itinerary as Array<{
