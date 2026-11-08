@@ -3,9 +3,14 @@
 use App\Domains\Media\Models\MediaAsset;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Storage::fake('public');
+});
 
 it('rejects anonymous image-library access to the editor', function () {
     $this->getJson('/admin/hugerte/media')->assertUnauthorized();
@@ -24,12 +29,17 @@ it('only exposes ready public images to authorized editors', function () {
     $admin = User::factory()->admin()->create();
     $admin->adminPermission()->create(['flags' => ['manage_blog' => true]]);
 
-    $create = static function (string $filename, string $mime, string $visibility, string $status): MediaAsset {
+    $create = static function (string $filename, string $mime, string $visibility, string $status, bool $writePhysicalFile = true): MediaAsset {
         $uuid = (string) Str::uuid();
+        $storageKey = 'uploads/' . $uuid . '.png';
+
+        if ($writePhysicalFile) {
+            Storage::disk('public')->put($storageKey, 'dummy image content');
+        }
 
         return MediaAsset::create([
             'uuid' => $uuid,
-            'storage_key' => 'uploads/' . $uuid . '.png',
+            'storage_key' => $storageKey,
             'disk' => 'public',
             'original_filename' => $filename,
             'filename' => $filename,
@@ -43,10 +53,11 @@ it('only exposes ready public images to authorized editors', function () {
         ]);
     };
 
-    $create('ready.png', 'image/png', 'public', MediaAsset::STATUS_READY);
-    $create('private.png', 'image/png', 'private', MediaAsset::STATUS_READY);
-    $create('pending.png', 'image/png', 'public', MediaAsset::STATUS_PENDING);
-    $create('document.pdf', 'application/pdf', 'public', MediaAsset::STATUS_READY);
+    $create('ready.png', 'image/png', 'public', MediaAsset::STATUS_READY, true);
+    $create('missing.png', 'image/png', 'public', MediaAsset::STATUS_READY, false);
+    $create('private.png', 'image/png', 'private', MediaAsset::STATUS_READY, true);
+    $create('pending.png', 'image/png', 'public', MediaAsset::STATUS_PENDING, true);
+    $create('document.pdf', 'application/pdf', 'public', MediaAsset::STATUS_READY, true);
 
     $this->actingAs($admin)->getJson('/admin/hugerte/media')
         ->assertOk()

@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\MediaAssetResource\Pages;
 
 use App\Domains\Media\Actions\UploadMediaAssetAction;
+use App\Domains\Media\Models\MediaAsset;
 use App\Domains\Media\Models\MediaFolder;
 use App\Filament\Resources\MediaAssetResource;
+use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -23,6 +25,7 @@ class CreateMediaAsset extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         $paths = Arr::wrap($data['file'] ?? null);
+        $tags = Arr::wrap($data['tags'] ?? []);
         unset($data['file'], $data['tags']);
         $folder = filled($data['folder_id'] ?? null)
             ? MediaFolder::query()->find((int) $data['folder_id'])
@@ -35,26 +38,39 @@ class CreateMediaAsset extends CreateRecord
                 continue;
             }
 
-            $asset = $this->storeFromPendingPath((string) $path, $data, $folder);
+            $created = $this->storeFromPendingPath((string) $path, $data, $folder);
+            if ($created instanceof MediaAsset) {
+                $asset = $created;
+                if (! empty($tags)) {
+                    $asset->tags()->sync($tags);
+                }
+            }
         }
 
         return $asset ?? parent::handleRecordCreation($data);
     }
 
-    private function storeFromPendingPath(string $path, array $data, ?MediaFolder $folder): Model
+    private function storeFromPendingPath(string $path, array $data, ?MediaFolder $folder): ?Model
     {
         $diskName = (string) config('filesystems.media_disk', 'public');
         $disk = Storage::disk($diskName);
+
+        if (! $disk->exists($path)) {
+            return null;
+        }
 
         $tempPath = tempnam(sys_get_temp_dir(), 'media_asset_');
         file_put_contents($tempPath, (string) $disk->get($path));
 
         try {
-            $upload = new UploadedFile($tempPath, basename($path));
+            $upload = new UploadedFile($tempPath, basename($path), null, null, true);
+
+            $user = auth()->user();
+            $actor = $user instanceof User ? $user : null;
 
             $asset = app(UploadMediaAssetAction::class)->perform(
                 $upload,
-                $this->getUser(),
+                $actor,
                 $folder,
                 Arr::only($data, ['alt_text', 'title', 'caption', 'visibility', 'focal_point']),
             );

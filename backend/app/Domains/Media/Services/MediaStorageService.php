@@ -58,7 +58,13 @@ class MediaStorageService
      */
     public function validate(UploadedFile $file): array
     {
-        if (! $file->isValid()) {
+        $realPath = $file->getRealPath();
+        $isServerSideValid = $file->getError() === UPLOAD_ERR_OK
+            && is_string($realPath)
+            && file_exists($realPath)
+            && is_readable($realPath);
+
+        if (! $file->isValid() && ! $isServerSideValid) {
             throw ValidationException::withMessages(['file' => [__('The upload failed or is corrupted.')]]);
         }
 

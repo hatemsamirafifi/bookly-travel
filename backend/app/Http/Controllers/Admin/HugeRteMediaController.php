@@ -25,13 +25,14 @@ final class HugeRteMediaController extends Controller
             ->where('mime_type', 'like', 'image/%')
             ->latest()
             ->limit(100)
-            ->get(['id', 'disk', 'storage_key', 'original_filename', 'alt_text']);
+            ->get(['id', 'disk', 'storage_key', 'original_filename', 'alt_text'])
+            ->filter(fn (MediaAsset $asset): bool => $asset->fileExists());
 
         return response()->json(['assets' => $assets->map(fn (MediaAsset $asset): array => [
             'id' => $asset->id,
             'url' => $asset->publicUrl(),
             'label' => $asset->original_filename,
-            'alt' => (string) ($asset->alt_text['en'] ?? ''),
-        ])->all()]);
+            'alt' => (string) ($asset->alt_text['en'] ?? collect((array) $asset->alt_text)->first(fn ($val) => filled($val)) ?? ''),
+        ])->values()->all()]);
     }
 }

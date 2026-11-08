@@ -82,7 +82,7 @@ services:
       # Pass explicit host values; otherwise let Laravel read backend/.env.
       - GEMINI_API_KEY
       - GEMINI_TRANSLATION_MODEL
-      - APP_URL=http://localhost
+      - APP_URL=${APP_URL:-http://localhost:8080}
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
       - SCOUT_DRIVER=meilisearch
@@ -127,7 +127,7 @@ services:
       # Use the same provider configuration as the backend.
       - GEMINI_API_KEY
       - GEMINI_TRANSLATION_MODEL
-      - APP_URL=http://localhost
+      - APP_URL=${APP_URL:-http://localhost:8080}
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
       - SCOUT_DRIVER=meilisearch
@@ -164,7 +164,7 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
-      - APP_URL=http://localhost
+      - APP_URL=${APP_URL:-http://localhost:8080}
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
       - SCOUT_DRIVER=meilisearch

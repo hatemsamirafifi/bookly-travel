@@ -10,10 +10,11 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 /**
  * Server-side allow-list sanitizer for CMS rich-text HTML.
  *
- * Rich-text stored by the admin (blog bodies, static pages) is untrusted input
- * that is later rendered in public responses. This service removes dangerous
- * elements together with their payloads, refuses inline event handlers and
- * unsafe URI schemes, and keeps only the editorial markup the editor supports.
+ * Rich-text stored by admin and partners (blog bodies, static pages, tour descriptions)
+ * is untrusted input that is later rendered in public responses. This service removes dangerous
+ * elements together with their payloads, refuses inline event handlers and unsafe URI schemes,
+ * and keeps only the editorial markup the official editor supports while strictly
+ * validating inline styles against a safe CSS allowlist.
  */
 final class HtmlSanitizerService
 {
@@ -24,39 +25,39 @@ final class HtmlSanitizerService
      * @var array<string, list<string>>
      */
     private const ALLOWED_ELEMENTS = [
-        'p' => [],
+        'p' => ['style', 'class'],
         'br' => [],
-        'h1' => [],
-        'h2' => [],
-        'h3' => [],
-        'h4' => [],
-        'h5' => [],
-        'h6' => [],
-        'strong' => [],
-        'b' => [],
-        'em' => [],
-        'i' => [],
-        'u' => [],
-        's' => [],
-        'ul' => [],
-        'ol' => [],
-        'li' => [],
-        'blockquote' => [],
-        'pre' => [],
-        'code' => [],
-        'a' => ['href', 'title', 'target', 'rel'],
-        'img' => ['src', 'alt', 'title', 'width', 'height', 'loading'],
-        'table' => [],
-        'thead' => [],
-        'tbody' => [],
-        'tr' => [],
-        'th' => [],
-        'td' => [],
-        'figure' => [],
-        'figcaption' => [],
-        'hr' => [],
-        'span' => [],
-        'div' => [],
+        'h1' => ['style', 'class'],
+        'h2' => ['style', 'class'],
+        'h3' => ['style', 'class'],
+        'h4' => ['style', 'class'],
+        'h5' => ['style', 'class'],
+        'h6' => ['style', 'class'],
+        'strong' => ['style', 'class'],
+        'b' => ['style', 'class'],
+        'em' => ['style', 'class'],
+        'i' => ['style', 'class'],
+        'u' => ['style', 'class'],
+        's' => ['style', 'class'],
+        'ul' => ['style', 'class'],
+        'ol' => ['style', 'class'],
+        'li' => ['style', 'class'],
+        'blockquote' => ['style', 'class'],
+        'pre' => ['style', 'class'],
+        'code' => ['style', 'class'],
+        'a' => ['href', 'title', 'target', 'rel', 'style', 'class'],
+        'img' => ['src', 'alt', 'title', 'width', 'height', 'loading', 'style', 'class'],
+        'table' => ['border', 'cellpadding', 'cellspacing', 'style', 'class'],
+        'thead' => ['style', 'class'],
+        'tbody' => ['style', 'class'],
+        'tr' => ['style', 'class'],
+        'th' => ['colspan', 'rowspan', 'scope', 'style', 'class'],
+        'td' => ['colspan', 'rowspan', 'style', 'class'],
+        'figure' => ['style', 'class'],
+        'figcaption' => ['style', 'class'],
+        'hr' => ['style', 'class'],
+        'span' => ['style', 'class'],
+        'div' => ['style', 'class'],
     ];
 
     /**
@@ -79,6 +80,45 @@ final class HtmlSanitizerService
         'link',
         'meta',
         'base',
+    ];
+
+    /**
+     * Strictly allowlisted CSS properties for inline style attributes.
+     *
+     * @var list<string>
+     */
+    private const ALLOWED_CSS_PROPERTIES = [
+        'color',
+        'background-color',
+        'text-align',
+        'font-size',
+        'font-family',
+        'font-weight',
+        'font-style',
+        'text-decoration',
+        'line-height',
+        'width',
+        'height',
+        'max-width',
+        'min-width',
+        'margin',
+        'margin-left',
+        'margin-right',
+        'margin-top',
+        'margin-bottom',
+        'padding',
+        'padding-left',
+        'padding-right',
+        'padding-top',
+        'padding-bottom',
+        'border',
+        'border-color',
+        'border-style',
+        'border-width',
+        'border-collapse',
+        'vertical-align',
+        'float',
+        'list-style-type',
     ];
 
     private readonly HtmlSanitizer $sanitizer;
@@ -111,7 +151,9 @@ final class HtmlSanitizerService
             return '';
         }
 
-        return $this->sanitizer->sanitize($html);
+        $sanitized = $this->sanitizer->sanitize($html);
+
+        return $this->sanitizeInlineStyles($sanitized);
     }
 
     /**
@@ -136,5 +178,59 @@ final class HtmlSanitizerService
         }
 
         return $sanitized;
+    }
+
+    /**
+     * Strictly filter inline CSS declarations in style attributes against safe properties and values.
+     */
+    private function sanitizeInlineStyles(string $html): string
+    {
+        return (string) preg_replace_callback('/\s*style\s*=\s*["\']([^"\']*)["\']/i', function (array $matches): string {
+            $cleanStyle = $this->cleanCssDeclarations((string) $matches[1]);
+
+            return $cleanStyle !== '' ? ' style="' . htmlspecialchars($cleanStyle, ENT_QUOTES, 'UTF-8') . '"' : '';
+        }, $html);
+    }
+
+    /**
+     * Parse and validate CSS declarations, discarding any dangerous or non-allowlisted rules.
+     */
+    private function cleanCssDeclarations(string $style): string
+    {
+        $declarations = explode(';', $style);
+        $safe = [];
+
+        foreach ($declarations as $declaration) {
+            $declaration = trim($declaration);
+            if ($declaration === '') {
+                continue;
+            }
+
+            $parts = explode(':', $declaration, 2);
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            $property = strtolower(trim($parts[0]));
+            $value = trim($parts[1]);
+
+            if (! in_array($property, self::ALLOWED_CSS_PROPERTIES, true)) {
+                continue;
+            }
+
+            // Reject URLs, script expressions, event bindings, behaviors, and HTML injection
+            if (preg_match('/[<>"\'`]|url\s*\(|expression\s*\(|javascript\s*:|behavior\s*:|-moz-binding|@import/i', $value)) {
+                continue;
+            }
+
+            // Allow only safe characters: letters, digits, spaces, hyphens, hashes, percent, commas, periods, parentheses (for colors)
+            if (! preg_match('/^[\w\s\-\#\%\,\.\(\)]+$/', $value)) {
+                continue;
+            }
+
+            $safe[] = $property . ': ' . $value;
+        }
+
+        return implode('; ', $safe);
     }
 }

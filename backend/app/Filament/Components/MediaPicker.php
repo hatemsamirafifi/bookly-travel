@@ -46,9 +46,12 @@ class MediaPicker extends Select
     private function allOptions(int $limit): array
     {
         return MediaAsset::query()
+            ->where('processing_status', MediaAsset::STATUS_READY)
+            ->whereNull('deleted_at')
             ->orderByDesc('created_at')
             ->limit($limit)
             ->get()
+            ->filter(fn (MediaAsset $asset) => $asset->fileExists())
             ->mapWithKeys(fn (MediaAsset $asset) => [$asset->getAttribute($this->stores) => static::optionLabel($asset)])
             ->all();
     }
@@ -57,6 +60,8 @@ class MediaPicker extends Select
     private function searchOptions(string $search): array
     {
         $query = MediaAsset::query()
+            ->where('processing_status', MediaAsset::STATUS_READY)
+            ->whereNull('deleted_at')
             ->when(filled($search), fn ($q) => $q->where(function ($q) use ($search): void {
                 $q->where('original_filename', 'like', "%{$search}%")
                     ->orWhere('uuid', 'like', "%{$search}%")
@@ -67,6 +72,7 @@ class MediaPicker extends Select
             ->limit(50);
 
         return $query->get()
+            ->filter(fn (MediaAsset $asset) => $asset->fileExists())
             ->mapWithKeys(fn (MediaAsset $asset) => [$asset->getAttribute($this->stores) => static::optionLabel($asset)])
             ->all();
     }

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import {
   apiGet,
   apiPost,
@@ -8,6 +8,30 @@ import {
   ownedEnglishSource,
   uniqueTitle,
 } from './tour-content-helpers';
+
+async function fillTourDescription(page: Page, text: string) {
+  const isHugeRte = await page.evaluate((val) => {
+    interface TestEditor {
+      setContent(html: string): void;
+      fire?(e: string): void;
+      dispatch?(e: string): void;
+    }
+    const win = window as unknown as { hugerte?: { get: (id?: string) => TestEditor | TestEditor[] | null } };
+    const res = win.hugerte?.get('description') || (typeof win.hugerte?.get === 'function' ? win.hugerte.get() : null);
+    const editor = Array.isArray(res) ? res[0] : res;
+    if (editor && typeof editor.setContent === 'function') {
+      editor.setContent(val);
+      if (typeof editor.fire === 'function') editor.fire('change');
+      if (typeof editor.dispatch === 'function') editor.dispatch('change');
+      return true;
+    }
+    return false;
+  }, text);
+
+  if (!isHugeRte) {
+    await page.getByLabel('Description').fill(text);
+  }
+}
 
 test.describe('Partner Tour Creation', () => {
   test.beforeEach(async ({ page, context }) => {
@@ -43,6 +67,27 @@ test.describe('Partner Tour Creation', () => {
   test('should display the tour creation page', async ({ page }) => {
     await expect(page.getByLabel('Tour Title')).toBeVisible();
     await expect(page.getByText('Edit English source content. Spanish and Italian are generated automatically and never block publication.')).toBeVisible();
+  });
+
+  test('initializes official HugeRTE editor for tour description with formatting toolbar', async ({ page }) => {
+    await expect(page.locator('.bookly-partner-editor .tox-hugerte, .bookly-partner-editor .tox').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.bookly-partner-editor .tox-toolbar, .bookly-partner-editor .tox-toolbar-overlord').first()).toBeVisible();
+
+    await page.evaluate(() => {
+      interface TestEditor { setContent(html: string): void; fire?(e: string): void; dispatch?(e: string): void; }
+      const win = window as unknown as { hugerte?: { get: (id?: string) => TestEditor | TestEditor[] | null } };
+      const hugerte = win.hugerte;
+      const res = hugerte?.get('description') || (typeof hugerte?.get === 'function' ? hugerte.get() : null);
+      const editor = Array.isArray(res) ? res[0] : res;
+      if (editor) {
+        editor.setContent('<p><strong>Magnificent</strong> sunset tour of Rome.</p>');
+        if (typeof editor.fire === 'function') editor.fire('change');
+        if (typeof editor.dispatch === 'function') editor.dispatch('change');
+      }
+    });
+
+    await expect.poll(() => page.locator('textarea#description').inputValue())
+      .toContain('<strong>Magnificent</strong> sunset tour of Rome.');
   });
 
   test('saves an ordered English day and stop in a draft payload', async ({ page }) => {
@@ -88,7 +133,7 @@ test.describe('Partner Tour Creation', () => {
 
     // Step 1: Details — fill all required fields per tourBasicDetailsSchema
     await page.getByLabel('Tour Title').fill('Beautiful Walking Tour of Rome');
-    await page.getByLabel('Description').fill('Explore the ancient history of Rome with a local guide, visiting celebrated landmarks and discovering stories behind the city.');
+    await fillTourDescription(page, 'Explore the ancient history of Rome with a local guide, visiting celebrated landmarks and discovering stories behind the city.');
 
     // Category uses a custom Select (button trigger, button items — not Radix).
     // The trigger shows the placeholder text "Select a category" when empty.
@@ -131,7 +176,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     await expect(page.getByLabel('Tour Title')).toBeVisible();
 
     await page.getByLabel('Tour Title').fill(title);
-    await page.getByLabel('Description').fill(LONG_DESCRIPTION);
+    await fillTourDescription(page, LONG_DESCRIPTION);
     await page.locator('button:has-text("Select a category")').click();
     await page.getByRole('option', { name: 'Walking', exact: true }).click();
     await page.getByLabel('Destination').fill('Rome, Italy');
@@ -172,7 +217,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     expect(getResult.status).toBe(200);
     const en = ownedEnRow(getResult.json);
     expect(en.title).toBe(title);
-    expect(en.description).toBe(LONG_DESCRIPTION);
+    expect(en.description?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
     expect(en.highlights).toEqual(['Old-town route']);
     expect(en.inclusions).toEqual(['Live guide']);
     expect(en.exclusions).toEqual(['Lunch']);
@@ -273,7 +318,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     expect(retainedRules[0].days_of_week).toContain(1);
     const retainedEn = ownedEnRow(retained.json);
     expect(retainedEn.title).toBe(title);
-    expect(retainedEn.description).toBe(LONG_DESCRIPTION);
+    expect(retainedEn.description?.replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
     expect(retainedEn.meeting_point).toBe('Colosseum Main Entrance');
     expect(retainedEn.highlights).toEqual(['Old-town route']);
     const retainedItinerary = retainedEn.itinerary as Array<{
@@ -305,7 +350,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     expect(Array.from(typedTitle).length).toBe(120);
     expect(typedTitle).toBe(title120);
 
-    await page.getByLabel('Description').fill(LONG_DESCRIPTION);
+    await fillTourDescription(page, LONG_DESCRIPTION);
     await page.locator('button:has-text("Select a category")').click();
     await page.getByRole('option', { name: 'Walking', exact: true }).click();
     await page.getByLabel('Destination').fill('Rome, Italy');
@@ -451,7 +496,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     await page.goto('/en/partner/tours/create');
     await expect(page.getByLabel('Tour Title')).toBeVisible();
     await page.getByLabel('Tour Title').fill(title);
-    await page.getByLabel('Description').fill(LONG_DESCRIPTION);
+    await fillTourDescription(page, LONG_DESCRIPTION);
     await page.locator('button:has-text("Select a category")').click();
     await page.getByRole('option', { name: 'Walking', exact: true }).click();
     await page.getByLabel('Destination').fill('Rome, Italy');

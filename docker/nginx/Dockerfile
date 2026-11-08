@@ -1,10 +1,11 @@
-# Pin the MIT-licensed upstream HugeRTE distribution, not Bookly's former
-# 3-KB document.execCommand shim. Include skins, icons, models, themes, plugins.
-FROM node:22-alpine AS hugerte-assets
-RUN npm install --prefix /opt/hugerte-build --ignore-scripts --no-save --no-audit --no-fund hugerte@1.0.15 \
-    && test "$(wc -c < /opt/hugerte-build/node_modules/hugerte/hugerte.min.js)" -gt 100000 \
-    && test -f /opt/hugerte-build/node_modules/hugerte/plugins/image/plugin.min.js \
-    && test -f /opt/hugerte-build/node_modules/hugerte/skins/ui/oxide/skin.min.css
-
+# Pinned MIT-licensed upstream HugeRTE distribution (v1.0.15), complete with
+# skins, icons, models, themes, and plugins.
 FROM nginx:alpine
-COPY --from=hugerte-assets /opt/hugerte-build/node_modules/hugerte/ /usr/share/bookly/hugerte/
+
+# Copy the self-hosted official HugeRTE assets into the nginx image
+COPY docker/nginx/hugerte/ /usr/share/bookly/hugerte/
+
+# Validate that the official distribution is present and meets size/file expectations
+RUN test "$(wc -c < /usr/share/bookly/hugerte/hugerte.min.js)" -gt 100000 \
+    && test -f /usr/share/bookly/hugerte/plugins/image/plugin.min.js \
+    && test -f /usr/share/bookly/hugerte/skins/ui/oxide/skin.min.css

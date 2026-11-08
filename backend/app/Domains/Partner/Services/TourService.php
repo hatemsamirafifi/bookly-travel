@@ -2,6 +2,7 @@
 
 namespace App\Domains\Partner\Services;
 
+use App\Domains\CMS\Services\HtmlSanitizerService;
 use App\Domains\Partner\Models\AvailabilityException;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\PricingTier;
@@ -288,7 +289,11 @@ class TourService
                 if ($field === 'title' && $content[$field] === null) {
                     continue;
                 }
-                $updateData[$field] = $content[$field];
+                if ($field === 'description' && is_string($content[$field])) {
+                    $updateData[$field] = app(HtmlSanitizerService::class)->sanitize($content[$field]);
+                } else {
+                    $updateData[$field] = $content[$field];
+                }
             }
 
             if ($updateData !== []) {

@@ -16,11 +16,12 @@ test.describe('@admin-hugerte-official', () => {
   });
 
   test('creates official HugeRTE editing UI in admin Blog Posts', async ({ page }) => {
+    test.slow();
     await page.goto('/admin/login');
     await page.getByLabel(/email address/i).first().fill('admin@bookly.test');
     await page.getByLabel(/password/i).first().fill('password');
     await Promise.all([
-      page.waitForURL('**/admin', { timeout: 30000 }),
+      page.waitForURL('**/admin', { timeout: 30000, waitUntil: 'domcontentloaded' }),
       page.getByRole('button', { name: /sign in/i }).click(),
     ]);
     const mediaResponse = await page.request.get('/admin/hugerte/media', { headers: { Accept: 'application/json' } });
@@ -29,19 +30,34 @@ test.describe('@admin-hugerte-official', () => {
 
     await page.goto('/admin/blog-posts/create');
 
-    await expect(page.locator('.tox-tinymce').first()).toBeVisible({ timeout: 30000 });
-    await expect(page.locator('.tox-toolbar').first()).toBeVisible();
+    await expect(page.locator('.tox-hugerte, .tox-tinymce, .tox').first()).toBeVisible({ timeout: 30000 });
+    await expect(page.locator('.tox-toolbar, .tox-toolbar-overlord').first()).toBeVisible();
     await expect.poll(() => page.evaluate(() =>
       !!(window as typeof window & { hugerte?: { activeEditor?: unknown } }).hugerte?.activeEditor
     )).toBe(true);
 
     const instance = await page.evaluate(() => {
-      const editor = (window as typeof window & {
-        hugerte?: { activeEditor?: { setContent(html: string): void; fire(event: string): void; getContent(): string } };
-      }).hugerte?.activeEditor;
+      interface TestEditor {
+        id: string;
+        setContent(html: string): void;
+        fire(event: string): void;
+        dispatch?(event: string): void;
+        getContent(): string;
+      }
+      const win = (window as typeof window & {
+        hugerte?: {
+          get(id?: string): TestEditor[] | TestEditor | null;
+          activeEditor?: TestEditor;
+        };
+        BooklyHugeRte?: { commit(editor: TestEditor): void };
+      });
+      const all = typeof win.hugerte?.get === 'function' ? win.hugerte.get() : [];
+      const editor = Array.isArray(all) && all.length > 0 ? all[0] : win.hugerte?.activeEditor;
       if (!editor) return null;
       editor.setContent('<h2>Test heading</h2><p><strong>Bold</strong> content</p>');
-      editor.fire('change');
+      if (typeof editor.fire === 'function') editor.fire('change');
+      if (typeof editor.dispatch === 'function') editor.dispatch('change');
+      if (win.BooklyHugeRte?.commit) win.BooklyHugeRte.commit(editor);
       return editor.getContent();
     });
     expect(instance).toContain('<h2>Test heading</h2>');

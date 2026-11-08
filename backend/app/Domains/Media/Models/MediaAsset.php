@@ -84,6 +84,45 @@ class MediaAsset extends Model
         return $query->where('mime_type', 'like', 'image/%');
     }
 
+    public function fileExists(): bool
+    {
+        try {
+            return filled($this->storage_key) && Storage::disk($this->disk)->exists((string) $this->storage_key);
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    public function isUsable(): bool
+    {
+        return $this->processing_status === self::STATUS_READY
+            && $this->fileExists()
+            && ! $this->trashed();
+    }
+
+    public static function missingImagePlaceholderSvg(): string
+    {
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="100" viewBox="0 0 160 100" fill="none"><rect width="160" height="100" rx="6" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="1"/><circle cx="68" cy="42" r="4" fill="#94A3B8"/><path d="M52 62L66 48L74 56L82 46L98 62H52Z" fill="#94A3B8"/><text x="80" y="78" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif" font-size="11" font-weight="500" fill="#64748B">Missing image</text></svg>';
+    }
+
+    public static function missingImagePlaceholderUrl(): string
+    {
+        return 'data:image/svg+xml;charset=UTF-8,' . rawurlencode(static::missingImagePlaceholderSvg());
+    }
+
+    public function previewUrl(): string
+    {
+        if (! $this->fileExists()) {
+            return static::missingImagePlaceholderUrl();
+        }
+
+        if (! $this->isImage()) {
+            return 'data:image/svg+xml;charset=UTF-8,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="100" viewBox="0 0 160 100" fill="none"><rect width="160" height="100" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/><text x="80" y="55" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif" font-size="13" font-weight="600" fill="#64748B">' . strtoupper($this->extension ?: 'DOC') . '</text></svg>');
+        }
+
+        return $this->publicUrl('thumbnail');
+    }
+
     /**
      * Public URL of the original file or a generated variant.
      */
@@ -93,11 +132,26 @@ class MediaAsset extends Model
             $variantData = $this->variants[$variant] ?? null;
 
             if (is_array($variantData) && filled($variantData['key'] ?? null)) {
-                return Storage::disk($this->disk)->url($variantData['key']);
+                return $this->formatUrl((string) $variantData['key']);
             }
         }
 
-        return Storage::disk($this->disk)->url($this->storage_key);
+        return $this->formatUrl((string) $this->storage_key);
+    }
+
+    private function formatUrl(?string $key): string
+    {
+        if (! filled($key)) {
+            return '';
+        }
+
+        $url = Storage::disk($this->disk)->url($key);
+
+        if (str_starts_with($url, 'http://localhost/')) {
+            return substr($url, strlen('http://localhost'));
+        }
+
+        return $url;
     }
 
     public function isImage(): bool

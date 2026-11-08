@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Components;
 
 use App\Domains\CMS\Services\HtmlSanitizerService;
@@ -19,8 +21,25 @@ class HugeRteEditor extends Field
      * @var array<string, list<string>>
      */
     public static array $toolbars = [
-        'full' => ['undo', 'redo', 'blocks', 'bold', 'italic', 'underline', 'strikethrough', 'forecolor', 'backcolor', 'alignleft', 'aligncenter', 'alignright', 'bullist', 'numlist', 'outdent', 'indent', 'link', 'image', 'table', 'blockquote', 'codesample', 'removeformat', 'searchreplace', 'preview', 'code', 'fullscreen', 'wordcount'],
-        'basic' => ['undo', 'redo', 'bold', 'italic', 'underline', 'blocks', 'bullist', 'numlist', 'link'],
+        'full' => [
+            'undo', 'redo', '|',
+            'blocks', 'fontfamily', 'fontsize', '|',
+            'bold', 'italic', 'underline', 'strikethrough', '|',
+            'forecolor', 'backcolor', '|',
+            'alignleft', 'aligncenter', 'alignright', 'alignjustify', '|',
+            'bullist', 'numlist', 'outdent', 'indent', '|',
+            'link', 'image', 'table', '|',
+            'blockquote', 'codesample', '|',
+            'searchreplace', 'preview', 'code', 'fullscreen', '|',
+            'wordcount',
+        ],
+        'basic' => [
+            'undo', 'redo', '|',
+            'bold', 'italic', 'underline', '|',
+            'blocks', '|',
+            'bullist', 'numlist', '|',
+            'link',
+        ],
     ];
 
     public function toolbarProfile(string $profile): static
