@@ -23,6 +23,10 @@ use Illuminate\Support\Carbon;
  * price/capacity/start time/weekdays are structured-only and never invalidate
  * a translation. Bookings snapshot both texts plus `content_locale` so a past
  * booking keeps showing what the traveler actually bought.
+ *
+ * @property-read array<int, string>|null $guide_languages
+ * @property-read array<int, int|string>|null $weekdays
+ * @property-read Carbon|string|null $start_time
  */
 class TourOption extends Model
 {

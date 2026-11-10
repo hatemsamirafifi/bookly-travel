@@ -75,6 +75,7 @@ class TourTranslationService
         return $payload === [] ? null : $payload;
     }
 
+    /** @return Collection<int, TourOption> */
     private function optionsForPayload(int $tourId, ?Tour $tour): Collection
     {
         if ($tour !== null && (int) $tour->id === $tourId && $tour->relationLoaded('options')) {
@@ -686,7 +687,7 @@ class TourTranslationService
                 ->where('locale', $locale)
                 ->first();
 
-        if ($row === null || ! is_string($row->title) || trim($row->title) === '') {
+        if ($row === null || trim($row->title) === '') {
             return $sourceText;
         }
 
