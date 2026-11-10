@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import type { PartnerTourMediaInput } from '@/lib/api/types';
 
 /**
@@ -216,4 +216,18 @@ export function buildOrderedMedia(
     is_cover: index === 0,
     ...(opts ? { alt_text: opts.altText ? opts.altText(index) : null } : {}),
   }));
+}
+
+const englishSourceControls = {
+  en: { radio: /^English\b/, next: 'Next' },
+  es: { radio: /^Inglés\b/, next: 'Siguiente' },
+  it: { radio: /^Inglese\b/, next: 'Avanti' },
+} as const;
+
+export async function enterEnglishTourDetails(page: Page, locale: keyof typeof englishSourceControls = 'en') {
+  const { radio, next } = englishSourceControls[locale];
+  const english = page.getByRole('radio', { name: radio });
+  await english.click();
+  await expect(english).toHaveAttribute('aria-checked', 'true');
+  await page.getByRole('button', { name: next, exact: true }).click();
 }
