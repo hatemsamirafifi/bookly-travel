@@ -16,7 +16,8 @@ test.describe('Blog Detail Page', () => {
     await expect(page.getByText(/min read/).first()).toBeVisible();
     await expect(page.getByText('Florence is full of hidden wonders.')).toBeVisible();
     await expect(page.getByText('The Oltrarno district')).toBeVisible();
-    await expect(page.getByText(/Top 10 Gelato Spots/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Related Stories/i })).toBeVisible();
+    await expect(page.getByText(/Florence Walking Guide/i).first()).toBeVisible();
   });
 
   test('displays 410 Gone page for archived published article', async ({ page }) => {

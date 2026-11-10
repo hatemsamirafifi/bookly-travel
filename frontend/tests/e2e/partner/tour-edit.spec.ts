@@ -17,6 +17,29 @@ import {
 } from './tour-content-helpers';
 
 test.describe('Partner Tour Edit Workflow', () => {
+  test('initializes official HugeRTE editor for tour description on edit page', async ({ page }) => {
+    await page.route('**/api/partner/tours/98', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ data: {
+          id: 98, category_id: 1, slug: 'ordered-source-tour', location: 'Rome',
+          duration_minutes: 120, group_size_min: 1, group_size_max: 10, status: 'draft',
+          cover_image_url: 'http://cdn.bookly.test/tours/rome-cover.jpg',
+          media: [],
+          translations: [{ locale: 'en', title: 'Ordered tour', description: '<p>Initial description</p>',
+            highlights: [], inclusions: [], exclusions: [], meeting_point: '', cancellation_policy: '',
+            itinerary: [],
+          }],
+        } }),
+      });
+    });
+
+    await page.goto('/en/partner/tours/98/edit');
+    await expect(page.locator('.bookly-partner-editor .tox-hugerte, .bookly-partner-editor .tox').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.bookly-partner-editor .tox-toolbar, .bookly-partner-editor .tox-toolbar-overlord').first()).toBeVisible();
+  });
+
   test('reorders English itinerary and gallery, selects cover, previews and saves the same order', async ({ page }) => {
     let savedPayload: Record<string, unknown> | null = null;
     let savedItinerary: Array<{ day: number; title: string; stops: Array<{ title: string }> }> = [
@@ -488,7 +511,7 @@ test.describe('Partner Tour Edit - Real API (Spec 019 US1)', () => {
     // retains the gallery; readiness/hash never applied.
     await expect(page.locator('#edit-source-meeting-point')).toHaveValue('Snapshot point');
     await expect(page.locator('#edit-source-title')).toHaveValue('Nested title wins');
-    await expect(page.locator('#edit-source-description')).toHaveValue(LONG_DESCRIPTION);
+    await expect.poll(async () => (await page.locator('#edit-source-description').inputValue()).replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
 
     const putPromise = page.waitForResponse(
       (resp) =>
@@ -502,7 +525,7 @@ test.describe('Partner Tour Edit - Real API (Spec 019 US1)', () => {
     expect(reread.status).toBe(200);
     expect(ownedEnRow(reread.json).meeting_point).toBe('Snapshot point');
     expect(ownedEnRow(reread.json).title).toBe('Nested title wins');
-    expect(ownedEnRow(reread.json).description).toBe(LONG_DESCRIPTION);
+    expect(((ownedEnRow(reread.json).description as string | undefined) ?? '').replace(/<\/?p>/g, '')).toBe(LONG_DESCRIPTION);
     expect(ownedEnRow(reread.json).inclusions).toEqual(['Owned inclusion']);
     const restoredData = (reread.json as { data: { media: unknown; translation_statuses: { es: string } } }).data;
     expect(restoredData.media).toEqual(snapshotMedia);
@@ -793,6 +816,7 @@ test.describe('Partner Tour Edit - Real API (Spec 019 US1)', () => {
   test('renders the edit page across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix', async ({
     page,
   }, testInfo) => {
+    test.slow();
     await page.goto('/en/partner/tours');
     const tourId = await seededOwnedTourId(page);
     for (const locale of ['en', 'es', 'it'] as const) {

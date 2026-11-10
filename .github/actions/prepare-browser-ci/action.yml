@@ -20,6 +20,8 @@ runs:
       working-directory: ${{ github.workspace }}
       run: |
         cp backend/.env.example backend/.env
+        # The full upstream editor (skins/plugins/themes) is baked into CI's Nginx image.
+        docker compose -f docker-compose.ci.yml build nginx
         docker compose -f docker-compose.ci.yml up -d --no-build
 
     - name: Install backend and seed browser fixtures

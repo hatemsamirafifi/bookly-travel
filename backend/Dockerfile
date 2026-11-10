@@ -4,6 +4,8 @@ FROM php:8.3-fpm-alpine
 RUN apk add --no-cache \
     curl \
     libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
     libxml2-dev \
     zip \
     unzip \
@@ -15,7 +17,8 @@ RUN apk add --no-cache \
 
 # Install PHP extensions (added pdo_sqlite for testing; pcntl so the
 # async Redis queue worker actually enforces the job --timeout=60 via SIGALRM)
-RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite bcmath gd zip intl pcntl
+RUN docker-php-ext-configure gd --with-jpeg --with-webp && \
+    docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite bcmath gd zip intl pcntl
 
 # Install Redis extension
 RUN mkdir -p /usr/src/php/ext/redis && curl -fsSL https://github.com/phpredis/phpredis/archive/refs/tags/6.1.0.tar.gz | tar -xz -C /usr/src/php/ext/redis --strip-components=1 && docker-php-ext-install redis

@@ -21,6 +21,7 @@ import { ItineraryEditor } from './ItineraryEditor';
 import { TourContentPreview } from './TourContentPreview';
 import { PricingTierForm } from './PricingTierForm';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
+import { PartnerRichTextEditor } from './PartnerRichTextEditor';
 import { createTour, updateTour, submitTour } from '@/lib/api/partner';
 import { ValidationError } from '@/lib/api/client';
 import {
@@ -388,14 +389,14 @@ export function TourWizard() {
             </div>
             <div className="space-y-1">
               <Label htmlFor="description">{t('form.description')}</Label>
-              <Textarea
+              <PartnerRichTextEditor
                 id="description"
                 value={formData.description}
-                onChange={(e) => updateField('description', e.target.value)}
+                onChange={(val) => updateField('description', val)}
                 placeholder={t('form.descriptionPlaceholder')}
-                rows={5}
                 disabled={isSubmitting}
                 aria-invalid={validationErrors['description'] || serverErrors['description'] ? true : undefined}
+                aria-label={t('form.description')}
               />
               {renderControlErrors('description')}
             </div>

@@ -12,6 +12,7 @@ import { localizeServerFieldError, pickFieldErrors } from '@/lib/validators/part
 import { ImageUploader } from '@/components/partner/tours/ImageUploader';
 import { ItineraryEditor } from '@/components/partner/tours/ItineraryEditor';
 import { TourContentPreview } from '@/components/partner/tours/TourContentPreview';
+import { PartnerRichTextEditor } from '@/components/partner/tours/PartnerRichTextEditor';
 import type { TourItineraryDay } from '@/lib/api/types';
 import type { TourMedia, DifficultyLevel } from '@/types/tour';
 
@@ -665,17 +666,15 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="edit-source-description" className="text-sm font-semibold text-gray-700">{formT('description')} ({activeLangTab.toUpperCase()})</label>
-              <textarea
+              <PartnerRichTextEditor
                 id="edit-source-description"
-                rows={5}
-                required={activeLangTab === 'en'}
                 value={translationData[activeLangTab].description}
-                onChange={(e) => updateTranslationField(activeLangTab, 'description', e.target.value)}
+                onChange={(val) => updateTranslationField(activeLangTab, 'description', val)}
                 placeholder={formT('descriptionPlaceholder')}
-                className="px-3.5 py-2 border rounded-lg bg-white outline-none focus:border-blue-500"
-                  {...sourceErrorProps('description')}
+                aria-label={`${formT('description')} (${activeLangTab.toUpperCase()})`}
+                {...sourceErrorProps('description')}
               />
-                {renderSourceErrors('description')}
+              {renderSourceErrors('description')}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
