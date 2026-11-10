@@ -36,7 +36,10 @@ class AvailabilityService
             $query->whereNull('tour_option_id');
         }
 
-        $existing = $query->get(['participant_count'])->sum('participant_count');
+        // PostgreSQL requires the row lock to stay inside the aggregate's subquery.
+        $existing = DB::query()
+            ->fromSub($query->select('participant_count'), 'locked_bookings')
+            ->sum('participant_count');
 
         $capacity = $option !== null
             ? $option->effectiveCapacity($tour)

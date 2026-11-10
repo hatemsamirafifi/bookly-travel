@@ -120,7 +120,7 @@ class CreateBookingAction
                 );
             }
 
-            $pricePerPerson = $option?->price_amount ?? $tour->lowestPriceAmount();
+            $pricePerPerson = $option->price_amount ?? $tour->lowestPriceAmount();
             $totalPrice = $pricePerPerson * $dto->participantCount;
 
             // FR-027: detect price drift between page load and confirmation time
