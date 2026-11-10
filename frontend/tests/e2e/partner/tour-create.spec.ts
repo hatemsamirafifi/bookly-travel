@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import {
   apiGet,
+  enterEnglishTourDetails,
   apiPost,
   apiPut,
   LONG_DESCRIPTION,
@@ -81,11 +82,12 @@ test.describe('Partner Tour Creation', () => {
     if (await acceptBtn.isVisible().catch(() => false)) {
       await acceptBtn.click().catch(() => {});
     }
+    await enterEnglishTourDetails(page);
   });
 
   test('should display the tour creation page', async ({ page }) => {
     await expect(page.getByLabel('Tour Title')).toBeVisible();
-    await expect(page.getByText('Edit English source content. Spanish and Italian are generated automatically and never block publication.')).toBeVisible();
+    await expect(page.getByText('Original content is written in English. The other two languages are generated automatically and never block publication.')).toBeVisible();
   });
 
   test('initializes official HugeRTE editor for tour description with formatting toolbar', async ({ page }) => {
@@ -192,6 +194,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   }) => {
     const title = uniqueTitle('US1 full source');
     await page.goto('/en/partner/tours/create');
+    await enterEnglishTourDetails(page);
     await expect(page.getByLabel('Tour Title')).toBeVisible();
 
     await page.getByLabel('Tour Title').fill(title);
@@ -360,6 +363,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     const dayDescription2000 = NON_BMP.repeat(2000);
 
     await page.goto('/en/partner/tours/create');
+    await enterEnglishTourDetails(page);
     await expect(page.getByLabel('Tour Title')).toBeVisible();
 
     // Real typing, not fill: fill bypasses native maxlength while typing cannot,
@@ -443,7 +447,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     // through the real step forms below so their validations stay exercised.
     const wizardSeed = {
       state: {
-        currentStep: 'details',
+        currentStep: 'source',
         formData: {
           title: '',
           description: '',
@@ -513,6 +517,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     });
 
     await page.goto('/en/partner/tours/create');
+    await enterEnglishTourDetails(page);
     await expect(page.getByLabel('Tour Title')).toBeVisible();
     await page.getByLabel('Tour Title').fill(title);
     await fillTourDescription(page, LONG_DESCRIPTION);
@@ -610,10 +615,12 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   test('renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix', async ({
     page,
   }, testInfo) => {
+    // Each viewport starts a fresh authoring flow instead of restoring Details.
+    await page.addInitScript(() => localStorage.removeItem('partner-tour-wizard'));
     const notices: Record<string, string> = {
-      en: 'Edit English source content. Spanish and Italian are generated automatically and never block publication.',
-      es: 'Edita el contenido original en inglés. Las traducciones al español y al italiano se generan automáticamente y no bloquean la publicación.',
-      it: 'Modifica il contenuto originale in inglese. Le traduzioni in spagnolo e italiano vengono generate automaticamente e non bloccano la pubblicazione.',
+      en: 'Original content is written in English. The other two languages are generated automatically and never block publication.',
+      es: 'El contenido original está escrito en English. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.',
+      it: 'Il contenuto originale è scritto in English. Le altre due lingue sono generate automaticamente e non bloccano la pubblicazione.',
     };
     for (const locale of ['en', 'es', 'it'] as const) {
       // 320 stays as supplemental narrow-width coverage; 390 is the
@@ -621,6 +628,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
       for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 900 });
         await page.goto(`/${locale}/partner/tours/create`);
+        await enterEnglishTourDetails(page, locale);
         await expect(page.getByText(notices[locale])).toBeVisible();
         await page.screenshot({
           path: testInfo.outputPath(`create-${locale}-${width}.png`),

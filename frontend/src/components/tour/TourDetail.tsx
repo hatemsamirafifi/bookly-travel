@@ -1,6 +1,7 @@
 import type { TourDetail as TourDetailType } from '@/lib/api/types';
 import {
   getDetailPresentation,
+  getContentLanguageName,
   type DetailSectionId,
 } from '@/lib/tours/detail-presentation';
 import TourGallery from './TourGallery';
@@ -51,6 +52,19 @@ export default function TourDetail({ tour, locale, todayUtc }: TourDetailProps) 
   };
   const sections = presentation.presentSectionIds.map((id) => ({ id, label: sectionLabels[id] }));
 
+  // Actual-language disclosures: the disclosed language is the content /
+  // itinerary locale itself. The original English fallback wording is
+  // preserved for English content; any other actual language gets the same
+  // sentence with a page-localized display name.
+  const contentLanguage =
+    tour.content_locale === 'en'
+      ? t('contentFallback')
+      : t('contentFallbackNamed', { language: getContentLanguageName(tour.content_locale, locale) });
+  const itineraryLanguage =
+    tour.itinerary_locale === 'en'
+      ? t('itineraryFallback')
+      : t('itineraryFallbackNamed', { language: getContentLanguageName(tour.itinerary_locale, locale) });
+
   return (
     // data-tour-detail scopes the measured nav offset (published on this
     // container by the nav island, inherited by the sidebar) and the
@@ -71,12 +85,12 @@ export default function TourDetail({ tour, locale, todayUtc }: TourDetailProps) 
         <div className="mb-2 flex flex-wrap gap-2">
           {presentation.disclosure.showContentFallback && (
             <p className="inline-block rounded border border-warning/30 bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
-              {t('contentFallback')}
+              {contentLanguage}
             </p>
           )}
           {presentation.disclosure.showItineraryFallback && (
             <p className="inline-block rounded border border-warning/30 bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
-              {t('itineraryFallback')}
+              {itineraryLanguage}
             </p>
           )}
         </div>
@@ -136,6 +150,7 @@ export default function TourDetail({ tour, locale, todayUtc }: TourDetailProps) 
             locale={locale}
             pricing={tour.pricing}
             availability={tour.availability}
+            options={tour.options}
             groupMin={tour.group_size.min}
             groupMax={tour.group_size.max}
             todayUtc={todayUtc ?? new Date().toISOString().slice(0, 10)}

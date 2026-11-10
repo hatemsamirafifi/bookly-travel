@@ -30,11 +30,14 @@ class ApproveTourAction
                 'Tour cannot be published from its current state, or the owning partner is not approved.',
             );
 
-            $english = $locked->translations()->where('locale', 'en')->first();
+            $sourceLocale = $locked->sourceLocale();
+            $source = $locked->translations()->where('locale', $sourceLocale)->first();
             abort_unless(
-                $english && filled($english->title) && filled($english->description),
+                $source && filled($source->title) && filled($source->description),
                 422,
-                'Tour requires an English title and description before publication.',
+                $sourceLocale === Tour::DEFAULT_SOURCE_LOCALE
+                    ? 'Tour requires an English title and description before publication.'
+                    : 'Tour requires a title and description in its source language before publication.',
             );
 
             $before = ['status' => $locked->status];

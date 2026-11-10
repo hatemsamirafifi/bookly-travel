@@ -4,9 +4,11 @@ import { useEffect, useId, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { formatOfferedDateUtc, type BookingSelectionView } from '@/lib/tours/booking-selection';
+import { formatOfferedDateUtc, type BookingWithOptionView } from '@/lib/tours/booking-selection';
+import type { TourOption } from '@/lib/api/types';
 import { Dialog } from '@/components/ui/Dialog';
 import AvailabilityCalendar from './AvailabilityCalendar';
+import OptionSelector from './OptionSelector';
 import {
   BookingContinuation,
   BookingCountStepper,
@@ -16,12 +18,15 @@ import {
 
 export interface MobileBookingBarProps {
   locale: string;
-  /** Validated exact per-person base from cents, or null when the supplied
-   *  price is invalid (the reason list explains; no bogus zero renders). */
+  /** Validated exact per-person display — the selected option's price when
+   *  one is chosen, else the tour-level base (null when invalid). */
   baseDisplay: string | null;
   groupMin: number;
   groupMax: number;
-  view: BookingSelectionView;
+  view: BookingWithOptionView;
+  /** The controller-owned option selection shared with the desktop card. */
+  selectedOptionId: number | null;
+  onOptionChange: (option: TourOption | null) => void;
   selectedDate: string | null;
   participantCount: number | null;
   dateChanged: boolean;
@@ -48,6 +53,8 @@ export default function MobileBookingBar({
   groupMin,
   groupMax,
   view,
+  selectedOptionId,
+  onOptionChange,
   selectedDate,
   participantCount,
   dateChanged,
@@ -65,6 +72,10 @@ export default function MobileBookingBar({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [barNode, setBarNode] = useState<HTMLDivElement | null>(null);
   const [barHeight, setBarHeight] = useState(0);
+  // With offered options the dialog leads with the same shared picker.
+  const hasOptions = view.options.length > 0;
+  const optionSelected = view.selectedOption !== null;
+  const selectedOptionLabel = view.selectedOption?.title ?? null;
 
   // Measured reservation: a callback ref restarts observation whenever the
   // bar (un)mounts — including unavailable-to-available transitions — and
@@ -130,9 +141,16 @@ export default function MobileBookingBar({
                 {baseDisplay} {t('perPerson')}
               </span>
             )}
+            {hasOptions && selectedOptionLabel !== null && (
+              <span className="block text-xs">
+                <span lang={view.selectedOption?.content_locale}>{selectedOptionLabel}</span>
+              </span>
+            )}
             <span className="text-text-muted">
-              {summaryDate} · {summaryCount}
-              {view.estimateDisplay !== null ? ` · ${view.estimateDisplay}` : ''}
+              {hasOptions && !optionSelected
+                ? t('selectAnOption')
+                : `${summaryDate} · ${summaryCount}`}
+              {(!hasOptions || optionSelected) && view.estimateDisplay !== null ? ` · ${view.estimateDisplay}` : ''}
             </span>
           </p>
           <div className="flex flex-col items-stretch gap-1">
@@ -178,37 +196,54 @@ export default function MobileBookingBar({
         closeLabel={tCommon('back')}
       >
         <div className="space-y-4">
-          <AvailabilityCalendar
-            offeredDates={view.offeredFutureDates}
-            selectedDate={selectedDate}
-            onSelect={onDateChange}
-            nextAvailableDate={view.initialDate}
-            locale={locale}
-            id={dialogDateId}
-            disabled={controlsDisabled}
-          />
-          <div>
-            <span className="mb-1 block text-sm font-medium text-primary">
-              {t('participants')}
-            </span>
-            <BookingCountStepper
-              count={participantCount}
-              groupMin={groupMin}
-              groupMax={groupMax}
-              onCountChange={onCountChange}
-              groupLabel={t('participants')}
-              decreaseLabel={t('decreaseParticipants')}
-              increaseLabel={t('increaseParticipants')}
-              rangeLabel={t('allowedRange', { min: groupMin, max: groupMax })}
-              idPrefix={`${dialogDateId}-count`}
+          {hasOptions && (
+            <OptionSelector
+              options={view.options}
+              value={selectedOptionId}
+              onChange={(optionId) => {
+                const option = view.options.find((entry) => entry.id === optionId) ?? null;
+                onOptionChange(option);
+              }}
+              locale={locale}
               disabled={controlsDisabled}
+              idPrefix={dialogDateId}
             />
-          </div>
-          {view.estimateDisplay !== null && (
-            <p aria-live="polite" className="text-sm text-text-muted">
-              {t('booking.estimatedTotal')}:{' '}
-              <span className="font-semibold text-primary">{view.estimateDisplay}</span>
-            </p>
+          )}
+          {(!hasOptions || optionSelected) && (
+            <>
+              <AvailabilityCalendar
+                offeredDates={view.offeredFutureDates}
+                selectedDate={selectedDate}
+                onSelect={onDateChange}
+                nextAvailableDate={view.initialDate}
+                locale={locale}
+                id={dialogDateId}
+                disabled={controlsDisabled}
+              />
+              <div>
+                <span className="mb-1 block text-sm font-medium text-primary">
+                  {t('participants')}
+                </span>
+                <BookingCountStepper
+                  count={participantCount}
+                  groupMin={groupMin}
+                  groupMax={groupMax}
+                  onCountChange={onCountChange}
+                  groupLabel={t('participants')}
+                  decreaseLabel={t('decreaseParticipants')}
+                  increaseLabel={t('increaseParticipants')}
+                  rangeLabel={t('allowedRange', { min: groupMin, max: groupMax })}
+                  idPrefix={`${dialogDateId}-count`}
+                  disabled={controlsDisabled}
+                />
+              </div>
+              {view.estimateDisplay !== null && (
+                <p aria-live="polite" className="text-sm text-text-muted">
+                  {t('booking.estimatedTotal')}:{' '}
+                  <span className="font-semibold text-primary">{view.estimateDisplay}</span>
+                </p>
+              )}
+            </>
           )}
           <BookingReasonList
             reasons={view.reasons}

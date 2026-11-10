@@ -6,6 +6,7 @@ use App\Domains\Admin\Models\GovernanceAuditLog;
 use App\Domains\Payment\Models\Payment;
 use App\Models\GuestIdentity;
 use App\Models\Tour;
+use App\Models\TourOption;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,6 +51,10 @@ class Booking extends Model
         'traveler_id',
         'guest_identity_id',
         'tour_id',
+        'tour_option_id',
+        'tour_option_title',
+        'tour_option_pickup_instructions',
+        'tour_option_content_locale',
         'tour_date',
         'start_time',
         'participant_count',
@@ -81,6 +86,7 @@ class Booking extends Model
         return [
             'tour_date' => 'date',
             'start_time' => 'datetime:H:i:s',
+            'tour_option_id' => 'integer',
             'participant_count' => 'integer',
             'price_per_person' => 'integer',
             'total_price' => 'integer',
@@ -107,6 +113,38 @@ class Booking extends Model
     public function tour(): BelongsTo
     {
         return $this->belongsTo(Tour::class);
+    }
+
+    /**
+     * The purchased tour option (null for legacy bookings and for tours that
+     * offer no options). The title / pickup instructions shown for a booking
+     * come from the snapshot columns — captured in the booking's requested
+     * locale (see `tour_option_content_locale` for the text's actual language)
+     * — not from this live relation.
+     */
+    public function tourOption(): BelongsTo
+    {
+        return $this->belongsTo(TourOption::class);
+    }
+
+    /**
+     * The snapshotted option rendering exactly as served to the traveler at
+     * purchase time, or null for option-less bookings.
+     *
+     * @return array{id: int, title: string, pickup_instructions: ?string, content_locale: ?string}|null
+     */
+    public function bookingOption(): ?array
+    {
+        if ($this->tour_option_id === null) {
+            return null;
+        }
+
+        return [
+            'id' => (int) $this->tour_option_id,
+            'title' => (string) ($this->tour_option_title ?? ''),
+            'pickup_instructions' => $this->tour_option_pickup_instructions,
+            'content_locale' => $this->tour_option_content_locale,
+        ];
     }
 
     public function auditLogs(): HasMany

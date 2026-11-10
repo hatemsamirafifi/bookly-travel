@@ -1,12 +1,12 @@
 import { safeAuthReturnUrl } from '../auth/return-url';
 import type { Locale } from '@/i18n/routing';
-import type { AvailabilityInfo, PricingInfo } from '../api/types';
+import type { AvailabilityInfo, PricingInfo, TourOption } from '../api/types';
 import { formatCurrency } from '../utils';
 
 /** Pure booking-selection model (Spec 020 US2). Pure derivations over the
  *  supplied PricingInfo, AvailabilityInfo and group bounds; every date check
  *  takes an injected UTC day. The cents estimate is display-only and the
- *  checkout query carries only tour, participants and date. */
+ *  checkout query carries only tour, participants, date and option. */
 
 export const BOOKING_SUPPORTED_CURRENCY = 'EUR';
 
@@ -21,7 +21,9 @@ export type BookingInvalidReason =
   | 'missing-count'
   | 'invalid-count'
   | 'invalid-estimate'
-  | 'invalid-route';
+  | 'invalid-route'
+  | 'option-required'
+  | 'option-invalid';
 
 export interface BookingSelectionInput {
   slug: string;
@@ -177,18 +179,30 @@ export function formatOfferedDateUtc(dateString: unknown, locale = 'en'): string
 }
 
 /** Syntactic and supported-route checks only; full eligibility lives in the
- *  view. Slug is a query value, so embedded slashes stay encoded, not banned. */
+ *  view. Slug is a query value, so embedded slashes stay encoded, not banned.
+ *  An option id (positive integer or its decimal string) rides along when
+ *  supplied so the explicit selection survives the checkout handoff. */
 export function buildCheckoutUrl(
   locale: string,
   slug: string,
   participantCount: unknown,
   selectedDate: unknown,
+  optionId?: number | string | null,
 ): string | null {
   if (!isSupportedLocale(locale)) return null;
   if (typeof slug !== 'string' || slug.length === 0) return null;
   if (!isPositiveSafeInteger(participantCount)) return null;
   if (!isRealCalendarDateString(selectedDate)) return null;
-  return `/${locale}/booking?tour=${encodeURIComponent(slug)}&participants=${participantCount}&date=${encodeURIComponent(selectedDate)}`;
+  const base = `/${locale}/booking?tour=${encodeURIComponent(slug)}&participants=${participantCount}&date=${encodeURIComponent(selectedDate)}`;
+  // Only a concrete safe-integer option id (or its exact decimal string)
+  // is carried; anything else stays out of the handoff.
+  const optionIdValue =
+    typeof optionId === 'number' && Number.isSafeInteger(optionId) && optionId > 0
+      ? String(optionId)
+      : typeof optionId === 'string' && /^\d+$/.test(optionId)
+        ? optionId
+        : null;
+  return optionIdValue === null ? base : `${base}&option=${encodeURIComponent(optionIdValue)}`;
 }
 
 /** One validated continuation builder behind both auth handoffs: supported
@@ -307,5 +321,171 @@ export function getBookingSelectionView(input: BookingSelectionInput): BookingSe
     checkoutUrl,
     canContinue: checkoutUrl !== null && finalReasons.length === 0,
     reasons: finalReasons,
+  };
+}
+
+/* ─── Option-aware booking view (additive; tour-level behavior unchanged) ── */
+
+export type ResolvedOption =
+  | /** Options absent or empty: the tour books from its own surface. */ { kind: 'no-options' }
+  /** Options exist but none is selected yet: dates/counts remain unknown. */
+  | { kind: 'unpicked' }
+  /** A concrete current-tour option is selected. */
+  | { kind: 'valid'; option: TourOption }
+  /** A selected id that is not among the current tour's options. */
+  | { kind: 'invalid' };
+
+/** True when some option coordinate travels along but the tour books
+ *  option-less ([] / absent): a stray parameter cannot stay selected. */
+export function hasStrayOptionParameter(
+  options: readonly TourOption[] | null | undefined,
+  selectedOptionId: unknown,
+): boolean {
+  const carried = selectedOptionId !== null && selectedOptionId !== undefined && selectedOptionId !== '';
+  return carried && (Array.isArray(options) ? options.length === 0 : true);
+}
+
+/** Validate an option selection against the tour's own offered options.
+ *  A numeric id (or its exact decimal string, as query parameters arrive)
+ *  must match one offered option; anything else stays unselected/invalid. */
+export function resolveSelectedOption(
+  options: readonly TourOption[] | null | undefined,
+  selectedOptionId: unknown,
+): ResolvedOption {
+  const list = Array.isArray(options) ? options : [];
+  if (list.length === 0) {
+    return { kind: 'no-options' };
+  }
+  if (selectedOptionId === null || selectedOptionId === undefined || selectedOptionId === '') {
+    return { kind: 'unpicked' };
+  }
+  const id =
+    typeof selectedOptionId === 'number' && isPositiveSafeInteger(selectedOptionId)
+      ? selectedOptionId
+      : typeof selectedOptionId === 'string' && /^\d+$/.test(selectedOptionId) && isPositiveSafeInteger(Number(selectedOptionId))
+        ? Number(selectedOptionId)
+        : NaN;
+  const option = list.find((entry) => entry?.id === id);
+  return option !== undefined && isPositiveSafeInteger(option.id) ? { kind: 'valid', option } : { kind: 'invalid' };
+}
+
+export interface BookingWithOptionInput {
+  slug: string;
+  locale: string;
+  /** Tour-level pricing/availability fallback (no-options booking or the
+   *  not-yet-selected display). */
+  pricing: PricingInfo;
+  availability: AvailabilityInfo;
+  /** Tour-level group bounds (fallback when no option is selected). */
+  groupMin: unknown;
+  groupMax: unknown;
+  selectedDate: string | null | undefined;
+  participantCount: unknown;
+  todayUtc: string;
+  options: TourOption[] | null | undefined;
+  selectedOptionId: unknown;
+}
+
+export interface BookingWithOptionView {
+  options: TourOption[];
+  /** The concrete selected current-tour option, or null. */
+  selectedOption: TourOption | null;
+  /** Offered dates of the effective surface; empty before an option exists. */
+  offeredFutureDates: string[];
+  initialDate: string | null;
+  initialCount: number | null;
+  estimateCents: number | null;
+  estimateDisplay: string | null;
+  /** Booking path with the explicit option parameter attached. */
+  checkoutUrl: string | null;
+  canContinue: boolean;
+  reasons: BookingInvalidReason[];
+}
+
+/**
+ * One option-aware continuation behind every booking surface. The core
+ * selection view runs over the selected option's own pricing/availability/
+ * bounds; the tour-level surface is used as-is when the tour offers no
+ * options ([] or absent, exactly the legacy behavior). With options but no
+ * selection, `option-required` is the only surface fact exposed — the
+ * option's own coordinates define dates/price, so they never appear early.
+ */
+export function getBookingWithOptionView(input: BookingWithOptionInput): BookingWithOptionView {
+  const options = Array.isArray(input.options) ? input.options : [];
+  const resolution = resolveSelectedOption(options, input.selectedOptionId);
+  const strayParameter = hasStrayOptionParameter(options, input.selectedOptionId);
+
+  const effectivePricing = resolution.kind === 'valid' ? resolution.option.pricing : input.pricing;
+  const effectiveAvailability = resolution.kind === 'valid' ? resolution.option.availability : input.availability;
+  const effectiveBounds = resolution.kind === 'valid' ? resolution.option.group_size : null;
+  const groupMin = effectiveBounds ? effectiveBounds.min : input.groupMin;
+  const groupMax = effectiveBounds ? effectiveBounds.max : input.groupMax;
+
+  const base = getBookingSelectionView({
+    slug: input.slug,
+    locale: input.locale,
+    pricing: effectivePricing,
+    availability: effectiveAvailability,
+    groupMin,
+    groupMax,
+    selectedDate: input.selectedDate,
+    participantCount: input.participantCount,
+    todayUtc: input.todayUtc,
+  });
+
+  // Option-less tours keep the tour view verbatim; a carried-but-unusable
+  // option coordinate becomes an explicit invalid-selection explanation.
+  if (resolution.kind === 'no-options') {
+    return {
+      options,
+      selectedOption: null,
+      offeredFutureDates: base.offeredFutureDates,
+      initialDate: base.initialDate,
+      initialCount: base.initialCount,
+      estimateCents: base.estimateCents,
+      estimateDisplay: base.estimateDisplay,
+      checkoutUrl: base.checkoutUrl,
+      canContinue: base.canContinue && !strayParameter,
+      reasons: strayParameter ? ['option-invalid', ...base.reasons] : base.reasons,
+    };
+  }
+
+  if (resolution.kind === 'unpicked' || resolution.kind === 'invalid') {
+    // The offered surface belongs to the selected option only; before a
+    // concrete option exists, no date/count coordinates can be offered.
+    return {
+      options,
+      selectedOption: null,
+      offeredFutureDates: [],
+      initialDate: null,
+      initialCount: null,
+      estimateCents: null,
+      estimateDisplay: null,
+      checkoutUrl: null,
+      canContinue: false,
+      reasons: [resolution.kind === 'unpicked' ? 'option-required' : 'option-invalid'],
+    };
+  }
+
+  const option = resolution.option;
+  // The selection coordinate itself rides through checkout and both auth
+  // continuation builders (they preserve the full booking path query).
+  // base.checkoutUrl is already null whenever any base reason exists.
+  const checkoutUrl =
+    base.checkoutUrl !== null
+      ? buildCheckoutUrl(input.locale, input.slug, input.participantCount, input.selectedDate, option.id)
+      : null;
+
+  return {
+    options,
+    selectedOption: option,
+    offeredFutureDates: base.offeredFutureDates,
+    initialDate: base.initialDate,
+    initialCount: base.initialCount,
+    estimateCents: base.estimateCents,
+    estimateDisplay: base.estimateDisplay,
+    checkoutUrl,
+    canContinue: checkoutUrl !== null,
+    reasons: base.reasons,
   };
 }

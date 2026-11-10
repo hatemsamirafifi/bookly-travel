@@ -5,8 +5,11 @@ namespace App\Domains\Partner\Services;
 use App\Domains\Partner\Jobs\GenerateTourTranslationJob;
 use App\Domains\Partner\Requests\TourContentRules;
 use App\Models\Tour;
+use App\Models\TourOption;
+use App\Models\TourOptionTranslation;
 use App\Models\TourTranslation;
 use App\Models\TourTranslationState;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -26,14 +29,94 @@ class TourTranslationService
         'important_information',
     ];
 
-    public function sourcePayload(TourTranslation $english): array
+    public function sourcePayload(TourTranslation $source, ?Tour $tour = null): array
     {
         $raw = [];
         foreach (self::FIELDS as $field) {
-            $raw[$field] = $english->{$field};
+            $raw[$field] = $source->{$field};
+        }
+
+        // Option texts join the revision only while options are available for
+        // sale: the payload of an option-less tour keeps every legacy byte
+        // (and therefore every legacy hash), so existing derivatives never
+        // flip stale just because option support landed.
+        $tour ??= $source->tour;
+        $options = $this->sourceOptionsPayload($source->tour_id, $tour);
+        if ($options !== null) {
+            $raw['options'] = $options;
         }
 
         return $this->normalizeSourceProjection($raw);
+    }
+
+    /**
+     * Active option texts keyed by stable option id, in display order.
+     * Retired rows remain available to bookings without counting against
+     * the translation payload limit.
+     *
+     * @return array<int|string, array{title: mixed, pickup_instructions: mixed, active: bool}>|null
+     */
+    public function sourceOptionsPayload(int $tourId, ?Tour $tour = null): ?array
+    {
+        $options = $this->optionsForPayload($tourId, $tour);
+        $payload = [];
+        foreach ($options as $option) {
+            if (! $option->isActive()) {
+                continue;
+            }
+
+            $payload[$option->id] = [
+                'title' => $option->title,
+                'pickup_instructions' => $option->pickup_instructions,
+                'active' => true,
+            ];
+        }
+
+        return $payload === [] ? null : $payload;
+    }
+
+    /** @return Collection<int, TourOption> */
+    private function optionsForPayload(int $tourId, ?Tour $tour): Collection
+    {
+        if ($tour !== null && (int) $tour->id === $tourId && $tour->relationLoaded('options')) {
+            return $tour->options;
+        }
+
+        return TourOption::query()
+            ->where('tour_id', $tourId)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * The authored source locale for a tour. Every pre-source-locale caller
+     * keeps English behavior because the model reads a missing/unknown
+     * `source_locale` as English.
+     */
+    public function sourceLocale(Tour $tour): string
+    {
+        return $tour->sourceLocale();
+    }
+
+    /**
+     * Locales generated from the tour's authored source, in stable platform
+     * order (English source: es, it).
+     *
+     * @return array<int, string>
+     */
+    public function derivativeLocales(Tour $tour): array
+    {
+        return $tour->derivativeLocales();
+    }
+
+    /**
+     * The authored source translation row for the tour. Reads the loaded
+     * relation when the caller eager-loaded it.
+     */
+    public function sourceTranslation(Tour $tour): ?TourTranslation
+    {
+        return $tour->sourceTranslation();
     }
 
     /**
@@ -59,6 +142,30 @@ class TourTranslationService
             $payload[$field] = $field === 'itinerary'
                 ? $this->normalizeItineraryForHash($value)
                 : $value;
+        }
+
+        if (array_key_exists('options', $raw) && is_array($raw['options'])) {
+            $options = [];
+            // Option identity is the stable id (never a list position): each
+            // entry is emitted in fixed key order under its id so reordering
+            // (insertion order) and text changes hash, while a structured-only
+            // rewrite of the same texts hashes identically. Malformed entries
+            // are preserved verbatim to stay distinct from valid source.
+            foreach ($raw['options'] as $id => $entry) {
+                if (! is_array($entry)) {
+                    $options[$id] = $entry;
+
+                    continue;
+                }
+                $options[$id] = [
+                    'title' => array_key_exists('title', $entry) ? $entry['title'] : null,
+                    'pickup_instructions' => array_key_exists('pickup_instructions', $entry)
+                        ? $entry['pickup_instructions']
+                        : null,
+                    'active' => array_key_exists('active', $entry) ? (bool) $entry['active'] : false,
+                ];
+            }
+            $payload['options'] = $options;
         }
 
         return $payload;
@@ -115,20 +222,27 @@ class TourTranslationService
         return $days;
     }
 
-    public function sourceHash(TourTranslation $english): string
+    public function sourceHash(TourTranslation $english, ?Tour $tour = null): string
     {
         // Serialization flags are unchanged from the inherited implementation
         // so existing persisted desired hashes stay comparable; only the
-        // documented key-order canonicalization affects identity.
-        return hash('sha256', json_encode($this->sourcePayload($english), JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+        // documented key-order canonicalization affects identity. Option
+        // texts join the identity through sourcePayload() only for tours
+        // that have options.
+        return hash('sha256', json_encode(
+            $this->sourcePayload($english, $tour),
+            JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
+        ));
     }
 
     /**
      * Reusable Tour-first transaction boundary for source/completion work.
      *
-     * Lock order is always Tour -> EN translation -> states in es/it order.
-     * Provider/network work must stay outside this boundary; callers recheck
-     * the fresh source hash inside the callback before mutating state.
+     * Lock order is always Tour -> authored source translation -> derivative
+     * states in stable platform order (English source: en -> es/it; Spanish
+     * source: es -> en/it). Provider/network work must stay outside this
+     * boundary; callers recheck the fresh source hash inside the callback
+     * before mutating state.
      *
      * @template T
      *
@@ -138,12 +252,13 @@ class TourTranslationService
     public function withContentLock(int $tourId, callable $callback): mixed
     {
         return DB::transaction(function () use ($tourId, $callback) {
-            Tour::where('id', $tourId)->lockForUpdate()->first();
+            $tour = Tour::where('id', $tourId)->lockForUpdate()->first();
+            $sourceLocale = $tour?->sourceLocale() ?? Tour::DEFAULT_SOURCE_LOCALE;
             TourTranslation::where('tour_id', $tourId)
-                ->where('locale', 'en')
+                ->where('locale', $sourceLocale)
                 ->lockForUpdate()
                 ->first();
-            foreach (['es', 'it'] as $locale) {
+            foreach (Tour::derivativeLocalesFor($sourceLocale) as $locale) {
                 TourTranslationState::where('tour_id', $tourId)
                     ->where('locale', $locale)
                     ->lockForUpdate()
@@ -155,33 +270,33 @@ class TourTranslationService
     }
 
     /**
-     * Persist the desired pending/stale generation state for a changed English
-     * source and return the per-locale generation plans WITHOUT dispatching.
+     * Persist the desired pending/stale generation state for a changed source
+     * and return the per-locale generation plans WITHOUT dispatching.
      *
-     * Must run inside the source transaction/lock (Tour -> EN -> es/it): old
-     * derivatives and their translated hashes are retained, unchanged sources
-     * (including canonical key-order-only rewrites) and blank/missing English
-     * plan nothing, and media/settings-only saves skip regeneration. The
-     * caller dispatches the returned plans after commit via
-     * dispatchPlannedTranslations() so a lost queue push can never fail the
+     * Must run inside the source transaction/lock (Tour -> source -> derivative
+     * states): old derivatives and their translated hashes are retained,
+     * unchanged sources (including canonical key-order-only rewrites) and
+     * blank/missing source content plan nothing, and media/settings-only saves
+     * skip regeneration. The caller dispatches the returned plans after commit
+     * via dispatchPlannedTranslations() so a lost queue push can never fail the
      * committed source write.
      *
      * @return array<int, array{tour_id: int, locale: string, source_hash: string}>
      */
     public function planSourceDispatches(Tour $tour, ?string $previousHash): array
     {
-        $english = $tour->translations()->where('locale', 'en')->first();
-        if (! $english || blank($english->title)) {
+        $source = $tour->translations()->where('locale', $tour->sourceLocale())->first();
+        if (! $source || blank($source->title)) {
             return [];
         }
 
-        $hash = $this->sourceHash($english);
+        $hash = $this->sourceHash($source, $tour);
         if ($previousHash === $hash) {
             return [];
         }
 
         $planned = [];
-        foreach (['es', 'it'] as $locale) {
+        foreach ($this->derivativeLocales($tour) as $locale) {
             $state = TourTranslationState::firstOrNew(['tour_id' => $tour->id, 'locale' => $locale]);
             if ($state->exists && $state->source_hash === $hash && in_array($state->status, ['pending', 'ready'], true)) {
                 continue;
@@ -254,27 +369,30 @@ class TourTranslationService
     /**
      * Bounded reconciliation for one tour under the shared Tour-first lock.
      *
-     * Rechecks the current English hash inside the lock and requeues every
-     * recoverable locale: orphan pending, stale, failed, and apparent-ready
-     * rows (ready status with a mismatched translated hash or a missing
-     * derivative row), even when they already carry the current desired hash.
-     * Genuinely current ready derivatives (row present, both hashes matching)
-     * are untouched: no provider call, no derivative rewrite, no state write,
-     * no dispatch. Stored derivatives are never deleted or rewritten here.
+     * Rechecks the current authored-source hash inside the lock and requeues
+     * every recoverable derivative locale: orphan pending, stale, failed, and
+     * apparent-ready rows (ready status with a mismatched translated hash or a
+     * missing derivative row), even when they already carry the current desired
+     * hash. Genuinely current ready derivatives (row present, both hashes
+     * matching) are untouched: no provider call, no derivative rewrite, no
+     * state write, no dispatch. Stored derivatives are never deleted or
+     * rewritten here.
      *
      * @return array<int, array{tour_id: int, locale: string, source_hash: string}>
      */
     public function reconcileTour(Tour $tour): array
     {
         return $this->withContentLock($tour->id, function () use ($tour) {
-            $english = TourTranslation::where('tour_id', $tour->id)->where('locale', 'en')->first();
-            if (! $english || blank($english->title)) {
+            $source = TourTranslation::where('tour_id', $tour->id)
+                ->where('locale', $tour->sourceLocale())
+                ->first();
+            if (! $source || blank($source->title)) {
                 return [];
             }
 
-            $hash = $this->sourceHash($english);
+            $hash = $this->sourceHash($source, $tour);
             $planned = [];
-            foreach (['es', 'it'] as $locale) {
+            foreach ($this->derivativeLocales($tour) as $locale) {
                 $state = TourTranslationState::where('tour_id', $tour->id)->where('locale', $locale)->first();
                 $rowExists = TourTranslation::where('tour_id', $tour->id)->where('locale', $locale)->exists();
                 $recoveryStatus = $rowExists ? 'stale' : 'pending';
@@ -307,19 +425,19 @@ class TourTranslationService
 
     /**
      * Whether the tour holds at least one genuinely current derivative:
-     * ready status, translated hash matching the fresh English source, and
-     * the derivative row present. Read-only; used by --refresh-ready to
-     * repair lost search projections without provider or content writes.
+     * ready status, translated hash matching the fresh source, and the
+     * derivative row present. Read-only; used by --refresh-ready to repair
+     * lost search projections without provider or content writes.
      */
     public function hasCurrentDerivatives(Tour $tour): bool
     {
-        $english = $tour->translations()->where('locale', 'en')->first();
-        if (! $english) {
+        $source = $tour->translations()->where('locale', $tour->sourceLocale())->first();
+        if (! $source) {
             return false;
         }
 
-        $hash = $this->sourceHash($english);
-        foreach (['es', 'it'] as $locale) {
+        $hash = $this->sourceHash($source, $tour);
+        foreach ($this->derivativeLocales($tour) as $locale) {
             $state = $tour->translationStates()->where('locale', $locale)->first();
             if ($state && $state->status === 'ready' && $state->translated_hash === $hash
                 && $tour->translations()->where('locale', $locale)->exists()) {
@@ -356,6 +474,27 @@ class TourTranslationService
                 foreach ($value as $index => $item) {
                     if (is_string($item) && trim($item) !== '') {
                         $strings[$field . '.' . $index] = $item;
+                    }
+                }
+            } elseif ($field === 'options') {
+                // Option name/pickup are the option-level authoring texts:
+                // identities are the stable ids (`options.{id}.{field}`) so a
+                // reorder, retire or same-position text change keeps mapping
+                // translations onto the same departure. Structured values
+                // (price, capacity, start time, weekdays, guide codes) are
+                // never emitted.
+                if (! is_array($value)) {
+                    continue;
+                }
+                foreach ($value as $optionId => $option) {
+                    if (! is_array($option)) {
+                        continue;
+                    }
+                    foreach (['title', 'pickup_instructions'] as $textField) {
+                        $text = $option[$textField] ?? null;
+                        if (is_string($text) && trim($text) !== '') {
+                            $strings["options.{$optionId}.{$textField}"] = $text;
+                        }
                     }
                 }
             } elseif ($field === 'itinerary') {
@@ -419,6 +558,13 @@ class TourTranslationService
             'important_information.*' => 'string|max:500',
             'meeting_point' => 'nullable|string|max:500',
             'cancellation_policy' => 'nullable|string|max:2000',
+            // Option entries are keyed by stable option id (validated at the
+            // partner boundary); here only the translatable text shape and
+            // the revision-relevant active flag are enforced.
+            'options' => 'sometimes|array|max:20',
+            'options.*.title' => 'required|string|max:120',
+            'options.*.pickup_instructions' => 'sometimes|nullable|string|max:500',
+            'options.*.active' => 'required|boolean',
             ...TourContentRules::itineraryRules('itinerary'),
         ])->validate();
 
@@ -486,11 +632,12 @@ class TourTranslationService
     public function currentTranslation(Tour $tour, string $locale): ?TourTranslation
     {
         $translations = $tour->relationLoaded('translations') ? $tour->translations : $tour->translations()->get();
-        $english = $translations->firstWhere('locale', 'en');
-        if ($locale === 'en') {
-            return $english;
+        $sourceLocale = $tour->sourceLocale();
+        $source = $translations->firstWhere('locale', $sourceLocale);
+        if ($locale === $sourceLocale) {
+            return $source;
         }
-        if (! $english) {
+        if (! $source) {
             return null;
         }
 
@@ -499,14 +646,61 @@ class TourTranslationService
 
         return $state
             && $state->status === 'ready'
-            && $state->translated_hash === $this->sourceHash($english)
+            && $state->translated_hash === $this->sourceHash($source, $tour)
                 ? $translations->firstWhere('locale', $locale)
                 : null;
     }
 
+    /**
+     * The option title/pickup actually served in the requested locale.
+     *
+     * Mirrors the tour-level fallback: when the requested locale is the
+     * authored source (or holds no genuinely current derivative), the source
+     * texts are served with their truthful `content_locale`; when the
+     * derivative is current, the generated option texts are served — keyed by
+     * the option's stable id — with the derivative locale. A missing option
+     * translation row (defensive) also falls back to source.
+     *
+     * @return array{title: string, pickup_instructions: ?string, content_locale: string}
+     */
+    public function localizedOptionText(Tour $tour, TourOption $option, string $locale): array
+    {
+        $sourceLocale = $tour->sourceLocale();
+        $sourceText = [
+            'title' => (string) $option->title,
+            'pickup_instructions' => $option->pickup_instructions,
+            'content_locale' => $sourceLocale,
+        ];
+
+        if ($locale === $sourceLocale || $tour->sourceTranslation() === null) {
+            return $sourceText;
+        }
+
+        if ($this->currentTranslation($tour, $locale) === null) {
+            return $sourceText;
+        }
+
+        $row = $option->relationLoaded('translations')
+            ? $option->translations->firstWhere('locale', $locale)
+            : TourOptionTranslation::query()
+                ->where('tour_option_id', $option->id)
+                ->where('locale', $locale)
+                ->first();
+
+        if ($row === null || trim($row->title) === '') {
+            return $sourceText;
+        }
+
+        return [
+            'title' => $row->title,
+            'pickup_instructions' => $row->pickup_instructions,
+            'content_locale' => $locale,
+        ];
+    }
+
     public function publicStatus(Tour $tour, string $locale): string
     {
-        if ($locale === 'en') {
+        if ($locale === $tour->sourceLocale()) {
             return 'source';
         }
 

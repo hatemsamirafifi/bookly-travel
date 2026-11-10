@@ -2,6 +2,7 @@
 
 namespace Tests\Support;
 
+use App\Domains\Partner\Contracts\SourceAwareTourContentTranslator;
 use App\Domains\Partner\Contracts\TourContentTranslator;
 
 /**
@@ -10,8 +11,13 @@ use App\Domains\Partner\Contracts\TourContentTranslator;
  * arrivals so tests can assert exactly which locales were requested
  * without any network traffic. PSR-4 file placement keeps it loadable
  * independently of suite ordering.
+ *
+ * The fake is source-aware (`translateFrom`) so generation jobs for tours
+ * authored in a non-English source (es/it) run through the same boundary the
+ * production source-aware Gemini translator implements, with the requested
+ * target locale recorded identically.
  */
-class Spec019FakeTranslator implements TourContentTranslator
+class Spec019FakeTranslator implements SourceAwareTourContentTranslator, TourContentTranslator
 {
     /** @var array<int, string> */
     private array $arrivals = [];
@@ -34,13 +40,18 @@ class Spec019FakeTranslator implements TourContentTranslator
 
     public function translate(array $strings, string $locale): array
     {
-        $this->arrivals[] = $locale;
+        return $this->translateFrom($strings, 'en', $locale);
+    }
+
+    public function translateFrom(array $strings, string $sourceLocale, string $targetLocale): array
+    {
+        $this->arrivals[] = $targetLocale;
         if ($this->onArrival !== null) {
-            ($this->onArrival)($locale, $strings);
+            ($this->onArrival)($targetLocale, $strings);
         }
         $translated = [];
         foreach ($strings as $path => $value) {
-            $translated[$path] = $value . " ({$locale})";
+            $translated[$path] = $value . " ({$targetLocale})";
         }
 
         return $translated;

@@ -2,6 +2,7 @@ import { mergePersistedWizardState, normalizeWizardState } from '../tourWizard';
 import type { TourFormData } from '@/types/tour';
 
 const baseForm: TourFormData = {
+  source_locale: 'en',
   title: '',
   description: '',
   category: '',
@@ -21,6 +22,7 @@ const baseForm: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 1,
   group_size_max: 20,
 };
@@ -86,6 +88,48 @@ describe('normalizeWizardState (Spec 019)', () => {
     expect(normalizeWizardState({}).difficulty_level).toBeNull();
     expect(normalizeWizardState({ difficulty_level: null }).difficulty_level).toBeNull();
     expect(normalizeWizardState({ difficulty_level: 'moderate' }).difficulty_level).toBe('moderate');
+  });
+
+  it('defaults the original writing language to the legacy English source and keeps concrete codes', () => {
+    expect(normalizeWizardState({}).source_locale).toBe('en');
+    expect(normalizeWizardState({ source_locale: 'es' }).source_locale).toBe('es');
+    expect(normalizeWizardState({ source_locale: 'it' }).source_locale).toBe('it');
+    expect(normalizeWizardState({ source_locale: null }).source_locale).toBe('en');
+    expect(normalizeWizardState({ source_locale: 'fr' }).source_locale).toBe('en');
+  });
+
+  it('restores authored option rows while dropping malformed entries', () => {
+    const normalized = normalizeWizardState({
+      options: [
+        {
+          id: 'row-1',
+          server_id: 12,
+          title: 'Paseo privado',
+          pickup_instructions: 'Recogida en el hotel',
+          guide_languages: ['es', 'ar'],
+          price: '45.50',
+          capacity: '8',
+          start_time: '10:00',
+          weekdays: [1, 3, 1],
+        },
+        42,
+        null,
+        { title: 7 },
+      ],
+    });
+    expect(normalized.options).toEqual([
+      {
+        id: 'row-1',
+        server_id: 12,
+        title: 'Paseo privado',
+        pickup_instructions: 'Recogida en el hotel',
+        guide_languages: ['es', 'ar'],
+        price: '45.50',
+        capacity: '8',
+        start_time: '10:00',
+        weekdays: [1, 3],
+      },
+    ]);
   });
 });
 

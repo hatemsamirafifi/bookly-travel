@@ -64,8 +64,10 @@ class GetHomepageDataAction
     protected function fetchBookableTours(string $locale, bool $featuredOnly = false, int $limit = 8): array
     {
         $query = Tour::bookable()
-            ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->orWhere('locale', 'en'))
-            ->with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
+            ->whereHas('translations', fn ($q) => $q
+                ->where('locale', $locale)
+                ->orWhereRaw('tour_translations.locale = COALESCE(tours.source_locale, ?)', [Tour::DEFAULT_SOURCE_LOCALE]))
+            ->with(['translations', 'translationStates', 'category', 'availabilityRules', 'availabilityExceptions', 'options'])
             ->latest()
             ->limit($limit);
 
@@ -113,8 +115,10 @@ class GetHomepageDataAction
         foreach ($themeDefinitions as $theme) {
             $tours = Tour::bookable()
                 ->whereHas('category', fn ($q) => $q->whereIn('slug', $theme['category_slugs']))
-                ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->orWhere('locale', 'en'))
-                ->with(['translations', 'category', 'availabilityRules', 'availabilityExceptions'])
+                ->whereHas('translations', fn ($q) => $q
+                    ->where('locale', $locale)
+                    ->orWhereRaw('tour_translations.locale = COALESCE(tours.source_locale, ?)', [Tour::DEFAULT_SOURCE_LOCALE]))
+                ->with(['translations', 'translationStates', 'category', 'availabilityRules', 'availabilityExceptions', 'options'])
                 ->latest()
                 ->limit(6)
                 ->get()

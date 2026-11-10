@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { getBookingDetail } from '@/lib/api/my-bookings';
 import { formatCurrency } from '@/lib/utils';
+import { getContentLanguageName } from '@/lib/tours/detail-presentation';
 import type { TravelerBooking } from '@/types/traveler';
 
 interface BookingConfirmationProps {
@@ -188,6 +189,7 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
   };
   const tourName = booking.tour.name || booking.tour.title || 'Tour';
   const participants = booking.participants ?? booking.participant_count ?? 1;
+  const option = booking.option ?? null;
   // L6: shared currency formatter. Prefer the server-formatted string when the
   // API provides one; otherwise format the cents value with the booking currency.
   // L3: `pricing.total` is the canonical field; `total_amount`/`total_price` are
@@ -213,6 +215,32 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
           <span className="text-sm text-[#5A6B7B]">{t('tourLabel')}</span>
           <span className="text-sm font-medium text-[#0A2540]">{tourName}</span>
         </div>
+        {option?.title && (
+          <>
+            <div className="p-4 flex justify-between">
+              <span className="text-sm text-[#5A6B7B]">{t('option')}</span>
+              <span className="text-sm font-medium text-[#0A2540]" lang={option.content_locale ?? undefined}>
+                {option.title}
+              </span>
+            </div>
+            {option.pickup_instructions && (
+              <div className="p-4">
+                <span className="text-sm text-[#5A6B7B]">{t('optionPickup')}</span>
+                <p
+                  lang={option.content_locale ?? undefined}
+                  className="mt-1 whitespace-pre-line text-sm text-[#0A2540]"
+                >
+                  {option.pickup_instructions}
+                </p>
+                {option.content_locale && option.content_locale !== locale && (
+                  <p className="mt-1 text-xs font-medium text-warning">
+                    {t('optionContentLanguage', { language: getContentLanguageName(option.content_locale, locale) })}
+                  </p>
+                )}
+              </div>
+            )}
+          </>
+        )}
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">{t('date')}</span>
           <span className="text-sm font-medium text-[#0A2540]">{booking.tour_date}</span>

@@ -5,6 +5,7 @@ namespace App\Domains\Partner\Controllers;
 use App\Domains\Partner\Requests\StoreTourRequest;
 use App\Domains\Partner\Requests\UpdateTourRequest;
 use App\Domains\Partner\Services\TourService;
+use App\Models\Tour;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -50,6 +51,9 @@ class TourController
         $data = $this->service->resolveCategoryId($data, required: true);
 
         $tour = $this->service->createTour($partnerId, $data);
+        if (array_key_exists('options', $data)) {
+            $tour->load(['options' => fn ($query) => $query->active()]);
+        }
 
         return response()->json(['data' => $tour], 201);
     }
@@ -68,6 +72,9 @@ class TourController
         }
 
         $tour = $this->service->updateTour($tour, $data);
+        if (array_key_exists('options', $data)) {
+            $tour->load(['options' => fn ($query) => $query->active()]);
+        }
 
         return response()->json(['data' => $tour]);
     }
@@ -131,10 +138,15 @@ class TourController
             abort(404);
         }
 
-        $enTranslation = $tour->translations()->where('locale', 'en')->first();
-        if (! $enTranslation || trim((string) $enTranslation->title) === '' || trim((string) ($enTranslation->description ?? '')) === '') {
+        $sourceLocale = $tour->sourceLocale();
+        $sourceTranslation = $tour->translations()->where('locale', $sourceLocale)->first();
+        if (! $sourceTranslation || trim((string) $sourceTranslation->title) === '' || trim((string) ($sourceTranslation->description ?? '')) === '') {
+            $message = $sourceLocale === Tour::DEFAULT_SOURCE_LOCALE
+                ? 'Validation failed: Tour must have at least an English title and description.'
+                : 'Validation failed: Tour must have at least a title and description in its source language.';
+
             return response()->json([
-                'message' => 'Validation failed: Tour must have at least an English title and description.',
+                'message' => $message,
             ], 422);
         }
 

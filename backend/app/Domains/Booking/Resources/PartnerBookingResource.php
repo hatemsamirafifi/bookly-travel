@@ -11,8 +11,13 @@ class PartnerBookingResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $title = $this->tour->translations->where('locale', $this->locale)->value('title')
-            ?? $this->tour->translations->where('locale', 'en')->value('title') ?? '';
+        // The requested booking locale's stored derivative wins, then the
+        // tour's actual authored source (which may be Spanish or Italian),
+        // then the legacy English row — never a hardcoded English-first view.
+        $title = $this->tour->translations->firstWhere('locale', $this->locale)->title
+            ?? $this->tour->sourceTranslation()->title
+            ?? $this->tour->translations->firstWhere('locale', 'en')->title
+            ?? '';
         $traveler = $this->traveler ?? $this->guestIdentity;
 
         return [
@@ -43,6 +48,10 @@ class PartnerBookingResource extends JsonResource
             'total_participants' => $this->participant_count,
             'total_amount' => $this->total_price / 100,
             'currency' => $this->currency,
+            // Purchased departure snapshot: title/pickup exactly as served to
+            // the traveler when the booking was created (with the text's
+            // actual locale), immune to later renames/retirement.
+            'option' => $this->bookingOption(),
             'special_requests' => null,
             'payment_status' => optional($this->payment)->status ?? 'pending',
             'cancellation_reason' => $this->cancellation_reason,

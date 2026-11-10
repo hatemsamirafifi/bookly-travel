@@ -175,9 +175,10 @@ class TourResource extends Resource
                     ->searchable()
                     ->limit(40)
                     ->getStateUsing(function (Tour $record) {
-                        $en = $record->translations->firstWhere('locale', 'en');
-
-                        return $en?->title ?? $record->slug;
+                        // The authored source leads the moderation list: for a
+                        // Spanish/Italian-source tour the English row may not
+                        // exist (yet), and the slug says nothing about content.
+                        return $record->sourceTranslation()?->title ?? $record->slug;
                     }),
                 Tables\Columns\TextColumn::make('partner.name')
                     ->label('Partner')
@@ -415,21 +416,22 @@ class TourResource extends Resource
                             ->columns(4),
                     ])
                     ->collapsible(),
-                Infolists\Components\Section::make('English source (required)')
+                Infolists\Components\Section::make('Authored source (required)')
+                    ->description(fn (Tour $record): string => 'Authored in [' . strtoupper($record->sourceLocale()) . '] — this is the content derivatives are generated from.')
                     ->schema([
-                        Infolists\Components\TextEntry::make('english_source_title')
+                        Infolists\Components\TextEntry::make('source_title')
                             ->label('Title')
-                            ->getStateUsing(fn (Tour $record): ?string => $record->translations->firstWhere('locale', 'en')?->title)
-                            ->placeholder('English source missing'),
-                        Infolists\Components\TextEntry::make('english_source_description')
+                            ->getStateUsing(fn (Tour $record): ?string => $record->sourceTranslation()?->title)
+                            ->placeholder('Source content missing'),
+                        Infolists\Components\TextEntry::make('source_description')
                             ->label('Description')
                             ->html()
-                            ->getStateUsing(fn (Tour $record): ?string => $record->translations->firstWhere('locale', 'en')?->description)
-                            ->placeholder('English source missing'),
-                        Infolists\Components\TextEntry::make('english_source_itinerary')
+                            ->getStateUsing(fn (Tour $record): ?string => $record->sourceTranslation()?->description)
+                            ->placeholder('Source content missing'),
+                        Infolists\Components\TextEntry::make('source_itinerary')
                             ->label('Itinerary')
                             ->getStateUsing(function (Tour $record): ?string {
-                                $days = $record->translations->firstWhere('locale', 'en')?->itinerary ?? [];
+                                $days = $record->sourceTranslation()?->itinerary ?? [];
 
                                 return $days === [] ? null : collect($days)
                                     ->map(fn (array $day): string => 'Day ' . $day['day'] . ': ' . $day['title'])
@@ -437,15 +439,15 @@ class TourResource extends Resource
                             })
                             ->placeholder('No itinerary provided'),
                     ]),
-                Infolists\Components\Section::make('AI translations (derived from English)')
+                Infolists\Components\Section::make('Derivative translations (AI, generated from the source)')
                     ->schema([
                         Infolists\Components\TextEntry::make('spanish_translation_status')
-                            ->label('Spanish')
+                            ->label(fn (Tour $record): string => $record->sourceLocale() === 'es' ? 'Spanish (authored source)' : 'Spanish')
                             ->getStateUsing(fn (Tour $record): string => static::translationStatusLabel($record, 'es'))
                             ->badge()
                             ->color(fn (string $state): string => static::translationStatusColor($state)),
                         Infolists\Components\TextEntry::make('italian_translation_status')
-                            ->label('Italian')
+                            ->label(fn (Tour $record): string => $record->sourceLocale() === 'it' ? 'Italian (authored source)' : 'Italian')
                             ->getStateUsing(fn (Tour $record): string => static::translationStatusLabel($record, 'it'))
                             ->badge()
                             ->color(fn (string $state): string => static::translationStatusColor($state)),
@@ -486,6 +488,7 @@ class TourResource extends Resource
     private static function translationStatusLabel(Tour $tour, string $locale): string
     {
         return match (app(TourTranslationService::class)->publicStatus($tour, $locale)) {
+            'source' => $tour->sourceLocale() === $locale ? 'Authored source' : 'Source',
             'ready' => 'Ready',
             'stale' => 'Outdated',
             'failed' => 'Unavailable',
@@ -497,6 +500,7 @@ class TourResource extends Resource
     {
         return match ($status) {
             'Ready' => 'success',
+            'Authored source', 'Source' => 'primary',
             'Outdated' => 'warning',
             'Unavailable' => 'danger',
             default => 'gray',

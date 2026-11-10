@@ -228,6 +228,14 @@
     "partialTranslation": "Parte del contenido se muestra en inglés",
     "contentFallback": "El contenido se muestra en inglés",
     "itineraryFallback": "El itinerario se muestra en inglés",
+    "contentFallbackNamed": "El contenido se muestra en {language}",
+    "itineraryFallbackNamed": "El itinerario se muestra en {language}",
+    "bookingOptionPicker": "Opciones del tour",
+    "bookingOptionPickerHint": "Opciones disponibles",
+    "selectAnOption": "Elige una opción para continuar",
+    "optionStartTime": "Hora de inicio",
+    "optionPickupInstructions": "Recogida",
+    "optionContentLanguage": "El texto de esta opción se muestra en {language}",
     "overview": {
       "readMore": "Leer más",
       "readLess": "Leer menos"
@@ -240,7 +248,9 @@
       "invalidPricing": "El precio del tour no está disponible. No se puede continuar con la reserva.",
       "invalidBounds": "Los límites de viajeros no están disponibles. No se puede continuar con la reserva.",
       "countChanged": "Los límites de viajeros cambiaron. Elige de nuevo el número de viajeros.",
-      "editSelection": "Editar la selección de reserva"
+      "editSelection": "Editar la selección de reserva",
+      "optionRequired": "Elige una opción para ver las fechas y continuar.",
+      "optionInvalid": "La opción seleccionada ya no está disponible. Elige una opción de nuevo."
     },
     "authRecovery": {
       "continueNotice": "Inicia sesión para continuar con la reserva. Tu tour, fecha, número de viajeros e idioma se conservan y no se reserva nada hasta que confirmes.",
@@ -353,6 +363,8 @@
     "expiredTitle": "Reserva Expirada",
     "cancelledTitle": "Reserva Cancelada",
     "tourLabel": "Tour",
+    "option": "Opción",
+    "optionPickup": "Instrucciones de recogida",
     "notFound": "Reserva no encontrada.",
     "keepReference": "Conserve esta referencia para sus registros.",
     "retry": "Reintentar",
@@ -496,6 +508,8 @@
       "fallbackTour": "Tour",
       "reference": "Referencia",
       "tour": "Tour",
+      "option": "Opción",
+      "optionContentLanguage": "El texto de esta opción se muestra en {language}",
       "dateTime": "Fecha y hora",
       "participants": "Participantes",
       "price": "Precio",
@@ -746,6 +760,7 @@
         "archived": "Archivado"
       },
       "wizard": {
+        "source": "Idioma",
         "details": "Detalles",
         "media": "Multimedia",
         "pricing": "Precios",
@@ -785,7 +800,20 @@
         "meetingPoint": "Punto de Encuentro",
         "guideLanguageCodes": "Códigos de idiomas del guía en vivo",
         "guideLanguageCodesHint": "Idiomas hablados separados por comas, como de, en, es. No controlan la traducción de la página.",
-        "sourceLanguageNotice": "Edita el contenido original en inglés. Las traducciones al español y al italiano se generan automáticamente y no bloquean la publicación.",
+        "sourceLanguageNotice": "El contenido original está escrito en {language}. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.",
+        "sourceLanguageLabel": "Idioma de redacción original",
+        "sourceLanguageHint": "Selecciona el idioma en el que escribirás el contenido original. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.",
+        "sourceLanguageLockedNotice": "El contenido de este tour ya existe en {language}. El idioma de redacción original está fijado y no se puede cambiar.",
+        "sourceLanguageLabels": {
+          "en": "Inglés",
+          "es": "Español",
+          "it": "Italiano"
+        },
+        "sourceLanguageNames": {
+          "en": "English",
+          "es": "Español",
+          "it": "Italiano"
+        },
         "translationStatus": {
           "pending": "Traducción pendiente",
           "ready": "Traducción lista",
@@ -891,7 +919,32 @@
         "easy": "Fácil",
         "moderate": "Moderada",
         "challenging": "Exigente",
-        "difficultyUnspecified": "No especificado"
+        "difficultyUnspecified": "No especificado",
+        "bookingOptions": "Opciones de reserva",
+        "bookingOptionsHint": "Ofrece opciones reservables (p. ej., grupo estándar, tour privado, familiar). Cada opción tiene su propio precio, capacidad, idiomas de guía e instrucciones de recogida.",
+        "bookingOptionsSourceHint": "Los títulos y las instrucciones de recogida se redactan en {language}.",
+        "addOption": "Añadir opción",
+        "removeOption": "Eliminar la opción {number}",
+        "noBookingOptions": "Aún no hay opciones de reserva. Haz clic en \u201cAñadir opción\u201d para crear una.",
+        "bookingOptionNumber": "Opción {number}",
+        "bookingOptionsCount": "Opciones definidas: {count}",
+        "optionTitle": "Título de la opción",
+        "optionTitlePlaceholder": "p. ej., Grupo estándar, Tour privado",
+        "optionGuideLanguages": "Idiomas de la opción",
+        "optionPrice": "Precio por persona",
+        "optionCapacity": "Capacidad",
+        "optionStartTime": "Hora de inicio",
+        "optionWeekdays": "Días activos",
+        "optionWeekdaysHint": "Déjalo vacío para todos los días.",
+        "optionPickupInstructions": "Instrucciones de recogida",
+        "optionPickupPlaceholder": "p. ej., Recogida en el hotel 30 minutos antes del inicio (opcional)",
+        "weekday0": "Dom",
+        "weekday1": "Lun",
+        "weekday2": "Mar",
+        "weekday3": "Mié",
+        "weekday4": "Jue",
+        "weekday5": "Vie",
+        "weekday6": "Sáb"
       },
       "errors": {
         "titleRequired": "El título es obligatorio.",
@@ -942,7 +995,13 @@
         "guideLanguageInvalid": "Cada idioma del guía debe ser un código de 2 o 3 letras con subetiquetas opcionales (p. ej., en, pt-BR).",
         "guideLanguagesMax": "Como máximo 20 idiomas del guía.",
         "duplicateGuideLanguage": "Idioma del guía duplicado.",
-        "difficultyInvalid": "La dificultad debe ser easy, moderate o challenging."
+        "difficultyInvalid": "La dificultad debe ser easy, moderate o challenging.",
+        "sourceLocaleRequired": "Elige el idioma de redacción original antes de continuar.",
+        "optionTitleRequired": "El título de la opción es obligatorio.",
+        "optionPickupMax": "Las instrucciones de recogida deben tener 500 caracteres o menos.",
+        "optionPricePositive": "El precio de la opción debe ser un número positivo.",
+        "optionCapacityWhole": "La capacidad de la opción debe ser un número entero de al menos 1.",
+        "optionsMax": "No más de 10 opciones."
       },
       "noCoverImage": "Sin imagen de portada",
       "untitled": "Tour sin título",
