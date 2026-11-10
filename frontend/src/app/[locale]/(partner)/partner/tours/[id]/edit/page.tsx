@@ -8,13 +8,16 @@ import { getApiBaseUrl, NotFoundError } from '@/lib/api/client';
 import { getLatestTourDraft } from '@/lib/api/partner';
 import { normalizeWizardState } from '@/lib/stores/tourWizard';
 import { useTranslations } from 'next-intl';
-import { localizeServerFieldError, pickFieldErrors } from '@/lib/validators/partner';
+import { localizeServerFieldError, pickFieldErrors, toFormErrorPath, getSubmittedOptionRows } from '@/lib/validators/partner';
 import { ImageUploader } from '@/components/partner/tours/ImageUploader';
 import { ItineraryEditor } from '@/components/partner/tours/ItineraryEditor';
 import { TourContentPreview } from '@/components/partner/tours/TourContentPreview';
+import { BookingOptionsForm } from '@/components/partner/tours/BookingOptionsForm';
 import { PartnerRichTextEditor } from '@/components/partner/tours/PartnerRichTextEditor';
-import type { TourItineraryDay } from '@/lib/api/types';
-import type { TourMedia, DifficultyLevel } from '@/types/tour';
+import { toMinorUnits } from '@/lib/utils';
+import type { TourItineraryDay, ContentSourceLocale, PartnerBookingOptionInput } from '@/lib/api/types';
+import type { OwnedTourOption } from '@/types/partner';
+import type { TourMedia, DifficultyLevel, BookingOptionFormInput, SourceLocale } from '@/types/tour';
 
 interface Translation {
   title: string;
@@ -41,6 +44,8 @@ const SNAPSHOT_TEXT_FIELDS = ['title', 'description', 'meeting_point', 'cancella
 const SNAPSHOT_LIST_FIELDS = ['highlights', 'inclusions', 'exclusions', 'important_information'] as const;
 
 interface SnapshotRestore {
+  /** Actual source language the snapshot's authored fields were read from. */
+  sourceLocale: ContentSourceLocale;
   source: Partial<Translation>;
   /** Snapshot fields explicitly nulled (clearing applies on save). */
   nulled: Array<keyof Translation>;
@@ -50,24 +55,72 @@ interface SnapshotRestore {
   difficulty: DifficultyLevel | null;
   /** True when the snapshot carries difficulty_level (retain current when absent). */
   difficultyPresent: boolean;
+  /** Restored booking options when present; null retains current rows. */
+  options: BookingOptionFormInput[] | null;
+}
+
+/** Guard a snapshot option row into an editable row (strings preserved).
+ *  Snapshot prices travel as integer cents in the API contract; the edit
+ *  UI shows currency major units, so numeric cents convert here — never
+ *  restored raw into the major-unit input (that would multiply by 100 on
+ *  the next save). */
+function snapshotOptionRows(payload: Record<string, unknown>): BookingOptionFormInput[] | null {
+  if (!Array.isArray(payload.options)) {
+    return null;
+  }
+  return payload.options
+    .filter((entry): entry is Record<string, unknown> => isRecord(entry) && typeof entry.title === 'string')
+    .map((entry, index) => {
+      const rawPrice = entry.price_amount;
+      // Numeric (or numeric-string) snapshot cents → major units for the UI.
+      const priceCents =
+        typeof rawPrice === 'number' && Number.isSafeInteger(rawPrice)
+          ? rawPrice
+          : typeof rawPrice === 'string' && /^\d+$/.test(rawPrice)
+            ? Number(rawPrice)
+            : null;
+      const price = priceCents === null ? '' : String(priceCents / 100);
+      const rawCapacity = entry.group_size_max;
+      return {
+        id: `restored-option-${index}`,
+        ...(typeof entry.id === 'number' && Number.isSafeInteger(entry.id) ? { server_id: entry.id as number } : {}),
+        title: entry.title as string,
+        pickup_instructions: typeof entry.pickup_instructions === 'string' ? entry.pickup_instructions : '',
+        guide_languages: Array.isArray(entry.guide_languages)
+          ? entry.guide_languages.filter((code): code is string => typeof code === 'string')
+          : [],
+        price,
+        capacity:
+          typeof rawCapacity === 'number' && Number.isSafeInteger(rawCapacity) ? String(rawCapacity) : '',
+        start_time: typeof entry.start_time === 'string' ? entry.start_time : '',
+        weekdays: Array.isArray(entry.weekdays)
+          ? entry.weekdays.filter((day): day is number => typeof day === 'number' && day >= 0 && day <= 6)
+          : [],
+      };
+    });
 }
 
 /** Build a presence-aware restore patch from an opaque stored snapshot
- *  without mutating it: explicit nested `translations.en` keys win per
- *  field, shorthand fills only missing fields, omitted source/media stay
- *  untouched on the current form, and explicit null/[] clear per contract.
- *  Platform-owned readiness/hash fields are never read. Returns null when
- *  the payload is unusable, leaving the form intact. */
+ *  without mutating it: explicit nested `translations[<source>]` keys win
+ *  per field (the source is the snapshot's own `source_locale`, defaulting
+ *  to the legacy English source), shorthand fills only missing fields,
+ *  omitted source/media/options stay untouched on the current form, and
+ *  explicit null/[] clear per contract. Platform-owned readiness/hash
+ *  fields are never read. Returns null when the payload is unusable,
+ *  leaving the form intact. */
 function snapshotRestorePatch(payload: unknown): SnapshotRestore | null {
   if (!isRecord(payload)) {
     return null;
   }
   const translations = payload.translations;
-  const nestedEn = isRecord(translations) && isRecord(translations.en) ? translations.en : undefined;
+  const snapshotSource: ContentSourceLocale =
+    payload.source_locale === 'es' || payload.source_locale === 'it' ? payload.source_locale : 'en';
+  const nestedSource =
+    isRecord(translations) && isRecord(translations[snapshotSource]) ? translations[snapshotSource] : undefined;
 
   const readRaw = (field: string): { present: boolean; value: unknown } => {
-    if (nestedEn !== undefined && field in nestedEn) {
-      return { present: true, value: nestedEn[field] };
+    if (nestedSource !== undefined && field in nestedSource) {
+      return { present: true, value: nestedSource[field] };
     }
     if (field in payload) {
       return { present: true, value: payload[field] };
@@ -146,13 +199,25 @@ function snapshotRestorePatch(payload: unknown): SnapshotRestore | null {
       ? rawDifficulty
       : null;
 
-  return { source, nulled, media, difficulty, difficultyPresent };
+  const options = snapshotOptionRows(payload);
+
+  return { sourceLocale: snapshotSource, source, nulled, media, difficulty, difficultyPresent, options };
 }
 
-/** Strip the canonical `translations.en.` prefix so nested server 422 paths
- *  map onto the actual authoring field. */
-function toFormErrorPath(serverPath: string): string {
-  return serverPath.startsWith('translations.en.') ? serverPath.slice('translations.en.'.length) : serverPath;
+/** Form rows → API-contract options array: placeholders (fully empty rows)
+ *  are excluded, persistent ids travel for edits, the UI's major-unit price
+ *  becomes integer cents, and blank optional fields null out. */
+function toOptionsPayload(rows: BookingOptionFormInput[]): PartnerBookingOptionInput[] {
+  return getSubmittedOptionRows(rows).map((row) => ({
+    ...(row.server_id !== undefined ? { id: row.server_id } : {}),
+    title: row.title.trim(),
+    pickup_instructions: row.pickup_instructions.trim() === '' ? null : row.pickup_instructions.trim(),
+    guide_languages: [...new Set(row.guide_languages.map((code) => code.trim().toLowerCase()).filter(Boolean))],
+    price_amount: toMinorUnits(row.price),
+    group_size_max: row.capacity.trim() === '' ? null : Number(row.capacity),
+    start_time: row.start_time.trim() === '' ? null : row.start_time.trim(),
+    weekdays: row.weekdays.length > 0 ? [...new Set(row.weekdays)].sort((a, b) => a - b) : null,
+  }));
 }
 
 interface Tour {
@@ -165,13 +230,17 @@ interface Tour {
   duration_minutes?: number;
   /** Nullable: older tours read truthfully as null/missing, never inferred. */
   difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
+  /** Actual language of the authored source content (legacy: 'en'). */
+  source_locale?: 'en' | 'es' | 'it' | null;
   group_size_min: number;
   group_size_max: number;
   status: string;
   cover_image_url: string | null;
   media?: Array<Pick<TourMedia, 'id' | 'url' | 'sort_order'> & Partial<Pick<TourMedia, 'thumbnail_url' | 'alt_text'>>>;
   guide_languages?: string[];
-  translation_statuses?: { es: 'pending' | 'ready' | 'stale' | 'failed'; it: 'pending' | 'ready' | 'stale' | 'failed' };
+  /** Authored active bookable options; absent means none are stored. */
+  options?: OwnedTourOption[];
+  translation_statuses?: { en?: 'pending' | 'ready' | 'stale' | 'failed'; es?: 'pending' | 'ready' | 'stale' | 'failed'; it?: 'pending' | 'ready' | 'stale' | 'failed' };
   translations: Array<{
     locale: string;
     title: string;
@@ -209,6 +278,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [restoreNotice, setRestoreNotice] = useState<string | null>(null);
   const [isRestoring, setIsRestoring] = useState(false);
   const saveErrorRef = useRef<HTMLDivElement>(null);
+  // Original writing language of this tour's source content; immutable per
+  // tour (legacy tours read as the English source), shown read-only while
+  // the other two languages stay generated server-side.
+  const [sourceLocale, setSourceLocale] = useState<SourceLocale>('en');
   // Owned EN fields that are canonically NULL (vs []): untouched nulls are
   // sent back as null on save so an unrelated edit never converts stored
   // nulls into empty values. Any user edit removes the field from the set;
@@ -245,6 +318,11 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [guideLanguagesInput, setGuideLanguagesInput] = useState('');
   const [groupSizeMin, setGroupSizeMin] = useState(1);
   const [groupSizeMax, setGroupSizeMax] = useState(10);
+  // Authored bookable options: rows keep their persistent server ids while
+  // they exist, and a touched set is submitted whole (deleting all rows of a
+  // previously optioned tour retires them); untouched options stay omitted.
+  const [options, setOptions] = useState<BookingOptionFormInput[]>([]);
+  const [optionsDirty, setOptionsDirty] = useState(false);
   const [durationValue, setDurationValue] = useState(2);
   const [durationUnit, setDurationUnit] = useState('hour');
   // Nullable difficulty: older null/missing reads truthfully as blank and is
@@ -253,8 +331,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel | null>(null);
   const [difficultyDirty, setDifficultyDirty] = useState(false);
 
-  // Partners edit the English source only; ES/IT are generated server-side.
-  const activeLangTab = 'en' as const;
+  // Partners edit the tour's own source only; the other languages are
+  // generated server-side. The tab is the tour's authoritative (immutable)
+  // source locale — legacy tours read as the English source.
+  const activeLangTab = sourceLocale;
   const sourceErrorProps = (field: keyof Translation, hint?: string) => {
     const invalid = pickFieldErrors(fieldErrors, field).length > 0;
     return {
@@ -293,6 +373,11 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       const t: Tour = json.data;
       setTour(t);
 
+      // Actual source language of the authored content: legacy tours read
+      // as the English source.
+      const actualSource: SourceLocale = t.source_locale === 'es' || t.source_locale === 'it' ? t.source_locale : 'en';
+      setSourceLocale(actualSource);
+
       // Populate states
       setCategoryId(t.category_id);
       setLocation(t.location);
@@ -305,6 +390,21 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       setGuideLanguagesInput((t.guide_languages ?? []).join(', '));
       setGroupSizeMin(t.group_size_min);
       setGroupSizeMax(t.group_size_max);
+
+      // Authored options: persisted ids are retained for edits; prices are
+      // stored as integer cents and are shown in currency major units.
+      setOptions((t.options ?? []).map((option, index) => ({
+        id: `stored-option-${option.id ?? index}`,
+        ...(option.id !== undefined ? { server_id: option.id } : {}),
+        title: option.title ?? '',
+        pickup_instructions: option.pickup_instructions ?? '',
+        guide_languages: option.guide_languages ?? [],
+        price: (Number(option.price_amount ?? 0) / 100).toString(),
+        capacity: option.group_size_max === null || option.group_size_max === undefined ? '' : String(option.group_size_max),
+        start_time: option.start_time ?? '',
+        weekdays: option.weekdays ?? [],
+      })));
+      setOptionsDirty(false);
       
       const val = t.duration_minutes ? (t.duration_minutes >= 1440 ? t.duration_minutes / 1440 : t.duration_minutes / 60) : 2;
       const unit = t.duration_minutes && t.duration_minutes >= 1440 ? 'day' : 'hour';
@@ -342,13 +442,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       });
       setTranslationData(newTrans);
 
-      // Record owned EN nulls (array rows serialize null vs [] distinctly).
-      const enRow = t.translations.find((tr) => tr.locale === 'en');
-      if (enRow) {
+      // Record owned source nulls (array rows serialize null vs [] distinctly)
+      // for the actual source language row of this tour.
+      const sourceRow = t.translations.find((tr) => tr.locale === actualSource);
+      if (sourceRow) {
         const nulls = new Set<keyof Translation>();
         (['description', 'highlights', 'inclusions', 'exclusions', 'meeting_point', 'cancellation_policy', 'important_information', 'itinerary'] as const)
           .forEach((field) => {
-            if (enRow[field] === null || enRow[field] === undefined) {
+            if (sourceRow[field] === null || sourceRow[field] === undefined) {
               nulls.add(field);
             }
           });
@@ -405,7 +506,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       }
       // Merge onto the owned current source: omitted snapshot fields keep
       // their values, explicit null/[] clear, media omission retains media.
-      setTranslationData((prev) => ({ ...prev, en: { ...prev.en, ...patch.source } }));
+      // The authored fields restore into the snapshot's OWN source language
+      // (declared by the snapshot or legacy English) — never into another.
+      setTranslationData((prev) => ({ ...prev, [patch.sourceLocale]: { ...prev[patch.sourceLocale], ...patch.source } }));
       setNullSourceFields((prev) => {
         const next = new Set(prev);
         (Object.keys(patch.source) as Array<keyof Translation>).forEach((field) => {
@@ -425,6 +528,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         // A restored supported code is an actual choice and travels on save;
         // restored null/missing stays omitted (backend rejects supplied null).
         setDifficultyDirty(patch.difficulty !== null);
+      }
+      if (patch.options !== null) {
+        setOptions(patch.options);
+        setOptionsDirty(true);
       }
       setRestoreNotice(formT('draftRestored'));
     } catch (err) {
@@ -453,11 +560,13 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       const token = getAuthToken();
       // Untouched canonical nulls round-trip as null (never as []/'');
       // edited fields — including explicit user clears — send as authored.
-      const enPayload: Record<string, unknown> = { ...translationData.en };
+      // The authored source is keyed by the tour's own (immutable) source
+      // language; source_locale itself never travels on updates.
+      const sourcePayload: Record<string, unknown> = { ...translationData[sourceLocale] };
       nullSourceFields.forEach((field) => {
-        enPayload[field] = null;
+        sourcePayload[field] = null;
       });
-      const translationsPayload = { en: enPayload };
+      const translationsPayload = { [sourceLocale]: sourcePayload };
 
       const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}`, {
         method: 'PUT',
@@ -480,6 +589,10 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           // only an actually chosen supported code travels.
           ...(difficultyDirty && difficultyLevel ? { difficulty_level: difficultyLevel } : {}),
           translations: translationsPayload,
+          // Touched options are submitted whole (an emptied array retires a
+          // previously optioned tour); untouched options stay omitted so
+          // unrelated saves never preserve/fabricate rows by accident.
+          ...(optionsDirty ? { options: toOptionsPayload(options) } : {}),
           // Media carry alt_text presence exactly (omitted stays absent,
           // explicit null clears), preserving URL identity, order, and
           // cover flags; omission retains the gallery untouched.
@@ -515,6 +628,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       setCoverImageDirty(false);
       setMediaDirty(false);
       setDifficultyDirty(false);
+      setOptionsDirty(false);
       fetchTour();
     } catch {
       // Field errors render localized inline + in the focused summary;
@@ -574,7 +688,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 {tour?.status}
               </span>
             </div>
-            <p className="text-sm text-gray-500">ID: {id} — {formT('sourceLanguageNotice')}</p>
+            <p className="text-sm text-gray-500">
+              ID: {id} — {formT('sourceLanguageNotice', { language: formT(`sourceLanguageNames.${sourceLocale}`) })}
+            </p>
           </div>
         </div>
 
@@ -627,10 +743,15 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         <div className="space-y-6 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <h2 className="font-bold text-lg text-[#0A2540] border-b border-gray-50 pb-2 mb-4">Tour Content Editing</h2>
 
-          <p className="text-sm text-gray-600">{formT('sourceLanguageNotice')}</p>
+          <p className="text-sm text-gray-600">
+            {formT('sourceLockedNotice', { language: formT(`sourceLanguageNames.${sourceLocale}`) })}
+          </p>
           {tour?.translation_statuses && (
             <p className="text-sm text-gray-600" aria-live="polite">
-              ES: {formT(`translationStatus.${tour.translation_statuses.es}`)} · IT: {formT(`translationStatus.${tour.translation_statuses.it}`)}
+              {(['en', 'es', 'it'] as const)
+                .filter((generated) => generated !== sourceLocale && tour.translation_statuses?.[generated])
+                .map((generated) => `${generated.toUpperCase()}: ${formT(`translationStatus.${tour.translation_statuses?.[generated]}`)}`)
+                .join(' · ')}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-2">
@@ -654,7 +775,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               <input
                 id="edit-source-title"
                 type="text"
-                required={activeLangTab === 'en'}
+                required
                 value={translationData[activeLangTab].title}
                 onChange={(e) => updateTranslationField(activeLangTab, 'title', e.target.value)}
                 placeholder={formT('titlePlaceholder')}
@@ -764,7 +885,39 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               />
                 {renderSourceErrors('important_information')}
             </div>
-            <ItineraryEditor value={translationData.en.itinerary} onChange={(days) => updateTranslationField('en', 'itinerary', days)} errors={fieldErrors} />
+            <ItineraryEditor value={translationData[sourceLocale].itinerary} onChange={(days) => updateTranslationField(sourceLocale, 'itinerary', days)} errors={fieldErrors} />
+
+            {/* Authored bookable options: rows keep their persistent ids and
+            a touched set is submitted whole; untouched options stay omitted. */}
+            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+              <BookingOptionsForm
+                rows={options}
+                disabled={false}
+                sourceLocale={sourceLocale}
+                onAdd={() => {
+                  setOptions((prev) => [...prev, {
+                    id: `edit-option-${prev.length + 1}-${Date.now()}`,
+                    title: '',
+                    pickup_instructions: '',
+                    guide_languages: [],
+                    price: '',
+                    capacity: '',
+                    start_time: '',
+                    weekdays: [],
+                  }]);
+                  setOptionsDirty(true);
+                }}
+                onRemove={(rowId) => {
+                  setOptions((prev) => prev.filter((row) => row.id !== rowId));
+                  setOptionsDirty(true);
+                }}
+                onUpdate={(rowId, updates) => {
+                  setOptions((prev) => prev.map((row) => (row.id === rowId ? { ...row, ...updates } : row)));
+                  setOptionsDirty(true);
+                }}
+                serverErrors={fieldErrors}
+              />
+            </div>
           </div>
         </div>
 
@@ -906,7 +1059,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
             <ImageUploader
               key={tour?.id}
               media={media}
-              title={translationData.en.title}
+              title={translationData[sourceLocale].title}
               onValidityChange={setMediaAltValid}
               onChange={(next) => {
                 setMedia(next);
@@ -926,16 +1079,17 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       </button>
       {previewOpen && (
         <TourContentPreview
-          title={translationData.en.title}
-          description={translationData.en.description}
-          itinerary={translationData.en.itinerary}
+          sourceLocale={sourceLocale}
+          title={translationData[sourceLocale].title}
+          description={translationData[sourceLocale].description}
+          itinerary={translationData[sourceLocale].itinerary}
           media={media}
-          highlights={translationData.en.highlights}
-          inclusions={translationData.en.inclusions}
-          exclusions={translationData.en.exclusions}
-          important_information={translationData.en.important_information}
-          meeting_point={translationData.en.meeting_point || null}
-          cancellation_policy={translationData.en.cancellation_policy || null}
+          highlights={translationData[sourceLocale].highlights}
+          inclusions={translationData[sourceLocale].inclusions}
+          exclusions={translationData[sourceLocale].exclusions}
+          important_information={translationData[sourceLocale].important_information}
+          meeting_point={translationData[sourceLocale].meeting_point || null}
+          cancellation_policy={translationData[sourceLocale].cancellation_policy || null}
           translationStatuses={tour?.translation_statuses ?? null}
         />
       )}

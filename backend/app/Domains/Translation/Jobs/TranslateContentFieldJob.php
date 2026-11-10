@@ -78,6 +78,17 @@ class TranslateContentFieldJob implements ShouldQueue
             return;
         }
 
+        // Only the tour pipeline can translate non-English sources and keep
+        // option texts on the same revision as the product translation.
+        if ($model instanceof Tour && ! $model->supportsFieldTranslation()) {
+            $code = $model->sourceLocale() === Tour::DEFAULT_SOURCE_LOCALE
+                ? 'TOUR_TRANSLATION_MANAGED'
+                : 'TOUR_SOURCE_NOT_ENGLISH';
+            $this->failState($state, $code, 'Tour translations are managed by the tour generation pipeline.');
+
+            return;
+        }
+
         $sourceText = $service->englishValue($model, $this->fieldName);
 
         if ($sourceText === null) {
@@ -233,7 +244,7 @@ class TranslateContentFieldJob implements ShouldQueue
             }
         }
 
-        $tourHash = app(TourTranslationService::class)->sourceHash($enRow);
+        $tourHash = app(TourTranslationService::class)->sourceHash($enRow, $tour);
 
         TourTranslationState::query()->updateOrCreate(
             ['tour_id' => $tour->id, 'locale' => $this->locale],
@@ -254,6 +265,13 @@ class TranslateContentFieldJob implements ShouldQueue
         $state->save();
 
         if ($this->translatableType === 'tour' || $this->translatableType === Tour::class) {
+            $tour = Tour::find($this->translatableId);
+
+            // A legacy field job must not change another pipeline's state.
+            if ($tour === null || ! $tour->supportsFieldTranslation()) {
+                return;
+            }
+
             $enRow = TourTranslation::query()
                 ->where('tour_id', $this->translatableId)
                 ->where('locale', 'en')
@@ -263,7 +281,7 @@ class TranslateContentFieldJob implements ShouldQueue
                 TourTranslationState::query()->updateOrCreate(
                     ['tour_id' => $this->translatableId, 'locale' => $this->locale],
                     [
-                        'source_hash' => app(TourTranslationService::class)->sourceHash($enRow),
+                        'source_hash' => app(TourTranslationService::class)->sourceHash($enRow, $tour),
                         'status' => 'failed',
                         'last_error_code' => $code,
                     ],

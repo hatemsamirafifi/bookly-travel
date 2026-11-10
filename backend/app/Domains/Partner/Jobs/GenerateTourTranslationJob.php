@@ -2,12 +2,15 @@
 
 namespace App\Domains\Partner\Jobs;
 
+use App\Domains\Partner\Contracts\SourceAwareTourContentTranslator;
 use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Requests\TourContentRules;
 use App\Domains\Partner\Services\PermanentTranslationException;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Search\Actions\IndexTourAction;
 use App\Models\Tour;
+use App\Models\TourOption;
+use App\Models\TourOptionTranslation;
 use App\Models\TourTranslation;
 use App\Models\TourTranslationState;
 use Illuminate\Bus\Queueable;
@@ -52,16 +55,24 @@ class GenerateTourTranslationJob implements ShouldQueue
 
     public function handle(TourTranslationService $service, TourContentTranslator $translator): void
     {
-        if (! in_array($this->locale, ['es', 'it'], true)) {
+        $tour = Tour::with(['translations', 'translationStates'])->find($this->tourId);
+        if (! $tour) {
             return;
         }
 
-        $tour = Tour::with(['translations', 'translationStates'])->find($this->tourId);
-        $english = $tour?->translations->firstWhere('locale', 'en');
-        if (! $tour || ! $english) {
+        // Only generated derivative locales of this tour's authored source are
+        // translatable; the source locale itself and unknown locales are no-ops.
+        $sourceLocale = $tour->sourceLocale();
+        if ($this->locale === $sourceLocale
+            || ! in_array($this->locale, Tour::derivativeLocalesFor($sourceLocale), true)) {
             return;
         }
-        if ($service->sourceHash($english) !== $this->sourceHash) {
+
+        $source = $tour->translations->firstWhere('locale', $sourceLocale);
+        if (! $source) {
+            return;
+        }
+        if ($service->sourceHash($source, $tour) !== $this->sourceHash) {
             return;
         }
 
@@ -78,22 +89,22 @@ class GenerateTourTranslationJob implements ShouldQueue
             return;
         }
 
-        // Malformed persisted English must never reach the provider or a
+        // Malformed persisted source must never reach the provider or a
         // derivative: safe-fail without touching the stored source.
         try {
-            $this->validateRawSource($service, $english);
+            $this->validateRawSource($service, $source);
         } catch (ValidationException|\InvalidArgumentException $e) {
             $this->markFailed($service, 'translation_output_invalid');
 
             return;
         }
 
-        $source = $service->sourcePayload($english);
+        $sourcePayload = $service->sourcePayload($source, $tour);
+        $strings = $service->strings($sourcePayload);
+
         try {
-            $translated = $service->applyStrings(
-                $source,
-                $translator->translate($service->strings($source), $this->locale)
-            );
+            $translatedStrings = $this->translate($translator, $strings, $sourceLocale);
+            $translated = $service->applyStrings($sourcePayload, $translatedStrings);
         } catch (PermanentTranslationException $e) {
             $this->markFailed($service, $this->permanentCode($e->getMessage()));
 
@@ -104,9 +115,9 @@ class GenerateTourTranslationJob implements ShouldQueue
             return;
         }
 
-        $result = $service->withContentLock($this->tourId, function () use ($service, $translated): string {
-            $english = TourTranslation::where('tour_id', $this->tourId)->where('locale', 'en')->first();
-            if (! $english || $service->sourceHash($english) !== $this->sourceHash) {
+        $result = $service->withContentLock($this->tourId, function () use ($service, $translated, $sourceLocale): string {
+            $source = TourTranslation::where('tour_id', $this->tourId)->where('locale', $sourceLocale)->first();
+            if (! $source || $service->sourceHash($source, $source->tour) !== $this->sourceHash) {
                 return 'noop';
             }
 
@@ -130,15 +141,27 @@ class GenerateTourTranslationJob implements ShouldQueue
             // that hashes like valid source must still fail safe with no
             // derivative and no source rewrite.
             try {
-                $this->validateRawSource($service, $english);
+                $this->validateRawSource($service, $source);
             } catch (ValidationException|\InvalidArgumentException $e) {
                 return 'invalid';
             }
 
-            $english->tour->translations()->updateOrCreate(
+            $translatedFields = $translated;
+            // Option texts live in their own id-keyed store, never inside the
+            // tour translation row: strip them before the row write and apply
+            // them scoped to this tour's stable option ids.
+            $translatedOptions = $translatedFields['options'] ?? null;
+            unset($translatedFields['options']);
+
+            $source->tour->translations()->updateOrCreate(
                 ['locale' => $this->locale],
-                $translated
+                $translatedFields
             );
+
+            if (is_array($translatedOptions) && $translatedOptions !== []) {
+                $this->writeOptionTranslations($translatedOptions);
+            }
+
             $state->update([
                 'status' => 'ready',
                 'translated_hash' => $this->sourceHash,
@@ -167,17 +190,73 @@ class GenerateTourTranslationJob implements ShouldQueue
     }
 
     /**
-     * Validate the RAW stored English fields through the hardened service
+     * Persist generated option texts for this locale, keyed by stable option
+     * id. Only options that still belong to this tour are written — the
+     * translator never changes ids, but a directly mutated source is re-checked
+     * here so no derivative row can ever be attached to a foreign option.
+     * Rows are upserted per (option, locale); retirement never deletes them.
+     *
+     * @param  array<int|string, mixed>  $translatedOptions  option id => generated entry
+     */
+    private function writeOptionTranslations(array $translatedOptions): void
+    {
+        $validOptionIds = TourOption::query()
+            ->where('tour_id', $this->tourId)
+            ->whereIn('id', array_map('intval', array_keys($translatedOptions)))
+            ->pluck('id');
+
+        foreach ($translatedOptions as $optionId => $entry) {
+            if (! is_array($entry) || ! is_string($entry['title'] ?? null) || trim($entry['title']) === '') {
+                continue;
+            }
+            if (! $validOptionIds->contains((int) $optionId)) {
+                continue;
+            }
+
+            TourOptionTranslation::query()->updateOrCreate(
+                ['tour_option_id' => (int) $optionId, 'locale' => $this->locale],
+                [
+                    'title' => $entry['title'],
+                    'pickup_instructions' => is_string($entry['pickup_instructions'] ?? null)
+                        ? $entry['pickup_instructions']
+                        : null,
+                ]
+            );
+        }
+    }
+
+    private function translate(TourContentTranslator $translator, array $strings, string $sourceLocale): array
+    {
+        if ($sourceLocale === Tour::DEFAULT_SOURCE_LOCALE) {
+            return $translator->translate($strings, $this->locale);
+        }
+
+        if ($translator instanceof SourceAwareTourContentTranslator) {
+            return $translator->translateFrom($strings, $sourceLocale, $this->locale);
+        }
+
+        throw new PermanentTranslationException('invalid_translation_request');
+    }
+
+    /**
+     * Validate the RAW stored source fields through the hardened service
      * boundary (shared list rules + strict integer checks), never a local
      * rule copy and never the canonical hash projection: array_values
      * reindexing would silently launder malformed associative day/stops
-     * objects into valid lists. The stored EN row is only read here.
+     * objects into valid lists. The stored source row is only read here.
+     * Option rows are raw-validated too (id-keyed scalar values) so a
+     * malformed/blanks-titled option fails safe before any provider call.
      */
-    private function validateRawSource(TourTranslationService $service, TourTranslation $english): void
+    private function validateRawSource(TourTranslationService $service, TourTranslation $source): void
     {
         $raw = [];
         foreach (TourContentRules::SOURCE_FIELDS as $field) {
-            $raw[$field] = $english->{$field};
+            $raw[$field] = $source->{$field};
+        }
+
+        $options = $service->sourceOptionsPayload($source->tour_id, $source->tour);
+        if ($options !== null) {
+            $raw['options'] = $options;
         }
 
         $service->validateTranslatablePayload($raw);
@@ -192,15 +271,22 @@ class GenerateTourTranslationJob implements ShouldQueue
 
     /**
      * Guarded terminal failure under the shared Tour-first lock: writes only
-     * when the fresh English hash and the desired state still match this job
+     * when the fresh source hash and the desired state still match this job
      * and the row is not ready, so genuine current content, newer sources,
      * and newer desired states are never demoted.
      */
     private function markFailed(TourTranslationService $service, string $code): void
     {
         $service->withContentLock($this->tourId, function () use ($service, $code): void {
-            $english = TourTranslation::where('tour_id', $this->tourId)->where('locale', 'en')->first();
-            if (! $english || $service->sourceHash($english) !== $this->sourceHash) {
+            $tour = Tour::find($this->tourId);
+            if (! $tour) {
+                return;
+            }
+
+            $source = TourTranslation::where('tour_id', $this->tourId)
+                ->where('locale', $tour->sourceLocale())
+                ->first();
+            if (! $source || $service->sourceHash($source, $tour) !== $this->sourceHash) {
                 return;
             }
 

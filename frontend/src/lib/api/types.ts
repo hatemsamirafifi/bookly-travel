@@ -52,6 +52,37 @@ export interface TourDetail extends Pick<TourCard, 'id' | 'slug' | 'title' | 'lo
   seo: SeoMetadata;
   translation_warning?: 'partial_translation';
   translation_status?: 'source' | 'ready' | 'pending' | 'stale' | 'failed';
+  /**
+   * Authored bookable options (additive contract). Absent or empty means the
+   * tour books from its tour-level pricing/availability as before. Each
+   * option carries its own localized content language, spoken guide
+   * languages, pricing and availability surface.
+   */
+  options?: TourOption[];
+}
+
+/** One bookable option of a public tour detail (additive; see TourDetail.options). */
+export interface TourOption {
+  id: number;
+  /** Authored option title in the option's own content language. */
+  title: string;
+  pickup_instructions: string | null;
+  /** Actual language of title/pickup_instructions; may differ from the page. */
+  content_locale: 'en' | 'es' | 'it';
+  /** Spoken/live-guide codes; independent of the content locale. */
+  guide_languages: string[];
+  start_time: string | null;
+  pricing: PricingInfo;
+  availability: AvailabilityInfo;
+  group_size: { min: number; max: number };
+}
+
+/** Booked option snapshot as serialized in booking responses and details. */
+export interface BookingOptionSnapshot {
+  id: number | null;
+  title: string;
+  pickup_instructions: string | null;
+  content_locale: 'en' | 'es' | 'it' | null;
 }
 
 export interface TourImage {
@@ -113,6 +144,27 @@ export interface PartnerAvailabilityExceptionInput {
   note?: string;
 }
 
+/**
+ * One authored booking option (additive write contract). `id` is the
+ * persistent server row id and MUST be preserved when editing an existing
+ * option; rows without `id` are created. `price_amount` is integer minor
+ * units (cents) in the tour currency; partner UI shows major units.
+ * Omitting `options` preserves existing rows; sending `[]` retires them.
+ */
+export interface PartnerBookingOptionInput {
+  id?: number;
+  title: string;
+  pickup_instructions?: string | null;
+  guide_languages: string[];
+  price_amount: number;
+  group_size_max?: number | null;
+  start_time?: string | null;
+  weekdays?: number[] | null;
+}
+
+/** Content locale an authored option is written in. */
+export type ContentSourceLocale = 'en' | 'es' | 'it';
+
 export interface PartnerTourWritePayload {
   title?: string;
   description?: string | null;
@@ -123,7 +175,16 @@ export interface PartnerTourWritePayload {
   cancellation_policy?: string | null;
   itinerary?: TourItineraryDay[] | null;
   important_information?: string[] | null;
-  translations?: { en?: EnglishSourceInput };
+  /** Language the authored source content is written in (en/es/it). Sent on
+   *  creation only; immutable afterwards and never resubmitted on updates. */
+  source_locale?: ContentSourceLocale;
+  /** Authored source content keyed by its own language: the selected
+   *  writing language on create (plus later edits of that same language);
+   *  the other two locales are generated server-side and never authored. */
+  translations?: { en?: EnglishSourceInput; es?: EnglishSourceInput; it?: EnglishSourceInput };
+  /** Authored bookable options. Omitted preserves existing rows; `[]`
+   *  retires them; absent rows are created / updated by persistent id. */
+  options?: PartnerBookingOptionInput[];
   /** Nullable: older tours without difficulty stay null; never invented. */
   difficulty_level?: 'easy' | 'moderate' | 'challenging' | null;
   /** Spoken/live-guide codes, independent of EN/ES/IT content locales. */

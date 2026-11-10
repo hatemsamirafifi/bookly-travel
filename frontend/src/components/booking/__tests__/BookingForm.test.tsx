@@ -180,6 +180,40 @@ describe('BookingForm', () => {
     });
   });
 
+  it('carries the Arabic-guide option and its price into checkout on the Italian page', async () => {
+    mockQuery += '&option=23';
+    const tour = bookingTour();
+    tour.data.options = [{
+      id: 23,
+      title: 'Partenza del mattino',
+      pickup_instructions: 'Incontro vicino alla fontana',
+      content_locale: 'it',
+      guide_languages: ['ar'],
+      start_time: '09:00',
+      pricing: {
+        base_price: { amount: 5500, currency: 'EUR', formatted: '€55.00' },
+        tiered_pricing: null,
+      },
+      availability: tour.data.availability,
+      group_size: { min: 1, max: 3 },
+    }];
+    jest.mocked(getTourDetail).mockResolvedValue(tour);
+    render(<BookingForm locale="it" todayUtc={TODAY_UTC} />);
+
+    expect(await screen.findByText('Partenza del mattino')).toHaveAttribute('lang', 'it');
+    expect(screen.getByText(/arabo/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm & Pay' }));
+
+    await waitFor(() => expect(createBooking).toHaveBeenCalledTimes(1));
+    expect(jest.mocked(createBooking).mock.calls[0][0]).toMatchObject({
+      tour_option_id: 23,
+      tour_date: FUTURE_DATE,
+      participant_count: 2,
+      locale: 'it',
+      page_load_price: 5500,
+    });
+  });
+
   // Spec 020 US2: the recovery target preserves the full selected
   // tour/date/count URL through safe login with a session-expired notice.
   it('builds an expired-session recovery URL that keeps the full booking query', () => {

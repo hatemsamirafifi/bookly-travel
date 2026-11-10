@@ -113,6 +113,42 @@ const guideLanguagesSchema = z.array(
     { message: 'partner.tours.errors.duplicateGuideLanguage' }
   );
 
+/**
+ * One authored booking option row (create/edit forms). `title` and a
+ * positive `price` are required; capacity is an integer ≥ 1; the spoken
+ * guide codes reuse the tour-level pattern (independent of content
+ * languages); the start time and weekday set (0=Sun..6=Sat) are optional;
+ * pickup instructions cap at 500 characters (backend contract).
+ */
+export const bookingOptionSchema = z.object({
+  id: z.string(),
+  server_id: z.number().int().safe().optional(),
+  title: nonBlankTitle('partner.tours.errors.optionTitleRequired'),
+  pickup_instructions: z
+    .string()
+    .refine((value) => unicodeCodePointLength(value) <= 500, { message: 'partner.tours.errors.optionPickupMax' })
+    .optional()
+    .or(z.literal('')),
+  guide_languages: guideLanguagesSchema.refine((codes) => codes.length > 0, {
+    message: 'partner.tours.errors.guideLanguageInvalid',
+  }),
+  price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: 'partner.tours.errors.optionPricePositive',
+  }),
+  capacity: z
+    .string()
+    .refine(
+      (val) => val.trim() === '' || (Number.isInteger(Number(val)) && Number(val) >= 1),
+      { message: 'partner.tours.errors.optionCapacityWhole' }
+    ),
+  start_time: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/, { message: 'partner.tours.errors.invalidTime' })
+    .optional()
+    .or(z.literal('')),
+  weekdays: z.array(z.number().min(0).max(6)).optional(),
+});
+
 // Basic details form step (combines basic and details steps). Draft-tolerant:
 // optional source fields stay optional here; the stricter publication schema
 // below (and the server submit guards) require trimmed English title and
@@ -170,6 +206,10 @@ export const tourPricingStepSchema = z.object({
   pricing_tiers: z.array(pricingTierSchema).min(1, { message: 'partner.tours.errors.pricingTierMin' }),
   group_size_min: z.number().int().min(1),
   group_size_max: z.number().int().min(1),
+  // Authored booking options travel with the pricing step; callers pass the
+  // placeholder-filtered rows (getSubmittedOptionRows) so empty add-row
+  // templates never block or submit.
+  options: z.array(bookingOptionSchema).max(10, { message: 'partner.tours.errors.optionsMax' }).default([]),
 }).refine((data) => data.group_size_max >= data.group_size_min, {
   message: 'partner.tours.errors.maxParticipantsGteMin',
   path: ['group_size_max'],
@@ -180,6 +220,37 @@ export const tourAvailabilityStepSchema = z.object({
   availability_exceptions: z.array(availabilityExceptionSchema).default([]),
 });
 
+/** A fully-empty added row is a UI placeholder only: it carries no
+ *  information and is excluded from both validation and submissions. */
+export function isPlaceholderOptionRow(
+  row: Partial<{ title: unknown; pickup_instructions: unknown; guide_languages: unknown; price: unknown; capacity: unknown; start_time: unknown; weekdays: unknown }>,
+): boolean {
+  const languages = Array.isArray(row.guide_languages)
+    ? row.guide_languages.filter((code) => typeof code === 'string' && code.trim() !== '')
+    : [];
+  const weekdays = Array.isArray(row.weekdays) ? row.weekdays : [];
+  return (
+    (typeof row.title !== 'string' || row.title.trim() === '') &&
+    (typeof row.pickup_instructions !== 'string' || row.pickup_instructions.trim() === '') &&
+    languages.length === 0 &&
+    (typeof row.price !== 'string' || row.price.trim() === '') &&
+    (typeof row.capacity !== 'string' || row.capacity.trim() === '') &&
+    (typeof row.start_time !== 'string' || row.start_time.trim() === '') &&
+    weekdays.length === 0
+  );
+}
+
+/** The rows a submit/validation actually considers: placeholders excluded. */
+export function getSubmittedOptionRows<T>(rows: readonly T[]): T[] {
+  return rows.filter((row) => !isPlaceholderOptionRow(row as never));
+}
+
+/** Source language step: the wizard cannot enter authored content without a
+ *  concrete original writing language (legacy drafts restore as 'en'). */
+export const tourSourceStepSchema = z.object({
+  source_locale: z.enum(['en', 'es', 'it'], { message: 'partner.tours.errors.sourceLocaleRequired' }),
+});
+
 // Full tour wizard schema for final submission
 export const tourWizardSchema = tourBasicDetailsSchema
   .merge(tourMediaStepSchema)
@@ -188,17 +259,37 @@ export const tourWizardSchema = tourBasicDetailsSchema
 
 /**
  * Map a Laravel 422 `errors` object to flat form-field paths, stripping the
- * canonical `translations.en.` prefix so nested server paths
- * (`translations.en.itinerary.0.title`) land on the actual authoring field
+ * canonical `translations.{en|es|it}.` prefix (the authored source locale is
+ * whichever the tour declares) so nested server paths
+ * (`translations.es.itinerary.0.title`) land on the actual authoring field
+ * (`itinerary.0.title`). First message per path wins; messages stay raw
+ * here and are localized per field via `localizeServerFieldError`.
+ */
+/** Strip the canonical `translations.{en|es|it}.` prefix and alias option
+ *  API-contract field names (price_amount→price, group_size_max→capacity)
+ *  so server 422 paths land on the actual authoring controls. */
+export function toFormErrorPath(serverPath: string): string {
+  const nested = serverPath.match(/^translations\.(?:en|es|it)\./);
+  let formPath = nested ? serverPath.slice(nested[0].length) : serverPath;
+  const optionRow = formPath.match(/^(options\.\d+)\.(.+)$/);
+  if (optionRow) {
+    formPath = `${optionRow[1]}.${optionRow[2] === 'price_amount' ? 'price' : optionRow[2] === 'group_size_max' ? 'capacity' : optionRow[2]}`;
+  }
+  return formPath;
+}
+
+/**
+ * Map a Laravel 422 `errors` object to flat form-field paths, stripping the
+ * canonical `translations.{en|es|it}.` prefix (the authored source locale is
+ * whichever the tour declares) so nested server paths
+ * (`translations.es.itinerary.0.title`) land on the actual authoring field
  * (`itinerary.0.title`). First message per path wins; messages stay raw
  * here and are localized per field via `localizeServerFieldError`.
  */
 export function mapServerErrorsToFields(errors: Record<string, string[]>): Record<string, string> {
   const fields: Record<string, string> = {};
   for (const [path, messages] of Object.entries(errors)) {
-    const formPath = path.startsWith('translations.en.')
-      ? path.slice('translations.en.'.length)
-      : path;
+    const formPath = toFormErrorPath(path);
     if (messages.length > 0 && !(formPath in fields)) {
       fields[formPath] = messages[0];
     }
@@ -293,6 +384,35 @@ const SERVER_ERROR_MAPPINGS: ServerErrorMapping[] = [
     keyFor: fixedKey('partner.tours.errors.durationMinutesInteger'),
   },
   { test: (p) => /duration_minutes$/.test(p), keyFor: fixedKey('partner.tours.errors.durationMinutesRange') },
+  // Authored booking options: only the fixed, message-shaped backend rules
+  // receive catalog copy; anything else falls back to the raw message.
+  {
+    test: (p, m) => /^options\.\d+\.title$/.test(p) && /greater than/i.test(m),
+    keyFor: fixedKey('partner.tours.errors.titleMax160'),
+  },
+  { test: (p) => /^options\.\d+\.title$/.test(p), keyFor: fixedKey('partner.tours.errors.optionTitleRequired') },
+  {
+    test: (p, m) => /^options\.\d+\.pickup_instructions$/.test(p) && /greater than/i.test(m),
+    keyFor: fixedKey('partner.tours.errors.optionPickupMax'),
+  },
+  {
+    test: (p, m) => /^options\.\d+\.price$/.test(p) && /greater than|at least|positive/i.test(m),
+    keyFor: fixedKey('partner.tours.errors.optionPricePositive'),
+  },
+  {
+    test: (p, m) => /^options\.\d+\.capacity$/.test(p) && /greater than|at least|positive|whole|integer/i.test(m),
+    keyFor: fixedKey('partner.tours.errors.optionCapacityWhole'),
+  },
+  {
+    test: (p, m) => /^options\.\d+\.guide_languages(\.\d+)?$/.test(p) && /greater than|more than/i.test(m),
+    keyFor: fixedKey('partner.tours.errors.guideLanguagesMax'),
+  },
+  {
+    test: (p) => /^options\.\d+\.guide_languages(\.\d+)?$/.test(p),
+    keyFor: fixedKey('partner.tours.errors.guideLanguageInvalid'),
+  },
+  { test: (p) => /^options\.\d+\.start_time$/.test(p), keyFor: fixedKey('partner.tours.errors.invalidTime') },
+  { test: (p, m) => /^options$/.test(p) && /greater than|more than/i.test(m), keyFor: fixedKey('partner.tours.errors.optionsMax') },
 ];
 
 export function localizeServerFieldError(

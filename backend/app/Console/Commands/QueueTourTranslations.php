@@ -12,7 +12,7 @@ class QueueTourTranslations extends Command
 {
     protected $signature = 'tours:queue-translations {--after-id=0 : Resume after this tour ID} {--limit=100 : Maximum tours to inspect in this run} {--refresh-ready : Repair lost search projections for tours with current derivatives}';
 
-    protected $description = 'Queue bounded ES/IT regeneration from English tour source without deleting legacy translations';
+    protected $description = 'Queue bounded derivative regeneration from each tour source locale without deleting legacy translations';
 
     public function handle(TourTranslationService $service): int
     {
@@ -33,7 +33,13 @@ class QueueTourTranslations extends Command
         $refreshReady = (bool) $this->option('refresh-ready');
 
         $tours = Tour::where('id', '>', $afterId)
-            ->whereHas('translations', fn ($query) => $query->where('locale', 'en'))
+            // Only tours that already hold their own authored source row are
+            // inspectable; the source locale is per tour, so the comparison is
+            // expressed in SQL rather than assuming English.
+            ->whereHas('translations', fn ($query) => $query->whereRaw(
+                'tour_translations.locale = COALESCE(tours.source_locale, ?)',
+                [Tour::DEFAULT_SOURCE_LOCALE]
+            ))
             ->orderBy('id')
             ->limit($limit)
             ->get();

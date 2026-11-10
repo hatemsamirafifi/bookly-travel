@@ -3,17 +3,18 @@
 namespace App\Domains\Partner\Requests;
 
 /**
- * Reusable English input boundary for partner tour content (Spec 019 T008).
+ * Reusable source-language input boundary for partner tour content (Spec 019
+ * T008, extended for a configurable authored source locale).
  *
- * Normalization contract: explicit nested `translations.en` keys win for
- * that field; top-level shorthand fills absent nested keys; omitted keys
- * preserve existing values (stay absent from the patch); explicit null
+ * Normalization contract: explicit nested `translations.{sourceLocale}` keys
+ * win for that field; top-level shorthand fills absent nested keys; omitted
+ * keys preserve existing values (stay absent from the patch); explicit null
  * clears nullable text; `[]` clears lists. Title is a non-null string
- * whenever supplied. Every authored non-English locale and every
- * platform-owned revision/readiness key is rejected with its precise
- * offending path, including present-but-null/empty values. Opaque draft
- * snapshot payloads keep their own boundary and are validated only on
- * materialization (US1).
+ * whenever supplied. Every authored locale other than the tour's source
+ * locale and every platform-owned revision/readiness key is rejected with
+ * its precise offending path, including present-but-null/empty values.
+ * Opaque draft snapshot payloads keep their own boundary and are validated
+ * only on materialization (US1).
  */
 class TourContentRules
 {
@@ -59,18 +60,21 @@ class TourContentRules
     ];
 
     /**
-     * Merge shorthand and nested English input into one canonical patch.
+     * Merge shorthand and nested source-locale input into one canonical patch.
      *
      * Only provided fields appear in the result; omitted keys stay absent
      * so services can preserve existing values. Explicit null and `[]`
-     * are retained with their distinct clearing meanings.
+     * are retained with their distinct clearing meanings. The nested
+     * `translations.{sourceLocale}` entry wins per field; top-level shorthand
+     * fills the rest, so callers that only ever sent top-level English
+     * content keep working regardless of the chosen source locale.
      *
      * @param  array<string, mixed>  $input
      * @return array<string, mixed>
      */
-    public static function normalizeEnglishPatch(array $input): array
+    public static function normalizeSourcePatch(array $input, string $sourceLocale = 'en'): array
     {
-        $nested = $input['translations']['en'] ?? [];
+        $nested = $input['translations'][$sourceLocale] ?? [];
         if (! is_array($nested)) {
             $nested = [];
         }
@@ -85,6 +89,17 @@ class TourContentRules
         }
 
         return $patch;
+    }
+
+    /**
+     * English-source alias of normalizeSourcePatch() kept for existing callers.
+     *
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
+     */
+    public static function normalizeEnglishPatch(array $input): array
+    {
+        return self::normalizeSourcePatch($input, 'en');
     }
 
     /**
@@ -117,38 +132,44 @@ class TourContentRules
     }
 
     /**
-     * Shared source-field rules for create ($isCreate) and update. Title is
-     * a non-null string whenever supplied; description is a nullable draft
-     * string with the existing top-level create minimum preserved. Source
-     * collections are canonical JSON lists (`list`): authored associative
-     * objects fail at their exact path while `[]` stays a valid clear.
+     * Shared source-field rules for create ($isCreate) and update, rooted at
+     * the authored source locale. Title is a non-null string whenever
+     * supplied; description is a nullable draft string with the existing
+     * top-level create minimum preserved. Source collections are canonical
+     * JSON lists (`list`): authored associative objects fail at their exact
+     * path while `[]` stays a valid clear.
+     *
+     * The default English source keeps every pre-source-locale caller on
+     * `translations.en`, so old request shapes validate unchanged.
      *
      * @return array<string, mixed>
      */
-    public static function sourceRules(bool $isCreate): array
+    public static function sourceRules(bool $isCreate, string $sourceLocale = 'en'): array
     {
         $title = $isCreate ? 'required|string|max:120' : 'sometimes|string|max:120';
         $description = $isCreate
             ? 'required|string|min:100|max:5000'
             : 'sometimes|nullable|string|max:5000';
 
+        $path = "translations.{$sourceLocale}";
+
         return [
             'title' => $title,
             'description' => $description,
             'translations' => 'sometimes|nullable|array',
-            'translations.en' => 'sometimes|nullable|array',
-            'translations.en.title' => 'sometimes|string|max:120',
-            'translations.en.description' => 'sometimes|nullable|string|max:5000',
-            'translations.en.highlights' => 'sometimes|nullable|list|max:30',
-            'translations.en.highlights.*' => 'string|max:500',
-            'translations.en.inclusions' => 'sometimes|nullable|list|max:30',
-            'translations.en.inclusions.*' => 'string|max:500',
-            'translations.en.exclusions' => 'sometimes|nullable|list|max:30',
-            'translations.en.exclusions.*' => 'string|max:500',
-            'translations.en.meeting_point' => 'sometimes|nullable|string|max:500',
-            'translations.en.cancellation_policy' => 'sometimes|nullable|string|max:2000',
-            'translations.en.important_information' => 'sometimes|nullable|list|max:30',
-            'translations.en.important_information.*' => 'string|max:500',
+            "{$path}" => 'sometimes|nullable|array',
+            "{$path}.title" => 'sometimes|string|max:120',
+            "{$path}.description" => 'sometimes|nullable|string|max:5000',
+            "{$path}.highlights" => 'sometimes|nullable|list|max:30',
+            "{$path}.highlights.*" => 'string|max:500',
+            "{$path}.inclusions" => 'sometimes|nullable|list|max:30',
+            "{$path}.inclusions.*" => 'string|max:500',
+            "{$path}.exclusions" => 'sometimes|nullable|list|max:30',
+            "{$path}.exclusions.*" => 'string|max:500',
+            "{$path}.meeting_point" => 'sometimes|nullable|string|max:500',
+            "{$path}.cancellation_policy" => 'sometimes|nullable|string|max:2000',
+            "{$path}.important_information" => 'sometimes|nullable|list|max:30',
+            "{$path}.important_information.*" => 'string|max:500',
             'highlights' => 'sometimes|nullable|list|max:30',
             'highlights.*' => 'string|max:500',
             'inclusions' => 'sometimes|nullable|list|max:30',
@@ -232,6 +253,142 @@ class TourContentRules
     }
 
     /**
+     * Shared purchasable-option boundary for partner create/update (bounded
+     * list of departure variants authored in the tour's source language).
+     *
+     * Field bounds: title required nonblank (max 120 like the tour title);
+     * pickup required-nullable text (max 500 like meeting point); price in
+     * cents min 1 (a zero-price option is not sellable); capacity per
+     * departure 1-1000 or null (inherits the tour capacity); start time
+     * H:mm[:ss]; weekdays 0-6 distinct integers (Carbon dayOfWeek) or null
+     * (every operating weekday). `id` is optional: on update it scopes the
+     * write to an existing option of THIS tour, on create options are new
+     * rows and any authored id is rejected. `source_locale` and every other
+     * partner-forbidden key is handled by forbiddenPresentPaths().
+     *
+     * @return array<string, mixed>
+     */
+    public static function optionRules(): array
+    {
+        return [
+            'options' => 'sometimes|list|max:20',
+            'options.*' => 'array',
+            'options.*.id' => 'sometimes|integer|min:1',
+            'options.*.title' => 'required|string|max:120|regex:/.*\\S.*/',
+            'options.*.pickup_instructions' => 'sometimes|nullable|string|max:500',
+            'options.*.guide_languages' => 'required|list|max:20',
+            'options.*.guide_languages.*' => 'string|regex:/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i',
+            'options.*.price_amount' => 'required|integer|min:1|max:10000000',
+            'options.*.group_size_max' => 'sometimes|nullable|integer|min:1|max:1000',
+            'options.*.start_time' => ['sometimes', 'nullable', 'regex:/^([01]?\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?$/i'],
+            'options.*.weekdays' => 'sometimes|nullable|list|max:7',
+            'options.*.weekdays.*' => 'integer|between:0,6',
+        ];
+    }
+
+    /**
+     * The id field must be absent on create (every option is a new row) and,
+     * on update, must reference an option of the tour being edited. This pair
+     * of checks runs inside the Request `after` hook because both need the
+     * request context (isCreate) and — for update — a scoped storage lookup.
+     *
+     * @param  array<int, mixed>  $options  raw options list from the input
+     * @return array<string, string> offending path => message
+     */
+    public static function optionIdPaths(array $options, bool $isCreate, ?callable $scopedExists = null): array
+    {
+        $paths = [];
+        $seen = [];
+
+        foreach (array_values($options) as $index => $item) {
+            $id = is_array($item) ? ($item['id'] ?? null) : null;
+
+            if ($isCreate) {
+                if ($id !== null) {
+                    $paths["options.{$index}.id"] = 'Options cannot specify ids when creating a tour.';
+                }
+
+                continue;
+            }
+
+            if (filter_var($id, FILTER_VALIDATE_INT) === false) {
+                continue;
+            }
+
+            $id = (int) $id;
+
+            if (isset($seen[$id])) {
+                $paths["options.{$index}.id"] = 'Options contain duplicate ids.';
+            } else {
+                $seen[$id] = true;
+            }
+
+            if ($scopedExists !== null && ! $scopedExists($id)) {
+                $paths["options.{$index}.id"] = 'The selected option does not belong to this tour.';
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Normalize raw option input into storage-ready rows, preserving authored
+     * order (sort_order). Guide codes are lowercased, trimmed and deduped in
+     * first-seen order; weekdays are cast to integers (an empty list means
+     * "every operating weekday", stored as null like an omitted list);
+     * start_time is normalized to H:i:s. Unknown keys never reach this
+     * projection: writes assemble the storage payload field by field.
+     *
+     * Create passes `stripIds: true` because every option on a brand-new
+     * tour is a new row and any authored id would otherwise collide with the
+     * scoped-lookup guard in the service.
+     *
+     * @param  array<int, mixed>  $options
+     * @return array<int, array<string, mixed>>
+     */
+    public static function normalizeOptions(array $options, bool $stripIds = false): array
+    {
+        $normalized = [];
+
+        foreach (array_values($options) as $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+
+            $weekdays = $item['weekdays'] ?? null;
+            $weekdays = is_array($weekdays) && $weekdays !== []
+                ? array_values(array_unique(array_map('intval', $weekdays)))
+                : null;
+
+            $startTime = $item['start_time'] ?? null;
+            if (is_string($startTime) && $startTime !== '') {
+                $parts = array_pad(explode(':', $startTime), 3, '00');
+                $startTime = sprintf('%02d:%02d:%02d', (int) $parts[0], (int) $parts[1], (int) $parts[2]);
+            } else {
+                $startTime = null;
+            }
+
+            $pickup = $item['pickup_instructions'] ?? null;
+
+            $normalized[] = [
+                'id' => isset($item['id']) && ! $stripIds ? (int) $item['id'] : null,
+                'title' => trim((string) ($item['title'] ?? '')),
+                'pickup_instructions' => is_string($pickup) && trim($pickup) === '' ? null : $pickup,
+                'guide_languages' => array_values(array_unique(array_map(
+                    static fn ($code): string => strtolower(trim((string) $code)),
+                    array_values(is_array($item['guide_languages'] ?? null) ? $item['guide_languages'] : []),
+                ))),
+                'price_amount' => (int) ($item['price_amount'] ?? 0),
+                'group_size_max' => isset($item['group_size_max']) ? (int) $item['group_size_max'] : null,
+                'start_time' => $startTime,
+                'weekdays' => $weekdays,
+            ];
+        }
+
+        return $normalized;
+    }
+
+    /**
      * Cast validated numeric-string day and duration values to JSON integers.
      *
      * Laravel's `integer` rule accepts digit strings for compatibility; this
@@ -275,11 +432,12 @@ class TourContentRules
 
     /**
      * Scan raw input for every forbidden present key and return its precise
-     * offending path: any authored translations locale other than `en`
-     * (whatever its value, including null/empty); any key inside
-     * `translations.en` outside the authored source-field allowlist; and
-     * any platform-owned revision/readiness or provider/job/error state
-     * key at top level. Presence is key existence, so
+     * offending path: any authored translations locale other than the tour's
+     * authored source (whatever its value, including null/empty); any key
+     * inside the source locale entry outside the authored source-field
+     * allowlist; any platform-owned revision/readiness or provider/job/error
+     * state key at top level; and, when the source locale is immutable,
+     * `source_locale` itself. Presence is key existence, so
      * present-but-null/empty values are still reported. Valid
      * lifecycle/pricing/availability keys are untouched. Deeper unknown
      * keys (inside days/stops) never reach writes because only validated
@@ -288,7 +446,7 @@ class TourContentRules
      * @param  array<string, mixed>  $input
      * @return array<string, string> offending path => message
      */
-    public static function forbiddenPresentPaths(array $input): array
+    public static function forbiddenPresentPaths(array $input, string $sourceLocale = 'en', bool $allowSourceLocale = true): array
     {
         $paths = [];
 
@@ -303,25 +461,29 @@ class TourContentRules
             }
         }
 
+        if (! $allowSourceLocale && array_key_exists('source_locale', $input)) {
+            $paths['source_locale'] = 'Source language cannot be changed after creation.';
+        }
+
         $translations = $input['translations'] ?? null;
         if (is_array($translations)) {
             foreach ($translations as $locale => $entry) {
-                if ($locale === 'en') {
+                if ($locale === $sourceLocale) {
                     if (is_array($entry)) {
                         foreach ($entry as $key => $value) {
                             if (in_array($key, self::PLATFORM_OWNED_KEYS, true)) {
-                                $paths["translations.en.{$key}"] = 'Revision state is platform-owned.';
+                                $paths["translations.{$locale}.{$key}"] = 'Revision state is platform-owned.';
                             } elseif (in_array($key, self::PROVIDER_STATE_KEYS, true)) {
-                                $paths["translations.en.{$key}"] = 'Provider state is platform-owned.';
+                                $paths["translations.{$locale}.{$key}"] = 'Provider state is platform-owned.';
                             } elseif (! in_array($key, self::SOURCE_FIELDS, true)) {
-                                $paths["translations.en.{$key}"] = 'Unsupported English source field.';
+                                $paths["translations.{$locale}.{$key}"] = 'Unsupported source field.';
                             }
                         }
                     }
 
                     continue;
                 }
-                $paths["translations.{$locale}"] = 'Partners may edit English source content only.';
+                $paths["translations.{$locale}"] = 'Partners may edit source-language content only.';
             }
         }
 

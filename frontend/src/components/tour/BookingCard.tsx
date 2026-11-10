@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import type { TourOption } from '@/lib/api/types';
 import { useTranslations } from 'next-intl';
 import AvailabilityCalendar from './AvailabilityCalendar';
+import OptionSelector from './OptionSelector';
 import { resolveBookingReasonMessage } from '@/lib/tours/booking-reasons';
-import type { BookingInvalidReason, BookingSelectionView } from '@/lib/tours/booking-selection';
+import type { BookingInvalidReason, BookingWithOptionView } from '@/lib/tours/booking-selection';
 
 export interface BookingCardAuth {
   status: 'pending' | 'signed-in' | 'signed-out';
@@ -112,7 +114,7 @@ export function BookingReasonList({ reasons, groupMin, groupMax, dateChanged, co
 }
 
 export interface BookingContinuationProps {
-  view: BookingSelectionView;
+  view: BookingWithOptionView;
   auth: BookingCardAuth;
   actionClassName: string;
   onContinueClick: (event: React.MouseEvent) => void;
@@ -180,12 +182,16 @@ export interface BookingCardProps {
   /** Retained for controller compatibility: the single current-tour wishlist
    *  control lives in TourHeader now, so the card no longer consumes this. */
   tourId?: string | number;
-  /** Validated exact per-person base from cents, or null when the supplied
-   *  price is invalid (the reason list explains; no bogus zero renders). */
+  /** Validated exact per-person base from cents — the selected option's
+   *  price when one is chosen, else the tour-level base — or null when the
+   *  supplied price is invalid (the reason list explains; no bogus zero). */
   baseDisplay: string | null;
   groupMin: number;
   groupMax: number;
-  view: BookingSelectionView;
+  view: BookingWithOptionView;
+  /** The controller-owned option selection shared with the mobile dialog. */
+  selectedOptionId: number | null;
+  onOptionChange: (option: TourOption | null) => void;
   selectedDate: string | null;
   participantCount: number | null;
   dateChanged: boolean;
@@ -199,8 +205,8 @@ export interface BookingCardProps {
   /** Content language of the supplied cancellation policy; attached only to
    *  the policy text, never the controls. */
   cancellationPolicyLocale?: string;
-  /** Inert date/count controls while auth restores; continuation keeps its
-   *  own pending rule in BookingContinuation. */
+  /** Inert option/date/count controls while auth restores; continuation
+   *  keeps its own pending rule in BookingContinuation. */
   controlsDisabled: boolean;
 }
 
@@ -213,6 +219,8 @@ export default function BookingCard({
   groupMin,
   groupMax,
   view,
+  selectedOptionId,
+  onOptionChange,
   selectedDate,
   participantCount,
   dateChanged,
@@ -230,6 +238,10 @@ export default function BookingCard({
   const bookable = !view.reasons.includes('tour-unavailable');
   const hasCancellation =
     typeof cancellationPolicy === 'string' && cancellationPolicy.trim() !== '';
+  // With offered options the picker leads; its own coordinates (dates,
+  // price, bounds) apply only after a concrete selection exists.
+  const hasOptions = view.options.length > 0;
+  const optionSelected = view.selectedOption !== null;
 
   return (
     <div className="rounded-lg border border-border bg-surface p-5 shadow-card">
@@ -259,39 +271,59 @@ export default function BookingCard({
         </div>
       ) : (
         <>
-          <AvailabilityCalendar
-            offeredDates={view.offeredFutureDates}
-            selectedDate={selectedDate}
-            onSelect={onDateChange}
-            nextAvailableDate={view.initialDate}
-            locale={locale}
-            id={dateSelectId}
-            disabled={controlsDisabled}
-          />
+          {hasOptions && (
+            <div className="mb-3">
+              <OptionSelector
+                options={view.options}
+                value={selectedOptionId}
+                onChange={(optionId) => {
+                  const option = view.options.find((entry) => entry.id === optionId) ?? null;
+                  onOptionChange(option);
+                }}
+                locale={locale}
+                disabled={controlsDisabled}
+                idPrefix={dateSelectId}
+              />
+            </div>
+          )}
 
-          <div className="mb-3 mt-3">
-            <span className="mb-1 block text-sm font-medium text-primary">
-              {t('participants')}
-            </span>
-            <BookingCountStepper
-              count={participantCount}
-              groupMin={groupMin}
-              groupMax={groupMax}
-              onCountChange={onCountChange}
-              groupLabel={t('participants')}
-              decreaseLabel={t('decreaseParticipants')}
-              increaseLabel={t('increaseParticipants')}
-              rangeLabel={t('allowedRange', { min: groupMin, max: groupMax })}
-              idPrefix={`${dateSelectId}-count`}
-              disabled={controlsDisabled}
-            />
-          </div>
+          {(!hasOptions || optionSelected) && (
+            <>
+              <AvailabilityCalendar
+                offeredDates={view.offeredFutureDates}
+                selectedDate={selectedDate}
+                onSelect={onDateChange}
+                nextAvailableDate={view.initialDate}
+                locale={locale}
+                id={dateSelectId}
+                disabled={controlsDisabled}
+              />
 
-          {view.estimateDisplay !== null && (
-            <p aria-live="polite" className="mb-3 text-sm text-text-muted">
-              {t('booking.estimatedTotal')}:{' '}
-              <span className="font-semibold text-primary">{view.estimateDisplay}</span>
-            </p>
+              <div className="mb-3 mt-3">
+                <span className="mb-1 block text-sm font-medium text-primary">
+                  {t('participants')}
+                </span>
+                <BookingCountStepper
+                  count={participantCount}
+                  groupMin={groupMin}
+                  groupMax={groupMax}
+                  onCountChange={onCountChange}
+                  groupLabel={t('participants')}
+                  decreaseLabel={t('decreaseParticipants')}
+                  increaseLabel={t('increaseParticipants')}
+                  rangeLabel={t('allowedRange', { min: groupMin, max: groupMax })}
+                  idPrefix={`${dateSelectId}-count`}
+                  disabled={controlsDisabled}
+                />
+              </div>
+
+              {view.estimateDisplay !== null && (
+                <p aria-live="polite" className="mb-3 text-sm text-text-muted">
+                  {t('booking.estimatedTotal')}:{' '}
+                  <span className="font-semibold text-primary">{view.estimateDisplay}</span>
+                </p>
+              )}
+            </>
           )}
 
           {hasCancellation && (

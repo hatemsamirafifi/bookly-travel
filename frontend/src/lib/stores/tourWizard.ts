@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { isPlaceholderOptionRow } from '@/lib/validators/partner';
 import type { TourItineraryDay } from '@/lib/api/types';
 import type {
   WizardStep,
@@ -7,11 +8,13 @@ import type {
   PricingTierFormInput,
   AvailabilityRuleFormInput,
   AvailabilityExceptionFormInput,
+  BookingOptionFormInput,
   TourMedia,
 } from '@/types/tour';
 
 // Inline the initial data to avoid circular issues at module init
 const INITIAL_FORM: TourFormData = {
+  source_locale: null,
   title: '',
   description: '',
   category: '',
@@ -31,6 +34,7 @@ const INITIAL_FORM: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 1,
   group_size_max: 20,
 };
@@ -65,6 +69,36 @@ function toStringArray(value: unknown): string[] {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
+}
+
+/** Guard a restored option row without fabricating facts: non-object or
+ *  untyped rows keep blank text/numbers, numeric values restore as their
+ *  decimal string, arrays are filtered to their real members. */
+function normalizeOption(entry: unknown, index: number): BookingOptionFormInput | null {
+  if (!isRecord(entry) || Array.isArray(entry)) {
+    return null;
+  }
+  const toNumberString = (value: unknown): string =>
+    typeof value === 'string' ? value : typeof value === 'number' && Number.isFinite(value) ? String(value) : '';
+  const localId = typeof entry.id === 'string' && entry.id.trim() !== '' ? entry.id : null;
+  const row: BookingOptionFormInput = {
+    id: localId ?? `restored-${index}`,
+    server_id: typeof entry.server_id === 'number' && Number.isSafeInteger(entry.server_id) && entry.server_id > 0
+      ? entry.server_id
+      : undefined,
+    title: typeof entry.title === 'string' ? entry.title : '',
+    pickup_instructions: typeof entry.pickup_instructions === 'string' ? entry.pickup_instructions : '',
+    guide_languages: Array.isArray(entry.guide_languages)
+      ? entry.guide_languages.filter((code): code is string => typeof code === 'string')
+      : [],
+    price: toNumberString(entry.price),
+    capacity: toNumberString(entry.capacity),
+    start_time: typeof entry.start_time === 'string' ? entry.start_time : '',
+    weekdays: Array.isArray(entry.weekdays)
+      ? [...new Set(entry.weekdays.filter((day): day is number => typeof day === 'number' && Number.isInteger(day) && day >= 0 && day <= 6))]
+      : [],
+  };
+  return localId === null && row.server_id === undefined && isPlaceholderOptionRow(row) ? null : row;
 }
 
 type NormalizedStop = NonNullable<TourItineraryDay['stops']>[number];
@@ -120,6 +154,14 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
   const source: Record<string, unknown> = isRecord(draft) ? draft : {};
   const normalized: Record<string, unknown> = { ...source };
 
+  // Original writing language: only a concrete supported code is kept;
+  // anything missing/invalid reads as the legacy English source default.
+  const rawSourceLocale = source.source_locale;
+  normalized.source_locale =
+    rawSourceLocale === 'en' || rawSourceLocale === 'es' || rawSourceLocale === 'it'
+      ? rawSourceLocale
+      : 'en';
+
   for (const key of STRING_ARRAY_KEYS) {
     normalized[key] = toStringArray(source[key]);
   }
@@ -145,6 +187,13 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
     const value = source[key];
     normalized[key] = Array.isArray(value) ? value : [];
   }
+
+  const rawOptions = source.options;
+  normalized.options = Array.isArray(rawOptions)
+    ? rawOptions
+        .map((entry, index) => normalizeOption(entry, index))
+        .filter((option): option is BookingOptionFormInput => option !== null)
+    : [];
 
   return normalized as Partial<TourFormData>;
 }
@@ -173,7 +222,7 @@ export function mergePersistedWizardState<S extends WizardState>(
     ...current,
     formData,
     currentStep:
-      step === 'details' || step === 'media' || step === 'pricing' || step === 'availability' || step === 'review'
+      step === 'source' || step === 'details' || step === 'media' || step === 'pricing' || step === 'availability' || step === 'review'
         ? step
         : current.currentStep,
     isDirty: false,
@@ -200,6 +249,14 @@ export type WizardActions = {
   addAvailabilityException: () => void;
   updateAvailabilityException: (id: string, updates: Partial<Omit<AvailabilityExceptionFormInput, 'id'>>) => void;
   removeAvailabilityException: (id: string) => void;
+  updateBookingOption: (id: string, updates: Partial<Omit<BookingOptionFormInput, 'id'>>) => void;
+  addBookingOption: () => void;
+  removeBookingOption: (id: string) => void;
+  /** Adopt the persistent option ids echoed by an owned tour write, so the
+   *  next update in the same wizard session edits the stored rows instead of
+   *  duplicating them. Matching is positional over the placeholder-filtered
+   *  rows — the submitted rows are stored in submission order. */
+  adoptSavedOptionIds: (saved: Array<{ id: unknown; title: unknown }> | null | undefined) => void;
   setMedia: (media: TourMedia[]) => void;
   reset: () => void;
   loadDraft: (draft: Partial<TourFormData>) => void;
@@ -353,6 +410,84 @@ export const useTourWizardStore = create<WizardStore>()(
           },
           isDirty: true,
         })),
+
+      updateBookingOption: (id, updates) =>
+        set((state) => ({
+          formData: {
+            ...state.formData,
+            options: state.formData.options.map((option) =>
+              option.id === id ? { ...option, ...updates } : option
+            ),
+          },
+          isDirty: true,
+        })),
+
+      addBookingOption: () =>
+        set((state) => ({
+          formData: {
+            ...state.formData,
+            options: [
+              ...state.formData.options,
+              {
+                id: generateId(),
+                title: '',
+                pickup_instructions: '',
+                guide_languages: [],
+                price: '',
+                capacity: '',
+                start_time: '',
+                weekdays: [],
+              },
+            ],
+          },
+          isDirty: true,
+        })),
+
+      removeBookingOption: (id) =>
+        set((state) => ({
+          formData: {
+            ...state.formData,
+            options: state.formData.options.filter((option) => option.id !== id),
+          },
+          isDirty: true,
+        })),
+
+      adoptSavedOptionIds: (saved) =>
+        set((state) => {
+          if (!Array.isArray(saved) || saved.length === 0) {
+            return state;
+          }
+          const submittedIndexes: number[] = [];
+          state.formData.options.forEach((row, index) => {
+            if (!isPlaceholderOptionRow(row)) {
+              submittedIndexes.push(index);
+            }
+          });
+          let changed = false;
+          const nextOptions = [...state.formData.options];
+          submittedIndexes.forEach((rowIndex, savedIndex) => {
+            const savedOption = saved[savedIndex];
+            if (!isRecord(savedOption)) return;
+            const savedId = savedOption.id;
+            const row = nextOptions[rowIndex];
+            if (
+              typeof savedId === 'number' &&
+              Number.isSafeInteger(savedId) &&
+              row &&
+              row.server_id !== savedId
+            ) {
+              nextOptions[rowIndex] = { ...row, server_id: savedId };
+              changed = true;
+            }
+          });
+          if (!changed) {
+            return state;
+          }
+          return {
+            formData: { ...state.formData, options: nextOptions },
+            isDirty: state.isDirty,
+          };
+        }),
 
       setMedia: (media) =>
         set((state) => ({

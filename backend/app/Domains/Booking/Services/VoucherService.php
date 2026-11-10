@@ -122,6 +122,7 @@ class VoucherService
         $locale = $booking->locale ?? 'en';
 
         return optional($tour->translations->firstWhere('locale', $locale))->title
+            ?? optional($tour->sourceTranslation())->title
             ?? optional($tour->translations->firstWhere('locale', 'en'))->title
             ?? $tour->slug;
     }

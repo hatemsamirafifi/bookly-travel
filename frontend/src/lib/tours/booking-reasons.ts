@@ -64,5 +64,9 @@ export function resolveBookingReasonMessage(
       };
     case 'invalid-route':
       return { scope: 'common', key: 'error' };
+    case 'option-required':
+      return { scope: 'tour', key: 'booking.optionRequired' };
+    case 'option-invalid':
+      return { scope: 'tour', key: 'booking.optionInvalid' };
   }
 }

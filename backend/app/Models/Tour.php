@@ -25,6 +25,15 @@ use Throwable;
 
 class Tour extends Model
 {
+    /**
+     * Content locales the platform can store and serve. Exactly one of them
+     * is the authored source (`tours.source_locale`); the others are generated
+     * derivatives of that source.
+     */
+    public const CONTENT_LOCALES = ['en', 'es', 'it'];
+
+    public const DEFAULT_SOURCE_LOCALE = 'en';
+
     use Searchable {
         queueMakeSearchable as private traitQueueMakeSearchable;
         queueRemoveFromSearch as private traitQueueRemoveFromSearch;
@@ -117,6 +126,7 @@ class Tour extends Model
         'partner_id',
         'category_id',
         'slug',
+        'source_locale',
         'location',
         'location_slug',
         'duration_minutes',
@@ -150,10 +160,20 @@ class Tour extends Model
     public function toSearchableArray(): array
     {
         $translations = $this->translations->keyBy('locale');
-        $en = $translations->get('en');
+        $source = $translations->get($this->sourceLocale());
         $resolver = app(TourTranslationService::class);
-        $es = $resolver->currentTranslation($this, 'es') ?? $en;
-        $it = $resolver->currentTranslation($this, 'it') ?? $en;
+
+        // One projection slot per platform content locale. The authored source
+        // always fills its own slot; a genuinely current derivative fills its
+        // slot, otherwise the source is served as the truthful fallback so no
+        // locale slot is ever silently empty while real content exists.
+        $projected = [];
+        foreach (self::CONTENT_LOCALES as $contentLocale) {
+            $projected[$contentLocale] = $resolver->currentTranslation($this, $contentLocale) ?? $source;
+        }
+        $en = $projected['en'] ?? null;
+        $es = $projected['es'] ?? null;
+        $it = $projected['it'] ?? null;
 
         return [
             'id' => $this->id,
@@ -226,13 +246,21 @@ class Tour extends Model
      * component is approximated with `whereHas('availabilityRules')` (a tour
      * with no rules has no upcoming dates), which matches the search-index
      * behavior closely enough for facet counts and homepage listings.
+     *
+     * A tour that ever configured options is bookable only while at least one
+     * option is active: with no option to select (all retired / no sale) the
+     * tour is accurately unavailable even though its availability rules still
+     * define dates. Tours that never configured options keep legacy behavior.
      */
     public function scopeBookable($query)
     {
         return $query
             ->published()
-            ->where('price_amount', '>', 0)
-            ->whereHas('availabilityRules');
+            ->whereHas('availabilityRules')
+            ->where(function ($query) {
+                $query->where(fn ($legacy) => $legacy->whereDoesntHave('options')->where('tours.price_amount', '>', 0))
+                    ->orWhereHas('options', fn ($options) => $options->active()->where('price_amount', '>', 0));
+            });
     }
 
     public function hasValidPricing(): bool
@@ -240,13 +268,84 @@ class Tour extends Model
         return $this->lowestPriceAmount() > 0;
     }
 
+    /**
+     * Whether any option was ever configured for this tour (active or
+     * retired). Tours that were never configured keep legacy behavior on
+     * every read surface; once options exist, the booking path requires an
+     * explicit option selection and the public availability must reflect the
+     * sellable option set instead of the bare tour schedule.
+     */
+    public function hasOptionsConfigured(): bool
+    {
+        if ($this->relationLoaded('options')) {
+            return $this->options->isNotEmpty();
+        }
+
+        return $this->options()->exists();
+    }
+
+    public function supportsFieldTranslation(): bool
+    {
+        return $this->sourceLocale() === self::DEFAULT_SOURCE_LOCALE && ! $this->hasOptionsConfigured();
+    }
+
+    /**
+     * The active (selectable) options in authored display order. Reads the
+     * eager-loaded relation when present; otherwise one indexed query.
+     */
+    public function activeOptions(): Collection
+    {
+        $options = $this->relationLoaded('options')
+            ? $this->options
+            : $this->options()->get();
+
+        return $options
+            ->filter(fn (TourOption $option) => $option->isActive())
+            ->sortBy([['sort_order', 'asc'], ['id', 'asc']])
+            ->values();
+    }
+
+    public function hasActiveOptions(): bool
+    {
+        if ($this->relationLoaded('options')) {
+            return $this->options->contains(fn (TourOption $option) => $option->isActive());
+        }
+
+        return $this->options()->active()->exists();
+    }
+
     public function hasUpcomingAvailability(): bool
     {
+        // A tour whose options were all retired has nothing to sell on any
+        // of its operating dates: availability is accurately unavailable even
+        // when the schedule still defines dates (no-sale state).
+        if ($this->hasOptionsConfigured() && ! $this->hasActiveOptions()) {
+            return false;
+        }
+
         return count($this->upcomingAvailableDates()) > 0;
     }
 
+    /**
+     * The per-person bookable price for this tour: the minimum among active
+     * options when options are configured (the price a traveler can really
+     * pay), otherwise the legacy tour-level amount for option-less tours.
+     */
     public function lowestPriceAmount(): int
     {
+        $activeOptions = $this->relationLoaded('options')
+            ? $this->options->filter(fn (TourOption $option) => $option->isActive())
+            : null;
+        $hasActiveOptions = $activeOptions !== null
+            ? $activeOptions->isNotEmpty()
+            : $this->options()->active()->exists();
+
+        if ($hasActiveOptions) {
+            $options = $activeOptions ?? $this->options()->active()->get();
+
+            return (int) $options->min('price_amount');
+        }
+
         return (int) ($this->price_amount ?? 0);
     }
 
@@ -508,25 +607,73 @@ class Tour extends Model
      * Resolve the tour's display title from its translations.
      *
      * Tours have no `title` column — titles live in `tour_translations`. This
-     * picks the requested locale, falling back to the app fallback locale
-     * (en), then the first available translation, then an empty string. Used by
-     * review-facing resources so a title is always shown regardless of which
+     * picks the requested locale, falling back to the tour's authored source
+     * locale, then the first available translation, then an empty string. Used
+     * by review-facing resources so a title is always shown regardless of which
      * translations exist. Reuses the eager-loaded `translations` collection
      * when available to avoid an extra query.
      */
     public function displayTitle(?string $locale = null): string
     {
         $locale ??= app()->getLocale();
-        $fallback = config('app.fallback_locale', 'en');
 
         $translations = $this->relationLoaded('translations')
             ? $this->translations
             : $this->translations()->get();
 
         return optional(app(TourTranslationService::class)->currentTranslation($this, $locale))->title
-            ?? optional($translations->firstWhere('locale', $fallback))->title
+            ?? optional($translations->firstWhere('locale', $this->sourceLocale()))->title
             ?? optional($translations->first())->title
             ?? '';
+    }
+
+    /**
+     * The immutable authored-content locale of this tour.
+     *
+     * Existing rows and every pre-source-locale caller default to English;
+     * unknown stored values also read as English rather than leaking an
+     * unsupported locale into generation or projection.
+     */
+    public function sourceLocale(): string
+    {
+        $locale = $this->getAttribute('source_locale');
+
+        return is_string($locale) && in_array($locale, self::CONTENT_LOCALES, true)
+            ? $locale
+            : self::DEFAULT_SOURCE_LOCALE;
+    }
+
+    /**
+     * The authored source translation row, if it exists. Reuses the
+     * eager-loaded collection when available.
+     */
+    public function sourceTranslation(): ?TourTranslation
+    {
+        $translations = $this->relationLoaded('translations')
+            ? $this->translations
+            : $this->translations()->get();
+
+        return $translations->firstWhere('locale', $this->sourceLocale());
+    }
+
+    /**
+     * Locales generated from a given source locale, in stable platform order.
+     *
+     * @return array<int, string>
+     */
+    public static function derivativeLocalesFor(string $sourceLocale): array
+    {
+        return array_values(array_diff(self::CONTENT_LOCALES, [$sourceLocale]));
+    }
+
+    /**
+     * Generated derivative locales of this tour, in stable platform order.
+     *
+     * @return array<int, string>
+     */
+    public function derivativeLocales(): array
+    {
+        return self::derivativeLocalesFor($this->sourceLocale());
     }
 
     public function category(): BelongsTo
@@ -556,6 +703,18 @@ class Tour extends Model
     public function pricingTiers(): HasMany
     {
         return $this->hasMany(PricingTier::class);
+    }
+
+    /**
+     * Every option ever configured for this tour (active + retired), in
+     * authored display order. Retirement never deletes rows, so this relation
+     * is also the stable identity source for generated option translations.
+     *
+     * @return HasMany<TourOption, $this>
+     */
+    public function options(): HasMany
+    {
+        return $this->hasMany(TourOption::class)->orderBy('sort_order')->orderBy('id');
     }
 
     public function availabilityRules(): HasMany

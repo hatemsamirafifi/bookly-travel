@@ -1,4 +1,4 @@
-﻿import type { EnglishSourceInput, OwnedTranslationStatus } from '@/lib/api/types';
+﻿import type { EnglishSourceInput, OwnedTranslationStatus, ContentSourceLocale } from '@/lib/api/types';
 
 export type TourStatus = 'draft' | 'pending_review' | 'published' | 'rejected' | 'archived';
 
@@ -62,6 +62,23 @@ export interface AvailabilityException {
   reason?: string;
 }
 
+/**
+ * An owned, authored booking option exactly as serialized by the partner
+ * tour detail (`TourResource` options key): only active options are listed,
+ * prices are integer minor units (cents), and content stays in the option's
+ * authored source language.
+ */
+export interface OwnedTourOption {
+  id: number;
+  title: string;
+  pickup_instructions: string | null;
+  guide_languages: string[];
+  price_amount: number;
+  group_size_max: number | null;
+  start_time: string | null;
+  weekdays: number[] | null;
+}
+
 export interface Tour {
   id: string | number;
   partner_id: string | number;
@@ -88,12 +105,18 @@ export interface Tour {
   }>;
   /** Owned responses return localized rows; writes use nested English input. */
   translations?: Array<EnglishSourceInput & { locale: string }>;
-  /** Sanitized owned readiness; hashes/provider errors never serialized. */
-  translation_statuses?: { es: OwnedTranslationStatus; it: OwnedTranslationStatus };
+  /** Sanitized owned readiness; hashes/provider errors never serialized.
+   *  Keys are the generated (non-source) locales, so a non-English source
+   *  tour reports its other two languages instead of es/it. */
+  translation_statuses?: Partial<{ en: OwnedTranslationStatus; es: OwnedTranslationStatus; it: OwnedTranslationStatus }>;
   highlights: string[];
   inclusions: string[];
   exclusions: string[];
   cancellation_policy: string;
+  /** Actual language of the authored source content (legacy tours: 'en'). */
+  source_locale?: ContentSourceLocale | null;
+  /** Authored active bookable options; absent means none are stored. */
+  options?: OwnedTourOption[];
   /** Spoken/live-guide codes; not the EN/ES/IT content translation locales. */
   languages?: string[];
   guide_languages?: string[] | null;

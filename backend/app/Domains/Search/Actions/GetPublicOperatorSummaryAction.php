@@ -27,7 +27,7 @@ class GetPublicOperatorSummaryAction
         // per-tour N+1 query is issued.
         $eligibleTourIds = Tour::bookable()
             ->where('partner_id', $partner->id)
-            ->with(['availabilityRules', 'availabilityExceptions'])
+            ->with(['availabilityRules', 'availabilityExceptions', 'options'])
             ->get()
             ->filter(fn (Tour $candidate) => $candidate->isPubliclyBookable())
             ->map(fn (Tour $candidate) => $candidate->id)

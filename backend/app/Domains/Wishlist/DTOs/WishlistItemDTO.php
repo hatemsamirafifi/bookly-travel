@@ -13,7 +13,8 @@ class WishlistItemDTO
 
         if ($tour->relationLoaded('translations')) {
             $translation = $tour->translations->firstWhere('locale', $locale)
-                ?? $tour->translations->firstWhere('locale', 'en');
+                ?? $tour->sourceTranslation()
+                ?? $tour->translations->first();
         }
 
         return [

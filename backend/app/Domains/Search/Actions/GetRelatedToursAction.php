@@ -85,7 +85,10 @@ class GetRelatedToursAction
         return Tour::bookable()
             ->select(['tours.*', 'genuine_stats.genuine_review_count', 'genuine_stats.genuine_average_rating'])
             ->whereKeyNot($tour->id)
-            ->whereHas('translations', fn (Builder $query) => $query->where('locale', 'en'))
+            // Any stored content is enough: the card transformer projects the
+            // requested locale, then the tour's own authored source, so a
+            // non-English source is not silently excluded.
+            ->whereHas('translations')
             ->where(function (Builder $query) use ($tour): void {
                 if ($tour->location_slug) {
                     $query->where('tours.location_slug', $tour->location_slug);
@@ -97,7 +100,7 @@ class GetRelatedToursAction
                 }
             })
             ->leftJoinSub($genuineStats, 'genuine_stats', 'tours.id', '=', 'genuine_stats.tour_id')
-            ->with(['translations', 'translationStates', 'category', 'media', 'availabilityRules', 'availabilityExceptions'])
+            ->with(['translations', 'translationStates', 'category', 'media', 'availabilityRules', 'availabilityExceptions', 'options'])
             ->orderByRaw('CASE WHEN tours.location_slug = ? THEN 0 ELSE 1 END', [$tour->location_slug])
             ->orderByRaw('CASE WHEN tours.category_id = ? THEN 0 ELSE 1 END', [$tour->category_id])
             ->orderByRaw('CASE WHEN genuine_stats.genuine_review_count > 0 THEN 0 ELSE 1 END')

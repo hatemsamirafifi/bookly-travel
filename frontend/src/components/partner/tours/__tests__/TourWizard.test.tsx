@@ -29,6 +29,7 @@ if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
 }
 
 const baseForm: TourFormData = {
+  source_locale: 'en',
   title: 'Morning walking tour',
   description: 'A wonderful tour through Florence with a local guide, visiting celebrated landmarks and hidden corners.',
   category: 'walking',
@@ -48,6 +49,7 @@ const baseForm: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 2,
   group_size_max: 7,
 };
@@ -153,17 +155,43 @@ describe('TourWizard (Spec 019)', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
-  it('updates the retained draft instead of duplicating on save retry', async () => {
-    seedForm();
-    mockedCreateTour.mockResolvedValue({ data: { id: 11, status: 'draft' } });
+  it('saves a Spanish source with an Arabic guide and reuses the option id on the next save', async () => {
+    const option = {
+      id: 'morning',
+      title: 'Salida por la mañana',
+      pickup_instructions: 'Junto a la fuente',
+      guide_languages: ['ar'],
+      price: '55',
+      capacity: '',
+      start_time: '09:00',
+      weekdays: [1],
+    };
+    seedForm({ source_locale: 'es', title: 'Paseo por Florencia', options: [option] });
+    mockedCreateTour.mockResolvedValue({
+      data: { id: 11, status: 'draft', options: [{ id: 23, title: option.title }] },
+    });
     mockedUpdateTour.mockResolvedValue({ data: { id: 11, status: 'draft' } });
     render(<TourWizard />);
     fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
-    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    await screen.findByText('wizard.saved');
+    const createPayload = mockedCreateTour.mock.calls[0][0];
+    expect(createPayload.source_locale).toBe('es');
+    expect(Object.keys(createPayload.translations)).toEqual(['es']);
+    expect(createPayload.translations.es.title).toBe('Paseo por Florencia');
+    expect(createPayload.options[0]).toMatchObject({
+      title: option.title,
+      pickup_instructions: option.pickup_instructions,
+      guide_languages: ['ar'],
+      price_amount: 5500,
+      group_size_max: null,
+    });
+    expect(createPayload.options[0]).not.toHaveProperty('id');
 
     fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
     await waitFor(() => expect(mockedUpdateTour).toHaveBeenCalledTimes(1));
     expect(mockedUpdateTour.mock.calls[0][0]).toBe(11);
+    expect(mockedUpdateTour.mock.calls[0][1].options[0].id).toBe(23);
+    expect(mockedUpdateTour.mock.calls[0][1]).not.toHaveProperty('source_locale');
     expect(mockedCreateTour).toHaveBeenCalledTimes(1);
   });
 

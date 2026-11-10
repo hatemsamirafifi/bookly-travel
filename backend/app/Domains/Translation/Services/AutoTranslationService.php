@@ -121,6 +121,12 @@ class AutoTranslationService
             return $dispatched;
         }
 
+        // The tour pipeline handles non-English sources and option texts as
+        // one revision. The field engine continues to handle legacy tours.
+        if ($model instanceof Tour && ! $model->supportsFieldTranslation()) {
+            return $dispatched;
+        }
+
         foreach (self::TARGET_LOCALES as $locale) {
             foreach ($fields as $fieldName => $isHtml) {
                 $enValue = $this->localizedValue($model, $fieldName, 'en');
@@ -359,7 +365,7 @@ class AutoTranslationService
             return;
         }
 
-        $tourHash = app(TourTranslationService::class)->sourceHash($enRow);
+        $tourHash = app(TourTranslationService::class)->sourceHash($enRow, $tour);
         $targetRow = $tour->translations()->where('locale', $locale)->first();
 
         if ($hasQueuedFields) {

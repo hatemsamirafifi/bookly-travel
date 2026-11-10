@@ -4,8 +4,10 @@ namespace App\Domains\Search\Actions;
 
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Models\Tour;
+use App\Models\TourOption;
 use App\Models\TourTranslation;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Carbon;
 
 class GetTourDetailAction
 {
@@ -18,7 +20,7 @@ class GetTourDetailAction
     public function execute(string $slug, string $locale): array
     {
         $tour = Tour::with([
-            'translations', 'translationStates', 'category', 'media',
+            'translations', 'translationStates', 'category', 'media', 'options.translations',
             'partnerRecord' => fn ($query) => $query->select(['id', 'onboarding_status', 'is_active']),
             'partnerRecord.profile' => fn ($query) => $query->select(['id', 'partner_id', 'company_name', 'business_description', 'logo_url']),
             'availabilityRules', 'availabilityExceptions',
@@ -58,19 +60,24 @@ class GetTourDetailAction
         $isUnavailable = ! $tour->isPubliclyBookable();
 
         // Reuse the eager-loaded `translations` collection (no extra query).
-        $english = $tour->translations->firstWhere('locale', 'en');
+        // The requested locale is served only when it is the authored source or
+        // a derivative whose translated hash still matches the current source;
+        // otherwise the actual source content is served with its truthful
+        // language, independent of spoken guide languages and the UI locale.
+        $sourceLocale = $tour->sourceLocale();
+        $source = $tour->sourceTranslation();
         $translation = $this->translationService->currentTranslation($tour, $locale);
-        $t = $translation ?? $english;
-        $englishItinerary = optional($english)->itinerary;
-        $hasNonemptyEnglishItinerary = is_array($englishItinerary) && count($englishItinerary) > 0;
-        // An explicit [] derivative stays empty; missing/empty English never warns.
-        $itineraryFallback = $locale !== 'en'
-            && $hasNonemptyEnglishItinerary
+        $t = $translation ?? $source;
+        $sourceItinerary = optional($source)->itinerary;
+        $hasNonemptySourceItinerary = is_array($sourceItinerary) && count($sourceItinerary) > 0;
+        // An explicit [] derivative stays empty; a missing/empty source never warns.
+        $itineraryFallback = $locale !== $sourceLocale
+            && $hasNonemptySourceItinerary
             && ($translation === null || optional($t)->itinerary === null);
         $contentLocale = optional($t)->locale ?? $locale;
 
         /** @var mixed $selectedItinerary */
-        $selectedItinerary = optional($t)->itinerary ?? $englishItinerary ?? [];
+        $selectedItinerary = optional($t)->itinerary ?? $sourceItinerary ?? [];
         if (! is_array($selectedItinerary)) {
             $selectedItinerary = [];
         }
@@ -78,16 +85,16 @@ class GetTourDetailAction
         // itinerary retains the selected content locale without claiming
         // translated text exists.
         $itineraryLocale = count($selectedItinerary) > 0
-            ? ($itineraryFallback ? 'en' : $contentLocale)
+            ? ($itineraryFallback ? $sourceLocale : $contentLocale)
             : $contentLocale;
 
         // Spec 019 US4 T052: allImageUrls stays authoritative for order,
         // dedup, legacy fallback and no-image []. Per-URL specific alt comes
         // from the eager-loaded media collection (no extra queries):
-        // nonblank English alt projects with alt_locale=en, otherwise the
-        // selected current title with the actual content locale (not the
-        // requested locale when falling back to EN). No placeholder or
-        // fabricated photo is introduced.
+        // nonblank authored alt projects with the authored source locale,
+        // otherwise the selected current title with the actual content locale
+        // (not the requested locale when falling back to the source). No
+        // placeholder or fabricated photo is introduced.
         $images = $tour->allImageUrls();
         $mediaRows = $tour->relationLoaded('media') ? $tour->media : collect();
         $specificAltByUrl = [];
@@ -113,7 +120,7 @@ class GetTourDetailAction
                     'url' => $url,
                     'is_cover' => $i === 0,
                     'alt' => $specific,
-                    'alt_locale' => 'en',
+                    'alt_locale' => $sourceLocale,
                 ];
             } else {
                 $imageObjects[] = [
@@ -126,6 +133,19 @@ class GetTourDetailAction
         }
 
         $availableDates = $tour->upcomingAvailableDates();
+
+        // Real purchasable options of this tour. A tour that ever configured
+        // options but has none active right now is accurately unavailable: no
+        // option can be selected for any date, so the sellable date surface
+        // collapses to empty while the (retired) option history stays
+        // server-side only. Tours that never configured options keep the
+        // exact legacy availability behavior.
+        $activeOptions = $tour->activeOptions();
+        $noSaleOptions = $tour->hasOptionsConfigured() && $activeOptions->isEmpty();
+        $isUnavailable = $isUnavailable || $noSaleOptions;
+        if ($noSaleOptions) {
+            $availableDates = [];
+        }
 
         // Bounded primary-review fix: derive the public aggregate from the
         // same actual visible+flagged review set as the distribution (one
@@ -140,6 +160,10 @@ class GetTourDetailAction
             + 2 * (int) ($reviewDistribution['2'] ?? 0)
             + 1 * (int) ($reviewDistribution['1'] ?? 0);
         $reviewAverage = $reviewCount > 0 ? round($reviewSum / $reviewCount, 2) : 0;
+
+        $optionObjects = $activeOptions
+            ->map(fn (TourOption $option): array => $this->buildOptionObject($tour, $option, $locale, $availableDates))
+            ->all();
 
         $data = [
             'id' => $tour->id,
@@ -210,8 +234,14 @@ class GetTourDetailAction
             'seo' => $this->buildSeoMetadata($tour, $t, $locale),
         ];
 
-        // `partial_translation` summarizes actual nonempty English fallbacks only.
-        $generalFallback = $locale !== 'en' && ! $translation && $english && $this->hasNonemptyGeneralContent($english);
+        // Real purchasable departures. Empty when the tour never configured
+        // options (legacy shape, no `options` consumers) and when every
+        // configured option is retired (no-sale state above).
+        $data['options'] = $optionObjects;
+
+        // `partial_translation` summarizes actual nonempty source-language
+        // fallbacks only.
+        $generalFallback = $locale !== $sourceLocale && ! $translation && $source && $this->hasNonemptyGeneralContent($source);
         if ($generalFallback || $itineraryFallback) {
             $data['translation_warning'] = 'partial_translation';
         }
@@ -220,21 +250,21 @@ class GetTourDetailAction
     }
 
     /**
-     * Whether the English source carries any nonempty general traveler
+     * Whether the authored source carries any nonempty general traveler
      * content worth disclosing as a fallback. Lists count when any entry
      * is a nonempty string.
      */
-    protected function hasNonemptyGeneralContent(TourTranslation $english): bool
+    protected function hasNonemptyGeneralContent(TourTranslation $source): bool
     {
         foreach (['title', 'description', 'meeting_point', 'cancellation_policy'] as $field) {
-            $value = $english->{$field};
+            $value = $source->{$field};
             if (is_string($value) && trim($value) !== '') {
                 return true;
             }
         }
 
         foreach (['highlights', 'inclusions', 'exclusions', 'important_information'] as $field) {
-            $value = $english->{$field};
+            $value = $source->{$field};
             if (is_array($value)) {
                 foreach ($value as $entry) {
                     if (is_string($entry) && trim($entry) !== '') {
@@ -245,6 +275,57 @@ class GetTourDetailAction
         }
 
         return false;
+    }
+
+    /**
+     * One purchasable option in the public detail contract.
+     *
+     * `pricing` and `availability` reuse the exact top-level shapes
+     * (base_price{amount,currency,formatted} + tiered_pricing:null;
+     * next_available_date/available_dates/is_unavailable), so the booking
+     * form consumes them identically. `available_dates` intersects the
+     * tour's operating dates with the option's own weekday allow-list, and
+     * `next_available_date` stays strictly future (CreateBookingAction
+     * rejects today). The option texts carry the locale that is actually
+     * served — derivative locale when the derivative is current, else the
+     * authored source — matching the tour-level fallback contract.
+     */
+    protected function buildOptionObject(Tour $tour, TourOption $option, string $locale, array $tourDates): array
+    {
+        $text = $this->translationService->localizedOptionText($tour, $option, $locale);
+
+        $dates = array_values(array_filter(
+            $tourDates,
+            fn (string $date): bool => $option->coversWeekday(Carbon::parse($date))
+        ));
+
+        $priceAmount = (int) $option->price_amount;
+
+        return [
+            'id' => $option->id,
+            'title' => $text['title'],
+            'pickup_instructions' => $text['pickup_instructions'],
+            'content_locale' => $text['content_locale'],
+            'guide_languages' => $option->guideLanguages(),
+            'start_time' => $option->startTimeString(),
+            'pricing' => [
+                'base_price' => [
+                    'amount' => $priceAmount,
+                    'currency' => $tour->currency(),
+                    'formatted' => Tour::formatPrice($priceAmount, $tour->currency()),
+                ],
+                'tiered_pricing' => null,
+            ],
+            'availability' => [
+                'next_available_date' => $this->firstFutureDate($dates),
+                'available_dates' => $dates,
+                'is_unavailable' => $dates === [],
+            ],
+            'group_size' => [
+                'min' => $tour->group_size_min,
+                'max' => $option->effectiveCapacity($tour),
+            ],
+        ];
     }
 
     /**
