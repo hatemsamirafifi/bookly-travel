@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { sanitizeHtml } from '@/lib/sanitizeHtml';
 
 /** Preview budget for long descriptions, counted in Unicode code points. */
 export const DESCRIPTION_PREVIEW_CODE_POINTS = 600;
@@ -24,14 +25,23 @@ export default function TourOverview({ text, contentLocale }: TourOverviewProps)
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
+  const hasHtml = /<[a-z][\s\S]*>/i.test(text);
   const codePoints = Array.from(text);
   if (codePoints.length <= DESCRIPTION_PREVIEW_CODE_POINTS) {
     return (
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-3 text-section-title font-bold text-primary">{t('about')}</h2>
-        <div lang={contentLocale} className="prose prose-gray max-w-none text-primary/80 whitespace-pre-line">
-          {text}
-        </div>
+        {hasHtml ? (
+          <div
+            lang={contentLocale}
+            className="prose prose-gray max-w-none text-primary/80"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }}
+          />
+        ) : (
+          <div lang={contentLocale} className="prose prose-gray max-w-none text-primary/80 whitespace-pre-line">
+            {text}
+          </div>
+        )}
       </section>
     );
   }
@@ -48,14 +58,24 @@ export default function TourOverview({ text, contentLocale }: TourOverviewProps)
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-3 text-section-title font-bold text-primary">{t('about')}</h2>
-      <div
-        id={panelId}
-        ref={panelRef}
-        lang={contentLocale}
-        className="prose prose-gray max-w-none text-primary/80 whitespace-pre-line"
-      >
-        {expanded ? text : preview}
-      </div>
+      {hasHtml ? (
+        <div
+          id={panelId}
+          ref={panelRef}
+          lang={contentLocale}
+          className="prose prose-gray max-w-none text-primary/80"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(expanded ? text : preview) }}
+        />
+      ) : (
+        <div
+          id={panelId}
+          ref={panelRef}
+          lang={contentLocale}
+          className="prose prose-gray max-w-none text-primary/80 whitespace-pre-line"
+        >
+          {expanded ? text : preview}
+        </div>
+      )}
       <button
         ref={toggleRef}
         type="button"

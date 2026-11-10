@@ -4,3 +4,4 @@ export { TourWizard } from './TourWizard';
 export { ImageUploader } from './ImageUploader';
 export { PricingTierForm } from './PricingTierForm';
 export { AvailabilityCalendar } from './AvailabilityCalendar';
+export { PartnerRichTextEditor } from './PartnerRichTextEditor';

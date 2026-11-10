@@ -33,6 +33,14 @@ class ProcessMediaAssetJob implements ShouldQueue
             return;
         }
 
+        if (! Storage::disk($asset->disk)->exists($asset->storage_key)) {
+            $asset->update([
+                'processing_status' => MediaAsset::STATUS_FAILED,
+            ]);
+
+            return;
+        }
+
         $variantData = $this->buildVariants($asset);
 
         $asset->update(array_merge($variantData, [
@@ -117,6 +125,12 @@ class ProcessMediaAssetJob implements ShouldQueue
     {
         try {
             $disk = Storage::disk($asset->disk);
+            $fullThumbPath = $disk->path($thumbKey);
+            $thumbDir = dirname($fullThumbPath);
+            if (! is_dir($thumbDir)) {
+                @mkdir($thumbDir, 0775, true);
+            }
+
             $image = match ($asset->mime_type) {
                 'image/jpeg' => @imagecreatefromjpeg($disk->path($asset->storage_key)),
                 'image/png' => @imagecreatefrompng($disk->path($asset->storage_key)),

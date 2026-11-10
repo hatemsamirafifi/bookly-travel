@@ -6,6 +6,7 @@ use App\Domains\Partner\Controllers\AvailabilityController;
 use App\Domains\Partner\Controllers\BookingController;
 use App\Domains\Partner\Controllers\NotificationController;
 use App\Domains\Partner\Controllers\OnboardingStatusController;
+use App\Domains\Partner\Controllers\PartnerHugeRteMediaController;
 use App\Domains\Partner\Controllers\PartnerStripeConnectController;
 use App\Domains\Partner\Controllers\PricingController;
 use App\Domains\Partner\Controllers\ProfileController;
@@ -30,6 +31,11 @@ Route::middleware(['auth:sanctum', 'partner'])->group(function () {
         Route::post('signed-url', [UploadController::class, 'signedUrl'])
             ->middleware('throttle:booking.create');
     });
+
+    // HugeRTE Media Library integration for Partners (scoped strictly to partner's owned tour media)
+    Route::get('hugerte/media', PartnerHugeRteMediaController::class)
+        ->name('partner.hugerte.media')
+        ->middleware('throttle:booking.get');
 
     // Tours
     Route::prefix('tours')->middleware('throttle:booking.get')->group(function () {

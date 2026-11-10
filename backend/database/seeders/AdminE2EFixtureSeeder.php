@@ -23,6 +23,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AdminE2EFixtureSeeder extends Seeder
@@ -289,20 +290,45 @@ class AdminE2EFixtureSeeder extends Seeder
         }
 
         // 8. MediaAsset for Media Library & MediaPicker
+        $fixtureKey = 'media/2026/08/e2e-amalfi-hero.jpg';
+        $disk = Storage::disk('public');
+        if (! $disk->exists($fixtureKey)) {
+            $img = imagecreatetruecolor(1600, 900);
+            $bg = imagecolorallocate($img, 30, 60, 90);
+            imagefill($img, 0, 0, $bg);
+            $textColor = imagecolorallocate($img, 240, 240, 240);
+            imagestring($img, 5, 50, 50, 'E2E Amalfi Hero Fixture', $textColor);
+            ob_start();
+            imagejpeg($img, null, 85);
+            $imageContent = (string) ob_get_clean();
+            imagedestroy($img);
+
+            $disk->put($fixtureKey, $imageContent);
+        }
+
+        $realPath = $disk->path($fixtureKey);
+        $fileSize = $disk->size($fixtureKey);
+        $checksum = hash_file('sha256', $realPath);
+        $imageInfo = @getimagesize($realPath);
+        $width = $imageInfo ? (int) $imageInfo[0] : 1600;
+        $height = $imageInfo ? (int) $imageInfo[1] : 900;
+        $mime = $imageInfo ? (string) $imageInfo['mime'] : 'image/jpeg';
+        $isReadable = is_readable($realPath);
+
         MediaAsset::query()->updateOrCreate(
-            ['storage_key' => 'media/2026/08/e2e-amalfi-hero.jpg'],
+            ['storage_key' => $fixtureKey],
             [
                 'uuid' => (string) Str::uuid(),
                 'disk' => 'public',
                 'filename' => 'e2e-amalfi-hero.jpg',
                 'original_filename' => 'e2e-amalfi-hero.jpg',
-                'mime_type' => 'image/jpeg',
+                'mime_type' => $mime,
                 'extension' => 'jpg',
-                'size_bytes' => 40960,
-                'width' => 1600,
-                'height' => 900,
-                'checksum_sha256' => hash('sha256', 'e2e-amalfi-hero.jpg'),
-                'processing_status' => 'ready',
+                'size_bytes' => $fileSize,
+                'width' => $width,
+                'height' => $height,
+                'checksum_sha256' => $checksum,
+                'processing_status' => $isReadable ? 'ready' : 'failed',
                 'visibility' => 'public',
                 'title' => ['en' => 'Amalfi Hero Shot'],
                 'alt_text' => ['en' => 'Amalfi Coast Sunset'],
