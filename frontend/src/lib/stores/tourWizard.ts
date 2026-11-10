@@ -273,7 +273,9 @@ function generateId(): string {
 }
 
 const initialState: WizardState = {
-  currentStep: 'details',
+  // The Language (source) screen is the wizard's first step: a fresh or
+  // reset form always starts there, never past the writing-language gate.
+  currentStep: 'source',
   formData: { ...INITIAL_FORM },
   isDirty: false,
   isSubmitting: false,

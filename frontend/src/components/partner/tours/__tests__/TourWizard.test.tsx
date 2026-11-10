@@ -117,6 +117,18 @@ describe('TourWizard (Spec 019)', () => {
     expect(screen.getByLabelText('form.title')).not.toHaveAttribute('maxlength');
   });
 
+  it('opens a fresh wizard on the source language step', () => {
+    useTourWizardStore.getState().reset();
+    render(<TourWizard />);
+    // The Language step precedes Details: a fresh/reset form can never author
+    // content before the original writing language is chosen.
+    expect(useTourWizardStore.getState().currentStep).toBe('source');
+    expect(screen.getByRole('heading', { name: 'wizard.source' })).toBeInTheDocument();
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-label', 'form.sourceLanguageLabel');
+    // First step owns no Back affordance until a step precedes it.
+    expect(screen.getByRole('button', { name: 'wizard.prevStep' })).toBeDisabled();
+  });
+
   it('sends nested English source with all fields while preserving pricing and availability', async () => {
     seedForm({
       pricing_tiers: [{ id: 't1', name: 'Adult', price: '50', currency: 'USD', min_participants: 1, max_participants: 10 }],
