@@ -97,7 +97,7 @@ class MediaAssetResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('preview')
                     ->label('')
-                    ->getStateUsing(fn (MediaAsset $record): string => $record->publicUrl())
+                    ->getStateUsing(fn (MediaAsset $record): string => $record->previewUrl())
                     ->extraImgAttributes(['loading' => 'lazy'])
                     ->circular(false),
                 Tables\Columns\TextColumn::make('original_filename')
@@ -127,11 +127,13 @@ class MediaAssetResource extends Resource
                 Tables\Columns\TextColumn::make('processing_status')
                     ->label('Status')
                     ->badge()
-                    ->colors([
-                        'success' => 'ready',
-                        'warning' => 'pending',
-                        'danger' => 'failed',
-                    ]),
+                    ->color(fn (MediaAsset $record): string => match (true) {
+                        ! $record->fileExists() => 'danger',
+                        $record->processing_status === MediaAsset::STATUS_READY => 'success',
+                        $record->processing_status === MediaAsset::STATUS_FAILED => 'danger',
+                        default => 'warning',
+                    })
+                    ->formatStateUsing(fn (MediaAsset $record): string => ! $record->fileExists() ? 'Missing file' : ucfirst($record->processing_status)),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('folder')

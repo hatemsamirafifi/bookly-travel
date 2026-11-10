@@ -44,12 +44,14 @@ class PartnerRoleMiddleware
             'api/partner/onboarding*',
             'api/partner/onboarding-status*',
             'api/partner/notifications*',
+            'api/partner/hugerte*',
             'partner/profile*',
             'partner/settings*',
             'partner/stripe*',
             'partner/onboarding*',
             'partner/onboarding-status*',
-            'partner/notifications*'
+            'partner/notifications*',
+            'partner/hugerte*'
         ) || (($request->is('api/partner/tours*') || $request->is('partner/tours*')) && $request->isMethod('GET'));
 
         if ($isAllowedEndpoint) {

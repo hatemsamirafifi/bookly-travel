@@ -423,6 +423,7 @@ class TourResource extends Resource
                             ->placeholder('English source missing'),
                         Infolists\Components\TextEntry::make('english_source_description')
                             ->label('Description')
+                            ->html()
                             ->getStateUsing(fn (Tour $record): ?string => $record->translations->firstWhere('locale', 'en')?->description)
                             ->placeholder('English source missing'),
                         Infolists\Components\TextEntry::make('english_source_itinerary')

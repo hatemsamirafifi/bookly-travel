@@ -1,3 +1,4 @@
+import { sanitizeHtml } from '@/lib/sanitizeHtml';
 import { useTranslations } from 'next-intl';
 import ImageGallery from '@/components/tour/ImageGallery';
 import type { TourItineraryDay, OwnedTranslationStatus } from '@/lib/api/types';
@@ -42,7 +43,17 @@ export function TourContentPreview({
     <section className="space-y-5 rounded-xl border border-border bg-surface p-4 shadow-sm sm:p-6" aria-label={t('previewTour')}>
       <h2 lang="en" className="text-2xl font-bold text-bookly-navy">{title || '—'}</h2>
       {images.length > 0 && <ImageGallery images={images} title={title} />}
-      {description && <p lang="en" className="whitespace-pre-line text-text-muted">{description}</p>}
+      {description && (
+        /<[a-z][\s\S]*>/i.test(description) ? (
+          <div
+            lang="en"
+            className="prose prose-sm max-w-none text-text-muted"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
+          />
+        ) : (
+          <p lang="en" className="whitespace-pre-line text-text-muted">{description}</p>
+        )
+      )}
       {highlights.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-xl font-semibold text-bookly-navy">{t('highlights')}</h3>

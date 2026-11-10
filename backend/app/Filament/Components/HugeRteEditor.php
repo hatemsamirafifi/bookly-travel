@@ -1,21 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Components;
 
 use App\Domains\CMS\Services\HtmlSanitizerService;
 use Filament\Forms\Components\Field;
 
 /**
- * Self-hosted rich-text editor (Admin 2.0 Phase G, T-G04).
- *
- * Replaces Filament's CDN-dependent RichEditor with a contenteditable editor
- * backed by `public/vendor/hugerte/hugerte.min.js`. The field keeps the plain
- * `body_*` field names so existing persistence and tests are unchanged, and
- * sanitizes the raw HTML through the server-side allow-list on dehydrate.
- *
- * Toolbar buttons are grouped into profiles:
- *   `full`  — the complete editorial set (default),
- *   `basic` — inline formatting only (stubs for Ulte for ulterior use).
+ * Official HugeRTE integration. HTML is sanitized on save by the existing
+ * CMS allow-list. No schema changes and no remote/CDN runtime dependencies.
  */
 class HugeRteEditor extends Field
 {
@@ -28,26 +22,22 @@ class HugeRteEditor extends Field
      */
     public static array $toolbars = [
         'full' => [
-            'bold',
-            'italic',
-            'underline',
-            'strikethrough',
-            'heading1',
-            'heading2',
-            'heading3',
-            'paragraph',
-            'orderedlist',
-            'unorderedlist',
-            'blockquote',
-            'link',
-            'unlink',
+            'undo', 'redo', '|',
+            'blocks', 'fontfamily', 'fontsize', '|',
+            'bold', 'italic', 'underline', 'strikethrough', '|',
+            'forecolor', 'backcolor', '|',
+            'alignleft', 'aligncenter', 'alignright', 'alignjustify', '|',
+            'bullist', 'numlist', 'outdent', 'indent', '|',
+            'link', 'image', 'table', '|',
+            'blockquote', 'codesample', '|',
+            'searchreplace', 'preview', 'code', 'fullscreen', '|',
+            'wordcount',
         ],
         'basic' => [
-            'bold',
-            'italic',
-            'underline',
-            'paragraph',
-            'unorderedlist',
+            'undo', 'redo', '|',
+            'bold', 'italic', 'underline', '|',
+            'blocks', '|',
+            'bullist', 'numlist', '|',
             'link',
         ],
     ];
