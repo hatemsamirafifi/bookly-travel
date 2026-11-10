@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import {
   apiGet,
+  enterEnglishTourDetails,
   apiPost,
   apiPut,
   LONG_DESCRIPTION,
@@ -8,20 +9,6 @@ import {
   ownedEnglishSource,
   uniqueTitle,
 } from './tour-content-helpers';
-
-const englishSourceControls = {
-  en: { radio: /^English\b/, next: 'Next' },
-  es: { radio: /^Inglés\b/, next: 'Siguiente' },
-  it: { radio: /^Inglese\b/, next: 'Avanti' },
-} as const;
-
-async function enterEnglishTourDetails(page: Page, locale: keyof typeof englishSourceControls = 'en') {
-  const { radio, next } = englishSourceControls[locale];
-  const english = page.getByRole('radio', { name: radio });
-  await english.click();
-  await expect(english).toHaveAttribute('aria-checked', 'true');
-  await page.getByRole('button', { name: next, exact: true }).click();
-}
 
 async function fillTourDescription(page: Page, text: string) {
   // Wait for either HugeRTE to initialize or fallback textarea to stay ready
@@ -460,7 +447,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     // through the real step forms below so their validations stay exercised.
     const wizardSeed = {
       state: {
-        currentStep: 'details',
+        currentStep: 'source',
         formData: {
           title: '',
           description: '',
@@ -628,6 +615,8 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   test('renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix', async ({
     page,
   }, testInfo) => {
+    // Each viewport starts a fresh authoring flow instead of restoring Details.
+    await page.addInitScript(() => localStorage.removeItem('partner-tour-wizard'));
     const notices: Record<string, string> = {
       en: 'Original content is written in English. The other two languages are generated automatically and never block publication.',
       es: 'El contenido original está escrito en English. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.',
