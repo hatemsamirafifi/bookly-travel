@@ -3,26 +3,37 @@
 namespace App\Domains\Admin\Actions;
 
 use App\Domains\Admin\Services\GovernanceAuditService;
+use App\Domains\Admin\Services\TourPublicationGuardService;
 use App\Enums\TourStatus;
 use App\Models\Tour;
+use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Publish (approve) a tour (Spec 013, FR-003/FR-005).
- *
- * Asserts the Tour::canTransitionTo() guard — publishing is blocked unless the
- * owning partner is approved (FR-005) and the tour is in a submittable state.
- * Writes an immutable `tour.publish` governance audit entry.
+ * Publish an eligible reviewed tour and record its governance event atomically.
+ * Owner and tour locks serialize publication with suspension and content saves.
+ * Authorization is checked after locking against the persisted actor and record.
+ * Derivative readiness never participates in publication validation.
  */
 class ApproveTourAction
 {
-    public function __construct(private readonly GovernanceAuditService $audit) {}
+    public function __construct(
+        private readonly GovernanceAuditService $audit,
+        private readonly TourPublicationGuardService $publicationGuard,
+    ) {}
 
     public function execute(User $actor, Tour $tour): Tour
     {
         return DB::transaction(function () use ($actor, $tour) {
-            $locked = Tour::lockForUpdate()->find($tour->id) ?? $tour;
+            $locked = $this->publicationGuard->lockTourForMutation($tour);
+            $authorizedActor = $this->publicationGuard->resolveAuthorizedPublisher($actor, $locked);
+            $sourceLocale = $locked->sourceLocale();
+            $source = TourTranslation::query()
+                ->where('tour_id', $locked->id)
+                ->where('locale', $sourceLocale)
+                ->lockForUpdate()
+                ->first();
 
             abort_unless(
                 $locked->canTransitionTo(TourStatus::Published),
@@ -30,8 +41,6 @@ class ApproveTourAction
                 'Tour cannot be published from its current state, or the owning partner is not approved.',
             );
 
-            $sourceLocale = $locked->sourceLocale();
-            $source = $locked->translations()->where('locale', $sourceLocale)->first();
             abort_unless(
                 $source && filled($source->title) && filled($source->description),
                 422,
@@ -46,14 +55,14 @@ class ApproveTourAction
             // published. The tour-detail endpoint uses a non-null `published_at`
             // to decide 410 (was once public) vs 404 (never was) for archived
             // tours (tour-detail-api.md:107-114). Preserve an existing stamp on
-            // re-publish after archive.
+            // publication after resubmission.
             $locked->update([
                 'status' => TourStatus::Published->value,
                 'published_at' => $locked->published_at ?? now(),
             ]);
             $locked->refresh();
 
-            $this->audit->log($actor, 'tour.publish', $locked, $before, ['status' => $locked->status]);
+            $this->audit->log($authorizedActor, 'tour.publish', $locked, $before, ['status' => $locked->status]);
 
             return $locked;
         });

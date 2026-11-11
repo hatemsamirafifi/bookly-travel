@@ -1,6 +1,6 @@
 # Quickstart and Acceptance Guide: Spec 019
 
-**Status**: Instructions for subsequent implementation; no runtime gates in this guide were executed during planning.
+**Status**: Instructions for subsequent implementation; no runtime gates in this guide were executed during planning. Updated 2026-11-10 for [Constitution v3.0.0](../../.specify/memory/constitution.md): the authored source is the tour's fixed canonical locale (`en`/`es`/`it`), per the [spec.md Amendment Record](spec.md); the 2026-10-12 executed acceptance remains historical v2.1.0 evidence.
 **Contracts**: [public](contracts/tour-detail-api.md), [partner](contracts/partner-tour-content-api.md), [generation](contracts/translation-generation.md).
 **Model**: [data-model.md](data-model.md).
 
@@ -46,20 +46,21 @@ The API_INTERNAL_URL above applies to native host execution. Keep tests serializ
 
 | Scenario | Procedure / expected result | Trace |
 |---|---|---|
-| Source round trip | Create owned EN tour with every source field; update one, omit one, clear nullable text/lists; reopen source and draft. Accepted values/order match; omitted data/media retained | US1; FR-001-009; SC-001/005 |
-| Ownership and state forgery | Use partner IDs different from user IDs; try another tour and ES/IT/state/hash writes. Denial/422, no modified source/state or leaked fields | FR-002/011/023/027 |
+| Source round trip | Create an owned tour in its canonical source locale (`en`, `es`, or `it`, set at creation) with every source field; update one, omit one, clear nullable text/lists; reopen source and draft. Accepted values/order match; omitted data/media retained | US1; FR-001-009; SC-001/005 |
+| Ownership and state forgery | Use partner IDs different from user IDs; try another tour and writes to a derived locale, state, or hash. Denial/422, no modified source/state or leaked fields | FR-002/011/023/027 |
 | Itinerary bounds | Test 0/30/31 days, 0/20/21 stops, 160/161 titles, 2000/2001 descriptions, fractional/out-of-range day/duration, null/1/1440/1441 duration. Valid round trip; invalid field paths fail atomically | FR-005-007; SC-001 |
 | Day ordering | Supply repeated valid day numbers and reordered object keys. Arrays retain order, UI keys stay stable, semantic object-key reordering alone does not regenerate | FR-001/005/010; SC-001/004 |
-| Draft versus publish | Save/restore owned incomplete and legacy snapshots; try submit/approve without trimmed EN title/description, then with complete EN plus existing cover/pricing guards and unavailable derivatives. Draft retained, incomplete publish refused; derivatives do not block eligible publication | US1/US3; FR-004; SC-003 |
-| All locale states | Read EN/ES/IT with current/missing/pending/stale/failed derivatives, independently missing itinerary, and empty EN itinerary. Actual language/notice matches; no empty section or misleading notice | US2; FR-014-016; SC-002 |
-| Ready reload | Complete current fake translation then reload SSR and read backend detail. Current derivative replaces EN; stale-source/late completion retains current English, URLs and guide codes stable | US2/US3; SC-002/004 |
+| Draft versus publish | Save/restore owned incomplete and legacy snapshots; try submit/approve without a trimmed canonical-source title/description, then with complete canonical-source content plus existing cover/pricing guards and unavailable derivatives. Draft retained, incomplete publish refused; derivatives do not block eligible publication | US1/US3; FR-004; SC-003 |
+| Source-locale policy (2026-11-10 amendment) | Create tours with `source_locale` = `en`, `es`, and `it`; attempt to change `source_locale` after creation and author in a derived locale — both must be rejected with field-specific 422 without touching the source; publish a non-English-source tour while derivatives are pending/failed and confirm the display falls back to the current canonical source with the localized notice | FR-003/004; FR-010-016; SC-002-004 |
+| All locale states | Read EN/ES/IT pages with current/missing/pending/stale/failed derivatives, independently missing itinerary, and an empty canonical-source itinerary. Actual language/notice matches; no empty section or misleading notice | US2; FR-014-016; SC-002 |
+| Ready reload | Complete current fake translation then reload SSR and read backend detail. Current derivative replaces the canonical source; stale-source/late completion retains the current canonical source, URLs and guide codes stable | US2/US3; SC-002/004 |
 | Real races | Use barriers and independent PostgreSQL connections/processes for source save, completion, duplicate, terminal failure and adoption. No stale overwrite/ready demotion, common lock order, network work outside locks | FR-010-013; SC-004 |
 | Queue/projection recovery | Force dispatch failure after source/ready commit; reconcile current unfinished generation and ready projection intent. Source/derivative remain saved; index refresh recovers without regenerating a matching ready derivative | FR-010/012/013/016 |
 | Legacy adoption | Seed valid, invalid, empty, partially invalid, populated EN and missing-EN fixtures. Dry-run has no writes/jobs; bounded repeats preserve legacy/populated arrays, report counts/cursor and never fabricate EN | FR-008/009; SC-005 |
 | Supported facts / media | Round-trip difficulty, guide codes, duration, cover/gallery and optional alt. Preserve legacy null difficulty on restore/unrelated save. Omitted media retains rows; duplicate authored URLs fail; legacy duplicate URLs deduplicate on read; alt text uses actual language | US4; FR-017-021; SC-006 |
 | Operator / alternatives | Seed inactive/unapproved profiles, zero/hidden/flagged reviews, expired published tours and >32 invalid related candidates before valid ones. Only exact eligible aggregates/cards; correct ranking/limits; no private fields | US5; FR-022-026; SC-007 |
 | Search facts / compatibility | Inspect real selected day/stop/meeting Place/gallery facts, actual languages, safe script escaping and genuine/no-review ratings. Existing fields, 404/410/unavailable/booking consumers remain compatible | US6; FR-027-029; SC-008 |
-| Interface matrix | Save/errors/draft/status/fallback/empty/denial in EN/ES/IT at 390/768/1024/1440. Keyboard/focus/labels/live errors pass with Axe and reviewed screenshots; English specific alt on ES/IT pages has correct lang | FR-030; Constitution VI/VII |
+| Interface matrix | Save/errors/draft/status/fallback/empty/denial in EN/ES/IT at 390/768/1024/1440. Keyboard/focus/labels/live errors pass with Axe and reviewed screenshots; source-locale-specific alt text on derived-locale pages has the correct `lang` | FR-030; Constitution VI/VII |
 
 ## Planned Adoption and Recovery Commands
 
@@ -72,13 +73,13 @@ docker compose exec -T laravel php artisan tours:adopt-itineraries --after-id=0 
 docker compose exec -T laravel php artisan tours:queue-translations --after-id=0 --limit=100 --refresh-ready
 ```
 
-Continue from each reported cursor; limits remain 1-500. Preserve populated English and raw legacy data. Missing EN is reported for governed repair. Fake-based automated scenarios require no real Gemini key.
+Continue from each reported cursor; limits remain 1-500. Preserve populated canonical-source rows (pre-amendment legacy rows store English) and raw legacy data. A missing source row is reported for governed repair. Fake-based automated scenarios require no real Gemini key.
 
 ## Live Staging Smoke and Rollback
 
-Before release, provision backend/worker-only credentials in the secret store and a model available for the project. Start asynchronous Redis workers with verified job/worker/retry timeouts. Save a dedicated staging English tour and verify source HTTP success, derivative progress and ready next-read replacement. Record sanitized status/category and release IDs; never keys/prompts/provider bodies. Provider entitlement and runtime behavior remain unverified until this smoke runs.
+Before release, provision backend/worker-only credentials in the secret store and a model available for the project. Start asynchronous Redis workers with verified job/worker/retry timeouts. Save dedicated staging tours that cover each supported source locale (`en`, `es`, `it`) and verify for each: source HTTP success, derivative progress and ready next-read replacement, and the actual fallback language displayed when a derivative is unavailable (Constitution v3.0.0 rollout verification). Record sanitized status/category and release IDs; never keys/prompts/provider bodies. Provider entitlement and runtime behavior remain unverified until this smoke runs.
 
-Apply additive schema before dependent code and compatible image/cover/gallery readers before new typed writers. Confirm EN-only consumers and post-commit projection/cache refresh. Rehearse frontend and compatible backend/worker image rollback with backup; retain columns, legacy content, media and derivatives. Ordinary rollback does not run migrate:rollback. An old image-only reader needs the compatibility patch for a complete new gallery; a retained legacy cover alone is degraded display.
+Apply additive schema before dependent code and compatible image/cover/gallery readers before new typed writers. Confirm source-locale-aware consumers and post-commit projection/cache refresh. Rehearse frontend and compatible backend/worker image rollback with backup; retain columns, legacy content, media and derivatives. Ordinary rollback does not run migrate:rollback. An old image-only reader needs the compatibility patch for a complete new gallery; a retained legacy cover alone is degraded display.
 
 ## Full Gates and Evidence
 

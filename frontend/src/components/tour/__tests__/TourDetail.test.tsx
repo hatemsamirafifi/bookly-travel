@@ -179,6 +179,24 @@ describe('TourDetail', () => {
   });
 
   it.each([
+    ['it', 'es', 'Cata de vinos', 'Il contenuto è mostrato in Spagnolo'],
+    ['es', 'it', 'Degustazione di vini', 'El contenido se muestra en Italiano'],
+  ] as const)('names the actual non-English fallback in the %s interface', (locale, sourceLocale, title, notice) => {
+    renderTour(locale, {
+      ...tour,
+      title,
+      content_locale: sourceLocale,
+      itinerary_locale: locale,
+      translation_status: 'pending',
+      translation_warning: 'partial_translation',
+    });
+
+    expect(screen.getByText(notice)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: title })).toHaveAttribute('lang', sourceLocale);
+    expect(screen.queryByText(mockMessages[locale].tour.itineraryFallback)).not.toBeInTheDocument();
+  });
+
+  it.each([
     ['en', enMessages.tour.contentFallback, enMessages.tour.itineraryFallback],
     ['es', esMessages.tour.contentFallback, esMessages.tour.itineraryFallback],
     ['it', itMessages.tour.contentFallback, itMessages.tour.itineraryFallback],

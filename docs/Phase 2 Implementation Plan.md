@@ -3,7 +3,7 @@
 > **Version**: 2.1.0
 > **Date**: 2026-10-01
 > **Status**: Active — Spec 017 merged; UI Phase 1 implemented; Spec 019 is the active specification
-> **Governing Constitution**: [Bookly Constitution v2.1.0](../.specify/memory/constitution.md)
+> **Governing Constitution**: [Bookly Constitution v3.0.0](../.specify/memory/constitution.md) as amended 2026-11-10; completed phase records below retain the version (v2.1.0 and earlier) that governed their original delivery. The tour-content source amendment is recorded in the [Spec 019 Amendment Record](../specs/019-tour-content-data/spec.md).
 > **Authoritative product source**: [PRD v2.2.0](PRD.md)
 
 ---
@@ -70,7 +70,7 @@ The [UI master-plan Phase-to-Spec Numbering](bookly-ui-redesign-spec-kit-master-
 |:----:|---------|:----:|:------:|---------------|
 | `017` | Stripe Payments, Connect & Invoicing Foundation | Delivered baseline | ✅ Merged | Marketplace payment routing and B2B invoice foundation |
 | `018` | UI Bootstrap, Design System and Shared Shells | 1 | Implementation complete; CI/merge acceptance pending | Shared foundations and preserved original redesign baseline |
-| `019` | Tour Content Data Model and API | 1 | Active specification | Structured English content and derived locales with compatible public contracts |
+| `019` | Tour Content Data Model and API | 1 | Active specification | Canonical per-tour source locale fixed at creation (`en`/`es`/`it`) and derived locales with compatible public contracts (v3.0.0 wording) |
 | `020-027` | Remaining UI Redesign Phases | 1 | Planned | Tour detail through deployment; see the master-plan mapping |
 | `028` | Partner Earnings & Settlement Operations | 2 | Planned | Operational visibility and reconciliation without double-paying partners |
 | `029` | Cancellation Policies & Partial Refunds | 2 | Planned | Policy-driven cancellation and reduced manual support |
@@ -188,7 +188,7 @@ specs/019-tour-content-data/
   coverage.
 - Primary visual acceptance matrices pass at all target viewports.
 - EN/ES/IT, accessibility, frontend/backend tests, production build, and
-  documented Lighthouse runs meet the Constitution v2.1.0 gates.
+  documented Lighthouse runs meet the [active Constitution v3.0.0](../.specify/memory/constitution.md) gates.
 
 ---
 
@@ -431,7 +431,7 @@ approved foundation under Constitution v2.1.0.
 
 ### Internationalization
 
-- Every new customer-facing interface message ships in EN/ES/IT. Spec 019 tour content uses English source and revision-bound platform derivatives; unavailable derivatives use disclosed current English without blocking publication. Guide languages remain separate.
+- Every new customer-facing interface message ships in EN/ES/IT. In [Spec 019](../specs/019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10), the partner selects a fixed source from `en`, `es`, and `it` at tour creation. Submission and publication validate source title and description. Gemini generates both derivatives asynchronously from the current revision. Superseded results cannot replace current content. Missing, pending, stale, or failed derivatives do not block eligible publication. Public sections disclose current-source fallback in the page language, and guide languages remain independent.
 - Provider error messages are mapped to localized Bookly messages; raw provider
   errors are not shown to users.
 
@@ -482,7 +482,7 @@ Minimum evidence by feature:
 |:----:|-------------------|
 | `017` | Database-backed rerun of Stripe Connect/invoicing tests and partner endpoint authorization |
 | `018-027` | Visual matrices, responsive screenshots, accessibility checks, regression suites, production build, documented Lighthouse runs |
-| `019` | English round-trip and publication, translation revision/fallback, migration preservation, media, operator privacy, related-tour ranking and contract compatibility |
+| `019` | Canonical-source round-trip and publication (per-tour locale fixed at creation; v2.1.0-era evidence covers the English baseline), translation revision/fallback, migration preservation, media, operator privacy, related-tour ranking and contract compatibility |
 | `028` | Reconciliation fixtures, retry/idempotency tests, duplicate-transfer prevention, ownership tests |
 | `029` | Boundary-time policy tests, full/partial/no-refund math, price/policy snapshot tests, webhook replay |
 | `030` | OAuth state/callback tests, account-link collision cases, provider failure, guest checkout regression |

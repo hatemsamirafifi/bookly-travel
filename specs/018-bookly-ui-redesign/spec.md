@@ -8,7 +8,9 @@
 
 **Input**: Phase 0 of the Bookly UI redesign in `docs/bookly-ui-redesign-spec-kit-master-plan.md`: use Tripadvisor-inspired information hierarchy for discovery and tour details while retaining Bookly's identity, tours-only model, and existing business rules.
 
-**Governance**: Original specification baseline: Constitution v2.0.0. Active continuation and release acceptance use [Constitution v2.1.0](../../.specify/memory/constitution.md).
+**Governance**: Original specification baseline: Constitution v2.0.0. When active, continuation and release acceptance used [Constitution v2.1.0](../../.specify/memory/constitution.md). **From 2026-11-10, [Constitution v3.0.0](../../.specify/memory/constitution.md) governs active specifications and release acceptance**; its "Tour Content Source and Derived Locales" amendment supersedes this baseline's English-only authoring and English-fallback assumptions.
+
+The 2026-09-25 clarifications record the original English-source policy. The active requirements below follow [Constitution v3.0.0](../../.specify/memory/constitution.md#tour-content-source-and-derived-locales) and the [Spec 019 amendment](../019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10).
 
 **Spec ID / phase ownership**: `018`; master-plan bootstrap and Phase 1 foundations. The original full-program scope below remains the design baseline. Phase 2 owns its active requirements and revised contracts in [Spec 019](../019-tour-content-data/spec.md); later phases follow the [master-plan mapping](../../docs/bookly-ui-redesign-spec-kit-master-plan.md#phase-to-spec-numbering).
 
@@ -88,7 +90,7 @@ As a traveler, I can sign in, register, recover access, maintain my profile, vie
 
 ### User Story 5 - Author accurate tour content (Priority: P2)
 
-As an authorized partner, I can author the English source for ordered itinerary days and stops and other traveler-facing tour content, select and order gallery images, choose a cover, and preview what travelers will see. The platform generates Spanish and Italian versions; I do not have to author them. Existing tours remain editable without new optional content.
+As an authorized partner, I can select one source locale from `en`, `es`, and `it` at creation and author the itinerary and other traveler-facing content in that fixed locale. I can order gallery images, choose a cover, and preview what travelers will see. The platform generates the other two locales. Existing tours remain editable without new optional content.
 
 **Why this priority**: The new tour page needs structured, partner-owned content without disrupting published listings.
 
@@ -96,12 +98,12 @@ As an authorized partner, I can author the English source for ordered itinerary 
 
 **Acceptance Scenarios**:
 
-1. **Given** a partner-owned draft, **When** its owner adds, removes, or reorders English-source itinerary and images, **Then** saved and previewed content preserves that order and cover selection.
-2. **Given** a tour page in English, Spanish, or Italian, **When** it opens, **Then** ready translations of its traveler-facing content and itinerary appear in the selected language; missing or outdated derived content falls back to English with a visible notice, independently of available live-guide languages.
+1. **Given** a partner-owned draft, **When** its owner adds, removes, or reorders the source itinerary and images, **Then** saved and previewed content preserves that order and cover selection.
+2. **Given** a tour page in English, Spanish, or Italian, **When** it opens, **Then** it displays current requested content and itinerary where available. Sections that use the current source display a visible notice in the page language independently of live-guide languages.
 3. **Given** a legacy tour without new optional fields, **When** its owner edits or resubmits it, **Then** those absent fields alone do not block saving or publishing.
 4. **Given** a user who does not own a draft, **When** they attempt to access or change it, **Then** the existing ownership restriction applies.
-5. **Given** complete required English source content but no Spanish or Italian translation, **When** the tour is submitted or approved, **Then** missing derived translations do not block publication and generation is queued.
-6. **Given** a partner updates English source content, **When** it is saved, **Then** the affected Spanish and Italian translations are marked outdated and queued for regeneration; the public page does not display outdated derived content as current.
+5. **Given** an eligible tour with a complete source title and description, **When** it is submitted or approved, **Then** missing, pending, stale, or failed derivatives do not block publication.
+6. **Given** a partner updates the source content, **When** it is saved, **Then** the platform queues the other two locales for the current revision and excludes outdated results from public display.
 
 ---
 
@@ -160,8 +162,8 @@ As a visitor, I can read blog and legal pages, verify a voucher, or recover from
 - Search has no results, times out, or fails: preserve entered criteria and offer a recovery action.
 - A partner draft is interrupted or concurrently changed: preserve existing save/conflict behavior; do not falsely claim a save.
 - A metric or translation is missing: show unavailable/fallback status rather than a fabricated number or untranslated placeholder.
-- A selected-locale itinerary is missing while English itinerary exists: show the English itinerary with a visible language notice; do not use the tour's guide languages to choose content.
-- AI translation is pending, fails, or completes after the English source changes again: keep an explicit translation state, show the current English source with a visible notice, and never publish an outdated AI result as current.
+- If the selected-locale itinerary is unavailable, display the current source itinerary with a visible localized notice when it has content. Guide languages describe the spoken service independently.
+- If a derivative is pending, failed, or superseded, display the current source with a visible localized notice. Superseded jobs cannot update the current content.
 
 ## Requirements *(mandatory)*
 
@@ -181,9 +183,9 @@ As a visitor, I can read blog and legal pages, verify a voucher, or recover from
 - **FR-012**: Booking actions MUST allow only real available dates and valid traveler counts; they MUST show the supported base price and corresponding total without fabricated fees or pricing tiers.
 - **FR-013**: Selected tour/date/travelers MUST carry into checkout without changing existing booking, payment, price-change, cancellation, retry, and confirmation rules; retries MUST NOT create duplicate bookings or charges.
 - **FR-014**: Authentication, profile, wishlist, booking history/detail, and review journeys MUST retain existing guards, redirects, validation, and eligibility rules.
-- **FR-015**: Authorized partners MUST be able to create, reorder, edit, save, recover, and preview the English-source itinerary days/stops and ordered gallery media, including the cover; they MUST NOT be required to author Spanish or Italian content.
+- **FR-015**: Authorized partners MUST be able to create, reorder, edit, save, recover, and preview itinerary days and stops in the selected source locale, along with ordered gallery media and cover.
 - **FR-016**: New structured tour fields MUST remain optional for legacy tours; their absence alone MUST NOT create a new publication gate.
-- **FR-017**: English MUST be the required canonical source for partner-authored traveler-facing tour content. Spanish and Italian MUST be platform-generated AI translations of that source, including title, description, itinerary, inclusions/exclusions, important information, and other traveler-facing fields. Public pages MUST use a current derived translation when ready; missing or outdated derived content MUST temporarily fall back to the current English source with a visible notice. New interface copy MUST be available in all three languages.
+- **FR-017**: Partners MUST select one fixed source locale from `en`, `es`, and `it` when creating a tour. Gemini MUST generate the other two locales asynchronously from the current source revision. Public pages MUST use current requested content where available and otherwise display the current source with a visible localized notice. New interface copy MUST be available in all three languages.
 - **FR-018**: Public operator summaries MUST contain only approved traveler-safe information; private partner contact, tax, payout, account, and identity details MUST never be exposed.
 - **FR-019**: Related tours MUST exclude the current tour and unpublished/unbookable tours; ordering MUST favor destination relevance, then category relevance, then genuine review quality.
 - **FR-020**: Partner dashboard operations MUST remain available across overview, analytics, tours, pricing, availability, bookings, reviews, profile, and onboarding views at narrow and wide widths.
@@ -192,13 +194,13 @@ As a visitor, I can read blog and legal pages, verify a voucher, or recover from
 - **FR-023**: Blog, legal, voucher, preview, and error/recovery pages MUST retain their established content, visibility, and security behavior while adopting the shared visual language.
 - **FR-024**: Interactive controls MUST be keyboard operable with visible focus, correct dialog focus behavior, practical touch targets, reduced-motion support, and WCAG 2.1 AA conformance.
 - **FR-025**: Existing tour publishing, partner ownership, booking, payment, review-integrity, and administrative authorization rules MUST remain authoritative.
-- **FR-026**: Public search-result descriptions, alternate-language links, and structured tour facts MUST match the visible page content and its actual content language, including a disclosed English fallback; non-public previews MUST remain excluded from public discovery.
+- **FR-026**: Public search-result descriptions, alternate-language links, and structured tour facts MUST reflect the visible content and its actual language, including disclosed source fallback. Non-public previews MUST remain excluded from public discovery.
 - **FR-027**: Success, disabled, permission-denied, and failed states MUST be intentional on each applicable page; errors MUST not disclose private data.
 - **FR-028**: Public rating and operator aggregates MUST derive only from reviews and tours eligible for public display.
 - **FR-029**: A tour's available live-guide/spoken languages MUST be stored and exposed as separate metadata identified by stable language codes; those codes MUST NOT be used to infer which content translations exist.
 - **FR-030**: The tour detail MUST clearly display available live-guide languages, with their names translated for the selected interface language when translations are available.
-- **FR-031**: Publication MUST require the existing mandatory English title and description, but MUST NOT require Spanish or Italian translations; optional source fields remain optional for legacy tours.
-- **FR-032**: Changes to English source content MUST mark affected Spanish and Italian translations outdated and queue regeneration. Translation state MUST distinguish current, pending, outdated, and failed results without allowing a result from an older English revision to become current.
+- **FR-031**: Submission and publication MUST validate the title and description in the tour's fixed source locale. Missing, pending, stale, or failed derivatives MUST NOT block eligible publication. Optional source fields remain optional for legacy tours.
+- **FR-032**: Changes to the source MUST invalidate outdated derivatives and queue regeneration for the current revision. Translation state MUST distinguish current, pending, stale, and failed results. Superseded jobs MUST NOT replace current content.
 - **FR-033**: Existing public route and API fields MUST remain compatible where possible; any added translation-status information MUST distinguish content locale from live-guide language codes.
 
 ### Key Entities *(include if feature involves data)*
@@ -212,7 +214,7 @@ As a visitor, I can read blog and legal pages, verify a voucher, or recover from
 - **Review**: Eligible traveler feedback governed by existing publication and integrity rules.
 - **Partner Metric**: Measured business value with known currency/unit and availability state; unavailable is not zero.
 - **Guide Language**: A stable language identifier for a live guide or spoken tour service; independent of the tour page's English, Spanish, or Italian content translation.
-- **Tour Content Translation**: English canonical source plus Spanish and Italian AI-derived traveler-facing fields, with a state tied to the English source revision; it is independent of guide-language metadata.
+- **Tour Content Translation** means the tour's fixed authored locale and two platform-generated locales with readiness tied to the current source revision. Guide-language metadata is independent.
 
 ## Success Criteria *(mandatory)*
 
@@ -226,9 +228,9 @@ As a visitor, I can read blog and legal pages, verify a voucher, or recover from
 - **SC-006**: 100% of new visible interface messages are available in English, Spanish, and Italian, with no untranslated placeholder in representative journeys.
 - **SC-007**: Acceptance tests show zero unsupported fees, availability claims, review values, conversion rates, or private partner fields in traveler/partner-facing views.
 - **SC-008**: All sampled legacy tours without new structured fields remain viewable and editable and do not fail existing publication solely because those fields are absent.
-- **SC-009**: Every representative public page's search-result description, language links, and structured tour facts match its visible content and actual content language on EN/ES/IT routes, including temporary English fallback.
+- **SC-009**: Every representative public page's search-result description, language links, and structured tour facts match its visible content and actual content language on EN/ES/IT routes, including source fallback.
 - **SC-010**: For every sampled tour with live-guide languages, its guide-language codes remain identical across EN/ES/IT pages while the label and available language names display in each page's language; content fallback behavior does not change with the guide-language list.
-- **SC-011**: Acceptance tests show that an English-complete tour can be published before ES/IT generation, ready translations appear automatically, missing/outdated/failed translations show visibly identified current English, and an English edit cannot make an older AI result appear current.
+- **SC-011**: Acceptance tests cover eligible publication with complete source content before generation finishes, ready translations on the next read, visibly identified current-source fallback when derivatives are unavailable, and rejection of superseded generation results.
 
 ## Assumptions
 
@@ -239,4 +241,4 @@ As a visitor, I can read blog and legal pages, verify a voucher, or recover from
 - Structured tour content is additive, and legacy content remains available for fallback and backward compatibility.
 - Emails, generated PDFs, and native applications are outside this web redesign.
 - Existing partner/admin access boundaries remain unchanged; only approved operator information can be public.
-- Partners author required English source content; the platform derives Spanish and Italian using AI. English fallback is an explicitly disclosed temporary state, not a guide-language rule.
+- Partners author in the tour's selected source locale. Gemini generates the other two supported locales, and fallback to the current source is disclosed separately from guide-language information.

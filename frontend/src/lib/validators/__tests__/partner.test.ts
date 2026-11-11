@@ -9,6 +9,7 @@ import {
   pickFieldErrors,
   pricingTierSchema,
   availabilityRuleSchema,
+  bookingOptionSchema,
 } from '../partner';
 import enMessages from '../../../../messages/en.json';
 import esMessages from '../../../../messages/es.json';
@@ -366,6 +367,7 @@ describe('tourPricingStepSchema', () => {
   it('requires at least one pricing tier', () => {
     const r = tourPricingStepSchema.safeParse({
       pricing_tiers: [],
+      options: [],
       group_size_min: 1,
       group_size_max: 10,
     });
@@ -382,6 +384,7 @@ describe('tourPricingStepSchema', () => {
         min_participants: 1,
         max_participants: 10,
       }],
+      options: [],
       group_size_min: 2,
       group_size_max: 7,
     });
@@ -390,6 +393,82 @@ describe('tourPricingStepSchema', () => {
       expect(r.data.group_size_min).toBe(2);
       expect(r.data.group_size_max).toBe(7);
     }
+  });
+
+  it('caps the authored options list at ten entries', () => {
+    const r = tourPricingStepSchema.safeParse({
+      pricing_tiers: [{
+        id: '1',
+        name: 'Adult',
+        price: '50',
+        currency: 'USD',
+        min_participants: 1,
+        max_participants: 10,
+      }],
+      options: Array.from({ length: 11 }, (_, i) => ({
+        id: `opt-${i}`,
+        title: `Option ${i}`,
+        pickup_instructions: '',
+        guide_languages: ['en'],
+        price: '25',
+        capacity: '8',
+        start_time: '09:00',
+        weekdays: [],
+      })),
+      group_size_min: 1,
+      group_size_max: 10,
+    });
+    expect(r.success).toBe(false);
+  });
+});
+
+describe('bookingOptionSchema backend contract caps', () => {
+  const validOption = {
+    id: 'opt-1',
+    title: 'Private dawn visit',
+    pickup_instructions: 'Meet at the main gate',
+    guide_languages: ['en', 'ar'],
+    price: '25',
+    capacity: '8',
+    start_time: '06:30',
+    weekdays: [1],
+  };
+  // Distinct valid 3-letter codes (zaa, zba, ... zua) for list-bound checks.
+  const guideCode = (index: number): string =>
+    `z${String.fromCharCode(97 + (index % 26))}${String.fromCharCode(97 + Math.floor(index / 26))}`;
+
+  it('accepts a valid authored option row', () => {
+    expect(bookingOptionSchema.safeParse(validOption).success).toBe(true);
+  });
+
+  it('caps pickup instructions at 500 code points, counting astral text once', () => {
+    // 500 astral-plane emoji are 500 code points (1000 UTF-16 units) and pass,
+    // matching the server's mb_strlen max:500; the 501st code point fails.
+    expect(bookingOptionSchema.safeParse({ ...validOption, pickup_instructions: '🎯'.repeat(500) }).success).toBe(true);
+    expect(bookingOptionSchema.safeParse({ ...validOption, pickup_instructions: '🎯'.repeat(501) }).success).toBe(false);
+  });
+
+  it('accepts an omitted or empty pickup instruction', () => {
+    expect(bookingOptionSchema.safeParse({ ...validOption, pickup_instructions: '' }).success).toBe(true);
+    const { pickup_instructions: _omitted, ...withoutPickup } = validOption;
+    expect(bookingOptionSchema.safeParse(withoutPickup).success).toBe(true);
+  });
+
+  it('caps the spoken guide list at twenty entries', () => {
+    expect(bookingOptionSchema.safeParse({ ...validOption, guide_languages: Array.from({ length: 20 }, (_, i) => guideCode(i)) }).success).toBe(true);
+    expect(bookingOptionSchema.safeParse({ ...validOption, guide_languages: Array.from({ length: 21 }, (_, i) => guideCode(i)) }).success).toBe(false);
+  });
+
+  it('rejects malformed spoken guide codes and case-insensitive duplicates', () => {
+    expect(bookingOptionSchema.safeParse({ ...validOption, guide_languages: ['not a code!'] }).success).toBe(false);
+    expect(bookingOptionSchema.safeParse({ ...validOption, guide_languages: ['en', 'EN'] }).success).toBe(false);
+  });
+
+  it('rejects non-positive prices and non-whole capacities', () => {
+    expect(bookingOptionSchema.safeParse({ ...validOption, price: '0' }).success).toBe(false);
+    expect(bookingOptionSchema.safeParse({ ...validOption, price: '-5' }).success).toBe(false);
+    expect(bookingOptionSchema.safeParse({ ...validOption, capacity: '7.5' }).success).toBe(false);
+    expect(bookingOptionSchema.safeParse({ ...validOption, capacity: '0' }).success).toBe(false);
   });
 });
 

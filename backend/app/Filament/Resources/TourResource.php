@@ -12,6 +12,7 @@ use App\Domains\Partner\Services\TourTranslationService;
 use App\Filament\Components\HugeRteEditor;
 use App\Filament\Resources\TourResource\Pages;
 use App\Models\Tour;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
@@ -21,6 +22,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 
 class TourResource extends Resource
 {
@@ -99,7 +101,11 @@ class TourResource extends Resource
                                 'archived' => 'Archived',
                             ])
                             ->default('draft')
-                            ->required(),
+                            ->required()
+                            // Create/edit hooks also reject forged lifecycle writes.
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->helperText('Managed by the approval workflow — publish/reject/unpublish/archive actions record the governance audit.'),
                         Forms\Components\TextInput::make('location')
                             ->required()
                             ->maxLength(150),
@@ -302,7 +308,13 @@ class TourResource extends Resource
                     ->requiresConfirmation()
                     ->visible(fn () => app(AdminAuthorizationService::class)->can(auth()->user(), 'manage_tours'))
                     ->action(function (EloquentCollection $records) {
-                        $actor = auth()->user();
+                        if ($records->isEmpty()) {
+                            return;
+                        }
+
+                        $actor = User::findOrFail(auth()->id());
+                        Gate::forUser($actor)->authorize('bulkPublish', Tour::class);
+
                         $failed = 0;
                         foreach ($records as $record) {
                             try {

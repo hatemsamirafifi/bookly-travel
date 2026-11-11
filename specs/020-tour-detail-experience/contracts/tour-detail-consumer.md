@@ -10,8 +10,9 @@
 | Supplied data | Consumer requirement |
 |---|---|
 | title/description, highlights/inclusions/exclusions, practical information | Use selected current text; trim only to determine presence, never rewrite facts. |
-| content_locale/itinerary_locale, translation_warning/status | Independently disclose actual fallback language for nonempty content; no frontend translation generation or substituted intentional empty itinerary. |
+| content_locale/itinerary_locale, translation_warning/status | Independently disclose the actual fallback language for nonempty content in a visible notice localized to the page. The API selects the current authored source when a derivative is unavailable. The consumer preserves intentional empty itineraries. |
 | duration, group_size, difficulty_level, guide_languages/languages | Supplied facts; stable spoken-language code names localized for page. Null difficulty omitted. |
+| options | Use the active options and their supplied content locales. Keep the selected option identifier through checkout. See the [Spec 019 supplier option contract](../../019-tour-content-data/contracts/tour-detail-api.md#supplier-option-content). |
 | itinerary days/stops | Preserve order, actual text/language and intentionally empty array; no coordinates/transport/map inference. |
 | images `{url,is_cover,alt,alt_locale?}` | Genuine supplied gallery, cover first/remaining order; language only on image/description, not viewer controls. No duplicate padding. |
 | pricing.base_price `{amount,currency,formatted}`, tiered_pricing=null | Positive safe integer cents; current backend EUR/divisor100; localized estimate uses existing formatter. No currency support/exponent reinterpretation. |
@@ -23,11 +24,11 @@ Unknown/unpublished backend 404 remains not-found; previously published archive 
 
 ## Booking deep link and authorization
 
-`/{locale}/booking?tour={encodedSlug}&participants={integer}&date={encodedYYYY-MM-DD}` is unchanged. Both surfaces use one builder after shared selection validation. Do not send estimated total, currency overrides, arbitrary identifiers or new fee/tier parameters.
+`/{locale}/booking?tour={encodedSlug}&participants={integer}&date={encodedYYYY-MM-DD}` is the legacy deep link. An option booking adds `&option={id}` for the selected option. Both surfaces use the shared builder after selection validation. Checkout sends the option as `tour_option_id` and the server validates availability and pricing.
 
 When not authenticated after restoration completes, continue through `/{locale}/auth/login?returnUrl={encodedFullBookingPath}`. Use existing safeAuthReturnUrl with complete path/query, and preserve it through registration as existing auth flow supports. Do not use pathname-only AuthGuard for this handoff. Session expiry/401 in checkout returns through the same validated path with localized notice and without auto-submitting a booking on return. Server refetch/revalidation still applies.
 
-Existing `POST /api/public/bookings` retains `tour_slug`, `tour_date`, `participant_count`, `locale`, optional page_load_price cents, bearer authentication and stable Idempotency-Key. No modification to payment creation, provider confirmation, retry identity, price-drift acceptance or confirmation query `ref` is part of this detail redesign. Verify those existing behaviors survive bounded auth recovery.
+Existing `POST /api/public/bookings` retains `tour_slug`, `tour_date`, `participant_count`, `locale`, optional `tour_option_id` for an option booking, optional `page_load_price` in cents, bearer authentication and stable Idempotency-Key. No modification to payment creation, provider confirmation, retry identity, price-drift acceptance or confirmation query `ref` is part of this detail redesign. Verify those existing behaviors survive bounded auth recovery.
 
 ## Selection guards
 

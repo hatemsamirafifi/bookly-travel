@@ -10,7 +10,7 @@
 
 **Spec sequence:** This master plan governs the redesign program across Specs `018-027`. Spec `018-bookly-ui-redesign` retains the bootstrap, original program specification, and completed Phase 1 foundations. Phase 2 is Spec `019-tour-content-data`; subsequent phases own separate specifications as mapped below.
 
-**Governing Constitution:** Bookly Constitution v2.1.0 (`.specify/memory/constitution.md`). Every generated Spec Kit artifact and implementation phase must pass its applicable principles and quality gates.
+**Governing Constitution:** Bookly Constitution [v3.0.0](../.specify/memory/constitution.md) (`.specify/memory/constitution.md`). Completed phases retain the constitution version that governed their original delivery as historical evidence; every active artifact, new phase, and release acceptance must pass the principles and quality gates of the active version, including the 2026-11-10 tour-content source amendment recorded in the [Spec 019 Amendment Record](../specs/019-tour-content-data/spec.md).
 
 ## Phase-to-Spec Numbering
 
@@ -18,7 +18,7 @@
 |---|---|---|---|---|
 | Phase 0 | `018` | `specs/018-bookly-ui-redesign/` | Spec Kit Bootstrap and Design Contracts | Existing baseline |
 | Phase 1 | `018` | `specs/018-bookly-ui-redesign/` | Design System and Shared Application Shells | Implementation complete; PR #28 merged with successful checks; release pending |
-| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | Implementation complete: 78/78 accepted; complete source Tests and twelve-report Lighthouse CI pass on ee24b45; PR #29; documentation-head CI/readiness tracked separately; merge/release pending |
+| Phase 2 | `019` | `specs/019-tour-content-data/` | Tour Content Data Model and API | 78/78 accepted under v2.1.0 on 2026-10-12. Source Tests and twelve-report Lighthouse CI evidence is scoped to `ee24b45`. PR #29 merged at `9e241b9`. Amended acceptance and release status are separate |
 | Phase 3 | `020` | `specs/020-tour-detail-experience/` | Tripadvisor-Style Tour Detail Experience | Implementation complete: 74/74 tasks accepted (100% complete). 2026-10-26 rebuilt Docker runtime (`AfUeSl_Iw4WVM4xW7N-hy`, `sha256:5d0871d62426...`, 419/420 zero-mismatch parity) passed all in-container Linux source gates (Jest 857/857 across 72/72 suites, tsc 0, ESLint 0 - [source QA](../specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/lcp-qa-20261026/frontend-gates-result.json), [runtime parity](../specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/lcp-qa-20261026/runtime-ready.json)); 2026-10-26 strict native LHCI `attempt-02` collected all 18 valid fresh Lighthouse 12.8.2 reports across all 6 URLs (3 runs each) - `/en` passed (`0.95, 0.95, 0.96`, min `0.95`), `/en/search?q=rome` passed (`0.90, 0.96, 0.97`, min `0.90`), `/en/blog/hidden-gems-florence` passed (`0.94, 0.94, 0.95`, min `0.94`), tour detail pages scored `0.88-0.90` (CLS `0.001`, FCP `0.9s`, SI `1.4s`, TBT `110-150ms`), and `22/24` evaluated assertions passed ([attempt-02 result](../specs/020-tour-detail-experience/evidence/final/performance/repair-20261018/lcp-strict-performance-20261026/attempt-02/native-audits-result.json)); source-head CI/retained-shell merge/deployment remain separate unproven gates |
 | Phase 4 | `021` | `specs/021-homepage-discovery/` | Homepage and Discovery | Spec Kit artifacts created; implementation pending |
 | Phase 5 | `022` | `specs/022-supporting-web-pages/` | Blog, Legal, Verification, and Error Surfaces | Planned |
@@ -50,7 +50,7 @@ Spec `018` and its existing artifacts MUST be preserved. Its original full-progr
 - Continue an existing or dependent phase from its verified predecessor when required to preserve approved work. Record the branch, base commit, and pending PR dependencies before editing. Existing redesign branches ahead of `main` are dependencies to document, not grounds to discard their specifications.
 - Keep each phase on its mapped specification and a separate `codex/` branch; preserve earlier spec directories and evidence when choosing a checkout.
 - Preserve EN/ES/IT; Arabic and RTL are out of scope.
-- Partners author English (EN) as the mandatory source of truth for tour content. The platform generates Spanish (ES) and Italian (IT) with AI; missing or outdated derived content does not block publishing and temporarily shows the current English source with a visible fallback notice. This decision is independent of live-guide languages.
+- The partner selects one fixed source from `en`, `es`, and `it` at tour creation. Submission and publication validate source title and description. Gemini generates the other two locales asynchronously from the current revision. Superseded jobs cannot overwrite current content. Missing, pending, stale, or failed derivatives do not block eligible publication. Public sections display the current derivative or source and identify each fallback language in a visible localized notice. SEO reflects the content shown, and guide languages remain independent. [Spec 019 amendment](../specs/019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10)
 - Live-guide/spoken languages are separate tour metadata with stable language codes (for example `de`, `en`, `es`), and their display names are localized for the page language.
 - Redesign all web screens, including public, auth, traveler, checkout, partner, Filament admin, legal, blog, errors, and voucher verification.
 - Emails, generated PDFs, native apps, hotels, flights, restaurants, forums, ads, rewards, and AI planning are out of scope.
@@ -129,7 +129,7 @@ specs/018-bookly-ui-redesign/
 ```
 
 - [x] Populate `spec.md` from this master plan.
-- [x] Original Phase 0 check: cite Bookly Constitution v2.0.0 in `spec.md` and record a principle-by-principle Constitution Check in `plan.md`. New phases and release acceptance evaluate v2.1.0; the original checked item is historical evidence.
+- [x] Original Phase 0 check: cite Bookly Constitution v2.0.0 in `spec.md` and record a principle-by-principle Constitution Check in `plan.md`. At the time of the check, new phases and release acceptance evaluated v2.1.0; since the 2026-11-10 amendment they evaluate the active [Constitution v3.0.0](../.specify/memory/constitution.md). The original checked item is historical evidence.
 - [x] Verify the existing `/speckit.plan` deliverables: `plan.md`, `research.md`, `data-model.md`, both API contracts, and `quickstart.md`. The generator was not rerun over the dirty worktree during this Phase 0 audit.
 - [x] Verify the existing `/speckit.tasks` deliverable against the Constitution Check. The generator was not rerun over the dirty worktree during this Phase 0 audit.
 - [x] Compare `tasks.md` against every phase below and append explicit tasks for previously implicit media, operator, related-tour, auth, partner-editor, admin and supporting-page work. Existing task IDs stay stable.
@@ -266,7 +266,7 @@ git commit -m "feat: establish Bookly UI design system"
 
 ## Phase 2 - Tour Content Data Model and API
 
-**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Phase 2 implementation is complete: 78/78 tasks independently accepted on 2026-10-12, covering Tasks 2.1-2.4, all FR/SC and Constitution checks. [Verification](../specs/019-tour-content-data/verification.md#32-final-spec-019-acceptance-2026-10-12) retains actual tests, live isolated model/rollback, responsive/accessibility and all performance results. Complete source Tests and twelve-report Lighthouse CI pass on ee24b45. [PR #29](https://github.com/hatemsamirafifi/bookly-travel/pull/29) carries this phase; documentation-head CI/readiness are tracked separately, while merge/release remain pending. Spec 018 is preserved and predecessor PR27/PR28 are merged.
+**Spec:** `019-tour-content-data` - [specification](../specs/019-tour-content-data/spec.md), [implementation plan](../specs/019-tour-content-data/plan.md), [implementation tasks](../specs/019-tour-content-data/tasks.md). Phase 2 implementation is complete: 78/78 tasks independently accepted on 2026-10-12, covering Tasks 2.1-2.4, all FR/SC and Constitution checks. [Verification](../specs/019-tour-content-data/verification.md#32-final-spec-019-acceptance-2026-10-12) retains actual tests, live isolated model/rollback, responsive/accessibility and all performance results. Complete source Tests and twelve-report Lighthouse CI pass on ee24b45. [PR #29](https://github.com/hatemsamirafifi/bookly-travel/pull/29) carries this phase; it merged at `9e241b9` on 2026-10-13. The dated evidence applies to v2.1.0. Current release verification is separate. Spec 018 is preserved and predecessor PR27/PR28 are merged.
 
 ### Task 2.1: Add localized structured itineraries
 
@@ -306,23 +306,25 @@ Validation:
 
 Migration behavior:
 
-- Backfill valid `tours.itinerary` values into the English translation.
+> **Task 2.1 historical record.** Tasks 2.1-2.4 were specified and accepted under Constitution v2.1.0, which made English the sole canonical source and the universal fallback. The bullets below that state English-source policy are kept as the historical Phase 2 record and are superseded, where they conflict, by [Constitution v3.0.0](../.specify/memory/constitution.md) and the [Spec 019 Amendment Record](../specs/019-tour-content-data/spec.md). The checked tasks remain completed evidence; no rerun against the amended criteria is recorded here.
+
+- Backfill valid `tours.itinerary` values into the English translation. *(Historical migration step: legacy rows default to source `en`.)*
 - Invalid or empty legacy values become `[]`.
 - Keep `tours.itinerary` for backward compatibility.
-- Select itinerary content by page locale; if only its translation is missing, disclose an English fallback rather than treating guide-language codes as translation availability.
+- Select itinerary content by page locale; if only its translation is missing, disclose an English fallback rather than treating guide-language codes as translation availability. *(Historical v2.1.0 wording; a completed Phase 2 data set was English-sourced. Active rule: disclose the actual canonical-source fallback language.)*
 - Stop writing new content to the legacy column.
 - Do not drop the legacy column in this feature.
-- Treat English as the canonical source for title, description, itinerary, inclusions/exclusions, important information, and all other traveler-facing tour fields. Partners are not required to author ES/IT.
-- Track whether each derived translation is current, pending, outdated, or failed relative to the English source revision; queue generation after English creation or change, and reject late results for superseded revisions.
-- Require the existing English title and description before publication; never gate publication on ES/IT translation readiness.
-- Select the actual current content locale for public display and SEO. A missing, outdated, or failed ES/IT translation uses the current English source with a visible notice; ready content replaces it automatically.
+- *Superseded 2026-11-10 (was: active policy).* Treat English as the canonical source for title, description, itinerary, inclusions/exclusions, important information, and all other traveler-facing tour fields. Partners are not required to author ES/IT.
+- *Superseded 2026-11-10.* Track whether each derived translation is current, pending, outdated, or failed relative to the English source revision; queue generation after English creation or change, and reject late results for superseded revisions.
+- *Superseded 2026-11-10.* Require the existing English title and description before publication; never gate publication on ES/IT translation readiness.
+- Select the actual current content locale for public display and SEO. A missing, outdated, or failed ES/IT translation uses the current English source with a visible notice; ready content replaces it automatically. *(Historical v2.1.0 wording; the active rule selects the current canonical source as fallback for every supported source locale.)*
 - Gemini is the approved backend-only AI provider in the Spec Kit plan. Its model and key are configured through backend environment variables; the local key is ignored by Git and must be rotated before production use.
 
 - [x] Write failing migration, validation, locale-selection, and fallback tests.
 - [x] Verify and reuse applied nullable JSONB `itinerary` on `tour_translations`.
 - [x] Add fillable/cast configuration.
 - [x] Update Form Requests, service synchronization, and draft serialization.
-- [x] Add translation-state, retry, source-revision, stale-result, and English-only publishing tests, including frontend and browser-level fallback/ready transitions.
+- [x] Add translation-state, retry, source-revision, stale-result, and English-only publishing tests, including frontend and browser-level fallback/ready transitions. *(Executed under v2.1.0; the v3.0.0 [traceability table](../specs/019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10) separates current local coverage from outstanding acceptance.)*
 - [x] Run focused backend tests.
 
 ### Task 2.2: Persist difficulty and gallery media correctly

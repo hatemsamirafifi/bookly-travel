@@ -1,5 +1,7 @@
 # Tasks: Bookly Web Experience Redesign
 
+> Historical execution ledger. Current source and fallback acceptance follows [Spec 019 under Constitution v3.0.0](../019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10). Checked results below retain their original scope.
+
 **Input**: `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `quickstart.md`
 
 **Tests**: Required by the feature specification and Constitution v2.0.0. Write focused failing tests before each implementation slice.

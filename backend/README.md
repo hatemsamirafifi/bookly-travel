@@ -1,3 +1,40 @@
+# Bookly Backend
+
+<!-- EGM contract -->
+
+## Overview
+
+Laravel application serving the Bookly marketplace API, the Filament administration panel, and Artisan commands. Composer wires PHP namespaces and dependencies, while Vite builds the Laravel-side asset entries.
+
+## Interface
+
+- `php artisan` loads the shared Laravel bootstrap, handles console arguments and returns the command exit status. [artisan](./artisan#L7)
+- The PHP-FPM image uses PHP 8.3 and defaults to `php-fpm` on port 9000. [Dockerfile](./Dockerfile#L1), [Dockerfile](./Dockerfile#L55)
+- [vite.config.js](./vite.config.js#L5) declares `default export`.
+- [app](./app/README.md) — Laravel application layer containing the domain implementations, HTTP adapters, shared Eloquent models, Filament administration panel, and runtime registration.
+- [bootstrap](./bootstrap/README.md) — Constructs the Laravel application and configures the Filament panel, route mounts, middleware aliases and exception responses.
+- [config](./config/README.md) — Defines Laravel configuration for persistence, security, search, queues, mail, storage and external service adapters.
+- [database](./database/README.md) — Owns schema evolution, application settings migrations, seed data, and Eloquent model factories.
+- [docker](./docker/README.md) — Startup permissions and OPcache settings for the PHP container.
+- [lang](./lang/README.md) — Groups backend translation catalogs for English, Spanish, and Italian.
+- [public](./public/README.md) — PHP web entry point and browser-accessible assets.
+- [resources](./resources/README.md) — Groups Laravel browser assets and Blade templates for the admin panel, email messages, and booking vouchers.
+- [routes](./routes/README.md) — Registers web readiness and media routes, schedules recurring Artisan work, and groups the HTTP API route files.
+
+## Invariants
+
+- Composer maps `App`, `Database\Factories` and `Database\Seeders` to their respective source roots. [composer.json](./composer.json#L30)
+
+## Side Effects
+
+- Composer's post-autoload hook triggers Laravel package discovery. The Vite build consumes the Laravel CSS and JavaScript entry files. [composer.json](./composer.json#L42), [vite.config.js](./vite.config.js#L5)
+
+## Verification
+
+- From `backend/`, run `php artisan test --configuration=phpunit.pgsql.xml` with the PostgreSQL and Meilisearch test services and environment from the CI workflow.
+
+<!-- End EGM contract -->
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

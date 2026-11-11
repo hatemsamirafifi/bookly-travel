@@ -6,14 +6,9 @@ use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
 use App\Models\Category;
 use App\Models\Tour;
-use App\Support\DemoMediaDeployer;
-use Database\Seeders\BlogContentSeeder;
-use Database\Seeders\DemoContentSeeder;
-use Database\Seeders\PartnerSeeder;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 class DemoContentManager extends Page
@@ -46,19 +41,11 @@ class DemoContentManager extends Page
                 ->color('primary')
                 ->requiresConfirmation()
                 ->modalHeading('Regenerate Demo Content')
-                ->modalDescription('This will seed demo tours, blog posts, and categories with valid images.')
+                ->modalDescription('Demo regeneration is temporarily unavailable while its publishing workflow is being reviewed.')
                 ->action(function () {
-                    DemoMediaDeployer::deployAll();
-                    Artisan::call('db:seed', ['--class' => PartnerSeeder::class, '--force' => true]);
-                    Artisan::call('db:seed', ['--class' => BlogContentSeeder::class, '--force' => true]);
-                    Artisan::call('db:seed', ['--class' => DemoContentSeeder::class, '--force' => true]);
-                    Cache::flush();
-
-                    Notification::make()
-                        ->title('Demo Content Generated')
-                        ->body('Tours, categories, and blog articles have been refreshed.')
-                        ->success()
-                        ->send();
+                    // EGM-003 remains unresolved. Demo seeders bypass both
+                    // publication approval and governed translation writes.
+                    abort(403, 'Demo content generation is temporarily disabled; tours are published only through the governed approval workflow.');
                 }),
             Action::make('viewSite')
                 ->label('View Public Site')

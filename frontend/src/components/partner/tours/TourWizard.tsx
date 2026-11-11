@@ -443,8 +443,6 @@ export function TourWizard() {
   const stepContent = () => {
     switch (currentStep) {
       case 'source': {
-        // Once source content exists, the writing language is fixed: the
-        // tour data model labels authored fields by this language.
         const contentAuthored =
           formData.title.trim() !== '' ||
           formData.description.trim() !== '' ||
@@ -455,6 +453,10 @@ export function TourWizard() {
           formData.meeting_point.trim() !== '' ||
           formData.cancellation_policy.trim() !== '' ||
           formData.itinerary.length > 0;
+        // A saved draft retains its source even when the author clears every
+        // field. An older unanswered local draft still needs a source choice.
+        const sourceLocaleLocked =
+          formData.source_locale !== null && (createdDraftId !== null || contentAuthored);
         return (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">{t('form.sourceLanguageHint')}</p>
@@ -466,7 +468,7 @@ export function TourWizard() {
                   role="radio"
                   aria-checked={formData.source_locale === code}
                   onClick={() => updateField('source_locale', code)}
-                  disabled={isSubmitting || (contentAuthored && formData.source_locale !== code)}
+                  disabled={isSubmitting || (sourceLocaleLocked && formData.source_locale !== code)}
                   className={`rounded-xl border p-4 text-left transition-colors ${
                     formData.source_locale === code
                       ? 'border-[#FFB800] bg-[#FFB800]/10'
@@ -482,9 +484,9 @@ export function TourWizard() {
                 </button>
               ))}
             </div>
-            {contentAuthored && (
+            {sourceLocaleLocked && (
               <p className="text-sm text-muted-foreground">
-                {t('form.sourceLanguageLockedNotice', { language: t(`form.sourceLanguageNames.${sourceLocale}`) })}
+                {t('form.sourceLanguageLockedNotice', { language: t(`form.sourceLanguageNames.${formData.source_locale}`) })}
               </p>
             )}
             {validationErrors['source_locale'] && (

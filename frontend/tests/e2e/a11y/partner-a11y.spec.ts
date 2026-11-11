@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { apiGet, ownedMedia, seededOwnedTourId } from '../partner/tour-content-helpers';
 
@@ -149,6 +149,17 @@ test.describe('Partner Layout Accessibility', () => {
   });
 });
 
+async function openWizardDetails(page: Page, next: string) {
+  const main = page.locator('main#main-content');
+  await expect(main).toBeVisible();
+  const picker = main.getByRole('radiogroup');
+  if (await picker.isVisible()) {
+    await picker.getByRole('radio', { name: /English/i }).click();
+    await main.getByRole('button', { name: next, exact: true }).click();
+  }
+  await expect(main.locator('#title')).toBeVisible();
+}
+
 // Spec019 T073 / FR-030 additions (author-only): affected TourWizard /
 // ImageUploader / edit-page facts only. No route mocks, no backend writes, no
 // Axe exclusions. Widths/locales are distributed (not full cartesian) to avoid
@@ -158,15 +169,15 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     page,
   }) => {
     const cases = [
-      { locale: 'en', width: 390 },
-      { locale: 'es', width: 768 },
-      { locale: 'it', width: 1024 },
-      { locale: 'en', width: 1440 },
+      { locale: 'en', width: 390, next: 'Next' },
+      { locale: 'es', width: 768, next: 'Siguiente' },
+      { locale: 'it', width: 1024, next: 'Avanti' },
+      { locale: 'en', width: 1440, next: 'Next' },
     ] as const;
-    for (const { locale, width } of cases) {
+    for (const { locale, width, next } of cases) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`/${locale}/partner/tours/create`);
-      await expect(page.locator('main#main-content')).toBeVisible();
+      await openWizardDetails(page, next);
       const results = await new AxeBuilder({ page }).analyze();
       expect(results.violations).toEqual([]);
     }
@@ -176,19 +187,19 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     // 320 is layout-relevant for the wizard grids and uploader thumbnails.
     await page.setViewportSize({ width: 320, height: 900 });
     await page.goto('/en/partner/tours/create');
-    await expect(page.locator('main#main-content')).toBeVisible();
+    await openWizardDetails(page, 'Next');
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   });
 
   test('difficulty and guide-language controls are labeled in each page language', async ({ page }) => {
     const expectations = [
-      { locale: 'en', difficulty: 'Difficulty Level', guide: 'Live-guide language codes' },
-      { locale: 'es', difficulty: 'Nivel de Dificultad', guide: 'en vivo' },
-      { locale: 'it', difficulty: 'Livello di Difficolt', guide: 'guida dal vivo' },
+      { locale: 'en', difficulty: 'Difficulty Level', guide: 'Live-guide language codes', next: 'Next' },
+      { locale: 'es', difficulty: 'Nivel de Dificultad', guide: 'en vivo', next: 'Siguiente' },
+      { locale: 'it', difficulty: 'Livello di Difficolt', guide: 'guida dal vivo', next: 'Avanti' },
     ] as const;
-    for (const { locale, difficulty, guide } of expectations) {
+    for (const { locale, difficulty, guide, next } of expectations) {
       await page.goto(`/${locale}/partner/tours/create`);
-      await expect(page.locator('main#main-content')).toBeVisible();
+      await openWizardDetails(page, next);
       // Difficulty select keeps a stable accessible name per page language and
       // starts blank: unknown difficulty is never invented as easy.
       const difficultyTrigger = page.locator(
@@ -207,10 +218,11 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
   test('english-source notice stays visible and page-localized on details step', async ({ page }) => {
     await page.goto('/es/partner/tours/create');
     await expect(page.locator('main#main-content')).toBeVisible();
-    // Spanish page notice: authors edit English source; derivatives never block.
-    await expect(page.getByText(/traducci/i).first()).toBeVisible();
+    await page.getByRole('radiogroup').getByRole('radio', { name: /English/i }).click();
+    await page.getByRole('button', { name: 'Siguiente', exact: true }).click();
+    await expect(page.getByText(/^El contenido original está escrito en English/i)).toBeVisible();
     await page.goto('/it/partner/tours/create');
-    await expect(page.getByText(/inglese/i).first()).toBeVisible();
+    await expect(page.getByText(/^Il contenuto originale è scritto in English/i)).toBeVisible();
   });
 
   test('empty wizard next announces validation errors and moves focus to the summary', async ({
@@ -218,14 +230,22 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
   }) => {
     // Client-side validation only: no backend write, no route mock.
     await page.goto('/en/partner/tours/create');
-    await expect(page.locator('main#main-content')).toBeVisible();
-    await page.getByRole('button', { name: /Next/i }).click();
-    const summary = page.getByRole('alert').first();
+    const main = page.locator('main#main-content');
+    await expect(main).toBeVisible();
+    await main.getByRole('button', { name: 'Next', exact: true }).click();
+    const summary = main.getByRole('alert').first();
     await expect(summary).toBeVisible();
     expect(await summary.getAttribute('aria-live')).toBe('assertive');
     await expect(summary).toBeFocused();
-    // Field-level announced error for the missing English title.
-    await expect(page.locator('p[role="alert"]', { hasText: /.+/ }).first()).toBeVisible();
+    await expect(page.locator('p[role="alert"]', { hasText: 'Choose the original writing language before continuing.' })).toBeVisible();
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+
+    await openWizardDetails(page, 'Next');
+    await main.getByRole('button', { name: 'Next', exact: true }).click();
+    await expect(summary).toBeVisible();
+    await expect(summary).toHaveAttribute('aria-live', 'assertive');
+    await expect(summary).toBeFocused();
+    await expect(main.locator('p[role="alert"]', { hasText: 'Title is required.' })).toBeVisible();
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   });
 

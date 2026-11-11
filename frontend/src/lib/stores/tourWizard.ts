@@ -154,13 +154,17 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
   const source: Record<string, unknown> = isRecord(draft) ? draft : {};
   const normalized: Record<string, unknown> = { ...source };
 
-  // Original writing language: only a concrete supported code is kept;
-  // anything missing/invalid reads as the legacy English source default.
+  // Original writing language: only a concrete supported code is an actual
+  // choice. Anything missing/null/invalid stays UNSELECTED so a restored
+  // unbound snapshot re-enters through the Language gate instead of being
+  // silently preselected (EGM-004). The English default for identifiable
+  // materialized legacy tours is applied by the edit-flow call sites that
+  // know a real tour is being read — never here.
   const rawSourceLocale = source.source_locale;
   normalized.source_locale =
     rawSourceLocale === 'en' || rawSourceLocale === 'es' || rawSourceLocale === 'it'
       ? rawSourceLocale
-      : 'en';
+      : null;
 
   for (const key of STRING_ARRAY_KEYS) {
     normalized[key] = toStringArray(source[key]);
@@ -203,7 +207,9 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
  * localStorage snapshot normalizes through the same safe path as
  * loadDraft, so reopened state never crashes array joins/maps and never
  * invents an old difficulty. New-tour defaults (including `easy`) apply
- * only when no persisted form state exists at all.
+ * only when no persisted form state exists at all. A restored draft whose
+ * writing language is still unanswered re-enters at the Language gate even
+ * when an older step was persisted.
  */
 export function mergePersistedWizardState<S extends WizardState>(
   persisted: unknown,
@@ -218,13 +224,17 @@ export function mergePersistedWizardState<S extends WizardState>(
   }
   const formData = { ...current.formData, ...normalizeWizardState(persistedForm) };
   const step: unknown = persisted.currentStep;
+  const persistedStep =
+    step === 'source' || step === 'details' || step === 'media' || step === 'pricing' || step === 'availability' || step === 'review'
+      ? step
+      : current.currentStep;
   return {
     ...current,
     formData,
-    currentStep:
-      step === 'source' || step === 'details' || step === 'media' || step === 'pricing' || step === 'availability' || step === 'review'
-        ? step
-        : current.currentStep,
+    // An unselected restored draft always re-enters through the Language
+    // gate, even when an older step was persisted alongside it (EGM-004).
+    // A chosen valid source keeps the persisted step.
+    currentStep: formData.source_locale === null ? 'source' : persistedStep,
     isDirty: false,
     isSubmitting: false,
   };
@@ -273,7 +283,9 @@ function generateId(): string {
 }
 
 const initialState: WizardState = {
-  currentStep: 'details',
+  // The Language (source) screen is the wizard's first step: a fresh or
+  // reset form always starts there, never past the writing-language gate.
+  currentStep: 'source',
   formData: { ...INITIAL_FORM },
   isDirty: false,
   isSubmitting: false,

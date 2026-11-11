@@ -744,7 +744,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
           <h2 className="font-bold text-lg text-[#0A2540] border-b border-gray-50 pb-2 mb-4">Tour Content Editing</h2>
 
           <p className="text-sm text-gray-600">
-            {formT('sourceLockedNotice', { language: formT(`sourceLanguageNames.${sourceLocale}`) })}
+            {formT('sourceLanguageLockedNotice', { language: formT(`sourceLanguageNames.${sourceLocale}`) })}
           </p>
           {tour?.translation_statuses && (
             <p className="text-sm text-gray-600" aria-live="polite">

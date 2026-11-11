@@ -28,6 +28,7 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\Support\Spec019FakeTranslator;
 
 uses(RefreshDatabase::class);
@@ -114,6 +115,7 @@ beforeEach(function () {
 
     [$this->partner, $this->token] = makeOptionsPartner();
     $this->admin = User::factory()->admin()->create();
+    $this->admin->adminPermission()->create(['flags' => ['manage_tours' => true]]);
 
     $common = [
         'category' => 'wine-food',
@@ -612,29 +614,62 @@ it('captures the currently served option text and its locale on option bookings'
     Carbon::setTestNow();
 });
 
-it('publishes a Spanish-authored tour end to end and keeps source immutable', function () {
-    $tourId = postJson('/api/partner/tours', $this->esTourPayload, optionsHeaders($this->token))
+it('publishes in the selected source before derivatives are ready and keeps the source immutable', function (string $sourceLocale, string $title, string $description) {
+    $headers = optionsHeaders($this->token);
+    $payload = array_replace($this->esTourPayload, [
+        'source_locale' => $sourceLocale,
+        'title' => $title,
+        'description' => str_repeat($description, 4),
+        'options' => [],
+    ]);
+    $tourId = postJson('/api/partner/tours', $payload, $headers)
         ->assertCreated()->json('data.id');
     $tour = Tour::findOrFail($tourId);
+    optionsAvailabilityRule($tour);
 
-    $published = optionsPublishTour($tour, $this->admin);
+    postJson("/api/partner/tours/{$tourId}/submit", [], $headers)
+        ->assertOk()->assertJsonPath('data.status', 'pending_review');
+    $published = app(ApproveTourAction::class)->execute($this->admin, $tour->fresh());
     expect($published->status)->toBe('published')
-        ->and($published->sourceLocale())->toBe('es');
+        ->and($published->sourceLocale())->toBe($sourceLocale);
 
-    $headers = optionsHeaders($this->token);
+    getJson("/api/public/tours/{$published->slug}?locale=en")
+        ->assertOk()
+        ->assertJsonPath('data.title', $title)
+        ->assertJsonPath('data.content_locale', $sourceLocale)
+        ->assertJsonPath('data.translation_warning', 'partial_translation');
 
-    // Source language is immutable, everywhere.
-    putJson("/api/partner/tours/{$tourId}", ['source_locale' => 'it'], $headers)
+    putJson("/api/partner/tours/{$tourId}", ['source_locale' => 'en'], $headers)
         ->assertUnprocessable()->assertJsonValidationErrors(['source_locale']);
     putJson("/api/partner/tours/{$tourId}", [
         'translations' => ['en' => ['title' => 'Overwrite from field engine']],
     ], $headers)->assertUnprocessable()->assertJsonValidationErrors(['translations.en']);
 
-    // Retries and legacy reads stay source-bound: the source row is es and the
-    // submit gate keeps speaking the source language, not English.
-    expect($tour->fresh()->translations()->where('locale', 'es')->exists())->toBeTrue()
-        ->and($tour->fresh()->translations()->where('locale', 'en')->exists())->toBeFalse();
-});
+    expect($tour->fresh()->translations()->pluck('locale')->all())->toBe([$sourceLocale]);
+})->with([
+    'Spanish source' => ['es', 'Cata de vinos en Toscana', 'Descubre los viñedos de la Toscana con un guía local. '],
+    'Italian source' => ['it', 'Degustazione di vini in Toscana', 'Scopri i vigneti della Toscana con una guida locale. '],
+]);
+
+it('refuses submission and publication when only a derivative has the required source field', function (string $field) {
+    $headers = optionsHeaders($this->token);
+    $tourId = postJson('/api/partner/tours', $this->esTourPayload, $headers)
+        ->assertCreated()->json('data.id');
+    $tour = Tour::findOrFail($tourId);
+    runOptionTranslations($tour, new Spec019FakeTranslator, ['en']);
+    expect($tour->translations()->where('locale', 'en')->value($field))->not->toBeEmpty();
+
+    $tour->translations()->where('locale', 'es')->update([$field => '']);
+    postJson("/api/partner/tours/{$tourId}/submit", [], $headers)
+        ->assertUnprocessable()
+        ->assertJsonPath('message', 'Validation failed: Tour must have at least a title and description in its source language.');
+    expect($tour->fresh()->status)->toBe('draft');
+
+    $tour->update(['status' => 'pending_review']);
+    expect(fn () => app(ApproveTourAction::class)->execute($this->admin, $tour->fresh()))
+        ->toThrow(HttpException::class, 'Tour requires a title and description in its source language before publication.');
+    expect($tour->fresh()->status)->toBe('pending_review');
+})->with(['title', 'description']);
 
 it('does not dispatch the English field engine for a non-English source tour', function () {
     $tourId = postJson('/api/partner/tours', $this->esTourPayload, optionsHeaders($this->token))

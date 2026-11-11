@@ -1,0 +1,265 @@
+# Migrations
+
+<!-- EGM contract -->
+
+## Overview
+
+Laravel migrations define the relational schema, PostgreSQL-specific constraints and historical data backfills. The interface lists table creation sites.
+
+## Interface
+
+- `users` [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L14), `password_reset_tokens` [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L31), `sessions` [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L37)
+- `cache` [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L14), `cache_locks` [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L20)
+- `personal_access_tokens` [0001_01_01_000001_create_personal_access_tokens_table.php](./0001_01_01_000001_create_personal_access_tokens_table.php#L11)
+- `guest_identities` [0001_01_01_000002_create_guest_identities_table.php](./0001_01_01_000002_create_guest_identities_table.php#L11)
+- `jobs` [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L14), `job_batches` [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L24), `failed_jobs` [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L37)
+- `auth_audit_logs` [0001_01_01_000003_create_auth_audit_logs_table.php](./0001_01_01_000003_create_auth_audit_logs_table.php#L11)
+- `categories` [2026_05_01_000001_create_categories_table.php](./2026_05_01_000001_create_categories_table.php#L11)
+- `tours` [2026_05_01_000002_create_tours_table.php](./2026_05_01_000002_create_tours_table.php#L11)
+- `tour_translations` [2026_05_01_000003_create_tour_translations_table.php](./2026_05_01_000003_create_tour_translations_table.php#L11)
+- `bookings` [2026_05_09_000001_create_bookings_table.php](./2026_05_09_000001_create_bookings_table.php#L11)
+- `booking_audit_logs` [2026_05_09_000002_create_booking_audit_logs_table.php](./2026_05_09_000002_create_booking_audit_logs_table.php#L11)
+- `payments` [2026_05_11_100001_create_payments_table.php](./2026_05_11_100001_create_payments_table.php#L11)
+- `financial_ledger_entries` [2026_05_11_100002_create_financial_ledger_entries_table.php](./2026_05_11_100002_create_financial_ledger_entries_table.php#L11)
+- `stripe_webhook_events` [2026_05_11_100003_create_stripe_webhook_events_table.php](./2026_05_11_100003_create_stripe_webhook_events_table.php#L11)
+- `reviews` [2026_05_13_100001_create_reviews_table.php](./2026_05_13_100001_create_reviews_table.php#L11)
+- `review_audit_trails` [2026_05_13_100002_create_review_audit_trails_table.php](./2026_05_13_100002_create_review_audit_trails_table.php#L11)
+- `wishlists` [2026_06_01_000002_create_wishlists_table.php](./2026_06_01_000002_create_wishlists_table.php#L11)
+- `partners` [2026_06_02_100001_create_partners_table.php](./2026_06_02_100001_create_partners_table.php#L11)
+- `notifications` [2026_06_02_100002_create_notifications_table.php](./2026_06_02_100002_create_notifications_table.php#L11)
+- `tour_drafts` [2026_06_02_100003_create_tour_drafts_table.php](./2026_06_02_100003_create_tour_drafts_table.php#L11)
+- `tour_media` [2026_06_02_100004_create_tour_media_table.php](./2026_06_02_100004_create_tour_media_table.php#L11)
+- `pricing_tiers` [2026_06_02_100005_create_pricing_tiers_table.php](./2026_06_02_100005_create_pricing_tiers_table.php#L11)
+- `availability_rules` [2026_06_02_100006_create_availability_rules_table.php](./2026_06_02_100006_create_availability_rules_table.php#L11)
+- `availability_exceptions` [2026_06_02_100007_create_availability_exceptions_table.php](./2026_06_02_100007_create_availability_exceptions_table.php#L11)
+- `review_responses` [2026_06_02_100009_create_review_responses_table.php](./2026_06_02_100009_create_review_responses_table.php#L11)
+- `partner_profiles` [2026_06_02_100010_create_partner_profiles_table.php](./2026_06_02_100010_create_partner_profiles_table.php#L11)
+- `partner_settings` [2026_06_02_100011_create_partner_settings_table.php](./2026_06_02_100011_create_partner_settings_table.php#L11)
+- `settings` by default, with a table-name override from the settings repository config. [2026_06_20_000001_create_settings_table.php](./2026_06_20_000001_create_settings_table.php#L11)
+- `governance_audit_logs` [2026_06_20_100001_create_governance_audit_logs_table.php](./2026_06_20_100001_create_governance_audit_logs_table.php#L11)
+- `admin_permissions` [2026_06_20_100002_create_admin_permissions_table.php](./2026_06_20_100002_create_admin_permissions_table.php#L11)
+- `static_pages` [2026_06_20_100003_create_static_pages_table.php](./2026_06_20_100003_create_static_pages_table.php#L11)
+- `partner_invitations` [2026_08_18_100000_create_partner_invitations_table.php](./2026_08_18_100000_create_partner_invitations_table.php#L11)
+- `blog_categories` [2026_08_22_100001_create_blog_categories_table.php](./2026_08_22_100001_create_blog_categories_table.php#L11)
+- `blog_posts` [2026_08_22_100002_create_blog_posts_table.php](./2026_08_22_100002_create_blog_posts_table.php#L11)
+- `author_profiles` [2026_08_22_100003_create_author_profiles_table.php](./2026_08_22_100003_create_author_profiles_table.php#L11)
+- `blog_post_tours` [2026_08_22_100004_create_blog_post_tours_table.php](./2026_08_22_100004_create_blog_post_tours_table.php#L11)
+- `tour_translation_states` [2026_09_25_000002_create_tour_translation_states_table.php](./2026_09_25_000002_create_tour_translation_states_table.php#L15)
+- `admin_roles` [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L11), `admin_role_user` [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L21)
+- `media_folders` [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L11), `media_assets` [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L26), `media_tags` [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L52), `media_asset_tag` [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L59), `media_usages` [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L66)
+- `content_revisions` [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L19), `blog_tags` [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L34), `blog_post_tags` [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L41)
+- `destinations` [2026_11_01_000005_create_destinations_table.php](./2026_11_01_000005_create_destinations_table.php#L11)
+- `translation_field_states` [2026_11_01_000006_create_translation_field_states_table.php](./2026_11_01_000006_create_translation_field_states_table.php#L20)
+- `tour_options` [2026_11_10_000002_create_tour_options_and_booking_option_columns.php](./2026_11_10_000002_create_tour_options_and_booking_option_columns.php#L26)
+- `tour_option_translations` [2026_11_10_000003_add_option_sort_order_and_option_translations.php](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L31)
+- [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L12) declares `up()`, `down()`.
+- [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L12) declares `up()`, `down()`.
+- [0001_01_01_000001_create_personal_access_tokens_table.php](./0001_01_01_000001_create_personal_access_tokens_table.php#L9) declares `up()`, `down()`.
+- [0001_01_01_000002_create_guest_identities_table.php](./0001_01_01_000002_create_guest_identities_table.php#L9) declares `up()`, `down()`.
+- [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L12) declares `up()`, `down()`.
+- [0001_01_01_000003_create_auth_audit_logs_table.php](./0001_01_01_000003_create_auth_audit_logs_table.php#L9) declares `up()`, `down()`.
+- [2026_04_28_000001_add_verification_email_sent_at_to_users_table.php](./2026_04_28_000001_add_verification_email_sent_at_to_users_table.php#L12) declares `up()`, `down()`.
+- [2026_05_01_000001_create_categories_table.php](./2026_05_01_000001_create_categories_table.php#L9) declares `up()`, `down()`.
+- [2026_05_01_000002_create_tours_table.php](./2026_05_01_000002_create_tours_table.php#L9) declares `up()`, `down()`.
+- [2026_05_01_000003_create_tour_translations_table.php](./2026_05_01_000003_create_tour_translations_table.php#L9) declares `up()`, `down()`.
+- [2026_05_03_000001_add_last_lockout_email_sent_at_to_users_table.php](./2026_05_03_000001_add_last_lockout_email_sent_at_to_users_table.php#L12) declares `up()`, `down()`.
+- [2026_05_09_000001_create_bookings_table.php](./2026_05_09_000001_create_bookings_table.php#L9) declares `up()`, `down()`.
+- [2026_05_09_000002_create_booking_audit_logs_table.php](./2026_05_09_000002_create_booking_audit_logs_table.php#L9) declares `up()`, `down()`.
+- [2026_05_11_000001_add_anonymized_at_to_bookings_table.php](./2026_05_11_000001_add_anonymized_at_to_bookings_table.php#L17) declares `up()`, `down()`.
+- [2026_05_11_100001_create_payments_table.php](./2026_05_11_100001_create_payments_table.php#L9) declares `up()`, `down()`.
+- [2026_05_11_100002_create_financial_ledger_entries_table.php](./2026_05_11_100002_create_financial_ledger_entries_table.php#L9) declares `up()`, `down()`.
+- [2026_05_11_100003_create_stripe_webhook_events_table.php](./2026_05_11_100003_create_stripe_webhook_events_table.php#L9) declares `up()`, `down()`.
+- [2026_05_11_100004_add_payment_columns_to_bookings_table.php](./2026_05_11_100004_add_payment_columns_to_bookings_table.php#L9) declares `up()`, `down()`.
+- [2026_05_13_100001_create_reviews_table.php](./2026_05_13_100001_create_reviews_table.php#L9) declares `up()`, `down()`.
+- [2026_05_13_100002_create_review_audit_trails_table.php](./2026_05_13_100002_create_review_audit_trails_table.php#L9) declares `up()`, `down()`.
+- [2026_05_13_100003_add_rating_columns_to_tours_table.php](./2026_05_13_100003_add_rating_columns_to_tours_table.php#L9) declares `up()`, `down()`.
+- [2026_05_13_100004_make_traveler_id_nullable_for_anonymization.php](./2026_05_13_100004_make_traveler_id_nullable_for_anonymization.php#L13) declares `up()`, `down()`.
+- [2026_06_01_000001_add_profile_columns_to_users_table.php](./2026_06_01_000001_add_profile_columns_to_users_table.php#L10) declares `up()`, `down()`.
+- [2026_06_01_000002_create_wishlists_table.php](./2026_06_01_000002_create_wishlists_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100001_create_partners_table.php](./2026_06_02_100001_create_partners_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100002_create_notifications_table.php](./2026_06_02_100002_create_notifications_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100003_create_tour_drafts_table.php](./2026_06_02_100003_create_tour_drafts_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100004_create_tour_media_table.php](./2026_06_02_100004_create_tour_media_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100005_create_pricing_tiers_table.php](./2026_06_02_100005_create_pricing_tiers_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100006_create_availability_rules_table.php](./2026_06_02_100006_create_availability_rules_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100007_create_availability_exceptions_table.php](./2026_06_02_100007_create_availability_exceptions_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100008_add_partner_columns_to_tours_table.php](./2026_06_02_100008_add_partner_columns_to_tours_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100009_create_review_responses_table.php](./2026_06_02_100009_create_review_responses_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100010_create_partner_profiles_table.php](./2026_06_02_100010_create_partner_profiles_table.php#L9) declares `up()`, `down()`.
+- [2026_06_02_100011_create_partner_settings_table.php](./2026_06_02_100011_create_partner_settings_table.php#L9) declares `up()`, `down()`.
+- [2026_06_06_231248_fix_tours_partner_id_to_partners_table.php](./2026_06_06_231248_fix_tours_partner_id_to_partners_table.php#L18) declares `up()`, `down()`.
+- [2026_06_20_000001_create_settings_table.php](./2026_06_20_000001_create_settings_table.php#L9) declares `up()`, `down()`.
+- [2026_06_20_100001_create_governance_audit_logs_table.php](./2026_06_20_100001_create_governance_audit_logs_table.php#L9) declares `up()`, `down()`.
+- [2026_06_20_100002_create_admin_permissions_table.php](./2026_06_20_100002_create_admin_permissions_table.php#L9) declares `up()`, `down()`.
+- [2026_06_20_100003_create_static_pages_table.php](./2026_06_20_100003_create_static_pages_table.php#L9) declares `up()`, `down()`.
+- [2026_06_20_100100_widen_bookings_status_column.php](./2026_06_20_100100_widen_bookings_status_column.php#L14) declares `up()`, `down()`.
+- [2026_06_20_100200_backfill_governance_audit_logs_from_legacy_trails.php](./2026_06_20_100200_backfill_governance_audit_logs_from_legacy_trails.php#L21) declares `up()`, `down()`.
+- [2026_06_29_000001_add_guest_identity_id_to_bookings_table.php](./2026_06_29_000001_add_guest_identity_id_to_bookings_table.php#L9) declares `up()`, `down()`.
+- [2026_07_04_100100_add_voucher_freshness_columns_to_bookings.php](./2026_07_04_100100_add_voucher_freshness_columns_to_bookings.php#L19) declares `up()`, `down()`.
+- [2026_07_17_100000_add_start_time_to_bookings_table.php](./2026_07_17_100000_add_start_time_to_bookings_table.php#L9) declares `up()`, `down()`.
+- [2026_07_23_100000_drop_unique_payments_intent_add_composite.php](./2026_07_23_100000_drop_unique_payments_intent_add_composite.php#L18) declares `up()`, `down()`.
+- [2026_08_18_100000_create_partner_invitations_table.php](./2026_08_18_100000_create_partner_invitations_table.php#L9) declares `up()`, `down()`.
+- [2026_08_18_100001_add_rejection_reason_to_partner_profiles_table.php](./2026_08_18_100001_add_rejection_reason_to_partner_profiles_table.php#L9) declares `up()`, `down()`.
+- [2026_08_18_100002_add_invited_by_admin_to_partners_table.php](./2026_08_18_100002_add_invited_by_admin_to_partners_table.php#L9) declares `up()`, `down()`.
+- [2026_08_22_100001_create_blog_categories_table.php](./2026_08_22_100001_create_blog_categories_table.php#L9) declares `up()`, `down()`.
+- [2026_08_22_100002_create_blog_posts_table.php](./2026_08_22_100002_create_blog_posts_table.php#L9) declares `up()`, `down()`.
+- [2026_08_22_100003_create_author_profiles_table.php](./2026_08_22_100003_create_author_profiles_table.php#L9) declares `up()`, `down()`.
+- [2026_08_22_100004_create_blog_post_tours_table.php](./2026_08_22_100004_create_blog_post_tours_table.php#L9) declares `up()`, `down()`.
+- [2026_08_22_100005_add_meta_title_to_blog_posts_table.php](./2026_08_22_100005_add_meta_title_to_blog_posts_table.php#L9) declares `up()`, `down()`.
+- [2026_09_19_100001_add_stripe_connect_columns_to_partners_table.php](./2026_09_19_100001_add_stripe_connect_columns_to_partners_table.php#L9) declares `up()`, `down()`.
+- [2026_09_22_100001_add_stripe_invoice_fields_to_bookings_table.php](./2026_09_22_100001_add_stripe_invoice_fields_to_bookings_table.php#L9) declares `up()`, `down()`.
+- [2026_09_25_000001_add_guide_languages_and_localized_itinerary.php](./2026_09_25_000001_add_guide_languages_and_localized_itinerary.php#L10) declares `up()`, `backfillLegacyItineraries()`, `down()`.
+- [2026_09_25_000002_create_tour_translation_states_table.php](./2026_09_25_000002_create_tour_translation_states_table.php#L9) declares `up()`, `down()`.
+- [2026_10_02_000001_add_alt_text_to_tour_media_table.php](./2026_10_02_000001_add_alt_text_to_tour_media_table.php#L9) declares `up()`, `down()`.
+- [2026_10_30_000001_add_image_url_to_blog_categories_table.php](./2026_10_30_000001_add_image_url_to_blog_categories_table.php#L9) declares `up()`, `down()`.
+- [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L9) declares `up()`, `down()`.
+- [2026_11_01_000002_add_status_columns_to_users_table.php](./2026_11_01_000002_add_status_columns_to_users_table.php#L9) declares `up()`, `down()`.
+- [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L9) declares `up()`, `down()`.
+- [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L17) declares `up()`, `down()`.
+- [2026_11_01_000005_create_destinations_table.php](./2026_11_01_000005_create_destinations_table.php#L9) declares `up()`, `down()`.
+- [2026_11_01_000006_create_translation_field_states_table.php](./2026_11_01_000006_create_translation_field_states_table.php#L18) declares `up()`, `down()`.
+- [2026_11_10_000001_add_source_locale_to_tours_table.php](./2026_11_10_000001_add_source_locale_to_tours_table.php#L9) declares `up()`, `down()`.
+- [2026_11_10_000002_create_tour_options_and_booking_option_columns.php](./2026_11_10_000002_create_tour_options_and_booking_option_columns.php#L24) declares `up()`, `down()`.
+- [2026_11_10_000003_add_option_sort_order_and_option_translations.php](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L25) declares `up()`, `down()`.
+
+## Invariants
+
+- `bookings.reference` and `bookings.idempotency_key` are unique. `stripe_webhook_events.stripe_event_id` is unique, and `payments` uses a composite unique constraint on `stripe_payment_intent_id` and `type`. [Booking keys](./2026_05_09_000001_create_bookings_table.php#L11), [Stripe webhook keys](./2026_05_11_100003_create_stripe_webhook_events_table.php#L11), [Payment constraint](./2026_07_23_100000_drop_unique_payments_intent_add_composite.php#L25)
+- There is one review per booking, with a PostgreSQL check restricting rating to 1–5. PostgreSQL traveler references on reviews and bookings are nullable and use `ON DELETE SET NULL`. [Review constraints](./2026_05_13_100001_create_reviews_table.php#L11), [Traveler anonymization](./2026_05_13_100004_make_traveler_id_nullable_for_anonymization.php#L15)
+- Tour translations, tour translation states and option translations each enforce uniqueness for their parent and locale. `translation_field_states` enforces uniqueness across translatable type, translatable ID, locale and field name. [Tour translation constraint](./2026_05_01_000003_create_tour_translations_table.php#L24), [Tour state constraint](./2026_09_25_000002_create_tour_translation_states_table.php#L24), [Option translation constraint](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L41), [Field state constraint](./2026_11_01_000006_create_translation_field_states_table.php#L41)
+- Booking option ID, title, pickup instructions, and content locale are nullable. Deleting the referenced option sets the booking foreign key to null while preserving the snapshot columns. [Booking option columns](./2026_11_10_000002_create_tour_options_and_booking_option_columns.php#L51), [Snapshot locale](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L44)
+- Blog posts store localized title and body in JSONB, restrict author deletion, and cascade category deletion. The related-tour pivot enforces uniqueness per post and tour. [Blog post columns](./2026_08_22_100002_create_blog_posts_table.php#L11), [Blog-tour constraint](./2026_08_22_100004_create_blog_post_tours_table.php#L11)
+- Content revision version numbers are unique per revisionable type and ID. Media usage is unique per asset, usable type, usable ID, and field. [Revision constraint](./2026_11_01_000004_create_cms_and_revisions_tables.php#L30), [Media usage constraint](./2026_11_01_000003_create_media_library_tables.php#L74)
+
+## Side Effects
+
+- Migration commands mutate schema and indexes. The governance audit backfill copies legacy booking and review audit rows and removes marked rows on rollback. The itinerary migration copies legacy itinerary data into translation rows. [Governance audit backfill](./2026_06_20_100200_backfill_governance_audit_logs_from_legacy_trails.php#L21), [Itinerary backfill](./2026_09_25_000001_add_guide_languages_and_localized_itinerary.php#L25)
+- Creates schema table users via `Schema::create()` in [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L14).
+- Creates schema table password_reset_tokens via `Schema::create()` in [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L31).
+- Creates schema table sessions via `Schema::create()` in [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L37).
+- Drops schema table sessions via `Schema::dropIfExists()` in [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L52).
+- Drops schema table password_reset_tokens via `Schema::dropIfExists()` in [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L53).
+- Drops schema table users via `Schema::dropIfExists()` in [0001_01_01_000000_create_users_table.php](./0001_01_01_000000_create_users_table.php#L54).
+- Creates schema table cache via `Schema::create()` in [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L14).
+- Creates schema table cache_locks via `Schema::create()` in [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L20).
+- Drops schema table cache via `Schema::dropIfExists()` in [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L32).
+- Drops schema table cache_locks via `Schema::dropIfExists()` in [0001_01_01_000001_create_cache_table.php](./0001_01_01_000001_create_cache_table.php#L33).
+- Creates schema table personal_access_tokens via `Schema::create()` in [0001_01_01_000001_create_personal_access_tokens_table.php](./0001_01_01_000001_create_personal_access_tokens_table.php#L11).
+- Drops schema table personal_access_tokens via `Schema::dropIfExists()` in [0001_01_01_000001_create_personal_access_tokens_table.php](./0001_01_01_000001_create_personal_access_tokens_table.php#L25).
+- Creates schema table guest_identities via `Schema::create()` in [0001_01_01_000002_create_guest_identities_table.php](./0001_01_01_000002_create_guest_identities_table.php#L11).
+- Drops schema table guest_identities via `Schema::dropIfExists()` in [0001_01_01_000002_create_guest_identities_table.php](./0001_01_01_000002_create_guest_identities_table.php#L27).
+- Creates schema table jobs via `Schema::create()` in [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L14).
+- Creates schema table job_batches via `Schema::create()` in [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L24).
+- Creates schema table failed_jobs via `Schema::create()` in [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L37).
+- Drops schema table jobs via `Schema::dropIfExists()` in [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L53).
+- Drops schema table job_batches via `Schema::dropIfExists()` in [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L54).
+- Drops schema table failed_jobs via `Schema::dropIfExists()` in [0001_01_01_000002_create_jobs_table.php](./0001_01_01_000002_create_jobs_table.php#L55).
+- Creates schema table auth_audit_logs via `Schema::create()` in [0001_01_01_000003_create_auth_audit_logs_table.php](./0001_01_01_000003_create_auth_audit_logs_table.php#L11).
+- Drops schema table auth_audit_logs via `Schema::dropIfExists()` in [0001_01_01_000003_create_auth_audit_logs_table.php](./0001_01_01_000003_create_auth_audit_logs_table.php#L28).
+- Alters schema table users via `Schema::table()` in [2026_04_28_000001_add_verification_email_sent_at_to_users_table.php](./2026_04_28_000001_add_verification_email_sent_at_to_users_table.php#L14), `Schema::table()` in [2026_05_03_000001_add_last_lockout_email_sent_at_to_users_table.php](./2026_05_03_000001_add_last_lockout_email_sent_at_to_users_table.php#L14), `Schema::table()` in [2026_06_01_000001_add_profile_columns_to_users_table.php](./2026_06_01_000001_add_profile_columns_to_users_table.php#L12).
+- Creates schema table categories via `Schema::create()` in [2026_05_01_000001_create_categories_table.php](./2026_05_01_000001_create_categories_table.php#L11).
+- Drops schema table categories via `Schema::dropIfExists()` in [2026_05_01_000001_create_categories_table.php](./2026_05_01_000001_create_categories_table.php#L25).
+- Creates schema table tours via `Schema::create()` in [2026_05_01_000002_create_tours_table.php](./2026_05_01_000002_create_tours_table.php#L11).
+- Drops schema table tours via `Schema::dropIfExists()` in [2026_05_01_000002_create_tours_table.php](./2026_05_01_000002_create_tours_table.php#L36).
+- Creates schema table tour_translations via `Schema::create()` in [2026_05_01_000003_create_tour_translations_table.php](./2026_05_01_000003_create_tour_translations_table.php#L11).
+- Drops schema table tour_translations via `Schema::dropIfExists()` in [2026_05_01_000003_create_tour_translations_table.php](./2026_05_01_000003_create_tour_translations_table.php#L30).
+- Creates schema table bookings via `Schema::create()` in [2026_05_09_000001_create_bookings_table.php](./2026_05_09_000001_create_bookings_table.php#L11).
+- Drops schema table bookings via `Schema::dropIfExists()` in [2026_05_09_000001_create_bookings_table.php](./2026_05_09_000001_create_bookings_table.php#L39).
+- Creates schema table booking_audit_logs via `Schema::create()` in [2026_05_09_000002_create_booking_audit_logs_table.php](./2026_05_09_000002_create_booking_audit_logs_table.php#L11).
+- Drops schema table booking_audit_logs via `Schema::dropIfExists()` in [2026_05_09_000002_create_booking_audit_logs_table.php](./2026_05_09_000002_create_booking_audit_logs_table.php#L29).
+- Alters schema table bookings via `Schema::table()` in [2026_05_11_000001_add_anonymized_at_to_bookings_table.php](./2026_05_11_000001_add_anonymized_at_to_bookings_table.php#L19), `Schema::table()` in [2026_05_11_100004_add_payment_columns_to_bookings_table.php](./2026_05_11_100004_add_payment_columns_to_bookings_table.php#L11), `Schema::table()` in [2026_06_29_000001_add_guest_identity_id_to_bookings_table.php](./2026_06_29_000001_add_guest_identity_id_to_bookings_table.php#L11).
+- Creates schema table payments via `Schema::create()` in [2026_05_11_100001_create_payments_table.php](./2026_05_11_100001_create_payments_table.php#L11).
+- Drops schema table payments via `Schema::dropIfExists()` in [2026_05_11_100001_create_payments_table.php](./2026_05_11_100001_create_payments_table.php#L32).
+- Creates schema table financial_ledger_entries via `Schema::create()` in [2026_05_11_100002_create_financial_ledger_entries_table.php](./2026_05_11_100002_create_financial_ledger_entries_table.php#L11).
+- Drops schema table financial_ledger_entries via `Schema::dropIfExists()` in [2026_05_11_100002_create_financial_ledger_entries_table.php](./2026_05_11_100002_create_financial_ledger_entries_table.php#L30).
+- Creates schema table stripe_webhook_events via `Schema::create()` in [2026_05_11_100003_create_stripe_webhook_events_table.php](./2026_05_11_100003_create_stripe_webhook_events_table.php#L11).
+- Drops schema table stripe_webhook_events via `Schema::dropIfExists()` in [2026_05_11_100003_create_stripe_webhook_events_table.php](./2026_05_11_100003_create_stripe_webhook_events_table.php#L28).
+- Creates schema table reviews via `Schema::create()` in [2026_05_13_100001_create_reviews_table.php](./2026_05_13_100001_create_reviews_table.php#L11).
+- Drops schema table reviews via `Schema::dropIfExists()` in [2026_05_13_100001_create_reviews_table.php](./2026_05_13_100001_create_reviews_table.php#L34).
+- Creates schema table review_audit_trails via `Schema::create()` in [2026_05_13_100002_create_review_audit_trails_table.php](./2026_05_13_100002_create_review_audit_trails_table.php#L11).
+- Drops schema table review_audit_trails via `Schema::dropIfExists()` in [2026_05_13_100002_create_review_audit_trails_table.php](./2026_05_13_100002_create_review_audit_trails_table.php#L30).
+- Alters schema table tours via `Schema::table()` in [2026_05_13_100003_add_rating_columns_to_tours_table.php](./2026_05_13_100003_add_rating_columns_to_tours_table.php#L11), `Schema::table()` in [2026_06_02_100008_add_partner_columns_to_tours_table.php](./2026_06_02_100008_add_partner_columns_to_tours_table.php#L11), `Schema::table()` in [2026_06_06_231248_fix_tours_partner_id_to_partners_table.php](./2026_06_06_231248_fix_tours_partner_id_to_partners_table.php#L20).
+- Executes a database statement via `DB::statement()` in [2026_05_13_100004_make_traveler_id_nullable_for_anonymization.php](./2026_05_13_100004_make_traveler_id_nullable_for_anonymization.php#L16), `DB::statement()` in [2026_06_20_100100_widen_bookings_status_column.php](./2026_06_20_100100_widen_bookings_status_column.php#L17).
+- Creates schema table wishlists via `Schema::create()` in [2026_06_01_000002_create_wishlists_table.php](./2026_06_01_000002_create_wishlists_table.php#L11).
+- Drops schema table wishlists via `Schema::dropIfExists()` in [2026_06_01_000002_create_wishlists_table.php](./2026_06_01_000002_create_wishlists_table.php#L24).
+- Creates schema table partners via `Schema::create()` in [2026_06_02_100001_create_partners_table.php](./2026_06_02_100001_create_partners_table.php#L11).
+- Drops schema table partners via `Schema::dropIfExists()` in [2026_06_02_100001_create_partners_table.php](./2026_06_02_100001_create_partners_table.php#L28).
+- Creates schema table notifications via `Schema::create()` in [2026_06_02_100002_create_notifications_table.php](./2026_06_02_100002_create_notifications_table.php#L11).
+- Drops schema table notifications via `Schema::dropIfExists()` in [2026_06_02_100002_create_notifications_table.php](./2026_06_02_100002_create_notifications_table.php#L30).
+- Creates schema table tour_drafts via `Schema::create()` in [2026_06_02_100003_create_tour_drafts_table.php](./2026_06_02_100003_create_tour_drafts_table.php#L11).
+- Drops schema table tour_drafts via `Schema::dropIfExists()` in [2026_06_02_100003_create_tour_drafts_table.php](./2026_06_02_100003_create_tour_drafts_table.php#L33).
+- Creates schema table tour_media via `Schema::create()` in [2026_06_02_100004_create_tour_media_table.php](./2026_06_02_100004_create_tour_media_table.php#L11).
+- Drops schema table tour_media via `Schema::dropIfExists()` in [2026_06_02_100004_create_tour_media_table.php](./2026_06_02_100004_create_tour_media_table.php#L26).
+- Creates schema table pricing_tiers via `Schema::create()` in [2026_06_02_100005_create_pricing_tiers_table.php](./2026_06_02_100005_create_pricing_tiers_table.php#L11).
+- Drops schema table pricing_tiers via `Schema::dropIfExists()` in [2026_06_02_100005_create_pricing_tiers_table.php](./2026_06_02_100005_create_pricing_tiers_table.php#L26).
+- Creates schema table availability_rules via `Schema::create()` in [2026_06_02_100006_create_availability_rules_table.php](./2026_06_02_100006_create_availability_rules_table.php#L11).
+- Drops schema table availability_rules via `Schema::dropIfExists()` in [2026_06_02_100006_create_availability_rules_table.php](./2026_06_02_100006_create_availability_rules_table.php#L28).
+- Creates schema table availability_exceptions via `Schema::create()` in [2026_06_02_100007_create_availability_exceptions_table.php](./2026_06_02_100007_create_availability_exceptions_table.php#L11).
+- Drops schema table availability_exceptions via `Schema::dropIfExists()` in [2026_06_02_100007_create_availability_exceptions_table.php](./2026_06_02_100007_create_availability_exceptions_table.php#L28).
+- Creates schema table review_responses via `Schema::create()` in [2026_06_02_100009_create_review_responses_table.php](./2026_06_02_100009_create_review_responses_table.php#L11).
+- Drops schema table review_responses via `Schema::dropIfExists()` in [2026_06_02_100009_create_review_responses_table.php](./2026_06_02_100009_create_review_responses_table.php#L28).
+- Creates schema table partner_profiles via `Schema::create()` in [2026_06_02_100010_create_partner_profiles_table.php](./2026_06_02_100010_create_partner_profiles_table.php#L11).
+- Drops schema table partner_profiles via `Schema::dropIfExists()` in [2026_06_02_100010_create_partner_profiles_table.php](./2026_06_02_100010_create_partner_profiles_table.php#L37).
+- Creates schema table partner_settings via `Schema::create()` in [2026_06_02_100011_create_partner_settings_table.php](./2026_06_02_100011_create_partner_settings_table.php#L11).
+- Drops schema table partner_settings via `Schema::dropIfExists()` in [2026_06_02_100011_create_partner_settings_table.php](./2026_06_02_100011_create_partner_settings_table.php#L29).
+- Creates schema table governance_audit_logs via `Schema::create()` in [2026_06_20_100001_create_governance_audit_logs_table.php](./2026_06_20_100001_create_governance_audit_logs_table.php#L11).
+- Drops schema table governance_audit_logs via `Schema::dropIfExists()` in [2026_06_20_100001_create_governance_audit_logs_table.php](./2026_06_20_100001_create_governance_audit_logs_table.php#L31).
+- Creates schema table admin_permissions via `Schema::create()` in [2026_06_20_100002_create_admin_permissions_table.php](./2026_06_20_100002_create_admin_permissions_table.php#L11).
+- Drops schema table admin_permissions via `Schema::dropIfExists()` in [2026_06_20_100002_create_admin_permissions_table.php](./2026_06_20_100002_create_admin_permissions_table.php#L23).
+- Creates schema table static_pages via `Schema::create()` in [2026_06_20_100003_create_static_pages_table.php](./2026_06_20_100003_create_static_pages_table.php#L11).
+- Drops schema table static_pages via `Schema::dropIfExists()` in [2026_06_20_100003_create_static_pages_table.php](./2026_06_20_100003_create_static_pages_table.php#L29).
+- Alters schema table payments via `Schema::table()` in [2026_07_23_100000_drop_unique_payments_intent_add_composite.php](./2026_07_23_100000_drop_unique_payments_intent_add_composite.php#L20).
+- Creates schema table partner_invitations via `Schema::create()` in [2026_08_18_100000_create_partner_invitations_table.php](./2026_08_18_100000_create_partner_invitations_table.php#L11).
+- Drops schema table partner_invitations via `Schema::dropIfExists()` in [2026_08_18_100000_create_partner_invitations_table.php](./2026_08_18_100000_create_partner_invitations_table.php#L30).
+- Alters schema table partner_profiles via `Schema::table()` in [2026_08_18_100001_add_rejection_reason_to_partner_profiles_table.php](./2026_08_18_100001_add_rejection_reason_to_partner_profiles_table.php#L11).
+- Alters schema table partners via `Schema::table()` in [2026_08_18_100002_add_invited_by_admin_to_partners_table.php](./2026_08_18_100002_add_invited_by_admin_to_partners_table.php#L11), `Schema::table()` in [2026_09_19_100001_add_stripe_connect_columns_to_partners_table.php](./2026_09_19_100001_add_stripe_connect_columns_to_partners_table.php#L11).
+- Creates schema table blog_categories via `Schema::create()` in [2026_08_22_100001_create_blog_categories_table.php](./2026_08_22_100001_create_blog_categories_table.php#L11).
+- Drops schema table blog_categories via `Schema::dropIfExists()` in [2026_08_22_100001_create_blog_categories_table.php](./2026_08_22_100001_create_blog_categories_table.php#L26).
+- Creates schema table blog_posts via `Schema::create()` in [2026_08_22_100002_create_blog_posts_table.php](./2026_08_22_100002_create_blog_posts_table.php#L11).
+- Drops schema table blog_posts via `Schema::dropIfExists()` in [2026_08_22_100002_create_blog_posts_table.php](./2026_08_22_100002_create_blog_posts_table.php#L37).
+- Creates schema table author_profiles via `Schema::create()` in [2026_08_22_100003_create_author_profiles_table.php](./2026_08_22_100003_create_author_profiles_table.php#L11).
+- Drops schema table author_profiles via `Schema::dropIfExists()` in [2026_08_22_100003_create_author_profiles_table.php](./2026_08_22_100003_create_author_profiles_table.php#L23).
+- Creates schema table blog_post_tours via `Schema::create()` in [2026_08_22_100004_create_blog_post_tours_table.php](./2026_08_22_100004_create_blog_post_tours_table.php#L11).
+- Drops schema table blog_post_tours via `Schema::dropIfExists()` in [2026_08_22_100004_create_blog_post_tours_table.php](./2026_08_22_100004_create_blog_post_tours_table.php#L26).
+- Alters schema table blog_posts via `Schema::table()` in [2026_08_22_100005_add_meta_title_to_blog_posts_table.php](./2026_08_22_100005_add_meta_title_to_blog_posts_table.php#L11), `Schema::table()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L62).
+- Alters schema table tour_translations via `Schema::table()` in [2026_09_25_000001_add_guide_languages_and_localized_itinerary.php](./2026_09_25_000001_add_guide_languages_and_localized_itinerary.php#L16), `Schema::table()` in [2026_09_25_000002_create_tour_translation_states_table.php](./2026_09_25_000002_create_tour_translation_states_table.php#L11).
+- Creates schema table tour_translation_states via `Schema::create()` in [2026_09_25_000002_create_tour_translation_states_table.php](./2026_09_25_000002_create_tour_translation_states_table.php#L15).
+- Drops schema table tour_translation_states via `Schema::dropIfExists()` in [2026_09_25_000002_create_tour_translation_states_table.php](./2026_09_25_000002_create_tour_translation_states_table.php#L30).
+- Alters schema table tour_media via `Schema::table()` in [2026_10_02_000001_add_alt_text_to_tour_media_table.php](./2026_10_02_000001_add_alt_text_to_tour_media_table.php#L11).
+- Alters schema table blog_categories via `Schema::table()` in [2026_10_30_000001_add_image_url_to_blog_categories_table.php](./2026_10_30_000001_add_image_url_to_blog_categories_table.php#L11).
+- Creates schema table admin_roles via `Schema::create()` in [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L11).
+- Creates schema table admin_role_user via `Schema::create()` in [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L21).
+- Drops schema table admin_role_user via `Schema::dropIfExists()` in [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L34).
+- Drops schema table admin_roles via `Schema::dropIfExists()` in [2026_11_01_000001_create_admin_roles_tables.php](./2026_11_01_000001_create_admin_roles_tables.php#L35).
+- Creates schema table media_folders via `Schema::create()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L11).
+- Creates schema table media_assets via `Schema::create()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L26).
+- Creates schema table media_tags via `Schema::create()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L52).
+- Creates schema table media_asset_tag via `Schema::create()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L59).
+- Creates schema table media_usages via `Schema::create()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L66).
+- Drops schema table media_usages via `Schema::dropIfExists()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L81).
+- Drops schema table media_asset_tag via `Schema::dropIfExists()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L82).
+- Drops schema table media_tags via `Schema::dropIfExists()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L83).
+- Drops schema table media_assets via `Schema::dropIfExists()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L84).
+- Drops schema table media_folders via `Schema::dropIfExists()` in [2026_11_01_000003_create_media_library_tables.php](./2026_11_01_000003_create_media_library_tables.php#L85).
+- Creates schema table content_revisions via `Schema::create()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L19).
+- Creates schema table blog_tags via `Schema::create()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L34).
+- Creates schema table blog_post_tags via `Schema::create()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L41).
+- Alters schema table static_pages via `Schema::table()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L47).
+- Drops schema table blog_post_tags via `Schema::dropIfExists()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L81).
+- Drops schema table blog_tags via `Schema::dropIfExists()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L82).
+- Drops schema table content_revisions via `Schema::dropIfExists()` in [2026_11_01_000004_create_cms_and_revisions_tables.php](./2026_11_01_000004_create_cms_and_revisions_tables.php#L83).
+- Creates schema table destinations via `Schema::create()` in [2026_11_01_000005_create_destinations_table.php](./2026_11_01_000005_create_destinations_table.php#L11).
+- Drops schema table destinations via `Schema::dropIfExists()` in [2026_11_01_000005_create_destinations_table.php](./2026_11_01_000005_create_destinations_table.php#L25).
+- Creates schema table translation_field_states via `Schema::create()` in [2026_11_01_000006_create_translation_field_states_table.php](./2026_11_01_000006_create_translation_field_states_table.php#L20).
+- Drops schema table translation_field_states via `Schema::dropIfExists()` in [2026_11_01_000006_create_translation_field_states_table.php](./2026_11_01_000006_create_translation_field_states_table.php#L48).
+- Creates schema table tour_options via `Schema::create()` in [2026_11_10_000002_create_tour_options_and_booking_option_columns.php](./2026_11_10_000002_create_tour_options_and_booking_option_columns.php#L26).
+- Drops schema table tour_options via `Schema::dropIfExists()` in [2026_11_10_000002_create_tour_options_and_booking_option_columns.php](./2026_11_10_000002_create_tour_options_and_booking_option_columns.php#L70).
+- Alters schema table tour_options via `Schema::table()` in [2026_11_10_000003_add_option_sort_order_and_option_translations.php](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L27).
+- Creates schema table tour_option_translations via `Schema::create()` in [2026_11_10_000003_add_option_sort_order_and_option_translations.php](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L31).
+- Drops schema table tour_option_translations via `Schema::dropIfExists()` in [2026_11_10_000003_add_option_sort_order_and_option_translations.php](./2026_11_10_000003_add_option_sort_order_and_option_translations.php#L55).
+
+## Verification
+
+- From `backend/`, run `php artisan test --configuration=phpunit.pgsql.xml` with the PostgreSQL and Meilisearch test services and environment from the CI workflow.
+
+<!-- End EGM contract -->

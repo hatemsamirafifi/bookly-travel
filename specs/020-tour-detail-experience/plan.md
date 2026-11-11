@@ -2,10 +2,12 @@
 
 **Branch**: `codex/020-tour-detail-experience` | **Date**: 2026-10-14 (Africa/Cairo) | **Spec**: [spec.md](spec.md)  
 **Spec ID / Master-plan phase**: Spec 020 / Phase 3  
-**Governing Constitution**: [v2.1.0](../../.specify/memory/constitution.md)  
+**Governing Constitution**: [v3.0.0](../../.specify/memory/constitution.md) for active acceptance. Original planning used v2.1.0.
 **Baseline / Dependencies**: `4afdbc6e0bec2d29341ea229b7b7f1b2226ecf27`, retaining six header/footer/static-asset commits from `codex/header-navigation-polish` above fetched `origin/main` at `9e241b9377d42f904081cb7b2bca1871e3b4388d` (Spec 019 PR #29 merge). Main ancestry verified on 2026-10-14; retained shell commits are an explicit unmerged dependency, not evidence of release readiness.  
 **Input**: `specs/020-tour-detail-experience/spec.md`  
 **Status**: Planning/design complete; [execution tasks](tasks.md) generated on 2026-10-14; implementation pending. No runtime, CI, merge or release gates executed by documentation generation.
+
+The [Spec 019 amendment](../019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10) governs active source and fallback acceptance. Dated verification remains scoped to its original criteria.
 
 ## Summary
 
@@ -22,7 +24,7 @@ Decisions/evidence: [research](research.md). Transient state: [data model](data-
 **Target Platform**: Existing Next app in supported desktop/mobile browsers through the current nginx/API boundary; production build required for performance/SSR acceptance.  
 **Project Type**: API-first tours marketplace web application.  
 **Performance Goals**: Lighthouse Performance ≥90 for detail pages in EN/ES/IT, pessimistic minimum across three recorded runs per locale; fixed gallery geometry prevents gallery-induced layout shift. Keep existing EN home/search/blog regression audits.  
-**Constraints**: Constitution v2.1.0; truthful data; EN/ES/IT and widths 390/768/1024/1440; WCAG 2.1 AA; integer cents; existing checkout remains authoritative; preserve URLs, status handling and independent fallback languages.  
+**Constraints**: Constitution v3.0.0; truthful data; EN/ES/IT and widths 390/768/1024/1440; WCAG 2.1 AA; integer cents; existing checkout remains authoritative; preserve URLs, status handling and independent fallback languages.
 **Scale/Scope**: One detail-route family and its reusable tour components. Existing partner/admin/content generation and later program phases remain separate; no speculative user-volume target.
 
 ## Constitution Check

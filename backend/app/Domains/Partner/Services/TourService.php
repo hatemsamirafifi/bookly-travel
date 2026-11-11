@@ -504,6 +504,14 @@ class TourService
         // policy is added here.
         return $this->translationService->withContentLock($tour->id, function () use ($tour) {
             $fresh = Tour::findOrFail($tour->id);
+
+            // EGM-002: archived and live tours cannot re-enter approval here.
+            abort_unless(
+                $fresh->status === 'pending_review' || $fresh->canTransitionTo('pending_review'),
+                422,
+                'Tour cannot be submitted for review from its current state.',
+            );
+
             $sourceLocale = $fresh->sourceLocale();
             $source = $fresh->translations()->where('locale', $sourceLocale)->first();
 
