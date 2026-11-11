@@ -292,6 +292,8 @@ class Tour extends Model
     /**
      * The active (selectable) options in authored display order. Reads the
      * eager-loaded relation when present; otherwise one indexed query.
+     *
+     * @return Collection<int, TourOption>
      */
     public function activeOptions(): Collection
     {

@@ -14,9 +14,9 @@ class PartnerBookingResource extends JsonResource
         // The requested booking locale's stored derivative wins, then the
         // tour's actual authored source (which may be Spanish or Italian),
         // then the legacy English row — never a hardcoded English-first view.
-        $title = $this->tour->translations->firstWhere('locale', $this->locale)?->title
-            ?? $this->tour->sourceTranslation()?->title
-            ?? $this->tour->translations->firstWhere('locale', 'en')?->title
+        $title = $this->tour->translations->firstWhere('locale', $this->locale)->title
+            ?? $this->tour->sourceTranslation()->title
+            ?? $this->tour->translations->firstWhere('locale', 'en')->title
             ?? '';
         $traveler = $this->traveler ?? $this->guestIdentity;
 

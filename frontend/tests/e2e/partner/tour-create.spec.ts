@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import {
   apiGet,
+  enterEnglishTourDetails,
   apiPost,
   apiPut,
   LONG_DESCRIPTION,
@@ -722,6 +723,12 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   test('renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix', async ({
     page,
   }, testInfo) => {
+    await page.addInitScript(() => localStorage.removeItem('partner-tour-wizard'));
+    const notices = {
+      en: 'Original content is written in English. The other two languages are generated automatically and never block publication.',
+      es: 'El contenido original está escrito en English. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.',
+      it: 'Il contenuto originale è scritto in English. Le altre due lingue sono generate automaticamente e non bloccano la pubblicazione.',
+    };
     const pickerNames = {
       en: 'Original writing language',
       es: 'Idioma de redacción original',
@@ -737,6 +744,8 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
         await page.screenshot({
           path: testInfo.outputPath(`create-${locale}-${width}.png`),
         });
+        await enterEnglishTourDetails(page, locale);
+        await expect(page.getByText(notices[locale])).toBeVisible();
       }
     }
   });

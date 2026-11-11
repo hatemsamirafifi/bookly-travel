@@ -52,16 +52,11 @@ class GetPartnerBookingsAction
         $paginator = $query->paginate(25, ['*'], 'page', $page);
 
         $data = $paginator->map(function (Booking $booking) {
-            // F10: resolve the tour title by the booking's locale, falling
-            // back to the tour's actual authored source (which may be Spanish
-            // or Italian), then the legacy English row — the same chain as
-            // BookingResponseDTO/PartnerBookingResource. `firstWhere()` avoids
-            // the nullsafe/property false-positives larastan raises on the
-            // non-generic translations collection.
+            // A booking without a translation in its locale falls back to the tour's authored title.
             $translations = $booking->tour->translations;
-            $title = $translations->firstWhere('locale', $booking->locale)?->title
-                ?? $booking->tour->sourceTranslation()?->title
-                ?? $translations->firstWhere('locale', 'en')?->title
+            $title = $translations->firstWhere('locale', $booking->locale)->title
+                ?? $booking->tour->sourceTranslation()->title
+                ?? $translations->firstWhere('locale', 'en')->title
                 ?? '';
 
             return [
