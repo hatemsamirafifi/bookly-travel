@@ -20,6 +20,10 @@ class BookingController
             'locale' => 'required|string|in:en,es,it',
             // FR-027: optional price the traveler saw on the tour detail page (cents)
             'page_load_price' => 'sometimes|integer|min:0',
+            // Optional for tours without options; required once a tour exposes
+            // active options (enforced in CreateBookingAction, which knows the
+            // tour). Format-only validation here.
+            'tour_option_id' => 'sometimes|nullable|integer|min:1',
         ]);
 
         $idempotencyKey = $request->header('Idempotency-Key');
@@ -39,6 +43,7 @@ class BookingController
             idempotencyKey: $idempotencyKey,
             travelerId: (int) $request->user()->id,
             pageLoadPrice: isset($validated['page_load_price']) ? (int) $validated['page_load_price'] : null,
+            tourOptionId: isset($validated['tour_option_id']) ? (int) $validated['tour_option_id'] : null,
         );
 
         // L4: Symfony HttpExceptions and ValidationException thrown by the

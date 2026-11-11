@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import BookingStatusBadge from '@/components/my-bookings/BookingStatusBadge';
+import { getContentLanguageName } from '@/lib/tours/detail-presentation';
 import type { TravelerBooking } from '@/types/traveler';
 
 interface BookingDetailViewProps {
@@ -30,6 +31,7 @@ export default function BookingDetailView({ booking, locale }: BookingDetailView
   const participants = booking.participants ?? booking.participant_count ?? 1;
   const total = formatMoneyValue(booking.total_amount ?? booking.total_price);
   const pricePerPerson = formatMoneyValue(booking.price_per_person);
+  const option = booking.option ?? null;
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-5">
@@ -51,6 +53,21 @@ export default function BookingDetailView({ booking, locale }: BookingDetailView
         <Field label={detailT('dateTime')}>
           <p>{booking.tour_date}{booking.tour_time ? ` at ${booking.tour_time}` : ''}</p>
         </Field>
+        {option?.title && (
+          <Field label={detailT('option')}>
+            <p lang={option.content_locale ?? undefined}>{option.title}</p>
+            {option.pickup_instructions && (
+              <p lang={option.content_locale ?? undefined} className="mt-1 whitespace-pre-line text-xs text-gray-600">
+                {option.pickup_instructions}
+              </p>
+            )}
+            {option.content_locale && option.content_locale !== locale && (
+              <p className="mt-1 text-xs font-medium text-warning">
+                {detailT('optionContentLanguage', { language: getContentLanguageName(option.content_locale, locale) })}
+              </p>
+            )}
+          </Field>
+        )}
         <Field label={detailT('participants')}>
           <p>{participants}</p>
         </Field>

@@ -43,6 +43,7 @@ function catalogText(locale: Locale, path: string): string {
 }
 
 const baseForm: TourFormData = {
+  source_locale: 'en',
   title: 'Morning walking tour',
   description: 'A wonderful tour through Florence with a local guide, visiting celebrated landmarks and hidden corners.',
   category: 'walking',
@@ -62,6 +63,7 @@ const baseForm: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 2,
   group_size_max: 7,
 };

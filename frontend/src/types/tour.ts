@@ -27,12 +27,19 @@ export type TourStatus = PartnerTourStatus;
 
 /* ─── Wizard-specific types ─────────────────────────────────────────────── */
 
-/** Steps in the multi-step tour creation wizard */
-export type WizardStep = 'details' | 'media' | 'pricing' | 'availability' | 'review';
+/** Content locales a tour's original content can be authored in. */
+export type SourceLocale = 'en' | 'es' | 'it';
 
-export const WIZARD_STEPS: WizardStep[] = ['details', 'media', 'pricing', 'availability', 'review'];
+/** All content locales, in catalog display order. */
+export const SOURCE_LOCALES: readonly SourceLocale[] = ['en', 'es', 'it'];
+
+/** Steps in the multi-step tour creation wizard */
+export type WizardStep = 'source' | 'details' | 'media' | 'pricing' | 'availability' | 'review';
+
+export const WIZARD_STEPS: WizardStep[] = ['source', 'details', 'media', 'pricing', 'availability', 'review'];
 
 export const WIZARD_STEP_LABELS: Record<WizardStep, string> = {
+  source: 'Language',
   details: 'Basic Info',
   media: 'Media',
   pricing: 'Pricing',
@@ -48,6 +55,10 @@ export type DifficultyLevel = 'easy' | 'moderate' | 'challenging';
 
 /** Form data for the tour creation/edit wizard */
 export interface TourFormData {
+  /** Language the original content is written in (en/es/it). Null on a
+   *  fresh form until the wizard's first screen is answered; legacy data
+   *  restores as 'en'. Immutable once content is authored. */
+  source_locale: SourceLocale | null;
   title: string;
   description: string;
   category: string;
@@ -57,7 +68,7 @@ export interface TourFormData {
   /** Nullable: older tours without difficulty restore as null; new tours default to 'easy'. */
   difficulty_level: DifficultyLevel | null;
   itinerary: TourItineraryDay[];
-  /** Authored English source lists (Spec 019); arrays preserve order. */
+  /** Authored source lists (Spec 019); arrays preserve order. */
   highlights: string[];
   inclusions: string[];
   exclusions: string[];
@@ -70,6 +81,8 @@ export interface TourFormData {
   pricing_tiers: PricingTierFormInput[];
   availability_rules: AvailabilityRuleFormInput[];
   availability_exceptions: AvailabilityExceptionFormInput[];
+  /** Authored bookable options (additive; see PartnerBookingOptionInput). */
+  options: BookingOptionFormInput[];
   /** Tour-level group size; the API contract names are group_size_min/max. */
   group_size_min: number;
   group_size_max: number;
@@ -107,6 +120,26 @@ export interface AvailabilityExceptionFormInput {
   note: string;
 }
 
+/**
+ * Authored booking option input for the create/edit forms (mirrors
+ * PartnerBookingOptionInput with form-shaped raw strings).`price` is the
+ * price per person in currency MAJOR units exactly as shown in the UI
+ * (converted to integer cents on submit); `capacity` maps to
+ * `group_size_max`; `weekdays` are 0=Sunday..6=Saturday; `server_id` is the
+ * persistent server row id kept whenever an existing option is edited.
+ */
+export interface BookingOptionFormInput {
+  id: string; // client-side temp id
+  server_id?: number;
+  title: string;
+  pickup_instructions: string;
+  guide_languages: string[];
+  price: string; // major units as typed, converted to integer cents on submit
+  capacity: string; // string for form input, converted to number on submit
+  start_time: string; // HH:MM or ''
+  weekdays: number[]; // subset of 0=Sun..6=Sat; empty = no day restriction
+}
+
 /* ─── Tour list types ───────────────────────────────────────────────────── */
 
 export interface TourListFilters {
@@ -132,6 +165,7 @@ export interface ImageUploadState {
 /* ─── Initial form data ─────────────────────────────────────────────────── */
 
 export const INITIAL_TOUR_FORM_DATA: TourFormData = {
+  source_locale: null,
   title: '',
   description: '',
   category: '',
@@ -151,6 +185,7 @@ export const INITIAL_TOUR_FORM_DATA: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 1,
   group_size_max: 20,
 };

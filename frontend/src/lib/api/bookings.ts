@@ -1,13 +1,18 @@
 import { apiClient } from './client';
 import { getAuthToken } from '../auth/token';
+import type { BookingOptionSnapshot } from './types';
 
 export interface CreateBookingRequest {
   tour_slug: string;
   tour_date: string;
   participant_count: number;
   locale?: string;
-  /** Price per person in cents as shown on the tour detail page (FR-027 drift detection). */
+  /** Price per person in cents as shown on the tour detail page (FR-027 drift detection).
+   *  Use the selected option's exact price when a booking option is chosen. */
   page_load_price?: number;
+  /** Selected bookable option of the tour (additive). The backend validates
+   *  it against the tour and snapshot-fills the booking's option block. */
+  tour_option_id?: number;
 }
 
 export interface BookingResponse {
@@ -42,6 +47,8 @@ export interface BookingResponse {
   cancellation_window_hours: number;
   can_cancel: boolean;
   created_at: string;
+  /** Booked option snapshot (additive); null/absent for option-less tours. */
+  option?: BookingOptionSnapshot | null;
 }
 
 export interface PaymentInfo {
@@ -105,6 +112,7 @@ export async function createBooking(
       participant_count: params.participant_count,
       locale: params.locale || 'en',
       ...(params.page_load_price !== undefined && { page_load_price: params.page_load_price }),
+      ...(params.tour_option_id !== undefined && { tour_option_id: params.tour_option_id }),
     }),
   });
 }

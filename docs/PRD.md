@@ -4,7 +4,7 @@
 > **Date**: 2026-10-01
 > **Author**: Product & Engineering  
 > **Status**: Living Document (Phase 1 Complete; Phase 2 Active — Spec 017 Delivered; UI Phase 1 Implemented, Spec 019 Active)
-> **Governing Constitution**: [Bookly Constitution v2.1.0](../.specify/memory/constitution.md)
+> **Governing Constitution**: [Bookly Constitution v3.0.0](../.specify/memory/constitution.md)
 > **Repository**: [bookly-travel](https://github.com/hatemsamirafifi/bookly-travel)
 
 ---
@@ -916,7 +916,7 @@ Built in-house with Tailwind CSS:
 
 ### Tour Content Source Policy
 
-Under Spec 019, partners author English traveler-facing tour content; the platform generates Spanish and Italian derivatives tied to that source revision. Missing, stale, pending, or failed derivatives do not block publication and use current English with a visible notice localized to the page language. Content and itinerary may fall back independently. Live-guide language codes are separate metadata and do not determine translated-content availability. Interface copy still ships in all three locales.
+Under Spec 019 as amended for [Bookly Constitution v3.0.0](../.specify/memory/constitution.md) (EGM-001 Option B, 2026-11-10; criteria in the [Spec 019 Amendment Record](../specs/019-tour-content-data/spec.md)), each tour has one canonical partner-authored source locale — `en`, `es`, or `it` — selected by the partner at creation and fixed for that tour. Submission and admin publication validate the title and description in the canonical source locale. Gemini generates the two other locales asynchronously from the current source revision. Superseded results cannot overwrite current data. Missing, pending, stale, or failed derivatives do not block publication, and public display uses the current derivative or the current canonical source with a visible notice localized to the page language. Content and itinerary may fall back independently; actual display languages are disclosed, and SEO descriptions and structured content reflect the values displayed. Legacy rows and legacy callers may default to `en` where evidenced; that is a compatibility default, not a restriction on new authoring. Live-guide language codes are separate metadata and do not determine translated-content availability. Interface copy still ships in all three locales.
 
 ### Multi-Tier Localization Architecture
 
@@ -1117,7 +1117,7 @@ delivered equivalent functionality.
 |:----:|-------|:------:|------------------|
 | `017` | Stripe Payments, Connect & Invoicing Foundation | ✅ Delivered and hardened | Automatic payment methods, Stripe Express onboarding/status/dashboard, destination charges, integer-only platform fees, audited account changes, and idempotent hosted invoicing |
 | `018` | UI Bootstrap, Design System and Shared Shells | Implementation complete; CI/merge acceptance pending | Original redesign baseline, semantic tokens, primitives and shared shells |
-| `019` | Tour Content Data Model and API | Active specification | English source, derived ES/IT, itinerary, media, operator privacy, related tours and compatible contracts |
+| `019` | Tour Content Data Model and API | Active specification | Canonical per-tour source locale (`en`/`es`/`it`, fixed at creation), derived locales, itinerary, media, operator privacy, related tours and compatible contracts (amended 2026-11-10 per Constitution v3.0.0) |
 | `020-027` | Remaining UI Redesign Phases | Planned | Tour detail through deployment; see master-plan mapping |
 | `028` | Partner Earnings & Settlement Operations | Planned | Bookly-owned earnings and settlement records, partner history, admin controls, Stripe reconciliation, operational audit trail |
 | `029` | Cancellation Policies & Partial Refunds | Planned | Extend the existing idempotent full-refund flow with tour policies, refund previews, partial-refund calculations, and policy snapshots |

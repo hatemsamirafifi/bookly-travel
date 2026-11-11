@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { apiGet, ownedMedia, seededOwnedTourId } from '../partner/tour-content-helpers';
+import { apiGet, enterEnglishTourDetails, ownedMedia, seededOwnedTourId } from '../partner/tour-content-helpers';
 
 test.describe('Partner Dashboard Accessibility', () => {
   test('partner dashboard home should not have accessibility violations', async ({ page }) => {
@@ -154,6 +154,10 @@ test.describe('Partner Layout Accessibility', () => {
 // Axe exclusions. Widths/locales are distributed (not full cartesian) to avoid
 // duplicated exhaustive loops; full coverage is left for ROOT manual.
 test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem('partner-tour-wizard'));
+  });
+
   test('wizard create page has no axe violations across distributed locales and widths', async ({
     page,
   }) => {
@@ -169,6 +173,8 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
       await expect(page.locator('main#main-content')).toBeVisible();
       const results = await new AxeBuilder({ page }).analyze();
       expect(results.violations).toEqual([]);
+      await enterEnglishTourDetails(page, locale);
+      expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
     }
   });
 
@@ -177,6 +183,8 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     await page.setViewportSize({ width: 320, height: 900 });
     await page.goto('/en/partner/tours/create');
     await expect(page.locator('main#main-content')).toBeVisible();
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    await enterEnglishTourDetails(page);
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   });
 
@@ -189,6 +197,7 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     for (const { locale, difficulty, guide } of expectations) {
       await page.goto(`/${locale}/partner/tours/create`);
       await expect(page.locator('main#main-content')).toBeVisible();
+      await enterEnglishTourDetails(page, locale);
       // Difficulty select keeps a stable accessible name per page language and
       // starts blank: unknown difficulty is never invented as easy.
       const difficultyTrigger = page.locator(
@@ -207,10 +216,11 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
   test('english-source notice stays visible and page-localized on details step', async ({ page }) => {
     await page.goto('/es/partner/tours/create');
     await expect(page.locator('main#main-content')).toBeVisible();
-    // Spanish page notice: authors edit English source; derivatives never block.
-    await expect(page.getByText(/traducci/i).first()).toBeVisible();
+    await enterEnglishTourDetails(page, 'es');
+    await expect(page.getByText('El contenido original está escrito en English. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.')).toBeVisible();
     await page.goto('/it/partner/tours/create');
-    await expect(page.getByText(/inglese/i).first()).toBeVisible();
+    await enterEnglishTourDetails(page, 'it');
+    await expect(page.getByText('Il contenuto originale è scritto in English. Le altre due lingue sono generate automaticamente e non bloccano la pubblicazione.')).toBeVisible();
   });
 
   test('empty wizard next announces validation errors and moves focus to the summary', async ({
@@ -224,8 +234,15 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     await expect(summary).toBeVisible();
     expect(await summary.getAttribute('aria-live')).toBe('assertive');
     await expect(summary).toBeFocused();
-    // Field-level announced error for the missing English title.
-    await expect(page.locator('p[role="alert"]', { hasText: /.+/ }).first()).toBeVisible();
+    await expect(page.locator('p[role="alert"]', { hasText: 'Choose the original writing language before continuing.' })).toBeVisible();
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+
+    await enterEnglishTourDetails(page);
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await expect(summary).toBeVisible();
+    await expect(summary).toHaveAttribute('aria-live', 'assertive');
+    await expect(summary).toBeFocused();
+    await expect(page.locator('p[role="alert"]', { hasText: 'Title is required.' })).toBeVisible();
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   });
 

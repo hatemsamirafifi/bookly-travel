@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
@@ -7,7 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   turbopack: {
-    root: resolve(__dirname, '..', '..'),
+    root: __dirname,
   },
   // Allow the dev server to accept requests/HMR from the Docker service hostnames
   // used in-container. When Playwright runs inside the bookly-frontend container it

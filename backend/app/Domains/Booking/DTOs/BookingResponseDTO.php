@@ -73,6 +73,7 @@ class BookingResponseDTO
         // Add richer tour detail when available
         if ($tour->relationLoaded('translations')) {
             $translation = $tour->translations->firstWhere('locale', $booking->locale)
+                ?? $tour->sourceTranslation()
                 ?? $tour->translations->firstWhere('locale', 'en');
             if ($translation) {
                 $data['tour']['title'] = $translation->title;
@@ -82,6 +83,12 @@ class BookingResponseDTO
         $data['tour'] = array_merge($data['tour'], [
             'cover_image_url' => $tour->cover_image_url,
         ]);
+
+        // The option the traveler bought, exactly as it was served to them at
+        // purchase time (snapshotted title/pickup in their requested booking
+        // locale, with the text's actual locale). Null for option-less
+        // bookings — legacy rows and tours without options keep working.
+        $data['option'] = $booking->bookingOption();
 
         return $data;
     }

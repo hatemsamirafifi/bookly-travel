@@ -13,5 +13,10 @@ class CreateBookingDTO
         public readonly int $travelerId,
         /** Price per person in cents as displayed on the page at load time (FR-027). */
         public readonly ?int $pageLoadPrice = null,
+        /**
+         * Selected tour option. Null is valid only for tours that offer no
+         * active options (legacy behavior); tours with options require it.
+         */
+        public readonly ?int $tourOptionId = null,
     ) {}
 }

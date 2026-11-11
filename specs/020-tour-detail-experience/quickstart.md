@@ -68,7 +68,7 @@ Wait for pg_isready success before Pest; the root runner retains a bounded30seco
 | Gallery | Zero/one/four/>five and broken photos; actual order/count, swipe/buttons, all photo reachability, focus trap/inertness/Escape/return, no refocus on image change or layout jump. | FR-009–012/029; SC-004/007 |
 | Navigation/sticky | Click and manual scroll full/sparse page, resize/long labels; active cue, visible focused heading, no focus theft/whole-page overflow/bar obstruction. | FR-013–015; SC-005/007 |
 | Trust/discovery/wishlist | Real review counts/zero, absent/verified operator, related eligibility/current locale, actual saved/failed/denied outcomes; no private data. | FR-023–026; SC-006/009 |
-| Locale/source/SEO | Current derivatives, independent English fallback, intentional empty itinerary and reload; notices/lang, metadata/schema/visible facts agree. | FR-001/027–028/032; SC-006/009 |
+| Locale/source/SEO | Current derivatives, independent fallback to the fixed tour source for each `en`/`es`/`it` source, intentional empty itinerary and reload; notices/lang, metadata/schema/visible facts agree. | FR-001/027–028/032; SC-006/009 |
 | Route/states | Actual404/410 API plus rendered not-found/withdrawn, loading/unavailable/network/review/media errors and denied actions; localized retry/noindex/no fake success. | FR-001/031; SC-006/009 |
 | Twelve visual cases | EN/ES/IT ×390/768/1024/1440 screenshots with loaded reviews, viewer/mobile selectors/wishlist prompt as applicable; keyboard/reduced motion/manual focus/contrast. | FR-029–030/033; SC-005/007 |
 | Performance/regression | Strict production audits and existing critical payment/auth/review/public-contract suites; retain every report/result. | FR-001/022–034; SC-008/009 |

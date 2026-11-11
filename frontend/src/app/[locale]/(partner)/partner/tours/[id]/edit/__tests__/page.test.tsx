@@ -61,6 +61,7 @@ interface MockEnRow {
 
 interface MockTour {
   id: number;
+  source_locale?: 'en' | 'es' | 'it';
   category_id: number;
   slug: string;
   location: string;
@@ -174,6 +175,22 @@ describe('PartnerTourEditPage snapshot restore (Spec 019)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFetchTour();
+  });
+
+  it.each([
+    [undefined, 'en', 'Owned legacy tour'],
+    ['es', 'es', 'Recorrido guardado'],
+  ] as const)('opens an existing tour with source %s directly in its authored editor', async (storedLocale, authoredLocale, title) => {
+    mockFetchTour({
+      ...ownedTour,
+      ...(storedLocale && { source_locale: storedLocale }),
+      translations: [{ ...ownedTour.translations[0], locale: authoredLocale, title }],
+    });
+
+    await renderPage();
+
+    expect(await screen.findByDisplayValue(title)).toBeVisible();
+    expect(screen.queryByRole('radiogroup', { name: englishForm.sourceLanguageLabel })).not.toBeInTheDocument();
   });
 
   it('retains specific English alt through snapshot media restoration and the owned update', async () => {

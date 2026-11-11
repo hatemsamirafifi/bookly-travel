@@ -9,14 +9,10 @@ class TourCardTransformer
 {
     public function transform(Tour $tour, string $locale): array
     {
-        // Use the loaded `translations` collection (no extra query) when the
-        // caller eager-loaded it; falls back to a single query otherwise.
-        $translations = $tour->relationLoaded('translations')
-            ? $tour->translations
-            : $tour->translations()->get();
-
+        $tour->loadMissing('translations');
         $translation = app(TourTranslationService::class)->currentTranslation($tour, $locale)
-            ?? $translations->firstWhere('locale', 'en');
+            ?? $tour->sourceTranslation();
+        $priceAmount = $tour->lowestPriceAmount();
 
         return [
             'id' => $tour->id,
@@ -26,9 +22,9 @@ class TourCardTransformer
             'category' => optional($tour->category)->name ?? '',
             'duration_label' => $tour->duration_label,
             'price' => [
-                'amount' => $tour->lowestPriceAmount(),
+                'amount' => $priceAmount,
                 'currency' => $tour->currency(),
-                'formatted' => Tour::formatPrice($tour->lowestPriceAmount(), $tour->currency()),
+                'formatted' => Tour::formatPrice($priceAmount, $tour->currency()),
             ],
             'rating' => [
                 'average' => $tour->averageRating(),

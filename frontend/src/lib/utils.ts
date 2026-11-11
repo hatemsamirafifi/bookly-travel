@@ -52,6 +52,16 @@ export function formatExactCentsDecimal(amountCents: number): string {
 }
 
 /**
+ * Convert a UI major-unit money input (e.g. `19.99` euros as typed) into
+ * integer minor units (cents) for the API contract. Matching search.ts
+ * money semantics: the rounded product avoids the binary floating point
+ * drift of naive multiplication (0.29 * 100 → 28.999…).
+ */
+export function toMinorUnits(majorUnits: number | string): number {
+  return Math.round(Number(majorUnits) * 100);
+}
+
+/**
  * Format a money amount (stored in integer cents) as a locale-aware currency
  * string. Shared by every booking UI so prices render consistently and the
  * currency is driven by the data, not a hardcoded symbol/EUR fallback.

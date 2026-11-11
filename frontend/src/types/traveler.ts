@@ -20,6 +20,15 @@ export interface TravelerTourSummary {
   inclusions?: string[];
 }
 
+/** Booked booking option as serialized in booking detail/confirmation payloads. */
+export interface BookingOptionRecord {
+  id: number | null;
+  title: string;
+  pickup_instructions: string | null;
+  /** Actual content language of the snapshot text; null when unknown. */
+  content_locale?: 'en' | 'es' | 'it' | null;
+}
+
 export interface TravelerBooking {
   id: string | number;
   reference: string;
@@ -43,6 +52,8 @@ export interface TravelerBooking {
   cancellation_date?: string | null;
   created_at?: string;
   can_cancel?: boolean;
+  /** Booked option snapshot (additive); absent for option-less tours. */
+  option?: BookingOptionRecord | null;
   payment?: {
     status: string;
     amount: number | MoneyValue;

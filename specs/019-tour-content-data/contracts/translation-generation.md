@@ -1,19 +1,19 @@
 # Translation Generation and Recovery Contract: Spec 019
 
-**Governance**: [Constitution v2.1.0](../../../.specify/memory/constitution.md)
+**Governance**: [Constitution v2.1.0](../../../.specify/memory/constitution.md) at original design; synchronized 2026-11-10 with [Constitution v3.0.0](../../../.specify/memory/constitution.md). Derivatives are the two non-source locales of each tour's fixed canonical source locale ([spec.md Amendment Record](../spec.md)).
 **Scope**: Internal TourContentTranslator/job/state boundary; no public provider endpoint.
 
 ## Request Boundary
 
-Reuse TourContentTranslator and GeminiTourTranslator. A job carries tourId, requested derived locale (es/it), and sourceHash only; never credentials, provider responses, private partner/booking/payment fields or raw prompts. The worker loads the current whitelisted English source. Translate nonempty source strings by stable paths; reconstruct into the source shape so numeric day/duration, nulls and list ordering stay unchanged.
+Reuse TourContentTranslator and GeminiTourTranslator. A job carries tourId, one requested derived locale (a non-source locale of that tour), and sourceHash only; never credentials, provider responses, private partner/booking/payment fields or raw prompts. The worker loads the current whitelisted canonical source of the tour. Translate nonempty source strings by stable paths; reconstruct into the source shape so numeric day/duration, nulls and list ordering stay unchanged.
 
 The backend sends the existing structured JSON generateContent request with backend-only configured model/key. Prompt input is data, not instructions. Exact expected keys must return once each as nonblank strings; unknown/missing/duplicate keys or invalid lengths reject the result. Validate every source-field and itinerary bound after reconstruction, including numeric fields preserved from source. [Gemini structured outputs](https://ai.google.dev/gemini-api/docs/generate-content/structured-output) supports structured JSON but does not replace application value validation.
 
-Specific media alt text remains English-specific accessibility text with actual alt_locale; it does not add a per-photo translation or AI-caption request.
+Specific media alt text remains source-locale-specific accessibility text with actual alt_locale; it does not add a per-photo translation or AI-caption request.
 
 ## Revision and Atomic Completion
 
-1. Persist canonical EN and desired ES/IT states in the source transaction. Lock Tour, then EN, then states in es/it order. Compute normalized current hash; unchanged source is a no-op.
+1. Persist the canonical source and desired derived-locale states in the source transaction. Lock Tour, then the source translation, then derived states in platform order. Compute normalized current hash; unchanged source is a no-op.
 2. Dispatch after commit to an asynchronous Redis worker. Source HTTP success is independent of provider completion and of a recoverable post-commit queue-dispatch failure.
 3. Worker prechecks existence and hash. Superseded/deleted/missing-source jobs exit without a content write. Perform provider HTTP outside database locks.
 4. On completion, take the same lock order and recompute source hash. Only matching current desired hash can be applied. If matching ready content already exists, derivative writing is a no-op; do not replace it merely because another worker produced different wording. Precheck matching-ready work before the provider call and allow idempotent projection refresh without regeneration, repairing a prior index-dispatch failure after ready commit.
@@ -44,4 +44,4 @@ Monitor queue lag, unfinished/failed state counts, sanitized categories and sour
 
 ## Required Interleavings
 
-Real PostgreSQL tests must demonstrate old completion versus newer source, two completions for the same hash, terminal failure after ready, source transaction rollback, queue failure after commit/reconciliation, changed English during legacy adoption, and concurrent source edits using a consistent lock order. Provider fake barriers/independent DB connections control the ordering; sequential hash assertions alone are insufficient evidence of row-lock correctness.
+Real PostgreSQL tests must demonstrate old completion versus newer source, two completions for the same hash, terminal failure after ready, source transaction rollback, queue failure after commit/reconciliation, changed source content during legacy adoption, and concurrent source edits using a consistent lock order. Provider fake barriers/independent DB connections control the ordering; sequential hash assertions alone are insufficient evidence of row-lock correctness.

@@ -173,12 +173,14 @@ export function getPresentSectionIds(tour: TourDetail): DetailSectionId[] {
 }
 
 /**
- * General fallback: a non-English page whose actual content locale is
- * English with nonempty general content. The summary flag alone never
- * produces a notice.
+ * Language fallback disclosure: the actual content/itinerary language
+ * differs from the page locale. With the additive source-localization
+ * model a tour may serve non-English authored content, so the mismatch is
+ * what discloses — an English page with Spanish content now discloses too,
+ * and non-English disclosures render localized display names.
  */
 export function shouldShowContentFallback(tour: TourDetail, pageLocale: string): boolean {
-  return pageLocale !== 'en' && tour.content_locale === 'en' && hasNonemptyGeneralContent(tour);
+  return tour.content_locale !== pageLocale && hasNonemptyGeneralContent(tour);
 }
 
 /**
@@ -187,7 +189,7 @@ export function shouldShowContentFallback(tour: TourDetail, pageLocale: string):
  * itineraries stay silent without English substitution.
  */
 export function shouldShowItineraryFallback(tour: TourDetail, pageLocale: string): boolean {
-  return pageLocale !== 'en' && tour.itinerary_locale === 'en' && hasUsableItinerary(tour.itinerary);
+  return tour.itinerary_locale !== pageLocale && hasUsableItinerary(tour.itinerary);
 }
 
 export function getLanguageDisclosure(tour: TourDetail, pageLocale: string): LanguageDisclosure {
@@ -226,6 +228,17 @@ export function getGuideLanguageNames(codes: readonly string[], pageLocale: stri
 /** Image alt language: explicit alt_locale wins, else the content locale. */
 export function resolveImageAltLocale(image: TourImage, contentLocale: ContentLocale): ContentLocale {
   return image.alt_locale ?? contentLocale;
+}
+
+/**
+ * One content-language name localized for the page (e.g. the ES display
+ * name for an Italian-authored option shown on a Spanish page). Unknown or
+ * ill-formed locales fall back to the raw code, matching the guide-language
+ * disclosure behavior.
+ */
+export function getContentLanguageName(code: string, pageLocale: string): string {
+  const [name] = getGuideLanguageNames([code], pageLocale);
+  return name;
 }
 
 export function getDetailPresentation(tour: TourDetail, pageLocale: string): DetailPresentation {

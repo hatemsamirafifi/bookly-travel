@@ -1,33 +1,24 @@
 <!--
   SYNC IMPACT REPORT
-  Version change : 2.0.0 -> 2.1.0
-  Bump rationale : MINOR - adds mandatory phase/spec traceability and tour
-                   source/derived-content rules; clarifies continuation of
-                   existing work without weakening fresh-main or release gates.
+  Version change : 2.1.0 -> 3.0.0
+  Bump rationale : MAJOR. Replaces mandatory English tour authoring with one
+                   canonical partner-authored locale per tour from en, es, it.
   Ratified       : 2026-04-10
-  Last Amended   : 2026-10-01
-  Owner direction: UI master-plan Phase 2 is Spec 019; align numbering and
-                   constitution while preserving existing Spec 018.
+  Last Amended   : 2026-11-10
+  Owner approval : EGM-001, Option B, approved on 2026-11-10.
   Modified sections:
-    - VI: distinguish translated interface copy from derived tour content.
-    - Public Contracts and SEO: English revision, fallback, guide-language rules.
-    - Specification and Planning: verified predecessor, phase/spec mapping.
-    - Compliance Review: separate implementation from CI/merge/release acceptance.
-  Added sections: phase/spec identity and preservation rules in delivery workflow.
-  Removed sections: none; original product, security and release gates retained.
-  Propagation:
-    - docs/bookly-ui-redesign-spec-kit-master-plan.md: Specs 018-027 mapping.
-    - docs/Phase 2 Implementation Plan.md: v2.1.0; future product Specs 028-034.
-    - docs/PRD.md: v2.2.0; matching numbering and active Constitution v2.1.0.
-    - specs/019-tour-content-data/spec.md: new Phase 2 scope under v2.1.0.
-    - specs/018-bookly-ui-redesign/spec.md and plan.md: original scope retained;
-      continuation ownership and current release governance annotated.
-    - .specify/templates/spec-template.md and plan-template.md: traceability fields.
-    - .specify/templates/tasks-template.md: affected critical-flow tests required.
-    - Existing Spec 018 contracts/research/tasks: preserved baseline, not rewritten.
-  Deferred acceptance: Spec 018 historical checks remain checks against v2.0.0;
-                       new phases and release checks evaluate v2.1.0 explicitly.
-  Follow-up TODOs: none.
+    - Tour Content Source and Derived Locales: canonical source selection,
+      validation, revision-bound derivatives and localized fallback.
+  Added sections: none.
+  Removed sections: none.
+  Dependent documentation to align before further work relying on the amendment:
+    - Supplier Portal Plan: record the v3.0.0 Constitution Check.
+    - Redesign master plan, Phase 2 Implementation Plan, and PRD: update active
+      references and requirements that assume English as the sole source.
+    - Specs 018–020: update affected active requirements, contracts, data model,
+      and acceptance procedures for source validation and localized fallback.
+    - Rollout verification: confirm existing source-locale defaults, derivative
+      regeneration, and the actual fallback language for each supported source.
 -->
 
 # Bookly Constitution
@@ -252,19 +243,20 @@ amendment when it changes a principle.
 
 ### Tour Content Source and Derived Locales
 
-- English MUST be the canonical partner-authored source for traveler-facing
-  tour content, including structured itineraries. Required English title and
-  description MUST be validated before submission and admin publication.
-- Spanish and Italian tour content MUST be platform-generated derivatives.
-  Missing, pending, stale, or failed derivatives MUST NOT block an otherwise
-  eligible English tour from publication.
-- Derived content MUST be tied to an English source revision. Superseded
-  results MUST NOT replace current content; generation and retries MUST be
-  idempotent and MUST NOT delay a successful English save.
-- Public display MUST use a current derivative or the current English source
-  with a visible localized fallback notice. Content and itinerary MAY fall back
-  independently; their actual languages MUST be disclosed. SEO descriptions
-  and structured content MUST reflect those same selected values.
+- Each tour MUST have one canonical partner-authored source for traveler-facing
+  content, including structured itineraries, in English (`en`), Spanish (`es`),
+  or Italian (`it`). The partner selects the source locale at creation and it
+  MUST remain fixed for that tour. Submission and publication MUST validate
+  the title and description in the canonical source locale.
+- The platform MUST generate the two other locales from the current canonical
+  revision. Missing, pending, stale, or failed derivatives MUST NOT block
+  publication of an otherwise eligible tour.
+- Superseded results MUST NOT replace current content. Generation and retries
+  MUST be idempotent and MUST NOT delay a successful source save.
+- Public display MUST use the current derivative or the current canonical
+  source with a visible localized fallback notice. Content and itinerary MAY
+  fall back independently. Their actual languages MUST be disclosed, and SEO
+  descriptions and structured content MUST reflect the values displayed.
 - Live-guide/spoken language codes MUST remain independent of content locales.
   Existing spoken-language aliases MUST preserve their meaning.
 - Gemini is the approved backend-only translation provider for the redesign.
@@ -430,4 +422,4 @@ current version.
 - Exceptions require written owner approval, bounded scope, an expiry or
   remediation plan, and entry in the feature plan's Complexity Tracking table.
 
-**Version**: 2.1.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-10-01
+**Version**: 3.0.0 | **Ratified**: 2026-04-10 | **Last Amended**: 2026-11-10

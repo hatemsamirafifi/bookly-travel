@@ -7,7 +7,8 @@ import { z } from 'zod';
  * participant count originate from selectors rather than free text, so this
  * schema primarily guards against submitting with a missing date/participants
  * and enforces basic shape before the network call. The backend remains the
- * source of truth for per-tour group-size limits and availability (422/409).
+ * source of truth for per-tour group-size limits and availability (422/409),
+ * and for validating the selected option against the tour.
  */
 export const createBookingSchema = z.object({
   tour_slug: z.string().min(1, 'REQUIRED'),
@@ -15,6 +16,8 @@ export const createBookingSchema = z.object({
   participant_count: z.number().int('REQUIRED').min(1, 'REQUIRED'),
   locale: z.enum(['en', 'es', 'it']).optional(),
   page_load_price: z.number().int().nonnegative().optional(),
+  /** Selected offered option id; sent only when the traveler picked one. */
+  tour_option_id: z.number().int().positive().optional(),
 });
 
 export type CreateBookingFormData = z.infer<typeof createBookingSchema>;

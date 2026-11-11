@@ -4,11 +4,11 @@
 
 **Input**: `specs/018-bookly-ui-redesign/spec.md`, [master plan](../../docs/bookly-ui-redesign-spec-kit-master-plan.md), Constitution v2.0.0.
 
-**Continuation governance**: [Constitution v2.1.0](../../.specify/memory/constitution.md) applies to new phases and release acceptance. The checks recorded below remain historical v2.0.0 design evidence, not a v2.1.0 revalidation. Spec 018 retains the original program plan and completed Phase 1 foundations; active master-plan Phase 2 planning belongs to [Spec 019](../019-tour-content-data/spec.md). Its dependent branch starts from `codex/bookly-ui-redesign-all-work` at `84ae4e5`, with PRs #27/#28 pending merge.
+**Continuation governance**: [Constitution v2.1.0](../../.specify/memory/constitution.md) applied to new phases and release acceptance while active; from 2026-11-10, [Constitution v3.0.0](../../.specify/memory/constitution.md) governs active phases, and its tour-content source amendment governs the active plan ([Spec 019 Amendment Record](../019-tour-content-data/spec.md)). The checks recorded below remain historical v2.0.0 design evidence, not a later-version revalidation. Spec 018 retains the original program plan and completed Phase 1 foundations; active master-plan Phase 2 planning belongs to [Spec 019](../019-tour-content-data/spec.md). (Historical baseline note from generation: its dependent branch started from `codex/bookly-ui-redesign-all-work` at `84ae4e5`, with PRs #27/#28 pending merge at that time; both later merged.)
 
 ## Summary
 
-Deliver a phased, Tripadvisor-inspired but distinctly Bookly tours-only redesign. Preserve marketplace, booking, payment, publishing, authorization, and URL contracts. Add partner-owned English tour content with asynchronous Gemini-generated Spanish/Italian derivatives. A current derivative is displayed in its locale; pending, failed, or stale derivatives show current English with a visible notice. Live-guide language codes remain separate.
+Deliver the phased Bookly tours-only redesign with existing booking, publishing, authorization, and URL contracts. Partners select one fixed tour source from `en`, `es`, and `it`. Gemini generates the other two asynchronously from the current revision. Public sections use a current derivative or the current source with a visible localized notice. Live-guide languages remain independent.
 
 ## Technical Context
 
@@ -86,7 +86,7 @@ frontend/tests/e2e/
 ## Delivery Sequence
 
 1. **Contracts and foundation**: lock existing routes/API shapes, source/derived translation model, semantic design tokens, shared shells and acceptance matrices.
-2. **Tour-content vertical slice**: additive status migration, EN-only partner authoring, Gemini translator adapter, revision-safe queue, EN publication guard, public fallback/ready selection, frontend state and E2E regression coverage.
+2. **Tour-content vertical slice**: additive status migration, fixed per-tour source authoring, Gemini translator adapter, revision-safe queue, source-locale publication guard, public fallback/ready selection, frontend state and E2E regression coverage.
 3. **Discovery and tour detail**: data-backed home/search cards, accessible gallery, facts, itinerary, guide languages, operator/related content and truthful booking CTA.
 4. **Checkout, traveler and partner surfaces**: preserve payment/booking/account authorization; redesign responsive flows and analytics with correctly scaled financial values.
 5. **Admin/supporting pages and release**: moderation, blog/legal/voucher/errors, browser/a11y/performance evidence, staged deployment and rollback checks.
@@ -95,16 +95,16 @@ Each slice must keep existing frontend compatible with additive backend response
 
 ## Translation Design Decisions
 
-- English is the sole partner-authored source. Existing EN title and description remain the publication minimum; optional fields are translated when present.
-- Store per-locale status and a hash/revision of EN fields. A result becomes current only if the source hash still matches under a transaction/lock. Unchanged source does not enqueue duplicate work.
-- Keep existing ES/IT records recoverable; treat their provenance conservatively until regeneration. Do not silently expose stale output as current. Backfill/requeue in bounded batches after rollout.
+- Partners select one source locale at creation. Submission and publication validate the source title and description. Eligible publication proceeds while derivatives are unavailable.
+- Store per-locale status and a hash of the canonical source revision. A result becomes current only if the source hash still matches under a transaction/lock. Unchanged source does not enqueue duplicate work.
+- Keep existing derivative records recoverable; treat their provenance conservatively until regeneration. Do not silently expose stale output as current. Backfill/requeue in bounded batches after rollout.
 - Use backend-only Gemini `generateContent` with structured JSON, explicit output validation, a translatable-field allowlist, bounded transient retries and sanitized errors. No secret in source, logs, queue payloads, browser bundles or tests.
-- Selection of a derivative is all-or-nothing for a content revision; if missing/stale/failed, use current EN consistently for public detail, cards, search metadata and structured data, with visible fallback status. Guide-language codes never affect selection.
+- Public detail selects current general content and itinerary independently. A nonempty section that uses the current source shows a visible notice in the page language naming the actual source. Metadata and structured data reflect the content shown. Guide languages remain independent.
 - Tests fake the translator and prove queue, stale-result rejection, publishing, fallback, ready transition, authorization and browser rendering; no live Gemini call is needed.
 
 ## Verification and Release
 
-Run focused Pest/Jest/Playwright first, then applicable full Laravel/Next gates from the constitution. Document production-build Lighthouse conditions and manual keyboard/focus checks. Deploy migration, backend and worker before frontend; configure a newly rotated `GEMINI_API_KEY` in the backend secret store and a backend model setting. Keep EN fallback until jobs succeed. Roll back frontend/backend without deleting new columns or generated translations. Monitor translation queue failures, Gemini 429/5xx, public fallback rate, booking errors and API latency.
+Run focused Pest/Jest/Playwright first, then applicable full Laravel/Next gates from the constitution. Document production-build Lighthouse conditions and manual keyboard/focus checks. Deploy migration, backend and worker before frontend; configure a newly rotated `GEMINI_API_KEY` in the backend secret store and a backend model setting. Display the current source with a localized notice until a current derivative is available. Roll back frontend/backend without deleting new columns or generated translations. Monitor translation queue failures, Gemini 429/5xx, public fallback rate, booking errors and API latency.
 
 ## Complexity Tracking
 

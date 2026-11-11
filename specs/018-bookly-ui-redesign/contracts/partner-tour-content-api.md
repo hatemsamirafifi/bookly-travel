@@ -6,20 +6,22 @@ Retain existing authenticated, partner-owned create/show/update/draft/submit end
 
 ## Authoring payload
 
-- `title` and `description` at top level remain the current English-source shorthand.
-- `translations.en` remains the structured English-source form. It may include `title`, `description`, `highlights`, `inclusions`, `exclusions`, `meeting_point`, `cancellation_policy`, `itinerary`, and optional `important_information`.
-- Partner UI authors EN only. New partner writes to `translations.es` or `translations.it` are rejected with a clear validation error once the new contract is active; previously stored rows are preserved for migration/backfill. This intentional write-contract restriction requires coordinated frontend/backend rollout.
+- Creation accepts one `source_locale` from `en`, `es`, and `it`. Legacy callers that omit it default to `en`. Updates cannot change it. Top-level `title` and `description` address that source.
+- `translations.{source_locale}` is the structured source form. It may include `title`, `description`, `highlights`, `inclusions`, `exclusions`, `meeting_point`, `cancellation_policy`, `itinerary`, and optional `important_information`.
+- The partner UI writes only the fixed source. Writes to either derived locale receive field-specific validation errors. Previously stored derivatives remain available for migration and backfill.
 - `guide_languages` (and existing `languages` alias) remain tour-level spoken-guide codes, not translation locales.
 - Do not accept translation status/hash as partner input. These are server-owned.
 
 ## Publication
 
-Submit and admin approval both require nonempty EN title and description and retain all existing authorization/lifecycle guards. ES/IT readiness is not required. English changes on any traveler-facing field mark derived status stale/pending and enqueue regeneration after commit; unchanged content is a no-op.
+Submission and admin approval require a nonempty title and description in the fixed source locale and retain existing authorization and lifecycle checks. Derivative readiness does not block eligible publication. Source changes queue both derivatives after commit. Gemini jobs use the current revision and superseded jobs cannot overwrite it.
 
 ## Response
 
-Partner show may add `translation_statuses: {es: pending|ready|stale|failed, it: ...}` for operational visibility. It must not return Gemini credentials, source hashes or provider error bodies. Existing tour and translation fields are retained.
+Partner show may add `translation_statuses` keyed by the two derived locales for operational visibility. It must not return Gemini credentials, source hashes or provider error bodies. Existing tour and translation fields are retained.
+
+Option text, revision handling, and option IDs follow the [Spec 019 supplier option contract](../../019-tour-content-data/contracts/partner-tour-content-api.md#supplier-option-content).
 
 ## Tests
 
-Pest tests cover auth/ownership, EN-required publish, ES/IT not required, rejection of partner-authored derived content, guide-code independence, idempotent queueing, revision-safe completion and sanitized failure status. Browser tests cover EN-only authoring and status display.
+Verify authorization, immutable source selection, source-required submission and publication, rejection of partner-authored derivatives, revision-safe jobs, and sanitized status. The [Spec 019 partner contract](../../019-tour-content-data/contracts/partner-tour-content-api.md) defines current acceptance coverage.

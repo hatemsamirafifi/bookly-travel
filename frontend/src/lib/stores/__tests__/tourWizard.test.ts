@@ -2,6 +2,7 @@ import { mergePersistedWizardState, normalizeWizardState } from '../tourWizard';
 import type { TourFormData } from '@/types/tour';
 
 const baseForm: TourFormData = {
+  source_locale: 'en',
   title: '',
   description: '',
   category: '',
@@ -21,6 +22,7 @@ const baseForm: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 1,
   group_size_max: 20,
 };
@@ -87,6 +89,53 @@ describe('normalizeWizardState (Spec 019)', () => {
     expect(normalizeWizardState({ difficulty_level: null }).difficulty_level).toBeNull();
     expect(normalizeWizardState({ difficulty_level: 'moderate' }).difficulty_level).toBe('moderate');
   });
+
+  it('keeps an unanswered original writing language unselected and keeps valid codes', () => {
+    // EGM-004: an unbound local snapshot with null/missing/invalid source is
+    // NOT a legacy tour — it stays unselected so the Language gate is still
+    // asked. Only identifiable materialized legacy tours default to 'en',
+    // and that default is applied by the edit-flow call sites.
+    expect(normalizeWizardState({}).source_locale).toBeNull();
+    expect(normalizeWizardState({ source_locale: null }).source_locale).toBeNull();
+    expect(normalizeWizardState({ source_locale: 'fr' }).source_locale).toBeNull();
+    expect(normalizeWizardState({ source_locale: 'en' }).source_locale).toBe('en');
+    expect(normalizeWizardState({ source_locale: 'es' }).source_locale).toBe('es');
+    expect(normalizeWizardState({ source_locale: 'it' }).source_locale).toBe('it');
+  });
+
+  it('restores authored option rows while dropping malformed entries', () => {
+    const normalized = normalizeWizardState({
+      options: [
+        {
+          id: 'row-1',
+          server_id: 12,
+          title: 'Paseo privado',
+          pickup_instructions: 'Recogida en el hotel',
+          guide_languages: ['es', 'ar'],
+          price: '45.50',
+          capacity: '8',
+          start_time: '10:00',
+          weekdays: [1, 3, 1],
+        },
+        42,
+        null,
+        { title: 7 },
+      ],
+    });
+    expect(normalized.options).toEqual([
+      {
+        id: 'row-1',
+        server_id: 12,
+        title: 'Paseo privado',
+        pickup_instructions: 'Recogida en el hotel',
+        guide_languages: ['es', 'ar'],
+        price: '45.50',
+        capacity: '8',
+        start_time: '10:00',
+        weekdays: [1, 3],
+      },
+    ]);
+  });
 });
 
 describe('mergePersistedWizardState (Spec 019 rehydration)', () => {
@@ -118,5 +167,48 @@ describe('mergePersistedWizardState (Spec 019 rehydration)', () => {
     expect(mergePersistedWizardState(null, current)).toBe(current);
     expect(mergePersistedWizardState('garbage', current)).toBe(current);
     expect(mergePersistedWizardState({ currentStep: 'details' }, current)).toBe(current);
+  });
+});
+
+describe('mergePersistedWizardState source gate (A2, EGM-004)', () => {
+  // The live store's initial state: the Language step with nothing chosen.
+  const unselectedCurrent = {
+    currentStep: 'source' as const,
+    formData: { ...baseForm, source_locale: null },
+    isDirty: false,
+    isSubmitting: false,
+  };
+
+  it('routes an unselected restored draft back to the Language step even when an older step was persisted', () => {
+    const raw: unknown = JSON.parse(
+      '{"currentStep":"pricing","formData":{"title":"Half-written tour","source_locale":null,'
+      + '"options":[{"id":"row-1","server_id":41,"title":"Evening walk","pickup_instructions":"",'
+      + '"guide_languages":["es","ar"],"price":"35","capacity":"6","start_time":"18:00","weekdays":[5]}]}}'
+    );
+    const merged = mergePersistedWizardState(raw, unselectedCurrent);
+    // A persisted later step never skips the unanswered writing-language gate.
+    expect(merged.currentStep).toBe('source');
+    expect(merged.formData.source_locale).toBeNull();
+    // The restored draft and its authored option rows survive behind the gate.
+    expect(merged.formData.title).toBe('Half-written tour');
+    expect(merged.formData.options[0]).toMatchObject({ id: 'row-1', server_id: 41, guide_languages: ['es', 'ar'] });
+  });
+
+  it('keeps a persisted later step when a valid source language was chosen', () => {
+    const raw: unknown = JSON.parse(
+      '{"currentStep":"availability","formData":{"title":"Recorrido español","source_locale":"es"}}'
+    );
+    const merged = mergePersistedWizardState(raw, unselectedCurrent);
+    expect(merged.currentStep).toBe('availability');
+    expect(merged.formData.source_locale).toBe('es');
+    expect(merged.formData.title).toBe('Recorrido español');
+  });
+
+  it('routes an older snapshot without any stored source through the Language step', () => {
+    const raw: unknown = JSON.parse('{"currentStep":"details","formData":{"title":"Pre-source snapshot"}}');
+    const merged = mergePersistedWizardState(raw, unselectedCurrent);
+    expect(merged.currentStep).toBe('source');
+    expect(merged.formData.source_locale).toBeNull();
+    expect(merged.formData.title).toBe('Pre-source snapshot');
   });
 });

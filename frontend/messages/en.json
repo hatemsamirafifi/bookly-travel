@@ -228,6 +228,14 @@
     "partialTranslation": "Some content is displayed in English",
     "contentFallback": "Content is shown in English",
     "itineraryFallback": "Itinerary is shown in English",
+    "contentFallbackNamed": "Content is shown in {language}",
+    "itineraryFallbackNamed": "Itinerary is shown in {language}",
+    "bookingOptionPicker": "Tour options",
+    "bookingOptionPickerHint": "Available options",
+    "selectAnOption": "Choose an option to continue",
+    "optionStartTime": "Start time",
+    "optionPickupInstructions": "Pickup",
+    "optionContentLanguage": "This option's text is shown in {language}",
     "overview": {
       "readMore": "Read more",
       "readLess": "Read less"
@@ -240,7 +248,9 @@
       "invalidPricing": "The tour price is unavailable. Booking cannot continue.",
       "invalidBounds": "Traveler limits are unavailable. Booking cannot continue.",
       "countChanged": "Traveler limits changed. Choose your traveler count again.",
-      "editSelection": "Edit booking selections"
+      "editSelection": "Edit booking selections",
+      "optionRequired": "Choose an option to see dates and continue.",
+      "optionInvalid": "Your selected option is no longer offered. Choose an option again."
     },
     "authRecovery": {
       "continueNotice": "Sign in to continue booking. Your tour, date, traveler count and language are kept, and nothing is booked until you confirm.",
@@ -353,6 +363,8 @@
     "expiredTitle": "Booking Expired",
     "cancelledTitle": "Booking Cancelled",
     "tourLabel": "Tour",
+    "option": "Option",
+    "optionPickup": "Pickup instructions",
     "notFound": "Booking not found.",
     "keepReference": "Keep this reference for your records.",
     "retry": "Retry",
@@ -496,6 +508,8 @@
       "fallbackTour": "Tour",
       "reference": "Reference",
       "tour": "Tour",
+      "option": "Option",
+      "optionContentLanguage": "This option's text is shown in {language}",
       "dateTime": "Date and time",
       "participants": "Participants",
       "price": "Price",
@@ -746,6 +760,7 @@
         "archived": "Archived"
       },
       "wizard": {
+        "source": "Language",
         "details": "Details",
         "media": "Media",
         "pricing": "Pricing",
@@ -785,7 +800,20 @@
         "meetingPoint": "Meeting Point",
         "guideLanguageCodes": "Live-guide language codes",
         "guideLanguageCodesHint": "Comma-separated spoken languages, such as de, en, es. These do not control page translations.",
-        "sourceLanguageNotice": "Edit English source content. Spanish and Italian are generated automatically and never block publication.",
+        "sourceLanguageNotice": "Original content is written in {language}. The other two languages are generated automatically and never block publication.",
+        "sourceLanguageLabel": "Original writing language",
+        "sourceLanguageHint": "Select the language you will write the original content in. The other two languages are generated automatically and never block publication.",
+        "sourceLanguageLockedNotice": "This tour's content already exists in {language}. The original writing language is fixed and cannot be changed.",
+        "sourceLanguageLabels": {
+          "en": "English",
+          "es": "Spanish",
+          "it": "Italian"
+        },
+        "sourceLanguageNames": {
+          "en": "English",
+          "es": "Español",
+          "it": "Italiano"
+        },
         "translationStatus": {
           "pending": "Translation pending",
           "ready": "Translation ready",
@@ -891,7 +919,32 @@
         "easy": "Easy",
         "moderate": "Moderate",
         "challenging": "Challenging",
-        "difficultyUnspecified": "Not specified"
+        "difficultyUnspecified": "Not specified",
+        "bookingOptions": "Booking Options",
+        "bookingOptionsHint": "Offer bookable options (e.g., Standard group, Private tour, Family). Each option carries its own price, capacity, guide languages and pickup instructions.",
+        "bookingOptionsSourceHint": "Titles and pickup instructions are written in {language}.",
+        "addOption": "Add Option",
+        "removeOption": "Remove option {number}",
+        "noBookingOptions": "No booking options yet. Click \u201cAdd Option\u201d to create one.",
+        "bookingOptionNumber": "Option {number}",
+        "bookingOptionsCount": "Options defined: {count}",
+        "optionTitle": "Option title",
+        "optionTitlePlaceholder": "e.g., Standard group, Private tour",
+        "optionGuideLanguages": "Option guide languages",
+        "optionPrice": "Price per person",
+        "optionCapacity": "Capacity",
+        "optionStartTime": "Start time",
+        "optionWeekdays": "Active days",
+        "optionWeekdaysHint": "Leave empty for every day.",
+        "optionPickupInstructions": "Pickup instructions",
+        "optionPickupPlaceholder": "e.g., Hotel pickup 30 minutes before the start (optional)",
+        "weekday0": "Sun",
+        "weekday1": "Mon",
+        "weekday2": "Tue",
+        "weekday3": "Wed",
+        "weekday4": "Thu",
+        "weekday5": "Fri",
+        "weekday6": "Sat"
       },
       "errors": {
         "titleRequired": "Title is required.",
@@ -942,7 +995,13 @@
         "guideLanguageInvalid": "Each guide language must be a 2- or 3-letter code with optional subtags (e.g. en, pt-BR).",
         "guideLanguagesMax": "No more than 20 guide languages.",
         "duplicateGuideLanguage": "Duplicate guide language.",
-        "difficultyInvalid": "Difficulty must be easy, moderate, or challenging."
+        "difficultyInvalid": "Difficulty must be easy, moderate, or challenging.",
+        "sourceLocaleRequired": "Choose the original writing language before continuing.",
+        "optionTitleRequired": "Option title is required.",
+        "optionPickupMax": "Pickup instructions must be 500 characters or fewer.",
+        "optionPricePositive": "Option price must be a positive number.",
+        "optionCapacityWhole": "Option capacity must be a whole number of at least 1.",
+        "optionsMax": "No more than 10 options."
       },
       "noCoverImage": "No cover image",
       "untitled": "Untitled Tour",

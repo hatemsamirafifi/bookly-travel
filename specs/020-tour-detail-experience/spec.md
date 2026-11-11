@@ -3,10 +3,12 @@
 **Feature Branch**: `codex/020-tour-detail-experience`  
 **Created**: 2026-10-14 (Africa/Cairo)  
 **Spec ID / Master-plan phase**: Spec 020 / Phase 3 — Tripadvisor-Style Tour Detail Experience  
-**Governing Constitution**: [Bookly Constitution v2.1.0](../../.specify/memory/constitution.md)  
+**Governing Constitution**: [v3.0.0](../../.specify/memory/constitution.md) for active acceptance. Original planning used v2.1.0.
 **Baseline / Dependencies**: Created from `codex/header-navigation-polish` at `4afdbc6e0bec2d29341ea229b7b7f1b2226ecf27`. After fetching origin on 2026-10-14, `origin/main` resolves to `9e241b9377d42f904081cb7b2bca1871e3b4388d`, the merge of Spec 019 PR #29, and is an ancestor of this baseline. Six subsequent header/footer/static-asset commits are retained as an explicit unmerged dependency; their presence does not establish main or release acceptance. No pending Spec 019 merge dependency remains.  
-**Status**: Draft — specification quality validated; planning/design and execution task document created on 2026-10-14; implementation pending. Runtime verification, CI, merge and release acceptance are not claimed.  
+**Status**: The [dated verification record](verification.md) covers the 74 tasks accepted on 2026-10-26. Amended source and fallback acceptance, current CI, and release verification are separate.
 **Input**: User description: "Spec 020", resolved through the approved [redesign master plan, Phase 3](../../docs/bookly-ui-redesign-spec-kit-master-plan.md#phase-3---tripadvisor-style-tour-detail-experience).
+
+The active source and fallback rules follow the [Spec 019 amendment](../019-tour-content-data/spec.md#amendment-record-constitution-v300-2026-11-10) and its [public contract](../019-tour-content-data/contracts/tour-detail-api.md). The tour detail consumes actual languages for content and itinerary independently and uses corresponding SEO values.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -100,7 +102,7 @@ As a traveler using EN/ES/IT, including with a keyboard or assistive technology,
 **Acceptance Scenarios**:
 
 1. **Given** current translated content, **When** I open its locale, **Then** controls/notices use that locale and tour text uses the supplied current translation; guide-language names describe spoken languages independently.
-2. **Given** translated general content and English itinerary, **When** I read, **Then** an itinerary-specific notice identifies its English text without labelling the entire page English; other independent fallback combinations disclose actual languages correctly.
+2. **Given** current translated general content and an itinerary available only in the tour's source locale, **When** I read, **Then** a visible itinerary notice in the page language names the actual source. The translated general content keeps its own language.
 3. **Given** an intentionally empty current translated itinerary or absent source itinerary, **When** I read, **Then** no itinerary is invented, substituted for intentional emptiness or accompanied by a misleading fallback notice.
 4. **Given** keyboard/assistive technology or reduced-motion preferences, **When** I operate the page, **Then** actions remain named, operable and visibly focused; selections, expanded states and errors are understandable without color, hover or motion alone.
 5. **Given** loading, recoverable failure, denied access, an unknown/unpublished tour or an archived tour, **When** I open or retry, **Then** the appropriate localized state appears, protected content stays private and existing unavailable/not-found/gone behavior remains intact.

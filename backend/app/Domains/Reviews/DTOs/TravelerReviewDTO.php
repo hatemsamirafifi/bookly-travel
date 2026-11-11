@@ -13,7 +13,8 @@ class TravelerReviewDTO
 
         if ($tour->relationLoaded('translations')) {
             $translation = $tour->translations->firstWhere('locale', $review->locale ?? 'en')
-                ?? $tour->translations->firstWhere('locale', 'en');
+                ?? $tour->sourceTranslation()
+                ?? $tour->translations->first();
         }
 
         return [

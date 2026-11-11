@@ -29,6 +29,7 @@ if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
 }
 
 const baseForm: TourFormData = {
+  source_locale: 'en',
   title: 'Morning walking tour',
   description: 'A wonderful tour through Florence with a local guide, visiting celebrated landmarks and hidden corners.',
   category: 'walking',
@@ -48,6 +49,7 @@ const baseForm: TourFormData = {
   pricing_tiers: [],
   availability_rules: [],
   availability_exceptions: [],
+  options: [],
   group_size_min: 2,
   group_size_max: 7,
 };
@@ -69,7 +71,7 @@ describe('TourWizard (Spec 019)', () => {
     useTourWizardStore.setState({ currentStep: 'details' });
   });
 
-  it('restores an older localStorage draft through persist and renders its preserved source', async () => {
+  it('routes an unselected older draft through the Language step and preserves its fields', async () => {
     localStorage.setItem('partner-tour-wizard', JSON.stringify({
       state: {
         currentStep: 'details',
@@ -89,12 +91,27 @@ describe('TourWizard (Spec 019)', () => {
     });
     render(<TourWizard />);
 
+    // No stored source stays unselected: the Language gate is asked even
+    // though an older Details step was persisted, and nothing is preselected.
+    expect(useTourWizardStore.getState().currentStep).toBe('source');
+    expect(useTourWizardStore.getState().formData.source_locale).toBeNull();
+    expect(screen.getByRole('heading', { name: 'wizard.source' })).toBeInTheDocument();
+    for (const key of ['en', 'es', 'it'] as const) {
+      expect(screen.getByRole('radio', { name: new RegExp(`form\\.sourceLanguageLabels\\.${key}\\b`) }))
+        .toHaveAttribute('aria-checked', 'false');
+    }
+    expect(screen.queryByLabelText('form.title')).not.toBeInTheDocument();
+
+    // Answering the gate moves the preserved draft onward unaltered.
+    fireEvent.click(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.en\b/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.nextStep' }));
     expect(screen.getByLabelText('form.title')).toHaveValue('Restored old tour');
     expect(screen.getByLabelText('form.inclusions')).toHaveValue('Guide, Tickets');
     expect(screen.getByLabelText('form.exclusions')).toHaveValue('Pickup, lunch');
     expect(screen.getByDisplayValue('Day 1: Arrival')).toBeInTheDocument();
     expect(screen.getByLabelText('form.difficultyLevel')).toHaveTextContent(/^$/);
     expect(useTourWizardStore.getState().formData.difficulty_level).toBeNull();
+    expect(useTourWizardStore.getState().formData.source_locale).toBe('en');
   });
 
   it('renders all nine English source controls on the details step', () => {
@@ -106,6 +123,48 @@ describe('TourWizard (Spec 019)', () => {
     expect(screen.getByText('itinerary')).toBeInTheDocument();
   });
 
+  it('keeps the Language options answerable for authored content without a chosen source', () => {
+    // An older snapshot can carry authored text with an unanswered source:
+    // the partner still makes the explicit choice (no invented default),
+    // and picking one re-locks the alternatives.
+    seedForm({ source_locale: null, description: 'Authored before any language was chosen' }, 'source');
+    render(<TourWizard />);
+    for (const key of ['en', 'es', 'it'] as const) {
+      expect(screen.getByRole('radio', { name: new RegExp(`form\\.sourceLanguageLabels\\.${key}\\b`) })).toBeEnabled();
+    }
+    fireEvent.click(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.es\b/ }));
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.es\b/ })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.en\b/ })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.it\b/ })).toBeDisabled();
+  });
+
+  it('locks the Language alternatives once a source is chosen with authored content', () => {
+    seedForm({ source_locale: 'en', description: 'Authored after the choice' }, 'source');
+    render(<TourWizard />);
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.en\b/ })).toBeEnabled();
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.es\b/ })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.it\b/ })).toBeDisabled();
+  });
+
+  it('keeps the source fixed after a saved draft’s authored fields are cleared', async () => {
+    seedForm({
+      source_locale: 'es', itinerary: [], highlights: [], inclusions: [], exclusions: [],
+      important_information: [], meeting_point: '', cancellation_policy: '',
+    });
+    mockedCreateTour.mockResolvedValue({ data: { id: 11, status: 'draft' } });
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+    await screen.findByText('wizard.saved');
+
+    fireEvent.change(screen.getByLabelText('form.title'), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('form.description'), { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.prevStep' }));
+
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.es\b/ })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.en\b/ })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.it\b/ })).toBeDisabled();
+  });
+
   it('carries no native maxlength on the authored title (Spec 019 T017)', () => {
     // Native maxlength counts UTF-16 units and would block typing/pasting the
     // schema/server-accepted 120 code-point non-BMP boundary. The 120 bound
@@ -113,6 +172,18 @@ describe('TourWizard (Spec 019)', () => {
     seedForm();
     render(<TourWizard />);
     expect(screen.getByLabelText('form.title')).not.toHaveAttribute('maxlength');
+  });
+
+  it('opens a fresh wizard on the source language step', () => {
+    useTourWizardStore.getState().reset();
+    render(<TourWizard />);
+    // The Language step precedes Details: a fresh/reset form can never author
+    // content before the original writing language is chosen.
+    expect(useTourWizardStore.getState().currentStep).toBe('source');
+    expect(screen.getByRole('heading', { name: 'wizard.source' })).toBeInTheDocument();
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-label', 'form.sourceLanguageLabel');
+    // First step owns no Back affordance until a step precedes it.
+    expect(screen.getByRole('button', { name: 'wizard.prevStep' })).toBeDisabled();
   });
 
   it('sends nested English source with all fields while preserving pricing and availability', async () => {
@@ -153,17 +224,43 @@ describe('TourWizard (Spec 019)', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
-  it('updates the retained draft instead of duplicating on save retry', async () => {
-    seedForm();
-    mockedCreateTour.mockResolvedValue({ data: { id: 11, status: 'draft' } });
+  it('saves a Spanish source with an Arabic guide and reuses the option id on the next save', async () => {
+    const option = {
+      id: 'morning',
+      title: 'Salida por la mañana',
+      pickup_instructions: 'Junto a la fuente',
+      guide_languages: ['ar'],
+      price: '55',
+      capacity: '',
+      start_time: '09:00',
+      weekdays: [1],
+    };
+    seedForm({ source_locale: 'es', title: 'Paseo por Florencia', options: [option] });
+    mockedCreateTour.mockResolvedValue({
+      data: { id: 11, status: 'draft', options: [{ id: 23, title: option.title }] },
+    });
     mockedUpdateTour.mockResolvedValue({ data: { id: 11, status: 'draft' } });
     render(<TourWizard />);
     fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
-    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    await screen.findByText('wizard.saved');
+    const createPayload = mockedCreateTour.mock.calls[0][0];
+    expect(createPayload.source_locale).toBe('es');
+    expect(Object.keys(createPayload.translations)).toEqual(['es']);
+    expect(createPayload.translations.es.title).toBe('Paseo por Florencia');
+    expect(createPayload.options[0]).toMatchObject({
+      title: option.title,
+      pickup_instructions: option.pickup_instructions,
+      guide_languages: ['ar'],
+      price_amount: 5500,
+      group_size_max: null,
+    });
+    expect(createPayload.options[0]).not.toHaveProperty('id');
 
     fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
     await waitFor(() => expect(mockedUpdateTour).toHaveBeenCalledTimes(1));
     expect(mockedUpdateTour.mock.calls[0][0]).toBe(11);
+    expect(mockedUpdateTour.mock.calls[0][1].options[0].id).toBe(23);
+    expect(mockedUpdateTour.mock.calls[0][1]).not.toHaveProperty('source_locale');
     expect(mockedCreateTour).toHaveBeenCalledTimes(1);
   });
 
@@ -281,7 +378,7 @@ describe('TourWizard US4 truthful facts (Spec 019)', () => {
     useTourWizardStore.setState({ currentStep: 'details' });
   });
 
-  it('restores twenty media and keeps a missing/null older difficulty blank', async () => {
+  it('routes restored media behind the Language gate and keeps a missing/null older difficulty blank', async () => {
     const media = Array.from({ length: 20 }, (_, i) => ({
       id: `m${i}`,
       url: `https://cdn.example.com/${i}.png`,
@@ -303,8 +400,12 @@ describe('TourWizard US4 truthful facts (Spec 019)', () => {
     });
     render(<TourWizard />);
 
+    // The unanswered source keeps the Language gate in front of Details.
+    expect(useTourWizardStore.getState().currentStep).toBe('source');
     expect(useTourWizardStore.getState().formData.media).toHaveLength(20);
     expect(useTourWizardStore.getState().formData.difficulty_level).toBeNull();
+    fireEvent.click(screen.getByRole('radio', { name: /form\.sourceLanguageLabels\.en\b/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.nextStep' }));
     expect(screen.getByLabelText('form.difficultyLevel')).toHaveTextContent(/^$/);
   });
 

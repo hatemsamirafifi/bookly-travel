@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import {
   apiGet,
+  enterEnglishTourDetails,
   apiPost,
   apiPut,
   LONG_DESCRIPTION,
@@ -8,6 +9,114 @@ import {
   ownedEnglishSource,
   uniqueTitle,
 } from './tour-content-helpers';
+
+async function chooseSource(page: Page, language = 'English') {
+  const picker = page.getByRole('radiogroup', { name: 'Original writing language' });
+  await picker.getByRole('radio', { name: new RegExp(language, 'i') }).click();
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
+}
+
+test.describe('Supplier A2 source selection', () => {
+  test('starts with no language selected and preserves the empty selection on reload', async ({ page }) => {
+    await page.goto('/en/partner/tours/create', { waitUntil: 'domcontentloaded' });
+    const picker = page.getByRole('radiogroup', { name: 'Original writing language' });
+    await expect(picker).toBeVisible();
+    await expect(picker.getByRole('radio', { checked: true })).toHaveCount(0);
+    await expect(page.getByLabel('Tour Title')).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Next', exact: true }).click();
+    await expect(picker).toBeVisible();
+    await page.evaluate(() => localStorage.setItem('partner-tour-wizard', JSON.stringify({
+      version: 0,
+      state: { currentStep: 'details', formData: { source_locale: null } },
+    })));
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await expect(picker).toBeVisible();
+    await expect(picker.getByRole('radio', { checked: true })).toHaveCount(0);
+    await expect(page.getByLabel('Tour Title')).toHaveCount(0);
+  });
+
+  test('restores Spanish after reload and sends Spanish content on save', async ({ page }) => {
+    const title = uniqueTitle('Recorrido por Sevilla');
+    const description = 'Explora los barrios históricos de Sevilla con un guía local y descubre los patios, las plazas y los monumentos que explican la historia de la ciudad.';
+    await page.goto('/en/partner/tours/create', { waitUntil: 'domcontentloaded' });
+    await chooseSource(page, 'Spanish');
+    await page.getByLabel('Tour Title').fill(title);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await expect(page.getByLabel('Tour Title')).toHaveValue(title);
+    await fillTourDescription(page, description);
+    await page.getByRole('button', { name: 'Category', exact: true }).click();
+    await page.getByRole('option', { name: 'Walking', exact: true }).click();
+    await page.getByLabel('Destination').fill('Sevilla, España');
+    await page.getByRole('spinbutton', { name: 'Duration' }).fill('3');
+    await page.getByRole('button', { name: 'Difficulty Level', exact: true }).click();
+    await page.getByRole('option', { name: 'Easy', exact: true }).click();
+
+    const save = page.waitForResponse((response) =>
+      response.request().method() === 'POST' && new URL(response.url()).pathname === '/api/partner/tours',
+    );
+    await page.getByRole('button', { name: 'Save Draft' }).click();
+    const created = await save;
+    const payload = created.request().postDataJSON();
+    expect(payload.source_locale).toBe('es');
+    expect(payload.translations).toEqual({ es: expect.objectContaining({ title, description: expect.any(String) }) });
+    // The rich-text editor can serialize accents as HTML entities.
+    const authoredDescription = await page.evaluate((html: string) =>
+      new DOMParser().parseFromString(html, 'text/html').body.textContent,
+      payload.translations.es.description,
+    );
+    expect(authoredDescription).toBe(description);
+    expect(created.status(), await created.text()).toBe(201);
+    const { data: { id } } = await created.json();
+    expect(id).toEqual(expect.any(Number));
+    await expect(page.getByRole('button', { name: 'Save Draft' })).toBeEnabled();
+
+    // The written answer is materialized once: the same tour identifier is
+    // reused on the next save of the session, and the fixed source never
+    // travels again (nothing may replace it with an incompatible draft value).
+    const reuse = page.waitForResponse((response) =>
+      response.request().method() === 'PUT' && new URL(response.url()).pathname === `/api/partner/tours/${id}`,
+    );
+    await page.getByRole('button', { name: 'Save Draft' }).click();
+    const updated = await reuse;
+    const reusedPayload = updated.request().postDataJSON();
+    expect(reusedPayload).not.toHaveProperty('source_locale');
+    expect(Object.keys(reusedPayload.translations)).toEqual(['es']);
+    expect(updated.status(), await updated.text()).toBe(200);
+
+    await page.getByLabel('Tour Title').fill('');
+    await fillTourDescription(page, '');
+    await expect(page.locator('textarea#description')).toHaveValue('');
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    const picker = page.getByRole('radiogroup', { name: 'Original writing language' });
+    await expect(picker.getByRole('radio', { name: /Spanish/i })).toHaveAttribute('aria-checked', 'true');
+    await expect(picker.getByRole('radio', { name: /English/i })).toBeDisabled();
+    await expect(picker.getByRole('radio', { name: /Italian/i })).toBeDisabled();
+
+    const change = await apiPut(page, `/api/partner/tours/${id}`, { source_locale: 'en' });
+    expect(change.status).toBe(422);
+    expect(change.json).toMatchObject({ errors: { source_locale: expect.any(Array) } });
+
+    await page.goto(`/en/partner/tours/${id}/edit`, { waitUntil: 'domcontentloaded' });
+    await expect(page.getByText("This tour's content already exists in Español. The original writing language is fixed and cannot be changed.")).toBeVisible();
+    await expect(page.getByRole('radiogroup', { name: 'Original writing language' })).toHaveCount(0);
+    await expect(page.getByLabel('Tour Title (ES)', { exact: true })).toHaveValue(title);
+  });
+
+  test('opens a legacy English tour response without asking for a source language', async ({ page }) => {
+    await page.route('**/api/partner/tours/101', (route) => route.fulfill({ json: { data: {
+      id: 101,
+      status: 'draft',
+      location: 'Rome',
+      duration_minutes: 120,
+      translations: [{ locale: 'en', title: 'Legacy Rome walk', description: LONG_DESCRIPTION }],
+    } } }));
+    await page.goto('/en/partner/tours/101/edit', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByLabel('Tour Title (EN)', { exact: true })).toHaveValue('Legacy Rome walk');
+    await expect(page.getByText("This tour's content already exists in English. The original writing language is fixed and cannot be changed.")).toBeVisible();
+    await expect(page.getByRole('radiogroup', { name: 'Original writing language' })).toHaveCount(0);
+  });
+});
 
 async function fillTourDescription(page: Page, text: string) {
   // Wait for either HugeRTE to initialize or fallback textarea to stay ready
@@ -81,11 +190,12 @@ test.describe('Partner Tour Creation', () => {
     if (await acceptBtn.isVisible().catch(() => false)) {
       await acceptBtn.click().catch(() => {});
     }
+    await chooseSource(page);
   });
 
   test('should display the tour creation page', async ({ page }) => {
     await expect(page.getByLabel('Tour Title')).toBeVisible();
-    await expect(page.getByText('Edit English source content. Spanish and Italian are generated automatically and never block publication.')).toBeVisible();
+    await expect(page.getByText('Original content is written in English. The other two languages are generated automatically and never block publication.')).toBeVisible();
   });
 
   test('initializes official HugeRTE editor for tour description with formatting toolbar', async ({ page }) => {
@@ -192,6 +302,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   }) => {
     const title = uniqueTitle('US1 full source');
     await page.goto('/en/partner/tours/create');
+    await chooseSource(page);
     await expect(page.getByLabel('Tour Title')).toBeVisible();
 
     await page.getByLabel('Tour Title').fill(title);
@@ -360,6 +471,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     const dayDescription2000 = NON_BMP.repeat(2000);
 
     await page.goto('/en/partner/tours/create');
+    await chooseSource(page);
     await expect(page.getByLabel('Tour Title')).toBeVisible();
 
     // Real typing, not fill: fill bypasses native maxlength while typing cannot,
@@ -513,6 +625,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
     });
 
     await page.goto('/en/partner/tours/create');
+    await chooseSource(page);
     await expect(page.getByLabel('Tour Title')).toBeVisible();
     await page.getByLabel('Tour Title').fill(title);
     await fillTourDescription(page, LONG_DESCRIPTION);
@@ -610,10 +723,16 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   test('renders the create wizard across EN/ES/IT and the 320/390/768/1024/1440 viewport matrix', async ({
     page,
   }, testInfo) => {
-    const notices: Record<string, string> = {
-      en: 'Edit English source content. Spanish and Italian are generated automatically and never block publication.',
-      es: 'Edita el contenido original en inglés. Las traducciones al español y al italiano se generan automáticamente y no bloquean la publicación.',
-      it: 'Modifica il contenuto originale in inglese. Le traduzioni in spagnolo e italiano vengono generate automaticamente e non bloccano la pubblicazione.',
+    await page.addInitScript(() => localStorage.removeItem('partner-tour-wizard'));
+    const notices = {
+      en: 'Original content is written in English. The other two languages are generated automatically and never block publication.',
+      es: 'El contenido original está escrito en English. Los otros dos idiomas se generan automáticamente y no bloquean la publicación.',
+      it: 'Il contenuto originale è scritto in English. Le altre due lingue sono generate automaticamente e non bloccano la pubblicazione.',
+    };
+    const pickerNames = {
+      en: 'Original writing language',
+      es: 'Idioma de redacción original',
+      it: 'Lingua di stesura originale',
     };
     for (const locale of ['en', 'es', 'it'] as const) {
       // 320 stays as supplemental narrow-width coverage; 390 is the
@@ -621,10 +740,12 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
       for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 900 });
         await page.goto(`/${locale}/partner/tours/create`);
-        await expect(page.getByText(notices[locale])).toBeVisible();
+        await expect(page.getByRole('radiogroup', { name: pickerNames[locale] })).toBeVisible();
         await page.screenshot({
           path: testInfo.outputPath(`create-${locale}-${width}.png`),
         });
+        await enterEnglishTourDetails(page, locale);
+        await expect(page.getByText(notices[locale])).toBeVisible();
       }
     }
   });

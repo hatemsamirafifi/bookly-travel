@@ -9,14 +9,19 @@ import { getStripe } from '@/lib/stripe/stripe-client';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { safeAuthReturnUrl } from '@/lib/auth/return-url';
 import {
-  BOOKING_SUPPORTED_CURRENCY,
   buildAuthContinuationUrl,
   buildCheckoutUrl,
   buildRegisterContinuationUrl,
-  getBookingSelectionView,
+  getBookingWithOptionView,
   isRealCalendarDateString,
+  resolveSelectedOption,
+  type BookingWithOptionView,
 } from '@/lib/tours/booking-selection';
 import { resolveBookingReasonMessage } from '@/lib/tours/booking-reasons';
+import {
+  getContentLanguageName,
+  getGuideLanguageNames,
+} from '@/lib/tours/detail-presentation';
 import ParticipantSelector from './ParticipantSelector';
 import DateConfirmation from './DateConfirmation';
 import PriceBreakdown from './PriceBreakdown';
@@ -27,6 +32,7 @@ import { createBooking } from '@/lib/api/bookings';
 import { cancelBooking } from '@/lib/api/my-bookings';
 import { getTourDetail } from '@/lib/api/tours';
 import { createBookingSchema } from '@/lib/validators/booking';
+import { formatOptionPriceDisplay } from '@/components/tour/OptionSelector';
 import { formatCurrency } from '@/lib/utils';
 import type { TourDetail } from '@/lib/api/types';
 
@@ -38,21 +44,24 @@ interface BookingFormProps {
 }
 
 /** Bounded checkout auth-recovery target (Spec 020 US2): preserves the full
- *  selected tour/date/count booking query through safe login and surfaces the
- *  session-expired notice on return. The booking path itself carries only the
- *  selection (tour/participants/date) — never price, currency or provider
- *  parameters. The sessionExpired flag lives on the login URL only. */
+ *  selected tour/option/date/count booking query through safe login and
+ *  surfaces the session-expired notice on return. The booking path itself
+ *  carries only the selection (tour/option/participants/date) — never
+ *  price, currency or provider parameters. The sessionExpired flag lives
+ *  on the login URL only. */
 export function buildCheckoutAuthRecoveryUrl(
   locale: string,
   tourSlug: string,
   participantCount: number,
   tourDate: string,
+  optionId?: number | null,
 ): string {
   const path =
-    buildCheckoutUrl(locale, tourSlug, participantCount, tourDate) ??
+    buildCheckoutUrl(locale, tourSlug, participantCount, tourDate, optionId ?? null) ??
     `/${locale}/booking?tour=${encodeURIComponent(tourSlug)}` +
       `&participants=${encodeURIComponent(String(participantCount))}` +
-      `&date=${encodeURIComponent(tourDate)}`;
+      `&date=${encodeURIComponent(tourDate)}` +
+      (typeof optionId === 'number' ? `&option=${encodeURIComponent(String(optionId))}` : '');
   const safe = safeAuthReturnUrl(locale, path);
   return `/${locale}/auth/login?sessionExpired=1&returnUrl=${encodeURIComponent(safe)}`;
 }
@@ -112,10 +121,13 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   const tourSlug = searchParams.get('tour') || '';
   const date = searchParams.get('date') || '';
   const participantsParam = searchParams.get('participants');
+  const optionParam = searchParams.get('option') || '';
 
   const [tour, setTour] = useState<TourDetail | null>(null);
   const [participants, setParticipants] = useState<number | null>(null);
   const [suppliedCountInvalid, setSuppliedCountInvalid] = useState<string | null>(null);
+  const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
+  const [suppliedOptionInvalid, setSuppliedOptionInvalid] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,6 +141,8 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
     gateway: 'stripe' | 'deterministic';
     serverTotal: string | null;
     serverPerPerson: string | null;
+    /** Booked option snapshot (additive) shown in the payment summary. */
+    option: { id: number | null; title: string; pickup_instructions: string | null; content_locale: 'en' | 'es' | 'it' | null } | null;
   };
   const [paymentStep, setPaymentStep] = useState<PaymentStep | null>(null);
 
@@ -143,15 +157,16 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   } | null>(null);
 
   // F2: stable across retries for the same selection, new on selection change.
-  // Keep this key constant while the traveler confirms a specific tour/date/party
-  // so the backend idempotency contract collapses retries into one booking. The
-  // key itself is a fresh random UUID per selection; the deps drive regeneration
-  // on selection change but are intentionally not read inside the factory (the
-  // randomness is intrinsic), hence the exhaustive-deps suppression.
+  // Keep this key constant while the traveler confirms a specific tour/option/
+  // date/party so the backend idempotency contract collapses retries into one
+  // booking. The key itself is a fresh random UUID per selection; the deps
+  // drive regeneration on selection change but are intentionally not read
+  // inside the factory (the randomness is intrinsic), hence the
+  // exhaustive-deps suppression.
   const idempotencyKey = useMemo(
     () => generateIdempotencyKey(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tourSlug, date, participants, bookingAttempt],
+    [tourSlug, date, participants, optionParam, bookingAttempt],
   );
 
   // F2: synchronous guard against double-click / double-submit. Set before any
@@ -162,13 +177,15 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   // withhold the previous selection until the new fetch resolves. Auth
   // changes keep the same key, so a pending paymentStep/reference survives
   // auth restoration untouched.
-  const queryKey = JSON.stringify([locale, tourSlug, date, participantsParam]);
+  const queryKey = JSON.stringify([locale, tourSlug, date, participantsParam, optionParam]);
   const [activeQueryKey, setActiveQueryKey] = useState(queryKey);
   if (activeQueryKey !== queryKey) {
     setActiveQueryKey(queryKey);
     setTour(null);
     setParticipants(null);
     setSuppliedCountInvalid(null);
+    setSelectedOptionId(null);
+    setSuppliedOptionInvalid(null);
     setLoading(true);
     setError(null);
     setPaymentStep(null);
@@ -189,12 +206,25 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       .then((res) => {
         if (!active) return;
         setTour(res.data);
+        // The explicit option selection is validated against the tour's
+        // own offered options: a carried coordinate that the current tour
+        // does not offer stays unselected and is explained downstream.
+        const offeredOptions = Array.isArray(res.data.options) ? res.data.options : [];
+        const resolution = resolveSelectedOption(offeredOptions, optionParam || null);
+        if (optionParam !== '' && resolution.kind === 'valid') {
+          setSelectedOptionId(resolution.option.id);
+          setSuppliedOptionInvalid(null);
+        } else {
+          setSelectedOptionId(null);
+          setSuppliedOptionInvalid(optionParam !== '' ? optionParam : null);
+        }
+        // Bounds come from the selected option when one is; the tour's own
+        // bounds otherwise. An absent parameter defaults to the minimum of
+        // the effective bounds; an explicit bad value stays invalid.
+        const bounds = resolution.kind === 'valid' ? resolution.option.group_size : res.data.group_size;
         const supplied = parseSuppliedCount(participantsParam);
         if (supplied.kind === 'value') {
-          if (
-            supplied.count >= res.data.group_size.min &&
-            supplied.count <= res.data.group_size.max
-          ) {
+          if (supplied.count >= bounds.min && supplied.count <= bounds.max) {
             setParticipants(supplied.count);
             setSuppliedCountInvalid(null);
           } else {
@@ -205,7 +235,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           setParticipants(null);
           setSuppliedCountInvalid(supplied.raw);
         } else {
-          setParticipants(res.data.group_size.min);
+          setParticipants(bounds.min);
           setSuppliedCountInvalid(null);
         }
       })
@@ -214,26 +244,33 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
     return () => {
       active = false;
     };
-  }, [tourSlug, locale, searchParams, participantsParam, t]);
+  }, [tourSlug, locale, searchParams, participantsParam, optionParam, t]);
 
   const effectiveToday = todayUtc ?? new Date().toISOString().slice(0, 10);
   const dateMissing = date === '';
   const dateValid = !dateMissing && isRealCalendarDateString(date);
   const countValid = participants !== null && suppliedCountInvalid === null;
 
+  // The explicit option coordinate (validated at fetch; an unusable carried
+  // param keeps re-validating as invalid so the explanation stays truthful).
+  const explicitOptionCoordinate =
+    suppliedOptionInvalid !== null ? suppliedOptionInvalid : selectedOptionId;
+
   // Accepted selection view over the refetched tour: the single eligibility
-  // owner for date bounds, availability, pricing and estimate guards.
-  const selectionView =
+  // owner for option, date bounds, availability, pricing and estimate guards.
+  const selectionView: BookingWithOptionView | null =
     tour && !dateMissing
-      ? getBookingSelectionView({
+      ? getBookingWithOptionView({
           slug: tourSlug,
           locale,
           pricing: tour.pricing,
           availability: tour.availability,
+          options: tour.options,
           groupMin: tour.group_size.min,
           groupMax: tour.group_size.max,
           selectedDate: date,
           participantCount: participants,
+          selectedOptionId: explicitOptionCoordinate,
           todayUtc: effectiveToday,
         })
       : null;
@@ -243,14 +280,15 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   const showEstimate = selectionView !== null && selectionView.estimateCents !== null;
 
   // Validated exact per-person base derived once from cents through the
-  // accepted formatter — only after the accepted view's guards hold
+  // accepted formatter — the selected option's price when one is chosen,
+  // else the tour base — only after the accepted view's guards hold
   // (non-null estimate cents), never the raw server string (which can
   // disagree at the safe-integer extremes) and never formatted from invalid
   // data. The estimated total comes straight from the accepted view's
   // display-only estimate; server-confirmed payment totals stay authoritative.
   const baseDisplay =
     tour !== null && selectionView !== null && selectionView.estimateCents !== null
-      ? formatCurrency(tour.pricing.base_price.amount, BOOKING_SUPPORTED_CURRENCY, locale)
+      ? formatOptionPriceDisplay(selectionView.selectedOption?.pricing ?? tour.pricing, locale)
       : null;
   const estimatedTotal =
     selectionView !== null && showEstimate && selectionView.estimateDisplay !== null
@@ -260,7 +298,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   const signedOut = !authRestoring && user === null;
   const bookingPath =
     tour && dateValid && countValid && participants !== null
-      ? buildCheckoutUrl(locale, tourSlug, participants, date)
+      ? buildCheckoutUrl(locale, tourSlug, participants, date, selectionView?.selectedOption?.id ?? null)
       : null;
   const canSubmit =
     !submitting &&
@@ -291,15 +329,17 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
     const submitDay = todayUtc ?? new Date().toISOString().slice(0, 10);
     const fresh =
       tour &&
-      getBookingSelectionView({
+      getBookingWithOptionView({
         slug: tourSlug,
         locale,
         pricing: tour.pricing,
         availability: tour.availability,
+        options: tour.options,
         groupMin: tour.group_size.min,
         groupMax: tour.group_size.max,
         selectedDate: date,
         participantCount: count,
+        selectedOptionId: explicitOptionCoordinate,
         todayUtc: submitDay,
       });
     if (!fresh || !fresh.canContinue) {
@@ -308,7 +348,10 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       return;
     }
 
-    const pageLoadPriceCents = tour?.pricing?.base_price?.amount;
+    // The page-load price rides the option's exact per-person price when an
+    // option was selected, else the tour base (FR-027 drift detection).
+    const selectedOption = fresh.selectedOption;
+    const pageLoadPriceCents = (selectedOption ?? tour).pricing?.base_price?.amount;
 
     // Validate the booking payload at the boundary before the network call.
     const parsed = createBookingSchema.safeParse({
@@ -317,6 +360,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       participant_count: count,
       locale,
       page_load_price: pageLoadPriceCents,
+      ...(selectedOption !== null ? { tour_option_id: selectedOption.id } : {}),
     });
     if (!parsed.success) {
       setError(t('errors.invalidDetails'));
@@ -335,6 +379,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           participant_count: count,
           locale,
           page_load_price: pageLoadPriceCents,
+          ...(selectedOption !== null ? { tour_option_id: selectedOption.id } : {}),
         },
         idempotencyKey,
       );
@@ -358,6 +403,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
             gateway: result.payment.gateway,
             serverTotal: result.data.pricing?.total?.formatted ?? result.data.total_price?.formatted ?? null,
             serverPerPerson: result.data.pricing.price_per_person.formatted,
+            option: result.data.option ?? null,
           } : null,
           cancelError: null,
         });
@@ -373,6 +419,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           gateway: result.payment.gateway,
           serverTotal: result.data.pricing?.total?.formatted ?? result.data.total_price?.formatted ?? null,
           serverPerPerson: result.data.pricing?.price_per_person?.formatted ?? null,
+          option: result.data.option ?? null,
         });
       } else {
         router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
@@ -388,7 +435,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
         // resubmits after return; nothing posts automatically.
         localStorage.removeItem('auth_token');
         window.location.assign(
-          buildCheckoutAuthRecoveryUrl(locale, tourSlug, count, date),
+          buildCheckoutAuthRecoveryUrl(locale, tourSlug, count, date, selectedOption?.id ?? null),
         );
         return;
       }
@@ -453,10 +500,22 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       <h2 className="text-lg font-semibold text-bookly-navy">{tour.title}</h2>
       <p className="mt-1 text-sm text-text-muted">{tour.location}</p>
       <dl className="mt-5 space-y-3 text-sm">
+        {paymentStep.option?.title && (
+          <div className="flex justify-between gap-4">
+            <dt className="text-text-muted">{t('option')}</dt>
+            <dd className="font-medium text-bookly-navy" lang={paymentStep.option.content_locale ?? undefined}>{paymentStep.option.title}</dd>
+          </div>
+        )}
         <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('date')}</dt><dd className="font-medium text-bookly-navy">{new Date(`${date}T00:00:00`).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}</dd></div>
         <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('participants')}</dt><dd className="font-medium text-bookly-navy">{participants}</dd></div>
         {paymentStep.serverPerPerson && <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('perPerson')}</dt><dd className="font-medium text-bookly-navy">{paymentStep.serverPerPerson}</dd></div>}
         {paymentStep.serverTotal && <div className="flex justify-between gap-4 border-t border-border pt-3"><dt className="font-semibold text-bookly-navy">{t('total')}</dt><dd className="font-bold text-bookly-navy">{paymentStep.serverTotal}</dd></div>}
+        {paymentStep.option?.pickup_instructions && (
+          <div>
+            <dt className="text-text-muted">{t('optionPickup')}</dt>
+            <dd className="mt-1 whitespace-pre-line text-bookly-navy" lang={paymentStep.option.content_locale ?? undefined}>{paymentStep.option.pickup_instructions}</dd>
+          </div>
+        )}
       </dl>
     </div>
   );
@@ -559,6 +618,12 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
               </Link>
             </div>
           )}
+          {selectionView?.selectedOption && tour && participants !== null && selectionView.offeredFutureDates.includes(date) && (
+            <SelectedOptionSummary
+              option={selectionView.selectedOption}
+              locale={locale}
+            />
+          )}
           {tour && participants !== null && (
             <ParticipantSelector
               value={participants}
@@ -652,6 +717,38 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
         </div>
       </form>
     </>
+  );
+}
+
+/**
+ * Checkout-line option summary: the explicitly selected option's authored
+ * title, pickup instructions and spoken guide languages, localized for the
+ * page and honestly tagged with the option's own content language.
+ */
+function SelectedOptionSummary({ option, locale }: { option: NonNullable<BookingWithOptionView['selectedOption']>; locale: string }) {
+  const t = useTranslations('tour');
+  const guideNames = getGuideLanguageNames(option.guide_languages ?? [], locale);
+  return (
+    <div className="rounded-lg border border-border bg-surface-alt p-3 text-sm" data-testid="booking-option-summary">
+      <p className="text-sm font-medium text-bookly-navy" lang={option.content_locale}>
+        {option.title}
+      </p>
+      {guideNames.length > 0 && (
+        <p className="mt-1 text-xs text-text-muted">
+          {t('liveGuide')}: {guideNames.join(', ')}
+        </p>
+      )}
+      {typeof option.pickup_instructions === 'string' && option.pickup_instructions.trim() !== '' && (
+        <p lang={option.content_locale} className="mt-1 whitespace-pre-line text-xs text-text-muted">
+          {t('optionPickupInstructions')}: {option.pickup_instructions}
+        </p>
+      )}
+      {option.content_locale !== locale && (
+        <p className="mt-1 text-xs font-medium text-warning">
+          {t('optionContentLanguage', { language: getContentLanguageName(option.content_locale, locale) })}
+        </p>
+      )}
+    </div>
   );
 }
 
