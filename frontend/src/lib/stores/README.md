@@ -14,7 +14,7 @@ Zustand stores for checkout state and partner tour wizard drafts.
 ## Invariants
 
 - Checkout generates an idempotency key on initialization and reset when `crypto` is available. The persisted state includes the key, booking selection, guest details, and special requests. [checkout-store.ts](./checkout-store.ts#L48)
-- Loading a draft and rehydrating a persisted wizard use `normalizeWizardState`. Missing or invalid restored source locales fall back to `en`, invalid difficulty becomes `null`, and older list, itinerary, and option data is normalized. Rehydration clears the dirty and submitting flags. [tourWizard.ts](./tourWizard.ts#L153) [tourWizard.ts](./tourWizard.ts#L208) [tourWizard.ts](./tourWizard.ts#L504)
+- Loading a draft and rehydrating a persisted wizard use `normalizeWizardState`. An unanswered, missing, or invalid restored source locale stays `null` and reopens the Language step. A valid chosen source retains the saved step. Invalid difficulty becomes `null`, and older list, itinerary, and option data is normalized. Rehydration clears the dirty and submitting flags. [tourWizard.ts](./tourWizard.ts#L153) [tourWizard.ts](./tourWizard.ts#L208) [tourWizard.ts](./tourWizard.ts#L504)
 - `adoptSavedOptionIds` associates server IDs with submitted rows by position after skipping placeholders. Adopting IDs preserves the dirty flag. [tourWizard.ts](./tourWizard.ts#L455)
 
 ## Side Effects
