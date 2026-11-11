@@ -2,8 +2,8 @@
 
 **Date:** 2026-11-04
 **Executor:** OpenCode implementer (Senior Staff Engineer / Git Integration / Laravel / Next.js / QA roles)
-**Primary repository:** `F:\Travel Website\bookly travel` (branch `fix/master-admin-audit-remediation`)
-**Isolated recovery worktree:** `F:\Travel Website\bookly-admin2-recovery` (branch `integration/admin-2.0-reconciliation`)
+**Primary repository:** `<workspace>\bookly travel` (branch `fix/master-admin-audit-remediation`)
+**Isolated recovery worktree:** `<workspace>\bookly-admin2-recovery` (branch `integration/admin-2.0-reconciliation`)
 **Forbidden operations used: none.** No `reset --hard`, no `clean`, no `checkout --`, no destructive `restore`, no `stash pop`/`drop`, no force-push, no amend, no rebase, no backup deletions, no changes to `fix/master-admin-audit-remediation`.
 
 ---
@@ -30,11 +30,11 @@ The preserved pre-Spec-021 WIP (stash `pre-spec021-ff-merge-preservation-2026110
 | Main worktree branch | `fix/master-admin-audit-remediation` ✅ |
 | Main HEAD | `9b4ea62493ecfeb9c4bf7745b187d23050162987` ✅ (matches mission expectation) |
 | Main working tree | 1 untracked file only: `docs/reports/spec-021-safe-merge-and-post-merge-regression-report.md` (report from prior session; additive, not committed) |
-| Admin 2.0 worktree | `F:\Travel Website\bookly-admin-2.0` |
+| Admin 2.0 worktree | `<workspace>\bookly-admin-2.0` |
 | Admin 2.0 branch | `feature/admin-2.0` |
 | Admin 2.0 HEAD | `e517cf7820791524c52af67a07e59a1aac3b824c` ✅ (matches last verified; clean working tree; no upstream configured — local branch) |
-| Spec 021 worktree | `F:\Travel Website\bookly-homepage-discovery` @ `9b4ea62` on `feature/021-homepage-discovery` |
-| Recovery worktree (created) | `F:\Travel Website\bookly-admin2-recovery` @ `115ec269e7ea322dd8cd58273f1d25bb5a30c2b0` on `integration/admin-2.0-reconciliation` (clean) |
+| Spec 021 worktree | `<workspace>\bookly-homepage-discovery` @ `9b4ea62` on `feature/021-homepage-discovery` |
+| Recovery worktree (created) | `<workspace>\bookly-admin2-recovery` @ `115ec269e7ea322dd8cd58273f1d25bb5a30c2b0` on `integration/admin-2.0-reconciliation` (clean) |
 | Recovery branch parent | `9b4ea62` (verified: exactly one commit ahead of main) |
 | Remotes | `origin` → github.com/hatemsamirafifi/bookly-travel; `no-mistakes` → local mirror. No pushes performed. |
 
@@ -103,7 +103,7 @@ Every preserved WIP entry (52 tracked + 134 untracked = 186) was compared byte-f
 
 ## 6. Recovery Actions Performed (isolated branch/worktree)
 
-1. Created isolated worktree `F:\Travel Website\bookly-admin2-recovery` with new branch `integration/admin-2.0-reconciliation` from verified base `9b4ea62` (`git worktree add -b`).
+1. Created isolated worktree `<workspace>\bookly-admin2-recovery` with new branch `integration/admin-2.0-reconciliation` from verified base `9b4ea62` (`git worktree add -b`).
    - *Incident:* the initial 4,866-file checkout exceeded the 120s command timeout and was interrupted mid-checkout (broken index, stale `index.lock` with "initializing" worktree lock). *Resolution (non-destructive):* removed the stale lock (git's own remedy after verifying no live git process held it; the only running git process was an unrelated 3-hour-old read-only `git config core.fsmonitor` query), repaired the index with `read-tree HEAD` and completed the checkout with `checkout-index -a -f` (both purely write committed content — no `reset --hard`, no `checkout --`, no `restore`, nothing deleted). Final state verified: `status --short` = 0 entries, HEAD = `9b4ea62`.
 2. Recovered the 3 tracked Admin 2.0 files by extracting complete file versions from the stash's tracked tree (`git archive stash@{0} -- <paths>` → tar extract; byte-exact, no pipe re-encoding).
 3. Recovered the 5 untracked files from the stash's third parent (`git archive stash@{0}^3 -- <paths>` → tar extract).
@@ -226,14 +226,14 @@ Run from the recovery worktree against the live dev stack (`http://localhost:808
 1. **Dev-stack Docker image is stale** (built 2026-10-30, pre-final Admin 2.0 panel; also affects `bookly-backend`). Rebuild (`docker compose build backend` equivalent) required before dev-stack admin E2E can reflect current code. *Non-blocking: Pest suites bind-mount current code and pass 341/341.*
 2. **`restricted-admin@bookly.test` + `seed-e2e.php` fixtures not provisioned/committed** — the admin E2E suite cannot fully run in any current environment (documented since the transfer audit). *Non-blocking: covered by the 263-test Pest admin/RBAC suite and the Nov-3 isolated E2E pass.*
 3. `docs/reports/spec-021-safe-merge-and-post-merge-regression-report.md` remains untracked in the primary worktree (prior session's deliverable) — commit decision belongs to the owner.
-4. The recovery worktree `F:\Travel Website\bookly-admin2-recovery` and branch `integration/admin-2.0-reconciliation` are preserved for review (worktree was un-locked after repair; never to be pruned without owner approval).
+4. The recovery worktree `<workspace>\bookly-admin2-recovery` and branch `integration/admin-2.0-reconciliation` are preserved for review (worktree was un-locked after repair; never to be pruned without owner approval).
 5. Brief's stated "41 unstaged files" vs actual 44 in the preserved snapshot (8+44+untracked=186 entries) — noted for record accuracy; stash object authoritative and intact.
 
 ## 18. Exact Next Commands If Merge Approval Is Granted
 
 ```powershell
 # 0. Preconditions (verify nothing drifted since this report)
-cd "F:\Travel Website\bookly travel"
+cd "<workspace>\bookly travel"
 git branch --show-current            # -> fix/master-admin-audit-remediation
 git rev-parse HEAD                   # -> 9b4ea62493ecfeb9c4bf7745b187d23050162987
 git status --short                   # -> only the untracked report file

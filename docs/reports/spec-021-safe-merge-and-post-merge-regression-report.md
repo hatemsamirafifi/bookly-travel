@@ -75,8 +75,8 @@ e3ba0a7 feat(home): add homepage discovery API and data contracts
 ```
 
 ### Backup/quarantine directories confirmed present
-- `F:\Travel Website\bookly-admin-premerge-backup-20261103_024422` → **True**
-- `F:\Travel Website\bookly-admin-quarantine-20261103_025028` → **True**
+- `<workspace>\bookly-admin-premerge-backup-20261103_024422` → **True**
+- `<workspace>\bookly-admin-quarantine-20261103_025028` → **True**
 
 ---
 
@@ -84,7 +84,7 @@ e3ba0a7 feat(home): add homepage discovery API and data contracts
 
 **Result: PASS**
 
-- **Backup directory:** `F:\Travel Website\bookly-spec021-premerge-backup-20261104_191501`
+- **Backup directory:** `<workspace>\bookly-spec021-premerge-backup-20261104_191501`
 - **Session timestamp:** `20261104_191501`
 - **Preservation stash:** `stash@{0}` — message `pre-spec021-ff-merge-preservation-20261104_191501`, stash SHA `25ab8a1e038fa9e94fedb24916d7523a04b242f6` (created with `git stash push -u` — includes all 134 untracked files; no `git add` used)
 - **Previous 4 stashes:** intact, renumbered `stash@{1}`–`stash@{4}`

@@ -1,12 +1,12 @@
 # Pull Request: Integrate Admin 2.0 (Filament RBAC) & Spec 021 (Homepage Discovery)
 
-**Title:** `feat: integrate Admin 2.0 (Filament RBAC) and Spec 021 (Homepage Discovery & Wishlist)`  
-**Base Branch:** `main` (Remote HEAD: `f57e8c086d50f1861c6724c49347a06a16a9ab83`)  
-**Head Branch:** `integration/admin-2.0-and-spec021` (HEAD: `67529298b62c6369d8fcb74d8aec9a7fa30f51ff`)  
-**Merge Base:** `6fcdbb83578f1beede7bf2512d60b1ad76054f0f`  
-**Incoming Commits:** 47 commits ahead  
-**Diff Footprint:** 414 files changed, 27,152 insertions(+), 459 deletions(-)  
-**Merge Conflict Status:** 0 conflicts (Clean 3-way merge validated via `git merge-tree`)  
+**Title:** `feat: integrate Admin 2.0 (Filament RBAC) and Spec 021 (Homepage Discovery & Wishlist)`\
+**Base Branch:** `main` (Remote HEAD: `f57e8c086d50f1861c6724c49347a06a16a9ab83`)\
+**Head Branch:** `integration/admin-2.0-and-spec021` (HEAD: `67529298b62c6369d8fcb74d8aec9a7fa30f51ff`)\
+**Merge Base:** `6fcdbb83578f1beede7bf2512d60b1ad76054f0f`\
+**Incoming Commits:** 47 commits ahead\
+**Diff Footprint:** 414 files changed, 27,152 insertions(+), 459 deletions(-)\
+**Merge Conflict Status:** 0 conflicts (Clean 3-way merge validated via `git merge-tree`)\
 
 ---
 

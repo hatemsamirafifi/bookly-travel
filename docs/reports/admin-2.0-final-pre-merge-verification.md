@@ -1,13 +1,13 @@
 # Bookly Admin 2.0 — Final Evidence Reconciliation & Release Gate Report
 
-**Date:** 2026-11-06  
-**Auditor / Roles:** Principal Security Engineer, Release Engineering Lead, Git Forensics Specialist  
-**Target Branch:** `fix/master-admin-audit-remediation`  
-**Target Baseline HEAD:** `9b4ea62493ecfeb9c4bf7745b187d23050162987`  
-**Recovery Worktree:** `F:\Travel Website\bookly-admin2-recovery`  
-**Recovery Branch:** `integration/admin-2.0-reconciliation`  
-**Verified Final Recovery HEAD:** `091de19d55050df0560834a7da7dd748bb678683`  
-**Release Gate Verdict:** `READY FOR LOCAL FAST-FORWARD MERGE — AWAITING OWNER APPROVAL`  
+**Date:** 2026-11-06\
+**Auditor / Roles:** Principal Security Engineer, Release Engineering Lead, Git Forensics Specialist\
+**Target Branch:** `fix/master-admin-audit-remediation`\
+**Target Baseline HEAD:** `9b4ea62493ecfeb9c4bf7745b187d23050162987`\
+**Recovery Worktree:** `<workspace>\bookly-admin2-recovery`\
+**Recovery Branch:** `integration/admin-2.0-reconciliation`\
+**Verified Final Recovery HEAD:** `091de19d55050df0560834a7da7dd748bb678683`\
+**Release Gate Verdict:** `READY FOR LOCAL FAST-FORWARD MERGE — AWAITING OWNER APPROVAL`\
 **MANDATORY STOP GATE:** **NO AUTOMATIC MERGE, PUSH, WORKTREE DELETION, STASH DROP, OR DATABASE ROLLBACK EXECUTED**
 
 ---
@@ -21,7 +21,7 @@ All checks requested in the final safety audit were executed and verified:
 2. **Backend Test Discrepancy Forensic Reconciliation:** Fully resolved the discrepancy between 1,176 tests / 6,226 assertions and 380 tests / 1,269 assertions (see Section 3).
 3. **Stash & Physical Backup Preservation:** All 5 Git stashes and all 4 backup/quarantine directories were re-verified with cryptographic SHAs and filesystem item counts intact (see Section 6).
 4. **Three-Tier Readiness Architecture:** Explicitly decoupled Local Fast-Forward Merge Readiness, Remote PR Readiness, and Deployment Readiness (see Section 5).
-5. **Hardcoded Maintenance Bypass Secret Elimination:** Replaced static token `--secret="admin-recovery-token"` with ephemeral, cryptographically secure token generation (`openssl rand -hex 32`) and safe secret-management guidance (see Section 4).
+5. **Hardcoded Maintenance Bypass Secret Elimination:** Replaced static token `--secret="<redacted-static-token>"` with ephemeral, cryptographically secure token generation (`openssl rand -hex 32`) and safe secret-management guidance (see Section 4).
 
 ---
 
@@ -53,7 +53,7 @@ All checks requested in the final safety audit were executed and verified:
 
 - **Ancestry Verification:** `git merge-base --is-ancestor 9b4ea62 091de19` returned exit code `0`.
 - **Merge Topology:** Pure fast-forward descendant. Fast-forward merge advances `fix/master-admin-audit-remediation` from `9b4ea62` to `091de19` with **0 merge commits, 0 conflicts, and 100% preservation of commit history**.
-- **Working Tree State:** `working tree clean` in `F:\Travel Website\bookly-admin2-recovery`.
+- **Working Tree State:** `working tree clean` in `<workspace>\bookly-admin2-recovery`.
 
 ---
 
@@ -79,9 +79,9 @@ The discrepancy was an artifact of labeling: the 380-test run was a **scoped sub
 In earlier versions of the deployment rollback runbook, line 133 contained:
 ```bash
 # VULNERABLE: Static maintenance bypass token
-php artisan down --render="errors::503" --secret="admin-recovery-token"
+php artisan down --render="errors::503" --secret="<redacted-static-token>"
 ```
-**Risk:** Committing a static token to source control or documentation creates a permanent, predictable bypass endpoint (`/admin-recovery-token`) during maintenance windows, allowing unauthorized external parties to bypass maintenance mode.
+**Risk:** Committing a static token to source control or documentation creates a permanent, predictable bypass endpoint (`/<redacted-static-token>`) during maintenance windows, allowing unauthorized external parties to bypass maintenance mode.
 
 ### 4.2 Approved Safe Secret-Management Implementation
 The deployment runbook has been updated to mandate ephemeral, cryptographically secure token generation at runtime:
@@ -113,7 +113,7 @@ To maintain enterprise release governance, merge readiness is explicitly partiti
 flowchart LR
     A["Tier 1: Local FF Merge"] --> B["Tier 2: Remote PR Reconciliation"]
     B --> C["Tier 3: Deployment Execution"]
-    
+
     style A fill:#dcfce7,stroke:#16a34a,stroke-width:2px
     style B fill:#fef9c3,stroke:#ca8a04,stroke-width:2px
     style C fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
@@ -161,19 +161,19 @@ All preserved assets and forensic archives were inspected and verified intact:
 
 | Directory Path | Item Count | Status | Purpose |
 | :--- | :--- | :--- | :--- |
-| `F:\Travel Website\bookly-admin-premerge-backup-20261103_024422` | 32 items | **Intact** | Pre-merge snapshot of modified Admin 2.0 files |
-| `F:\Travel Website\bookly-admin-quarantine-20261103_025028` | 26 items | **Intact** | Quarantined conflicting files |
-| `F:\Travel Website\bookly-spec021-pre-isolation-backup-20261104_014600` | 203 items | **Intact** | Spec 021 pre-isolation full tree backup |
-| `F:\Travel Website\bookly-spec021-premerge-backup-20261104_191501` | 6 items | **Intact** | Pre-merge preservation backup |
+| `<workspace>\bookly-admin-premerge-backup-20261103_024422` | 32 items | **Intact** | Pre-merge snapshot of modified Admin 2.0 files |
+| `<workspace>\bookly-admin-quarantine-20261103_025028` | 26 items | **Intact** | Quarantined conflicting files |
+| `<workspace>\bookly-spec021-pre-isolation-backup-20261104_014600` | 203 items | **Intact** | Spec 021 pre-isolation full tree backup |
+| `<workspace>\bookly-spec021-premerge-backup-20261104_191501` | 6 items | **Intact** | Pre-merge preservation backup |
 
 ### 6.3 Git Worktrees
 
 | Worktree Path | Branch / Ref | HEAD SHA | Status |
 | :--- | :--- | :--- | :--- |
-| `F:\Travel Website\bookly travel` | `fix/master-admin-audit-remediation` | `9b4ea62` | **Active Primary** |
-| `F:\Travel Website\bookly-admin2-recovery` | `integration/admin-2.0-reconciliation` | `091de19` | **Active Recovery** |
-| `F:\Travel Website\bookly-admin-2.0` | `feature/admin-2.0` | `e517cf7` | **Preserved Feature** |
-| `F:\Travel Website\bookly-homepage-discovery` | `feature/021-homepage-discovery` | `9b4ea62` | **Preserved Worktree** |
+| `<workspace>\bookly travel` | `fix/master-admin-audit-remediation` | `9b4ea62` | **Active Primary** |
+| `<workspace>\bookly-admin2-recovery` | `integration/admin-2.0-reconciliation` | `091de19` | **Active Recovery** |
+| `<workspace>\bookly-admin-2.0` | `feature/admin-2.0` | `e517cf7` | **Preserved Feature** |
+| `<workspace>\bookly-homepage-discovery` | `feature/021-homepage-discovery` | `9b4ea62` | **Preserved Worktree** |
 
 ---
 
@@ -203,7 +203,7 @@ Upon receiving user approval, the merge sequence will execute as follows:
 
 ```powershell
 # 1. Switch to primary authoritative repository
-cd "F:\Travel Website\bookly travel"
+cd "<workspace>\bookly travel"
 
 # 2. Confirm branch and baseline commit
 git status
@@ -243,17 +243,17 @@ git worktree list
 
 ## 10. Local Fast-Forward Integration Execution (Completed 2026-11-06)
 
-**Authorized By:** Owner Approval (Option 1 Approved & Final Owner Approval)  
-**Execution Timestamp:** 2026-11-06 22:51:11  
-**Target Worktree:** `F:\Travel Website\bookly travel`  
-**Target Branch:** `fix/master-admin-audit-remediation`  
-**Pre-Merge Target HEAD:** `9b4ea62493ecfeb9c4bf7745b187d23050162987`  
-**Source Branch:** `integration/admin-2.0-reconciliation`  
-**Source HEAD:** `67529298b62c6369d8fcb74d8aec9a7fa30f51ff`  
+**Authorized By:** Owner Approval (Option 1 Approved & Final Owner Approval)\
+**Execution Timestamp:** 2026-11-06 22:51:11\
+**Target Worktree:** `<workspace>\bookly travel`\
+**Target Branch:** `fix/master-admin-audit-remediation`\
+**Pre-Merge Target HEAD:** `9b4ea62493ecfeb9c4bf7745b187d23050162987`\
+**Source Branch:** `integration/admin-2.0-reconciliation`\
+**Source HEAD:** `67529298b62c6369d8fcb74d8aec9a7fa30f51ff`\
 
 ### Command Executed:
 ```powershell
-cd "F:\Travel Website\bookly travel"
+cd "<workspace>\bookly travel"
 git merge --ff-only integration/admin-2.0-reconciliation
 ```
 
