@@ -229,7 +229,7 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     // Client-side validation only: no backend write, no route mock.
     await page.goto('/en/partner/tours/create');
     await expect(page.locator('main#main-content')).toBeVisible();
-    await page.getByRole('button', { name: /Next/i }).click();
+    await page.locator('main#main-content').getByRole('button', { name: 'Next', exact: true }).click();
     const summary = page.getByRole('alert').first();
     await expect(summary).toBeVisible();
     expect(await summary.getAttribute('aria-live')).toBe('assertive');
