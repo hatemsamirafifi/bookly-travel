@@ -4,6 +4,8 @@
 
 Retain existing authenticated, partner-owned create/show/update/draft/submit endpoints and their response envelopes. No public or client-side Gemini endpoint is added.
 
+**EGM-003 owner decision, 2026-11-14:** published canonical content and presentation changes use separate reviewable proposals; general tour `PUT` cannot expose them publicly. Unchanged content may round-trip with existing operational saves. The additive proposal/read/response contracts, immutable replacement identity and current-generation tokens follow the [Spec 019 partner contract](../../019-tour-content-data/contracts/partner-tour-content-api.md) and [reviewed v3 design](../../../docs/designs/supplier-portal-egm003-governance-v3.md). General administrative forms cannot author source or generated derivatives; exceptional source corrections require an authorized audited Action and ordinary review. That correction workflow is the documented implementation choice under the owner-approved policy.
+
 ## Authoring payload
 
 - Creation accepts one `source_locale` from `en`, `es`, and `it`. Legacy callers that omit it default to `en`. Updates cannot change it. Top-level `title` and `description` address that source.
