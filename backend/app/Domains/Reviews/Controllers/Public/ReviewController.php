@@ -73,7 +73,7 @@ class ReviewController extends Controller
 
     public function index(Request $request, $slug): JsonResponse
     {
-        $tour = Tour::where('slug', $slug)->firstOrFail();
+        $tour = Tour::where('slug', $slug)->withEligiblePublicOwner()->firstOrFail();
 
         $reviews = Review::where('tour_id', $tour->id)
             ->whereIn('status', ['visible', 'flagged'])

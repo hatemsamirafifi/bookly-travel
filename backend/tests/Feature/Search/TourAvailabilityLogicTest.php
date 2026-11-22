@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Partner\Models\AvailabilityRule;
+use App\Domains\Partner\Models\Partner;
 use App\Models\Tour;
 use Illuminate\Support\Carbon;
 
@@ -52,10 +53,11 @@ it('respects the recurring rule day-of-week filter', function () {
     expect($dates)->not->toBeEmpty();
 });
 
-it('shouldBeSearchable is true only for published + priced + available tours', function () {
+it('shouldBeSearchable is true only for published + eligible owner + priced + available tours', function () {
     $recurring = collect([new AvailabilityRule(['rule_type' => 'recurring', 'days_of_week' => [1]])]);
 
     $tour = new Tour(['status' => 'published', 'price_amount' => 5000]);
+    $tour->setRelation('partnerRecord', new Partner(['onboarding_status' => 'approved', 'is_active' => true]));
     $tour->setRelation('availabilityRules', $recurring);
     $tour->setRelation('availabilityExceptions', collect([]));
     expect($tour->shouldBeSearchable())->toBeTrue();
@@ -66,12 +68,22 @@ it('shouldBeSearchable is true only for published + priced + available tours', f
     expect($draft->shouldBeSearchable())->toBeFalse();
 
     $unpriced = new Tour(['status' => 'published', 'price_amount' => 0]);
+    $unpriced->setRelation('partnerRecord', $tour->partnerRecord);
     $unpriced->setRelation('availabilityRules', $recurring);
     $unpriced->setRelation('availabilityExceptions', collect([]));
     expect($unpriced->shouldBeSearchable())->toBeFalse();
 
     $noAvailability = new Tour(['status' => 'published', 'price_amount' => 5000]);
+    $noAvailability->setRelation('partnerRecord', $tour->partnerRecord);
     $noAvailability->setRelation('availabilityRules', collect([]));
     $noAvailability->setRelation('availabilityExceptions', collect([]));
     expect($noAvailability->shouldBeSearchable())->toBeFalse();
+
+    $missingOwner = clone $tour;
+    $missingOwner->setRelation('partnerRecord', null);
+    expect($missingOwner->shouldBeSearchable())->toBeFalse();
+
+    $inactiveOwner = clone $tour;
+    $inactiveOwner->setRelation('partnerRecord', new Partner(['onboarding_status' => 'approved', 'is_active' => false]));
+    expect($inactiveOwner->shouldBeSearchable())->toBeFalse();
 });

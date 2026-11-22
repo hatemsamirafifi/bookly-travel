@@ -2,6 +2,7 @@
 
 use App\Domains\Booking\Jobs\AnonymizeExpiredBookingData;
 use App\Domains\Booking\Jobs\CompleteBookingJob;
+use App\Domains\Partner\Jobs\MaintainDepartureHorizonJob;
 use App\Domains\Payment\Jobs\ExpirePendingBookingsJob;
 use App\Jobs\AnonymizeStaleGuestIdentities;
 use Illuminate\Foundation\Inspiring;
@@ -43,4 +44,10 @@ Schedule::command('partner-invitations:expire')
 Schedule::command('cms:publish-scheduled')
     ->everyMinute()
     ->name('publish-scheduled-cms-content')
+    ->withoutOverlapping();
+
+// EGM-005 D3: roll bounded 180-day explicit departures forward for published tours
+Schedule::job(new MaintainDepartureHorizonJob)
+    ->dailyAt('01:30')
+    ->name('maintain-departure-horizon')
     ->withoutOverlapping();

@@ -3,6 +3,7 @@
 namespace App\Domains\Booking\Controllers\Public;
 
 use App\Domains\Booking\Actions\CancelBookingAction;
+use App\Domains\Booking\Actions\DeclinePendingBookingAction;
 use App\Domains\Booking\Actions\GetTravelerBookingsAction;
 use App\Domains\Booking\DTOs\BookingResponseDTO;
 use App\Domains\Booking\Models\Booking;
@@ -49,7 +50,7 @@ class TravelerBookingController
 
     public function show(Request $request, string $reference): JsonResponse
     {
-        $booking = Booking::with(['tour.translations', 'payment'])
+        $booking = Booking::with(['tour.translations', 'payment', 'departure'])
             ->where('reference', $reference)
             ->first();
 
@@ -79,6 +80,24 @@ class TravelerBookingController
         return response()->json([
             'data' => $data,
             'message' => 'Booking cancelled. Refund is being processed.',
+        ]);
+    }
+
+    public function decline(Request $request, string $reference, DeclinePendingBookingAction $action): JsonResponse
+    {
+        $validated = $request->validate([
+            'reason' => 'sometimes|nullable|string|max:500',
+        ]);
+
+        $data = $action->execute(
+            reference: $reference,
+            travelerId: (int) $request->user()->id,
+            reason: $validated['reason'] ?? null,
+        );
+
+        return response()->json([
+            'data' => $data,
+            'message' => 'Pending booking declined and seat hold released.',
         ]);
     }
 }

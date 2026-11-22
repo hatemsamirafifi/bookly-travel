@@ -18,7 +18,7 @@ Localized server-rendered tour search with filters, sorting, and pagination.
 
 ## Side Effects
 
-- Fetches search results through `searchTours` with a requested revalidation interval of 300 seconds. [Search fetch](./page.tsx#L58) [Fetch policy](../../../../lib/api/search.ts#L29)
+- Fetches search results through `searchTours` with `cache: 'no-store'` so each server request reaches the backend eligibility checks and guarded caches. [Search fetch](./page.tsx#L58) [Fetch policy](../../../../lib/api/search.ts#L29)
 
 ## Verification
 

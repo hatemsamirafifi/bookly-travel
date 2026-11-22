@@ -3,9 +3,11 @@
 namespace App\Domains\Partner\Models;
 
 use App\Domains\Admin\Models\GovernanceAuditLog;
+use App\Domains\Search\Services\TourPublicCacheService;
 use App\Enums\PartnerStatus;
 use App\Models\Tour;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -38,9 +40,58 @@ class Partner extends Model
         ];
     }
 
+    /** @var list<array{id: int, slug: string, content_version: int}> */
+    private array $transientDeletionTargets = [];
+
+    protected static function booted(): void
+    {
+        static::saved(function (Partner $partner): void {
+            // saved fires before originals synchronize; unlike wasChanged,
+            // dirty facts do not repeat a preceding update on a no-op save.
+            if (! $partner->isDirty(['onboarding_status', 'is_active'])) {
+                return;
+            }
+
+            $targets = app(TourPublicCacheService::class)->captureOwnerTargets((int) $partner->id);
+            if ($targets === []) {
+                return;
+            }
+
+            app(TourPublicCacheService::class)->invalidateOwnerTargetsAfterCommit($targets);
+        });
+
+        static::deleting(function (Partner $partner): void {
+            $partner->transientDeletionTargets = app(TourPublicCacheService::class)->captureOwnerTargets((int) $partner->id);
+        });
+
+        static::deleted(function (Partner $partner): void {
+            $targets = $partner->transientDeletionTargets;
+            $partner->transientDeletionTargets = [];
+            if ($targets === []) {
+                return;
+            }
+
+            app(TourPublicCacheService::class)->invalidateOwnerTargetsAfterCommit($targets);
+        });
+    }
+
     public function isPayoutReady(): bool
     {
         return ! empty($this->stripe_account_id) && $this->stripe_charges_enabled && $this->stripe_payouts_enabled;
+    }
+
+    public function isPubliclyEligible(): bool
+    {
+        return $this->onboarding_status === 'approved' && $this->is_active;
+    }
+
+    /**
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
+    public function scopePubliclyEligible(Builder $query): Builder
+    {
+        return $query->where('onboarding_status', 'approved')->where('is_active', true);
     }
 
     public function user(): BelongsTo

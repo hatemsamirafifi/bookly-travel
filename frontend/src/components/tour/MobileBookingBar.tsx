@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatOfferedDateUtc, type BookingWithOptionView } from '@/lib/tours/booking-selection';
-import type { TourOption } from '@/lib/api/types';
+import type { TieredPricingInfo, TourOption } from '@/lib/api/types';
 import { Dialog } from '@/components/ui/Dialog';
 import AvailabilityCalendar from './AvailabilityCalendar';
 import OptionSelector from './OptionSelector';
@@ -13,6 +13,7 @@ import {
   BookingContinuation,
   BookingCountStepper,
   BookingReasonList,
+  TieredPricingSummary,
   type BookingCardAuth,
 } from './BookingCard';
 
@@ -38,6 +39,8 @@ export interface MobileBookingBarProps {
   /** Same pending rule as the desktop card: the dialog selectors stay inert
    *  while auth restores. */
   controlsDisabled: boolean;
+  /** Optional participant-count per-person pricing tiers (EGM-005 D5). */
+  tieredPricing?: TieredPricingInfo | null;
 }
 
 const BAR_ACTION_CLASS =
@@ -64,6 +67,7 @@ export default function MobileBookingBar({
   onContinueClick,
   auth,
   controlsDisabled,
+  tieredPricing,
 }: MobileBookingBarProps) {
   const t = useTranslations('tour');
   const tCommon = useTranslations('common');
@@ -243,6 +247,11 @@ export default function MobileBookingBar({
                   <span className="font-semibold text-primary">{view.estimateDisplay}</span>
                 </p>
               )}
+              <TieredPricingSummary
+                tieredPricing={tieredPricing ?? (view.selectedOption?.pricing.tiered_pricing ?? null)}
+                activeTierId={view.appliedTier?.id}
+                locale={locale}
+              />
             </>
           )}
           <BookingReasonList

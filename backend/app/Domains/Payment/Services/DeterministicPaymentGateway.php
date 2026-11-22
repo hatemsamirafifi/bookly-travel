@@ -35,8 +35,15 @@ class DeterministicPaymentGateway implements PaymentGateway
         return 'pi_test_' . substr($digest, 0, 24) . '_secret_' . substr($digest, 24);
     }
 
-    public function refund(string $paymentIntentId, ?string $idempotencyKey = null): string
-    {
+    public function refund(
+        string $paymentIntentId,
+        ?string $idempotencyKey = null,
+        bool $reverseTransfer = false,
+        bool $refundApplicationFee = false
+    ): string {
+        // The deterministic adapter has no external resource, so the Connect
+        // refund flags (transfer reversal, application fee return) are no-ops
+        // here; they only shape the real StripeService call.
         return 're_test_' . substr(hash_hmac(
             'sha256',
             $paymentIntentId . '|' . ($idempotencyKey ?? ''),

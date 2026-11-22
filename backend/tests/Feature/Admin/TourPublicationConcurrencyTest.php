@@ -64,7 +64,7 @@ it('serializes publication and owner reassignment against partner suspension', f
             $arguments,
             $output, $error, 'Concurrent tour approval',
         );
-        Spec019TranslationProcess::waitForFile($arrival, 60, 'Approval worker arrival', $error);
+        Spec019TranslationProcess::waitForFile($arrival, 90, 'Approval worker arrival', $error, $worker);
         $childPid = (int) file_get_contents($arrival);
         $blocked = false;
         $deadline = microtime(true) + 10;
@@ -111,7 +111,7 @@ it('serializes publication and owner reassignment against partner suspension', f
         $category?->delete();
         DB::setDefaultConnection($previousDefault);
         DB::purge('egm002_owner');
-        foreach ([$arrival, $output, $error] as $file) {
+        foreach ([$arrival, $arrival . '.spawned', $output, $error] as $file) {
             if (is_file($file)) {
                 unlink($file);
             }

@@ -24,6 +24,8 @@ class BookingController
             // active options (enforced in CreateBookingAction, which knows the
             // tour). Format-only validation here.
             'tour_option_id' => 'sometimes|nullable|integer|min:1',
+            // Explicit departure (EGM-005 D3, D4).
+            'tour_departure_id' => 'sometimes|nullable|integer|min:1',
         ]);
 
         $idempotencyKey = $request->header('Idempotency-Key');
@@ -44,6 +46,7 @@ class BookingController
             travelerId: (int) $request->user()->id,
             pageLoadPrice: isset($validated['page_load_price']) ? (int) $validated['page_load_price'] : null,
             tourOptionId: isset($validated['tour_option_id']) ? (int) $validated['tour_option_id'] : null,
+            tourDepartureId: isset($validated['tour_departure_id']) ? (int) $validated['tour_departure_id'] : null,
         );
 
         // L4: Symfony HttpExceptions and ValidationException thrown by the

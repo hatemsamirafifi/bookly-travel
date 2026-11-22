@@ -13,7 +13,12 @@ interface PaymentGateway
         array $metadata = []
     ): string;
 
-    public function refund(string $paymentIntentId, ?string $idempotencyKey = null): string;
+    public function refund(
+        string $paymentIntentId,
+        ?string $idempotencyKey = null,
+        bool $reverseTransfer = false,
+        bool $refundApplicationFee = false
+    ): string;
 
     public function cancelPaymentIntent(string $intentId): void;
 }

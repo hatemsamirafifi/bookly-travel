@@ -60,9 +60,108 @@ const messages: Record<string, string> = {
   'partner.tours.errors.fileTooLarge': 'File is too large.',
   'partner.tours.errors.maxImagesReached': 'Maximum number of images reached.',
   'partner.tours.form.dismissErrors': 'Dismiss',
+  'partner.tours.availability.recurringSchedule': 'Recurring Schedule',
+  'partner.tours.availability.recurringScheduleHint': 'Define when your tour runs on a recurring basis.',
+  'partner.tours.availability.addRule': 'Add Rule',
+  'partner.tours.availability.noRulesYet': 'No recurring rules yet. Click “Add Rule” to create one.',
+  'partner.tours.availability.exceptionsTitle': 'Exceptions',
+  'partner.tours.availability.exceptionsHint': 'Add blackout dates or specific overrides for individual days.',
+  'partner.tours.availability.addException': 'Add Exception',
+  'partner.tours.availability.noExceptionsYet': 'No exceptions yet. Click “Add Exception” to create one.',
+  'partner.tours.availability.dailyRule': 'Daily Rule',
+  'partner.tours.availability.weeklyRule': 'Weekly Rule',
+  'partner.tours.availability.monthlyRule': 'Monthly Rule',
+  'partner.tours.availability.removeRule': 'Remove rule',
+  'partner.tours.availability.frequency': 'Frequency',
+  'partner.tours.availability.selectFrequency': 'Select frequency',
+  'partner.tours.availability.daily': 'Daily',
+  'partner.tours.availability.weekly': 'Weekly',
+  'partner.tours.availability.monthly': 'Monthly',
+  'partner.tours.availability.startTime': 'Start time',
+  'partner.tours.availability.startDate': 'Start date',
+  'partner.tours.availability.endDate': 'End date',
+  'partner.tours.availability.indefinitePlaceholder': 'Leave empty for indefinite',
+  'partner.tours.availability.capacity': 'Capacity',
+  'partner.tours.availability.daysOfWeek': 'Days of week',
+  'partner.tours.availability.blackoutBadge': 'Blackout',
+  'partner.tours.availability.specificBadge': 'Specific Override',
+  'partner.tours.availability.removeException': 'Remove exception',
+  'partner.tours.availability.typeLabel': 'Type',
+  'partner.tours.availability.selectType': 'Select type',
+  'partner.tours.availability.blackoutOption': 'Blackout (unavailable)',
+  'partner.tours.availability.specificOption': 'Specific (override)',
+  'partner.tours.availability.date': 'Date',
+  'partner.tours.availability.priceMultiplier': 'Price multiplier',
+  'partner.tours.availability.priceMultiplierPlaceholder': 'e.g., 1.20 for 20% surcharge',
+  'partner.tours.availability.note': 'Note',
+  'partner.tours.availability.notePlaceholder': 'e.g., Holiday special pricing',
+  'partner.tours.availability.exceptionsCalendar': 'Exceptions Calendar',
+  'partner.tours.availability.weekday0': 'Sun',
+  'partner.tours.availability.weekday1': 'Mon',
+  'partner.tours.availability.weekday2': 'Tue',
+  'partner.tours.availability.weekday3': 'Wed',
+  'partner.tours.availability.weekday4': 'Thu',
+  'partner.tours.availability.weekday5': 'Fri',
+  'partner.tours.availability.weekday6': 'Sat',
+  'partner.tours.pricingForm.heading': 'Pricing Tiers',
+  'partner.tours.pricingForm.subtitle': 'Add per-person pricing tiers by participant count for your tour.',
+  'partner.tours.pricingForm.addTier': 'Add Tier',
+  'partner.tours.pricingForm.emptyBanner': 'At least one pricing tier is required. Click “Add Tier” to create one.',
+  'partner.tours.pricingForm.tierTitle': 'Tier {number}',
+  'partner.tours.pricingForm.removeTier': 'Remove pricing tier {number}',
+  'partner.tours.pricingForm.nameLabel': 'Name',
+  'partner.tours.pricingForm.namePlaceholder': 'e.g., Solo, Couple, Small Group',
+  'partner.tours.pricingForm.priceLabel': 'Price per person',
+  'partner.tours.pricingForm.minLabel': 'Min participants',
+  'partner.tours.pricingForm.maxLabel': 'Max participants',
+  'partner.tours.pricingForm.maxPlaceholder': 'Leave empty for unlimited',
+  'partner.tours.pricingForm.pricePositiveError': 'Price must be a positive number.',
+  'partner.tours.pricingForm.maxGteMinError': 'Max participants must be greater than or equal to min.',
+  'partner.tours.pricingForm.summaryCount': '{count, plural, =1 {1 pricing tier} other {# pricing tiers}} defined.',
+  'tour.tieredPricing.title': 'Group rate tiers',
+  'tour.tieredPricing.perPersonNote': 'Per-person rate based on total group size',
+  'tour.tieredPricing.singleParticipant': '1 traveler',
+  'tour.tieredPricing.rangeParticipants': '{min}–{max} travelers',
+  'tour.tieredPricing.minPlusParticipants': '{min}+ travelers',
+  'tour.tieredPricing.activeBadge': 'Applied',
+  // Booking confirmation
+  'booking.confirmationTitle': 'Booking Confirmed',
+  'booking.confirmationSubheading': 'Your booking has been received.',
+  'booking.tourLabel': 'Tour',
+  'booking.date': 'Date',
+  'booking.departureTime': 'Departure time',
+  'booking.participants': 'Participants',
+  'booking.rate': 'Rate',
+  'booking.total': 'Total',
+  'booking.status': 'Status',
+  'booking.statusConfirmed': 'Confirmed',
+  // Traveler booking detail
+  'traveler.bookingDetail.reference': 'Booking Reference',
+  'traveler.bookingDetail.tour': 'Tour',
+  'traveler.bookingDetail.dateTime': 'Date & Time',
+  'traveler.bookingDetail.participants': 'Participants',
+  'traveler.bookingDetail.price': 'Price',
+  'traveler.bookingDetail.perPerson': '{price} per person',
+  'traveler.bookingDetail.total': 'Total: {total}',
+  'traveler.bookingDetail.fallbackTour': 'Tour',
+  // Partner booking detail
+  'partner.bookings.detail.title': 'Booking Details',
+  'partner.bookings.detail.tour': 'Tour',
+  'partner.bookings.detail.date': 'Date',
+  'partner.bookings.detail.time': 'Time',
+  'partner.bookings.detail.departureTime': 'Departure time',
+  'partner.bookings.detail.option': 'Option',
+  'partner.bookings.detail.traveler': 'Traveler',
+  'partner.bookings.detail.participants': 'Participants',
+  'partner.bookings.detail.total': 'Total',
+  'partner.bookings.detail.specialRequests': 'Special Requests',
+  'partner.bookings.detail.cancellationReason': 'Cancellation Reason',
+  'partner.bookings.detail.markCompleted': 'Mark as Completed',
+  'partner.bookings.detail.requestCancellation': 'Request Cancellation',
 };
 
 jest.mock('next-intl', () => ({
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
   useLocale: () => 'en',
   useTranslations: (namespace?: string) => (key: string, values?: Record<string, unknown>) => {
     if (key === 'review_count') {
@@ -74,6 +173,18 @@ jest.mock('next-intl', () => ({
       return `${count}/2000`;
     }
     const lookupKey = namespace ? `${namespace}.${key}` : key;
-    return messages[lookupKey] || messages[key] || key;
+    const raw = messages[lookupKey] || messages[key] || key;
+    if (!values) return raw;
+    let formatted = raw.replace(
+      /\{(\w+),\s*plural,\s*=1\s*\{([^}]*)\}\s*other\s*\{([^}]*)\}\}/g,
+      (_, k: string, one: string, other: string) => {
+        const count = Number(values[k] ?? 0);
+        return (count === 1 ? one : other).replace('#', String(count));
+      },
+    );
+    for (const [k, v] of Object.entries(values)) {
+      formatted = formatted.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+    }
+    return formatted;
   },
 }));

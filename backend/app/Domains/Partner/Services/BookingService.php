@@ -23,7 +23,7 @@ class BookingService
      */
     public function listForPartner(int $partnerId, array $filters = []): LengthAwarePaginator
     {
-        $query = Booking::with(['tour', 'traveler'])
+        $query = Booking::with(['tour', 'traveler', 'departure'])
             ->whereHas('tour', function ($q) use ($partnerId) {
                 $q->where('partner_id', $partnerId);
             })
@@ -68,7 +68,7 @@ class BookingService
      */
     public function getForPartner(string $reference, int $partnerId): ?Booking
     {
-        return Booking::with(['tour.translations', 'traveler', 'guestIdentity', 'payment'])
+        return Booking::with(['tour.translations', 'traveler', 'guestIdentity', 'payment', 'departure'])
             ->where('reference', $reference)
             ->whereHas('tour', function ($q) use ($partnerId) {
                 $q->where('partner_id', $partnerId);

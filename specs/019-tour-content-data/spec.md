@@ -51,7 +51,27 @@ The project owner approved a content-ownership and revision-governance policy on
 | Enforcement boundary | Refusals are enforced in authenticated application boundaries, domain Actions/Services and the known writer inventory. No PostgreSQL `GUC` or trigger bypass mechanism is introduced (FR-031) |
 | Activation | One coordinated cutover: old workers finish and exit, new workers no-op legacy null-epoch jobs and reconciliation queues replacements. The supported rollback is a compatible build that retains the governance guards (FR-040) |
 
-Design of record: [Supplier Portal EGM-003 technical design v3](../../docs/designs/supplier-portal-egm003-governance-v3.md), with its [execution file/test manifest](../../docs/designs/supplier-portal-egm003-execution-plan.md); the [design index](../../docs/designs/supplier-portal-egm003-revision-governance.md) is the canonical entry point. Two independent Goldfish reviewers passed the v3 architecture on 2026-11-14; the v1 and v2 drafts are archived as `…-v1.md` and `…-v2.md`, both failed the independent readiness review and are historical review evidence rather than active contracts. This record was synchronized to v3 on 2026-11-14; no schema, migration, code or test has been written and EGM-003 remains open. FR-001–FR-030 and SC-001–SC-008 are unchanged by this record; the requirements below are additive.
+Design of record: [Supplier Portal EGM-003 technical design v3](../../docs/designs/supplier-portal-egm003-governance-v3.md), with its [execution file/test manifest](../../docs/designs/supplier-portal-egm003-execution-plan.md); the [design index](../../docs/designs/supplier-portal-egm003-revision-governance.md) is the canonical entry point. Two independent Goldfish reviewers passed the v3 architecture on 2026-11-14; the v1 and v2 drafts are archived as `…-v1.md` and `…-v2.md`, both failed the independent readiness review and are historical review evidence rather than active contracts. No implementation existed when this record was synchronized to v3 on 2026-11-14. Implementation later began; the [interim implementation review](../../docs/reports/supplier-portal-egm003-checkpoint-review.md) failed and acceptance remains pending. EGM-003 stays open. FR-001–FR-030 and SC-001–SC-008 are unchanged by this record; the requirements below are additive.
+
+## Operational & Commercial Engine Record (EGM-005 owner decisions, 2026-11-17)
+
+The project owner approved the operational and commercial decisions for the Supplier Portal on 2026-11-17. It ratifies:
+- **D1 (Draft Recovery & Concurrency):** Server-authoritative draft persistence in PostgreSQL (`tour_drafts`), cross-session resume, and optimistic concurrency tokens (`concurrency_token`) preventing silent multi-tab overwrites.
+- **D2 (First-Save Idempotency):** Client-generated creation UUID scoped to partner, enforced via unique constraint.
+- **D3 (Explicit Departures):** Concrete bookable occurrences (`tour_departures`) with independent UTC start datetime, IANA timezone reference, local booking cutoffs, and bounded recurrence generation up to 180 days with DST transition correctness.
+- **D4 (Independent Capacity Only):** **OWNER-APPROVED:** Shared capacity pools (`tour_capacity_pools`) are removed. Every concrete departure has independent inventory. Valid pending bookings reserve seats until payment expiration.
+- **D5 (Participant-Count Tiered Pricing):** **OWNER-APPROVED:** Fixed group pricing (`per_group`) is removed. The supplier configures price per person based on total participants in a booking. All participants pay the applicable tier unit price. Money is computed in integer minor units (cents).
+- **D6 (Content Governance Preservation):** Preserves the immutable content revision model of EGM-003.
+
+| Area | Active criterion (EGM-005) |
+|---|---|
+| Server Draft Recovery | Drafts persist server-side in PostgreSQL. Unselected language start preserved. Multi-tab conflict returns 409 with current server state (D1) |
+| First-Save Idempotency | Client UUID prevents duplicate tour creation on retry; divergent payload with same key returns 409 conflict (D2) |
+| Concrete Departures | Bookable `tour_departures` records with authoritative UTC timestamp and IANA timezone. Historical booking dates preserved (D3) |
+| Capacity Ownership | Capacity is strictly per-departure. No cross-option or cross-day inventory pooling (D4) |
+| Tiered Pricing | Per-person unit price determined by booking participant count. Server backend calculates total atomically; price drift detected (D5) |
+| Governance Isolation | Operational departures and tiered prices update under commercial authorization; editorial text revisions use EGM-003 governance (D6) |
+
 
 ## User Scenarios & Testing *(mandatory)*
 

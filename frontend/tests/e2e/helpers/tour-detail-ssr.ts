@@ -157,7 +157,9 @@ async function serveCdnMedia(url: string, res: ServerResponse): Promise<void> {
 // harness page renders the same reviews the test fetched from the real API;
 // without an upstream the mock keeps the historical 404 behavior.
 async function relayTourReviews(url: string, res: ServerResponse): Promise<void> {
-  const upstreamBase = process.env.PLAYWRIGHT_BASE_URL;
+  const upstreamBase =
+    process.env.PLAYWRIGHT_BASE_URL ||
+    (process.env.DOCKER_ENV === 'true' ? 'http://nginx' : 'http://localhost:8080');
   if (!upstreamBase) {
     res.writeHead(404, { 'Content-Type': 'application/json' }).end('{}');
     return;

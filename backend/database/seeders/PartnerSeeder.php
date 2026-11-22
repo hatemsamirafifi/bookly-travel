@@ -13,6 +13,8 @@ use App\Domains\Partner\Models\TourDraft;
 use App\Domains\Partner\Models\TourMedia;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourOption;
+use App\Models\TourOptionTranslation;
 use App\Models\TourTranslation;
 use App\Models\User;
 use App\Support\DemoMediaDeployer;
@@ -46,7 +48,7 @@ class PartnerSeeder extends Seeder
         $partner = Partner::firstOrCreate(
             ['user_id' => $user->id],
             [
-                'onboarding_status' => 'complete',
+                'onboarding_status' => 'approved',
                 'is_active' => true,
             ]
         );
@@ -137,6 +139,52 @@ class PartnerSeeder extends Seeder
             ],
         ]);
 
+        // Create dedicated optioned published tour for option revision governance
+        $optionedPublishedTour = $this->createTourWithTranslations($partner, $walkingCategory, [
+            'slug' => 'colosseum-vip-experience-tour',
+            'location' => 'Rome, Italy',
+            'location_slug' => 'rome-italy',
+            'duration_minutes' => 180,
+            'duration_label' => '3 hours',
+            'group_size_min' => 1,
+            'group_size_max' => 20,
+            'price_amount' => 6500, // €65.00 in cents
+            'status' => 'published',
+            'cover_image_url' => 'http://cdn.bookly.test/tours/rome-cover.jpg',
+            'is_featured' => true,
+            'published_at' => now()->subDays(20),
+            'price_from' => 65.00,
+            'currency' => 'EUR',
+        ], [
+            'en' => [
+                'title' => 'Colosseum VIP Experience Tour',
+                'description' => 'Exclusive VIP guided tour of the Colosseum and Ancient Rome with expert archaeological guide.',
+                'highlights' => ['Arena floor access', 'Underground chambers', 'Ancient Roman stories'],
+                'inclusions' => ['Expert local guide', 'Headset for clear commentary', 'VIP skip-the-line entrance'],
+                'exclusions' => ['Hotel pickup', 'Food and drinks', 'Gratuities'],
+                'meeting_point' => 'Colosseum VIP Gate',
+                'cancellation_policy' => 'Free cancellation up to 24 hours before the tour.',
+            ],
+            'es' => [
+                'title' => 'Tour VIP Coliseo y Roma Antigua',
+                'description' => 'Tour guiado VIP exclusivo del Coliseo y la Roma Antigua con guía arqueológico experto.',
+                'highlights' => ['Acceso a la arena', 'Cámaras subterráneas', 'Historias romanas antiguas'],
+                'inclusions' => ['Guía local experto', 'Auricular', 'Entrada VIP sin colas'],
+                'exclusions' => ['Recogida en hotel', 'Comida y bebida'],
+                'meeting_point' => 'Puerta VIP del Coliseo',
+                'cancellation_policy' => 'Cancelación gratuita hasta 24 horas antes.',
+            ],
+            'it' => [
+                'title' => 'Tour Esperienza VIP del Colosseo',
+                'description' => 'Tour guidato VIP esclusivo del Colosseo e dell\'Antica Roma con guida archeologica esperta.',
+                'highlights' => ['Accesso all\'arena', 'Sotterranei', 'Storie romane antiche'],
+                'inclusions' => ['Guida locale esperta', 'Auricolare', 'Ingresso VIP salta la fila'],
+                'exclusions' => ['Pick-up in hotel', 'Cibo e bevande'],
+                'meeting_point' => 'Ingresso VIP del Colosseo',
+                'cancellation_policy' => 'Cancellazione gratuita fino a 24 ore prima.',
+            ],
+        ]);
+
         $pendingTour = $this->createTourWithTranslations($partner, $foodCategory, [
             'slug' => 'trastevere-food-wine-experience',
             'location' => 'Rome, Italy',
@@ -201,6 +249,13 @@ class PartnerSeeder extends Seeder
 
         // Add tour media to published tour
         $this->createTourMedia($publishedTour);
+
+        // Options are attached to the optioned tour to preserve legacy option-less behavior on $publishedTour
+        $this->createPricingTiers($optionedPublishedTour);
+        $this->createAvailabilityRules($optionedPublishedTour);
+        $this->createAvailabilityExceptions($optionedPublishedTour);
+        $this->createTourMedia($optionedPublishedTour);
+        $this->createTourOptions($optionedPublishedTour);
 
         // Create draft for the pending tour
         TourDraft::updateOrCreate(
@@ -373,5 +428,30 @@ class PartnerSeeder extends Seeder
                 'data' => ['booking_id' => 1],
                 'read_at' => null,
             ]);
+    }
+
+    private function createTourOptions(Tour $tour): void
+    {
+        $option = TourOption::firstOrCreate(
+            ['tour_id' => $tour->id, 'title' => 'Standard English Tour'],
+            [
+                'pickup_instructions' => 'Meet at the Colosseum entrance.',
+                'guide_languages' => ['en'],
+                'price_amount' => 4500,
+                'group_size_max' => 20,
+                'start_time' => '10:00:00',
+                'weekdays' => [0, 1, 2, 3, 4, 5, 6],
+                'status' => TourOption::STATUS_ACTIVE,
+                'sort_order' => 1,
+            ]
+        );
+
+        TourOptionTranslation::firstOrCreate(
+            ['tour_option_id' => $option->id, 'locale' => 'en'],
+            [
+                'title' => 'Standard English Tour',
+                'pickup_instructions' => 'Meet at the Colosseum entrance.',
+            ]
+        );
     }
 }

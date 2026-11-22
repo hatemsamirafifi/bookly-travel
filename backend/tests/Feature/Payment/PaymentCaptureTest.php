@@ -40,7 +40,7 @@ it('creates booking in pending_payment status with client_secret', function () {
     $mock = $this->mock(StripeService::class);
     $mock->shouldReceive('createPaymentIntent')
         ->once()
-        ->with(15000, 'EUR', Mockery::any())
+        ->with(15000, 'EUR', Mockery::any(), null, null, Mockery::any())
         ->andReturn('pi_test_123_secret_abc');
 
     $response = actingAs($traveler)

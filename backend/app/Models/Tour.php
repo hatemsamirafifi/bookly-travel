@@ -12,13 +12,14 @@ use App\Domains\Partner\Models\TourDraft;
 use App\Domains\Partner\Models\TourMedia;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Reviews\Models\Review;
+use App\Domains\Search\Services\TourPublicCacheService;
 use App\Enums\TourStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Laravel\Scout\Searchable;
 use Throwable;
@@ -80,28 +81,32 @@ class Tour extends Model
         }
     }
 
-    public static function clearDetailCache(?string $slug): void
+    public static function clearDetailCache(?string $slug, ?string $previousSlug = null): void
     {
         if (! $slug) {
             return;
         }
 
-        foreach (['en', 'es', 'it'] as $locale) {
-            Cache::forget("tour.{$slug}.{$locale}");
-        }
+        app(TourPublicCacheService::class)->forgetDetailAfterCommit((string) $slug, $previousSlug);
     }
 
     protected static function booted(): void
     {
         static::saved(function (Tour $tour) {
-            static::clearDetailCache($tour->slug);
-            if ($tour->wasChanged('slug') && $tour->getOriginal('slug')) {
-                static::clearDetailCache((string) $tour->getOriginal('slug'));
-            }
+            // Current versioned keys are evicted together with the legacy key:
+            // operational saves that never bump content_version must not retain
+            // a 900-second stale payload (design v3 §8). A renamed tour evicts
+            // both its old and new slug keys.
+            $previousSlug = $tour->wasChanged('slug') ? $tour->getOriginal('slug') : null;
+
+            app(TourPublicCacheService::class)->forgetDetailAfterCommit(
+                (string) $tour->slug,
+                $previousSlug !== null && $previousSlug !== '' ? (string) $previousSlug : null,
+            );
         });
 
         static::deleted(function (Tour $tour) {
-            static::clearDetailCache($tour->slug);
+            app(TourPublicCacheService::class)->forgetDetailAfterCommit((string) $tour->slug);
         });
     }
 
@@ -140,6 +145,9 @@ class Tour extends Model
         'guide_languages',
         'is_featured',
         'published_at',
+        'published_revision_id',
+        'generation_epoch',
+        'content_version',
         'created_at',
         'updated_at',
     ];
@@ -154,6 +162,9 @@ class Tour extends Model
             'is_featured' => 'boolean',
             'published_at' => 'datetime',
             'guide_languages' => 'array',
+            'published_revision_id' => 'integer',
+            'generation_epoch' => 'integer',
+            'content_version' => 'integer',
         ];
     }
 
@@ -227,8 +238,30 @@ class Tour extends Model
     public function isPubliclyBookable(): bool
     {
         return $this->status === 'published'
+            && $this->hasEligiblePublicOwner()
             && $this->hasValidPricing()
             && $this->hasUpcomingAvailability();
+    }
+
+    public function hasEligiblePublicOwner(): bool
+    {
+        $partner = $this->relationLoaded('partnerRecord')
+            ? $this->partnerRecord
+            : $this->partnerRecord()->first();
+
+        return $partner instanceof Partner && $partner->isPubliclyEligible();
+    }
+
+    /**
+     * @param  Builder<static>  $query
+     * @return Builder<static>
+     */
+    public function scopeWithEligiblePublicOwner(Builder $query): Builder
+    {
+        return $query->whereHas('partnerRecord', function (Builder $owner): void {
+            /** @var Builder<Partner> $owner */
+            $owner->publiclyEligible();
+        });
     }
 
     /**
@@ -256,6 +289,7 @@ class Tour extends Model
     {
         return $query
             ->published()
+            ->withEligiblePublicOwner()
             ->whereHas('availabilityRules')
             ->where(function ($query) {
                 $query->where(fn ($legacy) => $legacy->whereDoesntHave('options')->where('tours.price_amount', '>', 0))
@@ -286,7 +320,11 @@ class Tour extends Model
 
     public function supportsFieldTranslation(): bool
     {
-        return $this->sourceLocale() === self::DEFAULT_SOURCE_LOCALE && ! $this->hasOptionsConfigured();
+        // EGM-003 owner policy (ADR 0024): Gemini derivatives are never edited
+        // by administrators and the tour content pipeline owns every tour
+        // translation revision. The legacy per-field engine is retired for
+        // tours everywhere; CMS/blog content keeps its engine untouched.
+        return false;
     }
 
     /**
@@ -688,6 +726,53 @@ class Tour extends Model
         return $this->belongsTo(Partner::class, 'partner_id');
     }
 
+    /**
+     * The currently approved public snapshot of this tour. Null means the
+     * tour was never publicly approved under the revision contract yet (that
+     * only happens through lazy/batch baseline capture or a real approval).
+     *
+     * @return BelongsTo<TourContentRevision, $this>
+     */
+    public function publishedRevision(): BelongsTo
+    {
+        return $this->belongsTo(TourContentRevision::class, 'published_revision_id');
+    }
+
+    /**
+     * Every immutable content revision ever captured for this tour, newest ID
+     * last so the monotonic `revision_number` stays readable in order.
+     *
+     * @return HasMany<TourContentRevision, $this>
+     */
+    public function contentRevisions(): HasMany
+    {
+        return $this->hasMany(TourContentRevision::class)->orderBy('revision_number');
+    }
+
+    /**
+     * @return HasMany<TourRevisionRequest, $this>
+     */
+    public function revisionRequests(): HasMany
+    {
+        return $this->hasMany(TourRevisionRequest::class);
+    }
+
+    /**
+     * The monotonically increasing canonical-generation identity (design v3
+     * §7). It advances only when the canonical source text/option text changes
+     * or an authorized force-regeneration runs; media, presentation and
+     * pricing changes never advance it.
+     */
+    public function generationEpoch(): int
+    {
+        return (int) ($this->getAttribute('generation_epoch') ?? 0);
+    }
+
+    public function contentVersion(): int
+    {
+        return (int) ($this->getAttribute('content_version') ?? 0);
+    }
+
     public static function formatPrice(int $amount, string $currency): string
     {
         return match ($currency) {
@@ -795,7 +880,7 @@ class Tour extends Model
      *  rejected → pending_review; published → archived|draft.
      *
      * Publishing (→ published) is blocked unless the owning partner is
-     * approved — `onboarding_status === 'approved'`.
+     * approved and active.
      */
     public function canTransitionTo(TourStatus|string $to): bool
     {
@@ -815,7 +900,7 @@ class Tour extends Model
         }
 
         if ($to === TourStatus::Published->value) {
-            return optional($this->partnerRecord)->onboarding_status === 'approved';
+            return $this->hasEligiblePublicOwner();
         }
 
         return true;

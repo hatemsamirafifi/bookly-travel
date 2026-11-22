@@ -1,4 +1,8 @@
 import { apiClient } from '../client';
+import { searchTours } from '../search';
+import { getHomepageData } from '../homepage';
+import { getCategories, getCategoryTours } from '../categories';
+import { getDestinations, getDestinationTours } from '../destinations';
 
 
 describe('API Caching', () => {
@@ -8,6 +12,29 @@ describe('API Caching', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe.each(['en', 'es', 'it'])('fresh public eligibility in %s', (locale) => {
+    it.each([
+      ['search', () => searchTours({ locale })],
+      ['homepage', () => getHomepageData(locale)],
+      ['categories', () => getCategories(locale)],
+      ['category tours', () => getCategoryTours('walking', { locale })],
+      ['destinations', () => getDestinations(locale)],
+      ['destination tours', () => getDestinationTours('rome', { locale })],
+    ] as const)('keeps %s reads out of the Next data cache', async (_name, read) => {
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => ({ data: [] }),
+      });
+
+      await read();
+
+      const options = (global.fetch as jest.Mock).mock.calls[0][1];
+      expect(options.cache).toBe('no-store');
+      expect(options.next).toBeUndefined();
+      expect(options.headers['Accept-Language']).toBe(locale);
+    });
   });
 
   it('should handle rate limit errors gracefully', async () => {

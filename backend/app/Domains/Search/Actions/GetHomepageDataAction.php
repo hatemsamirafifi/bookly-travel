@@ -2,6 +2,7 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Search\Services\TourPublicProjectionService;
 use App\Domains\Search\Support\DestinationAggregator;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Category;
@@ -11,9 +12,12 @@ class GetHomepageDataAction
 {
     protected TourCardTransformer $transformer;
 
+    protected TourPublicProjectionService $projection;
+
     public function __construct()
     {
         $this->transformer = new TourCardTransformer;
+        $this->projection = app(TourPublicProjectionService::class);
     }
 
     public function execute(string $locale): array
@@ -75,10 +79,11 @@ class GetHomepageDataAction
             $query->where('is_featured', true);
         }
 
-        return $query->get()
-            ->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))
-            ->values()
-            ->toArray();
+        return $this->projection->hydrateAndTransformCards(
+            $query->get(),
+            $locale,
+            fn (Tour $tour, string $loc) => $this->transformer->transform($tour, $loc)
+        );
     }
 
     /**
@@ -113,18 +118,20 @@ class GetHomepageDataAction
         $rails = [];
 
         foreach ($themeDefinitions as $theme) {
-            $tours = Tour::bookable()
+            $candidates = Tour::bookable()
                 ->whereHas('category', fn ($q) => $q->whereIn('slug', $theme['category_slugs']))
                 ->whereHas('translations', fn ($q) => $q
                     ->where('locale', $locale)
                     ->orWhereRaw('tour_translations.locale = COALESCE(tours.source_locale, ?)', [Tour::DEFAULT_SOURCE_LOCALE]))
-                ->with(['translations', 'translationStates', 'category', 'availabilityRules', 'availabilityExceptions', 'options'])
                 ->latest()
                 ->limit(6)
-                ->get()
-                ->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))
-                ->values()
-                ->toArray();
+                ->get();
+
+            $tours = $this->projection->hydrateAndTransformCards(
+                $candidates,
+                $locale,
+                fn (Tour $tour, string $loc) => $this->transformer->transform($tour, $loc)
+            );
 
             if (! empty($tours)) {
                 $translationKey = "homepage.rails.{$theme['id']}";

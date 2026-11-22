@@ -27,7 +27,16 @@ class AvailabilityService
         $query = DB::table('bookings')
             ->where('tour_id', $tour->id)
             ->where('tour_date', $date)
-            ->whereIn('status', ['pending_payment', 'confirmed', 'completed'])
+            ->where(function ($sub) {
+                $sub->whereIn('status', ['confirmed', 'completed'])
+                    ->orWhere(function ($p) {
+                        $p->where('status', 'pending_payment')
+                            ->where(function ($e) {
+                                $e->whereNull('pending_expires_at')
+                                    ->orWhere('pending_expires_at', '>', now());
+                            });
+                    });
+            })
             ->lockForUpdate();
 
         if ($option !== null) {

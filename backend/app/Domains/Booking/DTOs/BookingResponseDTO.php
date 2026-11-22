@@ -3,6 +3,7 @@
 namespace App\Domains\Booking\DTOs;
 
 use App\Domains\Booking\Models\Booking;
+use App\Models\TourDeparture;
 use Illuminate\Support\Carbon;
 
 class BookingResponseDTO
@@ -89,6 +90,23 @@ class BookingResponseDTO
         // locale, with the text's actual locale). Null for option-less
         // bookings — legacy rows and tours without options keep working.
         $data['option'] = $booking->bookingOption();
+
+        // EGM-005 D3, D5: Concrete departure and pricing snapshot
+        if ($booking->tour_departure_id) {
+            /** @var TourDeparture|null $departure */
+            $departure = $booking->relationLoaded('departure') ? $booking->departure : $booking->departure()->first();
+            $data['departure'] = $departure ? [
+                'id' => $departure->id,
+                'starts_at' => $departure->starts_at->toIso8601String(),
+                'timezone' => $departure->timezone,
+                'local_date' => $departure->local_date,
+                'local_time' => $departure->local_time,
+            ] : null;
+        }
+
+        if ($booking->pricing_snapshot) {
+            $data['pricing_snapshot'] = $booking->pricing_snapshot;
+        }
 
         return $data;
     }

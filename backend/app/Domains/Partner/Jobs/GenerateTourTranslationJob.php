@@ -18,6 +18,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -46,7 +47,26 @@ class GenerateTourTranslationJob implements ShouldQueue
         public readonly int $tourId,
         public readonly string $locale,
         public readonly string $sourceHash,
+        /**
+         * The canonical generation identity this work was planned for. Legacy
+         * queued jobs serialized before EGM-003 carry no epoch at all: the
+         * constructor tolerates its absence for queue deserialization, but a
+         * null epoch never equals the current integer epoch and such a job
+         * performs no success or failure write (design v3 §7).
+         */
+        public readonly ?int $generationEpoch = null,
     ) {}
+
+    /**
+     * The desired epoch of this job, tolerant of a legacy payload that never
+     * carried the property: `isset()` on an uninitialized (or absent) typed
+     * property is false without throwing, so an old serialized job can never
+     * raise an uninitialized-property error.
+     */
+    private function desiredEpoch(): ?int
+    {
+        return isset($this->generationEpoch) ? (int) $this->generationEpoch : null;
+    }
 
     public function backoff(): array
     {
@@ -55,8 +75,14 @@ class GenerateTourTranslationJob implements ShouldQueue
 
     public function handle(TourTranslationService $service, TourContentTranslator $translator): void
     {
+        // Legacy queued jobs carry no generation identity: after the cutover
+        // they safely no-op (reconciliation queues epoch-aware replacements).
+        if (($epoch = $this->desiredEpoch()) === null) {
+            return;
+        }
+
         $tour = Tour::with(['translations', 'translationStates'])->find($this->tourId);
-        if (! $tour) {
+        if (! $tour || $tour->generationEpoch() !== $epoch) {
             return;
         }
 
@@ -76,15 +102,24 @@ class GenerateTourTranslationJob implements ShouldQueue
             return;
         }
 
+        // The provider input is the APPROVED, materialized source only: a
+        // proposed/under-review revision payload never reaches the provider.
         $state = $tour->translationStates->firstWhere('locale', $this->locale);
         if (! $state || $state->source_hash !== $this->sourceHash) {
             return;
         }
+        // NULL never equals the current integer epoch, so a state row without a
+        // desired epoch identity is likewise never eligible.
+        if ((int) $state->generation_epoch !== $epoch) {
+            return;
+        }
 
-        // Genuinely ready with a real derivative row: skip provider and writes.
-        // An apparent ready row with no derivative falls through to recovery.
+        // Genuinely ready with a real derivative row for the current identity:
+        // skip provider and writes. An apparent ready row with no derivative
+        // falls through to recovery.
         if ($state->status === 'ready'
             && $state->translated_hash === $this->sourceHash
+            && (int) $state->generation_epoch === $epoch
             && $tour->translations->firstWhere('locale', $this->locale) !== null) {
             return;
         }
@@ -115,7 +150,13 @@ class GenerateTourTranslationJob implements ShouldQueue
             return;
         }
 
-        $result = $service->withContentLock($this->tourId, function () use ($service, $translated, $sourceLocale): string {
+        $result = $service->withContentLock($this->tourId, function () use ($service, $translated, $sourceLocale, $epoch): string {
+            $tour = Tour::find($this->tourId);
+
+            if (! $tour || $tour->generationEpoch() !== $epoch) {
+                return 'noop';
+            }
+
             $source = TourTranslation::where('tour_id', $this->tourId)->where('locale', $sourceLocale)->first();
             if (! $source || $service->sourceHash($source, $source->tour) !== $this->sourceHash) {
                 return 'noop';
@@ -127,11 +168,15 @@ class GenerateTourTranslationJob implements ShouldQueue
             if (! $state || $state->source_hash !== $this->sourceHash) {
                 return 'noop';
             }
+            if ((int) $state->generation_epoch !== $epoch) {
+                return 'noop';
+            }
 
-            // First same-hash completion wins: a genuinely ready derivative
+            // First same-identity completion wins: a genuinely ready derivative
             // that now exists must stand, never be rewritten by a late job.
             if ($state->status === 'ready'
                 && $state->translated_hash === $this->sourceHash
+                && (int) $state->generation_epoch === $epoch
                 && TourTranslation::where('tour_id', $this->tourId)->where('locale', $this->locale)->exists()) {
                 return 'noop';
             }
@@ -165,8 +210,14 @@ class GenerateTourTranslationJob implements ShouldQueue
             $state->update([
                 'status' => 'ready',
                 'translated_hash' => $this->sourceHash,
+                'generation_epoch' => $epoch,
                 'last_error_code' => null,
             ]);
+
+            // A public derivative state/content transition advances the content
+            // version in the SAME transaction, fencing old cache fills against
+            // the new canonical content (design v3 §8).
+            Tour::query()->whereKey($this->tourId)->update(['content_version' => DB::raw('content_version + 1')]);
 
             return 'ready';
         });
@@ -186,6 +237,11 @@ class GenerateTourTranslationJob implements ShouldQueue
 
     public function failed(?Throwable $exception): void
     {
+        // A legacy job without identity performs no failure write at all.
+        if (($epoch = $this->desiredEpoch()) === null) {
+            return;
+        }
+
         $this->markFailed(app(TourTranslationService::class), 'translation_provider_temporary');
     }
 
@@ -271,15 +327,19 @@ class GenerateTourTranslationJob implements ShouldQueue
 
     /**
      * Guarded terminal failure under the shared Tour-first lock: writes only
-     * when the fresh source hash and the desired state still match this job
-     * and the row is not ready, so genuine current content, newer sources,
-     * and newer desired states are never demoted.
+     * when the fresh source hash and the desired state still match this job's
+     * identity (hash AND epoch), so genuine current content, newer sources and
+     * newer desired states are never demoted.
      */
     private function markFailed(TourTranslationService $service, string $code): void
     {
-        $service->withContentLock($this->tourId, function () use ($service, $code): void {
+        if (($epoch = $this->desiredEpoch()) === null) {
+            return;
+        }
+
+        $service->withContentLock($this->tourId, function () use ($service, $epoch, $code): void {
             $tour = Tour::find($this->tourId);
-            if (! $tour) {
+            if (! $tour || $tour->generationEpoch() !== $epoch) {
                 return;
             }
 
@@ -290,11 +350,19 @@ class GenerateTourTranslationJob implements ShouldQueue
                 return;
             }
 
-            TourTranslationState::where('tour_id', $this->tourId)
+            $state = TourTranslationState::where('tour_id', $this->tourId)
                 ->where('locale', $this->locale)
                 ->where('source_hash', $this->sourceHash)
-                ->where('status', '!=', 'ready')
-                ->update(['status' => 'failed', 'last_error_code' => $code]);
+                ->where('generation_epoch', $epoch)
+                ->first();
+            if ($state === null
+                || ($state->status === 'failed' && $state->last_error_code === $code)
+                || ($state->status === 'ready' && $state->translated_hash === $this->sourceHash
+                    && TourTranslation::where('tour_id', $this->tourId)->where('locale', $this->locale)->exists())) {
+                return;
+            }
+            $state->update(['status' => 'failed', 'last_error_code' => $code]);
+            Tour::query()->whereKey($this->tourId)->update(['content_version' => DB::raw('content_version + 1')]);
         });
     }
 }

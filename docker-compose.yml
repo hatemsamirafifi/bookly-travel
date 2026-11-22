@@ -79,6 +79,16 @@ services:
       - REDIS_HOST=redis
       - QUEUE_CONNECTION=redis
       - REDIS_QUEUE_RETRY_AFTER=${REDIS_QUEUE_RETRY_AFTER:-90}
+      # Stripe credentials, voucher origin, and admin Slack webhook pass
+      # through from the host environment; when unset, Laravel falls back to
+      # the values in the read-only backend/.env. Staging/production must set
+      # real values — the fail-closed PaymentConfigurationGuard refuses to
+      # boot the payment surface with missing or mode-mismatched keys.
+      - SERVICES_VOUCHER_PUBLIC_BASE_URL
+      - STRIPE_KEY
+      - STRIPE_SECRET
+      - STRIPE_WEBHOOK_SECRET
+      - ADMIN_SLACK_WEBHOOK_URL
       # Pass explicit host values; otherwise let Laravel read backend/.env.
       - GEMINI_API_KEY
       - GEMINI_TRANSLATION_MODEL
@@ -124,6 +134,15 @@ services:
       - REDIS_HOST=redis
       - QUEUE_CONNECTION=redis
       - REDIS_QUEUE_RETRY_AFTER=${REDIS_QUEUE_RETRY_AFTER:-90}
+      # Stripe credentials, voucher origin, and admin Slack webhook pass
+      # through from the host environment; when unset, Laravel falls back to
+      # the values in the read-only backend/.env. All three backend containers
+      # stay consistent.
+      - SERVICES_VOUCHER_PUBLIC_BASE_URL
+      - STRIPE_KEY
+      - STRIPE_SECRET
+      - STRIPE_WEBHOOK_SECRET
+      - ADMIN_SLACK_WEBHOOK_URL
       # Use the same provider configuration as the backend.
       - GEMINI_API_KEY
       - GEMINI_TRANSLATION_MODEL
@@ -164,11 +183,29 @@ services:
       - DB_USERNAME=bookly
       - DB_PASSWORD=secret
       - REDIS_HOST=redis
+      # Scheduled jobs (voucher emails, anonymization) must reach the same
+      # queue backend as the dedicated worker container.
+      - QUEUE_CONNECTION=redis
+      # Stripe credentials, voucher origin, and admin Slack webhook pass
+      # through from the host environment; when unset, Laravel falls back to
+      # the values in the read-only backend/.env. All three backend containers
+      # stay consistent.
+      - SERVICES_VOUCHER_PUBLIC_BASE_URL
+      - STRIPE_KEY
+      - STRIPE_SECRET
+      - STRIPE_WEBHOOK_SECRET
+      - ADMIN_SLACK_WEBHOOK_URL
+      - GEMINI_API_KEY
+      - GEMINI_TRANSLATION_MODEL
       - APP_URL=${APP_URL:-http://localhost:8080}
       - MEILISEARCH_HOST=http://meilisearch:7700
       - MEILISEARCH_KEY=${MEILI_MASTER_KEY:-development-key}
       - SCOUT_DRIVER=meilisearch
       - MAIL_MAILER=${MAIL_MAILER:-log}
+      # LOCAL DEVELOPMENT ONLY: the deterministic adapter is refused outside
+      # local/testing by the PaymentConfigurationGuard; staging/production
+      # must set PAYMENT_GATEWAY=stripe together with real credentials.
+      - PAYMENT_GATEWAY=${PAYMENT_GATEWAY:-deterministic}
     networks:
       - bookly-network
     depends_on:

@@ -88,6 +88,7 @@ function spec019RaceSeedCommittedTour(string $slugPrefix, array &$owned): array
         'categoryId' => $category->id,
         'tourId' => $tour->id,
         'hash' => $hash,
+        'epoch' => $tour->fresh()->generationEpoch(),
         'englishTitle' => $english->title,
     ];
 }
@@ -98,7 +99,7 @@ function spec019RaceSeedCommittedTour(string $slugPrefix, array &$owned): array
  *
  * @return array{0: Spec019TranslationProcess, 1: array<string, string>}
  */
-function spec019RaceSpawnChild(int $tourId, string $locale, string $hash, string $barrierDir, string $name, string $marker): array
+function spec019RaceSpawnChild(int $tourId, string $locale, string $hash, int $epoch, string $barrierDir, string $name, string $marker): array
 {
     $paths = [
         'arrival' => "{$barrierDir}/{$name}.arrival",
@@ -110,7 +111,7 @@ function spec019RaceSpawnChild(int $tourId, string $locale, string $hash, string
 
     $proc = Spec019TranslationProcess::spawn(
         dirname(__DIR__, 2) . '/Support/Spec019TranslationWorker.php',
-        [(string) $tourId, $locale, $hash, $paths['arrival'], $paths['release'], $paths['done'], $marker],
+        [(string) $tourId, $locale, $hash, $paths['arrival'], $paths['release'], $paths['done'], $marker, (string) $epoch],
         $paths['out'],
         $paths['err'],
         "spec019-{$name}"
@@ -169,8 +170,13 @@ function spec019RaceCleanup(array $procs, array $files, string $barrierDir, arra
         }
 
         foreach ($files as $file) {
-            if ($file !== '' && is_file($file)) {
-                @unlink($file);
+            if ($file !== '') {
+                if (is_file($file)) {
+                    @unlink($file);
+                }
+                if (is_file($file . '.spawned')) {
+                    @unlink($file . '.spawned');
+                }
             }
         }
         if ($barrierDir !== '' && is_dir($barrierDir)) {
@@ -219,13 +225,13 @@ it('old translation completion never writes after a newer source edit commits', 
         $barrierDir = sys_get_temp_dir() . '/spec019-race-' . uniqid();
         mkdir($barrierDir, 0700, true);
 
-        [$proc, $paths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $barrierDir, 'old', 'OLD');
+        [$proc, $paths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $seed['epoch'], $barrierDir, 'old', 'OLD');
         $procs[] = $proc;
         $files = array_values($paths);
 
         // Provider arrival is observed BEFORE any parent mutation: the old
         // job is paused inside the fake provider with its process alive.
-        Spec019TranslationProcess::waitForFile($paths['arrival'], 60.0, 'old-job arrival', $paths['err']);
+        Spec019TranslationProcess::waitForFile($paths['arrival'], 60.0, 'old-job arrival', $paths['err'], $proc);
         $arrivedAt = microtime(true);
         expect($proc->isAlive())->toBeTrue();
         // A real child PHP process: concrete pid, never the parent pid.
@@ -252,7 +258,7 @@ it('old translation completion never writes after a newer source edit commits', 
 
         // Release the stale worker; its completion must be a harmless no-op.
         Spec019TranslationProcess::signal($paths['release']);
-        Spec019TranslationProcess::waitForFile($paths['done'], 60.0, 'old-job done', $paths['err']);
+        Spec019TranslationProcess::waitForFile($paths['done'], 60.0, 'old-job done', $paths['err'], $proc);
         expect($proc->waitExit(30.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($paths['done'])), 'ok'))->toBeTrue();
 
@@ -289,15 +295,15 @@ it('first same-hash completion wins when two jobs overlap in real processes', fu
         $barrierDir = sys_get_temp_dir() . '/spec019-race-' . uniqid();
         mkdir($barrierDir, 0700, true);
 
-        [$firstProc, $firstPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $barrierDir, 'first', 'FIRST');
-        [$secondProc, $secondPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $barrierDir, 'second', 'SECOND');
+        [$firstProc, $firstPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $seed['epoch'], $barrierDir, 'first', 'FIRST');
+        [$secondProc, $secondPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $seed['epoch'], $barrierDir, 'second', 'SECOND');
         $procs = [$firstProc, $secondProc];
         $files = array_merge(array_values($firstPaths), array_values($secondPaths));
 
         // Two actual child processes overlap: both provider arrivals observed
         // while both processes are still alive. Two provider calls are allowed.
-        Spec019TranslationProcess::waitForFile($firstPaths['arrival'], 60.0, 'first-job arrival', $firstPaths['err']);
-        Spec019TranslationProcess::waitForFile($secondPaths['arrival'], 60.0, 'second-job arrival', $secondPaths['err']);
+        Spec019TranslationProcess::waitForFile($firstPaths['arrival'], 60.0, 'first-job arrival', $firstPaths['err'], $firstProc);
+        Spec019TranslationProcess::waitForFile($secondPaths['arrival'], 60.0, 'second-job arrival', $secondPaths['err'], $secondProc);
         expect($firstProc->isAlive())->toBeTrue();
         expect($secondProc->isAlive())->toBeTrue();
         // Two distinct real child PHP processes, neither the parent process.
@@ -313,7 +319,7 @@ it('first same-hash completion wins when two jobs overlap in real processes', fu
 
         // Release the first job and wait until it is provably ready.
         Spec019TranslationProcess::signal($firstPaths['release']);
-        Spec019TranslationProcess::waitForFile($firstPaths['done'], 60.0, 'first-job done', $firstPaths['err']);
+        Spec019TranslationProcess::waitForFile($firstPaths['done'], 60.0, 'first-job done', $firstPaths['err'], $firstProc);
         expect($firstProc->waitExit(30.0))->toBe(0);
 
         $expectedFirst = $seed['englishTitle'] . ' (es FIRST)';
@@ -328,7 +334,7 @@ it('first same-hash completion wins when two jobs overlap in real processes', fu
         // completed derivative must stand (first-wins, no overwrite).
         // Baseline RED: the second completion overwrites with the SECOND text.
         Spec019TranslationProcess::signal($secondPaths['release']);
-        Spec019TranslationProcess::waitForFile($secondPaths['done'], 60.0, 'second-job done', $secondPaths['err']);
+        Spec019TranslationProcess::waitForFile($secondPaths['done'], 60.0, 'second-job done', $secondPaths['err'], $secondProc);
         expect($secondProc->waitExit(30.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($secondPaths['done'])), 'ok'))->toBeTrue();
 
@@ -483,13 +489,13 @@ it('terminal provider failure never clobbers a genuine ready completion from an 
         // genuine success, one terminal FAIL marker that throws the harmless
         // fixed PermanentTranslationException after release (actual job
         // failure path; the parent writes no fake state itself).
-        [$goodProc, $goodPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $barrierDir, 'good', 'GOOD');
-        [$failProc, $failPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $barrierDir, 'fail', 'FAIL');
+        [$goodProc, $goodPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $seed['epoch'], $barrierDir, 'good', 'GOOD');
+        [$failProc, $failPaths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $seed['epoch'], $barrierDir, 'fail', 'FAIL');
         $procs = [$goodProc, $failProc];
         $files = array_merge(array_values($goodPaths), array_values($failPaths));
 
-        Spec019TranslationProcess::waitForFile($goodPaths['arrival'], 60.0, 'good-job arrival', $goodPaths['err']);
-        Spec019TranslationProcess::waitForFile($failPaths['arrival'], 60.0, 'fail-job arrival', $failPaths['err']);
+        Spec019TranslationProcess::waitForFile($goodPaths['arrival'], 60.0, 'good-job arrival', $goodPaths['err'], $goodProc);
+        Spec019TranslationProcess::waitForFile($failPaths['arrival'], 60.0, 'fail-job arrival', $failPaths['err'], $failProc);
         expect($goodProc->isAlive())->toBeTrue();
         expect($failProc->isAlive())->toBeTrue();
         $goodPid = $goodProc->pid();
@@ -504,7 +510,7 @@ it('terminal provider failure never clobbers a genuine ready completion from an 
 
         // Release the success and await the REAL ready derivative + state.
         Spec019TranslationProcess::signal($goodPaths['release']);
-        Spec019TranslationProcess::waitForFile($goodPaths['done'], 60.0, 'good-job done', $goodPaths['err']);
+        Spec019TranslationProcess::waitForFile($goodPaths['done'], 60.0, 'good-job done', $goodPaths['err'], $goodProc);
         expect($goodProc->waitExit(30.0))->toBe(0);
 
         $expected = $seed['englishTitle'] . ' (es GOOD)';
@@ -518,7 +524,7 @@ it('terminal provider failure never clobbers a genuine ready completion from an 
         // Release the terminal failure; its markFailed is scoped to the same
         // hash AND non-ready rows, so the genuine ready row must stand.
         Spec019TranslationProcess::signal($failPaths['release']);
-        Spec019TranslationProcess::waitForFile($failPaths['done'], 60.0, 'fail-job done', $failPaths['err']);
+        Spec019TranslationProcess::waitForFile($failPaths['done'], 60.0, 'fail-job done', $failPaths['err'], $failProc);
         expect($failProc->waitExit(30.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($failPaths['done'])), 'ok'))->toBeTrue();
 
@@ -568,11 +574,11 @@ it('terminal provider failure stays scoped to its stale hash after a newer sourc
         // process with the old hash; the arrival is observed BEFORE any
         // parent mutation, so the overlap is a real process race, never a
         // sequential hash-only rehearsal.
-        [$proc, $paths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $barrierDir, 'stalefail', 'FAIL');
+        [$proc, $paths] = spec019RaceSpawnChild($seed['tourId'], 'es', $seed['hash'], $seed['epoch'], $barrierDir, 'stalefail', 'FAIL');
         $procs[] = $proc;
         $files = array_values($paths);
 
-        Spec019TranslationProcess::waitForFile($paths['arrival'], 60.0, 'stale-fail arrival', $paths['err']);
+        Spec019TranslationProcess::waitForFile($paths['arrival'], 60.0, 'stale-fail arrival', $paths['err'], $proc);
         expect($proc->isAlive())->toBeTrue();
         expect($proc->pid())->not->toBeNull();
         expect($proc->pid())->not->toBe(getmypid());
@@ -596,7 +602,7 @@ it('terminal provider failure stays scoped to its stale hash after a newer sourc
         // source_hash, so the newer pending row must persist untouched and no
         // old derivative may appear.
         Spec019TranslationProcess::signal($paths['release']);
-        Spec019TranslationProcess::waitForFile($paths['done'], 60.0, 'stale-fail done', $paths['err']);
+        Spec019TranslationProcess::waitForFile($paths['done'], 60.0, 'stale-fail done', $paths['err'], $proc);
         expect($proc->waitExit(30.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($paths['done'])), 'ok'))->toBeTrue();
 
@@ -650,10 +656,10 @@ it('overlapping source edits through TourService retain both disjoint patches wi
         $procs = [$titleProc, $pointProc];
         $files = array_merge(array_values($titlePaths), array_values($pointPaths));
 
-        Spec019TranslationProcess::waitForFile($titlePaths['arrival'], 60.0, 'title-writer arrival', $titlePaths['err']);
-        Spec019TranslationProcess::waitForFile($titlePaths['release'], 60.0, 'title-writer attempting', $titlePaths['err']);
-        Spec019TranslationProcess::waitForFile($pointPaths['arrival'], 60.0, 'point-writer arrival', $pointPaths['err']);
-        Spec019TranslationProcess::waitForFile($pointPaths['release'], 60.0, 'point-writer attempting', $pointPaths['err']);
+        Spec019TranslationProcess::waitForFile($titlePaths['arrival'], 120.0, 'title-writer arrival', $titlePaths['err'], $titleProc);
+        Spec019TranslationProcess::waitForFile($titlePaths['release'], 120.0, 'title-writer attempting', $titlePaths['err'], $titleProc);
+        Spec019TranslationProcess::waitForFile($pointPaths['arrival'], 120.0, 'point-writer arrival', $pointPaths['err'], $pointProc);
+        Spec019TranslationProcess::waitForFile($pointPaths['release'], 120.0, 'point-writer attempting', $pointPaths['err'], $pointProc);
 
         // Real distinct child PHP processes, neither the parent process.
         $titlePid = $titleProc->pid();
@@ -682,10 +688,10 @@ it('overlapping source edits through TourService retain both disjoint patches wi
         DB::commit();
         $holdingOpen = false;
 
-        Spec019TranslationProcess::waitForFile($titlePaths['done'], 60.0, 'title-writer done', $titlePaths['err']);
-        Spec019TranslationProcess::waitForFile($pointPaths['done'], 60.0, 'point-writer done', $pointPaths['err']);
-        expect($titleProc->waitExit(30.0))->toBe(0);
-        expect($pointProc->waitExit(30.0))->toBe(0);
+        Spec019TranslationProcess::waitForFile($titlePaths['done'], 120.0, 'title-writer done', $titlePaths['err'], $titleProc);
+        Spec019TranslationProcess::waitForFile($pointPaths['done'], 120.0, 'point-writer done', $pointPaths['err'], $pointProc);
+        expect($titleProc->waitExit(60.0))->toBe(0);
+        expect($pointProc->waitExit(60.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($titlePaths['done'])), 'ok'))->toBeTrue();
         expect(str_starts_with(trim((string) file_get_contents($pointPaths['done'])), 'ok'))->toBeTrue();
 

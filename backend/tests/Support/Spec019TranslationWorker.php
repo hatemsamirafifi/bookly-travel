@@ -40,12 +40,16 @@ use Illuminate\Support\Facades\Queue;
  * failures), non-zero with a stderr message otherwise.
  */
 $argv = $_SERVER['argv'] ?? [];
-if (count($argv) !== 8) {
-    fwrite(STDERR, "usage: Spec019TranslationWorker.php <tourId> <locale> <sourceHash> <arrivalPath> <releasePath> <donePath> <marker>\n");
+if (count($argv) !== 9) {
+    fwrite(STDERR, "usage: Spec019TranslationWorker.php <tourId> <locale> <sourceHash> <arrivalPath> <releasePath> <donePath> <marker> <observedEpoch>\n");
     exit(2);
 }
 
-[, $tourIdArg, $locale, $sourceHash, $arrivalPath, $releasePath, $donePath, $marker] = $argv;
+[, $tourIdArg, $locale, $sourceHash, $arrivalPath, $releasePath, $donePath, $marker, $observedEpoch] = $argv;
+if (! ctype_digit((string) $observedEpoch) || (int) $observedEpoch < 1) {
+    fwrite(STDERR, "observedEpoch must be a positive integer captured with sourceHash.\n");
+    exit(2);
+}
 
 $fail = static function (string $message, int $code): never {
     fwrite(STDERR, $message . "\n");
@@ -77,6 +81,9 @@ foreach (['arrival' => $arrivalPath, 'release' => $releasePath, 'done' => $doneP
 if (count(array_unique([$arrivalPath, $releasePath, $donePath])) !== 3) {
     $fail('arrival/release/done paths must be distinct.', 2);
 }
+
+// Observable OS-level startup heartbeat BEFORE Composer/Laravel bootstrap.
+@file_put_contents($arrivalPath . '.spawned', 'pid=' . getmypid() . "\n");
 
 $backendRoot = dirname(__DIR__, 2);
 
@@ -188,7 +195,7 @@ $app->singleton(
 );
 
 try {
-    (new GenerateTourTranslationJob($tourId, $locale, $sourceHash))->handle(
+    (new GenerateTourTranslationJob($tourId, $locale, $sourceHash, (int) $observedEpoch))->handle(
         $app->make(TourTranslationService::class),
         $app->make(TourContentTranslator::class)
     );

@@ -1,6 +1,6 @@
 import { safeAuthReturnUrl } from '../auth/return-url';
 import type { Locale } from '@/i18n/routing';
-import type { AvailabilityInfo, PricingInfo, TourOption } from '../api/types';
+import type { AvailabilityInfo, PricingInfo, TieredPricingTier, TourOption } from '../api/types';
 import { formatCurrency } from '../utils';
 
 /** Pure booking-selection model (Spec 020 US2). Pure derivations over the
@@ -41,7 +41,11 @@ export interface BookingSelectionView {
   offeredFutureDates: string[];
   initialDate: string | null;
   initialCount: number | null;
-  /** Base x count cents; needs valid pricing/bounds/count only, not a date. */
+  /** Applicable unit price per person in cents when tiered pricing or base is valid. */
+  unitPriceCents: number | null;
+  unitPriceDisplay: string | null;
+  appliedTier: TieredPricingTier | null;
+  /** Unit price x count cents; needs valid pricing/bounds/count only, not a date. */
   estimateCents: number | null;
   estimateDisplay: string | null;
   /** Null whenever any reason exists. */
@@ -151,10 +155,55 @@ export function isPriceCurrencySupported(pricing: PricingInfo): boolean {
   return isSupportedCurrency(pricing?.base_price?.currency);
 }
 
-function safeProductOf(pricing: PricingInfo, count: unknown): number | null {
+/**
+ * Resolve per-person unit price in integer minor units (cents) for a given
+ * participant count, applying EGM-005 D5 per-person tiers when present and
+ * falling back to `pricing.base_price.amount` otherwise.
+ */
+export function resolveTieredUnitPrice(
+  pricing: PricingInfo,
+  count: unknown,
+): { unitCents: number; tier: TieredPricingTier | null } | null {
+  if (!isPriceCurrencySupported(pricing)) return null;
+  const tiered = pricing?.tiered_pricing;
+  if (
+    tiered &&
+    tiered.mode === 'per_person' &&
+    Array.isArray(tiered.tiers) &&
+    tiered.tiers.length > 0 &&
+    isPositiveSafeInteger(count)
+  ) {
+    const matching = tiered.tiers
+      .filter((t) => {
+        if (typeof t.min_participants !== 'number' || !Number.isSafeInteger(t.min_participants)) {
+          return false;
+        }
+        if (t.min_participants > count) return false;
+        if (t.max_participants === null || t.max_participants === undefined) return true;
+        return typeof t.max_participants === 'number' && Number.isSafeInteger(t.max_participants) && t.max_participants >= count;
+      })
+      .sort((a, b) => b.min_participants - a.min_participants);
+
+    const best = matching[0];
+    if (
+      best &&
+      typeof best.price_amount === 'number' &&
+      Number.isSafeInteger(best.price_amount) &&
+      best.price_amount > 0
+    ) {
+      return { unitCents: best.price_amount, tier: best };
+    }
+  }
+
   if (!isPriceAmountValid(pricing)) return null;
+  return { unitCents: getBaseAmount(pricing) as number, tier: null };
+}
+
+function safeProductOf(pricing: PricingInfo, count: unknown): number | null {
   if (!isPositiveSafeInteger(count)) return null;
-  const product = (getBaseAmount(pricing) as number) * count;
+  const resolved = resolveTieredUnitPrice(pricing, count);
+  if (resolved === null) return null;
+  const product = resolved.unitCents * count;
   return Number.isSafeInteger(product) ? product : null;
 }
 
@@ -267,7 +316,7 @@ export function getBookingInvalidReasons(input: BookingSelectionInput): BookingI
     isPriceAmountValid(pricing) &&
     isPriceCurrencySupported(pricing) &&
     isPositiveSafeInteger(participantCount) &&
-    !Number.isSafeInteger((getBaseAmount(pricing) as number) * participantCount)
+    safeProductOf(pricing, participantCount) === null
   ) {
     reasons.push('invalid-estimate');
   }
@@ -294,10 +343,19 @@ export function getBookingSelectionView(input: BookingSelectionInput): BookingSe
   const initialCount = resolveInitialCount(input.groupMin, input.groupMax);
   const reasons = getBookingInvalidReasons(input);
 
-  const estimateCents =
-    staticGuardsValid && isParticipantCountValid(input.participantCount, input.groupMin, input.groupMax)
-      ? safeProductOf(input.pricing, input.participantCount)
-      : null;
+  const countValidForEstimate =
+    staticGuardsValid && isParticipantCountValid(input.participantCount, input.groupMin, input.groupMax);
+  const resolvedUnit = countValidForEstimate ? resolveTieredUnitPrice(input.pricing, input.participantCount) : null;
+  const unitPriceCents = resolvedUnit?.unitCents ?? null;
+  const appliedTier = resolvedUnit?.tier ?? null;
+  const unitPriceDisplay =
+    unitPriceCents === null
+      ? null
+      : formatCurrency(unitPriceCents, BOOKING_SUPPORTED_CURRENCY, input.locale);
+
+  const estimateCents = countValidForEstimate
+    ? safeProductOf(input.pricing, input.participantCount)
+    : null;
   const estimateDisplay =
     estimateCents === null
       ? null
@@ -316,6 +374,9 @@ export function getBookingSelectionView(input: BookingSelectionInput): BookingSe
     offeredFutureDates,
     initialDate,
     initialCount,
+    unitPriceCents,
+    unitPriceDisplay,
+    appliedTier,
     estimateCents,
     estimateDisplay,
     checkoutUrl,
@@ -394,6 +455,9 @@ export interface BookingWithOptionView {
   offeredFutureDates: string[];
   initialDate: string | null;
   initialCount: number | null;
+  unitPriceCents: number | null;
+  unitPriceDisplay: string | null;
+  appliedTier: TieredPricingTier | null;
   estimateCents: number | null;
   estimateDisplay: string | null;
   /** Booking path with the explicit option parameter attached. */
@@ -442,6 +506,9 @@ export function getBookingWithOptionView(input: BookingWithOptionInput): Booking
       offeredFutureDates: base.offeredFutureDates,
       initialDate: base.initialDate,
       initialCount: base.initialCount,
+      unitPriceCents: base.unitPriceCents,
+      unitPriceDisplay: base.unitPriceDisplay,
+      appliedTier: base.appliedTier,
       estimateCents: base.estimateCents,
       estimateDisplay: base.estimateDisplay,
       checkoutUrl: base.checkoutUrl,
@@ -459,6 +526,9 @@ export function getBookingWithOptionView(input: BookingWithOptionInput): Booking
       offeredFutureDates: [],
       initialDate: null,
       initialCount: null,
+      unitPriceCents: null,
+      unitPriceDisplay: null,
+      appliedTier: null,
       estimateCents: null,
       estimateDisplay: null,
       checkoutUrl: null,
@@ -482,6 +552,9 @@ export function getBookingWithOptionView(input: BookingWithOptionInput): Booking
     offeredFutureDates: base.offeredFutureDates,
     initialDate: base.initialDate,
     initialCount: base.initialCount,
+    unitPriceCents: base.unitPriceCents,
+    unitPriceDisplay: base.unitPriceDisplay,
+    appliedTier: base.appliedTier,
     estimateCents: base.estimateCents,
     estimateDisplay: base.estimateDisplay,
     checkoutUrl,

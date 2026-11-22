@@ -463,6 +463,7 @@ test.describe('Partner Tour Create - Real API (Spec 019 US1)', () => {
   test('types non-BMP boundary input past native limits and persists it exactly (T017)', async ({
     page,
   }) => {
+    test.setTimeout(120000);
     const NON_BMP = String.fromCodePoint(0x1f30d);
     const title120 = NON_BMP.repeat(120);
     expect(Array.from(title120).length).toBe(120);

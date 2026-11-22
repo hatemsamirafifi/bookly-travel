@@ -2,7 +2,7 @@
 
 **Governance**: [Constitution v2.1.0](../../../.specify/memory/constitution.md) at original design; synchronized 2026-11-10 with [Constitution v3.0.0](../../../.specify/memory/constitution.md). Derivatives are the two non-source locales of each tour's fixed canonical source locale ([spec.md Amendment Record](../spec.md)).
 **Scope**: Internal TourContentTranslator/job/state boundary; no public provider endpoint.
-**Status**: Synchronized 2026-11-14 to the [EGM-003 technical design v3](../../../docs/designs/supplier-portal-egm003-governance-v3.md) and its [execution file/test manifest](../../../docs/designs/supplier-portal-egm003-execution-plan.md). No schema, migration, code or test has been written; EGM-003 remains open.
+**Status**: Synchronized 2026-11-14 to the [EGM-003 technical design v3](../../../docs/designs/supplier-portal-egm003-governance-v3.md) and its [execution file/test manifest](../../../docs/designs/supplier-portal-egm003-execution-plan.md). As of 2026-11-17, epoch-bound generation, S4 legacy field-engine retirement for tours, and recovery commands are implemented and under final acceptance verification; the earlier 2026-11-15 [interim review](../../../docs/reports/supplier-portal-egm003-checkpoint-review.md) failure record is preserved as historical context.
 
 ## Request Boundary
 

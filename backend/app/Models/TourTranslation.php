@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Domains\Search\Services\TourPublicCacheService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * @property string $locale
@@ -21,20 +21,24 @@ use Illuminate\Support\Facades\Cache;
  */
 class TourTranslation extends Model
 {
+    /** Resolve the owning tour's detail cache invalidation slugs. */
+    private static function resolveSlugs(int $tourId): array
+    {
+        return Tour::query()->whereKey($tourId)->pluck('slug')->filter()->values()->all();
+    }
+
     protected static function booted(): void
     {
         static::saved(function (TourTranslation $translation) {
-            $slug = Tour::where('id', $translation->tour_id)->value('slug');
-            if ($slug) {
-                Cache::forget("tour.{$slug}.{$translation->locale}");
-            }
+            // Every existing translation invalidation is preserved, now also
+            // against the current versioned detail keys.
+            app(TourPublicCacheService::class)
+                ->forgetDetailAfterCommit(self::resolveSlugs((int) $translation->tour_id));
         });
 
         static::deleted(function (TourTranslation $translation) {
-            $slug = Tour::where('id', $translation->tour_id)->value('slug');
-            if ($slug) {
-                Cache::forget("tour.{$slug}.{$translation->locale}");
-            }
+            app(TourPublicCacheService::class)
+                ->forgetDetailAfterCommit(self::resolveSlugs((int) $translation->tour_id));
         });
     }
 

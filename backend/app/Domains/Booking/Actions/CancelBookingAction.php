@@ -22,9 +22,16 @@ class CancelBookingAction
         private readonly ProcessRefundAction $processRefund,
     ) {}
 
+    /**
+     * The cancellation transaction contains ONLY database work: validation,
+     * the status transition, the audit log, and after-commit scheduling of
+     * the cancellation emails. External I/O (Stripe refund, email transport,
+     * Slack alerts) runs after commit, so a third-party outage can never
+     * roll back — or hold locks across — the cancellation itself.
+     */
     public function execute(string $reference, int $travelerId, ?string $reason = null): array
     {
-        return DB::transaction(function () use ($reference, $travelerId, $reason) {
+        $booking = DB::transaction(function () use ($reference, $travelerId, $reason): Booking {
             $booking = Booking::where('reference', $reference)->lockForUpdate()->first();
 
             if (! $booking) {
@@ -56,31 +63,13 @@ class CancelBookingAction
                 'cancellation_reason' => $reason,
             ]);
 
-            $this->processRefund->execute($booking);
-
-            try {
-                $booking->load(['traveler', 'tour.partnerRecord.user']);
-                if ($booking->traveler?->email) {
-                    $travelerEmail = $booking->traveler->email;
-                    DB::afterCommit(function () use ($booking, $travelerEmail) {
-                        try {
-                            Mail::to($travelerEmail)->send(new BookingCancelledMail($booking));
-                        } catch (\Throwable $e) {
-                            logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
-                        }
-                    });
-                }
-                // `tours.partner_id` references `partners.id` (repinned by the
-                // fix_tours_partner_id_to_partners_table migration), so the
-                // partner user is reached via `partnerRecord`, NOT the legacy
-                // `partner` relation (which still points at users.id).
-                if ($booking->tour?->partnerRecord?->user?->email) {
-                    Mail::to($booking->tour->partnerRecord->user->email)->send(new PartnerBookingCancelledMail($booking));
-                }
-            } catch (\Exception $e) {
-                // Prevent email failures from failing the cancellation transaction
-                logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
-            }
+            // Cancellation emails are scheduled after commit: a rollback must
+            // never send mail for a booking that stays active, and a mail
+            // transport failure (caught below) must never fail the committed
+            // cancellation.
+            DB::afterCommit(function () use ($booking): void {
+                $this->sendCancellationEmails($booking);
+            });
 
             $this->audit->log(
                 $booking,
@@ -92,9 +81,48 @@ class CancelBookingAction
                 $reason ? ['cancellation_reason' => $reason] : null,
             );
 
-            $booking->refresh()->load('tour');
-
-            return BookingResponseDTO::fromBooking($booking);
+            return $booking;
         });
+
+        // External Stripe refund I/O runs OUTSIDE the committed cancellation
+        // transaction. A Stripe outage is contained inside ProcessRefundAction
+        // (best-effort, alert-only), so the cancellation above stays durable
+        // and no row locks are held across the network call.
+        $this->processRefund->execute($booking);
+
+        $booking->refresh()->load('tour');
+
+        return BookingResponseDTO::fromBooking($booking);
+    }
+
+    private function sendCancellationEmails(Booking $booking): void
+    {
+        try {
+            $booking->load(['traveler', 'tour.partnerRecord.user']);
+        } catch (\Throwable $e) {
+            logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
+
+            return;
+        }
+
+        if ($booking->traveler?->email) {
+            try {
+                Mail::to($booking->traveler->email)->send(new BookingCancelledMail($booking));
+            } catch (\Throwable $e) {
+                logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
+            }
+        }
+
+        // `tours.partner_id` references `partners.id` (repinned by the
+        // fix_tours_partner_id_to_partners_table migration), so the
+        // partner user is reached via `partnerRecord`, NOT the legacy
+        // `partner` relation (which still points at users.id).
+        if ($booking->tour?->partnerRecord?->user?->email) {
+            try {
+                Mail::to($booking->tour->partnerRecord->user->email)->send(new PartnerBookingCancelledMail($booking));
+            } catch (\Throwable $e) {
+                logger()->error('Failed to send cancellation emails: ' . $e->getMessage());
+            }
+        }
     }
 }

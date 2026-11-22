@@ -8,6 +8,7 @@ import {
   buildCheckoutUrl,
   formatOfferedDateUtc,
   getBookingSelectionView,
+  getBookingWithOptionView,
   getEstimateCents,
   getOfferedFutureDates,
   isBookableAvailability,
@@ -499,5 +500,116 @@ describe('booking-selection UTC display and clock independence', () => {
     expect(isOfferedFutureDate(dates[0], info, TODAY_UTC)).toBe(true);
     expect(isOfferedFutureDate(dates[0], info, dates[0])).toBe(false);
     expect(getOfferedFutureDates(info, dates[0])).not.toContain(dates[0]);
+  });
+});
+
+describe('tiered pricing integer calculations (EGM-005 D5)', () => {
+  const tieredPricing = {
+    base_price: { amount: 1000, currency: 'EUR', formatted: '€10.00' },
+    tiered_pricing: {
+      mode: 'per_person' as const,
+      tiers: [
+        { id: 1, name: 'Solo', min_participants: 1, max_participants: 1, price_amount: 1000, currency: 'EUR', formatted: '€10.00' },
+        { id: 2, name: 'Duo', min_participants: 2, max_participants: 2, price_amount: 900, currency: 'EUR', formatted: '€9.00' },
+        { id: 3, name: 'Small Group', min_participants: 3, max_participants: 4, price_amount: 800, currency: 'EUR', formatted: '€8.00' },
+        { id: 4, name: 'Large Group', min_participants: 5, max_participants: null, price_amount: 700, currency: 'EUR', formatted: '€7.00' },
+      ],
+    },
+  };
+
+  it.each([
+    [1, 1000, 1000, 'Solo'],
+    [2, 900, 1800, 'Duo'],
+    [3, 800, 2400, 'Small Group'],
+    [4, 800, 3200, 'Small Group'],
+    [5, 700, 3500, 'Large Group'],
+    [10, 700, 7000, 'Large Group'],
+  ])('computes exact integer cents for %d travelers (%s)', (count, expectedUnit, expectedTotal, tierName) => {
+    const view = getBookingSelectionView(validViewInput({
+      pricing: tieredPricing,
+      groupMax: 12,
+      participantCount: count,
+    }));
+
+    expect(view.canContinue).toBe(true);
+    expect(view.unitPriceCents).toBe(expectedUnit);
+    expect(view.estimateCents).toBe(expectedTotal);
+    expect(view.appliedTier?.name).toBe(tierName);
+    expect(view.unitPriceDisplay).toBe(formatCurrency(expectedUnit, 'EUR', 'en'));
+    expect(view.estimateDisplay).toBe(formatCurrency(expectedTotal, 'EUR', 'en'));
+  });
+
+  it('prefers option tiered pricing over tour base pricing and keeps legacy null tiers unchanged', () => {
+    const dates = offered();
+    const withOption = getBookingWithOptionView({
+      slug: SLUG,
+      locale: 'en',
+      pricing: pricing(5000),
+      availability: availability(dates, dates[0]),
+      options: [
+        {
+          id: 101,
+          title: 'VIP Tiered',
+          pickup_instructions: null,
+          content_locale: 'en',
+          guide_languages: ['en'],
+          start_time: '09:00',
+          pricing: tieredPricing,
+          availability: availability(dates, dates[0]),
+          group_size: { min: 1, max: 10 },
+        },
+        {
+          id: 102,
+          title: 'Legacy Flat',
+          pickup_instructions: null,
+          content_locale: 'en',
+          guide_languages: ['en'],
+          start_time: '11:00',
+          pricing: pricing(4200),
+          availability: availability(dates, dates[0]),
+          group_size: { min: 1, max: 10 },
+        },
+      ],
+      groupMin: 1,
+      groupMax: 10,
+      selectedDate: dates[1],
+      participantCount: 4,
+      selectedOptionId: 101,
+      todayUtc: TODAY_UTC,
+    });
+
+    expect(withOption.unitPriceCents).toBe(800);
+    expect(withOption.estimateCents).toBe(3200);
+    expect(withOption.appliedTier?.id).toBe(3);
+
+    const legacyOption = getBookingWithOptionView({
+      slug: SLUG,
+      locale: 'en',
+      pricing: pricing(5000),
+      availability: availability(dates, dates[0]),
+      options: [
+        {
+          id: 102,
+          title: 'Legacy Flat',
+          pickup_instructions: null,
+          content_locale: 'en',
+          guide_languages: ['en'],
+          start_time: '11:00',
+          pricing: pricing(4200),
+          availability: availability(dates, dates[0]),
+          group_size: { min: 1, max: 10 },
+        },
+      ],
+      groupMin: 1,
+      groupMax: 10,
+      selectedDate: dates[1],
+      participantCount: 4,
+      selectedOptionId: 102,
+      todayUtc: TODAY_UTC,
+    });
+
+    expect(legacyOption.unitPriceCents).toBe(4200);
+    expect(legacyOption.estimateCents).toBe(16800);
+    expect(legacyOption.appliedTier).toBeNull();
   });
 });

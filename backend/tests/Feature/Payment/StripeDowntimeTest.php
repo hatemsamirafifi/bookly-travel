@@ -110,7 +110,7 @@ it('idempotency retry returns existing booking with stored client_secret, no new
     $this->mock(StripeService::class)
         ->shouldReceive('createPaymentIntent')
         ->once()
-        ->with(8000, 'EUR', Mockery::any())
+        ->with(8000, 'EUR', Mockery::any(), null, null, Mockery::any())
         ->andReturn('pi_idem_123_secret_xyz');
 
     $first = actingAs($traveler)

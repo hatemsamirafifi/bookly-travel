@@ -1,11 +1,18 @@
 <?php
 
 use App\Domains\Admin\Actions\ApproveTourAction;
+use App\Domains\Admin\Actions\ApproveTourRevisionAction;
+use App\Domains\Admin\Actions\UnpublishTourAction;
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Jobs\GenerateTourTranslationJob;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Services\TourRevisionService;
 use App\Domains\Partner\Services\TourService;
 use App\Domains\Partner\Services\TourTranslationService;
+use App\Domains\Payment\Actions\WebhookHandlers\HandlePaymentSucceeded;
+use App\Domains\Payment\Listeners\ConfirmBookingOnPayment;
+use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Services\StripeService;
 use App\Domains\Translation\Contracts\ContentTranslatorContract;
 use App\Domains\Translation\Jobs\TranslateContentFieldJob;
@@ -28,6 +35,7 @@ use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 
+use Stripe\Event;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\Support\Spec019FakeTranslator;
 
@@ -101,11 +109,25 @@ if (! function_exists('runOptionTranslations')) {
                 ->where('tour_id', $tour->id)
                 ->where('locale', $locale)
                 ->firstOrFail();
-            (new GenerateTourTranslationJob($tour->id, $locale, $state->source_hash))
+            (new GenerateTourTranslationJob($tour->id, $locale, $state->source_hash, (int) $state->generation_epoch))
                 ->handle(app(TourTranslationService::class), $translator);
         }
         Queue::fake();
     }
+}
+
+/** Publish reviewed text on the exact existing option IDs; no commercial or structural mutation. */
+function optionsApproveTextRevision(Tour $tour, User $admin, array $changes): void
+{
+    $service = app(TourRevisionService::class);
+    $base = $service->captureBaseline($tour->fresh());
+    $options = [];
+    foreach ($tour->options()->active()->orderBy('sort_order')->orderBy('id')->get() as $option) {
+        $options[$option->id] = $changes[$option->id] ?? ['title' => $option->title, 'pickup_instructions' => $option->pickup_instructions];
+    }
+    $candidate = $service->createCandidate($tour, $tour->partnerRecord->user_id, $base->id, ['options' => $options]);
+    $service->submitCandidate($tour, $candidate->id, $tour->partnerRecord->user_id);
+    app(ApproveTourRevisionAction::class)->execute($admin, $tour, $candidate->id);
 }
 
 beforeEach(function () {
@@ -328,6 +350,25 @@ it('does not invalidate translation on structured-only option changes', function
         ->and(TourOption::find($existing[0]->id)->price_amount)->toBe(6400);
 });
 
+it('does not run or persist a legacy option translation job without a generation epoch', function () {
+    $tourId = postJson('/api/partner/tours', $this->esTourPayload, optionsHeaders($this->token))
+        ->assertCreated()->json('data.id');
+    $tour = Tour::findOrFail($tourId);
+    $state = TourTranslationState::query()->where('tour_id', $tourId)->where('locale', 'en')->firstOrFail();
+    $beforeState = $state->getAttributes();
+    $beforeVersion = $tour->content_version;
+    $translator = new Spec019FakeTranslator;
+
+    (new GenerateTourTranslationJob($tourId, 'en', $state->source_hash))
+        ->handle(app(TourTranslationService::class), $translator);
+
+    expect($translator->arrivedCount())->toBe(0)
+        ->and($state->fresh()->getAttributes())->toBe($beforeState)
+        ->and($tour->fresh()->content_version)->toBe($beforeVersion)
+        ->and($tour->translations()->where('locale', 'en')->exists())->toBeFalse()
+        ->and(TourOptionTranslation::query()->whereIn('tour_option_id', $tour->options()->pluck('id'))->exists())->toBeFalse();
+});
+
 it('regenerates en/it derivatives through the fake provider when option texts or order change', function () {
     $tourId = postJson('/api/partner/tours', $this->esTourPayload, optionsHeaders($this->token))
         ->assertCreated()->json('data.id');
@@ -411,11 +452,9 @@ it('falls back to authored source option texts while the derivative is stale', f
     // partial translation like the tour-level text.
     Queue::fake();
     $ids = $tour->options()->orderBy('sort_order')->pluck('id');
-    putJson("/api/partner/tours/{$tourId}", [
-        'options' => [
-            ['id' => $ids[0], 'title' => 'Mañana reeditada', 'pickup_instructions' => 'Recogida nueva.', 'guide_languages' => ['en'], 'price_amount' => 5900],
-        ],
-    ], optionsHeaders($this->token))->assertOk();
+    optionsApproveTextRevision($tour, $this->admin, [
+        $ids[0] => ['title' => 'Mañana reeditada', 'pickup_instructions' => 'Recogida nueva.'],
+    ]);
     Queue::fake();
 
     $stale = getJson('/api/public/tours/' . $tour->slug . '?locale=en')->assertOk();
@@ -481,6 +520,10 @@ it('retiring every option makes public detail and bookability accurately unavail
     expect($detailBefore->json('data.options'))->toHaveCount(2)
         ->and($detailBefore->json('data.availability.is_unavailable'))->toBeFalse();
 
+    putJson("/api/partner/tours/{$tourId}", ['options' => []], optionsHeaders($this->token))
+        ->assertUnprocessable()->assertJsonPath('error_code', 'option_structure_change_not_supported');
+    app(UnpublishTourAction::class)->execute($this->admin, $tour);
+    getJson('/api/public/tours/' . $tour->slug . '?locale=en')->assertNotFound();
     $first = $tour->options()->orderBy('sort_order')->firstOrFail();
     putJson("/api/partner/tours/{$tourId}", [
         'options' => [
@@ -494,6 +537,8 @@ it('retiring every option makes public detail and bookability accurately unavail
     putJson("/api/partner/tours/{$tourId}", ['options' => []], optionsHeaders($this->token))->assertOk();
     expect(TourOption::query()->where('tour_id', $tourId)->count())->toBe(2)
         ->and(TourOption::query()->where('tour_id', $tourId)->where('status', TourOption::STATUS_ACTIVE)->count())->toBe(0);
+
+    $tour = optionsPublishTour($tour->fresh(), $this->admin);
 
     // All retired now: the served option list collapses and availability is
     // accurately unavailable.
@@ -590,11 +635,26 @@ it('captures the currently served option text and its locale on option bookings'
     // Stale revision (option-only text change) → next booking snapshots the
     // authored source text under its truthful locale.
     Queue::fake();
-    putJson("/api/partner/tours/{$tourId}", [
-        'options' => [
-            ['id' => $option->id, 'title' => 'Mañana reeditada', 'pickup_instructions' => 'Recogida renovada.', 'guide_languages' => ['en'], 'price_amount' => 5900],
-        ],
-    ], optionsHeaders($this->token))->assertOk();
+    $originalBooking = Booking::where('reference', $created->json('data.reference'))->firstOrFail();
+    $originalSnapshot = $originalBooking->bookingOption();
+    $payment = Payment::where('booking_id', $originalBooking->id)->firstOrFail();
+    $paid = Event::constructFrom([
+        'id' => 'evt_egm003_snapshot_' . $originalBooking->id,
+        'type' => 'payment_intent.succeeded',
+        'data' => ['object' => ['id' => $payment->stripe_payment_intent_id, 'charges' => ['data' => []]]],
+    ]);
+    $events = app(HandlePaymentSucceeded::class)->execute($paid, $paid->id);
+    expect($events)->toHaveCount(1);
+    app(ConfirmBookingOnPayment::class)->handle($events[0]);
+    expect($originalBooking->fresh()->status)->toBe('confirmed');
+
+    optionsApproveTextRevision($tour, $this->admin, [
+        $option->id => ['title' => 'Mañana reeditada', 'pickup_instructions' => 'Recogida renovada.'],
+    ]);
+    expect($originalBooking->fresh()->bookingOption())->toBe($originalSnapshot);
+    getJson('/api/public/traveler/bookings/' . $originalBooking->reference, [
+        'Authorization' => 'Bearer ' . $traveler->createToken('snapshot-check')->plainTextToken,
+    ])->assertOk()->assertJsonPath('data.option.title', 'Mañana en grupo pequeño (en)');
 
     $staleBooking = postJson('/api/public/bookings', [
         'tour_slug' => $tour->slug,

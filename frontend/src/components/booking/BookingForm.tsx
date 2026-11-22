@@ -29,12 +29,12 @@ import PriceChangeModal from './PriceChangeModal';
 import StripePaymentForm from './StripePaymentForm';
 import DeterministicPaymentForm from './DeterministicPaymentForm';
 import { createBooking } from '@/lib/api/bookings';
-import { cancelBooking } from '@/lib/api/my-bookings';
-import { getTourDetail } from '@/lib/api/tours';
+import { cancelBooking, declinePendingBooking } from '@/lib/api/my-bookings';
+import { getPublicTourDepartures, getTourDetail } from '@/lib/api/tours';
 import { createBookingSchema } from '@/lib/validators/booking';
 import { formatOptionPriceDisplay } from '@/components/tour/OptionSelector';
 import { formatCurrency } from '@/lib/utils';
-import type { TourDetail } from '@/lib/api/types';
+import type { PublicTourDeparture, TourDetail } from '@/lib/api/types';
 
 interface BookingFormProps {
   locale: string;
@@ -55,13 +55,18 @@ export function buildCheckoutAuthRecoveryUrl(
   participantCount: number,
   tourDate: string,
   optionId?: number | null,
+  departureId?: number | null,
 ): string {
-  const path =
+  const basePath =
     buildCheckoutUrl(locale, tourSlug, participantCount, tourDate, optionId ?? null) ??
     `/${locale}/booking?tour=${encodeURIComponent(tourSlug)}` +
       `&participants=${encodeURIComponent(String(participantCount))}` +
       `&date=${encodeURIComponent(tourDate)}` +
       (typeof optionId === 'number' ? `&option=${encodeURIComponent(String(optionId))}` : '');
+  const path =
+    typeof departureId === 'number'
+      ? `${basePath}&departure=${encodeURIComponent(String(departureId))}`
+      : basePath;
   const safe = safeAuthReturnUrl(locale, path);
   return `/${locale}/auth/login?sessionExpired=1&returnUrl=${encodeURIComponent(safe)}`;
 }
@@ -117,17 +122,23 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   const tAuth = useTranslations('auth');
   const searchParams = useSearchParams();
   const { user, isLoading: authRestoring } = useAuth();
+  const loadFailedMsgRef = useRef('Failed to load tour details.');
+  loadFailedMsgRef.current = t('errors.loadFailed');
 
   const tourSlug = searchParams.get('tour') || '';
   const date = searchParams.get('date') || '';
   const participantsParam = searchParams.get('participants');
   const optionParam = searchParams.get('option') || '';
+  const departureParam = searchParams.get('departure') || '';
 
   const [tour, setTour] = useState<TourDetail | null>(null);
   const [participants, setParticipants] = useState<number | null>(null);
   const [suppliedCountInvalid, setSuppliedCountInvalid] = useState<string | null>(null);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [suppliedOptionInvalid, setSuppliedOptionInvalid] = useState<string | null>(null);
+  const [departures, setDepartures] = useState<PublicTourDeparture[]>([]);
+  const [selectedDepartureId, setSelectedDepartureId] = useState<number | null>(null);
+  const [departuresLoading, setDeparturesLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -143,6 +154,8 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
     serverPerPerson: string | null;
     /** Booked option snapshot (additive) shown in the payment summary. */
     option: { id: number | null; title: string; pickup_instructions: string | null; content_locale: 'en' | 'es' | 'it' | null } | null;
+    /** Concrete departure snapshot (EGM-005 D3) shown in the payment summary when present. */
+    departure?: { id: number; starts_at: string; timezone: string; local_date: string; local_time: string } | null;
   };
   const [paymentStep, setPaymentStep] = useState<PaymentStep | null>(null);
 
@@ -166,7 +179,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   const idempotencyKey = useMemo(
     () => generateIdempotencyKey(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tourSlug, date, participants, optionParam, bookingAttempt],
+    [tourSlug, date, participants, optionParam, selectedDepartureId, bookingAttempt],
   );
 
   // F2: synchronous guard against double-click / double-submit. Set before any
@@ -177,7 +190,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   // withhold the previous selection until the new fetch resolves. Auth
   // changes keep the same key, so a pending paymentStep/reference survives
   // auth restoration untouched.
-  const queryKey = JSON.stringify([locale, tourSlug, date, participantsParam, optionParam]);
+  const queryKey = JSON.stringify([locale, tourSlug, date, participantsParam, optionParam, departureParam]);
   const [activeQueryKey, setActiveQueryKey] = useState(queryKey);
   if (activeQueryKey !== queryKey) {
     setActiveQueryKey(queryKey);
@@ -186,6 +199,9 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
     setSuppliedCountInvalid(null);
     setSelectedOptionId(null);
     setSuppliedOptionInvalid(null);
+    setDepartures([]);
+    setSelectedDepartureId(null);
+    setDeparturesLoading(false);
     setLoading(true);
     setError(null);
     setPaymentStep(null);
@@ -239,17 +255,76 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           setSuppliedCountInvalid(null);
         }
       })
-      .catch(() => { if (active) setError(t('errors.loadFailed')); })
+      .catch(() => { if (active) setError(loadFailedMsgRef.current); })
       .finally(() => { if (active) setLoading(false); });
     return () => {
       active = false;
     };
-  }, [tourSlug, locale, searchParams, participantsParam, optionParam, t]);
+  }, [tourSlug, locale, searchParams, participantsParam, optionParam]);
 
   const effectiveToday = todayUtc ?? new Date().toISOString().slice(0, 10);
   const dateMissing = date === '';
   const dateValid = !dateMissing && isRealCalendarDateString(date);
   const countValid = participants !== null && suppliedCountInvalid === null;
+
+  useEffect(() => {
+    const hasConfiguredOptions = Array.isArray(tour?.options) && tour.options.length > 0;
+    if (
+      !tour ||
+      !dateValid ||
+      participants === null ||
+      (hasConfiguredOptions && selectedOptionId === null) ||
+      typeof getPublicTourDepartures !== 'function'
+    ) {
+      setDepartures([]);
+      setSelectedDepartureId(null);
+      setDeparturesLoading(false);
+      return;
+    }
+
+    let active = true;
+    setDeparturesLoading(true);
+
+    getPublicTourDepartures(tourSlug, {
+      date_from: date,
+      date_to: date,
+      ...(selectedOptionId !== null ? { option_id: selectedOptionId } : {}),
+      participants,
+    })
+      .then((res) => {
+        if (!active) return;
+        const list = Array.isArray(res?.data) ? res.data : [];
+        setDepartures(list);
+        setSelectedDepartureId((prev) => {
+          if (list.length === 0) return null;
+          const prevMatch = prev !== null ? list.find((d) => d.id === prev) : undefined;
+          if (prevMatch && prevMatch.is_bookable && participants <= prevMatch.available_spots) {
+            return prevMatch.id;
+          }
+          const requestedId = /^\d+$/.test(departureParam) ? Number(departureParam) : null;
+          if (requestedId !== null) {
+            const paramMatch = list.find((d) => d.id === requestedId);
+            if (paramMatch && paramMatch.is_bookable && participants <= paramMatch.available_spots) {
+              return paramMatch.id;
+            }
+          }
+          const firstBookable = list.find((d) => d.is_bookable && participants <= d.available_spots);
+          return firstBookable ? firstBookable.id : null;
+        });
+      })
+      .catch(() => {
+        if (!active) return;
+        setDepartures([]);
+        setSelectedDepartureId(null);
+      })
+      .finally(() => {
+        if (active) setDeparturesLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [tour, tourSlug, dateValid, date, selectedOptionId, participants, departureParam, bookingAttempt]);
 
   // The explicit option coordinate (validated at fetch; an unusable carried
   // param keeps re-validating as invalid so the explanation stays truthful).
@@ -286,13 +361,36 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
   // disagree at the safe-integer extremes) and never formatted from invalid
   // data. The estimated total comes straight from the accepted view's
   // display-only estimate; server-confirmed payment totals stay authoritative.
+  const selectedDeparture =
+    departures.find((d) => d.id === selectedDepartureId) ?? null;
+  const hasDepartures = departures.length > 0;
+  const departureBookable =
+    !hasDepartures ||
+    (selectedDeparture !== null &&
+      selectedDeparture.is_bookable &&
+      participants !== null &&
+      participants <= selectedDeparture.available_spots);
+
   const baseDisplay =
     tour !== null && selectionView !== null && selectionView.estimateCents !== null
-      ? formatOptionPriceDisplay(selectionView.selectedOption?.pricing ?? tour.pricing, locale)
+      ? selectedDeparture
+        ? formatCurrency(
+            selectedDeparture.pricing.unit_price_cents,
+            selectedDeparture.pricing.currency,
+            locale,
+          )
+        : (selectionView.unitPriceDisplay ??
+          formatOptionPriceDisplay(selectionView.selectedOption?.pricing ?? tour.pricing, locale))
       : null;
   const estimatedTotal =
     selectionView !== null && showEstimate && selectionView.estimateDisplay !== null
-      ? selectionView.estimateDisplay
+      ? selectedDeparture
+        ? formatCurrency(
+            selectedDeparture.pricing.total_price_cents,
+            selectedDeparture.pricing.currency,
+            locale,
+          )
+        : selectionView.estimateDisplay
       : null;
 
   const signedOut = !authRestoring && user === null;
@@ -302,9 +400,11 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       : null;
   const canSubmit =
     !submitting &&
+    !departuresLoading &&
     !authRestoring &&
     user !== null &&
     tour !== null &&
+    departureBookable &&
     (selectionView?.canContinue ?? false);
 
   const changeParticipants = (count: number) => {
@@ -348,10 +448,13 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       return;
     }
 
-    // The page-load price rides the option's exact per-person price when an
-    // option was selected, else the tour base (FR-027 drift detection).
+    // The page-load price rides the active departure tiered rate when present,
+    // else the option's exact per-person price or tour base (FR-027).
     const selectedOption = fresh.selectedOption;
-    const pageLoadPriceCents = (selectedOption ?? tour).pricing?.base_price?.amount;
+    const pageLoadPriceCents =
+      selectedDeparture?.pricing.unit_price_cents ??
+      fresh.unitPriceCents ??
+      (selectedOption ?? tour).pricing?.base_price?.amount;
 
     // Validate the booking payload at the boundary before the network call.
     const parsed = createBookingSchema.safeParse({
@@ -361,6 +464,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       locale,
       page_load_price: pageLoadPriceCents,
       ...(selectedOption !== null ? { tour_option_id: selectedOption.id } : {}),
+      ...(selectedDeparture !== null ? { tour_departure_id: selectedDeparture.id } : {}),
     });
     if (!parsed.success) {
       setError(t('errors.invalidDetails'));
@@ -380,6 +484,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           locale,
           page_load_price: pageLoadPriceCents,
           ...(selectedOption !== null ? { tour_option_id: selectedOption.id } : {}),
+          ...(selectedDeparture !== null ? { tour_departure_id: selectedDeparture.id } : {}),
         },
         idempotencyKey,
       );
@@ -387,9 +492,10 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
       // FR-027: price drifted — surface the modal before forwarding to payment
       if (result.price_changed && result.data.pricing) {
         const confirmedPrice = result.data.pricing.price_per_person;
-        const oldFormatted = pageLoadPriceCents
-          ? formatCurrency(pageLoadPriceCents, confirmedPrice.currency, locale)
-          : confirmedPrice.formatted;
+        const oldFormatted =
+          pageLoadPriceCents !== undefined
+            ? formatCurrency(pageLoadPriceCents, confirmedPrice.currency, locale)
+            : confirmedPrice.formatted;
 
         setPriceChangeModal({
           visible: true,
@@ -404,6 +510,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
             serverTotal: result.data.pricing?.total?.formatted ?? result.data.total_price?.formatted ?? null,
             serverPerPerson: result.data.pricing.price_per_person.formatted,
             option: result.data.option ?? null,
+            departure: result.data.departure ?? null,
           } : null,
           cancelError: null,
         });
@@ -420,6 +527,7 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           serverTotal: result.data.pricing?.total?.formatted ?? result.data.total_price?.formatted ?? null,
           serverPerPerson: result.data.pricing?.price_per_person?.formatted ?? null,
           option: result.data.option ?? null,
+          departure: result.data.departure ?? null,
         });
       } else {
         router.push(`/${locale}/booking/confirmation?ref=${result.data.reference}`);
@@ -435,7 +543,14 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
         // resubmits after return; nothing posts automatically.
         localStorage.removeItem('auth_token');
         window.location.assign(
-          buildCheckoutAuthRecoveryUrl(locale, tourSlug, count, date, selectedOption?.id ?? null),
+          buildCheckoutAuthRecoveryUrl(
+            locale,
+            tourSlug,
+            count,
+            date,
+            selectedOption?.id ?? null,
+            selectedDeparture?.id ?? null,
+          ),
         );
         return;
       }
@@ -479,12 +594,16 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
     setPriceChangeModal(null);
   };
 
-  // FR-027: traveler declines the new price — dismiss modal, clear payment step, and cancel booking on server
+  // FR-027: traveler declines the new price — dismiss modal, clear payment step, and release pending seat hold on server
   const handlePriceChangeCancel = async () => {
     if (!priceChangeModal?.bookingReference || submitting) return;
     setSubmitting(true);
     try {
-      await cancelBooking(priceChangeModal.bookingReference);
+      if (typeof declinePendingBooking === 'function') {
+        await declinePendingBooking(priceChangeModal.bookingReference);
+      } else {
+        await cancelBooking(priceChangeModal.bookingReference);
+      }
       setPriceChangeModal(null);
       setPaymentStep(null);
       setBookingAttempt((attempt) => attempt + 1);
@@ -507,6 +626,14 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
           </div>
         )}
         <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('date')}</dt><dd className="font-medium text-bookly-navy">{new Date(`${date}T00:00:00`).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}</dd></div>
+        {paymentStep.departure && (
+          <div className="flex justify-between gap-4">
+            <dt className="text-text-muted">{t('departures.heading')}</dt>
+            <dd className="font-medium text-bookly-navy">
+              {paymentStep.departure.local_time.slice(0, 5)} ({paymentStep.departure.timezone})
+            </dd>
+          </div>
+        )}
         <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('participants')}</dt><dd className="font-medium text-bookly-navy">{participants}</dd></div>
         {paymentStep.serverPerPerson && <div className="flex justify-between gap-4"><dt className="text-text-muted">{t('perPerson')}</dt><dd className="font-medium text-bookly-navy">{paymentStep.serverPerPerson}</dd></div>}
         {paymentStep.serverTotal && <div className="flex justify-between gap-4 border-t border-border pt-3"><dt className="font-semibold text-bookly-navy">{t('total')}</dt><dd className="font-bold text-bookly-navy">{paymentStep.serverTotal}</dd></div>}
@@ -624,12 +751,84 @@ export default function BookingForm({ locale, todayUtc }: BookingFormProps) {
               locale={locale}
             />
           )}
+          {tour && dateValid && (departuresLoading || hasDepartures) && (
+            <fieldset className="space-y-2.5" data-testid="booking-departures">
+              <legend className="text-sm font-medium text-[#0A2540]">
+                {t('departures.heading')}
+              </legend>
+              {departuresLoading ? (
+                <p className="text-sm text-gray-700">{t('departures.loading')}</p>
+              ) : (
+                <div className="space-y-2">
+                  {departures.map((dep) => {
+                    const partySize = participants ?? 1;
+                    const enoughSeats = partySize <= dep.available_spots;
+                    const selectable = dep.is_bookable && enoughSeats;
+                    const isChecked = selectedDepartureId === dep.id;
+                    const unitFormatted = formatCurrency(
+                      dep.pricing.unit_price_cents,
+                      dep.pricing.currency,
+                      locale,
+                    );
+                    const statusLabel = dep.available_spots <= 0 || !enoughSeats
+                      ? t('departures.soldOut')
+                      : !dep.is_bookable
+                        ? t('departures.cutoffClosed')
+                        : t('departures.spotsLeft', { count: dep.available_spots });
+
+                    return (
+                      <label
+                        key={dep.id}
+                        className={`flex cursor-pointer items-center justify-between gap-3 rounded-lg border p-3 text-sm transition-colors ${
+                          isChecked
+                            ? 'border-[#0A2540] bg-[#F7F9FB]'
+                            : 'border-gray-200 bg-white hover:border-gray-300'
+                        } ${!selectable ? 'cursor-not-allowed opacity-60' : ''}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="tour_departure_id"
+                            value={dep.id}
+                            checked={isChecked}
+                            disabled={!selectable}
+                            data-testid={`departure-radio-${dep.id}`}
+                            onChange={() => setSelectedDepartureId(dep.id)}
+                            className="h-4 w-4 text-[#0A2540] focus:ring-[#0A2540]"
+                          />
+                          <div>
+                            <p className="font-semibold text-[#0A2540]">
+                              {dep.local_time.slice(0, 5)} ({dep.timezone})
+                            </p>
+                            <p className="text-xs text-gray-700">
+                              {statusLabel}
+                              {dep.pricing.tier_name ? ` · ${dep.pricing.tier_name}` : ''}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="font-mono font-semibold text-[#0A2540]">
+                          {unitFormatted}
+                        </span>
+                      </label>
+                    );
+                  })}
+                  {!departureBookable && (
+                    <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+                      {departures.some((d) => d.is_bookable && (participants ?? 1) <= d.available_spots)
+                        ? t('departures.selectPrompt')
+                        : t('departures.noBookable')}
+                    </p>
+                  )}
+                </div>
+              )}
+            </fieldset>
+          )}
           {tour && participants !== null && (
             <ParticipantSelector
               value={participants}
               onChange={changeParticipants}
-              min={tour.group_size.min}
-              max={tour.group_size.max}
+              min={selectionView?.selectedOption?.group_size.min ?? tour.group_size.min}
+              max={selectionView?.selectedOption?.group_size.max ?? tour.group_size.max}
               pricePerPerson={baseDisplay ?? undefined}
             />
           )}

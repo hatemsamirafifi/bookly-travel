@@ -1,7 +1,7 @@
 # EGM-003: Tour content and translation governance
 
 Date: 2026-11-14.
-Status: Owner policy approved; technical design and implementation acceptance pending.
+Status: Owner policy approved; v3 technical design passed independent review; implementation acceptance pending.
 Governance: Constitution v3.0.0. Existing requirement and specification numbers remain unchanged.
 
 ## Owner decision
@@ -32,4 +32,15 @@ Exceptional corrections require an explicit correction permission, a reason, val
 
 ## Evidence status
 
-Before this change, the focused backend baseline passed 102 tests with 726 assertions. The immutable tour revision workflow has not yet been implemented or accepted. The current translation hash/state mechanism and the CMS content history table must not be described as an existing immutable published-tour revision system.
+Before this change, the focused backend baseline passed 102 tests with 726 assertions. The [v3 technical design](../designs/supplier-portal-egm003-governance-v3.md), execution manifest and synchronized contracts passed independent review before schema or workflow changes began. Implementation is in progress and has not been accepted. The pre-existing translation hash/state mechanism and CMS content history table did not provide immutable published-tour revisions.
+
+## Owner decision: public owner eligibility
+
+On 2026-11-14 the owner explicitly selected HTTP 404 for the inconsistent `published` tour whose owning partner is no longer eligible. This is a narrow exception to the existing public-detail availability contract. Reuse the existing public operator eligibility definition: the partner exists, is `approved`, and is active.
+
+- Check fresh partner eligibility on the server before any cached tour content is served. An ineligible owner produces 404 without tour content or operator information.
+- Keep 200 with the existing unavailable state for a published tour with an eligible owner but temporarily unavailable pricing/inventory/schedule.
+- Reject new bookings for an ineligible owner independently of page visibility. Preserve existing purchased booking snapshots.
+- Apply the same restriction to search, public APIs, SSR, SEO and caches, and invalidate affected representations when eligibility changes.
+- Preserve suspension's existing published-to-draft workflow. Restoring eligibility never republishes a tour automatically.
+- Add real regressions for stale caches and the inconsistent published/ineligible state. This decision does not establish that those checks pass or change the source-locale policy.

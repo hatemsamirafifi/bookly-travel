@@ -52,7 +52,12 @@ class QueueTourTranslations extends Command
             // when they already carry the current desired hash, while
             // genuinely current ready derivatives stay untouched.
             foreach ($service->reconcileTour($tour) as $plan) {
-                GenerateTourTranslationJob::dispatch($plan['tour_id'], $plan['locale'], $plan['source_hash'])->afterCommit();
+                GenerateTourTranslationJob::dispatch(
+                    $plan['tour_id'],
+                    $plan['locale'],
+                    $plan['source_hash'],
+                    $plan['generation_epoch']
+                )->afterCommit();
                 $queued++;
             }
 

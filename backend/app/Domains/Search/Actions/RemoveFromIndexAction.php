@@ -2,7 +2,6 @@
 
 namespace App\Domains\Search\Actions;
 
-use App\Models\Tour;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -16,12 +15,8 @@ class RemoveFromIndexAction implements ShouldQueue
 
     public function handle(): void
     {
-        $tour = Tour::find($this->tourId);
-
-        if (! $tour) {
-            return;
-        }
-
-        $tour->unsearchable();
+        // Reconcile current state under the shared Tour lock rather than
+        // blindly removing, guarding against out-of-order A-B-A executions.
+        (new IndexTourAction($this->tourId))->handle();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Domains\Admin\Services;
 
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Services\TourRevisionPayloadService;
 use App\Enums\TourStatus;
 use App\Models\Tour;
 use App\Models\User;
@@ -60,6 +61,26 @@ class TourPublicationGuardService
     }
 
     /**
+     * EGM-003 owner policy: tour creation is a partner operation. The general
+     * administration interface does not create tours, so no valid submitted
+     * payload is accepted regardless of its lifecycle value.
+     *
+     * @param  array<string, mixed>  $rawData
+     */
+    public function refuseGeneralTourCreation(array $rawData = []): void
+    {
+        $errors = [
+            'data.status' => 'Tours are created in the partner portal. The administration interface reviews and requests changes on partner-authored content.',
+        ];
+
+        if (array_key_exists('translations', $rawData)) {
+            $errors['data.translations'] = 'Canonical tour content is never authored in this form. Partners own and edit canonical content.';
+        }
+
+        throw ValidationException::withMessages($errors);
+    }
+
+    /**
      * General create form: only ever materializes a draft. Any submitted
      * lifecycle value other than `draft` is an attempted write and is refused.
      */
@@ -93,14 +114,12 @@ class TourPublicationGuardService
     }
 
     /**
-     * TEMPORARY fail-closed EGM-003 intersection guard (owner decision
-     * outstanding on admin content editing). After the main record and
-     * relationship rows are saved, a still-published tour must keep a nonblank
-     * canonical source title and description in its immutable source locale
-     * and an approved owner. Destructive source deletes/renames/blanks and
-     * invalid owner changes roll the whole save back. Existing canonical and
-     * derivative admin editing behavior is otherwise preserved; derivatives
-     * never participate in this check.
+     * EGM-002 published-edit integrity, retained (design v3 §4: existing EGM-002
+     * guards are retained). After the main record and relationship rows are
+     * saved, a still-published tour must keep a nonblank canonical source title
+     * and description in its immutable source locale and an approved owner.
+     * Canonical source writes are refused at the form boundary under EGM-003;
+     * this remains the last atomic defense for the ownership path.
      */
     public function assertPublishedTourEditIntegrity(Tour $savedTour): void
     {
@@ -126,5 +145,127 @@ class TourPublicationGuardService
                 'data.partner_id' => 'A published tour must remain owned by an approved partner.',
             ]);
         }
+    }
+
+    /**
+     * EGM-003 general-form content fence (ADR 0024): compare the RAW submitted
+     * state against the freshly locked persisted row before any relationship
+     * persistence, so a read-only control alone can never be trusted and a
+     * forged Livewire payload cannot author canonical source text, a generated
+     * derivative, or a governed presentation field.
+     *
+     * Read-only controls are removed from the form schema; this is the
+     * enforcement. Any `translations` key at all is a tamper attempt (the form
+     * renders no translation control), and any governed presentation field
+     * whose raw value differs from the stored value is refused at its own path.
+     *
+     * @param  array<string, mixed>  $rawData  the unfiltered Livewire form data
+     * @param  array<string, string>|null  $governedValues  persisted governed values
+     */
+    public function assertGeneralFormRefusesContentWrites(array $rawData, ?array $governedValues = null): void
+    {
+        $errors = [];
+
+        if (array_key_exists('translations', $rawData)) {
+            $errors['data.translations'] = 'Canonical tour content and generated derivatives are never editable in this form. Partners own and edit canonical content, and generated translations are never manually edited.';
+        }
+
+        if ($governedValues !== null) {
+            foreach (TourRevisionPayloadService::PRESENTATION_FIELDS as $field) {
+                $path = "data.{$field}";
+
+                if (! array_key_exists($field, $rawData) || ! array_key_exists($field, $governedValues)) {
+                    continue;
+                }
+
+                if (! $this->valueSurvivesRoundTrip($rawData[$field], $governedValues[$field])) {
+                    $errors[$path] = sprintf(
+                        '"%s" is a governed field owned by the partner; request a change through the review workflow instead of editing it here.',
+                        $field,
+                    );
+                }
+            }
+        }
+
+        if ($errors !== []) {
+            throw ValidationException::withMessages($errors);
+        }
+    }
+
+    /**
+     * The persisted governed presentation values this form must round-trip
+     * unchanged, keyed by form field name.
+     *
+     * @return array<string, mixed>
+     */
+    public function governedPresentationValues(Tour $locked): array
+    {
+        $values = [];
+
+        foreach (TourRevisionPayloadService::PRESENTATION_FIELDS as $field) {
+            if ($field === 'guide_languages') {
+                $values[$field] = $locked->guide_languages;
+
+                continue;
+            }
+
+            $values[$field] = $locked->getAttribute($field);
+        }
+
+        return $values;
+    }
+
+    /**
+     * Filament stores the mounted value with its own casts; a round-tripped
+     * unchanged value must not be refused. Integers may arrive as strings and
+     * booleans may arrive as 0/1.
+     */
+    private function valueSurvivesRoundTrip(mixed $submitted, mixed $stored): bool
+    {
+        if ($submitted === $stored) {
+            return true;
+        }
+
+        if ($stored === null) {
+            return $submitted === null || $submitted === '' || $submitted === false || $submitted === [];
+        }
+
+        if (is_bool($stored)) {
+            return filter_var($submitted, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE) === $stored;
+        }
+
+        if (is_int($stored)) {
+            return filter_var($submitted, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE) === $stored;
+        }
+
+        if (is_array($stored)) {
+            $submittedList = is_array($submitted) ? $submitted : null;
+
+            if ($submittedList === null) {
+                return false;
+            }
+
+            $normalize = static fn (mixed $value): array => array_values(array_map(
+                static fn (mixed $item): string => trim((string) $item),
+                array_filter($value, fn (mixed $item): bool => $item !== null),
+            ));
+
+            $submittedList = $normalize($submittedList);
+            sort($submittedList);
+            $storedList = $normalize($stored);
+            sort($storedList);
+
+            return $submittedList === $storedList;
+        }
+
+        if (is_numeric($stored)) {
+            return filter_var($submitted, FILTER_VALIDATE_FLOAT, FILTER_NULL_ON_FAILURE) === (float) $stored;
+        }
+
+        if (is_string($stored) && $stored !== '') {
+            return is_scalar($submitted) && trim((string) $submitted) === trim($stored);
+        }
+
+        return false;
     }
 }

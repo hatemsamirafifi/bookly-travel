@@ -18,5 +18,9 @@ class CreateBookingDTO
          * active options (legacy behavior); tours with options require it.
          */
         public readonly ?int $tourOptionId = null,
+        /**
+         * Concrete tour departure (EGM-005 D3, D4).
+         */
+        public readonly ?int $tourDepartureId = null,
     ) {}
 }

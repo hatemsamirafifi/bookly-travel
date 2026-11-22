@@ -222,8 +222,13 @@ final class Spec019AdoptionRaceHelper
             }
 
             foreach ($files as $file) {
-                if (is_string($file) && $file !== '' && is_file($file)) {
-                    @unlink($file);
+                if (is_string($file) && $file !== '') {
+                    if (is_file($file)) {
+                        @unlink($file);
+                    }
+                    if (is_file($file . '.spawned')) {
+                        @unlink($file . '.spawned');
+                    }
                 }
             }
             if ($barrierDir !== '' && is_dir($barrierDir)) {

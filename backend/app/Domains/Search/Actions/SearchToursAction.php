@@ -2,12 +2,12 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Search\Services\TourPublicProjectionService;
 use App\Domains\Search\Support\DurationBucket;
 use App\Domains\Search\Support\SearchableAttributes;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Category;
 use App\Models\Tour;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class SearchToursAction
@@ -17,7 +17,11 @@ class SearchToursAction
     public function __construct()
     {
         $this->transformer = new TourCardTransformer;
+
+        $this->projection = app(TourPublicProjectionService::class);
     }
+
+    protected TourPublicProjectionService $projection;
 
     protected int $perPage = 12;
 
@@ -49,18 +53,14 @@ class SearchToursAction
         /** @var LengthAwarePaginator<int, Tour> $results */
         $results = $search->paginate($perPage, 'page', $page);
 
-        // Eager-load every relation the transformer reads so we don't issue
-        // per-tour queries (N+1) while mapping the results page.
-        /** @var EloquentCollection<int, Tour> $models */
-        $models = $results->getCollection();
-        $models->load([
-            'translations',
-            'category',
-            'availabilityRules',
-            'availabilityExceptions',
-        ]);
-
-        $data = $results->map(fn (Tour $tour) => $this->transformer->transform($tour, $locale))->values()->toArray();
+        // Transform the results page under one coherent batch shared lock on the
+        // sorted ids (design v3 §8), reloading fresh CARD_RELATIONS and excluding
+        // any tour that became unbookable before transforming inside the lock.
+        $data = $this->projection->hydrateAndTransformCards(
+            $results->getCollection(),
+            $locale,
+            fn (Tour $tour, string $loc) => $this->transformer->transform($tour, $loc)
+        );
 
         return [
             'data' => $data,

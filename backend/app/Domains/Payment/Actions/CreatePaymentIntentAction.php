@@ -69,6 +69,15 @@ class CreatePaymentIntentAction
             $applicationFeeAmount = $this->feeCalculator->calculate($booking->total_price, $commissionPercent);
         }
 
+        // Identifying metadata for EVERY PaymentIntent (Connect or not) so
+        // support and reconciliation flows can map a Stripe object back to
+        // the booking, tour, and partner without a local lookup.
+        $metadata = array_filter([
+            'booking_reference' => $booking->reference,
+            'tour_id' => (string) $booking->tour_id,
+            'partner_id' => $partner ? (string) $partner->id : null,
+        ]);
+
         // Stripe I/O outside the DB transaction.
         if ($destinationAccountId) {
             $clientSecret = $this->stripe->createPaymentIntent(
@@ -77,17 +86,14 @@ class CreatePaymentIntentAction
                 idempotencyKey: $booking->idempotency_key,
                 destinationAccountId: $destinationAccountId,
                 applicationFeeAmount: $applicationFeeAmount,
-                metadata: array_filter([
-                    'booking_reference' => $booking->reference,
-                    'tour_id' => (string) $booking->tour_id,
-                    'partner_id' => $partner ? (string) $partner->id : null,
-                ]),
+                metadata: $metadata,
             );
         } else {
             $clientSecret = $this->stripe->createPaymentIntent(
                 amount: $booking->total_price,
                 currency: $booking->currency,
                 idempotencyKey: $booking->idempotency_key,
+                metadata: $metadata,
             );
         }
 

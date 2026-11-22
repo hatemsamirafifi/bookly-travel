@@ -12,11 +12,14 @@ This is the actual existing route from backend bootstrap/public routes and front
 
 | Case | Result |
 |---|---|
-| Published tour | 200, `{data: ...}` |
-| Published but currently unbookable | 200 with availability.is_unavailable=true; no Book Now offer in UI |
+| Published tour with an eligible owner | 200, `{data: ...}` |
+| Published, eligible owner, but currently unbookable | 200 with availability.is_unavailable=true; no Book Now offer in UI |
+| Published but owner missing, not approved, or inactive | 404; no tour content or operator information, including on a stale-cache hit |
 | Unknown / unpublished tour | 404 |
 | Archived tour previously published | 410 |
 | Existing detail rate limit exceeded | Existing 429 response/headers |
+
+Owner-approved exception, 2026-11-14: [ADR 0024](../../../docs/adr/0024-tour-content-governance.md) requires fresh owner eligibility before cached public content is served. Search, detail APIs, SSR, SEO and caches must not expose an ineligible-owner tour, and new booking creation must independently refuse it. Eligibility changes invalidate affected cached representations. Existing suspension still changes the partner's published tours to draft; other established 404/410/unavailable behavior and existing booking snapshots remain unchanged. This is a target contract pending implementation verification.
 
 ## Additive Fields and Preserved Semantics
 

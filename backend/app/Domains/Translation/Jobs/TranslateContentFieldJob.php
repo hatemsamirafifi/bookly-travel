@@ -118,6 +118,18 @@ class TranslateContentFieldJob implements ShouldQueue
         $needsReview = $judgement['status'] === TranslationFieldState::STATUS_NEEDS_REVIEW;
 
         DB::transaction(function () use ($model, $state, $sourceText, $translation, $judgement, $needsReview, $service) {
+            // EGM-003 fence (design v3 §4): the tour field engine is retired, so
+            // a job that passed the earlier refusal is re-checked under a fresh
+            // Tour lock immediately before any save. Never silently rewrite
+            // canonical published content from the legacy engine.
+            if ($model instanceof Tour) {
+                $locked = Tour::query()->lockForUpdate()->find($model->getKey());
+
+                if ($locked === null || ! $locked->supportsFieldTranslation()) {
+                    return;
+                }
+            }
+
             $this->writeTranslatedField($model, $judgement['sanitized_text']);
 
             $state->status = $needsReview

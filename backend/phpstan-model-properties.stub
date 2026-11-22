@@ -160,6 +160,9 @@ namespace App\Domains\Booking\Models;
  * @property int|string|null $bookings
  * @property int|float|string|null $revenue
  * @property \Carbon\Carbon|null $start_time
+ * @property int|null $tour_departure_id
+ * @property int|null $pricing_tier_id
+ * @property array<string, mixed>|null $pricing_snapshot
  * @property-read \App\Models\User|null $traveler
  * @property-read \App\Models\GuestIdentity|null $guestIdentity
  * @property-read \App\Models\Tour|null $tour

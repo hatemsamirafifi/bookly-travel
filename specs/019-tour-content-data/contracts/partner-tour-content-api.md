@@ -2,7 +2,7 @@
 
 **Governance**: [Constitution v2.1.0](../../../.specify/memory/constitution.md) at original design; synchronized 2026-11-10 with [Constitution v3.0.0](../../../.specify/memory/constitution.md). The tour-content source policy and criteria are defined in the [spec.md Amendment Record](../spec.md); where this file says English/EN as the authored source, the active rule is the tour's fixed canonical source locale.
 **Source requirements**: FR-001-013, FR-017-021, FR-030, FR-031-FR-040.
-**Status**: Target completion of existing owned routes; implementation acceptance pending. The revision-governed section below was synchronized on 2026-11-14 to the [EGM-003 technical design v3](../../../docs/designs/supplier-portal-egm003-governance-v3.md) and its [execution file/test manifest](../../../docs/designs/supplier-portal-egm003-execution-plan.md). No schema, migration, code or test has been written; EGM-003 remains open.
+**Status**: Target completion of existing owned routes; EGM-003 revision-governed implementation and Round 1 review remediations complete on 2026-11-17, pending final acceptance gate closure. The revision-governed section below was synchronized on 2026-11-14 to the [EGM-003 technical design v3](../../../docs/designs/supplier-portal-egm003-governance-v3.md) and its [execution file/test manifest](../../../docs/designs/supplier-portal-egm003-execution-plan.md); the earlier 2026-11-15 [interim review](../../../docs/reports/supplier-portal-egm003-checkpoint-review.md) failure record is preserved as historical context.
 
 ## Existing Routes and Authorization
 
@@ -114,10 +114,13 @@ Partners own and edit canonical tour content. A content edit to a **published** 
 "content_governance": {
   "source_locale": "es",
   "generation_epoch": 4,
+  "content_version": 4,
   "approved_revision": { "id": 12, "revision_number": 3, "kind": "legacy_baseline", "state": "approved",
                          "payload_hash": "…", "created_at": "…" },
   "active_candidate": { "id": 15, "revision_number": 4, "kind": "partner_edit", "state": "proposed",
                          "payload_hash": "…", "base_revision_id": 12, "submitted_at": "…", "change_summary": "…" },
+  "latest_revision":  { "id": 15, "revision_number": 4, "kind": "partner_edit", "state": "proposed",
+                         "payload_hash": "…", "base_revision_id": 12, "submitted_at": "…" },
   "open_requests":    [ { "id": 9, "context": "published_review", "state": "open", "reason": "…",
                            "field_refs": [ { "path": "source.meeting_point", "note": "…" } ],
                            "created_at": "…" } ]
@@ -148,6 +151,12 @@ Rules for this object:
 `auth:sanctum` + `partner` middleware and the existing throttle are preserved. Unauthenticated is 401; a missing partner capability or an unknown/cross-partner tour is 404 through the scoped lookup; a restricted partner keeps the existing 403 `ONBOARDING_STATUS_BLOCKED` response. No public or administrator REST approval endpoint is added.
 
 All candidate operations identify tour **and** revision and scope ownership before validation, so an unknown or foreign revision remains 404. Ownership, permissions and account eligibility are re-read from the locked rows, not trusted from a caller-supplied model.
+
+### Owned response projections
+
+`GET tours/{id}` exposes a flat `content_governance` object with `source_locale`, `generation_epoch`, `content_version`, nullable `approved_revision`, nullable `active_candidate`, nullable `latest_revision` (preserving the highest-numbered revision summary so terminal `rejected`/`withdrawn`/`superseded` outcomes stay visible after `active_candidate` clears), and bounded `open_requests`. Approved summaries include `state: "approved"`; candidate summaries identify the exact immutable ID, number, kind, state, base, optional `change_summary`, and payload hash. Request summaries contain the request ID, context/state, mandatory reason, field references and timestamps. Full histories use the paginated owner-only endpoints; raw Eloquent request models and internal requested-content hashes are never serialized.
+
+Full revision GET/create/replace/submit/withdraw responses put the revision fields directly under the existing `data` key: `id`, `tour_id`, `revision_number`, `kind`, `state`, `source_locale`, `change_summary`, `payload`, `payload_hash`, `base_revision_id`, relevant timestamps and `diff`. They do not introduce a `data.revision` wrapper. The response examples below abbreviate the full payload and diff. The only exposed replacement token is `payload_hash`; canonical source/content hashes and provider diagnostics remain internal. Partner frontend types and real HTTP contract tests must agree on this projection before acceptance.
 
 ### Create request and payload
 

@@ -4,10 +4,10 @@ namespace App\Domains\Search\Controllers\Public;
 
 use App\Domains\Blog\Models\BlogCategory;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Search\Services\TourPublicCacheService;
 use App\Models\Category;
 use App\Models\Tour;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class SitemapController
 {
@@ -20,30 +20,51 @@ class SitemapController
 
     protected const CACHE_KEY = 'bookly:sitemap:xml';
 
+    public function __construct(
+        protected TourPublicCacheService $cacheService
+    ) {}
+
     public function index(): Response
     {
-        $xml = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, fn () => $this->renderXml());
+        $xml = $this->renderXml();
 
         return response($xml, 200)
             ->header('Content-Type', 'application/xml')
-            ->header('Cache-Control', 'public, max-age=3600');
+            ->header('Cache-Control', 'no-store');
     }
 
     /**
-     * Render the full sitemap XML. Tours are streamed via chunkById() so a
-     * catalog of 5,000–10,000 tours (spec SC-010) never materializes as a
-     * single Eloquent collection in memory; only `id` and `slug` are selected.
+     * Render the full sitemap XML. Structured fragments are retrieved through
+     * guarded cache and assembled into final XML.
      */
-    protected function renderXml(): string
+    public function renderXml(): string
+    {
+        $parts = $this->cacheService->rememberSitemapParts(
+            self::CACHE_KEY,
+            self::CACHE_TTL,
+            fn (): array => $this->buildSitemapParts()
+        );
+
+        return $this->assembleXml($parts);
+    }
+
+    /**
+     * Build the structured sitemap XML fragments. Tours are streamed via
+     * chunkById() so a catalog of 5,000–10,000 tours never materializes as a
+     * single Eloquent collection in memory; only `id` and `slug` are selected.
+     *
+     * @return array{prefix: string, tours: array<int, string>, static_after: string, destinations: array<string, string>, suffix: string}
+     */
+    protected function buildSitemapParts(): array
     {
         $baseUrl = config('app.url', 'https://bookly.com');
         $locales = config('app.supported_locales', ['en', 'es', 'it']);
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
+        $prefix = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $prefix .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
 
         // Homepage
-        $xml .= $this->renderUrl(
+        $prefix .= $this->renderUrl(
             "{$baseUrl}/{$locales[0]}",
             $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}", $locales),
             'daily',
@@ -51,7 +72,7 @@ class SitemapController
         );
 
         // Blog Index Page
-        $xml .= $this->renderUrl(
+        $prefix .= $this->renderUrl(
             "{$baseUrl}/{$locales[0]}/blog",
             $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog", $locales),
             'daily',
@@ -59,14 +80,15 @@ class SitemapController
         );
 
         // Tour detail pages — stream in chunks to bound memory. chunkById()
-        // paginates on the `id` column, so `id` MUST be in the select list or
-        // it aborts (RuntimeException) the moment any row exists.
+        // paginates on the `id` column, so `id` MUST be in the select list.
+        $tours = [];
         Tour::published()
+            ->withEligiblePublicOwner()
             ->select(['id', 'slug'])
             ->orderBy('id')
-            ->chunkById(500, function ($tours) use (&$xml, $baseUrl, $locales) {
-                foreach ($tours as $tour) {
-                    $xml .= $this->renderUrl(
+            ->chunkById(500, function ($chunk) use (&$tours, $baseUrl, $locales) {
+                foreach ($chunk as $tour) {
+                    $tours[(int) $tour->id] = $this->renderUrl(
                         "{$baseUrl}/{$locales[0]}/tours/{$tour->slug}",
                         $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/tours/{$tour->slug}", $locales),
                         'weekly',
@@ -75,13 +97,15 @@ class SitemapController
                 }
             });
 
+        $staticAfter = '';
+
         // Blog detail pages — stream published posts in chunks
         BlogPost::published()
             ->select(['id', 'slug', 'published_at'])
             ->orderBy('id')
-            ->chunkById(500, function ($posts) use (&$xml, $baseUrl, $locales) {
+            ->chunkById(500, function ($posts) use (&$staticAfter, $baseUrl, $locales) {
                 foreach ($posts as $post) {
-                    $xml .= $this->renderUrl(
+                    $staticAfter .= $this->renderUrl(
                         "{$baseUrl}/{$locales[0]}/blog/{$post->slug}",
                         $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog/{$post->slug}", $locales),
                         'weekly',
@@ -94,7 +118,7 @@ class SitemapController
         // Category pages — bounded taxonomy (30–50 per spec), select slug only.
         $categories = Category::where('is_active', true)->select('slug')->get();
         foreach ($categories as $category) {
-            $xml .= $this->renderUrl(
+            $staticAfter .= $this->renderUrl(
                 "{$baseUrl}/{$locales[0]}/categories/{$category->slug}",
                 $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/categories/{$category->slug}", $locales),
                 'daily',
@@ -105,7 +129,7 @@ class SitemapController
         // Blog Category pages
         $blogCategories = BlogCategory::where('is_active', true)->select('slug')->get();
         foreach ($blogCategories as $bCat) {
-            $xml .= $this->renderUrl(
+            $staticAfter .= $this->renderUrl(
                 "{$baseUrl}/{$locales[0]}/blog/category/{$bCat->slug}",
                 $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/blog/category/{$bCat->slug}", $locales),
                 'weekly',
@@ -113,13 +137,17 @@ class SitemapController
             );
         }
 
-        // Destination pages — distinct locations, select slug only.
-        $destinations = Tour::published()
+        // Destination pages — distinct locations with eligible public owners.
+        $destinations = [];
+        $destinationRows = Tour::published()
+            ->withEligiblePublicOwner()
+            ->whereNotNull('location_slug')
+            ->where('location_slug', '!=', '')
             ->select('location_slug')
             ->distinct()
             ->get();
-        foreach ($destinations as $dest) {
-            $xml .= $this->renderUrl(
+        foreach ($destinationRows as $dest) {
+            $destinations[(string) $dest->location_slug] = $this->renderUrl(
                 "{$baseUrl}/{$locales[0]}/destinations/{$dest->location_slug}",
                 $this->alternates(fn (string $lang) => "{$baseUrl}/{$lang}/destinations/{$dest->location_slug}", $locales),
                 'weekly',
@@ -127,9 +155,27 @@ class SitemapController
             );
         }
 
-        $xml .= '</urlset>';
+        return [
+            'prefix' => $prefix,
+            'tours' => $tours,
+            'static_after' => $staticAfter,
+            'destinations' => $destinations,
+            'suffix' => '</urlset>',
+        ];
+    }
 
-        return $xml;
+    /**
+     * Assemble guarded structured sitemap parts into complete XML string.
+     *
+     * @param  array{prefix?: string, tours?: array<int, string>, static_after?: string, destinations?: array<string, string>, suffix?: string}  $parts
+     */
+    protected function assembleXml(array $parts): string
+    {
+        return ($parts['prefix'] ?? '')
+            . implode('', $parts['tours'] ?? [])
+            . ($parts['static_after'] ?? '')
+            . implode('', $parts['destinations'] ?? [])
+            . ($parts['suffix'] ?? '');
     }
 
     /**

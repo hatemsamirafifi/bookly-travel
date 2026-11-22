@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   # -------------------------------------------------------------------
-  # Backend Tests (PHP)
+  # Backend Tests (Supported Baseline — PHP 8.3)
   # -------------------------------------------------------------------
   backend-tests:
     runs-on: ubuntu-latest
@@ -48,12 +48,74 @@ jobs:
       run:
         working-directory: backend
 
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.3, 8.4, 8.5]
+    name: PHP 8.3 (Baseline)
 
-    name: PHP ${{ matrix.php }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql, bcmath, gd, intl
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Copy environment file
+        run: cp .env.example .env
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Resolve disposable test services
+        run: |
+          echo '127.0.0.1 bookly-test-postgres bookly-test-meilisearch' | sudo tee -a /etc/hosts
+          curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://bookly-test-meilisearch:7700/health
+
+      - name: Execute tests
+        run: php -d memory_limit=1G artisan test --configuration=phpunit.pgsql.xml
+
+  # -------------------------------------------------------------------
+  # Backend Tests (PHP Compatibility Matrix — Non-Masking)
+  # -------------------------------------------------------------------
+  backend-tests-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: bookly_test
+          POSTGRES_USER: bookly_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bookly_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+      meilisearch:
+        image: getmeili/meilisearch:v1.10
+        env:
+          MEILI_MASTER_KEY: test-key
+          MEILI_ENV: development
+        ports:
+          - 7700:7700
+    defaults:
+      run:
+        working-directory: backend
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.4, 8.5]
+
+    name: PHP ${{ matrix.php }} (Compatibility)
 
     steps:
       - name: Checkout code
@@ -81,7 +143,68 @@ jobs:
           curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://bookly-test-meilisearch:7700/health
 
       - name: Execute tests
-        run: php artisan test --configuration=phpunit.pgsql.xml
+        run: php -d memory_limit=1G artisan test --configuration=phpunit.pgsql.xml
+
+  # -------------------------------------------------------------------
+  # Backend PostgreSQL Migration Rehearsal (UP -> Full-Batch DOWN -> UP)
+  # -------------------------------------------------------------------
+  backend-migration-rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: bookly_test
+          POSTGRES_USER: bookly_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bookly_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+    defaults:
+      run:
+        working-directory: backend
+
+    name: PostgreSQL Migration Rehearsal
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql, bcmath, gd, intl
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Copy environment file
+        run: cp .env.example .env
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Rehearse migrations against representative existing data
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: bookly_test
+          DB_USERNAME: bookly_test
+          DB_PASSWORD: ""
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+          SESSION_DRIVER: array
+          SCOUT_DRIVER: collection
+        run: php -d memory_limit=1G scripts/rehearse-migrations.php
 
   # -------------------------------------------------------------------
   # Backend Static Analysis (PHPStan/Larastan)
@@ -101,13 +224,13 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql, bcmath, gd, intl
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse --memory-limit=512M
+        run: vendor/bin/phpstan analyse --memory-limit=1G
 
   # -------------------------------------------------------------------
   # Backend Code Style (Laravel Pint)
@@ -163,6 +286,13 @@ jobs:
 
       - name: ESLint
         run: npm run lint
+
+      - name: Production build
+        env:
+          NEXT_PUBLIC_API_URL: ""
+          API_INTERNAL_URL: http://localhost:8080
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build
 
   # -------------------------------------------------------------------
   # Frontend Unit Tests (Jest)

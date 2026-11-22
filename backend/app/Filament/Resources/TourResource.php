@@ -9,7 +9,6 @@ use App\Domains\Admin\Actions\UnpublishTourAction;
 use App\Domains\Admin\Services\AdminAuthorizationService;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Services\TourTranslationService;
-use App\Filament\Components\HugeRteEditor;
 use App\Filament\Resources\TourResource\Pages;
 use App\Models\Tour;
 use App\Models\User;
@@ -73,25 +72,101 @@ class TourResource extends Resource
 
     public static function form(Forms\Form $form): Forms\Form
     {
+        // EGM-003 owner policy: canonical tour content belongs to the owning
+        // partner, generated derivatives are never edited, and governed
+        // presentation fields go through the review workflow. The general form
+        // therefore renders governed fields read-only and refuses their writes
+        // server-side (TourPublicationGuardService), never authoring canonical
+        // or derivative content.
         return $form
             ->schema([
-                Forms\Components\Section::make('General Information')
+                Forms\Components\Section::make('Governed content (partner-owned)')
+                    ->description('Tour content, its generated translations and the governed presentation fields are owned by the partner and change through the revision workflow. Use "Propose correction" (source text) or "Request changes" (any governed field) instead of editing here.')
                     ->schema([
+                        Forms\Components\Placeholder::make('governed_content_notice')
+                            ->label('Authored content status')
+                            ->content(fn (?Tour $record): string => $record === null
+                                ? 'Tour content is authored in the partner portal. This administration form does not create tours.'
+                                : sprintf(
+                                    'Source [%s]: %s — derivative statuses and the approved revision are shown on the view screen.',
+                                    strtoupper($record->sourceLocale()),
+                                    $record->sourceTranslation()?->title ?? 'Source content missing',
+                                ))
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('slug')
                             ->required()
                             ->unique(Tour::class, 'slug', ignoreRecord: true)
-                            ->maxLength(160),
+                            ->maxLength(160)
+                            ->disabled()
+                            ->dehydrated(false),
                         Forms\Components\Select::make('category_id')
                             ->relationship('category', 'name')
                             ->required()
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('location')
+                            ->required()
+                            ->maxLength(150)
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('location_slug')
+                            ->maxLength(150)
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('duration_minutes')
+                            ->numeric()
+                            ->default(120)
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('duration_label')
+                            ->default('2 hours')
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('group_size_min')
+                            ->numeric()
+                            ->default(1)
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\TextInput::make('group_size_max')
+                            ->numeric()
+                            ->default(15)
+                            ->disabled()
+                            ->dehydrated(false),
+                        Forms\Components\Select::make('difficulty_level')
+                            ->options([
+                                'easy' => 'Easy',
+                                'moderate' => 'Moderate',
+                                'challenging' => 'Challenging',
+                            ])
+                            ->disabled()
+                            ->dehydrated(false),
+                        // Governed cover: read-only path display. A file-upload
+                        // component would invite an administrative upload path;
+                        // media changes go through the revision workflow.
+                        Forms\Components\TextInput::make('cover_image_url')
+                            ->label('Cover Image URL')
+                            ->formatStateUsing(fn ($state) => is_string($state) ? $state : (''))
+                            ->columnSpanFull()
+                            ->disabled()
+                            ->dehydrated(false),
+                    ])->columns(2),
+
+                Forms\Components\Section::make('Operational fields (authorized)')
+                    ->schema([
                         Forms\Components\Select::make('partner_id')
                             ->relationship('partner', 'id')
                             ->getOptionLabelFromRecordUsing(fn ($record) => optional($record->profile)->company_name ?? "Partner #{$record->id}")
                             ->searchable()
                             ->preload()
                             ->required(),
+                        Forms\Components\TextInput::make('price_amount')
+                            ->label('Price in Cents (e.g. 8500 = €85.00)')
+                            ->numeric()
+                            ->required(),
+                        Forms\Components\Toggle::make('is_featured')
+                            ->label('Featured'),
                         Forms\Components\Select::make('status')
                             ->options([
                                 'draft' => 'Draft',
@@ -106,62 +181,7 @@ class TourResource extends Resource
                             ->disabled()
                             ->dehydrated(false)
                             ->helperText('Managed by the approval workflow — publish/reject/unpublish/archive actions record the governance audit.'),
-                        Forms\Components\TextInput::make('location')
-                            ->required()
-                            ->maxLength(150),
-                        Forms\Components\TextInput::make('location_slug')
-                            ->maxLength(150),
-                        Forms\Components\TextInput::make('price_amount')
-                            ->label('Price in Cents (e.g. 8500 = €85.00)')
-                            ->numeric()
-                            ->required(),
-                        Forms\Components\TextInput::make('duration_minutes')
-                            ->numeric()
-                            ->default(120),
-                        Forms\Components\TextInput::make('duration_label')
-                            ->default('2 hours'),
-                        Forms\Components\TextInput::make('group_size_min')
-                            ->numeric()
-                            ->default(1),
-                        Forms\Components\TextInput::make('group_size_max')
-                            ->numeric()
-                            ->default(15),
-                        Forms\Components\Toggle::make('is_featured')
-                            ->label('Featured'),
-                        Forms\Components\FileUpload::make('cover_image_url')
-                            ->label('Cover Image')
-                            ->image()
-                            ->disk('public')
-                            ->directory('tours')
-                            ->columnSpanFull(),
                     ])->columns(2),
-
-                Forms\Components\Section::make('Translations')
-                    ->schema([
-                        Forms\Components\Repeater::make('translations')
-                            ->relationship('translations')
-                            ->schema([
-                                Forms\Components\Select::make('locale')
-                                    ->options([
-                                        'en' => 'English',
-                                        'es' => 'Spanish',
-                                        'it' => 'Italian',
-                                    ])
-                                    ->required(),
-                                Forms\Components\TextInput::make('title')
-                                    ->required()
-                                    ->maxLength(255),
-                                HugeRteEditor::make('description')
-                                    ->columnSpanFull(),
-                                Forms\Components\Textarea::make('meeting_point')
-                                    ->rows(2),
-                                Forms\Components\Textarea::make('cancellation_policy')
-                                    ->rows(2),
-                            ])
-                            ->columns(2)
-                            ->columnSpanFull()
-                            ->defaultItems(1),
-                    ]),
             ]);
     }
 
@@ -431,6 +451,11 @@ class TourResource extends Resource
                 Infolists\Components\Section::make('Authored source (required)')
                     ->description(fn (Tour $record): string => 'Authored in [' . strtoupper($record->sourceLocale()) . '] — this is the content derivatives are generated from.')
                     ->schema([
+                        Infolists\Components\TextEntry::make('published_revision_id')
+                            ->label('Approved Revision')
+                            ->getStateUsing(fn (Tour $record): string => $record->publishedRevision
+                                ? '#' . $record->publishedRevision->revision_number . ' (ID ' . $record->publishedRevision->id . ')'
+                                : 'None'),
                         Infolists\Components\TextEntry::make('source_title')
                             ->label('Title')
                             ->getStateUsing(fn (Tour $record): ?string => $record->sourceTranslation()?->title)
@@ -453,6 +478,11 @@ class TourResource extends Resource
                     ]),
                 Infolists\Components\Section::make('Derivative translations (AI, generated from the source)')
                     ->schema([
+                        Infolists\Components\TextEntry::make('english_translation_status')
+                            ->label(fn (Tour $record): string => $record->sourceLocale() === 'en' ? 'English (authored source)' : 'English')
+                            ->getStateUsing(fn (Tour $record): string => static::translationStatusLabel($record, 'en'))
+                            ->badge()
+                            ->color(fn (string $state): string => static::translationStatusColor($state)),
                         Infolists\Components\TextEntry::make('spanish_translation_status')
                             ->label(fn (Tour $record): string => $record->sourceLocale() === 'es' ? 'Spanish (authored source)' : 'Spanish')
                             ->getStateUsing(fn (Tour $record): string => static::translationStatusLabel($record, 'es'))
@@ -464,7 +494,7 @@ class TourResource extends Resource
                             ->badge()
                             ->color(fn (string $state): string => static::translationStatusColor($state)),
                     ])
-                    ->columns(2),
+                    ->columns(3),
                 Infolists\Components\Section::make('Status & Dates')
                     ->schema([
                         Infolists\Components\TextEntry::make('status')

@@ -12,6 +12,8 @@ use App\Domains\Partner\Controllers\PricingController;
 use App\Domains\Partner\Controllers\ProfileController;
 use App\Domains\Partner\Controllers\ReviewController;
 use App\Domains\Partner\Controllers\TourController;
+use App\Domains\Partner\Controllers\TourDepartureController;
+use App\Domains\Partner\Controllers\TourRevisionController;
 use App\Domains\Partner\Controllers\UploadController;
 use App\Domains\Payment\Controllers\Partner\FinancialSummaryController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,16 @@ Route::middleware(['auth:sanctum', 'partner'])->group(function () {
     Route::prefix('tours')->middleware('throttle:booking.get')->group(function () {
         Route::get('/', [TourController::class, 'index']);
         Route::post('/', [TourController::class, 'store']);
+
+        // EGM-005 D1 Server-Authoritative Draft Management & Recovery
+        Route::get('drafts', [TourController::class, 'listDrafts']);
+        Route::get('drafts/latest', [TourController::class, 'latestGeneralDraft']);
+        Route::post('drafts', [TourController::class, 'saveGeneralDraft']);
+        Route::get('drafts/{draftId}', [TourController::class, 'showDraft']);
+        Route::put('drafts/{draftId}', [TourController::class, 'updateDraft']);
+        Route::post('drafts/{draftId}/resume', [TourController::class, 'resumeDraft']);
+        Route::delete('drafts/{draftId}', [TourController::class, 'discardDraft']);
+
         Route::get('{id}', [TourController::class, 'show']);
         Route::put('{id}', [TourController::class, 'update']);
         Route::delete('{id}', [TourController::class, 'destroy']);
@@ -49,10 +61,21 @@ Route::middleware(['auth:sanctum', 'partner'])->group(function () {
         Route::post('{id}/submit', [TourController::class, 'submitForReview']);
         Route::post('{id}/archive', [TourController::class, 'archive']);
 
+        // EGM-003 owned content revisions (Partner Content API contract §3)
+        Route::get('{id}/revisions', [TourRevisionController::class, 'index']);
+        Route::post('{id}/revisions', [TourRevisionController::class, 'store']);
+        Route::get('{id}/revisions/{revisionId}', [TourRevisionController::class, 'show']);
+        Route::put('{id}/revisions/{revisionId}', [TourRevisionController::class, 'update']);
+        Route::post('{id}/revisions/{revisionId}/submit', [TourRevisionController::class, 'submit']);
+        Route::post('{id}/revisions/{revisionId}/withdraw', [TourRevisionController::class, 'withdraw']);
+        Route::get('{id}/revision-requests', [TourRevisionController::class, 'requests']);
+        Route::post('{id}/revision-requests/{requestId}/respond', [TourRevisionController::class, 'respond']);
+
         // Pricing and Availability CRUD
         Route::prefix('{tourId}')->group(function () {
             // Pricing Resource
             Route::get('pricing', [PricingController::class, 'index']);
+            Route::post('pricing/sync', [PricingController::class, 'sync']);
             Route::post('pricing', [PricingController::class, 'store']);
             Route::put('pricing/{tierId}', [PricingController::class, 'update']);
             Route::delete('pricing/{tierId}', [PricingController::class, 'destroy']);
@@ -65,6 +88,13 @@ Route::middleware(['auth:sanctum', 'partner'])->group(function () {
             Route::post('availability/exceptions', [AvailabilityController::class, 'storeException']);
             Route::put('availability/exceptions/{exceptionId}', [AvailabilityController::class, 'updateException']);
             Route::delete('availability/exceptions/{exceptionId}', [AvailabilityController::class, 'destroyException']);
+
+            // Explicit Departures Resource (EGM-005 D3, D4)
+            Route::get('departures', [TourDepartureController::class, 'index']);
+            Route::post('departures', [TourDepartureController::class, 'store']);
+            Route::post('departures/generate', [TourDepartureController::class, 'generate']);
+            Route::put('departures/{departureId}', [TourDepartureController::class, 'update']);
+            Route::post('departures/{departureId}/cancel', [TourDepartureController::class, 'cancel']);
         });
     });
 

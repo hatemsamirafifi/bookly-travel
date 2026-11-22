@@ -1,4 +1,5 @@
-﻿import type { EnglishSourceInput, OwnedTranslationStatus, ContentSourceLocale } from '@/lib/api/types';
+import type { EnglishSourceInput, OwnedTranslationStatus, ContentSourceLocale, ContentGovernance } from '@/lib/api/types';
+import type { BookingOptionRecord, BookingDepartureSnapshot, BookingPricingSnapshot } from '@/types/traveler';
 
 export type TourStatus = 'draft' | 'pending_review' | 'published' | 'rejected' | 'archived';
 
@@ -109,6 +110,11 @@ export interface Tour {
    *  Keys are the generated (non-source) locales, so a non-English source
    *  tour reports its other two languages instead of es/it. */
   translation_statuses?: Partial<{ en: OwnedTranslationStatus; es: OwnedTranslationStatus; it: OwnedTranslationStatus }>;
+  /** Additive EGM-003 governance object (Spec 019 partner contract). Never
+   *  null for an owned tour the platform protects — a published legacy tour
+   *  carries a lazily captured baseline. Treated as required for published
+   *  tours: editing fails closed when it is absent. */
+  content_governance?: ContentGovernance | null;
   highlights: string[];
   inclusions: string[];
   exclusions: string[];
@@ -202,6 +208,11 @@ export interface PartnerBooking {
   total_participants: number;
   total_amount: number;
   currency: string;
+  option?: BookingOptionRecord | null;
+  tour_departure_id?: number | null;
+  departure?: BookingDepartureSnapshot | null;
+  pricing_tier_id?: number | null;
+  pricing_snapshot?: BookingPricingSnapshot | null;
   special_requests?: string | null;
   payment_status: string;
   cancellation_reason?: string | null;

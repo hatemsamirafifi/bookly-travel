@@ -59,6 +59,18 @@ export function cancelTravelerBooking(reference: string, reason?: string) {
   );
 }
 
+export function declinePendingBooking(reference: string, reason?: string) {
+  return apiClient<{ data: Partial<TravelerBooking>; message?: string }>(
+    `/api/public/traveler/bookings/${encodeURIComponent(reference)}/decline`,
+    {
+      method: 'POST',
+      requireCsrf: true,
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ reason: reason || 'Traveler declined updated price' }),
+    }
+  );
+}
+
 export function getTravelerProfile() {
   return apiClient<{ data: TravelerProfile }>('/api/public/traveler/profile', {
     headers: authHeaders(),

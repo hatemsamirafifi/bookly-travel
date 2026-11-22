@@ -198,65 +198,78 @@ it('rolls back destructive source edits and metadata together on a published tou
     $tour = publicationInvariantTour($locale);
     app(ApproveTourAction::class)->execute($this->admin, $tour);
     $stamp = $tour->fresh()->published_at;
+    $rows = fn (Tour $record) => $record->translations()->get(['locale', 'title', 'description'])->values()
+        ->map(fn ($row) => ['locale' => $row->locale, 'title' => $row->title, 'description' => $row->description])
+        ->all();
+    $beforeRows = $rows($tour);
 
+    // The general Filament form renders no translation control, so a source
+    // tamper arrives as raw Livewire state. EGM-003 refuses it server-side and
+    // the whole save rolls back untouched.
     Livewire::test(EditTour::class, ['record' => $tour->id])
-        ->fillForm(function (array $state) use ($change, $locale) {
-            $translations = $state['translations'];
-            foreach ($translations as $key => $translation) {
-                if ($translation['locale'] !== $locale) {
-                    continue;
-                }
-                if ($change === 'delete') {
-                    unset($translations[$key]);
-                } elseif ($change === 'rename') {
-                    $translations[$key]['locale'] = $locale === 'en' ? 'es' : 'en';
-                } else {
-                    $translations[$key]['description'] = '';
-                }
-            }
-
-            return ['location' => 'Must roll back', 'translations' => $translations];
-        })
+        ->set('data.translations', [
+            'egm003-forged-source' => [
+                'locale' => $locale,
+                'title' => $change === 'rename' ? ($locale === 'en' ? 'Forged es' : 'Forged en') : 'Forged title',
+                'description' => $change === 'clear description' ? '' : 'Forged description.',
+                'meeting_point' => null,
+                'cancellation_policy' => null,
+            ],
+        ])
+        ->set('data.location', 'Must roll back')
         ->call('save');
 
-    $source = $tour->translations()->where('locale', $locale)->first();
-    expect($source)->not->toBeNull()
-        ->and($source->description)->toBe('Canonical description.')
-        ->and($tour->fresh()->location)->toBe('Rome')
-        ->and($tour->fresh()->status)->toBe('published')
-        ->and($tour->fresh()->published_at->equalTo($stamp))->toBeTrue()
+    $fresh = $tour->fresh();
+
+    expect($rows($fresh))->toBe($beforeRows, "The {$change} source edit survived the general Filament form.")
+        ->and($fresh->location)->toBe('Rome')
+        ->and($fresh->status)->toBe('published')
+        ->and($fresh->published_at->equalTo($stamp))->toBeTrue()
         ->and(GovernanceAuditLog::where('action', 'tour.publish')->where('target_id', $tour->id)->count())->toBe(1);
 })->with(['en', 'es', 'it'])->with(['delete', 'rename', 'clear description']);
 
-it('preserves a valid published metadata save without republishing', function (string $locale) {
+it('keeps a published operational save authoritative without republishing', function (string $locale) {
     $tour = publicationInvariantTour($locale);
     app(ApproveTourAction::class)->execute($this->admin, $tour);
     $stamp = $tour->fresh()->published_at;
 
+    // A genuine non-content operation (pricing) still saves.
     Livewire::test(EditTour::class, ['record' => $tour->id])
-        ->fillForm(['location' => 'Florence'])
+        ->fillForm(['price_amount' => 6500])
         ->call('save')
         ->assertHasNoFormErrors();
 
-    expect($tour->fresh()->location)->toBe('Florence')
-        ->and($tour->fresh()->status)->toBe('published')
-        ->and($tour->fresh()->sourceLocale())->toBe($locale)
-        ->and($tour->fresh()->published_at->equalTo($stamp))->toBeTrue()
+    // A governed presentation field is requestable, not administratively
+    // editable (design v3 §1/§4), so the write is refused whole.
+    Livewire::test(EditTour::class, ['record' => $tour->id])
+        ->set('data.location', 'Florence')
+        ->call('save')
+        ->assertHasErrors();
+
+    $fresh = $tour->fresh();
+
+    expect($fresh->price_amount)->toBe(6500)
+        ->and($fresh->location)->toBe('Rome')
+        ->and($fresh->status)->toBe('published')
+        ->and($fresh->sourceLocale())->toBe($locale)
+        ->and($fresh->published_at->equalTo($stamp))->toBeTrue()
         ->and(GovernanceAuditLog::where('action', 'tour.publish')->where('target_id', $tour->id)->count())->toBe(1);
 })->with(['en', 'es', 'it']);
 
-it('rejects a forced form publication without persisting source or metadata changes', function (string $locale) {
+it('rejects a forged form status and raw content payload without persisting anything', function (string $locale) {
     $tour = publicationInvariantTour($locale, 'draft');
 
     Livewire::test(EditTour::class, ['record' => $tour->id])
-        ->fillForm(function (array $state) {
-            $translations = $state['translations'];
-            foreach ($translations as $key => $translation) {
-                $translations[$key]['title'] = 'Must roll back';
-            }
-
-            return ['status' => 'published', 'location' => 'Must roll back', 'translations' => $translations];
-        })
+        ->set('data.translations', [
+            'egm003-forged-publish' => [
+                'locale' => $locale,
+                'title' => 'Must roll back',
+                'description' => 'Must roll back.',
+                'meeting_point' => null,
+                'cancellation_policy' => null,
+            ],
+        ])
+        ->fillForm(['status' => 'published', 'location' => 'Must roll back'])
         ->call('save');
 
     expect($tour->fresh()->status)->toBe('draft')
@@ -282,28 +295,33 @@ it('prevents a stale published edit form from republishing an unpublished tour',
         ->and(GovernanceAuditLog::where('action', 'tour.unpublish')->where('target_id', $tour->id)->count())->toBe(1);
 });
 
-it('preserves existing nonblank admin source edits without choosing a derivative policy', function (string $locale) {
+it('refuses an administrator source edit through the general form and keeps the approved content', function (string $locale) {
     $tour = publicationInvariantTour($locale);
     app(ApproveTourAction::class)->execute($this->admin, $tour);
 
+    // EGM-003 owner policy (ADR 0024): partners own and edit canonical content;
+    // administrators request changes or use the dedicated correction action.
+    // The former positive expectation that a nonblank admin source edit
+    // persists is deliberately strengthened here, never weakened.
     Livewire::test(EditTour::class, ['record' => $tour->id])
-        ->fillForm(function (array $state) use ($locale) {
-            $translations = $state['translations'];
-            foreach ($translations as $key => $translation) {
-                if ($translation['locale'] === $locale) {
-                    $translations[$key]['description'] = 'Existing permitted source edit.';
-                }
-            }
-
-            return ['translations' => $translations];
-        })
+        ->set('data.translations', [
+            'egm003-strengthened-source-edit' => [
+                'locale' => $locale,
+                'title' => 'Canonical title',
+                'description' => 'Forged administrator source edit.',
+                'meeting_point' => null,
+                'cancellation_policy' => null,
+            ],
+        ])
         ->call('save')
-        ->assertHasNoFormErrors();
+        ->assertHasErrors();
 
-    expect($tour->translations()->where('locale', $locale)->value('description'))->toBe('Existing permitted source edit.')
+    expect($tour->translations()->where('locale', $locale)->value('description'))->toBe('Canonical description.')
         ->and($tour->fresh()->sourceLocale())->toBe($locale)
         ->and($tour->fresh()->status)->toBe('published')
-        ->and(GovernanceAuditLog::where('action', 'tour.publish')->where('target_id', $tour->id)->count())->toBe(1);
+        ->and(GovernanceAuditLog::where('action', 'tour.publish')->where('target_id', $tour->id)->count())->toBe(1)
+        ->and(GovernanceAuditLog::where('action', 'tour.correction.proposed')->where('target_id', $tour->id)->count())->toBe(0,
+            'A general-form source write must never become an exceptional correction.');
 })->with(['en', 'es', 'it']);
 
 it('prevents terminal or published tours from returning to review through partner submission', function (string $status) {

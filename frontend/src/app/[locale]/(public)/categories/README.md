@@ -18,7 +18,7 @@ See the linked child contracts.
 
 ## Side Effects
 
-- Reads category data through `getCategories`, which requests a 300-second revalidation interval. [Fetch policy](../../../../lib/api/categories.ts#L9)
+- Reads category data through `getCategories` with `cache: 'no-store'` so each server request reaches the backend eligibility checks and guarded caches. [Fetch policy](../../../../lib/api/categories.ts#L9)
 
 ## Verification
 

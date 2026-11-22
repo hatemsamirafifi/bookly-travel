@@ -3,6 +3,7 @@
 namespace App\Domains\Booking\Resources;
 
 use App\Domains\Booking\Models\Booking;
+use App\Models\TourDeparture;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -38,10 +39,16 @@ class PartnerBookingResource extends JsonResource
             ],
             'booking_date' => $this->created_at->toDateString(),
             'tour_date' => $this->tour_date->toDateString(),
-            'tour_time' => $this->start_time?->format('H:i'),
+            'tour_time' => ($departure = $this->departure) instanceof TourDeparture
+                ? substr($departure->local_time, 0, 5)
+                : $this->start_time?->format('H:i'),
             'participants' => [[
-                'tier_id' => 'standard',
-                'tier_name' => 'Standard',
+                'tier_id' => is_array($this->pricing_snapshot) && isset($this->pricing_snapshot['tier_id'])
+                    ? $this->pricing_snapshot['tier_id']
+                    : ($this->pricing_tier_id ?? 'standard'),
+                'tier_name' => is_array($this->pricing_snapshot) && ! empty($this->pricing_snapshot['tier_name'])
+                    ? (string) $this->pricing_snapshot['tier_name']
+                    : 'Standard',
                 'count' => $this->participant_count,
                 'price_per_person' => $this->price_per_person / 100,
             ]],
@@ -52,6 +59,16 @@ class PartnerBookingResource extends JsonResource
             // the traveler when the booking was created (with the text's
             // actual locale), immune to later renames/retirement.
             'option' => $this->bookingOption(),
+            'tour_departure_id' => $this->tour_departure_id,
+            'departure' => ($departure = $this->departure) instanceof TourDeparture ? [
+                'id' => $departure->id,
+                'starts_at' => $departure->starts_at->toIso8601String(),
+                'timezone' => $departure->timezone,
+                'local_date' => $departure->local_date,
+                'local_time' => $departure->local_time,
+            ] : null,
+            'pricing_tier_id' => $this->pricing_tier_id,
+            'pricing_snapshot' => $this->pricing_snapshot,
             'special_requests' => null,
             'payment_status' => optional($this->payment)->status ?? 'pending',
             'cancellation_reason' => $this->cancellation_reason,

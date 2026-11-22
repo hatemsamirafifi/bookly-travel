@@ -20,10 +20,12 @@ jest.mock('@/lib/api/bookings', () => ({
 
 jest.mock('@/lib/api/tours', () => ({
   getTourDetail: jest.fn(),
+  getPublicTourDepartures: jest.fn().mockResolvedValue({ data: [] }),
 }));
 
 jest.mock('@/lib/api/my-bookings', () => ({
   cancelBooking: jest.fn(),
+  declinePendingBooking: jest.fn().mockResolvedValue({ data: { reference: 'BKO-TEST', status: 'expired' } }),
 }));
 
 const mockPush = jest.fn();
@@ -86,8 +88,20 @@ jest.mock('next-intl', () => ({
 // surface; only system boundaries (network API fns, auth context, router,
 // Stripe SDK) are mocked. The deterministic payment form stays REAL: its 401
 // preservation behavior is part of this flow.
-jest.mock('../PriceChangeModal', () => function PriceChangeModal() {
-  return null;
+jest.mock('../PriceChangeModal', () => function PriceChangeModal(props: {
+  oldPrice: string;
+  newPrice: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div role="dialog" aria-label="Price change">
+      <span>{props.oldPrice}</span>
+      <span>{props.newPrice}</span>
+      <button type="button" onClick={props.onConfirm}>Confirm at new price</button>
+      <button type="button" onClick={props.onCancel}>Cancel</button>
+    </div>
+  );
 });
 jest.mock('../StripePaymentForm', () => function StripePaymentForm() {
   return <div data-testid="stripe-form" />;
@@ -95,7 +109,8 @@ jest.mock('../StripePaymentForm', () => function StripePaymentForm() {
 jest.mock('@/lib/stripe/stripe-client', () => ({ getStripe: () => Promise.resolve(null) }));
 
 import { createBooking, confirmDeterministicPayment } from '@/lib/api/bookings';
-import { getTourDetail } from '@/lib/api/tours';
+import { getPublicTourDepartures, getTourDetail } from '@/lib/api/tours';
+import { cancelBooking, declinePendingBooking } from '@/lib/api/my-bookings';
 import { formatCurrency } from '@/lib/utils';
 
 const CLOCK = new Date('2026-10-14T00:00:00.000Z');
@@ -616,5 +631,184 @@ describe('BookingForm', () => {
       tour_slug: 'c-course-walk',
       participant_count: 1,
     });
+  });
+});
+
+describe('BookingForm Wave 3D departures and price drift decline', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockQuery = `tour=rome-food-walk&date=${FUTURE_DATE}&participants=2`;
+    mockUseAuth.mockReturnValue({
+      user: { id: 1, name: 'Traveler', email: 'traveler@example.com' },
+      token: 'tok',
+      isLoading: false,
+    });
+    jest.mocked(getTourDetail).mockResolvedValue(bookingTour());
+    jest.mocked(getPublicTourDepartures).mockResolvedValue({ data: [] });
+  });
+
+  it('renders explicit departure radios, selects chosen departure, and submits tour_departure_id + tiered page_load_price', async () => {
+    jest.mocked(getPublicTourDepartures).mockResolvedValue({
+      data: [
+        {
+          id: 501,
+          tour_id: 1,
+          tour_option_id: 10,
+          starts_at: `${FUTURE_DATE}T09:00:00+00:00`,
+          timezone: 'Europe/Rome',
+          local_date: FUTURE_DATE,
+          local_time: '09:00:00',
+          capacity: 6,
+          reserved_spots: 2,
+          available_spots: 4,
+          booking_cutoff_hours: 2,
+          is_bookable: true,
+          pricing: {
+            mode: 'tiered_per_person',
+            tier_id: 71,
+            tier_name: 'Couple',
+            min_participants: 2,
+            max_participants: 3,
+            unit_price_cents: 6500,
+            total_price_cents: 13000,
+            currency: 'EUR',
+          },
+        },
+        {
+          id: 502,
+          tour_id: 1,
+          tour_option_id: 10,
+          starts_at: `${FUTURE_DATE}T14:00:00+00:00`,
+          timezone: 'Europe/Rome',
+          local_date: FUTURE_DATE,
+          local_time: '14:00:00',
+          capacity: 6,
+          reserved_spots: 1,
+          available_spots: 5,
+          booking_cutoff_hours: 2,
+          is_bookable: true,
+          pricing: {
+            mode: 'tiered_per_person',
+            tier_id: 72,
+            tier_name: 'Afternoon',
+            min_participants: 2,
+            max_participants: 3,
+            unit_price_cents: 7000,
+            total_price_cents: 14000,
+            currency: 'EUR',
+          },
+        },
+      ],
+    });
+    jest.mocked(createBooking).mockResolvedValueOnce({
+      data: {
+        reference: 'BKO-DEP1',
+        tour: { slug: 'rome-food-walk', title: 'Hidden Gems of Rome Walking Tour', location: 'Rome, Italy', cover_image_url: '' },
+        tour_date: FUTURE_DATE,
+        participant_count: 2,
+        total_price: { amount: 14000, currency: 'EUR', formatted: '€140.00' },
+        status: 'confirmed',
+        cancellation_policy: 'Free cancellation',
+        cancellation_window_hours: 24,
+        can_cancel: true,
+        created_at: new Date().toISOString(),
+      },
+      price_changed: false,
+    });
+
+    renderForm();
+
+    expect(await screen.findByText(/09:00 \(Europe\/Rome\)/)).toBeInTheDocument();
+    expect(screen.getByText(/14:00 \(Europe\/Rome\)/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('departure-radio-502'));
+    expect(screen.getByText('€70.00 / person')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm & Pay' }));
+    await waitFor(() => expect(createBooking).toHaveBeenCalledTimes(1));
+
+    expect(jest.mocked(createBooking).mock.calls[0][0]).toMatchObject({
+      tour_slug: 'rome-food-walk',
+      tour_date: FUTURE_DATE,
+      participant_count: 2,
+      page_load_price: 7000,
+      tour_departure_id: 502,
+    });
+  });
+
+  it('blocks submission when returned departures are sold out or cutoff-closed', async () => {
+    jest.mocked(getPublicTourDepartures).mockResolvedValue({
+      data: [
+        {
+          id: 601,
+          tour_id: 1,
+          tour_option_id: 10,
+          starts_at: `${FUTURE_DATE}T09:00:00+00:00`,
+          timezone: 'Europe/Rome',
+          local_date: FUTURE_DATE,
+          local_time: '09:00:00',
+          capacity: 2,
+          reserved_spots: 2,
+          available_spots: 0,
+          booking_cutoff_hours: 2,
+          is_bookable: false,
+          pricing: {
+            mode: 'base_price',
+            tier_id: null,
+            tier_name: null,
+            min_participants: 1,
+            max_participants: null,
+            unit_price_cents: 8900,
+            total_price_cents: 17800,
+            currency: 'EUR',
+          },
+        },
+      ],
+    });
+
+    renderForm();
+
+    expect(await screen.findByText('No bookable departures remain for the selected party size.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm & Pay' })).toBeDisabled();
+    expect(createBooking).not.toHaveBeenCalled();
+  });
+
+  it('calls declinePendingBooking (not cancelBooking) when declining a pending price-drift modal', async () => {
+    jest.mocked(createBooking).mockResolvedValueOnce({
+      data: {
+        reference: 'BKO-DRIFT',
+        tour: { slug: 'rome-food-walk', title: 'Hidden Gems of Rome Walking Tour', location: 'Rome, Italy', cover_image_url: '' },
+        tour_date: FUTURE_DATE,
+        participant_count: 2,
+        pricing: {
+          price_per_person: { amount: 9500, currency: 'EUR', formatted: '€95.00' },
+          total: { amount: 19000, currency: 'EUR', formatted: '€190.00' },
+        },
+        total_price: { amount: 19000, currency: 'EUR', formatted: '€190.00' },
+        status: 'pending_payment',
+        cancellation_policy: 'Free cancellation',
+        cancellation_window_hours: 24,
+        can_cancel: false,
+        created_at: new Date().toISOString(),
+      },
+      price_changed: true,
+      payment: {
+        client_secret: 'pi_drift_secret',
+        stripe_publishable_key: null,
+        gateway: 'deterministic',
+      },
+    });
+
+    renderForm();
+    fireEvent.click(await screen.findByRole('button', { name: 'Confirm & Pay' }));
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    const dialogButtons = screen.getAllByRole('button');
+    const declineBtn = dialogButtons.find((btn) => /cancel|decline/i.test(btn.textContent || ''));
+    expect(declineBtn).toBeDefined();
+    fireEvent.click(declineBtn!);
+
+    await waitFor(() => expect(declinePendingBooking).toHaveBeenCalledWith('BKO-DRIFT'));
+    expect(cancelBooking).not.toHaveBeenCalled();
   });
 });

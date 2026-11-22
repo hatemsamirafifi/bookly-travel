@@ -3,6 +3,7 @@
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Partner\Models\TourMedia;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Reviews\Events\ReviewSubmitted;
@@ -10,6 +11,7 @@ use App\Domains\Reviews\Listeners\UpdateTourAggregateRating;
 use App\Domains\Reviews\Models\Review;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourOption;
 use App\Models\TourTranslation;
 use App\Models\TourTranslationState;
 use App\Models\User;
@@ -221,7 +223,7 @@ it('returns only approved public operator fields and visible-review aggregates',
     expect(json_encode($operator))->not->toContain('private@example.com', 'SECRET-TAX', 'IT60');
 });
 
-it('omits operator identity when its partner is not approved', function () {
+it('denies the whole public tour when its partner is not approved', function () {
     $partner = makePartner('pending');
     $partner->profile()->create(['company_name' => 'Unapproved Operator', 'contact_email' => 'private@example.com']);
     $tour = Tour::create([
@@ -239,8 +241,9 @@ it('omits operator identity when its partner is not approved', function () {
     ]);
     TourTranslation::create(['tour_id' => $tour->id, 'locale' => 'en', 'title' => 'Tour', 'description' => 'A guided visit.']);
 
-    getJson('/api/public/tours/unapproved-operator-tour?locale=en')->assertOk()
-        ->assertJsonPath('data.operator', null)
+    getJson('/api/public/tours/unapproved-operator-tour?locale=en')->assertNotFound()
+        ->assertJsonMissingPath('data')
+        ->assertDontSee('A guided visit.')
         ->assertDontSee('Unapproved Operator')
         ->assertDontSee('private@example.com');
 });
@@ -1335,7 +1338,7 @@ it('surfaces an HTTP-authored specific English alt with an English locale mark o
     $partner = Partner::create([
         'user_id' => $partnerUser->id,
         'role' => 'partner',
-        'onboarding_status' => 'complete',
+        'onboarding_status' => 'approved',
         'is_active' => true,
     ]);
     $token = $partnerUser->createToken('test', ['partner'])->plainTextToken;
@@ -1472,3 +1475,101 @@ it('projects genuine primary review facts even when cached legacy aggregates are
     expect($tour->fresh()->averageRating())->toBe(5.0);
     expect($tour->fresh()->reviewCount())->toBe(50);
 })->group('spec019-us6');
+
+it('exposes per_person tiered_pricing on public tour detail and options while keeping legacy null', function () {
+    $tour = Tour::create([
+        'category_id' => $this->category->id,
+        'partner_id' => makePartner()->id,
+        'price_amount' => 6000,
+        'slug' => 'tiered-detail-tour',
+        'location' => 'Rome, Italy',
+        'location_slug' => 'rome',
+        'duration_minutes' => 180,
+        'duration_label' => '3 hours',
+        'group_size_min' => 1,
+        'group_size_max' => 8,
+        'status' => 'published',
+    ]);
+    TourTranslation::create([
+        'tour_id' => $tour->id,
+        'locale' => 'en',
+        'title' => 'Tiered Detail Tour',
+        'description' => 'Tour with tiered pricing schedule.',
+    ]);
+    AvailabilityRule::create([
+        'tour_id' => $tour->id,
+        'rule_type' => 'specific_date',
+        'start_date' => now()->addWeek()->toDateString(),
+        'capacity' => 8,
+    ]);
+
+    // Legacy / no-tiers tour returns tiered_pricing: null
+    getJson('/api/public/tours/tiered-detail-tour?locale=en')
+        ->assertOk()
+        ->assertJsonPath('data.pricing.tiered_pricing', null);
+
+    // Add tour-level tier + option-level tiers on optA, while optB inherits tour-level fallback
+    PricingTier::create([
+        'tour_id' => $tour->id,
+        'tour_option_id' => null,
+        'name' => 'Tour Fallback',
+        'min_participants' => 1,
+        'max_participants' => 8,
+        'price_amount' => 5800,
+        'price' => '58.00',
+        'currency' => 'EUR',
+    ]);
+
+    $optA = TourOption::create([
+        'tour_id' => $tour->id,
+        'title' => 'Private Tiered Option',
+        'price_amount' => 7000,
+        'group_size_max' => 8,
+        'status' => 'active',
+    ]);
+    $optB = TourOption::create([
+        'tour_id' => $tour->id,
+        'title' => 'Standard Inherited Option',
+        'price_amount' => 6000,
+        'group_size_max' => 8,
+        'status' => 'active',
+    ]);
+
+    PricingTier::create([
+        'tour_id' => $tour->id,
+        'tour_option_id' => $optA->id,
+        'name' => 'Group 3+',
+        'min_participants' => 3,
+        'max_participants' => 8,
+        'price_amount' => 5200,
+        'price' => '52.00',
+        'currency' => 'EUR',
+        'sort_order' => 2,
+    ]);
+    PricingTier::create([
+        'tour_id' => $tour->id,
+        'tour_option_id' => $optA->id,
+        'name' => 'Solo/Duo',
+        'min_participants' => 1,
+        'max_participants' => 2,
+        'price_amount' => 7000,
+        'price' => '70.00',
+        'currency' => 'EUR',
+        'sort_order' => 1,
+    ]);
+
+    $response = getJson('/api/public/tours/tiered-detail-tour?locale=en')->assertOk();
+    $response->assertJsonPath('data.pricing.tiered_pricing.mode', 'per_person')
+        ->assertJsonPath('data.pricing.tiered_pricing.tiers.0.price_amount', 5800);
+
+    $options = collect($response->json('data.options'));
+    $resOptA = $options->firstWhere('id', $optA->id);
+    $resOptB = $options->firstWhere('id', $optB->id);
+
+    expect($resOptA['pricing']['tiered_pricing']['mode'])->toBe('per_person')
+        ->and($resOptA['pricing']['tiered_pricing']['tiers'][0]['min_participants'])->toBe(1)
+        ->and($resOptA['pricing']['tiered_pricing']['tiers'][0]['price_amount'])->toBe(7000)
+        ->and($resOptA['pricing']['tiered_pricing']['tiers'][1]['min_participants'])->toBe(3)
+        ->and($resOptA['pricing']['tiered_pricing']['tiers'][1]['price_amount'])->toBe(5200)
+        ->and($resOptB['pricing']['tiered_pricing'])->toBeNull();
+});

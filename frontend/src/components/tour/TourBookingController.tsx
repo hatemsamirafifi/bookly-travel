@@ -281,7 +281,7 @@ export default function TourBookingController({
   // disagree at the safe-integer extremes) and never formatted from
   // invalid data.
   const effectivePricing = view.selectedOption ? view.selectedOption.pricing : pricing;
-  const baseDisplay = formatOptionPriceDisplay(effectivePricing, locale);
+  const baseDisplay = view.unitPriceDisplay ?? formatOptionPriceDisplay(effectivePricing, locale);
 
   // Continue-click recheck: the click itself refreshes the UTC day against
   // the injected clock. A selection that went stale blocks navigation with
@@ -342,6 +342,7 @@ export default function TourBookingController({
           auth={auth}
           cancellationPolicy={cancellationPolicy}
           cancellationPolicyLocale={cancellationPolicyLocale}
+          tieredPricing={effectivePricing.tiered_pricing}
         />
       </div>
       <MobileBookingBar
@@ -361,6 +362,7 @@ export default function TourBookingController({
         onContinueClick={guardContinueClick}
         auth={auth}
         controlsDisabled={controlsDisabled}
+        tieredPricing={effectivePricing.tiered_pricing}
       />
     </>
   );

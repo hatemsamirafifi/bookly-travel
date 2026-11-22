@@ -50,6 +50,7 @@ class StoreTourRequest extends FormRequest
 
         return array_merge(
             [
+                'creation_id' => 'sometimes|nullable|uuid',
                 'category' => 'required|string|max:50',
                 'destination' => 'required|string|max:255',
                 'duration_value' => 'required|integer|min:1',

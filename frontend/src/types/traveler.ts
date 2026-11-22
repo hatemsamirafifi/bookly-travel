@@ -29,6 +29,25 @@ export interface BookingOptionRecord {
   content_locale?: 'en' | 'es' | 'it' | null;
 }
 
+export interface BookingDepartureSnapshot {
+  id: number;
+  starts_at: string;
+  timezone: string;
+  local_date: string;
+  local_time: string;
+}
+
+export interface BookingPricingSnapshot {
+  mode?: string;
+  tier_id?: number | null;
+  tier_name?: string | null;
+  min_participants?: number;
+  max_participants?: number | null;
+  unit_price_cents?: number;
+  total_price_cents?: number;
+  currency?: string;
+}
+
 export interface TravelerBooking {
   id: string | number;
   reference: string;
@@ -54,6 +73,10 @@ export interface TravelerBooking {
   can_cancel?: boolean;
   /** Booked option snapshot (additive); absent for option-less tours. */
   option?: BookingOptionRecord | null;
+  /** Booked departure details (additive). */
+  departure?: BookingDepartureSnapshot | null;
+  /** Applied pricing snapshot (additive). */
+  pricing_snapshot?: BookingPricingSnapshot | null;
   payment?: {
     status: string;
     amount: number | MoneyValue;

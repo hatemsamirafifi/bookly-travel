@@ -17,7 +17,7 @@ Filtered and paginated tour listing for one destination.
 
 ## Side Effects
 
-- Reads destination tours with the 300-second revalidation requested by the API helper. [Fetch policy](../../../../../lib/api/destinations.ts#L17)
+- Reads destination tours with `cache: 'no-store'` so each server request reaches the backend eligibility checks and guarded caches. [Fetch policy](../../../../../lib/api/destinations.ts#L17)
 
 ## Verification
 

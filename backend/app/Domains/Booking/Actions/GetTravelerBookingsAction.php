@@ -10,7 +10,7 @@ class GetTravelerBookingsAction
 {
     public function execute(int $travelerId, int $page = 1, ?string $status = null): array
     {
-        $query = Booking::with('tour.translations')
+        $query = Booking::with(['tour.translations', 'departure'])
             ->where('traveler_id', $travelerId)
             ->orderBy('tour_date', 'desc');
 

@@ -1121,13 +1121,12 @@ test.describe('Partner Tour Edit - Real API (Spec 019 US4)', () => {
 
   test('preserves legacy null difficulty through unrelated UI and guide-code saves', async ({ page }) => {
     await page.goto('/en/partner/tours');
-    const published = await page.request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
-    expect(published.status()).toBe(200);
-    const publicBody: unknown = await published.json();
-    if (typeof publicBody !== 'object' || publicBody === null || !('data' in publicBody)
-      || typeof publicBody.data !== 'object' || publicBody.data === null || !('id' in publicBody.data)
-      || typeof publicBody.data.id !== 'number') throw new Error('Missing seeded legacy tour identity');
-    const tourId = publicBody.data.id;
+    const draftList = await apiGet(page, '/api/partner/tours?status=draft&per_page=100');
+    expect(draftList.status).toBe(200);
+    const draftRows = (draftList.json as { data?: Array<{ id: number; slug: string }> }).data ?? [];
+    const legacyDraft = draftRows.find((row) => row.slug === 'ancient-rome-night-tour');
+    if (!legacyDraft) throw new Error('Missing seeded legacy draft tour ancient-rome-night-tour');
+    const tourId = legacyDraft.id;
     const before = await apiGet(page, `/api/partner/tours/${tourId}`);
     expect(before.status).toBe(200);
     expect(ownedDifficulty(before.json)).toBeNull();

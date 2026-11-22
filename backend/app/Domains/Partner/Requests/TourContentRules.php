@@ -2,6 +2,8 @@
 
 namespace App\Domains\Partner\Requests;
 
+use Illuminate\Validation\ValidationException;
+
 /**
  * Reusable source-language input boundary for partner tour content (Spec 019
  * T008, extended for a configurable authored source locale).
@@ -31,6 +33,12 @@ class TourContentRules
     ];
 
     /**
+     * Bounded field-reference budget shared by every governed request/correction
+     * contract (design v3 §5): at most 30 resolvable references per request.
+     */
+    public const MAX_FIELD_REFS = 30;
+
+    /**
      * Platform-owned revision/readiness keys partners must never author,
      * at top level or nested inside any translations entry.
      */
@@ -41,6 +49,21 @@ class TourContentRules
         'translation_statuses',
         'readiness',
         'last_error_code',
+        // EGM-003 revision-governance state (design v3 §4/§6). Observed base,
+        // payload-hash and epoch tokens are accepted only by their dedicated
+        // revision/response contracts; a normal content write never assigns the
+        // stored counters.
+        'published_revision_id',
+        'base_revision_id',
+        'revision_id',
+        'revision_number',
+        'generation_epoch',
+        'content_version',
+        'payload_hash',
+        'observed_payload_hash',
+        'requested_content_hash',
+        'response_generation_epoch',
+        'decision_reason',
     ];
 
     /**
@@ -329,6 +352,73 @@ class TourContentRules
         }
 
         return $paths;
+    }
+
+    /**
+     * Normalize authored field references.
+     *
+     * Field references accept either the canonical object shape
+     * `{"path":"source.title","note":"optional"}` or a plain path string.
+     * Textarea input carries one path per line and becomes an object list. At
+     * most 30 references are accepted here; resolvability against the captured
+     * content is enforced in the payload service. Notes are bounded at 500
+     * characters.
+     *
+     * @return list<array{path: string, note?: string}>
+     */
+    public static function normalizeItineraryFieldReferences(mixed $value): array
+    {
+        $isTextarea = is_string($value);
+        if (is_string($value)) {
+            $value = preg_split('/\r\n|\r|\n/', trim($value)) ?: [];
+        }
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        if (! array_is_list($value) || count($value) > self::MAX_FIELD_REFS) {
+            throw ValidationException::withMessages([
+                'field_refs' => 'Field references must be a list of at most ' . self::MAX_FIELD_REFS . ' entries.',
+            ]);
+        }
+
+        $normalized = [];
+
+        foreach ($value as $index => $entry) {
+            if (is_string($entry)) {
+                if ($isTextarea && trim($entry) === '') {
+                    continue;
+                }
+                $entry = ['path' => trim($entry)];
+            }
+
+            if (! is_array($entry) || array_diff_key($entry, ['path' => true, 'note' => true]) !== []) {
+                throw ValidationException::withMessages([
+                    "field_refs.{$index}" => 'A field reference allows only path and optional note.',
+                ]);
+            }
+
+            $path = is_string($entry['path'] ?? null) ? trim((string) $entry['path']) : null;
+
+            if ($path === null || $path === '' || mb_strlen($path) > 200) {
+                throw ValidationException::withMessages([
+                    "field_refs.{$index}.path" => 'A nonempty field path of at most 200 characters is required.',
+                ]);
+            }
+
+            $rawNote = $entry['note'] ?? null;
+            if ($rawNote !== null && (! is_string($rawNote) || mb_strlen($rawNote) > 500)) {
+                throw ValidationException::withMessages([
+                    "field_refs.{$index}.note" => 'The note must be a string of at most 500 characters.',
+                ]);
+            }
+            $note = is_string($rawNote) ? trim($rawNote) : null;
+
+            $normalized[] = ['path' => $path] + ($note !== null && $note !== '' ? ['note' => $note] : []);
+        }
+
+        return $normalized;
     }
 
     /**
