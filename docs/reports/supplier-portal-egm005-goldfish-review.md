@@ -83,4 +83,18 @@ All five Wave 2 release exit criteria in Section 5 of the previous report are no
 2. **Partner Departure HTTP API:** Complete (`routes/api/partner.php:93-97`, `Partner/TourDepartureController.php`, daily `MaintainDepartureHorizonJob`).
 3. **Database Unique Constraints & Atomic Locking:** Complete (`2026_11_21_000001_harden_egm005_database_invariants.php`, UP/DOWN/UP rehearsal, `TourFirstSaveConcurrencyTest` 2-worker PGSQL pass).
 4. **Voucher PDF & `/v/{reference}` Consistency:** Complete (`VoucherService`, `booking.blade.php`, `PartnerBookingResource`, `VoucherFreshnessTest` `8/8`, `VerificationTest` `7/7`, `voucher-verification.spec.ts` `16/16`).
-5. **Accessibility, Focus/Localization & Regression Matrix:** Complete (`1,511` EN/ES/IT keys `0` diff, Jest `92/92`, `partner-a11y` `23/23` with `0` Axe violations, Pest `1,712/1,712`).
+5. **Accessibility, Focus/Localization & Regression Matrix:** Complete (`1,511` EN/ES/IT keys `0` diff, Jest `92/92`, `partner-a11y` `23/23` with `0` Axe violations, Pest `1,712/1,712` in Phase 3 + `21/21` in Phase 4 `PaymentSecurityHardeningTest` = `1,733/1,733` total).
+
+---
+
+## 5. Phase 4 Delivery Gate Addendum — Payment/CI Hardening, Migration Rehearsal & Production NO-GO Gate (2026-11-23)
+
+- **Payment & CI Security Hardening (`PaymentSecurityHardeningTest` `21/21`):**
+  - Verified `PaymentConfigurationGuard` fail-closed enforcement for `staging`/`production` without secret leakage in exception messages.
+  - Verified `SendAdminSlackAlertJob` after-commit queueing and `redactWebhookUrls()` scrubbing across all Slack alert listeners/handlers.
+  - Verified Stripe `Idempotency-Key` request options, Connect `reverse_transfer` & `refund_application_fee` refund parameters, orphaned PaymentIntent cancellation, 3-phase refund coordination outside DB transactions, expired-hold late-webhook protection, and after-commit notifications.
+  - Verified `backend/scripts/rehearse-migrations.php` full-batch disposable PostgreSQL migration rehearsal (`UP #1 -> full-batch migrate:rollback --force -> UP #2` preserving seeded pre-EGM-005 records) and `.github/workflows/{tests,lighthouse}.yml` remediation.
+- **Delivery & Release Boundary (`Production: NO-GO`):**
+  - Local verification is **complete (`GO` for branch push and Draft PR opening targeting `main`)**.
+  - Remote GitHub Actions CI must be confirmed on GitHub after pushing `codex/supplier-portal-hardening`, and all eight **Staging `S1–S8` acceptance gates** (documented in `docs/reports/supplier-portal-egm005-verification.md` Section 7.2, including live Stripe test-mode Elements, signed webhooks, Connect refunds, scheduler/queue workers, and `/v/{reference}` QR verification) must pass in staging before production approval.
+  - **Explicit Production Verdict:** **`NO-GO`** (production deployment and database migration execution remain strictly prohibited until GitHub Actions CI and Staging `S1–S8` are completed and signed off).

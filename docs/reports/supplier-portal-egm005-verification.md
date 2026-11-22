@@ -159,6 +159,43 @@ When `tour-detail.spec.ts` executed in Wave 3D (`wave3d_verify.log:1770-1839`), 
 
 ## 6. Git Working Tree Summary
 
-- **HEAD:** `324cb71cd6b46e36be27af799c7123d820a55f63` (`docs: define reviewed EGM-003 revision governance`)
-- **Working tree state:** `220` status entries (`149` tracked modified/added, `71` untracked, `0` commits, `0` resets, `0` pushes). Historical migrations `2026_11_17_000001..000003` have `git diff` length `0`.
-- **Report files updated:** `docs/reports/supplier-portal-egm005-verification.md` and `docs/reports/supplier-portal-egm005-goldfish-review.md` *(both pre-existing untracked files under `docs/reports/`)*.
+- **Baseline HEAD (Pre-Delivery Commit):** `324cb71cd6b46e36be27af799c7123d820a55f63` (`docs: define reviewed EGM-003 revision governance`)
+- **Pre-Commit Working Tree State:** `253` porcelain entries (`178` tracked modified, `75` untracked entries / `283` physical files under `git status -uall`). Historical migrations `2026_11_17_000001..000003` have `git diff` length `0`.
+- **Delivery Commit Scope:** `250` approved project files committed; `33` physical files (`6` porcelain entries: `.agents/skills/aeo/**` [1 file], `.agents/skills/ui-ux-pro-max/**` [28 files], and `4` test-environment-regenerated PNGs under `specs/020-tour-detail-experience/evidence/us1/visual/`) intentionally excluded and preserved intact on disk.
+
+---
+
+## 7. Phase 4 — Payment & CI Security Hardening, Full-Batch Migration Rehearsal & Staging S1–S8 Gates (2026-11-23)
+
+### 7.1 Payment Security Hardening & CI Remediation Verification
+- **Fail-Closed Payment Configuration (`PaymentConfigurationGuard`):** Enforced at application boot (`AppServiceProvider`), gateway resolution, `StripeService::client()`, and `ProcessStripeWebhookAction::execute()` for `staging` and `production` without echoing secret values in exceptions; `DeterministicPaymentGateway` and `POST /api/public/bookings/{reference}/deterministic-payment/confirm` remain strictly restricted to `['local', 'testing']`.
+- **Stripe Idempotency, Connect Refunds & After-Commit Notifications:**
+  - `StripeService::createPaymentIntent()` and `createRefund()` pass `idempotency_key` strictly via Stripe request options (`Idempotency-Key` header) and attach booking/tour/partner metadata on both Connect and non-Connect PaymentIntents.
+  - `CreatePaymentIntentAction` cancels orphaned remote PaymentIntents if local database persistence fails.
+  - `ProcessRefundAction` executes a 3-phase flow (lock & record pending refund -> call Stripe outside DB transaction with `reverse_transfer` and `refund_application_fee` on Connect bookings -> finalize status & dispatch `RefundCompleted` inside `DB::afterCommit()`).
+  - `HandleRefunded` reconciles pending/failed refund rows without double-decrementing capacity; `ConfirmBookingOnPayment` fences expired holds on late webhooks; `CancelBookingAction` queues traveler/partner cancellation emails inside `DB::afterCommit()`.
+- **Slack Webhook Secret Scrubbing (`SendAdminSlackAlertJob`):** All admin Slack alerts (`NotifyAdminOnPaymentFailure`, `NotifyAdminOnEmailDeliveryFailure`, `HandleDisputeCreated`, `ProcessRefundAction`) dispatch `SendAdminSlackAlertJob` after commit, reading the webhook URL from runtime config (never serialized in queue payloads) and redacting `hooks.slack.com` URLs from exception logs via `redactWebhookUrls()`.
+- **Full-Batch Disposable PostgreSQL Migration Rehearsal (`backend/scripts/rehearse-migrations.php`):** Rehearses all four EGM-005 migrations (`2026_11_17_000001..000003` and `2026_11_21_000001`) against representative seeded pre-EGM-005 records on disposable `bookly_test*` PostgreSQL (`UP #1 -> full-batch migrate:rollback --force [no --step=1] -> UP #2`), verifying zero historical data loss and all PostgreSQL constraints/indexes.
+- **GitHub Actions CI Workflow Remediation (`.github/workflows/tests.yml`, `.github/workflows/lighthouse.yml`):**
+  - Upgraded checkout steps to `actions/checkout@v6`.
+  - Separated blocking `PHP 8.3 (Baseline)` (`backend-tests`) from non-masking `PHP 8.4 / 8.5 (Compatibility)` (`backend-tests-compat`, `continue-on-error: true`).
+  - Added blocking `backend-migration-rehearsal` job running `php scripts/rehearse-migrations.php` on PostgreSQL 15.
+  - Added `frontend-e2e-result` gate verifying all Playwright shards succeed.
+- **Post-Hardening Backend Verification Counts:**
+  - `PaymentSecurityHardeningTest`: **`21 passed (141 assertions)`**
+  - Full Backend Pest PGSQL Suite (`phpunit.pgsql.xml`): **`1,733 passed (9,532 assertions)`**, `0` failed, `0` skipped
+  - `php scripts/rehearse-migrations.php`: **`[rehearse-migrations] PASS`** (`UP #1 -> full-batch DOWN -> UP #2`)
+
+### 7.2 Mandatory Staging S1–S8 Acceptance Gates & Production Verdict
+Remote GitHub Actions CI and the Staging `S1–S8` acceptance gates below **must be executed and verified** before any production deployment. **Production Release Verdict: `NO-GO`** (blocked until GitHub Actions CI passes on the Draft PR and Staging S1–S8 pass in a live staging environment):
+
+| Gate | Staging Acceptance Requirement | Status |
+|---|---|---|
+| **S1** | Deploy branch to Staging with `APP_ENV=staging` and `PAYMENT_GATEWAY=stripe`; verify `PaymentConfigurationGuard` passes boot with valid Stripe test-mode keys (`pk_test_*`, `sk_test_*`, `whsec_*`) and that `POST /api/public/bookings/{reference}/deterministic-payment/confirm` returns HTTP `404`. | **Pending Staging** |
+| **S2** | Run PostgreSQL migrations (`2026_11_14_000001`, `2026_11_17_000001..000003`, `2026_11_21_000001`) against a staging database snapshot after pre-flight duplicate/capacity queries (`0` anomalies), reload PHP-FPM OPcache, and verify schema constraints/indexes. | **Pending Staging** |
+| **S3** | Verify Laravel scheduler (`01:30` daily `MaintainDepartureHorizonJob` with `withoutOverlapping()`) and queue workers (`after_commit` mail, translation, Scout reconciliation, and `SendAdminSlackAlertJob`) in staging. | **Pending Staging** |
+| **S4** | Execute end-to-end supplier wizard draft recovery (`D1`), multi-tab `409 STALE_DRAFT_CONFLICT` resolution, and `Client-Creation-Id` first-save idempotency (`D2`) on staging over HTTPS. | **Pending Staging** |
+| **S5** | Execute supplier departure generation/CRUD (`D3`), independent capacity enforcement (`D4`), and contiguous `per_person` tiered pricing configuration (`D5`) on staging, confirming public `/departures` and tour detail caching across EN/ES/IT. | **Pending Staging** |
+| **S6** | Execute real Stripe test-mode checkout (`Stripe Elements` + `PaymentIntent` creation with `Idempotency-Key` header + signed `payment_intent.succeeded` webhook delivery) on a tiered-priced departure, confirming booking transition to `confirmed` and immutable `pricing_snapshot`. | **Pending Staging** |
+| **S7** | Execute staging cancellation and Stripe test-mode refund (`ProcessRefundAction` + signed `charge.refunded` webhook reconciliation, including Connect `reverse_transfer` / `refund_application_fee`), confirming departure capacity restoration and Slack alert redaction. | **Pending Staging** |
+| **S8** | Verify PDF voucher generation (`%PDF-`) and QR resolution against `SERVICES_VOUCHER_PUBLIC_BASE_URL` (`/v/{reference}` and `/api/public/v/{reference}`) on staging, confirming departure datetime/timezone, option, rate tier, `Cache-Control: no-store`, and zero PII leakage, plus EGM-003 (`D6`) published-tour content revision isolation. | **Pending Staging** |
