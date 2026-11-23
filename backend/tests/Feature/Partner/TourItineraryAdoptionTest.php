@@ -467,8 +467,8 @@ it('adoption inside a holding transaction composes with a blocked source edit: a
         $procs[] = $proc;
         $files = array_values($paths);
 
-        Spec019TranslationProcess::waitForFile($paths['arrival'], 60.0, 'source-writer arrival', $paths['err']);
-        Spec019TranslationProcess::waitForFile($paths['release'], 60.0, 'source-writer attempting', $paths['err']);
+        Spec019TranslationProcess::waitForFile($paths['arrival'], 120.0, 'source-writer arrival', $paths['err'], $proc);
+        Spec019TranslationProcess::waitForFile($paths['release'], 120.0, 'source-writer attempting', $paths['err'], $proc);
         expect($proc->isAlive())->toBeTrue();
         expect($proc->pid())->not->toBeNull();
         expect($proc->pid())->not->toBe(getmypid());
@@ -486,8 +486,8 @@ it('adoption inside a holding transaction composes with a blocked source edit: a
         DB::commit();
         $holdingOpen = false;
 
-        Spec019TranslationProcess::waitForFile($paths['done'], 60.0, 'source-writer done', $paths['err']);
-        expect($proc->waitExit(30.0))->toBe(0);
+        Spec019TranslationProcess::waitForFile($paths['done'], 120.0, 'source-writer done', $paths['err'], $proc);
+        expect($proc->waitExit(60.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($paths['done'])), 'ok'))->toBeTrue();
 
         // Populated source wins: the concurrent title patch stands, the
@@ -594,8 +594,8 @@ it('a waiting adoption preserves an already populated itinerary: populated sourc
         $procs[] = $proc;
         $files = array_values($paths);
 
-        Spec019TranslationProcess::waitForFile($paths['arrival'], 60.0, 'adoption-worker arrival', $paths['err']);
-        Spec019TranslationProcess::waitForFile($paths['release'], 60.0, 'adoption-worker attempting', $paths['err']);
+        Spec019TranslationProcess::waitForFile($paths['arrival'], 120.0, 'adoption-worker arrival', $paths['err'], $proc);
+        Spec019TranslationProcess::waitForFile($paths['release'], 120.0, 'adoption-worker attempting', $paths['err'], $proc);
         expect($proc->isAlive())->toBeTrue();
         // A real child PHP process: concrete pid, never the parent pid.
         expect($proc->pid())->not->toBeNull();
@@ -621,8 +621,8 @@ it('a waiting adoption preserves an already populated itinerary: populated sourc
         DB::commit();
         $holdingOpen = false;
 
-        Spec019TranslationProcess::waitForFile($paths['done'], 60.0, 'adoption-worker done', $paths['err']);
-        expect($proc->waitExit(30.0))->toBe(0);
+        Spec019TranslationProcess::waitForFile($paths['done'], 120.0, 'adoption-worker done', $paths['err'], $proc);
+        expect($proc->waitExit(60.0))->toBe(0);
         expect(str_starts_with(trim((string) file_get_contents($paths['done'])), 'ok'))->toBeTrue();
 
         // Populated source wins: the exact new itinerary stands (no stale

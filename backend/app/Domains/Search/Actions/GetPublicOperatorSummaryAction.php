@@ -10,7 +10,7 @@ class GetPublicOperatorSummaryAction
     public function execute(Tour $tour): ?array
     {
         $partner = $tour->partnerRecord;
-        if (! $partner || ! $partner->is_active || $partner->onboarding_status !== 'approved') {
+        if (! $partner || ! $partner->isPubliclyEligible()) {
             return null;
         }
 
@@ -29,7 +29,14 @@ class GetPublicOperatorSummaryAction
             ->where('partner_id', $partner->id)
             ->with(['availabilityRules', 'availabilityExceptions', 'options'])
             ->get()
-            ->filter(fn (Tour $candidate) => $candidate->isPubliclyBookable())
+            ->filter(function (Tour $candidate) use ($partner): bool {
+                // The SQL scope already checks fresh owner eligibility. Every
+                // candidate belongs to this known owner; reuse its loaded facts
+                // instead of querying that same partner again for every tour.
+                $candidate->setRelation('partnerRecord', $partner);
+
+                return $candidate->isPubliclyBookable();
+            })
             ->map(fn (Tour $candidate) => $candidate->id)
             ->values();
 

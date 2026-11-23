@@ -74,7 +74,7 @@ class AvailabilityController extends Controller
         $tour = $this->getTour($request, (int) $tourId);
 
         $rule = AvailabilityRule::where('tour_id', $tour->id)
-            ->where('id', $ruleId)
+            ->where('id', (int) $ruleId)
             ->firstOrFail();
 
         $validated = $request->validate([
@@ -104,7 +104,7 @@ class AvailabilityController extends Controller
         $tour = $this->getTour($request, (int) $tourId);
 
         $rule = AvailabilityRule::where('tour_id', $tour->id)
-            ->where('id', $ruleId)
+            ->where('id', (int) $ruleId)
             ->firstOrFail();
 
         // Check if there are active bookings for this rule in the future?
@@ -155,7 +155,7 @@ class AvailabilityController extends Controller
         $tour = $this->getTour($request, (int) $tourId);
 
         $exception = AvailabilityException::where('tour_id', $tour->id)
-            ->where('id', $exceptionId)
+            ->where('id', (int) $exceptionId)
             ->firstOrFail();
 
         $validated = $request->validate([
@@ -184,7 +184,7 @@ class AvailabilityController extends Controller
         $tour = $this->getTour($request, (int) $tourId);
 
         $exception = AvailabilityException::where('tour_id', $tour->id)
-            ->where('id', $exceptionId)
+            ->where('id', (int) $exceptionId)
             ->firstOrFail();
 
         $exception->delete();

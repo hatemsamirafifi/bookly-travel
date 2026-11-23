@@ -2,6 +2,7 @@
 
 namespace App\Domains\Payment\Actions\WebhookHandlers;
 
+use App\Domains\Booking\Models\Booking;
 use App\Domains\Payment\Events\PaymentRefunded;
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Models\StripeWebhookEvent;
@@ -20,10 +21,6 @@ class HandleRefunded
         $charge = data_get($event, 'data.object');
         $intentId = $charge->payment_intent;
 
-        $refundPayment = Payment::where('stripe_payment_intent_id', $intentId)
-            ->where('type', 'refund')
-            ->first();
-
         $chargePayment = Payment::where('stripe_payment_intent_id', $intentId)
             ->where('type', 'charge')
             ->first();
@@ -34,8 +31,28 @@ class HandleRefunded
             return [];
         }
 
+        // Lock the owning booking row to serialize with ProcessRefundAction's
+        // Phase 1 claim so concurrent refund creation and webhook delivery
+        // never race on (stripe_payment_intent_id, type).
+        Booking::where('id', $chargePayment->booking_id)->lockForUpdate()->first();
+
+        $refundPayment = Payment::where('stripe_payment_intent_id', $intentId)
+            ->where('type', 'refund')
+            ->lockForUpdate()
+            ->first();
+
         if (! $refundPayment) {
             $refundPayment = $this->createExternalRefundPayment($charge, $chargePayment);
+        } elseif ($refundPayment->status !== 'refunded') {
+            // Reconcile a row previously claimed by ProcessRefundAction
+            // (pending, or failed after a Stripe outage): the webhook is the
+            // authoritative signal that the refund exists in Stripe, so the
+            // existing row is completed in place — never duplicated.
+            $refundPayment->update([
+                'status' => 'refunded',
+                'stripe_refund_id' => $refundPayment->stripe_refund_id
+                    ?? data_get($charge, 'refunds.data.0.id'),
+            ]);
         }
 
         $this->ledger->recordRefund($refundPayment);

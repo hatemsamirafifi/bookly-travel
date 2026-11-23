@@ -16,6 +16,12 @@ const WEEKDAY_CODES = [0, 1, 2, 3, 4, 5, 6] as const;
 interface BookingOptionsFormProps {
   rows: BookingOptionFormInput[];
   disabled?: boolean;
+  /** EGM-003 fail-closed boundary, structure-only: when set, published-tour
+   *  add/remove structural controls are hidden (adding, removing and
+   *  reordering options on a published tour is refused for review) while
+   *  authored text and operational fields stay editable. Default false so
+   *  the wizard and draft edit flows behave exactly as before. */
+  structureDisabled?: boolean;
   /** Original writing language of the tour content (titles/instructions). */
   sourceLocale?: SourceLocale;
   onAdd: () => void;
@@ -36,6 +42,7 @@ interface BookingOptionsFormProps {
 export function BookingOptionsForm({
   rows,
   disabled = false,
+  structureDisabled = false,
   sourceLocale,
   onAdd,
   onRemove,
@@ -80,18 +87,27 @@ export function BookingOptionsForm({
             </p>
           )}
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onAdd}
-          disabled={disabled || rows.length >= 10}
-          className="gap-1"
-        >
-          <Plus className="w-4 h-4" />
-          {t('form.addOption')}
-        </Button>
+        {!structureDisabled && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onAdd}
+            disabled={disabled || rows.length >= 10}
+            className="gap-1"
+          >
+            <Plus className="w-4 h-4" />
+            {t('form.addOption')}
+          </Button>
+        )}
       </div>
+
+      {structureDisabled && (
+        <div className="rounded-lg border border-[#FFB800]/40 bg-[#FFB800]/10 p-4 text-sm text-[#0A2540] space-y-1">
+          <p>{t('form.optionStructureLockedNotice')}</p>
+          <p className="text-xs text-gray-600">{t('form.optionStructurePendingNote')}</p>
+        </div>
+      )}
 
       {rows.length === 0 && (
         <div className="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
@@ -108,22 +124,24 @@ export function BookingOptionsForm({
                 <span className="text-sm font-medium text-[#0A2540]">
                   {row.server_id !== undefined ? (
                     <>
-                      <span className="text-gray-400">{row.server_id} · </span>
+                      <span className="text-gray-600">{row.server_id} · </span>
                       {t('form.bookingOptionNumber', { number: index + 1 })}
                     </>
                   ) : (
                     t('form.bookingOptionNumber', { number: index + 1 })
                   )}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => onRemove(row.id)}
-                  disabled={disabled}
-                  className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  aria-label={t('form.removeOption', { number: index + 1 })}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {!structureDisabled && (
+                  <button
+                    type="button"
+                    onClick={() => onRemove(row.id)}
+                    disabled={disabled}
+                    className="p-1 rounded text-gray-600 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    aria-label={t('form.removeOption', { number: index + 1 })}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -171,7 +189,7 @@ export function BookingOptionsForm({
 
                 <div className="space-y-1">
                   <Label htmlFor={`option-capacity-${row.id}`} className="flex items-center gap-1">
-                    <Users className="w-3.5 h-3.5 text-gray-400" />
+                    <Users className="w-3.5 h-3.5 text-gray-600" />
                     {t('form.optionCapacity')}
                   </Label>
                   <Input
@@ -187,7 +205,7 @@ export function BookingOptionsForm({
 
                 <div className="space-y-1">
                   <Label htmlFor={`option-start-${row.id}`} className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-gray-400" />
+                    <Clock className="w-3.5 h-3.5 text-gray-600" />
                     {t('form.optionStartTime')}
                   </Label>
                   <Input
@@ -202,7 +220,7 @@ export function BookingOptionsForm({
 
               <div className="space-y-1">
                 <Label className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                  <Calendar className="w-3.5 h-3.5 text-gray-600" />
                   {t('form.optionWeekdays')}
                 </Label>
                 <div className="flex gap-1">
@@ -215,7 +233,7 @@ export function BookingOptionsForm({
                       className={`w-9 h-9 rounded-full text-xs font-medium flex items-center justify-center transition-colors ${
                         row.weekdays.includes(day)
                           ? 'bg-[#FFB800] text-[#0A2540]'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       } disabled:opacity-50`}
                     >
                       {t(`form.weekday${day}`)}
@@ -227,7 +245,7 @@ export function BookingOptionsForm({
 
               <div className="space-y-1">
                 <Label htmlFor={`option-pickup-${row.id}`} className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                  <MapPin className="w-3.5 h-3.5 text-gray-600" />
                   {t('form.optionPickupInstructions')}
                 </Label>
                 <Textarea

@@ -81,37 +81,54 @@ export function BookingDetail({ booking }: BookingDetailProps) {
       <div className="p-6 space-y-5">
         {/* Tour info */}
         <div className="space-y-1">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('detail.tour')}</p>
+          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{t('detail.tour')}</p>
           <p className="text-sm font-semibold text-[#0A2540]">{booking.tour.title}</p>
         </div>
 
         {/* Date & time */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('detail.date')}</p>
+            <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{t('detail.date')}</p>
             <p className="text-sm text-[#0A2540]">{new Date(booking.tour_date).toLocaleDateString(locale)}</p>
           </div>
-          {booking.tour_time && (
+          {(booking.departure || booking.tour_time) && (
             <div className="space-y-1">
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('detail.time')}</p>
-              <p className="text-sm text-[#0A2540]">{booking.tour_time}</p>
+              <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                {booking.departure ? t('detail.departureTime') : t('detail.time')}
+              </p>
+              <p className="text-sm text-[#0A2540]">
+                {booking.departure
+                  ? `${booking.departure.local_time.slice(0, 5)} (${booking.departure.timezone})`
+                  : booking.tour_time}
+              </p>
             </div>
           )}
         </div>
 
+        {/* Option */}
+        {booking.option && (
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{t('detail.option')}</p>
+            <p className="text-sm font-semibold text-[#0A2540]">{booking.option.title}</p>
+            {booking.option.pickup_instructions && (
+              <p className="text-xs text-gray-600">{booking.option.pickup_instructions}</p>
+            )}
+          </div>
+        )}
+
         {/* Traveler info */}
         <div className="space-y-1">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('detail.traveler')}</p>
+          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{t('detail.traveler')}</p>
           <p className="text-sm font-medium text-[#0A2540]">{booking.traveler.name}</p>
-          <p className="text-sm text-gray-500">{booking.traveler.email}</p>
+          <p className="text-sm text-gray-600">{booking.traveler.email}</p>
           {booking.traveler.phone && (
-            <p className="text-sm text-gray-500">{booking.traveler.phone}</p>
+            <p className="text-sm text-gray-600">{booking.traveler.phone}</p>
           )}
         </div>
 
         {/* Participants */}
         <div className="space-y-1">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             {t('detail.participants')} ({booking.total_participants} total)
           </p>
           {booking.participants && booking.participants.length > 0 ? (
@@ -126,7 +143,7 @@ export function BookingDetail({ booking }: BookingDetailProps) {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">{booking.total_participants} participants</p>
+            <p className="text-sm text-gray-600">{booking.total_participants} participants</p>
           )}
         </div>
 
@@ -141,7 +158,7 @@ export function BookingDetail({ booking }: BookingDetailProps) {
         {/* Special requests */}
         {booking.special_requests && (
           <div className="space-y-1 pt-3 border-t border-gray-100">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('detail.specialRequests')}</p>
+            <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{t('detail.specialRequests')}</p>
             <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3">{booking.special_requests}</p>
           </div>
         )}
@@ -149,7 +166,7 @@ export function BookingDetail({ booking }: BookingDetailProps) {
         {/* Cancellation reason */}
         {booking.cancellation_reason && (
           <div className="space-y-1 pt-3 border-t border-gray-100">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('detail.cancellationReason')}</p>
+            <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{t('detail.cancellationReason')}</p>
             <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3">{booking.cancellation_reason}</p>
           </div>
         )}

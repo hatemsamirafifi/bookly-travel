@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 // Standalone worker. The parent Pest process owns the disposable database lock.
 [, $actorId, $tourId, $arrival] = $_SERVER['argv'];
 $newOwnerId = $_SERVER['argv'][4] ?? null;
+@file_put_contents($arrival . '.spawned', 'pid=' . getmypid() . "\n");
 $environment = [
     'APP_ENV' => 'testing', 'APP_DEBUG' => 'false',
     'APP_CONFIG_CACHE' => sys_get_temp_dir() . '/egm002-worker-' . uniqid() . '.php',

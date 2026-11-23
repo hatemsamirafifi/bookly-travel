@@ -1,7 +1,18 @@
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { TourWizard } from '../TourWizard';
-import { useTourWizardStore } from '@/lib/stores/tourWizard';
-import { createTour, updateTour, submitTour } from '@/lib/api/partner';
+import { useTourWizardStore, isUuid } from '@/lib/stores/tourWizard';
+import {
+  createTour,
+  updateTour,
+  submitTour,
+  saveGeneralDraft,
+  updateGeneralDraft,
+  getLatestGeneralDraft,
+  getGeneralDraft,
+  resumeGeneralDraft,
+  discardGeneralDraft,
+} from '@/lib/api/partner';
+import { ConflictError, NotFoundError } from '@/lib/api/client';
 import type { TourFormData, WizardStep } from '@/types/tour';
 
 const push = jest.fn();
@@ -15,11 +26,23 @@ jest.mock('@/lib/api/partner', () => ({
   updateTour: jest.fn(),
   submitTour: jest.fn(),
   getSignedUploadUrl: jest.fn(),
+  saveGeneralDraft: jest.fn(),
+  updateGeneralDraft: jest.fn(),
+  getLatestGeneralDraft: jest.fn(),
+  getGeneralDraft: jest.fn(),
+  resumeGeneralDraft: jest.fn(),
+  discardGeneralDraft: jest.fn(),
 }));
 
 const mockedCreateTour = createTour as jest.Mock;
 const mockedUpdateTour = updateTour as jest.Mock;
 const mockedSubmitTour = submitTour as jest.Mock;
+const mockedSaveGeneralDraft = saveGeneralDraft as jest.Mock;
+const mockedUpdateGeneralDraft = updateGeneralDraft as jest.Mock;
+const mockedGetLatestGeneralDraft = getLatestGeneralDraft as jest.Mock;
+const mockedResumeGeneralDraft = resumeGeneralDraft as jest.Mock;
+void (getGeneralDraft as jest.Mock);
+void (discardGeneralDraft as jest.Mock);
 
 if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
   window.requestAnimationFrame = ((cb: FrameRequestCallback) => {
@@ -479,5 +502,251 @@ describe('TourWizard US4 truthful facts (Spec 019)', () => {
 
     await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
     expect(mockedCreateTour.mock.calls[0][0].media).toHaveLength(20);
+  });
+});
+
+describe('TourWizard EGM-005 server draft recovery and D2 idempotency', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    localStorage.clear();
+    localStorage.setItem('auth_token', 'test-partner-token');
+    useTourWizardStore.getState().reset();
+    mockedGetLatestGeneralDraft.mockRejectedValue(new Error('404'));
+  });
+
+  afterEach(() => {
+    localStorage.removeItem('auth_token');
+  });
+
+  it('sends a valid UUID creation_id on createTour and shows creation conflict reset action on 409', async () => {
+    seedForm();
+    mockedCreateTour.mockRejectedValueOnce(
+      new ConflictError('Creation ID was already used.', 'CREATION_ID_REUSED_WITH_DIFFERENT_PAYLOAD', {
+        error: 'CREATION_ID_REUSED_WITH_DIFFERENT_PAYLOAD',
+      })
+    );
+
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+
+    await waitFor(() => expect(mockedCreateTour).toHaveBeenCalledTimes(1));
+    const initialCreationId = mockedCreateTour.mock.calls[0][0].creation_id;
+    expect(isUuid(initialCreationId)).toBe(true);
+
+    expect(await screen.findByText('wizard.creationIdConflict')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.resetCreationId' }));
+    expect(useTourWizardStore.getState().creationId).not.toBe(initialCreationId);
+  });
+
+  it('surfaces server draft recovery banner and hydrates state on Resume click', async () => {
+    mockedGetLatestGeneralDraft.mockResolvedValueOnce({
+      data: {
+        id: 14,
+        creation_id: '8b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+        tour_id: null,
+        concurrency_token: 'tok-server-1',
+        current_step: 'details',
+        source_locale: 'es',
+        payload: { title: 'Paseo Recuperado' },
+      },
+    });
+    mockedResumeGeneralDraft.mockResolvedValueOnce({
+      data: {
+        draft_id: 14,
+        creation_id: '8b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+        tour_id: null,
+        concurrency_token: 'tok-server-1',
+        current_step: 'details',
+        source_locale: 'es',
+        payload: { title: 'Paseo Recuperado' },
+      },
+    });
+
+    render(<TourWizard />);
+
+    const banner = await screen.findByTestId('draft-recovery-banner');
+    expect(banner).toHaveTextContent('Paseo Recuperado');
+
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.resumeDraft' }));
+    await waitFor(() => expect(mockedResumeGeneralDraft).toHaveBeenCalledWith(14));
+
+    expect(useTourWizardStore.getState().formData.source_locale).toBe('es');
+    expect(screen.getByLabelText('form.title')).toHaveValue('Paseo Recuperado');
+  });
+
+  it('shows conflict panel preserving server_draft on 409 STALE_DRAFT_CONFLICT and lets partner choose server or local retry', async () => {
+    seedForm({ title: 'Local Stale Edit' }, 'details');
+    mockedSaveGeneralDraft.mockResolvedValueOnce({
+      data: {
+        id: 22,
+        creation_id: '6b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+        tour_id: null,
+        concurrency_token: 'tok-1',
+        current_step: 'details',
+        source_locale: 'en',
+        payload: { title: 'Local Stale Edit' },
+      },
+    });
+
+    render(<TourWizard />);
+    fireEvent.click(screen.getByTestId('wizard-save-progress'));
+    await screen.findByText('wizard.progressSaved');
+
+    mockedUpdateGeneralDraft.mockRejectedValueOnce(
+      new ConflictError('Modified in another tab', 'STALE_DRAFT_CONFLICT', {
+        error: 'STALE_DRAFT_CONFLICT',
+        server_draft: {
+          id: 22,
+          creation_id: '6b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+          concurrency_token: 'tok-server-2',
+          current_step: 'details',
+          source_locale: 'en',
+          payload: { title: 'Tab 1 Newer Server Title' },
+        },
+      })
+    );
+
+    fireEvent.change(screen.getByLabelText('form.title'), { target: { value: 'Tab 2 Overwrite Attempt' } });
+    fireEvent.click(screen.getByTestId('wizard-save-progress'));
+
+    const conflictPanel = await screen.findByTestId('draft-conflict-panel');
+    expect(conflictPanel).toHaveTextContent('wizard.conflictTitle');
+    expect(screen.getByLabelText('form.title')).toHaveValue('Tab 2 Overwrite Attempt');
+
+    mockedUpdateGeneralDraft.mockResolvedValueOnce({
+      data: {
+        id: 22,
+        creation_id: '6b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+        tour_id: null,
+        concurrency_token: 'tok-3',
+        current_step: 'details',
+        source_locale: 'en',
+        payload: { title: 'Tab 2 Overwrite Attempt' },
+      },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.conflictKeepLocal' }));
+    await waitFor(() => expect(mockedUpdateGeneralDraft).toHaveBeenCalledTimes(2));
+    expect(mockedUpdateGeneralDraft.mock.calls[1][1].concurrency_token).toBe('tok-server-2');
+    await screen.findByText('wizard.progressSaved');
+  });
+
+  it('adopts created.draft metadata on Save Draft so follow-up Save Progress succeeds without false 409', async () => {
+    seedForm({ title: 'Single Tab Save Draft Then Progress' }, 'details');
+    mockedCreateTour.mockResolvedValueOnce({
+      data: { id: 88, status: 'draft' },
+      draft: {
+        id: 33,
+        creation_id: useTourWizardStore.getState().creationId,
+        tour_id: 88,
+        concurrency_token: 'tok-from-create-1',
+        current_step: 'details',
+        source_locale: 'en',
+        auto_saved_at: '2026-11-21T20:00:00Z',
+      },
+    });
+    mockedUpdateGeneralDraft.mockResolvedValueOnce({
+      data: {
+        id: 33,
+        creation_id: useTourWizardStore.getState().creationId,
+        tour_id: 88,
+        concurrency_token: 'tok-after-progress-2',
+        current_step: 'details',
+        source_locale: 'en',
+        payload: { title: 'Single Tab Save Draft Then Progress' },
+      },
+    });
+
+    render(<TourWizard />);
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.saveDraft' }));
+    await screen.findByText('wizard.saved');
+
+    expect(useTourWizardStore.getState().draftId).toBe(33);
+    expect(useTourWizardStore.getState().concurrencyToken).toBe('tok-from-create-1');
+
+    fireEvent.click(screen.getByTestId('wizard-save-progress'));
+    await screen.findByText('wizard.progressSaved');
+    expect(mockedUpdateGeneralDraft).toHaveBeenCalledWith(
+      33,
+      expect.objectContaining({ concurrency_token: 'tok-from-create-1', tour_id: 88 })
+    );
+  });
+
+  it('clears dead local draftId on 404 and falls back to getLatestGeneralDraft recovery', async () => {
+    const mockedGetDraft = getGeneralDraft as jest.Mock;
+    useTourWizardStore.getState().setDraftSyncMeta({
+      draftId: 999,
+      concurrencyToken: 'dead-token',
+    });
+    mockedGetDraft.mockRejectedValueOnce(new NotFoundError('Draft not found.'));
+    mockedGetLatestGeneralDraft.mockResolvedValueOnce({
+      data: {
+        id: 101,
+        creation_id: '5b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+        tour_id: null,
+        concurrency_token: 'tok-fresh-101',
+        current_step: 'details',
+        source_locale: 'it',
+        payload: { title: 'Bozza Recuperata IT' },
+      },
+    });
+
+    render(<TourWizard />);
+    const banner = await screen.findByTestId('draft-recovery-banner');
+    expect(banner).toHaveTextContent('Bozza Recuperata IT');
+    expect(useTourWizardStore.getState().draftId).toBeNull();
+  });
+
+  it('serializes overlapping syncServerDraft calls so the second waits for the rotated concurrency_token', async () => {
+    seedForm({ title: 'Queue Test' }, 'details');
+    useTourWizardStore.getState().setDraftSyncMeta({
+      draftId: 50,
+      concurrencyToken: 'tok-queue-0',
+    });
+
+    let resolveFirst!: (val: unknown) => void;
+    const firstPromise = new Promise((res) => {
+      resolveFirst = res;
+    });
+
+    mockedUpdateGeneralDraft.mockReturnValueOnce(firstPromise);
+    mockedUpdateGeneralDraft.mockResolvedValueOnce({
+      data: {
+        id: 50,
+        creation_id: useTourWizardStore.getState().creationId,
+        tour_id: null,
+        concurrency_token: 'tok-queue-2',
+        current_step: 'media',
+        source_locale: 'en',
+        payload: { title: 'Queue Test' },
+      },
+    });
+
+    render(<TourWizard />);
+    fireEvent.click(screen.getByTestId('wizard-save-progress'));
+    fireEvent.click(screen.getByRole('button', { name: 'wizard.nextStep' }));
+
+    expect(mockedUpdateGeneralDraft).toHaveBeenCalledTimes(1);
+    expect(mockedUpdateGeneralDraft.mock.calls[0][1].concurrency_token).toBe('tok-queue-0');
+
+    await act(async () => {
+      resolveFirst({
+        data: {
+          id: 50,
+          creation_id: useTourWizardStore.getState().creationId,
+          tour_id: null,
+          concurrency_token: 'tok-queue-1',
+          current_step: 'details',
+          source_locale: 'en',
+          payload: { title: 'Queue Test' },
+        },
+      });
+    });
+
+    await waitFor(() => expect(mockedUpdateGeneralDraft).toHaveBeenCalledTimes(2));
+    expect(mockedUpdateGeneralDraft.mock.calls[1][1]).toMatchObject({
+      concurrency_token: 'tok-queue-1',
+      current_step: 'media',
+    });
   });
 });

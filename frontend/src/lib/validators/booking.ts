@@ -18,6 +18,8 @@ export const createBookingSchema = z.object({
   page_load_price: z.number().int().nonnegative().optional(),
   /** Selected offered option id; sent only when the traveler picked one. */
   tour_option_id: z.number().int().positive().optional(),
+  /** Selected concrete departure id (EGM-005 D3/D4). */
+  tour_departure_id: z.number().int().positive().optional(),
 });
 
 export type CreateBookingFormData = z.infer<typeof createBookingSchema>;

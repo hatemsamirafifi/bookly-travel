@@ -53,6 +53,10 @@ services:
       QUEUE_CONNECTION: sync
       SCOUT_QUEUE_CONNECTION: sync
       SANCTUM_STATEFUL_DOMAINS: localhost:8080,nginx
+      # Browser CI asserts voucher QR URLs resolve to the reachable frontend
+      # origin (nginx on :8080), mirroring the production
+      # SERVICES_VOUCHER_PUBLIC_BASE_URL contract.
+      SERVICES_VOUCHER_PUBLIC_BASE_URL: http://localhost:8080
     depends_on:
       postgres:
         condition: service_healthy

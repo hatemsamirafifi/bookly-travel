@@ -10,7 +10,7 @@ export async function getDestinations(locale: string): Promise<DestinationListRe
   // Accept-Language by the rate-limit middleware for localized 429 messages.
   return apiClient<DestinationListResponse>(
     `/api/public/destinations?locale=${encodeURIComponent(locale)}`,
-    { locale, revalidate: 300 }
+    { locale, cache: 'no-store' }
   );
 }
 
@@ -24,6 +24,6 @@ export async function getDestinationTours(
 
   return apiClient<SearchResponse>(
     `/api/public/destinations/${encodeURIComponent(slug)}/tours?${sp.toString()}`,
-    { locale: params.locale, revalidate: 300 }
+    { locale: params.locale, cache: 'no-store' }
   );
 }

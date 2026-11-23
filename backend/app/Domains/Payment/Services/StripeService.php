@@ -20,10 +20,21 @@ class StripeService implements PaymentGateway
      * global `Stripe::setApiKey(null)` tolerance: a missing secret only
      * surfaces when an actual API call is attempted, which is the correct
      * failure point (and callers like ProcessRefundAction catch it).
+     *
+     * Staging/production fail closed here before any client is built: the
+     * PaymentConfigurationGuard rejects a missing or mode-mismatched
+     * configuration (local/testing return early, keeping the tolerant
+     * behavior fixtures rely on).
      */
     private function client(): StripeClient
     {
-        return $this->client ??= new StripeClient(config('services.stripe.secret') ?? '');
+        if ($this->client === null) {
+            app(PaymentConfigurationGuard::class)->assertValid();
+
+            $this->client = new StripeClient(config('services.stripe.secret') ?? '');
+        }
+
+        return $this->client;
     }
 
     public function createPaymentIntent(
@@ -37,7 +48,6 @@ class StripeService implements PaymentGateway
         $params = [
             'amount' => $amount,
             'currency' => strtolower($currency),
-            'idempotency_key' => $idempotencyKey,
             'automatic_payment_methods' => [
                 'enabled' => true,
             ],
@@ -55,20 +65,40 @@ class StripeService implements PaymentGateway
             }
         }
 
-        $intent = $this->client()->paymentIntents->create($params);
+        // The idempotency key is a REQUEST OPTION, not a body param: the SDK
+        // turns opts['idempotency_key'] into the Idempotency-Key HTTP header.
+        // Passing it inside $params sent it as an unsupported body parameter
+        // instead (stripe-php even warns when it finds option keys in params).
+        $intent = $this->client()->paymentIntents->create(
+            $params,
+            ['idempotency_key' => $idempotencyKey],
+        );
 
         return $intent->client_secret;
     }
 
-    public function refund(string $paymentIntentId, ?string $idempotencyKey = null): string
-    {
+    public function refund(
+        string $paymentIntentId,
+        ?string $idempotencyKey = null,
+        bool $reverseTransfer = false,
+        bool $refundApplicationFee = false
+    ): string {
         $params = ['payment_intent' => $paymentIntentId];
 
-        if ($idempotencyKey !== null) {
-            $params['idempotency_key'] = $idempotencyKey;
+        // Stripe Connect destination charges: reverse the transfer to the
+        // connected account and return the platform's application fee.
+        if ($reverseTransfer) {
+            $params['reverse_transfer'] = true;
         }
 
-        $refund = $this->client()->refunds->create($params);
+        if ($refundApplicationFee) {
+            $params['refund_application_fee'] = true;
+        }
+
+        // Idempotency key as a REQUEST OPTION (HTTP header), never a body param.
+        $opts = $idempotencyKey !== null ? ['idempotency_key' => $idempotencyKey] : [];
+
+        $refund = $this->client()->refunds->create($params, $opts);
 
         return $refund->id;
     }

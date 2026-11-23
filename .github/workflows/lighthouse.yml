@@ -13,7 +13,7 @@ jobs:
       COMPOSE_PROJECT_NAME: bookly-ci-lighthouse
       LIGHTHOUSE_BASE_URL: http://localhost:8080
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Node.js
         uses: actions/setup-node@v4

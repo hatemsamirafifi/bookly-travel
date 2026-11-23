@@ -30,6 +30,7 @@ use App\Domains\Partner\Models\PartnerInvitation;
 use App\Domains\Partner\Services\GeminiTourTranslator;
 use App\Domains\Payment\Contracts\PaymentGateway;
 use App\Domains\Payment\Services\DeterministicPaymentGateway;
+use App\Domains\Payment\Services\PaymentConfigurationGuard;
 use App\Domains\Payment\Services\StripeService;
 use App\Domains\Reviews\Models\Review;
 use App\Domains\Translation\Contracts\ContentTranslatorContract;
@@ -73,6 +74,11 @@ class AppServiceProvider extends ServiceProvider
                 throw new \LogicException("Unsupported payment gateway [{$gateway}].");
             }
 
+            // Fail closed: staging/production must not resolve the Stripe
+            // gateway with a missing or mode-mismatched configuration
+            // (local/testing return early inside the guard).
+            $app->make(PaymentConfigurationGuard::class)->assertValid();
+
             return $app->make(StripeService::class);
         });
     }
@@ -82,6 +88,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Fail-closed payment configuration for staging/production: validated
+        // once per boot so a misconfigured deploy fails loudly at startup
+        // instead of mid-payment. Composer/discovery and build-only artisan
+        // commands run before secrets may exist, so they are exempted.
+        if ($this->app->environment(['staging', 'production']) && ! $this->runningBuildOnlyConsoleCommand()) {
+            $this->app->make(PaymentConfigurationGuard::class)->assertValid();
+        }
+
         // Register policies
         Gate::policy(Review::class, ReviewPolicy::class);
         Gate::policy(Tour::class, TourPolicy::class);
@@ -216,5 +230,31 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('blog_detail', function (Request $request) {
             return Limit::perMinute(120)->by($request->ip());
         });
+    }
+
+    /**
+     * Whether the current console invocation is a Composer/discovery or
+     * build-only artisan command that legitimately runs before real secrets
+     * exist (e.g. during container builds or `composer install`), and which
+     * therefore must not be blocked by the payment configuration guard.
+     */
+    private function runningBuildOnlyConsoleCommand(): bool
+    {
+        if (! $this->app->runningInConsole()) {
+            return false;
+        }
+
+        $command = $_SERVER['argv'][1] ?? null;
+
+        return in_array($command, [
+            'package:discover',
+            'vendor:publish',
+            'config:clear',
+            'cache:clear',
+            'view:clear',
+            'route:clear',
+            'clear-compiled',
+            'optimize:clear',
+        ], true);
     }
 }

@@ -18,6 +18,10 @@ class AdminAuthorizationService
 {
     public const FLAGS = [
         'manage_tours',
+        // EGM-003 (ADR 0024): the exceptional-correction permission. Granted
+        // only explicitly (or through the existing super_admin wildcard); it is
+        // never part of an ordinary administrator default or role template.
+        'correct_tour_content',
         'manage_partners',
         'manage_bookings',
         'moderate_reviews',

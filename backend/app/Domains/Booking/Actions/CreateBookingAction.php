@@ -7,9 +7,12 @@ use App\Domains\Booking\DTOs\CreateBookingDTO;
 use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\AuditService;
 use App\Domains\Booking\Services\AvailabilityService;
+use App\Domains\Partner\Models\Partner;
+use App\Domains\Partner\Services\PricingTierService;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Payment\Actions\CreatePaymentIntentAction;
 use App\Models\Tour;
+use App\Models\TourDeparture;
 use App\Models\TourOption;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
@@ -27,6 +30,7 @@ class CreateBookingAction
         private readonly AuditService $audit,
         private readonly CreatePaymentIntentAction $createPaymentIntent,
         private readonly TourTranslationService $translations,
+        private readonly PricingTierService $pricingService,
     ) {}
 
     public function execute(CreateBookingDTO $dto): array
@@ -38,12 +42,13 @@ class CreateBookingAction
             throw new NotFoundHttpException('Tour not found.');
         }
 
-        if ($dto->tourDate <= now()->toDateString()) {
+        if ($dto->tourDepartureId === null && $dto->tourDate <= now()->toDateString()) {
             throw ValidationException::withMessages([
                 'tour_date' => ['Tour date must be in the future.'],
             ]);
         }
 
+        $observedPartnerId = (int) $tour->partner_id;
         $date = Carbon::parse($dto->tourDate);
 
         // Phase 1 — DB transaction ONLY (no Stripe I/O). Creates the booking,
@@ -51,7 +56,11 @@ class CreateBookingAction
         // PaymentIntent is created after this commits (Phase 2) so a Stripe
         // outage can never leave an open DB transaction or an orphan intent
         // tied to an uncommitted booking.
-        [$booking, $priceChanged, $isRetry] = DB::transaction(function () use ($dto, $tour, $date) {
+        [$booking, $priceChanged, $isRetry] = DB::transaction(function () use ($dto, $tour, $date, $observedPartnerId) {
+            // Match publication/suspension's owner-first order. Missing owners
+            // remain nullable until the authorized idempotent retry branch.
+            $lockedPartner = Partner::query()->whereKey($observedPartnerId)->sharedLock()->first();
+
             // F1 + F4: lock + refresh the tour row inside the txn. Concurrent
             // booking transactions for the same tour serialize on this row
             // (fixing the overbooking race), and price/capacity are read fresh
@@ -77,8 +86,17 @@ class CreateBookingAction
 
             abort_unless($tour->status === 'published', 404, 'Tour not found.');
 
-            // F9: the tour must actually operate on the requested date.
-            if (! $tour->operatesOnDate($date)) {
+            $currentPartnerId = (int) $tour->partner_id;
+            if ($currentPartnerId !== $observedPartnerId) {
+                // Do not acquire a replacement owner lock after holding Tour.
+                throw new ConflictHttpException('Tour ownership changed during booking.');
+            }
+            if (! $lockedPartner || ! $lockedPartner->isPubliclyEligible()) {
+                throw new NotFoundHttpException('Tour not found.');
+            }
+
+            // F9: legacy date-only bookings must operate on the requested date.
+            if ($dto->tourDepartureId === null && ! $tour->operatesOnDate($date)) {
                 throw ValidationException::withMessages([
                     'tour_date' => ['This tour does not operate on the selected date.'],
                 ]);
@@ -88,7 +106,6 @@ class CreateBookingAction
             // status and weekday availability must be current at confirmation
             // time, not whatever the page loaded.
             $option = $this->resolveOption($tour, $dto->tourOptionId);
-            $this->validateParticipantCount($tour, $option, $dto->participantCount);
 
             // Snapshot the option EXACTLY as currently served in the requested
             // booking locale: the derivative texts when that derivative is
@@ -106,33 +123,101 @@ class CreateBookingAction
                 ];
             }
 
-            if ($option !== null && ! $option->coversWeekday($date)) {
-                throw ValidationException::withMessages([
-                    'tour_option_id' => ['The selected option does not operate on the selected date.'],
-                ]);
+            // EGM-005 D3, D4: Explicit departure validation and independent capacity
+            $departure = null;
+            if ($dto->tourDepartureId !== null) {
+                $departure = TourDeparture::query()
+                    ->where('id', $dto->tourDepartureId)
+                    ->where('tour_id', $tour->id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $departure) {
+                    throw ValidationException::withMessages([
+                        'tour_departure_id' => ['The selected departure is not available for this tour.'],
+                    ]);
+                }
+
+                if ($option !== null && $departure->tour_option_id !== $option->id) {
+                    throw ValidationException::withMessages([
+                        'tour_departure_id' => ['The selected departure does not belong to the selected option.'],
+                    ]);
+                }
+
+                if ($departure->status !== TourDeparture::STATUS_ACTIVE) {
+                    throw ValidationException::withMessages([
+                        'tour_departure_id' => ['The selected departure is no longer available.'],
+                    ]);
+                }
+
+                if ($dto->tourDate !== $departure->local_date) {
+                    throw ValidationException::withMessages([
+                        'tour_date' => ['The selected tour date does not match the chosen departure date.'],
+                    ]);
+                }
+
+                $this->validateParticipantCount($tour, $option, $dto->participantCount, (int) $departure->capacity);
+
+                if (! now()->addHours($departure->booking_cutoff_hours)->lt($departure->starts_at)) {
+                    throw new ConflictHttpException('The booking cutoff window for this departure has passed.');
+                }
+
+                // D4: Independent capacity on departure
+                $remaining = $departure->remainingCapacity();
+                if ($remaining < $dto->participantCount) {
+                    throw new ConflictHttpException(
+                        "Only {$remaining} spots remaining for this departure."
+                    );
+                }
+            } else {
+                if ($option !== null && TourDeparture::query()
+                    ->where('tour_option_id', $option->id)
+                    ->where('status', TourDeparture::STATUS_ACTIVE)
+                    ->exists()) {
+                    throw ValidationException::withMessages([
+                        'tour_departure_id' => ['Please select a departure for this option.'],
+                    ]);
+                }
+
+                $this->validateParticipantCount($tour, $option, $dto->participantCount);
+
+                if ($option !== null && ! $option->coversWeekday($date)) {
+                    throw ValidationException::withMessages([
+                        'tour_option_id' => ['The selected option does not operate on the selected date.'],
+                    ]);
+                }
+
+                $availability = $this->availability->checkAndReserve($tour, $dto->tourDate, $dto->participantCount, $option);
+
+                if (! $availability['available']) {
+                    throw new ConflictHttpException(
+                        "Only {$availability['remaining']} spots remaining for this date."
+                    );
+                }
             }
 
-            $availability = $this->availability->checkAndReserve($tour, $dto->tourDate, $dto->participantCount, $option);
-
-            if (! $availability['available']) {
-                throw new ConflictHttpException(
-                    "Only {$availability['remaining']} spots remaining for this date."
-                );
-            }
-
-            $pricePerPerson = $option->price_amount ?? $tour->lowestPriceAmount();
-            $totalPrice = $pricePerPerson * $dto->participantCount;
+            // EGM-005 D5: Participant-count tiered pricing
+            $pricing = $option !== null
+                ? $this->pricingService->calculatePrice($option, $dto->participantCount, $tour)
+                : $this->pricingService->calculateTourPrice($tour, $dto->participantCount);
+            $pricePerPerson = $pricing['unit_price_cents'];
+            $totalPrice = $pricing['total_price_cents'];
+            $pricingTierId = $pricing['tier_id'];
+            $pricingSnapshot = ($option !== null || $pricing['mode'] === 'tiered_per_person')
+                ? array_merge($pricing, [
+                    'participant_count' => $dto->participantCount,
+                ])
+                : null;
 
             // FR-027: detect price drift between page load and confirmation time
             $priceChanged = $dto->pageLoadPrice !== null && $dto->pageLoadPrice !== $pricePerPerson;
 
-            // F5: snapshot the start time — the selected option's own start time
-            // wins, otherwise the operating availability rule's earliest start
-            // (or the configured default) — so cancellation/no_show cutoffs
-            // anchor to the actual start, not tour_date midnight.
-            $startTime = $option?->startTimeString()
-                ?? $tour->startTimeForDate($date)
-                ?? config('bookings.default_start_time', '09:00');
+            // F5: snapshot the start time — explicit departure local time wins,
+            // otherwise the selected option's own start time, otherwise the operating
+            // availability rule's earliest start (or the configured default).
+            $startTime = $departure !== null
+                ? $departure->local_time
+                : ($option?->startTimeString() ?? $tour->startTimeForDate($date) ?? config('bookings.default_start_time', '09:00'));
 
             // F3 + F8: rely on the unique indexes (idempotency_key, reference)
             // as the source of truth for the concurrent same-key race. The
@@ -150,12 +235,15 @@ class CreateBookingAction
                         'traveler_id' => $dto->travelerId,
                         'tour_id' => $tour->id,
                         'tour_option_id' => $optionData['id'] ?? null,
+                        'tour_departure_id' => $departure?->id,
+                        'pricing_tier_id' => $pricingTierId,
+                        'pricing_snapshot' => $pricingSnapshot,
                         // Snapshot: a later rename/retire/regeneration of the
                         // option must not rewrite what this traveler booked.
                         'tour_option_title' => $optionData['title'] ?? null,
                         'tour_option_pickup_instructions' => $optionData['pickup_instructions'] ?? null,
                         'tour_option_content_locale' => $optionData['content_locale'] ?? null,
-                        'tour_date' => $dto->tourDate,
+                        'tour_date' => $departure ? $departure->local_date : $dto->tourDate,
                         'start_time' => $startTime,
                         'participant_count' => $dto->participantCount,
                         'price_per_person' => $pricePerPerson,
@@ -295,10 +383,10 @@ class CreateBookingAction
         return null;
     }
 
-    private function validateParticipantCount(Tour $tour, ?TourOption $option, int $count): void
+    private function validateParticipantCount(Tour $tour, ?TourOption $option, int $count, ?int $maxOverride = null): void
     {
         $min = max(1, (int) ($tour->group_size_min ?? 1));
-        $max = $option?->effectiveCapacity($tour) ?? (int) ($tour->group_size_max ?? 10);
+        $max = $maxOverride ?? ($option?->effectiveCapacity($tour) ?? (int) ($tour->group_size_max ?? 10));
 
         if ($count < $min || $count > $max) {
             throw ValidationException::withMessages([
@@ -312,6 +400,7 @@ class CreateBookingAction
         if ((int) $booking->traveler_id !== $dto->travelerId
             || (int) $booking->tour_id !== $tour->id
             || $booking->tour_option_id !== $dto->tourOptionId
+            || $booking->tour_departure_id !== $dto->tourDepartureId
             || $booking->tour_date->toDateString() !== $dto->tourDate
             || $booking->participant_count !== $dto->participantCount) {
             throw new ConflictHttpException('This Idempotency-Key is already in use.');

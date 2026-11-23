@@ -4,6 +4,7 @@ namespace App\Domains\Admin\Actions;
 
 use App\Domains\Admin\Services\GovernanceAuditService;
 use App\Domains\Admin\Services\TourPublicationGuardService;
+use App\Domains\Partner\Services\TourRevisionService;
 use App\Enums\TourStatus;
 use App\Models\Tour;
 use App\Models\TourTranslation;
@@ -21,6 +22,7 @@ class ApproveTourAction
     public function __construct(
         private readonly GovernanceAuditService $audit,
         private readonly TourPublicationGuardService $publicationGuard,
+        private readonly TourRevisionService $revisions,
     ) {}
 
     public function execute(User $actor, Tour $tour): Tour
@@ -62,7 +64,16 @@ class ApproveTourAction
             ]);
             $locked->refresh();
 
-            $this->audit->log($authorizedActor, 'tour.publish', $locked, $before, ['status' => $locked->status]);
+            $revision = $this->revisions->sealPublication($locked, $authorizedActor);
+
+            $this->audit->log(
+                $authorizedActor,
+                'tour.publish',
+                $locked,
+                $before,
+                ['status' => $locked->status],
+                ['revision_id' => $revision->id],
+            );
 
             return $locked;
         });

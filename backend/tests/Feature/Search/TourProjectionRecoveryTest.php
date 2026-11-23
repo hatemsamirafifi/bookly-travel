@@ -1,8 +1,9 @@
 <?php
 
+use App\Domains\Admin\Actions\ApproveTourRevisionAction;
 use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Jobs\GenerateTourTranslationJob;
-use App\Domains\Partner\Services\TourService;
+use App\Domains\Partner\Services\TourRevisionService;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Search\Actions\IndexTourAction;
 use App\Models\Tour;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Queue;
 use Laravel\Scout\EngineManager;
 use Laravel\Scout\Engines\CollectionEngine;
 use Tests\Support\TourContentFixtures;
+use Tests\Support\TourRevisionFixtures;
 
 // CollectionEngine search reads SQL directly and cannot prove a stale persisted
 // index was repaired. This adapter records documents written by real Scout sync,
@@ -57,10 +59,17 @@ it('repairs an actually stale recorded search document through refresh-ready wit
     expect($oldDocument['title_es'])->toBe('Title es');
 
     Tour::withoutSyncingToSearch(function () use ($tour) {
-        app(TourService::class)->updateTour($tour, ['title' => 'Evening walking tour']);
+        $revisions = app(TourRevisionService::class);
+        $base = $revisions->captureBaseline($tour);
+        $ownerId = (int) $tour->partnerRecord->user_id;
+        $candidate = $revisions->createCandidate($tour, $ownerId, $base->id, ['source' => ['title' => 'Evening walking tour']]);
+        $revisions->submitCandidate($tour, $candidate->id, $ownerId);
+        app(ApproveTourRevisionAction::class)
+            ->execute(TourRevisionFixtures::admin('manage_tours'), $tour, $candidate->id);
         $fresh = $tour->fresh();
         $service = app(TourTranslationService::class);
         $hash = $service->sourceHash($fresh->translations()->where('locale', 'en')->firstOrFail());
+        $observedEpoch = $fresh->generationEpoch();
         $translator = new class implements TourContentTranslator
         {
             public function translate(array $strings, string $locale): array
@@ -69,7 +78,7 @@ it('repairs an actually stale recorded search document through refresh-ready wit
             }
         };
         foreach (['es', 'it'] as $locale) {
-            (new GenerateTourTranslationJob($tour->id, $locale, $hash))->handle($service, $translator);
+            (new GenerateTourTranslationJob($tour->id, $locale, $hash, $observedEpoch))->handle($service, $translator);
         }
     });
     $service = app(TourTranslationService::class);

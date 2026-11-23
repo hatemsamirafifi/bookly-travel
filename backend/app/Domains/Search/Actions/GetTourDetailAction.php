@@ -2,12 +2,15 @@
 
 namespace App\Domains\Search\Actions;
 
+use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Partner\Services\TourTranslationService;
+use App\Domains\Search\Services\TourPublicProjectionService;
 use App\Models\Tour;
 use App\Models\TourOption;
 use App\Models\TourTranslation;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class GetTourDetailAction
 {
@@ -19,19 +22,39 @@ class GetTourDetailAction
 
     public function execute(string $slug, string $locale): array
     {
-        $tour = Tour::with([
-            'translations', 'translationStates', 'category', 'media', 'options.translations',
+        // The single coherent public read boundary: one Tour shared lock before
+        // any eager load and before any cache hit, the current content version
+        // deciding the cache key, and the fill completing under that lock
+        // (design v3 §8). An unknown slug is decided under the lock too.
+        return app(TourPublicProjectionService::class)->detail(
+            $slug,
+            $locale,
+            function (?Tour $tour) use ($locale): array {
+                if ($tour === null) {
+                    throw new HttpResponseException(
+                        response()->json(['message' => 'Tour not found.'], 404)
+                    );
+                }
+
+                return $this->buildPayload($tour, $locale);
+            }
+        );
+    }
+
+    /**
+     * Build the governed detail payload for an already locked tour. The caller
+     * holds the Tour shared lock; only stored/approved content participates and
+     * no proposed revision is ever readable here.
+     */
+    public function buildPayload(Tour $tour, string $locale): array
+    {
+        $tour->load([
+            'translations', 'translationStates', 'category', 'media',
+            'pricingTiers', 'options.translations', 'options.pricingTiers',
             'partnerRecord' => fn ($query) => $query->select(['id', 'onboarding_status', 'is_active']),
             'partnerRecord.profile' => fn ($query) => $query->select(['id', 'partner_id', 'company_name', 'business_description', 'logo_url']),
             'availabilityRules', 'availabilityExceptions',
-        ])
-            ->where('slug', $slug)->first();
-
-        if (! $tour) {
-            throw new HttpResponseException(
-                response()->json(['message' => 'Tour not found.'], 404)
-            );
-        }
+        ]);
 
         if ($tour->status !== 'published') {
             // Allowlist on `published` rather than a blocklist of statuses so a
@@ -161,6 +184,7 @@ class GetTourDetailAction
             + 1 * (int) ($reviewDistribution['1'] ?? 0);
         $reviewAverage = $reviewCount > 0 ? round($reviewSum / $reviewCount, 2) : 0;
 
+        $tourLevelTiers = $tour->pricingTiers->whereNull('tour_option_id')->values();
         $optionObjects = $activeOptions
             ->map(fn (TourOption $option): array => $this->buildOptionObject($tour, $option, $locale, $availableDates))
             ->all();
@@ -205,7 +229,7 @@ class GetTourDetailAction
                     'currency' => $tour->currency(),
                     'formatted' => Tour::formatPrice($tour->lowestPriceAmount(), $tour->currency()),
                 ],
-                'tiered_pricing' => null,
+                'tiered_pricing' => $this->buildTieredPricingPayload($tourLevelTiers, $tour->currency()),
             ],
             'availability' => [
                 // Bookings require a strictly-future tour_date (CreateBookingAction
@@ -290,8 +314,48 @@ class GetTourDetailAction
      * served — derivative locale when the derivative is current, else the
      * authored source — matching the tour-level fallback contract.
      */
-    protected function buildOptionObject(Tour $tour, TourOption $option, string $locale, array $tourDates): array
+    /**
+     * Build EGM-005 D5 per-person tiered pricing payload from loaded PricingTier rows,
+     * returning null when no tiers are configured (preserving legacy contracts).
+     *
+     * @param  Collection<int, PricingTier>  $tiers
+     * @return array{mode: 'per_person', tiers: array<int, array<string, mixed>>}|null
+     */
+    protected function buildTieredPricingPayload(Collection $tiers, string $defaultCurrency): ?array
     {
+        if ($tiers->isEmpty()) {
+            return null;
+        }
+
+        $sorted = $tiers
+            ->sort(fn (PricingTier $a, PricingTier $b): int => [$a->min_participants, $a->sort_order, $a->id] <=> [$b->min_participants, $b->sort_order, $b->id])
+            ->values();
+
+        return [
+            'mode' => 'per_person',
+            'tiers' => $sorted->map(function (PricingTier $tier) use ($defaultCurrency): array {
+                $unitAmount = $tier->unitPriceCents();
+                $currency = $tier->currency ?: $defaultCurrency;
+
+                return [
+                    'id' => (int) $tier->id,
+                    'name' => (string) $tier->name,
+                    'min_participants' => (int) $tier->min_participants,
+                    'max_participants' => $tier->max_participants !== null ? (int) $tier->max_participants : null,
+                    'price_amount' => $unitAmount,
+                    'currency' => $currency,
+                    'formatted' => Tour::formatPrice($unitAmount, $currency),
+                ];
+            })->all(),
+        ];
+    }
+
+    protected function buildOptionObject(
+        Tour $tour,
+        TourOption $option,
+        string $locale,
+        array $tourDates,
+    ): array {
         $text = $this->translationService->localizedOptionText($tour, $option, $locale);
 
         $dates = array_values(array_filter(
@@ -314,7 +378,7 @@ class GetTourDetailAction
                     'currency' => $tour->currency(),
                     'formatted' => Tour::formatPrice($priceAmount, $tour->currency()),
                 ],
-                'tiered_pricing' => null,
+                'tiered_pricing' => $this->buildTieredPricingPayload($option->pricingTiers, $tour->currency()),
             ],
             'availability' => [
                 'next_available_date' => $this->firstFutureDate($dates),

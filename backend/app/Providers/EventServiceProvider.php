@@ -21,16 +21,20 @@ use App\Domains\Reviews\Events\ReviewFlagged;
 use App\Domains\Reviews\Events\ReviewSubmitted;
 use App\Domains\Reviews\Listeners\UpdateTourAggregateRating;
 use App\Domains\Search\Actions\IndexTourAction;
+use App\Domains\Search\Actions\ReconcileTourScoutJobAction;
 use App\Domains\Search\Actions\RemoveFromIndexAction;
+use App\Domains\Search\Services\TourPublicCacheService;
 use App\Events\BookingEmailDeliveryFailed;
 use App\Listeners\NotifyAdminOnEmailDeliveryFailure;
 use App\Models\Category;
 use App\Models\Tour;
 use App\Models\TourTranslation;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laravel\Scout\Jobs\MakeSearchable;
+use Laravel\Scout\Jobs\RemoveFromSearch;
 use Throwable;
 
 class EventServiceProvider extends ServiceProvider
@@ -91,6 +95,15 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Design v3 §8.2: Map stock Scout command classes to ReconcileTourScoutJobAction.
+        // When scout.queue is configured, Scout's observer pushes MakeSearchable / RemoveFromSearch
+        // to the queue. Laravel's queued command handler resolves mapped handlers before execution,
+        // routing Tour indexing through sorted shared locks and current-state reconciliation.
+        Bus::map([
+            MakeSearchable::class => ReconcileTourScoutJobAction::class,
+            RemoveFromSearch::class => ReconcileTourScoutJobAction::class,
+        ]);
+
         // Search projection dispatches are deferred until after the source
         // transaction commits via DB::afterCommit on the current default
         // connection: a rolled-back source schedules nothing, and a lost
@@ -126,8 +139,14 @@ class EventServiceProvider extends ServiceProvider
 
         Tour::deleted(function (Tour $tour) {
             $tourId = $tour->id;
+            $target = [
+                'id' => (int) $tourId,
+                'slug' => (string) $tour->slug,
+                'content_version' => (int) $tour->content_version,
+            ];
 
-            DB::afterCommit(function () use ($tourId) {
+            DB::afterCommit(function () use ($tourId, $target) {
+                app(TourPublicCacheService::class)->forgetCapturedDetails([$target]);
                 try {
                     $pending = RemoveFromIndexAction::dispatch($tourId);
                     unset($pending);
@@ -145,21 +164,20 @@ class EventServiceProvider extends ServiceProvider
         // The flush mirrors InvalidateBlogCacheJob: try a tag-based flush
         // inside try/catch (non-taggable stores fall through) and NEVER call
         // plain Cache::flush() — it would wipe sessions, rate limits, etc.
-        $flushHomepageCache = function (): void {
-            try {
-                Cache::tags(['homepage'])->flush();
-            } catch (Throwable) {
-                // Store doesn't support tags — nothing safe to fall back to
-                // for a tag flush.
-            }
+        $flushCatalogCache = function (): void {
+            DB::afterCommit(function (): void {
+                $cache = app(TourPublicCacheService::class);
+                $cache->rotateCatalogGeneration();
+                $cache->flushHomepageTag();
+            });
         };
 
-        Tour::saved($flushHomepageCache);
-        Tour::deleted($flushHomepageCache);
-        TourTranslation::saved($flushHomepageCache);
-        TourTranslation::deleted($flushHomepageCache);
-        Category::saved($flushHomepageCache);
-        Category::deleted($flushHomepageCache);
+        Tour::saved($flushCatalogCache);
+        Tour::deleted($flushCatalogCache);
+        TourTranslation::saved($flushCatalogCache);
+        TourTranslation::deleted($flushCatalogCache);
+        Category::saved($flushCatalogCache);
+        Category::deleted($flushCatalogCache);
     }
 
     /**

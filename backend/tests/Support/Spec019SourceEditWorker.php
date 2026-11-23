@@ -75,6 +75,10 @@ if (count(array_unique([$arrivalPath, $releasePath, $donePath])) !== 3) {
     $fail('arrival/release/done paths must be distinct.', 2);
 }
 
+// Observable OS-level startup heartbeat BEFORE Composer/Laravel bootstrap so
+// cold-runner timeouts distinguish slow boot from failed spawn.
+@file_put_contents($arrivalPath . '.spawned', 'pid=' . getmypid() . "\n");
+
 $backendRoot = dirname(__DIR__, 2);
 
 // Environment BEFORE vendor/Dotenv/app boot. Mirrors tests/bootstrap.php so the
@@ -119,8 +123,8 @@ $db = DB::connection();
 // lock timeout is wider than the translation worker's because this child
 // MUST block on the parent-held Tour row lock while the parent proves the
 // wait via pg_stat_activity/pg_locks; it is still bounded.
-$db->statement("SET statement_timeout = '60000'");
-$db->statement("SET lock_timeout = '30000'");
+$db->statement("SET statement_timeout = '120000'");
+$db->statement("SET lock_timeout = '60000'");
 
 // Guard BEFORE any write: the disposable database on both axes, never dev/prod.
 $actualDb = (string) (($db->selectOne('select current_database() as db')->db) ?? '');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Partner\Models\Partner;
 use App\Domains\Search\Actions\IndexTourAction;
 use App\Domains\Search\Actions\RemoveFromIndexAction;
 use App\Models\Tour;
@@ -84,6 +85,7 @@ beforeEach(function () {
     $this->guardPassed = true;
     config()->set('database.default', Spec019CommittedFixtures::CONNECTION);
     $this->owner = Spec019CommittedFixtures::createOwner('outer-commit', $this->ownedRows);
+    Partner::whereIn('id', $this->ownedRows['tables'][(new Partner)->getTable()] ?? [])->update(['onboarding_status' => 'approved']);
 });
 
 afterEach(function () {

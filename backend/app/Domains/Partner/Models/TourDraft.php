@@ -15,6 +15,11 @@ class TourDraft extends Model
         'status',
         'rejection_reason',
         'auto_saved_at',
+        'creation_id',
+        'creation_payload_hash',
+        'concurrency_token',
+        'current_step',
+        'source_locale',
     ];
 
     protected function casts(): array

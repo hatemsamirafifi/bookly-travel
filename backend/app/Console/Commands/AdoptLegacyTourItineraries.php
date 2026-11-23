@@ -87,6 +87,15 @@ class AdoptLegacyTourItineraries extends Command
                     return [];
                 }
 
+                // EGM-003 (design v3 §4): published itinerary adoption is
+                // refused and reported, never silently written. Canonical
+                // published content changes only through a reviewed revision.
+                if ($fresh->status === 'published') {
+                    $skipped++;
+
+                    return [];
+                }
+
                 $outcome = $normalizer->normalize($this->decodeLegacy(
                     DB::table('tours')->where('id', $tour->id)->value('itinerary')
                 ));

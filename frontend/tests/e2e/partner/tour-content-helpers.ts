@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Browser, type BrowserContext, type Page } from '@playwright/test';
 import type { PartnerTourMediaInput } from '@/lib/api/types';
 
 /**
@@ -47,6 +47,93 @@ export const apiPost = (page: Page, path: string, body: unknown): Promise<ApiRes
   api(page, 'POST', path, body);
 export const apiPut = (page: Page, path: string, body: unknown): Promise<ApiResult> =>
   api(page, 'PUT', path, body);
+
+/**
+ * Create an isolated, authenticated traveler browser context backed by a fresh
+ * disposable traveler account registered through the real auth API.
+ *
+ * Isolates each booking-heavy E2E spec into its own per-user `booking.create`
+ * rate-limit bucket without raising or weakening the strict production 10/min
+ * limiter and without flushing shared Redis state.
+ */
+export async function createIsolatedTravelerContext(
+  browser: Browser,
+  options: {
+    baseURL?: string;
+    viewport?: { width: number; height: number } | null;
+    isMobile?: boolean;
+    hasTouch?: boolean;
+  } = {},
+): Promise<BrowserContext> {
+  const resolvedBaseURL =
+    options.baseURL ||
+    process.env.PLAYWRIGHT_BASE_URL ||
+    (process.env.DOCKER_ENV === 'true' ? 'http://nginx' : 'http://localhost:8080');
+
+  const context = await browser.newContext({
+    baseURL: resolvedBaseURL,
+    viewport: options.viewport ?? undefined,
+    isMobile: options.isMobile,
+    hasTouch: options.hasTouch,
+    storageState: { cookies: [], origins: [] },
+  });
+
+  await context.addCookies([
+    { name: 'bookly_cookie_consent', value: 'true', domain: 'localhost', path: '/' },
+    { name: 'bookly_cookie_consent', value: 'true', domain: 'nginx', path: '/' },
+    { name: 'bookly_cookie_consent', value: 'true', domain: '127.0.0.1', path: '/' },
+  ]);
+
+  const page = await context.newPage();
+  const suffix = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  const email = `e2e-traveler-${suffix}@bookly.test`;
+  const password = 'Password123!';
+
+  const registerResp = await page.request.post('/api/public/auth/register', {
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    data: {
+      name: `E2E Traveler ${suffix}`,
+      email,
+      password,
+      password_confirmation: password,
+      locale: 'en',
+    },
+  });
+
+  if (registerResp.status() !== 201) {
+    const body = await registerResp.text().catch(() => '<unreadable>');
+    await context.close().catch(() => {});
+    throw new Error(
+      `Failed to register isolated E2E traveler (${email}): HTTP ${registerResp.status()} ${body}`,
+    );
+  }
+
+  await page.goto('/en/auth/login');
+  await page.locator('input[name="email"]').waitFor({ state: 'visible', timeout: 30000 });
+  await page.fill('input[name="email"]', email);
+  await page.fill('input[name="password"]', password);
+
+  const loginRespPromise = page.waitForResponse(
+    (resp) => resp.url().includes('/api/public/auth/login'),
+    { timeout: 30000 },
+  );
+  await page.click('button[type="submit"]');
+  const loginResp = await loginRespPromise;
+  if (!loginResp.ok()) {
+    const body = await loginResp.text().catch(() => '<unreadable>');
+    await context.close().catch(() => {});
+    throw new Error(`Isolated E2E traveler login failed: HTTP ${loginResp.status()} ${body}`);
+  }
+
+  await expect
+    .poll(async () => page.evaluate(() => localStorage.getItem('auth_token')), {
+      timeout: 15000,
+    })
+    .not.toBeNull();
+
+  await page.close();
+  return context;
+}
 
 /** Unique-per-run title so reruns never collide on seeded data. */
 export function uniqueTitle(prefix: string): string {
@@ -107,7 +194,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * Call after loading a partner page so the bearer token has its real origin.
  */
 export async function seededOwnedTourId(page: Page): Promise<number> {
-  const response = await page.request.get('/api/public/tours/hidden-gems-rome-walking-tour?locale=en');
+  const response = await page.request.get('/api/public/tours/colosseum-vip-experience-tour?locale=en');
   const body: unknown = await response.json();
   if (response.status() !== 200 || !isRecord(body) || !isRecord(body.data)
     || typeof body.data.id !== 'number' || body.data.id <= 0) {

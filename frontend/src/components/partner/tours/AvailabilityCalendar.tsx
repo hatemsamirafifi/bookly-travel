@@ -1,5 +1,6 @@
 'use client';
 
+import { useLocale, useTranslations } from 'next-intl';
 import { useTourWizardStore } from '@/lib/stores/tourWizard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,21 +9,14 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import { Plus, Trash2 } from 'lucide-react';
 import type { AvailabilityRuleFormInput, AvailabilityExceptionFormInput } from '@/types/tour';
 
-const DAYS_OF_WEEK = [
-  { value: 0, label: 'Sun' },
-  { value: 1, label: 'Mon' },
-  { value: 2, label: 'Tue' },
-  { value: 3, label: 'Wed' },
-  { value: 4, label: 'Thu' },
-  { value: 5, label: 'Fri' },
-  { value: 6, label: 'Sat' },
-];
+const WEEKDAY_INDICES = [0, 1, 2, 3, 4, 5, 6] as const;
 
 interface AvailabilityCalendarProps {
   disabled?: boolean;
 }
 
 export function AvailabilityCalendar({ disabled = false }: AvailabilityCalendarProps) {
+  const t = useTranslations('partner.tours.availability');
   const {
     formData,
     updateAvailabilityRule,
@@ -39,12 +33,10 @@ export function AvailabilityCalendar({ disabled = false }: AvailabilityCalendarP
     <div className="space-y-8">
       {/* ── Recurring Rules ─────────────────────────────────────────── */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div>
-            <h3 className="text-lg font-semibold text-[#0A2540]">Recurring Schedule</h3>
-            <p className="text-sm text-gray-500">
-              Define when your tour runs on a recurring basis.
-            </p>
+            <h3 className="text-lg font-semibold text-[#0A2540]">{t('recurringSchedule')}</h3>
+            <p className="text-sm text-gray-500">{t('recurringScheduleHint')}</p>
           </div>
           <Button
             type="button"
@@ -52,16 +44,16 @@ export function AvailabilityCalendar({ disabled = false }: AvailabilityCalendarP
             size="sm"
             onClick={addAvailabilityRule}
             disabled={disabled}
-            className="gap-1"
+            className="gap-1 shrink-0"
           >
             <Plus className="w-4 h-4" />
-            Add Rule
+            {t('addRule')}
           </Button>
         </div>
 
         {availability_rules.length === 0 && (
           <div className="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
-            No recurring rules yet. Click &ldquo;Add Rule&rdquo; to create one.
+            {t('noRulesYet')}
           </div>
         )}
 
@@ -80,12 +72,10 @@ export function AvailabilityCalendar({ disabled = false }: AvailabilityCalendarP
 
       {/* ── Exceptions ───────────────────────────────────────────────── */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div>
-            <h3 className="text-lg font-semibold text-[#0A2540]">Exceptions</h3>
-            <p className="text-sm text-gray-500">
-              Add blackout dates or specific overrides for individual days.
-            </p>
+            <h3 className="text-lg font-semibold text-[#0A2540]">{t('exceptionsTitle')}</h3>
+            <p className="text-sm text-gray-500">{t('exceptionsHint')}</p>
           </div>
           <Button
             type="button"
@@ -93,16 +83,16 @@ export function AvailabilityCalendar({ disabled = false }: AvailabilityCalendarP
             size="sm"
             onClick={addAvailabilityException}
             disabled={disabled}
-            className="gap-1"
+            className="gap-1 shrink-0"
           >
             <Plus className="w-4 h-4" />
-            Add Exception
+            {t('addException')}
           </Button>
         </div>
 
         {availability_exceptions.length === 0 && (
           <div className="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
-            No exceptions yet. Click &ldquo;Add Exception&rdquo; to create one.
+            {t('noExceptionsYet')}
           </div>
         )}
 
@@ -118,7 +108,6 @@ export function AvailabilityCalendar({ disabled = false }: AvailabilityCalendarP
           ))}
         </div>
 
-        {/* Visual calendar-like summary of exceptions */}
         {availability_exceptions.length > 0 && (
           <ExceptionCalendar exceptions={availability_exceptions} />
         )}
@@ -137,6 +126,8 @@ interface AvailabilityRuleCardProps {
 }
 
 function AvailabilityRuleCard({ rule, onChange, onRemove, disabled }: AvailabilityRuleCardProps) {
+  const t = useTranslations('partner.tours.availability');
+
   const toggleDay = (dayValue: number) => {
     const days = rule.days_of_week.includes(dayValue)
       ? rule.days_of_week.filter((d) => d !== dayValue)
@@ -144,18 +135,23 @@ function AvailabilityRuleCard({ rule, onChange, onRemove, disabled }: Availabili
     onChange({ days_of_week: days });
   };
 
+  const ruleTitle =
+    rule.rule_type === 'daily'
+      ? t('dailyRule')
+      : rule.rule_type === 'weekly'
+        ? t('weeklyRule')
+        : t('monthlyRule');
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-[#0A2540]">
-          {rule.rule_type === 'daily' ? 'Daily' : rule.rule_type === 'weekly' ? 'Weekly' : 'Monthly'} Rule
-        </span>
+        <span className="text-sm font-medium text-[#0A2540]">{ruleTitle}</span>
         <button
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Remove rule"
+          className="p-1 rounded text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label={t('removeRule')}
         >
           <Trash2 className="w-4 h-4" />
         </button>
@@ -163,21 +159,23 @@ function AvailabilityRuleCard({ rule, onChange, onRemove, disabled }: Availabili
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <Label>Frequency</Label>
+          <Label id={`rule-freq-label-${rule.id}`}>{t('frequency')}</Label>
           <Select
             value={rule.rule_type}
             onValueChange={(v) => onChange({ rule_type: v as AvailabilityRuleFormInput['rule_type'] })}
           >
-            <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
+            <SelectTrigger aria-labelledby={`rule-freq-label-${rule.id}`}>
+              <SelectValue placeholder={t('selectFrequency')} />
+            </SelectTrigger>
             <SelectContent>
-              <SelectItem value="daily">Daily</SelectItem>
-              <SelectItem value="weekly">Weekly</SelectItem>
-              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="daily">{t('daily')}</SelectItem>
+              <SelectItem value="weekly">{t('weekly')}</SelectItem>
+              <SelectItem value="monthly">{t('monthly')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`rule-time-${rule.id}`}>Start time</Label>
+          <Label htmlFor={`rule-time-${rule.id}`}>{t('startTime')}</Label>
           <Input
             id={`rule-time-${rule.id}`}
             type="time"
@@ -187,7 +185,7 @@ function AvailabilityRuleCard({ rule, onChange, onRemove, disabled }: Availabili
           />
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`rule-start-${rule.id}`}>Start date</Label>
+          <Label htmlFor={`rule-start-${rule.id}`}>{t('startDate')}</Label>
           <Input
             id={`rule-start-${rule.id}`}
             type="date"
@@ -197,47 +195,47 @@ function AvailabilityRuleCard({ rule, onChange, onRemove, disabled }: Availabili
           />
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`rule-end-${rule.id}`}>End date</Label>
+          <Label htmlFor={`rule-end-${rule.id}`}>{t('endDate')}</Label>
           <Input
             id={`rule-end-${rule.id}`}
             type="date"
             value={rule.end_date}
             onChange={(e) => onChange({ end_date: e.target.value })}
             disabled={disabled}
-            placeholder="Leave empty for indefinite"
+            placeholder={t('indefinitePlaceholder')}
           />
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`rule-capacity-${rule.id}`}>Capacity</Label>
+          <Label htmlFor={`rule-capacity-${rule.id}`}>{t('capacity')}</Label>
           <Input
             id={`rule-capacity-${rule.id}`}
             type="number"
             min="1"
             value={rule.capacity}
-            onChange={(e) => onChange({ capacity: Math.max(1, parseInt(e.target.value) || 1) })}
+            onChange={(e) => onChange({ capacity: Math.max(1, parseInt(e.target.value, 10) || 1) })}
             disabled={disabled}
           />
         </div>
       </div>
 
-      {/* Days of week selector (only for weekly) */}
       {rule.rule_type === 'weekly' && (
         <div className="space-y-1">
-          <Label>Days of week</Label>
-          <div className="flex gap-1">
-            {DAYS_OF_WEEK.map((day) => (
+          <Label>{t('daysOfWeek')}</Label>
+          <div className="flex flex-wrap gap-1">
+            {WEEKDAY_INDICES.map((dayValue) => (
               <button
-                key={day.value}
+                key={dayValue}
                 type="button"
-                onClick={() => toggleDay(day.value)}
+                aria-pressed={rule.days_of_week.includes(dayValue)}
+                onClick={() => toggleDay(dayValue)}
                 disabled={disabled}
                 className={`w-9 h-9 rounded-full text-xs font-medium flex items-center justify-center transition-colors ${
-                  rule.days_of_week.includes(day.value)
+                  rule.days_of_week.includes(dayValue)
                     ? 'bg-[#FFB800] text-[#0A2540]'
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 } disabled:opacity-50`}
               >
-                {day.label}
+                {t(`weekday${dayValue}`)}
               </button>
             ))}
           </div>
@@ -257,22 +255,28 @@ interface ExceptionCardProps {
 }
 
 function ExceptionCard({ exception, onChange, onRemove, disabled }: ExceptionCardProps) {
+  const t = useTranslations('partner.tours.availability');
+  const locale = useLocale();
   const isBlackout = exception.exception_type === 'blackout';
 
   return (
-    <div className={`rounded-lg border p-4 space-y-3 ${
-      isBlackout ? 'border-red-200 bg-red-50/30' : 'border-blue-200 bg-blue-50/30'
-    }`}>
+    <div
+      className={`rounded-lg border p-4 space-y-3 ${
+        isBlackout ? 'border-red-200 bg-red-50/30' : 'border-blue-200 bg-blue-50/30'
+      }`}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
-            isBlackout ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
-          }`}>
-            {isBlackout ? 'Blackout' : 'Specific Override'}
+          <span
+            className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
+              isBlackout ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
+            }`}
+          >
+            {isBlackout ? t('blackoutBadge') : t('specificBadge')}
           </span>
           {exception.date && (
             <span className="text-sm text-gray-600">
-              {new Date(exception.date + 'T00:00:00').toLocaleDateString()}
+              {new Date(exception.date + 'T00:00:00').toLocaleDateString(locale)}
             </span>
           )}
         </div>
@@ -280,8 +284,8 @@ function ExceptionCard({ exception, onChange, onRemove, disabled }: ExceptionCar
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Remove exception"
+          className="p-1 rounded text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label={t('removeException')}
         >
           <Trash2 className="w-4 h-4" />
         </button>
@@ -289,20 +293,22 @@ function ExceptionCard({ exception, onChange, onRemove, disabled }: ExceptionCar
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <Label>Type</Label>
+          <Label id={`exc-type-label-${exception.id}`}>{t('typeLabel')}</Label>
           <Select
             value={exception.exception_type}
             onValueChange={(v) => onChange({ exception_type: v as 'blackout' | 'specific' })}
           >
-            <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
+            <SelectTrigger aria-labelledby={`exc-type-label-${exception.id}`}>
+              <SelectValue placeholder={t('selectType')} />
+            </SelectTrigger>
             <SelectContent>
-              <SelectItem value="blackout">Blackout (unavailable)</SelectItem>
-              <SelectItem value="specific">Specific (override)</SelectItem>
+              <SelectItem value="blackout">{t('blackoutOption')}</SelectItem>
+              <SelectItem value="specific">{t('specificOption')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`exc-date-${exception.id}`}>Date</Label>
+          <Label htmlFor={`exc-date-${exception.id}`}>{t('date')}</Label>
           <Input
             id={`exc-date-${exception.id}`}
             type="date"
@@ -314,7 +320,7 @@ function ExceptionCard({ exception, onChange, onRemove, disabled }: ExceptionCar
         {!isBlackout && (
           <>
             <div className="space-y-1">
-              <Label htmlFor={`exc-time-${exception.id}`}>Start time</Label>
+              <Label htmlFor={`exc-time-${exception.id}`}>{t('startTime')}</Label>
               <Input
                 id={`exc-time-${exception.id}`}
                 type="time"
@@ -324,18 +330,18 @@ function ExceptionCard({ exception, onChange, onRemove, disabled }: ExceptionCar
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor={`exc-capacity-${exception.id}`}>Capacity</Label>
+              <Label htmlFor={`exc-capacity-${exception.id}`}>{t('capacity')}</Label>
               <Input
                 id={`exc-capacity-${exception.id}`}
                 type="number"
                 min="1"
                 value={exception.capacity}
-                onChange={(e) => onChange({ capacity: Math.max(1, parseInt(e.target.value) || 1) })}
+                onChange={(e) => onChange({ capacity: Math.max(1, parseInt(e.target.value, 10) || 1) })}
                 disabled={disabled}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor={`exc-multiplier-${exception.id}`}>Price multiplier</Label>
+              <Label htmlFor={`exc-multiplier-${exception.id}`}>{t('priceMultiplier')}</Label>
               <Input
                 id={`exc-multiplier-${exception.id}`}
                 type="number"
@@ -345,18 +351,18 @@ function ExceptionCard({ exception, onChange, onRemove, disabled }: ExceptionCar
                 value={exception.price_multiplier}
                 onChange={(e) => onChange({ price_multiplier: e.target.value })}
                 disabled={disabled}
-                placeholder="e.g., 1.20 for 20% surcharge"
+                placeholder={t('priceMultiplierPlaceholder')}
               />
             </div>
           </>
         )}
         <div className="space-y-1 sm:col-span-2">
-          <Label htmlFor={`exc-note-${exception.id}`}>Note</Label>
+          <Label htmlFor={`exc-note-${exception.id}`}>{t('note')}</Label>
           <Input
             id={`exc-note-${exception.id}`}
             value={exception.note}
             onChange={(e) => onChange({ note: e.target.value })}
-            placeholder="e.g., Holiday special pricing"
+            placeholder={t('notePlaceholder')}
             disabled={disabled}
           />
         </div>
@@ -372,30 +378,31 @@ interface ExceptionCalendarProps {
 }
 
 function ExceptionCalendar({ exceptions }: ExceptionCalendarProps) {
-  // Group exceptions by month
+  const t = useTranslations('partner.tours.availability');
+  const locale = useLocale();
+
   const grouped = exceptions.reduce<Record<string, AvailabilityExceptionFormInput[]>>((acc, exc) => {
     if (!exc.date) return acc;
-    const key = exc.date.substring(0, 7); // YYYY-MM
+    const key = exc.date.substring(0, 7);
     acc[key] = acc[key] ?? [];
     acc[key].push(exc);
     return acc;
   }, {});
 
   const sortedMonths = Object.keys(grouped).sort();
-
   if (sortedMonths.length === 0) return null;
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
-      <h4 className="text-sm font-semibold text-[#0A2540]">Exceptions Calendar</h4>
+      <h4 className="text-sm font-semibold text-[#0A2540]">{t('exceptionsCalendar')}</h4>
       {sortedMonths.map((monthKey) => {
         const monthDate = new Date(monthKey + '-01T00:00:00');
-        const monthLabel = monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        const monthLabel = monthDate.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
         const items = grouped[monthKey];
 
         return (
           <div key={monthKey} className="space-y-1">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{monthLabel}</p>
+            <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">{monthLabel}</p>
             <div className="flex flex-wrap gap-2">
               {items.map((exc) => {
                 const day = exc.date ? new Date(exc.date + 'T00:00:00').getDate() : '?';
@@ -404,14 +411,12 @@ function ExceptionCalendar({ exceptions }: ExceptionCalendarProps) {
                   <div
                     key={exc.id}
                     className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
-                      isBlackout
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-blue-100 text-blue-700'
+                      isBlackout ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
                     }`}
                   >
                     <span>{day}</span>
                     {isBlackout && (
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-3 h-3" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     )}

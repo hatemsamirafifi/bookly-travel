@@ -101,7 +101,17 @@ export async function apiClient<T>(endpoint: string, options: FetchOptions = {})
 
     if (response.status === 409) {
       const body = await response.json().catch(() => ({}));
-      throw new ConflictError(body.message || 'This request conflicts with the current state.');
+      const errorCode =
+        typeof body.error === 'string'
+          ? body.error
+          : typeof body.error_code === 'string'
+            ? body.error_code
+            : undefined;
+      throw new ConflictError(
+        body.message || 'This request conflicts with the current state.',
+        errorCode,
+        typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : undefined
+      );
     }
 
     if (response.status === 410) {
@@ -146,9 +156,18 @@ export class NotFoundError extends ApiError {
 }
 
 export class ConflictError extends ApiError {
-  constructor(message: string) {
+  errorCode?: string;
+  body?: Record<string, unknown>;
+  serverDraft?: Record<string, unknown>;
+  constructor(message: string, errorCode?: string, body?: Record<string, unknown>) {
     super(message, 409);
     this.name = 'ConflictError';
+    this.errorCode = errorCode;
+    this.body = body;
+    const rawServerDraft = body?.server_draft;
+    if (typeof rawServerDraft === 'object' && rawServerDraft !== null && !Array.isArray(rawServerDraft)) {
+      this.serverDraft = rawServerDraft as Record<string, unknown>;
+    }
   }
 }
 

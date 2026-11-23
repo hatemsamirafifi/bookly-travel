@@ -1,11 +1,19 @@
 'use client';
 
-import { useState, useEffect, use, useCallback, useRef } from 'react';
+import { useState, useEffect, use, useCallback, useRef, useMemo } from 'react';
 import { ArrowLeft, Save, Calendar, Coins, Send, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { getAuthToken } from '@/lib/auth/token';
 import { getApiBaseUrl, NotFoundError } from '@/lib/api/client';
-import { getLatestTourDraft } from '@/lib/api/partner';
+import {
+  getLatestTourDraft,
+  createTourRevision,
+  replaceTourRevision,
+  submitTourRevision,
+  withdrawTourRevision,
+  respondToTourChangeRequest,
+  getTourRevision,
+} from '@/lib/api/partner';
 import { normalizeWizardState } from '@/lib/stores/tourWizard';
 import { useTranslations } from 'next-intl';
 import { localizeServerFieldError, pickFieldErrors, toFormErrorPath, getSubmittedOptionRows } from '@/lib/validators/partner';
@@ -13,9 +21,23 @@ import { ImageUploader } from '@/components/partner/tours/ImageUploader';
 import { ItineraryEditor } from '@/components/partner/tours/ItineraryEditor';
 import { TourContentPreview } from '@/components/partner/tours/TourContentPreview';
 import { BookingOptionsForm } from '@/components/partner/tours/BookingOptionsForm';
+import { TourRevisionPanel } from '@/components/partner/tours/TourRevisionPanel';
 import { PartnerRichTextEditor } from '@/components/partner/tours/PartnerRichTextEditor';
 import { toMinorUnits } from '@/lib/utils';
-import type { TourItineraryDay, ContentSourceLocale, PartnerBookingOptionInput } from '@/lib/api/types';
+import type {
+  TourItineraryDay,
+  ContentSourceLocale,
+  PartnerBookingOptionInput,
+  ContentGovernance,
+  TourRevisionDetail,
+  TourRevisionState,
+  TourRevisionResponsePayload,
+  TourRevisionPatchPayload,
+  RevisionPayload,
+  RevisionSnapshotOption,
+  RevisionSnapshotMedia,
+  EnglishSourceInput,
+} from '@/lib/api/types';
 import type { OwnedTourOption } from '@/types/partner';
 import type { TourMedia, DifficultyLevel, BookingOptionFormInput, SourceLocale } from '@/types/tour';
 
@@ -220,6 +242,183 @@ function toOptionsPayload(rows: BookingOptionFormInput[]): PartnerBookingOptionI
   }));
 }
 
+/* ─── EGM-003 revision governance helpers ────────────────────────────────── */
+
+/** Parse the additive owned `content_governance` object. Returns null for
+ *  anything that is not a complete governance record, so a published tour
+ *  without valid metadata fails closed instead of guessing capabilities. */
+function parseGovernance(value: unknown): ContentGovernance | null {
+  if (!isRecord(value)) return null;
+  const { source_locale, generation_epoch, approved_revision, active_candidate, open_requests } = value;
+  if (source_locale !== 'en' && source_locale !== 'es' && source_locale !== 'it') return null;
+  if (typeof generation_epoch !== 'number' || !Number.isSafeInteger(generation_epoch) || generation_epoch < 0) return null;
+  const isSummary = (entry: unknown): entry is Record<string, unknown> =>
+    isRecord(entry) && typeof entry.id === 'number' && typeof entry.revision_number === 'number'
+    && typeof entry.payload_hash === 'string';
+  if (approved_revision !== null && !isSummary(approved_revision)) return null;
+  if (active_candidate !== null && !isSummary(active_candidate)) return null;
+  if (!Array.isArray(open_requests)) return null;
+  return value as unknown as ContentGovernance;
+}
+
+const REVISION_SOURCE_TEXT_FIELDS = ['title', 'description', 'meeting_point', 'cancellation_policy'] as const;
+const REVISION_SOURCE_LIST_FIELDS = ['highlights', 'inclusions', 'exclusions', 'important_information'] as const;
+
+interface RevisionRestore {
+  /** Candidate source tier mapped back into the authored write shape. */
+  source: Partial<Translation>;
+  nulled: Array<keyof Translation>;
+  /** Candidate presentation tier (null when the snapshot omits it). */
+  presentation: Record<string, unknown> | null;
+  /** Candidate option text rows in stored (live) order. */
+  options: RevisionSnapshotOption[] | null;
+  /** Candidate media projection in stored order. */
+  media: TourMedia[] | null;
+}
+
+/** Normalize revision snapshot options from either an array or the backend's
+ *  ID-keyed object, preserving live display order when numeric keys would
+ *  otherwise iterate in ascending ID order. */
+function parseRevisionOptions(rawOptions: unknown, liveOptionOrder?: number[]): RevisionSnapshotOption[] | null {
+  if (Array.isArray(rawOptions)) {
+    return rawOptions
+      .filter((entry): entry is RevisionSnapshotOption => isRecord(entry) && typeof entry.id === 'number' && typeof entry.title === 'string')
+      .map((entry) => ({
+        id: entry.id,
+        title: entry.title,
+        pickup_instructions: typeof entry.pickup_instructions === 'string' ? entry.pickup_instructions : null,
+      }));
+  }
+  if (!isRecord(rawOptions)) return null;
+  const entries: RevisionSnapshotOption[] = [];
+  for (const [key, entry] of Object.entries(rawOptions)) {
+    if (!isRecord(entry) || typeof entry.title !== 'string') continue;
+    const keyId = /^\d+$/.test(key) ? Number(key) : NaN;
+    const optionId = typeof entry.id === 'number' && Number.isSafeInteger(entry.id) && entry.id > 0
+      ? entry.id
+      : (Number.isSafeInteger(keyId) && keyId > 0 ? keyId : null);
+    if (optionId === null) continue;
+    entries.push({
+      id: optionId,
+      title: entry.title,
+      pickup_instructions: typeof entry.pickup_instructions === 'string' ? entry.pickup_instructions : null,
+    });
+  }
+  if (liveOptionOrder && liveOptionOrder.length > 0 && entries.length > 1) {
+    const orderIndex = new Map<number, number>(liveOptionOrder.map((optionId, index) => [optionId, index]));
+    entries.sort((a, b) => (orderIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (orderIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER));
+  }
+  return entries;
+}
+
+/** Map a full candidate `source` tier back into the authored editor shape:
+ *  the stored snapshot tier `source` holds the same nine canonical fields
+ *  the write form keys under `translations.{fixed_source_locale}`, so this
+ *  inverse mapping is explicit and locale-independent (never a locale swap). */
+function revisionRestore(
+  payload: RevisionPayload | null | undefined,
+  fallbackSourceLocale: ContentSourceLocale,
+  liveOptionOrder?: number[]
+): RevisionRestore {
+  if (!payload || !isRecord(payload.source)) {
+    return { source: {}, nulled: [], presentation: null, options: null, media: null };
+  }
+  const source = payload.source as Record<string, unknown>;
+  const mapped: Record<string, unknown> = {};
+  const nulled: Array<keyof Translation> = [];
+  for (const field of REVISION_SOURCE_TEXT_FIELDS) {
+    if (!(field in source)) continue;
+    const value = source[field];
+    if (typeof value === 'string') mapped[field] = value;
+    else if (value === null) {
+      mapped[field] = '';
+      nulled.push(field);
+    }
+  }
+  for (const field of REVISION_SOURCE_LIST_FIELDS) {
+    if (!(field in source)) continue;
+    const value = source[field];
+    if (typeof value === 'string' || Array.isArray(value)) {
+      const normalized = normalizeWizardState({ [field]: value });
+      const list = normalized[field];
+      if (Array.isArray(list)) mapped[field] = list.filter((item): item is string => typeof item === 'string');
+    } else if (value === null) {
+      mapped[field] = [];
+      nulled.push(field);
+    }
+  }
+  if ('itinerary' in source) {
+    const value = source.itinerary;
+    if (Array.isArray(value)) mapped.itinerary = normalizeWizardState({ itinerary: value }).itinerary ?? [];
+    else if (value === null) {
+      mapped.itinerary = [];
+      nulled.push('itinerary');
+    }
+  }
+  void fallbackSourceLocale; // the source tier is locale-free; the editor binds it to the tour's fixed locale
+
+  const presentation = isRecord(payload.presentation) ? payload.presentation : null;
+
+  const options = parseRevisionOptions(payload.options, liveOptionOrder);
+
+  const media = Array.isArray(payload.media)
+    ? payload.media
+      .filter((entry): entry is RevisionSnapshotMedia => isRecord(entry) && typeof entry.url === 'string')
+      .map((entry, index) => {
+        const row: TourMedia = {
+          id: `revision-media-${index}`,
+          url: entry.url,
+          is_cover: entry.is_cover === true,
+          sort_order: index,
+        };
+        if ('alt_text' in entry) {
+          row.alt_text = typeof entry.alt_text === 'string' ? entry.alt_text : null;
+        }
+        return row;
+      })
+    : null;
+
+  return {
+    source: mapped as Partial<Translation>,
+    nulled,
+    presentation,
+    options,
+    media,
+  };
+}
+
+/** Build candidate option editor rows: authored text comes from the revision
+ *  snapshot while commercial values (price/capacity/schedule codes) stay
+ *  seeded from the CURRENT live approved option rows by stable id. */
+function candidateOptionRows(
+  snapshotOptions: RevisionSnapshotOption[],
+  liveOptions: OwnedTourOption[]
+): BookingOptionFormInput[] {
+  const liveById = new Map<number, OwnedTourOption>();
+  for (const option of liveOptions) {
+    if (typeof option.id === 'number') liveById.set(option.id, option);
+  }
+  return snapshotOptions.map((snapshot, index) => {
+    const live = liveById.get(snapshot.id);
+    return {
+      id: `revision-option-${index}`,
+      server_id: snapshot.id,
+      title: snapshot.title,
+      pickup_instructions: snapshot.pickup_instructions ?? '',
+      guide_languages: live?.guide_languages ?? [],
+      price: live ? (Number(live.price_amount ?? 0) / 100).toString() : '',
+      capacity: live === undefined || live.group_size_max === null || live.group_size_max === undefined ? '' : String(live.group_size_max),
+      start_time: live?.start_time ?? '',
+      weekdays: live?.weekdays ?? [],
+    };
+  });
+}
+
+/** Presentation minutes from the edit form's value/unit pair (day = 1440). */
+function derivedDurationMinutes(value: number, unit: string): number {
+  return unit === 'day' ? value * 1440 : value * 60;
+}
+
 interface Tour {
   id: number;
   category_id: number;
@@ -240,6 +439,9 @@ interface Tour {
   guide_languages?: string[];
   /** Authored active bookable options; absent means none are stored. */
   options?: OwnedTourOption[];
+  /** Additive EGM-003 governance object; absent/invalid on a published tour
+   *  fails the editor closed until it loads. */
+  content_governance?: ContentGovernance | null;
   translation_statuses?: { en?: 'pending' | 'ready' | 'stale' | 'failed'; es?: 'pending' | 'ready' | 'stale' | 'failed'; it?: 'pending' | 'ready' | 'stale' | 'failed' };
   translations: Array<{
     locale: string;
@@ -331,6 +533,91 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel | null>(null);
   const [difficultyDirty, setDifficultyDirty] = useState(false);
 
+  /* ─── EGM-003 revision governance state ────────────────────────────────── */
+  const revisionT = useTranslations('partner.tours.revision');
+  // Governed-object state: null means "no valid governance record". On a
+  // published tour that blocks every save (fail closed with a retry); drafts
+  // keep their existing opaque flow regardless.
+  const [governance, setGovernance] = useState<ContentGovernance | null>(null);
+  // The active candidate as it currently sits in the editor: `loaded` true
+  // means the full payload was applied to the form, and replacement edits are
+  // safe; a metadata-only candidate blocks content saves until reloaded.
+  interface CandidateContext {
+    id: number;
+    revisionNumber: number;
+    payloadHash: string;
+    baseRevisionId: number;
+    state: TourRevisionState;
+    loaded: boolean;
+  }
+  const [candidate, setCandidate] = useState<CandidateContext | null>(null);
+  const [changeSummary, setChangeSummary] = useState('');
+  const [savingContent, setSavingContent] = useState(false);
+  const [savingOperational, setSavingOperational] = useState(false);
+  const [submittingCandidate, setSubmittingCandidate] = useState(false);
+  const [withdrawingCandidate, setWithdrawingCandidate] = useState(false);
+  const [respondingRequest, setRespondingRequest] = useState(false);
+  const [showReloadCandidate, setShowReloadCandidate] = useState(false);
+  // Page-level revision status region (guidance, outcomes, focused errors).
+  const [revisionStatus, setRevisionStatus] = useState<{ tone: 'info' | 'error'; message: string } | null>(null);
+  const revisionStatusRef = useRef<HTMLDivElement>(null);
+  // Save baselines: the values the last completed save (approved content or
+  // the restored candidate) left in place. Published routing compares the
+  // current form against them; values never reset on failures.
+  const [sourceBaseline, setSourceBaseline] = useState<Translation | null>(null);
+  const [sourceBaselineNulled, setSourceBaselineNulled] = useState<Set<keyof Translation>>(new Set());
+  const [presentationBaseline, setPresentationBaseline] = useState<{
+    category_id: number;
+    location: string;
+    cover_image_url: string | null;
+    guide_languages: string[];
+    group_size_min: number;
+    group_size_max: number;
+    duration_minutes: number;
+    difficulty_level: DifficultyLevel | null;
+  } | null>(null);
+  const [mediaBaseline, setMediaBaseline] = useState<TourMedia[] | null>(null);
+  interface OptionTextBaselineEntry { title: string; pickup_instructions: string | null; guide_languages: string[] }
+  interface OptionCommercialBaselineEntry {
+    price_amount: number;
+    group_size_max: number | null;
+    start_time: string | null;
+    weekdays: number[] | null;
+  }
+  const [optionTextBaseline, setOptionTextBaseline] = useState<Record<number, OptionTextBaselineEntry> | null>(null);
+  const [optionOrderBaseline, setOptionOrderBaseline] = useState<number[] | null>(null);
+  const [optionCommercialBaseline, setOptionCommercialBaseline] = useState<Record<number, OptionCommercialBaselineEntry> | null>(null);
+
+  const isPublishedTour = tour?.status === 'published';
+  const governanceBlocked = isPublishedTour && governance === null;
+  const governanceBlockedSignature = governanceBlocked ? 'blocked' : '';
+
+  // Focus the revision status / governance-blocked regions only when they
+  // newly appear, so keyboard users hear published-save outcomes and refusals.
+  const revisionStatusSignature = revisionStatus ? `${revisionStatus.tone}|${revisionStatus.message}` : '';
+  const prevRevisionStatusSignatureRef = useRef('');
+  useEffect(() => {
+    if (revisionStatusSignature && revisionStatusSignature !== prevRevisionStatusSignatureRef.current) {
+      prevRevisionStatusSignatureRef.current = revisionStatusSignature;
+      revisionStatusRef.current?.focus();
+    }
+    if (!revisionStatusSignature) {
+      prevRevisionStatusSignatureRef.current = '';
+    }
+  }, [revisionStatusSignature]);
+
+  const governanceBlockedRef = useRef<HTMLDivElement>(null);
+  const prevBlockedSignatureRef = useRef('');
+  useEffect(() => {
+    if (governanceBlockedSignature && governanceBlockedSignature !== prevBlockedSignatureRef.current) {
+      prevBlockedSignatureRef.current = governanceBlockedSignature;
+      governanceBlockedRef.current?.focus();
+    }
+    if (!governanceBlockedSignature) {
+      prevBlockedSignatureRef.current = '';
+    }
+  }, [governanceBlockedSignature]);
+
   // Partners edit the tour's own source only; the other languages are
   // generated server-side. The tab is the tour's authoritative (immutable)
   // source locale — legacy tours read as the English source.
@@ -354,6 +641,257 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     en: emptyTranslation(), es: emptyTranslation(), it: emptyTranslation(),
   });
 
+  /* ─── Published mixed-save routing (EGM-003) ───────────────────────────── */
+  const normalizeGuideCodes = (raw: string): string[] =>
+    [...new Set(raw.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean))].sort();
+  const canonicalizeWeekdays = (days: number[]): number[] | null => (days.length > 0 ? [...new Set(days)].sort((a, b) => a - b) : null);
+
+  /** Classifies the current form against the last-saved baseline on a
+   *  published tour: governed (reviewable) vs. commercial (operational)
+   *  vs. structural option changes. Never mutates anything. */
+  const publishedGating = useMemo(() => {
+    const emptyResult = { governedDirty: false, commercialDirty: false, structuralDirty: false, optionTextDirty: false };
+    if (!isPublishedTour || !sourceBaseline || !presentationBaseline || !mediaBaseline) {
+      return emptyResult;
+    }
+
+    // Governed: canonical source fields (null-aware).
+    const canonicCurrent = (field: keyof Translation): unknown =>
+      nullSourceFields.has(field) ? null : translationData[sourceLocale][field];
+    const canonicBaseline = (field: keyof Translation): unknown => {
+      const value = sourceBaseline[field];
+      if (value === undefined) return undefined;
+      return sourceBaselineNulled.has(field) ? null : value;
+    };
+    let sourceDirty = false;
+    for (const field of SNAPSHOT_TEXT_FIELDS) {
+      if (canonicCurrent(field) !== canonicBaseline(field)) sourceDirty = true;
+    }
+    for (const field of SNAPSHOT_LIST_FIELDS) {
+      if (JSON.stringify(canonicCurrent(field)) !== JSON.stringify(canonicBaseline(field))) sourceDirty = true;
+    }
+    if (JSON.stringify(canonicCurrent('itinerary')) !== JSON.stringify(canonicBaseline('itinerary'))) {
+      sourceDirty = true;
+    }
+
+    // Governed: presentation fields.
+    const baseline = presentationBaseline;
+    const guideNormalized = normalizeGuideCodes(guideLanguagesInput);
+    const guideBaseline = [...new Set(baseline.guide_languages.map((code) => code.trim().toLowerCase()))].sort();
+    let presentationDirty = false;
+    if (categoryId !== baseline.category_id) presentationDirty = true;
+    if (location !== baseline.location) presentationDirty = true;
+    if (JSON.stringify(guideNormalized) !== JSON.stringify(guideBaseline)) presentationDirty = true;
+    if (groupSizeMin !== baseline.group_size_min) presentationDirty = true;
+    if (groupSizeMax !== baseline.group_size_max) presentationDirty = true;
+    const derivedMinutes = derivedDurationMinutes(durationValue, durationUnit);
+    if (!Number.isFinite(derivedMinutes) || derivedMinutes !== baseline.duration_minutes) presentationDirty = true;
+    if (difficultyLevel !== baseline.difficulty_level) presentationDirty = true;
+    if (coverImageDirty || coverImageUrl !== (baseline.cover_image_url ?? '')) presentationDirty = true;
+
+    // Governed: media projection.
+    let mediaDirtyNow = mediaDirty;
+    if (!mediaDirtyNow && mediaBaseline && media.length !== mediaBaseline.length) mediaDirtyNow = true;
+
+    // Options: authored text vs. price/capacity/schedule vs. structure.
+    const submittedRows = getSubmittedOptionRows(options);
+    const textBaselineMap = optionTextBaseline ?? {};
+    const commercialBaselineMap = optionCommercialBaseline ?? {};
+    const orderBaseline = optionOrderBaseline ?? [];
+    let optionTextDirty = false;
+    let commercialDirty = false;
+    let structuralDirty = false;
+    const submittedIds: number[] = [];
+    for (const row of submittedRows) {
+      if (row.server_id === undefined) {
+        structuralDirty = true;
+        continue;
+      }
+      submittedIds.push(row.server_id);
+      const textBase = textBaselineMap[row.server_id];
+      if (!textBase) {
+        structuralDirty = true;
+        continue;
+      }
+      if (row.title.trim() !== textBase.title) optionTextDirty = true;
+      if (row.pickup_instructions.trim() !== (textBase.pickup_instructions ?? '')) optionTextDirty = true;
+
+      const commercialBase = commercialBaselineMap[row.server_id];
+      if (!commercialBase) {
+        structuralDirty = true;
+        continue;
+      }
+      if (toMinorUnits(row.price) !== commercialBase.price_amount) commercialDirty = true;
+      const capacityValue = row.capacity.trim() === '' ? null : Number(row.capacity);
+      if (capacityValue !== commercialBase.group_size_max) commercialDirty = true;
+      if ((row.start_time.trim() === '' ? null : row.start_time.trim()) !== commercialBase.start_time) commercialDirty = true;
+      if (JSON.stringify(canonicalizeWeekdays(row.weekdays)) !== JSON.stringify(commercialBase.weekdays)) commercialDirty = true;
+    }
+    if (JSON.stringify(submittedIds) !== JSON.stringify(orderBaseline)) structuralDirty = true;
+
+    return {
+      governedDirty: sourceDirty || presentationDirty || mediaDirtyNow || optionTextDirty || structuralDirty,
+      commercialDirty,
+      structuralDirty,
+      optionTextDirty,
+    };
+  }, [
+    isPublishedTour, sourceBaseline, sourceBaselineNulled, presentationBaseline, mediaBaseline,
+    optionTextBaseline, optionOrderBaseline, optionCommercialBaseline, translationData, sourceLocale,
+    nullSourceFields, categoryId, location, guideLanguagesInput, groupSizeMin, groupSizeMax,
+    durationValue, durationUnit, difficultyLevel, coverImageDirty, coverImageUrl, media, mediaDirty, options,
+  ]);
+
+  /** Refresh ONLY the governance pointer/metadata (and live status) without
+   *  touching any in-form value, so unsaved edits survive request outcomes. */
+  const refreshGovernanceState = useCallback(async (): Promise<ContentGovernance | null> => {
+    const token = getAuthToken();
+    try {
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}`, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+          Accept: 'application/json',
+        },
+      });
+      if (!res.ok) return null;
+      const json = await res.json();
+      if (!isRecord(json.data) || typeof json.data.id !== 'number') return null;
+      const record = json.data as Record<string, unknown>;
+      const nextGovernance = parseGovernance(record.content_governance);
+      setGovernance(nextGovernance);
+      setTour((prev) => (prev ? { ...prev, status: typeof record.status === 'string' ? record.status : prev.status } : prev));
+      return nextGovernance;
+    } catch {
+      return null;
+    }
+  }, [id]);
+
+  /** Load the full immutable candidate payload into the editor: the stored
+   *  `source` tier maps back onto the authored write shape, the presentation
+   *  tier restores the technical fields, and option text comes from the
+   *  candidate while commercial values stay seeded from the live rows. The
+   *  candidate becomes the governed baseline for the next save.
+   *  Kept in a ref (not a useCallback dep) so the initial-fetch effect keeps
+   *  a stable identity — `useTranslations` returns a fresh function per
+   *  render and must never enter a dependency list. */
+  const applyCandidateRevision = async (
+    revisionId: number,
+    tourData: Tour,
+    liveOptions: OwnedTourOption[],
+    actualSource: SourceLocale,
+    liveMedia: TourMedia[]
+  ): Promise<CandidateContext | null> => {
+    const res = await getTourRevision(id, revisionId);
+    if (!res.ok || !res.data || !res.data.payload) {
+      setRevisionStatus({ tone: 'error', message: revisionT('errors.candidateLoadFailed') });
+      setShowReloadCandidate(true);
+      return null;
+    }
+    const detail: TourRevisionDetail = res.data;
+    const liveOptionOrder = liveOptions
+      .map((option) => option.id)
+      .filter((optionId): optionId is number => typeof optionId === 'number');
+    const restore = revisionRestore(detail.payload, actualSource, liveOptionOrder);
+
+    setTranslationData((prev) => ({ ...prev, [actualSource]: { ...prev[actualSource], ...restore.source } }));
+    const nextNulled = new Set(nullSourceFields);
+    restore.nulled.forEach((field) => nextNulled.add(field));
+    Object.keys(restore.source).forEach((field) => {
+      if (!restore.nulled.includes(field as keyof Translation)) nextNulled.delete(field as keyof Translation);
+    });
+    setNullSourceFields(nextNulled);
+
+    const presentation = restore.presentation as Record<string, unknown> | null;
+    const candidateDurationMinutes = typeof presentation?.duration_minutes === 'number' && presentation.duration_minutes > 0
+      ? presentation.duration_minutes
+      : (tourData.duration_minutes ?? 0);
+    if (presentation) {
+      setCategoryId(typeof presentation.category_id === 'number' ? presentation.category_id : tourData.category_id);
+      setLocation(typeof presentation.location === 'string' ? presentation.location : tourData.location);
+      const coverValue = typeof presentation.cover_image_url === 'string' ? presentation.cover_image_url : null;
+      setCoverImageUrl(coverValue || tourData.cover_image_url || '');
+      const guides = Array.isArray(presentation.guide_languages)
+        ? presentation.guide_languages.filter((code): code is string => typeof code === 'string')
+        : (tourData.guide_languages ?? []);
+      setGuideLanguagesInput(guides.join(', '));
+      setGroupSizeMin(typeof presentation.group_size_min === 'number' ? presentation.group_size_min : tourData.group_size_min);
+      setGroupSizeMax(typeof presentation.group_size_max === 'number' ? presentation.group_size_max : tourData.group_size_max);
+      setDurationValue(candidateDurationMinutes >= 1440 ? candidateDurationMinutes / 1440 : candidateDurationMinutes / 60);
+      setDurationUnit(candidateDurationMinutes >= 1440 ? 'day' : 'hour');
+      setDifficultyLevel(
+        presentation.difficulty_level === 'easy' || presentation.difficulty_level === 'moderate' || presentation.difficulty_level === 'challenging'
+          ? presentation.difficulty_level
+          : null
+      );
+    }
+    if (restore.options !== null) {
+      setOptions(candidateOptionRows(restore.options, liveOptions));
+    }
+    const candidateMedia = restore.media !== null ? restore.media : liveMedia;
+    if (restore.media !== null) {
+      setMedia(restore.media);
+    }
+
+    // The candidate is now the governed editing baseline; the commercial
+    // baseline stays live (candidate payloads never carry prices).
+    setSourceBaseline({ ...emptyTranslation(), ...restore.source });
+    setSourceBaselineNulled(new Set(restore.nulled));
+    setPresentationBaseline({
+      category_id: typeof presentation?.category_id === 'number' ? presentation.category_id : tourData.category_id,
+      location: typeof presentation?.location === 'string' ? presentation.location : tourData.location,
+      cover_image_url: typeof presentation?.cover_image_url === 'string' ? presentation.cover_image_url : (tourData.cover_image_url || null),
+      guide_languages: Array.isArray(presentation?.guide_languages)
+        ? (presentation?.guide_languages as string[])
+        : (tourData.guide_languages ?? []),
+      group_size_min: typeof presentation?.group_size_min === 'number' ? presentation.group_size_min : tourData.group_size_min,
+      group_size_max: typeof presentation?.group_size_max === 'number' ? presentation.group_size_max : tourData.group_size_max,
+      duration_minutes: candidateDurationMinutes,
+      difficulty_level: (presentation?.difficulty_level === 'easy' || presentation?.difficulty_level === 'moderate' || presentation?.difficulty_level === 'challenging')
+        ? presentation.difficulty_level
+        : null,
+    });
+    setMediaBaseline(candidateMedia.map((item) => ({ ...item })));
+    setMediaDirty(false);
+    setCoverImageDirty(false);
+    setOptionsDirty(false);
+    setDifficultyDirty(false);
+    setChangeSummary(typeof detail.change_summary === 'string' ? detail.change_summary : '');
+    const candidateContext: CandidateContext = {
+      id: detail.id,
+      revisionNumber: detail.revision_number,
+      payloadHash: detail.payload_hash,
+      baseRevisionId: detail.base_revision_id ?? 0,
+      state: detail.state,
+      loaded: true,
+    };
+    if (restore.options !== null) {
+      const textBaseline: Record<number, OptionTextBaselineEntry> = {};
+      const order: number[] = [];
+      for (const option of restore.options) {
+        order.push(option.id);
+        textBaseline[option.id] = {
+          title: option.title,
+          pickup_instructions: option.pickup_instructions ?? null,
+          guide_languages: candidateOptionRows(restore.options, liveOptions).find((row) => row.server_id === option.id)?.guide_languages ?? [],
+        };
+      }
+      setOptionTextBaseline(textBaseline);
+      setOptionOrderBaseline(order);
+    }
+    setCandidate(candidateContext);
+    setRevisionStatus({ tone: 'info', message: revisionT('candidateLoaded', { number: detail.revision_number }) });
+    setShowReloadCandidate(false);
+    return candidateContext;
+  };
+
+  // The initial-fetch effect must keep a stable identity: publish the latest
+  // per-render candidate loader through the ref (assignment only, no
+  // re-render loop).
+  const applyCandidateRevisionRef = useRef(applyCandidateRevision);
+  useEffect(() => {
+    applyCandidateRevisionRef.current = applyCandidateRevision;
+  });
+
   const fetchTour = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -373,6 +911,11 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       const t: Tour = json.data;
       setTour(t);
 
+      // Additive EGM-003 governance: a published tour without a valid record
+      // leaves `governance` null and every save stays blocked (fail closed).
+      // Never-public tours keep their existing flow with or without it.
+      const loadedGovernance = parseGovernance(t.content_governance);
+
       // Actual source language of the authored content: legacy tours read
       // as the English source.
       const actualSource: SourceLocale = t.source_locale === 'es' || t.source_locale === 'it' ? t.source_locale : 'en';
@@ -383,9 +926,11 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       setLocation(t.location);
       setCoverImageUrl(t.cover_image_url || '');
       setCoverImageDirty(false);
-      setMedia((t.media ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((item) => ({
+      const nextMedia = (t.media ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((item) => ({
         ...item, is_cover: item.url === t.cover_image_url,
-      })));
+      }));
+      setMedia(nextMedia);
+      setMediaBaseline(nextMedia.map((item) => ({ ...item })));
       setMediaDirty(false);
       setGuideLanguagesInput((t.guide_languages ?? []).join(', '));
       setGroupSizeMin(t.group_size_min);
@@ -393,7 +938,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
       // Authored options: persisted ids are retained for edits; prices are
       // stored as integer cents and are shown in currency major units.
-      setOptions((t.options ?? []).map((option, index) => ({
+      const nextOptions = (t.options ?? []).map((option, index) => ({
         id: `stored-option-${option.id ?? index}`,
         ...(option.id !== undefined ? { server_id: option.id } : {}),
         title: option.title ?? '',
@@ -403,20 +948,44 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         capacity: option.group_size_max === null || option.group_size_max === undefined ? '' : String(option.group_size_max),
         start_time: option.start_time ?? '',
         weekdays: option.weekdays ?? [],
-      })));
+      }));
+      setOptions(nextOptions);
       setOptionsDirty(false);
-      
+      // Baselines: approved/identity text (reviewable) and commercial values
+      // (operational) are tracked separately so mixed saves route correctly.
+      const nextTextBaseline: Record<number, OptionTextBaselineEntry> = {};
+      const nextCommercialBaseline: Record<number, OptionCommercialBaselineEntry> = {};
+      const nextOrder: number[] = [];
+      for (const option of t.options ?? []) {
+        if (typeof option.id !== 'number') continue;
+        nextOrder.push(option.id);
+        nextTextBaseline[option.id] = {
+          title: option.title ?? '',
+          pickup_instructions: option.pickup_instructions ?? null,
+          guide_languages: option.guide_languages ?? [],
+        };
+        nextCommercialBaseline[option.id] = {
+          price_amount: option.price_amount ?? 0,
+          group_size_max: option.group_size_max ?? null,
+          start_time: option.start_time ?? null,
+          weekdays: option.weekdays ?? null,
+        };
+      }
+      setOptionTextBaseline(nextTextBaseline);
+      setOptionOrderBaseline(nextOrder);
+      setOptionCommercialBaseline(nextCommercialBaseline);
+
       const val = t.duration_minutes ? (t.duration_minutes >= 1440 ? t.duration_minutes / 1440 : t.duration_minutes / 60) : 2;
       const unit = t.duration_minutes && t.duration_minutes >= 1440 ? 'day' : 'hour';
       setDurationValue(val);
       setDurationUnit(unit);
       // Older null/missing difficulty stays unknown (blank select), never
       // inferred as easy; only supported codes restore as selected.
-      setDifficultyLevel(
+      const loadedDifficulty =
         t.difficulty_level === 'easy' || t.difficulty_level === 'moderate' || t.difficulty_level === 'challenging'
           ? t.difficulty_level
-          : null
-      );
+          : null;
+      setDifficultyLevel(loadedDifficulty);
       setDifficultyDirty(false);
 
       // Populate translations
@@ -444,18 +1013,57 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
 
       // Record owned source nulls (array rows serialize null vs [] distinctly)
       // for the actual source language row of this tour.
+      const nulls = new Set<keyof Translation>();
       const sourceRow = t.translations.find((tr) => tr.locale === actualSource);
       if (sourceRow) {
-        const nulls = new Set<keyof Translation>();
         (['description', 'highlights', 'inclusions', 'exclusions', 'meeting_point', 'cancellation_policy', 'important_information', 'itinerary'] as const)
           .forEach((field) => {
             if (sourceRow[field] === null || sourceRow[field] === undefined) {
               nulls.add(field);
             }
           });
-        setNullSourceFields(nulls);
-      } else {
-        setNullSourceFields(new Set());
+      }
+      setNullSourceFields(nulls);
+
+      // Save baselines for published mixed-save routing reflect the live
+      // approved content; a candidate restore below replaces them.
+      setSourceBaseline({ ...newTrans[actualSource] });
+      setSourceBaselineNulled(new Set(nulls));
+      setPresentationBaseline({
+        category_id: t.category_id,
+        location: t.location,
+        cover_image_url: t.cover_image_url || null,
+        guide_languages: t.guide_languages ?? [],
+        group_size_min: t.group_size_min,
+        group_size_max: t.group_size_max,
+        duration_minutes: t.duration_minutes ?? 0,
+        difficulty_level: loadedDifficulty,
+      });
+      setGovernance(loadedGovernance);
+
+      // Published restore: an open candidate (not the opaque editor snapshot)
+      // is the editing baseline. Its full immutable payload replaces the
+      // approved values in the form before anything can be saved.
+      const activeCandidate = loadedGovernance?.active_candidate ?? null;
+      if (t.status === 'published' && activeCandidate) {
+        setCandidate({
+          id: activeCandidate.id,
+          revisionNumber: activeCandidate.revision_number,
+          payloadHash: activeCandidate.payload_hash,
+          baseRevisionId: activeCandidate.base_revision_id,
+          state: activeCandidate.state,
+          loaded: false,
+        });
+        setShowReloadCandidate(true);
+        await applyCandidateRevisionRef.current(
+          activeCandidate.id,
+          t,
+          (t.options ?? []) as OwnedTourOption[],
+          actualSource,
+          nextMedia
+        );
+      } else if (t.status !== 'published') {
+        setCandidate(null);
       }
     } catch {
       // Load feedback stays page-localized (including cross-owner 404 denial);
@@ -465,6 +1073,7 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
       setIsLoading(false);
     }
   }, [id, loadFailedMsg]);
+
 
   useEffect(() => {
     fetchTour();
@@ -543,6 +1152,458 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     }
   };
 
+  /* ─── Published routing: revision endpoint vs operational-only save ─────── */
+
+  const setRevisionNotice = (tone: 'info' | 'error', message: string) => setRevisionStatus({ tone, message });
+
+  const revisionFieldErrors = (errors: Record<string, string[]>): Record<string, string> => {
+    const mapped: Record<string, string> = {};
+    for (const [path, messages] of Object.entries(errors)) {
+      const formPath = toFormErrorPath(path);
+      if (!(formPath in mapped) && Array.isArray(messages) && messages.length > 0 && typeof messages[0] === 'string') {
+        mapped[formPath] = localizeServerFieldError(
+          formPath, messages[0], (key) => tourT(key.replace(/^partner\.tours\./, ''))
+        );
+      }
+    }
+    return mapped;
+  };
+
+  const localizedContentInvalid = () =>
+    revisionT('errors.contentInvalid', { language: formT(`sourceLanguageNames.${sourceLocale}`) });
+
+  const handleRevisionFailure = (
+    res: { status: number; errorCode?: string },
+    result: { errors?: Record<string, string[]> }
+  ) => {
+    if (res.status === 403) {
+      setRevisionNotice('error', revisionT('errors.permission'));
+      return;
+    }
+    if (res.status === 422) {
+      const code = res.errorCode;
+      if (result.errors) {
+        // Field-level 422s hand over to the legacy focused error summary
+        // (inline localized messages + focused summary box) instead of a
+        // second competing announcement.
+        setFieldErrors(revisionFieldErrors(result.errors));
+        if (code === 'REVISION_CONTENT_INVALID') {
+          setRevisionNotice('error', localizedContentInvalid());
+        } else {
+          setRevisionStatus(null);
+        }
+      } else {
+        setRevisionNotice('error', code === 'REVISION_CONTENT_INVALID' ? localizedContentInvalid() : revisionT('errors.invalidFields'));
+      }
+      return;
+    }
+    if (res.errorCode === 'REVISION_CONFLICT') {
+      setRevisionNotice('error', revisionT('errors.conflict'));
+      setShowReloadCandidate(true);
+      return;
+    }
+    if (res.errorCode === 'REVISION_ALREADY_OPEN') {
+      setRevisionNotice('error', revisionT('errors.alreadyOpen'));
+      setShowReloadCandidate(true);
+      void refreshGovernanceState();
+      return;
+    }
+    if (res.errorCode === 'REVISION_SUPERSEDED') {
+      setRevisionNotice('error', revisionT('errors.superseded'));
+      setShowReloadCandidate(true);
+      return;
+    }
+    if (res.errorCode === 'REVISION_TERMINAL') {
+      setRevisionNotice('error', revisionT('errors.terminal'));
+      return;
+    }
+    setRevisionNotice('error', revisionT('errors.generic'));
+  };
+
+  /** Govern-only payload builder: full authored source (the write shape for
+   *  the stored `source` tier), option authored text when dirty, the media
+   *  projection when dirty, and only dirty presentation fields — never any
+   *  commercial/operational key. */
+  const buildGovernedPatch = (): TourRevisionPatchPayload | null => {
+    if (!governance || !presentationBaseline || !sourceBaseline) return null;
+    const sourcePayload: Record<string, unknown> = { ...translationData[sourceLocale] };
+    nullSourceFields.forEach((field) => {
+      sourcePayload[field] = null;
+    });
+    const patch: TourRevisionPatchPayload = {
+      translations: { [sourceLocale]: sourcePayload as unknown as EnglishSourceInput },
+    };
+    const submittedRows = getSubmittedOptionRows(options);
+    const structureOk = submittedRows.length > 0 && submittedRows.every((row) => row.server_id !== undefined);
+    if (structureOk && publishedGating.optionTextDirty) {
+      patch.options = submittedRows.map((row) => ({
+        id: row.server_id as number,
+        title: row.title.trim(),
+        pickup_instructions: row.pickup_instructions.trim() === '' ? null : row.pickup_instructions.trim(),
+      }));
+    }
+    if (mediaDirty) {
+      patch.media = media.map((item) => ({
+        url: item.url,
+        is_cover: item.is_cover,
+        ...('alt_text' in item ? { alt_text: item.alt_text } : {}),
+      }));
+    }
+    const baseline = presentationBaseline;
+    const presentation: Record<string, unknown> = {};
+    if (categoryId !== baseline.category_id) presentation.category_id = categoryId;
+    if (location !== baseline.location) presentation.location = location;
+    if (coverImageDirty || coverImageUrl !== (baseline.cover_image_url ?? '')) presentation.cover_image_url = coverImageUrl || null;
+    const guideNormalized = [...new Set(guideLanguagesInput.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean))].sort();
+    const guideBaseline = [...new Set(baseline.guide_languages.map((code) => code.trim().toLowerCase()))].sort();
+    if (JSON.stringify(guideNormalized) !== JSON.stringify(guideBaseline)) presentation.guide_languages = guideNormalized;
+    if (groupSizeMin !== baseline.group_size_min) presentation.group_size_min = groupSizeMin;
+    if (groupSizeMax !== baseline.group_size_max) presentation.group_size_max = groupSizeMax;
+    const derivedMinutes = derivedDurationMinutes(durationValue, durationUnit);
+    if (Number.isFinite(derivedMinutes) && derivedMinutes !== baseline.duration_minutes) {
+      presentation.duration_minutes = Math.round(derivedMinutes);
+    }
+    if (difficultyLevel !== baseline.difficulty_level && difficultyLevel) presentation.difficulty_level = difficultyLevel;
+    if (Object.keys(presentation).length > 0) patch.presentation = presentation;
+    const summary = changeSummary.trim();
+    if (summary !== '') patch.change_summary = summary.slice(0, 500);
+    return patch;
+  };
+
+  /** Refresh ONLY the governed baseline after a committed content save; unsaved
+   *  commercial edits stay untouched and dirty. */
+  const refreshGovernedBaseline = () => {
+    setSourceBaseline({ ...translationData[sourceLocale] });
+    setSourceBaselineNulled(new Set(nullSourceFields));
+    const guideNormalized = [...new Set(guideLanguagesInput.split(',').map((code) => code.trim().toLowerCase()).filter(Boolean))].sort();
+    setPresentationBaseline({
+      category_id: categoryId,
+      location,
+      cover_image_url: coverImageUrl || null,
+      guide_languages: guideNormalized,
+      group_size_min: groupSizeMin,
+      group_size_max: groupSizeMax,
+      duration_minutes: Math.round(derivedDurationMinutes(durationValue, durationUnit)),
+      difficulty_level: difficultyLevel,
+    });
+    setMediaBaseline(media.map((item) => ({ ...item })));
+    setMediaDirty(false);
+    setCoverImageDirty(false);
+    setDifficultyDirty(false);
+    setOptionsDirty(false);
+    const textBaseline: Record<number, OptionTextBaselineEntry> = {};
+    const order: number[] = [];
+    for (const row of getSubmittedOptionRows(options)) {
+      if (row.server_id === undefined) continue;
+      order.push(row.server_id);
+      textBaseline[row.server_id] = {
+        title: row.title.trim(),
+        pickup_instructions: row.pickup_instructions.trim() === '' ? null : row.pickup_instructions.trim(),
+        guide_languages: optionTextBaseline?.[row.server_id]?.guide_languages ?? row.guide_languages,
+      };
+    }
+    setOptionTextBaseline(textBaseline);
+    setOptionOrderBaseline(order);
+  };
+
+  const handleSaveContentRevision = async () => {
+    if (!mediaAltValid) {
+      setSuccessMsg(null);
+      setFieldErrors({});
+      setError(formT('saveBlockedErrors'));
+      return;
+    }
+    if (governanceBlocked || !governance) {
+      setRevisionNotice('error', revisionT('errors.governanceMissing'));
+      return;
+    }
+    if (publishedGating.structuralDirty) {
+      setRevisionNotice('error', revisionT('structureChangeBlocked'));
+      return;
+    }
+    if (candidate && !candidate.loaded) {
+      // A candidate that was never loaded into the editor must never be
+      // blindly replaced: reload first (fail closed against the old merge).
+      setRevisionNotice('error', revisionT('errors.candidateLoadFailed'));
+      return;
+    }
+    const governedPatch = buildGovernedPatch();
+    if (governedPatch === null) {
+      setRevisionNotice('error', revisionT('errors.governanceMissing'));
+      return;
+    }
+    setSavingContent(true);
+    setRevisionStatus(null);
+    setFieldErrors({});
+    setError(null);
+    setSuccessMsg(null);
+    try {
+      const baselineState = candidate;
+      if (baselineState && baselineState.loaded) {
+        const res = await replaceTourRevision(id, baselineState.id, {
+          ...governedPatch,
+          base_revision_id: baselineState.baseRevisionId,
+          observed_payload_hash: baselineState.payloadHash,
+        });
+        if (!res.ok || !res.data) {
+          handleRevisionFailure(res, res);
+          return;
+        }
+        setCandidate({
+          id: res.data.id,
+          revisionNumber: res.data.revision_number,
+          payloadHash: res.data.payload_hash,
+          baseRevisionId: res.data.base_revision_id,
+          state: res.data.state,
+          loaded: true,
+        });
+        setRevisionNotice('info', revisionT('contentReplaced', { old: baselineState.revisionNumber, number: res.data.revision_number }));
+        refreshGovernedBaseline();
+        await refreshGovernanceState();
+        return;
+      }
+      const approvedId = governance.approved_revision?.id ?? null;
+      if (approvedId === null) {
+        setRevisionNotice('error', revisionT('errors.governanceMissing'));
+        return;
+      }
+      const res = await createTourRevision(id, { ...governedPatch, base_revision_id: approvedId });
+      if (!res.ok || !res.data) {
+        handleRevisionFailure(res, res);
+        return;
+      }
+      setCandidate({
+        id: res.data.id,
+        revisionNumber: res.data.revision_number,
+        payloadHash: res.data.payload_hash,
+        baseRevisionId: res.data.base_revision_id,
+        state: res.data.state,
+        loaded: true,
+      });
+      setRevisionNotice('info', revisionT('contentSaved', { number: res.data.revision_number }));
+      refreshGovernedBaseline();
+      await refreshGovernanceState();
+    } finally {
+      setSavingContent(false);
+    }
+  };
+
+  const handleSaveOperationalChanges = async () => {
+    if (governanceBlocked || !governance) {
+      setRevisionNotice('error', revisionT('errors.governanceMissing'));
+      return;
+    }
+    if (publishedGating.structuralDirty) {
+      setRevisionNotice('error', revisionT('structureChangeBlocked'));
+      return;
+    }
+    if (!publishedGating.commercialDirty) {
+      setRevisionNotice('info', revisionT('nothingToSave'));
+      return;
+    }
+    setSavingOperational(true);
+    setRevisionStatus(null);
+    setError(null);
+    setSuccessMsg(null);
+    setFieldErrors({});
+    try {
+      const token = getAuthToken();
+      const textBaselineMap = optionTextBaseline ?? {};
+      const submittedRows = getSubmittedOptionRows(options);
+      const body = {
+        // Operational contract: only price/capacity/schedule travel. The
+        // option identity and authored text are the CURRENT APPROVED values
+        // (live baseline), never the unsaved canonical text.
+        options: submittedRows.map((row) => {
+          const baseText = row.server_id !== undefined ? textBaselineMap[row.server_id] : undefined;
+          return {
+            ...(row.server_id !== undefined ? { id: row.server_id } : {}),
+            title: baseText ? baseText.title : row.title.trim(),
+            pickup_instructions: baseText ? baseText.pickup_instructions : (row.pickup_instructions.trim() === '' ? null : row.pickup_instructions.trim()),
+            guide_languages: baseText ? baseText.guide_languages : row.guide_languages,
+            price_amount: toMinorUnits(row.price),
+            group_size_max: row.capacity.trim() === '' ? null : Number(row.capacity),
+            start_time: row.start_time.trim() === '' ? null : row.start_time.trim(),
+            weekdays: row.weekdays.length > 0 ? [...new Set(row.weekdays)].sort((a, b) => a - b) : null,
+          };
+        }),
+      };
+      const res = await fetch(`${getApiBaseUrl()}/api/partner/tours/${id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        if (res.status === 422) {
+          if (isRecord(json) && typeof json.error_code === 'string' && json.error_code === 'option_structure_change_not_supported') {
+            setRevisionNotice('error', revisionT('structureChangeBlocked'));
+          } else if (isRecord(json.errors)) {
+            setFieldErrors(revisionFieldErrors(json.errors as Record<string, string[]>));
+            // Field-level feedback lands in the focused legacy summary.
+            setRevisionStatus(null);
+          } else {
+            setRevisionNotice('error', revisionT('errors.generic'));
+          }
+        } else if (res.status === 403) {
+          setRevisionNotice('error', revisionT('errors.permission'));
+        } else {
+          setRevisionNotice('error', revisionT('errors.generic'));
+        }
+        return;
+      }
+      // Refresh ONLY the commercial baseline: every unsaved governed value
+      // (source text, media, presentation, option text) stays editable.
+      const commercialBaseline: Record<number, OptionCommercialBaselineEntry> = { ...(optionCommercialBaseline ?? {}) };
+      for (const row of submittedRows) {
+        if (row.server_id === undefined) continue;
+        commercialBaseline[row.server_id] = {
+          price_amount: toMinorUnits(row.price),
+          group_size_max: row.capacity.trim() === '' ? null : Number(row.capacity),
+          start_time: row.start_time.trim() === '' ? null : row.start_time.trim(),
+          weekdays: row.weekdays.length > 0 ? [...new Set(row.weekdays)].sort((a, b) => a - b) : null,
+        };
+      }
+      setOptionCommercialBaseline(commercialBaseline);
+      setRevisionNotice('info', revisionT('operationalSaved'));
+    } catch {
+      setRevisionNotice('error', revisionT('errors.generic'));
+    } finally {
+      setSavingOperational(false);
+    }
+  };
+
+  /** General save routing for a published tour. Mixed dirty (governed AND
+   *  commercial) makes NO request: values are retained with explicit
+   *  instructions so nothing is silently dropped or partially applied. */
+  const routePublishedSave = () => {
+    if (publishedGating.structuralDirty) {
+      setRevisionNotice('error', revisionT('structureChangeBlocked'));
+      return;
+    }
+    if (publishedGating.governedDirty && publishedGating.commercialDirty) {
+      setRevisionNotice('info', revisionT('mixedBlocked'));
+      return;
+    }
+    if (publishedGating.governedDirty) {
+      void handleSaveContentRevision();
+      return;
+    }
+    if (publishedGating.commercialDirty) {
+      void handleSaveOperationalChanges();
+      return;
+    }
+    setRevisionNotice('info', revisionT('nothingToSave'));
+  };
+
+  const handleSubmitCandidateRevision = async () => {
+    if (!candidate || !candidate.loaded) {
+      setRevisionNotice('error', revisionT('errors.candidateLoadFailed'));
+      return;
+    }
+    setSubmittingCandidate(true);
+    setRevisionStatus(null);
+    try {
+      const res = await submitTourRevision(id, candidate.id);
+      if (!res.ok) {
+        handleRevisionFailure(res, res);
+        return;
+      }
+      setCandidate((prev) => (prev ? { ...prev, state: 'proposed', loaded: true } : prev));
+      setRevisionNotice('info', revisionT('submitted', { number: candidate.revisionNumber }));
+      await refreshGovernanceState();
+    } finally {
+      setSubmittingCandidate(false);
+    }
+  };
+
+  const handleWithdrawCandidate = async () => {
+    if (!candidate) return;
+    setWithdrawingCandidate(true);
+    setRevisionStatus(null);
+    try {
+      const res = await withdrawTourRevision(id, candidate.id);
+      if (!res.ok) {
+        handleRevisionFailure(res, res);
+        return;
+      }
+      setCandidate(null);
+      setShowReloadCandidate(false);
+      setRevisionNotice('info', revisionT('withdrawn', { number: candidate.revisionNumber }));
+      await refreshGovernanceState();
+    } finally {
+      setWithdrawingCandidate(false);
+    }
+  };
+
+  const handleRespondToRequest = async (requestId: number, responseNote: string) => {
+    const currentGovernance = governance;
+    const request = currentGovernance?.open_requests.find((req) => req.id === requestId);
+    if (!currentGovernance || !request) {
+      setRevisionNotice('error', revisionT('errors.requestNotOpen'));
+      return;
+    }
+    const respondNote = responseNote.trim().slice(0, 2000);
+    let body: TourRevisionResponsePayload;
+    if (request.context === 'initial_review') {
+      // Initial context answers with the observed generation epoch; no
+      // revision ID is ever invented for never-public tours.
+      body = { observed_generation_epoch: currentGovernance.generation_epoch, response_note: respondNote };
+    } else {
+      const linkable = candidate?.state === 'proposed' && candidate.loaded
+        ? candidate.id
+        : (currentGovernance.active_candidate?.state === 'proposed' ? currentGovernance.active_candidate.id : null);
+      if (linkable === null) {
+        setRevisionNotice('error', revisionT('respondNeedsSubmittedRevision'));
+        return;
+      }
+      body = { revision_id: linkable, response_note: respondNote };
+    }
+    setRespondingRequest(true);
+    setRevisionStatus(null);
+    try {
+      const res = await respondToTourChangeRequest(id, requestId, body);
+      if (!res.ok) {
+        if (res.errorCode === 'REQUEST_NOT_OPEN') {
+          setRevisionNotice('error', revisionT('errors.requestNotOpen'));
+          return;
+        }
+        handleRevisionFailure(res, res);
+        return;
+      }
+      setRevisionNotice('info', revisionT('responded'));
+      await refreshGovernanceState();
+    } finally {
+      setRespondingRequest(false);
+    }
+  };
+
+  /** Explicit user action: load/refresh the open candidate payload so its
+   *  values become the editing baseline (never automatic silent overwrite). */
+  const reloadCurrentCandidate = async () => {
+    if (!tour || !governance?.active_candidate) return;
+    const active = governance.active_candidate;
+    setCandidate({
+      id: active.id,
+      revisionNumber: active.revision_number,
+      payloadHash: active.payload_hash,
+      baseRevisionId: active.base_revision_id,
+      state: active.state,
+      loaded: false,
+    });
+    await applyCandidateRevisionRef.current(
+      active.id,
+      tour,
+      (tour.options ?? []) as OwnedTourOption[],
+      sourceLocale,
+      media
+    );
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     // Never partially save while a bad alt draft is pending: it was never
@@ -556,6 +1617,14 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
     setError(null);
     setSuccessMsg(null);
     setFieldErrors({});
+    // EGM-003: a published tour NEVER uses the legacy PUT for content edits.
+    // The general save routes to the revision proposal or the operational-only
+    // save; with both kinds dirty it makes no request at all, keeps every
+    // value and shows localized instructions to save them separately.
+    if (isPublishedTour) {
+      routePublishedSave();
+      return;
+    }
     try {
       const token = getAuthToken();
       // Untouched canonical nulls round-trip as null (never as []/'');
@@ -735,6 +1804,101 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
         </div>
       )}
 
+      {/* EGM-003 fail-closed gate: a published tour without valid governance
+      metadata never saves through the legacy PUT — retry only reloads the
+      owned governance read. */}
+      {isPublishedTour && governanceBlocked && (
+        <div ref={governanceBlockedRef} tabIndex={-1} className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm space-y-2" role="alert" aria-live="assertive">
+          <p>{revisionT('errors.governanceMissing')}</p>
+          <button
+            type="button"
+            onClick={() => {
+              void fetchTour();
+            }}
+            className="rounded-lg border border-red-300 px-3 py-1.5 text-sm font-semibold text-red-700 hover:bg-red-100 transition-colors"
+          >
+            {revisionT('errors.retry')}
+          </button>
+        </div>
+      )}
+
+      {revisionStatus && (
+        <div
+          ref={revisionStatusRef}
+          tabIndex={-1}
+          role={revisionStatus.tone === 'error' ? 'alert' : 'status'}
+          aria-live={revisionStatus.tone === 'error' ? 'assertive' : 'polite'}
+          className={`p-4 rounded-lg text-sm border ${
+            revisionStatus.tone === 'error'
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : 'bg-[#FFB800]/10 border-[#FFB800]/50 text-[#0A2540]'
+          }`}
+        >
+          <p>{revisionStatus.message}</p>
+          {showReloadCandidate && (
+            <button
+              type="button"
+              onClick={() => {
+                void reloadCurrentCandidate();
+              }}
+              className="mt-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-[#0A2540] hover:bg-gray-50 transition-colors"
+            >
+              {revisionT('errors.reloadCandidate')}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Revision workspace: approved content, the open candidate, open
+      administrator change requests and the explicit separate saves. Rendered
+      for every owned tour that exposes governance (draft tours show initial
+      review requests); absent metadata on a draft keeps the legacy flow. */}
+      {governance && !governanceBlocked && (
+        <TourRevisionPanel
+          governance={governance}
+          isPublished={!!isPublishedTour}
+          publicUrl={isPublishedTour && tour?.slug ? `/${locale}/tours/${tour.slug}` : null}
+          loadedCandidateId={candidate?.loaded ? candidate.id : null}
+          loadedCandidateState={candidate?.loaded ? candidate.state : null}
+          linkableCandidateId={
+            candidate?.state === 'proposed' && candidate.loaded
+              ? candidate.id
+              : (governance.active_candidate?.state === 'proposed' ? governance.active_candidate.id : null)
+          }
+          changeSummary={changeSummary}
+          changeSummaryError={fieldErrors.change_summary}
+          onChangeSummary={(value) => {
+            setChangeSummary(value);
+            setFieldErrors((prev) => {
+              if (!('change_summary' in prev)) return prev;
+              const next = { ...prev };
+              delete next.change_summary;
+              return next;
+            });
+          }}
+          onSaveContent={() => {
+            void handleSaveContentRevision();
+          }}
+          onOperationalSave={() => {
+            void handleSaveOperationalChanges();
+          }}
+          onSubmitCandidate={() => {
+            void handleSubmitCandidateRevision();
+          }}
+          onWithdraw={() => {
+            void handleWithdrawCandidate();
+          }}
+          onRespond={(requestId, responseNote) => {
+            void handleRespondToRequest(requestId, responseNote);
+          }}
+          savingContent={savingContent}
+          savingOperational={savingOperational}
+          submitting={submittingCandidate}
+          withdrawing={withdrawingCandidate}
+          responding={respondingRequest}
+        />
+      )}
+
       {/* noValidate lets empty/fractional source reach the authoritative
       server validation so custom localized field/summary feedback runs;
       required/min/step metadata stays for assistive technology. */}
@@ -754,19 +1918,23 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
                 .join(' · ')}
             </p>
           )}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={handleRestoreDraft}
-              disabled={isRestoring}
-              className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy disabled:opacity-50"
-            >
-              {isRestoring ? formT('restoringDraft') : formT('restoreDraft')}
-            </button>
-            {restoreNotice && (
-              <p className="text-sm text-gray-600" role="status" aria-live="polite">{restoreNotice}</p>
-            )}
-          </div>
+          {/* The opaque editor snapshot restores never-published drafts only;
+          a published tour reopens the immutable candidate instead. */}
+          {!isPublishedTour && (
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRestoreDraft}
+                disabled={isRestoring}
+                className="rounded-lg border border-border px-4 py-2 text-sm font-semibold text-bookly-navy disabled:opacity-50"
+              >
+                {isRestoring ? formT('restoringDraft') : formT('restoreDraft')}
+              </button>
+              {restoreNotice && (
+                <p className="text-sm text-gray-600" role="status" aria-live="polite">{restoreNotice}</p>
+              )}
+            </div>
+          )}
 
           {/* Current language tab fields */}
           <div className="space-y-4">
@@ -893,6 +2061,9 @@ export default function PartnerTourEditPage({ params }: { params: Promise<{ id: 
               <BookingOptionsForm
                 rows={options}
                 disabled={false}
+                // Published-tour structure lock (EGM-003): add/remove hidden;
+                // authored text and price/schedule stay editable.
+                structureDisabled={!!isPublishedTour}
                 sourceLocale={sourceLocale}
                 onAdd={() => {
                   setOptions((prev) => [...prev, {

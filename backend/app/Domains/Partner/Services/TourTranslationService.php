@@ -222,6 +222,45 @@ class TourTranslationService
         return $days;
     }
 
+    /**
+     * Compute the canonical source hash from a raw source snapshot and options array.
+     *
+     * This is the EXACT same algorithm used by sourceHash() for core immutable
+     * candidate identity. The snapshot option LIST {id,title,pickup_instructions}
+     * becomes the existing id-keyed map {title,pickup_instructions,active:true}
+     * in the same order; the options key is omitted entirely if none.
+     *
+     * Reuses normalizeSourceProjection with no hash algorithm drift.
+     *
+     * @param  array<string, mixed>  $source
+     * @param  array<int|string, mixed>  $options
+     */
+    public function sourceHashFromSnapshot(array $source, array $options): string
+    {
+        $normalizedOptions = [];
+        foreach ($options as $opt) {
+            if (! is_array($opt) || ! array_key_exists('id', $opt)) {
+                continue;
+            }
+            $id = $opt['id'];
+            $normalizedOptions[$id] = [
+                'title' => $opt['title'] ?? null,
+                'pickup_instructions' => $opt['pickup_instructions'] ?? null,
+                'active' => true,
+            ];
+        }
+
+        $payload = $this->normalizeSourceProjection($source);
+        if ($normalizedOptions !== []) {
+            $payload['options'] = $normalizedOptions;
+        }
+
+        return hash('sha256', json_encode(
+            $payload,
+            JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
+        ));
+    }
+
     public function sourceHash(TourTranslation $english, ?Tour $tour = null): string
     {
         // Serialization flags are unchanged from the inherited implementation
@@ -281,10 +320,16 @@ class TourTranslationService
      * via dispatchPlannedTranslations() so a lost queue push can never fail the
      * committed source write.
      *
-     * @return array<int, array{tour_id: int, locale: string, source_hash: string}>
+     * Every changed canonical hash ALSO advances the tour's monotonically
+     * increasing generation epoch (design v3 §7), so in-flight work for the
+     * older canonical identity can never complete later. Active option source
+     * text changes participate because option text joins the source hash.
+     *
+     * @return array<int, array{tour_id: int, locale: string, source_hash: string, generation_epoch: int}>
      */
     public function planSourceDispatches(Tour $tour, ?string $previousHash): array
     {
+        $tour->refresh();
         $source = $tour->translations()->where('locale', $tour->sourceLocale())->first();
         if (! $source || blank($source->title)) {
             return [];
@@ -295,19 +340,105 @@ class TourTranslationService
             return [];
         }
 
+        // A canonical change plans every derivative locale once for its new
+        // identity (hash + freshly advanced epoch). If the states already carry
+        // exactly that identity, this is a replay and nothing is re-planned: the
+        // epoch advances only when the canonical source actually changed.
+        $currentEpoch = $tour->generationEpoch();
+        $states = TourTranslationState::query()
+            ->where('tour_id', $tour->id)
+            ->whereIn('locale', $this->derivativeLocales($tour))
+            ->get()
+            ->keyBy('locale');
+
+        $alreadyPlanned = true;
+
+        foreach ($this->derivativeLocales($tour) as $locale) {
+            $state = $states->get($locale);
+
+            if ($state === null || $state->source_hash !== $hash
+                || (int) $state->generation_epoch !== $currentEpoch || $currentEpoch < 1) {
+                $alreadyPlanned = false;
+
+                break;
+            }
+        }
+
+        if ($alreadyPlanned) {
+            return [];
+        }
+
+        $epoch = $this->advanceGenerationEpoch($tour->id);
+
         $planned = [];
         foreach ($this->derivativeLocales($tour) as $locale) {
-            $state = TourTranslationState::firstOrNew(['tour_id' => $tour->id, 'locale' => $locale]);
-            if ($state->exists && $state->source_hash === $hash && in_array($state->status, ['pending', 'ready'], true)) {
-                continue;
-            }
+            $state = $states->get($locale) ?? new TourTranslationState([
+                'tour_id' => $tour->id,
+                'locale' => $locale,
+            ]);
 
             $state->source_hash = $hash;
+            $state->generation_epoch = $epoch;
+            // Advancing the desired identity clears the recorded translated
+            // identity: readiness can never be inherited from an older epoch
+            // by hash alone (A-B-A fence).
+            $state->translated_hash = null;
             $state->status = $tour->translations()->where('locale', $locale)->exists() ? 'stale' : 'pending';
             $state->last_error_code = null;
             $state->save();
 
-            $planned[] = ['tour_id' => $tour->id, 'locale' => $locale, 'source_hash' => $hash];
+            $planned[] = ['tour_id' => $tour->id, 'locale' => $locale, 'source_hash' => $hash, 'generation_epoch' => $epoch];
+        }
+
+        return $planned;
+    }
+
+    /**
+     * Advance and persist the generation epoch of a tour inside the caller's
+     * content lock. Returns the new epoch.
+     */
+    private function advanceGenerationEpoch(int $tourId): int
+    {
+        $current = (int) (Tour::query()->whereKey($tourId)->lockForUpdate()->value('generation_epoch') ?? 0);
+        $next = $current + 1;
+
+        Tour::query()->whereKey($tourId)->update(['generation_epoch' => $next, 'content_version' => DB::raw('content_version + 1')]);
+
+        return $next;
+    }
+
+    /**
+     * Authorized force-regeneration: advance the epoch even for identical text
+     * so older in-flight work is fenced away (design v3 §7). Callers must hold
+     * the content lock.
+     *
+     * @return array<int, array{tour_id: int, locale: string, source_hash: string, generation_epoch: int}>
+     */
+    public function planForcedRegeneration(Tour $tour): array
+    {
+        $tour->refresh();
+        $source = $tour->translations()->where('locale', $tour->sourceLocale())->first();
+
+        if (! $source || blank($source->title)) {
+            return [];
+        }
+
+        $hash = $this->sourceHash($source, $tour);
+        $epoch = $this->advanceGenerationEpoch($tour->id);
+
+        $planned = [];
+
+        foreach ($this->derivativeLocales($tour) as $locale) {
+            $state = TourTranslationState::firstOrNew(['tour_id' => $tour->id, 'locale' => $locale]);
+
+            $state->source_hash = $hash;
+            $state->generation_epoch = $epoch;
+            $state->translated_hash = null;
+            $state->status = $tour->translations()->where('locale', $locale)->exists() ? 'stale' : 'pending';
+            $state->last_error_code = null;
+            $state->save();
+
+            $planned[] = ['tour_id' => $tour->id, 'locale' => $locale, 'source_hash' => $hash, 'generation_epoch' => $epoch];
         }
 
         return $planned;
@@ -332,7 +463,7 @@ class TourTranslationService
      * SQL/validation failures propagate from the source transaction
      * itself and are never swallowed.
      *
-     * @param  array<int, array{tour_id: int, locale: string, source_hash: string}>  $planned
+     * @param  array<int, array{tour_id: int, locale: string, source_hash: string, generation_epoch?: int}>  $planned
      */
     public function dispatchPlannedTranslations(array $planned): void
     {
@@ -346,7 +477,8 @@ class TourTranslationService
                     $pending = GenerateTourTranslationJob::dispatch(
                         $plan['tour_id'],
                         $plan['locale'],
-                        $plan['source_hash']
+                        $plan['source_hash'],
+                        $plan['generation_epoch'] ?? 0,
                     );
                     unset($pending);
                 } catch (\Throwable) {
@@ -369,54 +501,87 @@ class TourTranslationService
     /**
      * Bounded reconciliation for one tour under the shared Tour-first lock.
      *
-     * Rechecks the current authored-source hash inside the lock and requeues
-     * every recoverable derivative locale: orphan pending, stale, failed, and
-     * apparent-ready rows (ready status with a mismatched translated hash or a
-     * missing derivative row), even when they already carry the current desired
-     * hash. Genuinely current ready derivatives (row present, both hashes
-     * matching) are untouched: no provider call, no derivative rewrite, no
-     * state write, no dispatch. Stored derivatives are never deleted or
-     * rewritten here.
+     * Rechecks the current authored-source hash and generation epoch inside the
+     * lock and requeues every recoverable derivative locale: orphan pending,
+     * stale, failed, and apparent-ready rows (ready status with a mismatched
+     * translated hash or a missing derivative row), even when they already
+     * carry the current desired hash, plus every row whose desired identity
+     * still names an older epoch (mismatch reconciliation). Genuinely current
+     * ready derivatives (row present, hashes and epoch matching) are untouched:
+     * no provider call, no derivative rewrite, no state write, no dispatch.
+     * Stored derivatives are never deleted or rewritten here.
      *
-     * @return array<int, array{tour_id: int, locale: string, source_hash: string}>
+     * @return array<int, array{tour_id: int, locale: string, source_hash: string, generation_epoch: int}>
      */
     public function reconcileTour(Tour $tour): array
     {
         return $this->withContentLock($tour->id, function () use ($tour) {
+            $fresh = Tour::findOrFail($tour->id);
             $source = TourTranslation::where('tour_id', $tour->id)
-                ->where('locale', $tour->sourceLocale())
+                ->where('locale', $fresh->sourceLocale())
                 ->first();
             if (! $source || blank($source->title)) {
                 return [];
             }
 
-            $hash = $this->sourceHash($source, $tour);
+            $hash = $this->sourceHash($source, $fresh);
+            $epoch = $fresh->generationEpoch();
+            $changed = $epoch < 1;
+            if ($changed) {
+                $epoch = $this->advanceGenerationEpoch((int) $fresh->id);
+            }
             $planned = [];
-            foreach ($this->derivativeLocales($tour) as $locale) {
-                $state = TourTranslationState::where('tour_id', $tour->id)->where('locale', $locale)->first();
-                $rowExists = TourTranslation::where('tour_id', $tour->id)->where('locale', $locale)->exists();
+
+            foreach ($this->derivativeLocales($fresh) as $locale) {
+                $state = TourTranslationState::where('tour_id', $fresh->id)->where('locale', $locale)->first();
+                $rowExists = TourTranslation::where('tour_id', $fresh->id)->where('locale', $locale)->exists();
                 $recoveryStatus = $rowExists ? 'stale' : 'pending';
 
-                if ($state && $state->status === 'ready' && $state->translated_hash === $hash && $rowExists) {
+                $isCurrent = $state !== null
+                    && $state->status === 'ready'
+                    && $state->translated_hash === $hash
+                    && $state->source_hash === $hash
+                    && (int) $state->generation_epoch === $epoch
+                    && $rowExists;
+
+                if ($isCurrent) {
                     continue;
                 }
 
-                if (! $state || $state->source_hash !== $hash) {
+                // Matching pending/stale rows already carry the current desired
+                // identity: a lost queue push requeues without state churn.
+                $needsIdentity = $state === null
+                    || $state->source_hash !== $hash
+                    || (int) $state->generation_epoch !== $epoch;
+
+                if ($needsIdentity) {
+                    $changed = true;
                     TourTranslationState::updateOrCreate(
-                        ['tour_id' => $tour->id, 'locale' => $locale],
-                        ['source_hash' => $hash, 'status' => $recoveryStatus, 'last_error_code' => null]
+                        ['tour_id' => $fresh->id, 'locale' => $locale],
+                        [
+                            'source_hash' => $hash,
+                            'generation_epoch' => $epoch,
+                            'translated_hash' => null,
+                            'status' => $recoveryStatus,
+                            'last_error_code' => null,
+                        ]
                     );
                 } elseif ($state->status === 'failed' || $state->status === 'ready') {
-                    // Same desired hash but recoverable: a sanitized failure
+                    $changed = true;
+                    // Same desired identity but recoverable: a sanitized failure
                     // or an apparent ready whose derivative is missing or
-                    // hash-mismatched. Re-arm to pending/stale without
-                    // touching stored derivatives.
+                    // hash-mismatched. Re-arm to pending/stale without touching
+                    // stored derivatives.
                     $state->update(['status' => $recoveryStatus, 'last_error_code' => null]);
                 }
-                // Pending/stale rows already carrying the current hash are
+                // Pending/stale rows already carrying the current identity are
                 // orphaned dispatches: requeue without state churn.
 
-                $planned[] = ['tour_id' => $tour->id, 'locale' => $locale, 'source_hash' => $hash];
+                $planned[] = ['tour_id' => $fresh->id, 'locale' => $locale, 'source_hash' => $hash, 'generation_epoch' => $epoch];
+            }
+
+            if ($changed && $fresh->generationEpoch() > 0) {
+                Tour::query()->whereKey($fresh->id)->update(['content_version' => DB::raw('content_version + 1')]);
             }
 
             return $planned;
@@ -425,9 +590,10 @@ class TourTranslationService
 
     /**
      * Whether the tour holds at least one genuinely current derivative:
-     * ready status, translated hash matching the fresh source, and the
-     * derivative row present. Read-only; used by --refresh-ready to repair
-     * lost search projections without provider or content writes.
+     * ready status, translated hash matching the fresh source, generation epoch
+     * matching the tour, and the derivative row present. Read-only; used by
+     * --refresh-ready to repair lost search projections without provider or
+     * content writes.
      */
     public function hasCurrentDerivatives(Tour $tour): bool
     {
@@ -437,9 +603,12 @@ class TourTranslationService
         }
 
         $hash = $this->sourceHash($source, $tour);
+        $epoch = $tour->refresh()->generationEpoch();
+
         foreach ($this->derivativeLocales($tour) as $locale) {
             $state = $tour->translationStates()->where('locale', $locale)->first();
             if ($state && $state->status === 'ready' && $state->translated_hash === $hash
+                && (int) $state->generation_epoch === $epoch
                 && $tour->translations()->where('locale', $locale)->exists()) {
                 return true;
             }
@@ -644,9 +813,12 @@ class TourTranslationService
         $states = $tour->relationLoaded('translationStates') ? $tour->translationStates : $tour->translationStates()->get();
         $state = $states->firstWhere('locale', $locale);
 
+        // After A-B-A a matching translated hash alone is never current: the
+        // generation epoch must also match the tour's canonical identity.
         return $state
             && $state->status === 'ready'
             && $state->translated_hash === $this->sourceHash($source, $tour)
+            && (int) $state->generation_epoch === (int) $tour->generationEpoch()
                 ? $translations->firstWhere('locale', $locale)
                 : null;
     }

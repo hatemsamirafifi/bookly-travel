@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Domains\Partner\Models\PricingTier;
+use App\Domains\Search\Services\TourPublicCacheService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @property-read array<int, string>|null $guide_languages
  * @property-read array<int, int|string>|null $weekdays
  * @property-read Carbon|string|null $start_time
+ * @property-read Tour $tour
  */
 class TourOption extends Model
 {
@@ -61,6 +64,30 @@ class TourOption extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        // Option text, membership, retirement and re-activation all change the
+        // public option surface of the tour detail payload, so the current
+        // versioned key plus the legacy key drop after commit (design v3 §8).
+        static::saved(function (TourOption $option) {
+            self::invalidateForTour((int) $option->tour_id);
+        });
+
+        static::deleted(function (TourOption $option) {
+            self::invalidateForTour((int) $option->tour_id);
+        });
+    }
+
+    private static function invalidateForTour(int $tourId): void
+    {
+        app(TourPublicCacheService::class)->forgetDetailAfterCommit(
+            Tour::query()->whereKey($tourId)->pluck('slug')->filter()->values()->all()
+        );
+    }
+
+    /**
+     * @return BelongsTo<Tour, $this>
+     */
     public function tour(): BelongsTo
     {
         return $this->belongsTo(Tour::class);
@@ -74,6 +101,31 @@ class TourOption extends Model
     public function translations(): HasMany
     {
         return $this->hasMany(TourOptionTranslation::class);
+    }
+
+    /**
+     * Concrete bookable occurrences of this option (EGM-005 D3). Each
+     * departure carries its own independent capacity (D4).
+     *
+     * @return HasMany<TourDeparture, $this>
+     */
+    public function departures(): HasMany
+    {
+        return $this->hasMany(TourDeparture::class);
+    }
+
+    /**
+     * Option-scoped participant-count pricing tiers (EGM-005 D5), in display
+     * order. Legacy tour-level tiers (null tour_option_id) stay on
+     * `tour->pricingTiers()`.
+     *
+     * @return HasMany<PricingTier, $this>
+     */
+    public function pricingTiers(): HasMany
+    {
+        return $this->hasMany(PricingTier::class)
+            ->orderBy('sort_order')
+            ->orderBy('min_participants');
     }
 
     public function scopeActive(Builder $query): Builder

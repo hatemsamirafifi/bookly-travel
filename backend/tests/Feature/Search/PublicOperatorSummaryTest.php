@@ -154,7 +154,7 @@ it('returns nullable description and logo facts without new mandatory gates', fu
         ->assertJsonPath('data.operator.tour_count', 1);
 });
 
-it('returns null summary for an inactive partner', function () {
+it('returns 404 without public content for an inactive partner', function () {
     $partner = makePartner();
     $partner->update(['is_active' => false]);
     $partner->profile()->create([
@@ -164,13 +164,13 @@ it('returns null summary for an inactive partner', function () {
     $tour = makeOperatorTour($this->category, $partner, 'inactive-operator-tour');
     addSpecificDateRule($tour, now()->addWeek()->toDateString());
 
-    getJson('/api/public/tours/inactive-operator-tour?locale=en')->assertOk()
-        ->assertJsonPath('data.operator', null)
+    getJson('/api/public/tours/inactive-operator-tour?locale=en')->assertNotFound()
+        ->assertJsonMissingPath('data')
         ->assertDontSee('Suspended Operator')
         ->assertDontSee('private@example.com');
 });
 
-it('returns null summary for an unapproved partner', function () {
+it('returns 404 without public content for an unapproved partner', function () {
     $partner = makePartner('pending');
     $partner->profile()->create([
         'company_name' => 'Pending Operator',
@@ -179,8 +179,8 @@ it('returns null summary for an unapproved partner', function () {
     $tour = makeOperatorTour($this->category, $partner, 'pending-operator-tour');
     addSpecificDateRule($tour, now()->addWeek()->toDateString());
 
-    getJson('/api/public/tours/pending-operator-tour?locale=en')->assertOk()
-        ->assertJsonPath('data.operator', null)
+    getJson('/api/public/tours/pending-operator-tour?locale=en')->assertNotFound()
+        ->assertJsonMissingPath('data')
         ->assertDontSee('Pending Operator')
         ->assertDontSee('private@example.com');
 });

@@ -18,7 +18,7 @@ See the linked child contracts.
 
 ## Side Effects
 
-- Reads destination data through `getDestinations`, which requests a 300-second revalidation interval. [Fetch policy](../../../../lib/api/destinations.ts#L9)
+- Reads destination data through `getDestinations` with `cache: 'no-store'` so each server request reaches the backend eligibility checks and guarded caches. [Fetch policy](../../../../lib/api/destinations.ts#L9)
 
 ## Verification
 

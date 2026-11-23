@@ -3,9 +3,11 @@
 namespace App\Domains\Booking\Models;
 
 use App\Domains\Admin\Models\GovernanceAuditLog;
+use App\Domains\Partner\Models\PricingTier;
 use App\Domains\Payment\Models\Payment;
 use App\Models\GuestIdentity;
 use App\Models\Tour;
+use App\Models\TourDeparture;
 use App\Models\TourOption;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +17,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
+/**
+ * @property array<string, mixed>|null $pricing_snapshot
+ * @property-read TourDeparture|null $departure
+ * @property-read PricingTier|null $pricingTier
+ */
 class Booking extends Model
 {
     protected static function booted(): void
@@ -79,6 +86,9 @@ class Booking extends Model
         'pending_expires_at',
         'voucher_generated_at',
         'voucher_content_hash',
+        'tour_departure_id',
+        'pricing_tier_id',
+        'pricing_snapshot',
     ];
 
     protected function casts(): array
@@ -97,6 +107,9 @@ class Booking extends Model
             'payment_confirmed_at' => 'datetime',
             'pending_expires_at' => 'datetime',
             'voucher_generated_at' => 'datetime',
+            'tour_departure_id' => 'integer',
+            'pricing_tier_id' => 'integer',
+            'pricing_snapshot' => 'array',
         ];
     }
 
@@ -125,6 +138,29 @@ class Booking extends Model
     public function tourOption(): BelongsTo
     {
         return $this->belongsTo(TourOption::class);
+    }
+
+    /**
+     * The explicit departure booked (EGM-005 D3); null for legacy
+     * date-based bookings.
+     *
+     * @return BelongsTo<TourDeparture, $this>
+     */
+    public function departure(): BelongsTo
+    {
+        return $this->belongsTo(TourDeparture::class, 'tour_departure_id');
+    }
+
+    /**
+     * The participant-count tier resolved at purchase time (EGM-005 D5).
+     * The immutable `pricing_snapshot` array is the authoritative price
+     * record; the live tier may have been re-priced since.
+     *
+     * @return BelongsTo<PricingTier, $this>
+     */
+    public function pricingTier(): BelongsTo
+    {
+        return $this->belongsTo(PricingTier::class, 'pricing_tier_id');
     }
 
     /**
@@ -203,6 +239,14 @@ class Booking extends Model
      */
     public function startDateTime(): Carbon
     {
+        if ($this->tour_departure_id !== null) {
+            /** @var TourDeparture|null $departure */
+            $departure = $this->relationLoaded('departure') ? $this->departure : $this->departure()->first();
+            if ($departure !== null) {
+                return $departure->starts_at->copy()->utc();
+            }
+        }
+
         // `start_time` is cast `datetime:H:i:s` and `tour_date` is cast `date`;
         // both return Carbon at runtime, but larastan types them as string
         // because of the format suffixes — so parse them explicitly here.

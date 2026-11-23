@@ -39,4 +39,16 @@ describe('PricingTierForm', () => {
     expect(addBtn).toBeDisabled();
     expect(useTourWizardStore.getState().formData.pricing_tiers).toHaveLength(10);
   });
+
+  it('displays Euro currency prefix and accessible validation alert when max < min', () => {
+    render(<PricingTierForm />);
+    fireEvent.click(screen.getByRole('button', { name: 'Add Tier' }));
+    expect(screen.getByText('€')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('Min participants'), { target: { value: '5' } });
+    fireEvent.change(screen.getByLabelText('Max participants'), { target: { value: '2' } });
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Max participants must be greater than or equal to min.',
+    );
+  });
 });

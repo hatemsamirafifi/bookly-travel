@@ -245,10 +245,24 @@ export default function BookingConfirmation({ reference, locale }: BookingConfir
           <span className="text-sm text-[#5A6B7B]">{t('date')}</span>
           <span className="text-sm font-medium text-[#0A2540]">{booking.tour_date}</span>
         </div>
+        {booking.departure && (
+          <div className="p-4 flex justify-between">
+            <span className="text-sm text-[#5A6B7B]">{t('departureTime')}</span>
+            <span className="text-sm font-medium text-[#0A2540]">
+              {booking.departure.local_time.slice(0, 5)} ({booking.departure.timezone})
+            </span>
+          </div>
+        )}
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">{t('participants')}</span>
           <span className="text-sm font-medium text-[#0A2540]">{participants}</span>
         </div>
+        {booking.pricing_snapshot?.tier_name && (
+          <div className="p-4 flex justify-between">
+            <span className="text-sm text-[#5A6B7B]">{t('rate')}</span>
+            <span className="text-sm font-medium text-[#0A2540]">{booking.pricing_snapshot.tier_name}</span>
+          </div>
+        )}
         <div className="p-4 flex justify-between">
           <span className="text-sm text-[#5A6B7B]">{t('total')}</span>
           <span className="text-sm font-semibold text-[#0A2540]">{total}</span>

@@ -106,12 +106,12 @@ export default function PriceChangeModal({
         {/* Price comparison */}
         <div className="mb-6 space-y-2 rounded-xl bg-gray-50 p-4">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">{t('from')}</span>
-            <span className="text-gray-400 line-through">{oldPrice}</span>
+            <span className="text-gray-700">{t('from')}</span>
+            <span className="text-gray-600 line-through">{oldPrice}</span>
           </div>
           <div className="flex items-center justify-between text-sm font-semibold">
             <span className="text-gray-700">{t('to')}</span>
-            <span className="text-emerald-600">{newPrice}</span>
+            <span className="text-emerald-700">{newPrice}</span>
           </div>
         </div>
 

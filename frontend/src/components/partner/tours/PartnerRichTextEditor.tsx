@@ -229,6 +229,9 @@ export function PartnerRichTextEditor({
           toolbar:
             'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | blockquote codesample | searchreplace preview code fullscreen',
           toolbar_mode: 'sliding',
+          mobile: {
+            toolbar_mode: 'sliding',
+          },
           skin: isDark ? 'oxide-dark' : 'oxide',
           content_css: isDark ? 'dark' : 'default',
           branding: false,

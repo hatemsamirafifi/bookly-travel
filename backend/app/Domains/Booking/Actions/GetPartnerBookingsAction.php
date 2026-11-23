@@ -22,7 +22,7 @@ class GetPartnerBookingsAction
         abort_unless($partner->partner !== null, 403, 'You are not authorized to view partner bookings.');
         $partnerId = $partner->partner->id;
 
-        $query = Booking::with(['tour.translations', 'traveler'])
+        $query = Booking::with(['tour.translations', 'traveler', 'departure'])
             ->whereHas('tour', function ($q) use ($partnerId) {
                 $q->where('partner_id', $partnerId);
             })

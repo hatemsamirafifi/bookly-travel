@@ -1,13 +1,12 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Browser, type Page } from '@playwright/test';
 import type { EnglishSourceInput, TourDetail } from '@/lib/api/types';
 import {
   apiGet,
-  apiPut,
-  ownedCoverUrl,
-  ownedDifficulty,
+  apiPost,
+  buildOrderedMedia,
+  LONG_DESCRIPTION,
   ownedEnglishSource,
-  ownedGuideLanguages,
-  ownedMedia,
+  uniqueTitle,
 } from './partner/tour-content-helpers';
 import { fetchServedResponse, readServedDetail, startSsrHarness, enableNativeMediaProxy } from './helpers/tour-detail-ssr';
 import type { SsrReading } from './helpers/tour-detail-ssr';
@@ -531,12 +530,92 @@ test.describe('Tour Detail Page', () => {
     });
   }
 
-  // Spec 019 US4: integrated media/difficulty/guide reads from the REAL
-  // backend through a real isolated Next SSR process (never fabricated JSON;
-  // browser route mocking cannot intercept SSR). Writes touch only an owned
-  // disposable fixture on the seeded published tour and restore it in
-  // `finally` via an actual partner PUT. Auth reuses the existing setup
-  // storageState file in a separate browser context; no token is printed.
+async function filamentPublishTourForDetailTest(
+  browser: Browser,
+  baseURL: string | undefined,
+  tourId: number,
+): Promise<void> {
+  const adminContext = await browser.newContext({
+    baseURL,
+    viewport: { width: 1440, height: 900 },
+    isMobile: false,
+    hasTouch: false,
+    storageState: { cookies: [], origins: [] },
+  });
+  try {
+    const adminPage = await adminContext.newPage();
+    await adminPage.goto('/admin/login');
+    const email = adminPage.getByLabel(/email address/i).first();
+    await email.waitFor({ state: 'visible', timeout: 30000 });
+    await email.fill('admin@bookly.test');
+    await adminPage.getByLabel(/password/i).first().fill('password');
+    await Promise.all([
+      adminPage.waitForURL('**/admin', { timeout: 30000 }),
+      adminPage.getByRole('button', { name: /sign in/i }).click(),
+    ]);
+
+    await adminPage.goto('/admin/tours?tableSortColumn=id&tableSortDirection=desc');
+    const row = adminPage
+      .getByRole('row')
+      .filter({ has: adminPage.getByRole('cell', { name: String(tourId), exact: true }) });
+    await expect(row).toBeVisible({ timeout: 30000 });
+    await row.getByRole('button', { name: 'Publish', exact: true }).click();
+    const dialog = adminPage.locator('.fi-modal-open .fi-modal-window');
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+    await expect(dialog).toBeHidden();
+    await expect(adminPage.getByText('Tour published', { exact: true })).toBeVisible();
+  } finally {
+    await adminContext.close().catch(() => {});
+  }
+}
+
+async function filamentApproveRevisionForDetailTest(
+  browser: Browser,
+  baseURL: string | undefined,
+  tourId: number,
+): Promise<void> {
+  const adminContext = await browser.newContext({
+    baseURL,
+    viewport: { width: 1440, height: 900 },
+    isMobile: false,
+    hasTouch: false,
+    storageState: { cookies: [], origins: [] },
+  });
+  try {
+    const adminPage = await adminContext.newPage();
+    await adminPage.goto('/admin/login');
+    const email = adminPage.getByLabel(/email address/i).first();
+    await email.waitFor({ state: 'visible', timeout: 30000 });
+    await email.fill('admin@bookly.test');
+    await adminPage.getByLabel(/password/i).first().fill('password');
+    await Promise.all([
+      adminPage.waitForURL('**/admin', { timeout: 30000 }),
+      adminPage.getByRole('button', { name: /sign in/i }).click(),
+    ]);
+
+    await adminPage.goto(`/admin/tours/${tourId}/edit`);
+    await adminPage.getByRole('button', { name: /approve revision/i }).first().click();
+    const dialog = adminPage.locator('.fi-modal-open .fi-modal-window');
+    await expect(dialog).toBeVisible();
+    await dialog.locator('button[type="submit"]').click();
+    await expect(dialog).toBeHidden();
+    await expect(adminPage.getByText('Revision approved and published', { exact: true })).toBeVisible();
+  } finally {
+    await adminContext.close().catch(() => {});
+  }
+}
+
+function futureIsoDate(daysAhead: number): string {
+  return new Date(Date.now() + daysAhead * 86_400_000).toISOString().slice(0, 10);
+}
+
+  // Spec 019 US4 + EGM-003 governance: integrated media/difficulty/guide reads
+  // from the REAL backend through the real Next SSR server without weakening
+  // EGM-003's immutable published-tour guard. Creates an owned disposable tour
+  // through the real partner API, publishes it via real Filament admin approval,
+  // and verifies EN/ES/IT public SSR gallery ordering, EN alt lang=en, and
+  // fallback title alt.
   test('US4 public SSR shows real cover-first gallery with EN alt lang=en on ES/IT pages (seeded tour, restored)', async ({
     page,
     request,
@@ -544,44 +623,11 @@ test.describe('Tour Detail Page', () => {
     baseURL,
   }) => {
     test.setTimeout(180000);
-    const slug = 'hidden-gems-rome-walking-tour';
     const authedContext = await browser.newContext({ baseURL, storageState: 'tests/.auth/partner.json' });
     const authedPage = await authedContext.newPage();
-    let tourId = 0;
-    let snapshot: {
-      media: Array<{ url: string; is_cover: boolean; alt_text?: string | null }>;
-      coverUrl: string | null;
-      difficulty: string | null;
-      guides: string[];
-    } | null = null;
+    let createdTourId = 0;
     try {
       await authedPage.goto('/en/partner/tours');
-      const boot = await request.get(`/api/public/tours/${slug}?locale=en`);
-      expect(boot.ok()).toBeTruthy();
-      const bootData = ((await boot.json()).data) as TourDetail;
-      tourId = bootData.id;
-      // Legacy seeded tours carry no invented difficulty: absent reads null.
-      if (bootData.difficulty_level === null || bootData.difficulty_level === undefined) {
-        expect(bootData.difficulty_level ?? null).toBeNull();
-      }
-      const owned = await apiGet(authedPage, `/api/partner/tours/${tourId}`);
-      if (owned.status !== 200) {
-        throw new Error(
-          `Spec019 US4 seed prerequisite: expected seeded partner@bookly.test to own published tour ${slug} ` +
-            `(partner GET /api/partner/tours/${tourId} returned ${owned.status}). ` +
-            'Root must prepare ownership/seeding instead of inventing state.'
-        );
-      }
-      snapshot = {
-        media: ownedMedia(owned.json).map((row) => ({
-          url: row.url,
-          is_cover: row.is_cover,
-          ...(row.alt_text === undefined ? {} : { alt_text: row.alt_text }),
-        })),
-        coverUrl: ownedCoverUrl(owned.json),
-        difficulty: ownedDifficulty(owned.json),
-        guides: ownedGuideLanguages(owned.json),
-      };
 
       const stamp = Date.now().toString(36);
       const coverUrl = `http://cdn.bookly.test/tours/rome-cover.jpg?us4=${stamp}-cover`;
@@ -589,21 +635,65 @@ test.describe('Tour Detail Page', () => {
       const thirdUrl = `http://cdn.bookly.test/tours/rome-gallery-2.jpg?us4=${stamp}-third`;
       const coverAltEn = 'US4 harbor sunrise Caf\u00e9';
       const secondAltEn = 'US4 old street';
-      const fixture = await apiPut(authedPage, `/api/partner/tours/${tourId}`, {
+      const title = uniqueTitle('US4 Gallery SSR');
+
+      const created = await apiPost(authedPage, '/api/partner/tours', {
+        title,
+        description: LONG_DESCRIPTION,
+        category: 'walking',
+        destination: 'Rome, Italy',
+        duration_value: 3,
+        duration_unit: 'hour',
+        difficulty_level: 'moderate',
+        guide_languages: ['en', 'de'],
+        cover_image_url: coverUrl,
         media: [
           { url: coverUrl, is_cover: true, alt_text: coverAltEn },
           { url: secondUrl, is_cover: false, alt_text: secondAltEn },
           { url: thirdUrl, is_cover: false, alt_text: null },
         ],
-        cover_image_url: coverUrl,
-        guide_languages: ['en', 'de'],
+        translations: {
+          en: {
+            title,
+            description: LONG_DESCRIPTION,
+            highlights: ['Historic route'],
+            inclusions: ['Local guide'],
+            exclusions: ['Lunch'],
+            important_information: ['Wear comfortable shoes'],
+            meeting_point: 'Piazza Navona',
+            cancellation_policy: 'Free cancellation up to 24 hours before start.',
+            itinerary: [{ day: 1, title: 'Old Town Walk', description: null, stops: [] }],
+          },
+        },
       });
-      if (fixture.status !== 200) {
-        throw new Error(
-          `Spec019 US4 seed prerequisite: fixture PUT on owned seeded tour ${slug} returned ${fixture.status}. ` +
-            'Root must prepare a writable owned fixture instead of inventing state.'
-        );
-      }
+      expect(created.status).toBe(201);
+      const createdData = (created.json as { data: { id: number; slug: string } }).data;
+      const tourId = createdData.id;
+      createdTourId = tourId;
+      const slug = createdData.slug;
+
+      const tierRes = await apiPost(authedPage, `/api/partner/tours/${tourId}/pricing`, {
+        name: 'Standard',
+        price: 55,
+        min_participants: 1,
+        max_participants: 10,
+      });
+      expect(tierRes.status).toBe(201);
+
+      const ruleRes = await apiPost(authedPage, `/api/partner/tours/${tourId}/availability/rules`, {
+        rule_type: 'recurring',
+        days_of_week: [0, 1, 2, 3, 4, 5, 6],
+        start_time: '10:00',
+        start_date: futureIsoDate(1),
+        end_date: futureIsoDate(90),
+        capacity: 10,
+      });
+      expect(ruleRes.status).toBe(201);
+
+      const submitRes = await apiPost(authedPage, `/api/partner/tours/${tourId}/submit`, {});
+      expect(submitRes.status).toBe(200);
+
+      await filamentPublishTourForDetailTest(browser, baseURL, tourId);
 
       const scenarios = [
         { locale: 'en', view1: 'View image 1', dialog: 'Image lightbox', close: 'Close lightbox', view3: 'View image 3', counter3: '3 of 3' },
@@ -611,7 +701,7 @@ test.describe('Tour Detail Page', () => {
         { locale: 'it', view1: 'Vedi immagine 1', dialog: 'Galleria ingrandita', close: 'Chiudi galleria', view3: 'Vedi immagine 3', counter3: '3 di 3' },
       ] as const;
       for (const scenario of scenarios) {
-        // Actual backend response the isolated Next server consumes.
+        // Actual backend response the Next server consumes.
         const servedResponse = await request.get(`/api/public/tours/${slug}?locale=${scenario.locale}`);
         expect(servedResponse.ok()).toBeTruthy();
         const served = ((await servedResponse.json()).data) as TourDetail;
@@ -628,7 +718,7 @@ test.describe('Tour Detail Page', () => {
         expect(served.images[2].alt).toBe(served.title);
         expect(served.images[2].alt_locale).toBe(served.content_locale);
         // Saved supported facts travel independently of page language.
-        expect(served.difficulty_level ?? null).toBe(snapshot.difficulty);
+        expect(served.difficulty_level ?? null).toBe('moderate');
         expect(served.guide_languages).toEqual(['en', 'de']);
 
         const url = new URL(`/${scenario.locale}/tours/${slug}`, baseURL).href;
@@ -675,37 +765,18 @@ test.describe('Tour Detail Page', () => {
         await expect(dialog).not.toBeVisible();
       }
     } finally {
-      if (snapshot !== null && tourId !== 0) {
-        const restoreDifficulty =
-          snapshot.difficulty === 'easy' ||
-          snapshot.difficulty === 'moderate' ||
-          snapshot.difficulty === 'challenging'
-            ? snapshot.difficulty
-            : null;
-        const restore = await apiPut(authedPage, `/api/partner/tours/${tourId}`, {
-          media: snapshot.media,
-          ...(snapshot.coverUrl && /^https?:\/\//i.test(snapshot.coverUrl)
-            ? { cover_image_url: snapshot.coverUrl }
-            : {}),
-          ...(restoreDifficulty === null ? {} : { difficulty_level: restoreDifficulty }),
-          guide_languages: snapshot.guides,
-        });
-        expect(restore.status).toBe(200);
+      if (createdTourId > 0) {
+        await apiPost(authedPage, `/api/partner/tours/${createdTourId}/archive`, {}).catch(() => {});
       }
       await authedContext.close();
     }
   });
 
-  // Spec 019 US6 (T071): actual English source write -> public SSR/SEO reads.
-  // Resolves the real published seeded tour by public slug (never a hardcoded
-  // id), snapshots the owned EN source (presence/null preserved via
-  // ownedEnglishSource), writes a meaningful ordered itinerary with repeated
-  // day numbers through the real partner PUT, then proves the production Next
-  // server through the real proxy serves the edited source with a disclosed stale-derivative EN
-  // fallback on the ES page. Server money/booking availability must not move
-  // with a source edit. No provider call is made; a non-200 write is a seed
-  // prerequisite failure, never a fabricated success. The snapshot is
-  // restored in `finally` through the same real API.
+  // Spec 019 US6 (T071) + EGM-003 governance: actual English source edit on a
+  // published tour via the real EGM-003 content revision + Filament approval
+  // pipeline -> public SSR/SEO reads with disclosed EN fallback on ES page and
+  // unchanged server money/booking availability. Never weakens EGM-003's 422
+  // direct-PUT guard on published tours.
   test('US6 public SSR reads actual edited English source with disclosed EN fallback; money/availability unchanged (seeded tour, restored)', async ({
     page,
     request,
@@ -713,35 +784,89 @@ test.describe('Tour Detail Page', () => {
     baseURL,
   }) => {
     test.setTimeout(180000);
-    const slug = 'hidden-gems-rome-walking-tour';
     const authedContext = await browser.newContext({ baseURL, storageState: 'tests/.auth/partner.json' });
     const authedPage = await authedContext.newPage();
-    let tourId = 0;
-    let snapshot: Record<string, unknown> | null = null;
+    let createdTourId = 0;
     try {
       await authedPage.goto('/en/partner/tours');
-      const boot = await request.get(`/api/public/tours/${slug}?locale=en`);
-      expect(boot.ok()).toBeTruthy();
-      const bootData = ((await boot.json()).data) as TourDetail;
-      tourId = bootData.id;
+      const initialTitle = uniqueTitle('US6 Initial Tour');
+      const created = await apiPost(authedPage, '/api/partner/tours', {
+        title: initialTitle,
+        description: LONG_DESCRIPTION,
+        category: 'walking',
+        destination: 'Rome, Italy',
+        duration_value: 3,
+        duration_unit: 'hour',
+        difficulty_level: 'easy',
+        guide_languages: ['en'],
+        price_from: 65,
+        media: buildOrderedMedia(2, 'us6-ssr'),
+        translations: {
+          en: {
+            title: initialTitle,
+            description: LONG_DESCRIPTION,
+            highlights: ['Initial highlight'],
+            inclusions: ['Guide'],
+            exclusions: ['Meals'],
+            important_information: ['Arrive 10 minutes early'],
+            meeting_point: 'Initial Gate',
+            cancellation_policy: 'Free cancellation up to 24 hours before start.',
+            itinerary: [{ day: 1, title: 'Initial day', description: null, stops: [] }],
+          },
+        },
+      });
+      expect(created.status).toBe(201);
+      const createdData = (created.json as { data: { id: number; slug: string } }).data;
+      const tourId = createdData.id;
+      createdTourId = tourId;
+      const slug = createdData.slug;
+
+      const tierRes = await apiPost(authedPage, `/api/partner/tours/${tourId}/pricing`, {
+        name: 'Standard',
+        price: 65,
+        min_participants: 1,
+        max_participants: 10,
+      });
+      expect(tierRes.status).toBe(201);
+
+      const ruleRes = await apiPost(authedPage, `/api/partner/tours/${tourId}/availability/rules`, {
+        rule_type: 'recurring',
+        days_of_week: [0, 1, 2, 3, 4, 5, 6],
+        start_time: '09:30',
+        start_date: futureIsoDate(1),
+        end_date: futureIsoDate(90),
+        capacity: 10,
+      });
+      expect(ruleRes.status).toBe(201);
+
+      const submitRes = await apiPost(authedPage, `/api/partner/tours/${tourId}/submit`, {});
+      expect(submitRes.status).toBe(200);
+
+      await filamentPublishTourForDetailTest(browser, baseURL, tourId);
+
       const owned = await apiGet(authedPage, `/api/partner/tours/${tourId}`);
-      if (owned.status !== 200) {
-        throw new Error(
-          `Spec019 US6 seed prerequisite: expected seeded partner@bookly.test to own published tour ${slug} ` +
-            `(partner GET /api/partner/tours/${tourId} returned ${owned.status}). ` +
-            'Root must prepare ownership/seeding instead of inventing state.'
-        );
-      }
-      snapshot = ownedEnglishSource(owned.json);
+      expect(owned.status).toBe(200);
+      const snapshot = ownedEnglishSource(owned.json);
+      const ownedData = (owned.json as {
+        data: {
+          published_revision_id?: number | null;
+          content_governance?: { published_revision_id?: number | null };
+        };
+      }).data;
+      const baseRevisionId =
+        ownedData.published_revision_id ?? ownedData.content_governance?.published_revision_id ?? null;
+      expect(baseRevisionId).not.toBeNull();
+
       const beforeEs = await request.get(`/api/public/tours/${slug}?locale=es`);
       expect(beforeEs.ok()).toBeTruthy();
       const beforeServed = ((await beforeEs.json()).data) as TourDetail;
       const moneyBefore = beforeServed.pricing;
       const availabilityBefore = beforeServed.availability;
 
-      // Meaningful ordered source edit: repeated valid day numbers kept in
-      // authored order (day 7 twice, then day 2) with ordered stops including
-      // null descriptions/durations, plus a real meeting point.
+      // Meaningful ordered source edit through EGM-003 revision governance:
+      // repeated valid day numbers kept in authored order (day 7 twice, then
+      // day 2) with ordered stops including null descriptions/durations, plus
+      // a real meeting point.
       const stamp = Date.now().toString(36);
       const sourceTitle = `US6 authored source ${stamp}`;
       const sourceDescription = 'US6 current English source description with real meeting-point facts.';
@@ -756,23 +881,31 @@ test.describe('Tour Detail Page', () => {
           { title: 'US6 photo stop', description: null, duration_minutes: 15 },
         ] },
       ];
-      const write = await apiPut(authedPage, `/api/partner/tours/${tourId}`, {
-        translations: { en: {
+
+      const createRevision = await apiPost(authedPage, `/api/partner/tours/${tourId}/revisions`, {
+        base_revision_id: baseRevisionId,
+        change_summary: 'US6 authored English itinerary update',
+        source: {
           ...(snapshot as EnglishSourceInput),
           title: sourceTitle,
           description: sourceDescription,
           meeting_point: sourceMeetingPoint,
           itinerary: sourceItinerary,
-        } },
+        },
       });
-      if (write.status !== 200) {
-        throw new Error(
-          `Spec019 US6 seed prerequisite: source PUT on owned seeded tour ${slug} returned ${write.status}. ` +
-            'Root must prepare a writable owned fixture instead of inventing state.'
-        );
-      }
+      expect(createRevision.status).toBe(201);
+      const revisionId = (createRevision.json as { data: { id: number } }).data.id;
 
-      // Actual backend response the isolated Next server consumes: the edited
+      const submitRevision = await apiPost(
+        authedPage,
+        `/api/partner/tours/${tourId}/revisions/${revisionId}/submit`,
+        {},
+      );
+      expect(submitRevision.status).toBe(200);
+
+      await filamentApproveRevisionForDetailTest(browser, baseURL, tourId);
+
+      // Actual backend response the Next server consumes: the approved edited
       // source is current while the ES derivative (missing or superseded by
       // the edit) falls back to disclosed English. Server money/booking
       // availability do not move with a source edit.
@@ -857,11 +990,8 @@ test.describe('Tour Detail Page', () => {
         await expect(bookingAction).toHaveCount(0);
       }
     } finally {
-      if (snapshot !== null && tourId !== 0) {
-        const restore = await apiPut(authedPage, `/api/partner/tours/${tourId}`, {
-          translations: { en: snapshot },
-        });
-        expect(restore.status).toBe(200);
+      if (createdTourId > 0) {
+        await apiPost(authedPage, `/api/partner/tours/${createdTourId}/archive`, {}).catch(() => {});
       }
       await authedContext.close();
     }

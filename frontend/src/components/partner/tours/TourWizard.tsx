@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { useTourWizardStore } from '@/lib/stores/tourWizard';
+import { useTourWizardStore, toServerWizardStep } from '@/lib/stores/tourWizard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CloudUpload, Save } from 'lucide-react';
 import { ImageUploader } from './ImageUploader';
 import { ItineraryEditor } from './ItineraryEditor';
 import { TourContentPreview } from './TourContentPreview';
@@ -23,8 +23,19 @@ import { PricingTierForm } from './PricingTierForm';
 import { BookingOptionsForm } from './BookingOptionsForm';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { PartnerRichTextEditor } from './PartnerRichTextEditor';
-import { createTour, updateTour, submitTour } from '@/lib/api/partner';
-import { ValidationError } from '@/lib/api/client';
+import {
+  createTour,
+  updateTour,
+  submitTour,
+  saveGeneralDraft,
+  updateGeneralDraft,
+  getLatestGeneralDraft,
+  getGeneralDraft,
+  resumeGeneralDraft,
+  discardGeneralDraft,
+} from '@/lib/api/partner';
+import { ValidationError, ConflictError, NotFoundError } from '@/lib/api/client';
+import { getAuthToken } from '@/lib/auth/token';
 import { toMinorUnits } from '@/lib/utils';
 import {
   tourSourceStepSchema,
@@ -45,6 +56,7 @@ import type {
   PartnerBookingOptionInput,
   ContentSourceLocale,
   EnglishSourceInput,
+  TourDraftSnapshot,
 } from '@/lib/api/types';
 
 const steps: { id: WizardStep; labelKey: string }[] = [
@@ -56,6 +68,45 @@ const steps: { id: WizardStep; labelKey: string }[] = [
   { id: 'review', labelKey: 'wizard.review' },
 ];
 
+function extractServerDraft(raw: unknown): TourDraftSnapshot | null {
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+    return null;
+  }
+  const obj = raw as Record<string, unknown>;
+  if (typeof obj.id !== 'number') {
+    return null;
+  }
+  return obj as unknown as TourDraftSnapshot;
+}
+
+function readDraftTitle(draft: TourDraftSnapshot | null): string {
+  if (!draft || typeof draft.payload !== 'object' || draft.payload === null || Array.isArray(draft.payload)) {
+    return '';
+  }
+  const rawTitle = (draft.payload as Record<string, unknown>).title;
+  return typeof rawTitle === 'string' ? rawTitle.trim() : '';
+}
+
+function payloadHasAuthoredContent(payload: unknown): boolean {
+  if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+    return false;
+  }
+  const obj = payload as Record<string, unknown>;
+  for (const field of ['title', 'description', 'meeting_point', 'cancellation_policy']) {
+    const val = obj[field];
+    if (typeof val === 'string' && val.trim() !== '') {
+      return true;
+    }
+  }
+  for (const listField of ['highlights', 'inclusions', 'exclusions', 'important_information', 'itinerary', 'options']) {
+    const val = obj[listField];
+    if (Array.isArray(val) && val.length > 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function TourWizard() {
   const t = useTranslations('partner.tours');
   const locale = useLocale();
@@ -64,6 +115,10 @@ export function TourWizard() {
   const {
     currentStep,
     formData,
+    draftId,
+    creationId,
+    tourId,
+    hasUnsyncedDraftChanges,
     isSubmitting,
     setStep,
     updateField,
@@ -74,19 +129,27 @@ export function TourWizard() {
     addBookingOption,
     removeBookingOption,
     updateBookingOption,
+    setDraftSyncMeta,
+    hydrateFromServerDraft,
+    regenerateCreationId,
   } = useTourWizardStore();
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
   const [errorMsg, setErrorMsg] = useState('');
   const [notice, setNotice] = useState('');
-  // Successfully materialized draft id: retries update THIS tour instead of
-  // creating duplicates after a partial success (created, submit failed).
-  const [createdDraftId, setCreatedDraftId] = useState<number | null>(null);
+  const [recoverableDraft, setRecoverableDraft] = useState<TourDraftSnapshot | null>(null);
+  const [conflictDraft, setConflictDraft] = useState<TourDraftSnapshot | null>(null);
+  const [showCreationIdConflict, setShowCreationIdConflict] = useState(false);
+  const [isSyncingDraft, setIsSyncingDraft] = useState(false);
+  const [serverAuthoredLock, setServerAuthoredLock] = useState(false);
   // FR021/US4: a pending over-long English alt draft stays local inside the
   // media step and must block Next/save until fixed or discarded.
   const [mediaAltValid, setMediaAltValid] = useState(true);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
+  const conflictPanelRef = useRef<HTMLDivElement>(null);
+  const syncPromiseRef = useRef<Promise<TourDraftSnapshot | false | null> | null>(null);
+  const mountRecoveryCheckedRef = useRef(false);
 
   const currentStepIdx = steps.findIndex((s) => s.id === currentStep);
 
@@ -121,6 +184,215 @@ export function TourWizard() {
       prevErrorSignatureRef.current = '';
     }
   }, [errorSignature]);
+
+  useEffect(() => {
+    if (conflictDraft) {
+      conflictPanelRef.current?.focus();
+    }
+  }, [conflictDraft]);
+
+  // Mount-time cross-session & multi-tab draft recovery check.
+  useEffect(() => {
+    if (mountRecoveryCheckedRef.current) return;
+    mountRecoveryCheckedRef.current = true;
+    const token = getAuthToken();
+    if (!token || typeof getLatestGeneralDraft !== 'function') {
+      return () => {
+        mountRecoveryCheckedRef.current = false;
+      };
+    }
+
+    let cancelled = false;
+    const checkServerDraft = async () => {
+      const state = useTourWizardStore.getState();
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const requestedParam = params?.get('draft');
+      const requestedDraftId = requestedParam && /^\d+$/.test(requestedParam) ? Number(requestedParam) : null;
+
+      try {
+        if (requestedDraftId !== null && typeof resumeGeneralDraft === 'function') {
+          const res = await resumeGeneralDraft(requestedDraftId);
+          if (!cancelled && res?.data) {
+            hydrateFromServerDraft(res.data);
+            setServerAuthoredLock(payloadHasAuthoredContent(res.data.payload));
+            setRecoverableDraft(null);
+            setConflictDraft(null);
+          }
+          return;
+        }
+
+        if (state.draftId !== null && typeof getGeneralDraft === 'function') {
+          try {
+            const res = await getGeneralDraft(state.draftId);
+            if (cancelled || !res?.data) return;
+            const serverDraft = res.data;
+            const serverToken = serverDraft.concurrency_token ?? null;
+            if (payloadHasAuthoredContent(serverDraft.payload)) {
+              setServerAuthoredLock(true);
+            }
+            if (serverToken && state.concurrencyToken && serverToken !== state.concurrencyToken) {
+              if (state.hasUnsyncedDraftChanges || state.isDirty) {
+                setConflictDraft(serverDraft);
+              } else {
+                hydrateFromServerDraft(serverDraft);
+              }
+            } else if (!state.hasUnsyncedDraftChanges && !state.isDirty) {
+              hydrateFromServerDraft(serverDraft);
+            }
+            return;
+          } catch (err) {
+            if (cancelled || !(err instanceof NotFoundError)) {
+              throw err;
+            }
+            // Reset dead draft reference and fall through to /drafts/latest recovery.
+            if (useTourWizardStore.getState().draftId === state.draftId) {
+              setDraftSyncMeta({
+                draftId: null,
+                tourId: null,
+                concurrencyToken: null,
+                lastSyncedAt: null,
+                hasUnsyncedDraftChanges: false,
+              });
+              setServerAuthoredLock(false);
+            }
+          }
+        }
+
+        const latest = await getLatestGeneralDraft();
+        if (cancelled || !latest?.data) return;
+
+        const current = useTourWizardStore.getState();
+        const latestCreationId = (latest.data.creation_id ?? '').toLowerCase();
+        if (latestCreationId !== '' && latestCreationId === current.creationId.toLowerCase()) {
+          if (payloadHasAuthoredContent(latest.data.payload)) {
+            setServerAuthoredLock(true);
+          }
+          const serverToken = latest.data.concurrency_token ?? null;
+          if (serverToken && current.concurrencyToken && serverToken !== current.concurrencyToken && (current.hasUnsyncedDraftChanges || current.isDirty)) {
+            setConflictDraft(latest.data);
+          } else if (!current.hasUnsyncedDraftChanges && !current.isDirty) {
+            hydrateFromServerDraft(latest.data);
+          } else {
+            setDraftSyncMeta({
+              draftId: latest.data.id ?? current.draftId,
+              tourId: latest.data.tour_id ?? current.tourId,
+              concurrencyToken: serverToken,
+              lastSyncedAt: latest.data.auto_saved_at ?? latest.data.updated_at ?? current.lastSyncedAt,
+              hasUnsyncedDraftChanges: current.hasUnsyncedDraftChanges,
+            });
+          }
+          return;
+        }
+
+        if (current.draftId === null && current.tourId === null) {
+          setRecoverableDraft(latest.data);
+        }
+      } catch (err) {
+        if (!cancelled && !(err instanceof NotFoundError)) {
+          // Non-blocking: local working buffer remains usable.
+        }
+      }
+    };
+
+    void checkServerDraft();
+    return () => {
+      cancelled = true;
+      mountRecoveryCheckedRef.current = false;
+    };
+    // Mount-only check; store access reads current snapshot via getState().
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const syncServerDraft = (opts?: {
+    overrideToken?: string | null;
+    stepOverride?: WizardStep;
+  }): Promise<TourDraftSnapshot | false | null> => {
+    if (!getAuthToken() || typeof saveGeneralDraft !== 'function') {
+      return Promise.resolve(null);
+    }
+
+    const executeSync = async (): Promise<TourDraftSnapshot | false | null> => {
+      const live = useTourWizardStore.getState();
+      const effectiveToken = opts?.overrideToken !== undefined ? opts.overrideToken : live.concurrencyToken;
+      const targetStep = opts?.stepOverride ?? live.currentStep;
+
+      const draftBody = {
+        creation_id: live.creationId,
+        tour_id: live.tourId,
+        source_locale: live.formData.source_locale,
+        current_step: toServerWizardStep(targetStep),
+        concurrency_token: effectiveToken,
+        payload: live.formData as unknown as Record<string, unknown>,
+      };
+
+      try {
+        setIsSyncingDraft(true);
+        const response =
+          live.draftId !== null && typeof updateGeneralDraft === 'function'
+            ? await updateGeneralDraft(live.draftId, draftBody)
+            : await saveGeneralDraft(draftBody);
+
+        if (response?.data) {
+          const saved = response.data;
+          setDraftSyncMeta({
+            draftId: saved.id ?? live.draftId,
+            creationId: saved.creation_id ?? live.creationId,
+            tourId: saved.tour_id ?? live.tourId,
+            concurrencyToken: saved.concurrency_token ?? null,
+            lastSyncedAt: saved.auto_saved_at ?? saved.updated_at ?? new Date().toISOString(),
+            hasUnsyncedDraftChanges: false,
+          });
+          if (payloadHasAuthoredContent(saved.payload)) {
+            setServerAuthoredLock(true);
+          }
+          setConflictDraft(null);
+          setRecoverableDraft(null);
+          return saved;
+        }
+        return null;
+      } catch (err) {
+        if (err instanceof ConflictError && err.errorCode === 'STALE_DRAFT_CONFLICT') {
+          const serverDraft = extractServerDraft(err.serverDraft);
+          if (serverDraft) {
+            setConflictDraft(serverDraft);
+            return false;
+          }
+        }
+        throw err;
+      } finally {
+        setIsSyncingDraft(false);
+      }
+    };
+
+    const queued = syncPromiseRef.current
+      ? syncPromiseRef.current.catch(() => null).then(() => executeSync())
+      : executeSync();
+    const cleaned = queued.catch(() => null).finally(() => {
+      if (syncPromiseRef.current === cleaned) {
+        syncPromiseRef.current = null;
+      }
+    });
+    syncPromiseRef.current = cleaned;
+    return queued;
+  };
+
+  // Debounced background server autosave once a server draft has been started.
+  useEffect(() => {
+    if (!draftId || !hasUnsyncedDraftChanges || isSubmitting || conflictDraft) {
+      return;
+    }
+    if (!getAuthToken() || typeof updateGeneralDraft !== 'function') {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      void syncServerDraft().catch(() => {
+        // Keep local buffer intact on transient autosave failure.
+      });
+    }, 1500);
+    return () => window.clearTimeout(timer);
+    // Intentionally triggers from dirty buffer changes on an active server draft.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftId, hasUnsyncedDraftChanges, formData, isSubmitting, conflictDraft]);
 
   const validateStep = (step: WizardStep) => {
     let result;
@@ -169,7 +441,11 @@ export function TourWizard() {
         setMediaAltValid(true);
       }
       if (currentStepIdx < steps.length - 1) {
-        setStep(steps[currentStepIdx + 1].id);
+        const nextStep = steps[currentStepIdx + 1].id;
+        setStep(nextStep);
+        if (draftId !== null && !conflictDraft) {
+          void syncServerDraft({ stepOverride: nextStep }).catch(() => {});
+        }
       }
     }
   };
@@ -180,7 +456,11 @@ export function TourWizard() {
       if (currentStep === 'media') {
         setMediaAltValid(true);
       }
-      setStep(steps[currentStepIdx - 1].id);
+      const prevStep = steps[currentStepIdx - 1].id;
+      setStep(prevStep);
+      if (draftId !== null && !conflictDraft) {
+        void syncServerDraft({ stepOverride: prevStep }).catch(() => {});
+      }
     }
   };
 
@@ -233,7 +513,9 @@ export function TourWizard() {
   const buildPayload = ({
     includeSourceLocale,
     sendOptionsUnconditionally = false,
-  }: { includeSourceLocale: boolean; sendOptionsUnconditionally?: boolean } = { includeSourceLocale: true }): PartnerTourWritePayload => ({
+    includeCreationId = false,
+  }: { includeSourceLocale: boolean; sendOptionsUnconditionally?: boolean; includeCreationId?: boolean } = { includeSourceLocale: true }): PartnerTourWritePayload => ({
+    ...(includeCreationId ? { creation_id: creationId } : {}),
     title: formData.title,
     description: formData.description,
     category: formData.category,
@@ -258,12 +540,12 @@ export function TourWizard() {
       is_cover: item.is_cover,
       ...('alt_text' in item ? { alt_text: item.alt_text } : {}),
     })),
-    pricing_tiers: formData.pricing_tiers.map((t) => ({
-      name: t.name,
-      price: parseFloat(t.price) || 0,
-      currency: t.currency,
-      min_participants: t.min_participants,
-      max_participants: t.max_participants,
+    pricing_tiers: formData.pricing_tiers.map((tier) => ({
+      name: tier.name,
+      price: parseFloat(tier.price) || 0,
+      currency: tier.currency,
+      min_participants: tier.min_participants,
+      max_participants: tier.max_participants,
     })),
     availability_rules: formData.availability_rules,
     availability_exceptions: formData.availability_exceptions,
@@ -282,6 +564,21 @@ export function TourWizard() {
       setErrorMsg(Object.keys(fields).length > 0 ? '' : fallbackMessage);
       return;
     }
+    if (err instanceof ConflictError) {
+      if (err.errorCode === 'STALE_DRAFT_CONFLICT') {
+        const serverDraft = extractServerDraft(err.serverDraft);
+        if (serverDraft) {
+          setConflictDraft(serverDraft);
+          setErrorMsg('');
+          return;
+        }
+      }
+      if (err.errorCode === 'CREATION_ID_REUSED_WITH_DIFFERENT_PAYLOAD') {
+        setShowCreationIdConflict(true);
+        setErrorMsg(t('wizard.creationIdConflict'));
+        return;
+      }
+    }
     setErrorMsg(fallbackMessage);
   };
 
@@ -293,22 +590,157 @@ export function TourWizard() {
   // adopted onto the local rows so a later update EDITS those rows (never
   // duplicating them as id-less creates).
   const materializeDraft = async () => {
+    const live = useTourWizardStore.getState();
+    const retainedTourId = live.tourId;
     const payload = buildPayload({
-      includeSourceLocale: createdDraftId === null,
-      sendOptionsUnconditionally: createdDraftId !== null,
+      includeSourceLocale: retainedTourId === null,
+      sendOptionsUnconditionally: retainedTourId !== null,
+      includeCreationId: retainedTourId === null,
     });
-    if (createdDraftId !== null) {
-      const updated = await updateTour(createdDraftId, payload);
+    if (retainedTourId !== null) {
+      const updated = await updateTour(retainedTourId, payload);
       adoptSavedOptionIds(updated.data?.options ?? null);
       return updated.data.id;
     }
     const created = await createTour(payload);
-    setCreatedDraftId(Number(created.data.id));
+    const createdId = Number(created.data.id);
+    setRecoverableDraft(null);
     adoptSavedOptionIds(created.data?.options ?? null);
+
+    const draftMeta = created.draft ?? null;
+    if (draftMeta && (typeof draftMeta.id === 'number' || typeof draftMeta.concurrency_token === 'string')) {
+      setDraftSyncMeta({
+        draftId: typeof draftMeta.id === 'number' ? draftMeta.id : live.draftId,
+        creationId: typeof draftMeta.creation_id === 'string' ? draftMeta.creation_id : live.creationId,
+        tourId: createdId,
+        concurrencyToken: draftMeta.concurrency_token ?? live.concurrencyToken,
+        lastSyncedAt: draftMeta.auto_saved_at ?? live.lastSyncedAt,
+        hasUnsyncedDraftChanges: false,
+      });
+    } else {
+      setDraftSyncMeta({ tourId: createdId, hasUnsyncedDraftChanges: false });
+
+      // Refresh server draft token rotated during materialization (fallback when `draft` omitted).
+      if (getAuthToken()) {
+        try {
+          if (live.draftId !== null && typeof getGeneralDraft === 'function') {
+            const refreshed = await getGeneralDraft(live.draftId);
+            if (refreshed?.data) {
+              setDraftSyncMeta({
+                draftId: refreshed.data.id ?? live.draftId,
+                concurrencyToken: refreshed.data.concurrency_token ?? null,
+                lastSyncedAt: refreshed.data.auto_saved_at ?? null,
+                hasUnsyncedDraftChanges: false,
+              });
+            }
+          } else if (typeof getLatestGeneralDraft === 'function') {
+            const latest = await getLatestGeneralDraft();
+            if (
+              latest?.data &&
+              latest.data.creation_id?.toLowerCase() === live.creationId.toLowerCase()
+            ) {
+              setDraftSyncMeta({
+                draftId: latest.data.id,
+                tourId: latest.data.tour_id ?? createdId,
+                concurrencyToken: latest.data.concurrency_token ?? null,
+                lastSyncedAt: latest.data.auto_saved_at ?? null,
+                hasUnsyncedDraftChanges: false,
+              });
+            }
+          }
+        } catch {
+          // Non-fatal: tour is already materialized with stable tourId.
+        }
+      }
+    }
+
     return created.data.id;
   };
 
+  const handleSaveProgress = async () => {
+    setErrorMsg('');
+    setNotice('');
+    setServerErrors({});
+    setShowCreationIdConflict(false);
+    try {
+      const saved = await syncServerDraft();
+      if (saved) {
+        setNotice(t('wizard.progressSaved'));
+      }
+    } catch (err: unknown) {
+      applyServerError(err, t('wizard.saveFailed'));
+    }
+  };
+
+  const handleResumeRecoverableDraft = async () => {
+    if (!recoverableDraft) return;
+    setErrorMsg('');
+    setNotice('');
+    try {
+      const res =
+        typeof resumeGeneralDraft === 'function'
+          ? await resumeGeneralDraft(recoverableDraft.id)
+          : { data: recoverableDraft };
+      if (res?.data) {
+        hydrateFromServerDraft(res.data);
+        setServerAuthoredLock(payloadHasAuthoredContent(res.data.payload));
+      } else {
+        hydrateFromServerDraft(recoverableDraft);
+        setServerAuthoredLock(payloadHasAuthoredContent(recoverableDraft.payload));
+      }
+      setRecoverableDraft(null);
+      setConflictDraft(null);
+    } catch (err: unknown) {
+      applyServerError(err, t('wizard.saveFailed'));
+    }
+  };
+
+  const handleStartFreshFromRecovery = async () => {
+    const targetId = recoverableDraft?.id ?? null;
+    setRecoverableDraft(null);
+    setConflictDraft(null);
+    setShowCreationIdConflict(false);
+    setServerAuthoredLock(false);
+    reset();
+    if (targetId !== null && getAuthToken() && typeof discardGeneralDraft === 'function') {
+      try {
+        await discardGeneralDraft(targetId);
+      } catch {
+        // Local reset already cleared the wizard cleanly.
+      }
+    }
+  };
+
+  const handleLoadServerConflictDraft = () => {
+    if (!conflictDraft) return;
+    hydrateFromServerDraft(conflictDraft);
+    setServerAuthoredLock(payloadHasAuthoredContent(conflictDraft.payload));
+    setConflictDraft(null);
+    setErrorMsg('');
+    setNotice('');
+  };
+
+  const handleKeepLocalConflictDraft = async () => {
+    if (!conflictDraft) return;
+    setErrorMsg('');
+    setNotice('');
+    try {
+      const saved = await syncServerDraft({
+        overrideToken: conflictDraft.concurrency_token ?? null,
+      });
+      if (saved) {
+        setNotice(t('wizard.progressSaved'));
+      }
+    } catch (err: unknown) {
+      applyServerError(err, t('wizard.saveFailed'));
+    }
+  };
+
   const handleSaveDraft = async () => {
+    if (conflictDraft) {
+      conflictPanelRef.current?.focus();
+      return;
+    }
     // Never partially save while a bad alt draft is pending: it was never
     // emitted into the payload and would be silently discarded.
     if (!mediaAltValid) {
@@ -325,7 +757,17 @@ export function TourWizard() {
     setErrorMsg('');
     setNotice('');
     setServerErrors({});
+    setShowCreationIdConflict(false);
     try {
+      if (syncPromiseRef.current) {
+        await syncPromiseRef.current.catch(() => null);
+      }
+      if (getAuthToken() && useTourWizardStore.getState().draftId !== null) {
+        const synced = await syncServerDraft();
+        if (synced === false) {
+          return;
+        }
+      }
       // The server validates materialized drafts; incomplete local state
       // remains persisted when a write is refused. Retain the saved id
       // for retry-safe updates.
@@ -339,6 +781,10 @@ export function TourWizard() {
   };
 
   const handleSubmitReview = async () => {
+    if (conflictDraft) {
+      conflictPanelRef.current?.focus();
+      return;
+    }
     if (!mediaAltValid) {
       setValidationErrors({ media: 'partner.tours.errors.altTextMax' });
       return;
@@ -372,6 +818,7 @@ export function TourWizard() {
     setErrorMsg('');
     setNotice('');
     setServerErrors({});
+    setShowCreationIdConflict(false);
     try {
       // Materialize a draft first, then submit through the guarded endpoint
       // (pricing/cover/lifecycle checks stay server-side). Creation never
@@ -380,7 +827,9 @@ export function TourWizard() {
       const id = await materializeDraft();
       await submitTour(id);
       setNotice(t('wizard.submitted'));
-      setCreatedDraftId(null);
+      setRecoverableDraft(null);
+      setConflictDraft(null);
+      setServerAuthoredLock(false);
       reset();
       router.push(`/${locale}/partner`);
     } catch (err: unknown) {
@@ -452,11 +901,12 @@ export function TourWizard() {
           formData.important_information.length > 0 ||
           formData.meeting_point.trim() !== '' ||
           formData.cancellation_policy.trim() !== '' ||
-          formData.itinerary.length > 0;
+          formData.itinerary.length > 0 ||
+          submittedOptionRows.length > 0;
         // A saved draft retains its source even when the author clears every
         // field. An older unanswered local draft still needs a source choice.
         const sourceLocaleLocked =
-          formData.source_locale !== null && (createdDraftId !== null || contentAuthored);
+          formData.source_locale !== null && (tourId !== null || serverAuthoredLock || contentAuthored);
         return (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">{t('form.sourceLanguageHint')}</p>
@@ -808,9 +1258,33 @@ export function TourWizard() {
       </div>
 
       {(errorMsg || summaryEntries.length > 0) && (
-        <div ref={errorSummaryRef} tabIndex={-1} className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm" role="alert" aria-live="assertive">
+        <div
+          ref={errorSummaryRef}
+          data-testid="wizard-error-summary"
+          tabIndex={-1}
+          className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"
+          role="alert"
+          aria-live="assertive"
+        >
           <p className="font-semibold">{t('form.errorSummary')}</p>
           {errorMsg && <p>{errorMsg}</p>}
+          {showCreationIdConflict && (
+            <div className="mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  regenerateCreationId();
+                  setShowCreationIdConflict(false);
+                  setServerAuthoredLock(false);
+                  setErrorMsg('');
+                }}
+              >
+                {t('wizard.resetCreationId')}
+              </Button>
+            </div>
+          )}
           {summaryEntries.length > 0 && (
             <ul className="mt-1 list-inside list-disc">
               {summaryEntries.map(({ path, message }) => (
@@ -818,6 +1292,77 @@ export function TourWizard() {
               ))}
             </ul>
           )}
+        </div>
+      )}
+      {recoverableDraft && !conflictDraft && (
+        <section
+          data-testid="draft-recovery-banner"
+          aria-label={t('wizard.recoveryTitle')}
+          className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-[#0A2540]"
+        >
+          <p className="font-semibold text-sm">{t('wizard.recoveryTitle')}</p>
+          <p className="mt-1 text-sm text-[#0A2540]/90">{t('wizard.recoveryDescription')}</p>
+          <p className="mt-1 text-xs font-medium text-[#0A2540]/80">
+            {readDraftTitle(recoverableDraft) || t('wizard.recoveryUntitled')}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              className="bg-[#FFB800] hover:bg-[#e6a600] text-[#0A2540] font-semibold"
+              onClick={handleResumeRecoverableDraft}
+              disabled={isSubmitting || isSyncingDraft}
+            >
+              {t('wizard.resumeDraft')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleStartFreshFromRecovery}
+              disabled={isSubmitting || isSyncingDraft}
+            >
+              {t('wizard.startFresh')}
+            </Button>
+          </div>
+        </section>
+      )}
+      {conflictDraft && (
+        <div
+          ref={conflictPanelRef}
+          tabIndex={-1}
+          data-testid="draft-conflict-panel"
+          role="alert"
+          aria-live="assertive"
+          className="mb-4 rounded-xl border border-red-300 bg-red-50 p-4 text-red-900"
+        >
+          <p className="font-semibold text-sm">{t('wizard.conflictTitle')}</p>
+          <p className="mt-1 text-sm">{t('wizard.conflictDescription')}</p>
+          <p className="mt-1 text-xs font-medium">
+            {t('wizard.conflictServerTitle', {
+              title: readDraftTitle(conflictDraft) || t('wizard.recoveryUntitled'),
+            })}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              className="bg-[#FFB800] hover:bg-[#e6a600] text-[#0A2540] font-semibold"
+              onClick={handleLoadServerConflictDraft}
+              disabled={isSubmitting || isSyncingDraft}
+            >
+              {t('wizard.conflictReloadServer')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleKeepLocalConflictDraft}
+              disabled={isSubmitting || isSyncingDraft}
+            >
+              {t('wizard.conflictKeepLocal')}
+            </Button>
+          </div>
         </div>
       )}
       {notice && (
@@ -833,7 +1378,7 @@ export function TourWizard() {
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 mt-6">
         <Button
           variant="outline"
           onClick={handleBack}
@@ -843,7 +1388,18 @@ export function TourWizard() {
           {t('wizard.prevStep')}
         </Button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            data-testid="wizard-save-progress"
+            onClick={handleSaveProgress}
+            disabled={isSubmitting || isSyncingDraft}
+          >
+            <CloudUpload className="w-4 h-4 mr-1" />
+            {isSyncingDraft ? t('wizard.syncing') : t('wizard.saveProgress')}
+          </Button>
           <Button
             variant="ghost"
             size="sm"

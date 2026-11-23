@@ -80,20 +80,34 @@ function normalizeOption(entry: unknown, index: number): BookingOptionFormInput 
   }
   const toNumberString = (value: unknown): string =>
     typeof value === 'string' ? value : typeof value === 'number' && Number.isFinite(value) ? String(value) : '';
+  const centsToMajorString = (cents: unknown): string => {
+    if (typeof cents !== 'number' || !Number.isFinite(cents) || cents <= 0) {
+      return '';
+    }
+    return (cents / 100).toFixed(2).replace(/\.?0+$/, '');
+  };
   const localId = typeof entry.id === 'string' && entry.id.trim() !== '' ? entry.id : null;
-  const row: BookingOptionFormInput = {
-    id: localId ?? `restored-${index}`,
-    server_id: typeof entry.server_id === 'number' && Number.isSafeInteger(entry.server_id) && entry.server_id > 0
+  const serverId =
+    typeof entry.server_id === 'number' && Number.isSafeInteger(entry.server_id) && entry.server_id > 0
       ? entry.server_id
-      : undefined,
+      : typeof entry.id === 'number' && Number.isSafeInteger(entry.id) && entry.id > 0
+        ? entry.id
+        : undefined;
+  const price = entry.price !== undefined ? toNumberString(entry.price) : centsToMajorString(entry.price_amount);
+  const capacity = entry.capacity !== undefined ? toNumberString(entry.capacity) : toNumberString(entry.group_size_max);
+  const rawStartTime = typeof entry.start_time === 'string' ? entry.start_time : '';
+  const startTime = /^\d{2}:\d{2}:\d{2}$/.test(rawStartTime) ? rawStartTime.slice(0, 5) : rawStartTime;
+  const row: BookingOptionFormInput = {
+    id: localId ?? (serverId !== undefined ? `srv-option-${serverId}` : `restored-${index}`),
+    server_id: serverId,
     title: typeof entry.title === 'string' ? entry.title : '',
     pickup_instructions: typeof entry.pickup_instructions === 'string' ? entry.pickup_instructions : '',
     guide_languages: Array.isArray(entry.guide_languages)
       ? entry.guide_languages.filter((code): code is string => typeof code === 'string')
       : [],
-    price: toNumberString(entry.price),
-    capacity: toNumberString(entry.capacity),
-    start_time: typeof entry.start_time === 'string' ? entry.start_time : '',
+    price,
+    capacity,
+    start_time: startTime,
     weekdays: Array.isArray(entry.weekdays)
       ? [...new Set(entry.weekdays.filter((day): day is number => typeof day === 'number' && Number.isInteger(day) && day >= 0 && day <= 6))]
       : [],
@@ -167,7 +181,11 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
       : null;
 
   for (const key of STRING_ARRAY_KEYS) {
-    normalized[key] = toStringArray(source[key]);
+    if (key === 'languages' && source.languages === undefined && source.guide_languages !== undefined) {
+      normalized.languages = toStringArray(source.guide_languages);
+    } else {
+      normalized[key] = toStringArray(source[key]);
+    }
   }
 
   const rawItinerary = source.itinerary;
@@ -187,7 +205,45 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
       ? rawDifficulty
       : null;
 
-  for (const key of ['media', 'pricing_tiers', 'availability_rules', 'availability_exceptions'] as const) {
+  const rawMedia = source.media;
+  normalized.media = Array.isArray(rawMedia)
+    ? rawMedia
+        .filter((item): item is Record<string, unknown> => isRecord(item) && typeof item.url === 'string' && item.url.trim() !== '')
+        .map((item, index) => ({
+          id: typeof item.id === 'string' && item.id.trim() !== '' ? item.id : `restored-media-${index}`,
+          url: String(item.url),
+          is_cover: Boolean(item.is_cover),
+          sort_order: typeof item.sort_order === 'number' && Number.isFinite(item.sort_order) ? item.sort_order : index,
+          ...(item.alt_text !== undefined
+            ? { alt_text: typeof item.alt_text === 'string' ? item.alt_text : null }
+            : {}),
+        }))
+    : [];
+
+  const rawTiers = source.pricing_tiers;
+  normalized.pricing_tiers = Array.isArray(rawTiers)
+    ? rawTiers
+        .filter((item): item is Record<string, unknown> => isRecord(item))
+        .map((item, index) => ({
+          id: typeof item.id === 'string' && item.id.trim() !== '' ? item.id : `restored-tier-${index}`,
+          name: typeof item.name === 'string' ? item.name : '',
+          price:
+            typeof item.price === 'string'
+              ? item.price
+              : typeof item.price === 'number' && Number.isFinite(item.price)
+                ? String(item.price)
+                : '0',
+          currency: typeof item.currency === 'string' && item.currency.trim() !== '' ? item.currency : 'EUR',
+          min_participants:
+            typeof item.min_participants === 'number' && Number.isFinite(item.min_participants) ? item.min_participants : 1,
+          max_participants:
+            typeof item.max_participants === 'number' && Number.isFinite(item.max_participants)
+              ? item.max_participants
+              : null,
+        }))
+    : [];
+
+  for (const key of ['availability_rules', 'availability_exceptions'] as const) {
     const value = source[key];
     normalized[key] = Array.isArray(value) ? value : [];
   }
@@ -200,6 +256,35 @@ export function normalizeWizardState(draft: unknown): Partial<TourFormData> {
     : [];
 
   return normalized as Partial<TourFormData>;
+}
+
+export function toServerWizardStep(step: WizardStep): string {
+  return step === 'source' ? 'language' : step;
+}
+
+export function fromServerWizardStep(step: unknown): WizardStep {
+  if (step === 'language' || step === 'source') return 'source';
+  if (step === 'details' || step === 'media' || step === 'pricing' || step === 'availability' || step === 'review') {
+    return step;
+  }
+  return 'source';
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export function isUuid(value: unknown): value is string {
+  return typeof value === 'string' && UUID_RE.test(value);
+}
+
+export function generateUuid(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 
 /**
@@ -228,6 +313,30 @@ export function mergePersistedWizardState<S extends WizardState>(
     step === 'source' || step === 'details' || step === 'media' || step === 'pricing' || step === 'availability' || step === 'review'
       ? step
       : current.currentStep;
+  const draftId =
+    typeof persisted.draftId === 'number' && Number.isSafeInteger(persisted.draftId) && persisted.draftId > 0
+      ? persisted.draftId
+      : null;
+  const tourId =
+    typeof persisted.tourId === 'number' && Number.isSafeInteger(persisted.tourId) && persisted.tourId > 0
+      ? persisted.tourId
+      : null;
+  const creationId = isUuid(persisted.creationId)
+    ? persisted.creationId
+    : isUuid(current.creationId)
+      ? current.creationId
+      : generateUuid();
+  const concurrencyToken =
+    typeof persisted.concurrencyToken === 'string' && persisted.concurrencyToken.trim() !== ''
+      ? persisted.concurrencyToken
+      : null;
+  const lastSyncedAt =
+    typeof persisted.lastSyncedAt === 'string' && persisted.lastSyncedAt.trim() !== ''
+      ? persisted.lastSyncedAt
+      : null;
+  const hasUnsyncedDraftChanges =
+    typeof persisted.hasUnsyncedDraftChanges === 'boolean' ? persisted.hasUnsyncedDraftChanges : false;
+
   return {
     ...current,
     formData,
@@ -235,6 +344,12 @@ export function mergePersistedWizardState<S extends WizardState>(
     // gate, even when an older step was persisted alongside it (EGM-004).
     // A chosen valid source keeps the persisted step.
     currentStep: formData.source_locale === null ? 'source' : persistedStep,
+    draftId,
+    creationId,
+    tourId,
+    concurrencyToken,
+    lastSyncedAt,
+    hasUnsyncedDraftChanges,
     isDirty: false,
     isSubmitting: false,
   };
@@ -243,9 +358,28 @@ export function mergePersistedWizardState<S extends WizardState>(
 export type WizardState = {
   currentStep: WizardStep;
   formData: TourFormData;
+  draftId: number | null;
+  creationId: string;
+  tourId: number | null;
+  concurrencyToken: string | null;
+  lastSyncedAt: string | null;
+  hasUnsyncedDraftChanges: boolean;
   isDirty: boolean;
   isSubmitting: boolean;
 };
+
+export interface ServerDraftHydrationInput {
+  id?: number | null;
+  draft_id?: number | null;
+  creation_id?: string | null;
+  tour_id?: number | null;
+  concurrency_token?: string | null;
+  current_step?: string | null;
+  source_locale?: string | null;
+  auto_saved_at?: string | null;
+  updated_at?: string | null;
+  payload?: unknown;
+}
 
 export type WizardActions = {
   setStep: (step: WizardStep) => void;
@@ -268,6 +402,16 @@ export type WizardActions = {
    *  rows — the submitted rows are stored in submission order. */
   adoptSavedOptionIds: (saved: Array<{ id: unknown; title: unknown }> | null | undefined) => void;
   setMedia: (media: TourMedia[]) => void;
+  setDraftSyncMeta: (meta: {
+    draftId?: number | null;
+    creationId?: string;
+    tourId?: number | null;
+    concurrencyToken?: string | null;
+    lastSyncedAt?: string | null;
+    hasUnsyncedDraftChanges?: boolean;
+  }) => void;
+  hydrateFromServerDraft: (draft: ServerDraftHydrationInput) => void;
+  regenerateCreationId: () => void;
   reset: () => void;
   loadDraft: (draft: Partial<TourFormData>) => void;
   setIsSubmitting: (value: boolean) => void;
@@ -276,10 +420,7 @@ export type WizardActions = {
 type WizardStore = WizardState & WizardActions;
 
 function generateId(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return `tmp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  return generateUuid();
 }
 
 const initialState: WizardState = {
@@ -287,6 +428,12 @@ const initialState: WizardState = {
   // reset form always starts there, never past the writing-language gate.
   currentStep: 'source',
   formData: { ...INITIAL_FORM },
+  draftId: null,
+  creationId: generateUuid(),
+  tourId: null,
+  concurrencyToken: null,
+  lastSyncedAt: null,
+  hasUnsyncedDraftChanges: false,
   isDirty: false,
   isSubmitting: false,
 };
@@ -302,6 +449,7 @@ export const useTourWizardStore = create<WizardStore>()(
         set((state) => ({
           formData: { ...state.formData, [key]: value },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       updatePricingTier: (id, updates) =>
@@ -313,6 +461,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       addPricingTier: () =>
@@ -332,6 +481,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ],
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       removePricingTier: (id) =>
@@ -341,6 +491,7 @@ export const useTourWizardStore = create<WizardStore>()(
             pricing_tiers: state.formData.pricing_tiers.filter((tier) => tier.id !== id),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       updateAvailabilityRule: (id, updates) =>
@@ -352,6 +503,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       addAvailabilityRule: () =>
@@ -372,6 +524,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ],
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       removeAvailabilityRule: (id) =>
@@ -381,6 +534,7 @@ export const useTourWizardStore = create<WizardStore>()(
             availability_rules: state.formData.availability_rules.filter((rule) => rule.id !== id),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       addAvailabilityException: () =>
@@ -401,6 +555,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ],
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       updateAvailabilityException: (id, updates) =>
@@ -412,6 +567,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       removeAvailabilityException: (id) =>
@@ -421,6 +577,7 @@ export const useTourWizardStore = create<WizardStore>()(
             availability_exceptions: state.formData.availability_exceptions.filter((exc) => exc.id !== id),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       updateBookingOption: (id, updates) =>
@@ -432,6 +589,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       addBookingOption: () =>
@@ -453,6 +611,7 @@ export const useTourWizardStore = create<WizardStore>()(
             ],
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       removeBookingOption: (id) =>
@@ -462,6 +621,7 @@ export const useTourWizardStore = create<WizardStore>()(
             options: state.formData.options.filter((option) => option.id !== id),
           },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
 
       adoptSavedOptionIds: (saved) =>
@@ -505,11 +665,72 @@ export const useTourWizardStore = create<WizardStore>()(
         set((state) => ({
           formData: { ...state.formData, media },
           isDirty: true,
+          hasUnsyncedDraftChanges: state.draftId !== null ? true : state.hasUnsyncedDraftChanges,
         })),
+
+      setDraftSyncMeta: (meta) =>
+        set((state) => ({
+          draftId: meta.draftId !== undefined ? meta.draftId : state.draftId,
+          creationId: meta.creationId !== undefined ? meta.creationId : state.creationId,
+          tourId: meta.tourId !== undefined ? meta.tourId : state.tourId,
+          concurrencyToken: meta.concurrencyToken !== undefined ? meta.concurrencyToken : state.concurrencyToken,
+          lastSyncedAt: meta.lastSyncedAt !== undefined ? meta.lastSyncedAt : state.lastSyncedAt,
+          hasUnsyncedDraftChanges: meta.hasUnsyncedDraftChanges ?? false,
+          isDirty: meta.hasUnsyncedDraftChanges ?? false,
+        })),
+
+      hydrateFromServerDraft: (draft) =>
+        set((state) => {
+          const normalized = normalizeWizardState(draft.payload);
+          const explicitLocale =
+            draft.source_locale === 'en' || draft.source_locale === 'es' || draft.source_locale === 'it'
+              ? draft.source_locale
+              : draft.source_locale === null
+                ? null
+                : normalized.source_locale ?? null;
+          const nextFormData: TourFormData = {
+            ...INITIAL_FORM,
+            ...normalized,
+            source_locale: explicitLocale,
+          };
+          const resolvedDraftId =
+            typeof draft.id === 'number' && Number.isSafeInteger(draft.id) && draft.id > 0
+              ? draft.id
+              : typeof draft.draft_id === 'number' && Number.isSafeInteger(draft.draft_id) && draft.draft_id > 0
+                ? draft.draft_id
+                : state.draftId;
+          const resolvedTourId =
+            typeof draft.tour_id === 'number' && Number.isSafeInteger(draft.tour_id) && draft.tour_id > 0
+              ? draft.tour_id
+              : null;
+          return {
+            formData: nextFormData,
+            currentStep: explicitLocale === null ? 'source' : fromServerWizardStep(draft.current_step),
+            draftId: resolvedDraftId,
+            creationId: isUuid(draft.creation_id) ? draft.creation_id : state.creationId,
+            tourId: resolvedTourId,
+            concurrencyToken: draft.concurrency_token ?? null,
+            lastSyncedAt: draft.auto_saved_at ?? draft.updated_at ?? state.lastSyncedAt,
+            hasUnsyncedDraftChanges: false,
+            isDirty: false,
+            isSubmitting: false,
+          };
+        }),
+
+      regenerateCreationId: () =>
+        set({
+          draftId: null,
+          creationId: generateUuid(),
+          tourId: null,
+          concurrencyToken: null,
+          lastSyncedAt: null,
+          hasUnsyncedDraftChanges: false,
+        }),
 
       reset: () =>
         set({
           ...initialState,
+          creationId: generateUuid(),
           formData: { ...INITIAL_FORM },
         }),
 
@@ -527,6 +748,12 @@ export const useTourWizardStore = create<WizardStore>()(
       partialize: (state) => ({
         currentStep: state.currentStep,
         formData: state.formData,
+        draftId: state.draftId,
+        creationId: state.creationId,
+        tourId: state.tourId,
+        concurrencyToken: state.concurrencyToken,
+        lastSyncedAt: state.lastSyncedAt,
+        hasUnsyncedDraftChanges: state.hasUnsyncedDraftChanges,
       }),
       merge: (persisted, current) => mergePersistedWizardState(persisted, current),
     }

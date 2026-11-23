@@ -4,6 +4,8 @@ use App\Domains\Booking\Models\Booking;
 use App\Domains\Booking\Services\VoucherService;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourDeparture;
+use App\Models\TourOption;
 use App\Models\TourTranslation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -196,4 +198,77 @@ it('regenerates when the stored hash is null', function () {
     expect($booking->fresh()->voucher_content_hash)->not->toBeNull();
 
     @unlink($second);
+});
+
+it('includes departure and pricing tier in voucher content hash and HTML', function () {
+    $option = TourOption::create([
+        'tour_id' => $this->tour->id,
+        'title' => 'VIP Sunset Option',
+        'guide_languages' => ['en'],
+        'price_amount' => 5000,
+        'status' => TourOption::STATUS_ACTIVE,
+    ]);
+    $departure = TourDeparture::create([
+        'tour_id' => $this->tour->id,
+        'tour_option_id' => $option->id,
+        'starts_at' => now()->addDays(10)->setTime(17, 30, 0),
+        'timezone' => 'Europe/Rome',
+        'local_date' => now()->addDays(10)->format('Y-m-d'),
+        'local_time' => '17:30:00',
+        'capacity' => 12,
+        'booking_cutoff_hours' => 2,
+        'status' => TourDeparture::STATUS_ACTIVE,
+    ]);
+
+    $booking = makeFreshnessBooking($this, [
+        'tour_departure_id' => $departure->id,
+        'pricing_snapshot' => [
+            'mode' => 'per_person',
+            'tier_id' => 42,
+            'tier_name' => 'Sunset Special',
+            'unit_price_cents' => 5000,
+            'total_price_cents' => 10000,
+            'currency' => 'EUR',
+        ],
+    ]);
+
+    $pdfPath = $this->service->generate($booking);
+    expect(file_exists($pdfPath))->toBeTrue();
+
+    $initialHash = $booking->fresh()->voucher_content_hash;
+    expect($initialHash)->not->toBeNull();
+
+    // Changing departure changes the content hash and triggers regeneration
+    $newDeparture = TourDeparture::create([
+        'tour_id' => $this->tour->id,
+        'tour_option_id' => $option->id,
+        'starts_at' => now()->addDays(10)->setTime(19, 0, 0),
+        'timezone' => 'Europe/Rome',
+        'local_date' => now()->addDays(10)->format('Y-m-d'),
+        'local_time' => '19:00:00',
+        'capacity' => 12,
+        'booking_cutoff_hours' => 2,
+        'status' => TourDeparture::STATUS_ACTIVE,
+    ]);
+
+    $booking->tour_departure_id = $newDeparture->id;
+    $booking->unsetRelation('departure');
+    $booking->save();
+
+    $reloaded = $this->service->getOrGenerate($booking);
+    expect($booking->fresh()->voucher_content_hash)->not->toBe($initialHash);
+
+    // Status change (confirmed -> completed) reuses cache (SC-008)
+    $secondHash = $booking->fresh()->voucher_content_hash;
+    $secondMtime = filemtime($reloaded);
+    $booking->status = 'completed';
+    $booking->save();
+
+    Carbon::setTestNow('2026-07-04 03:00:00');
+    $third = $this->service->getOrGenerate($booking);
+    expect($third)->toBe($reloaded)
+        ->and(filemtime($third))->toBe($secondMtime)
+        ->and($booking->fresh()->voucher_content_hash)->toBe($secondHash);
+
+    @unlink($pdfPath);
 });

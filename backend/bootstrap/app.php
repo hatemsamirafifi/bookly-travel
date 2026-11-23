@@ -56,13 +56,14 @@ return Application::configure(basePath: dirname(__DIR__))
         // keep the /login redirect.
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('api/*') ? null : '/login');
 
-        // Spec 019 T011 — opaque draft snapshots must round-trip exactly as
+        // Spec 019 T011 + EGM-005 D1 — opaque draft snapshots must round-trip exactly as
         // authored (padded/empty strings preserved). Skip BOTH global string
-        // normalizers ONLY for the authenticated draft-save endpoint; route
+        // normalizers ONLY for authenticated draft-save/update endpoints; route
         // auth and owner policy are unchanged, and every canonical
         // create/update/source/publish request keeps trim/null normalization.
-        $draftSnapshotRequest = fn (Request $request) => $request->isMethod('POST')
-            && $request->is('api/partner/tours/*/drafts/save');
+        $draftSnapshotRequest = fn (Request $request) => ($request->isMethod('POST')
+            && ($request->is('api/partner/tours/*/drafts/save') || $request->is('api/partner/tours/drafts')))
+            || ($request->isMethod('PUT') && $request->is('api/partner/tours/drafts/*'));
         $middleware->trimStrings(except: [$draftSnapshotRequest]);
         $middleware->convertEmptyStringsToNull(except: [$draftSnapshotRequest]);
     })

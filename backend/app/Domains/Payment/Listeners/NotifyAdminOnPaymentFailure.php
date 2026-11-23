@@ -3,7 +3,7 @@
 namespace App\Domains\Payment\Listeners;
 
 use App\Domains\Payment\Events\PaymentFailed;
-use Illuminate\Support\Facades\Http;
+use App\Jobs\SendAdminSlackAlertJob;
 use Illuminate\Support\Facades\Log;
 
 class NotifyAdminOnPaymentFailure
@@ -22,41 +22,28 @@ class NotifyAdminOnPaymentFailure
             'currency' => $payment->currency,
         ]);
 
-        $webhookUrl = config('services.slack.admin_webhook_url');
-        if (! $webhookUrl) {
-            return;
-        }
-
-        try {
-            $response = Http::timeout(5)->post($webhookUrl, [
-                'text' => sprintf(
-                    ':warning: *Bookly Alert* — Payment failed for booking `%s`.'
-                    . ' Booking has been expired.'
-                    . "\n*Amount*: %d %s  |  Check application logs for details.",
-                    $booking->reference,
-                    $payment->amount,
-                    $payment->currency,
-                ),
-            ]);
-
-            if (! $response->successful()) {
-                Log::error('Slack webhook returned non-success status', [
-                    'webhook_url' => $webhookUrl,
-                    'booking_reference' => $booking->reference,
-                    'amount' => $payment->amount,
-                    'currency' => $payment->currency,
-                    'response_status' => $response->status(),
-                    'response_body' => $response->body(),
-                ]);
-            }
-        } catch (\Throwable $e) {
-            Log::error('Slack webhook call failed', [
-                'webhook_url' => $webhookUrl,
+        // Slack is best-effort (FR-012): the queued job owns the webhook URL
+        // (it is read from config at run time, never serialized with the
+        // job) and is dispatched after commit, so the external HTTP call
+        // never runs inside — and can never roll back — the caller's DB
+        // transaction.
+        SendAdminSlackAlertJob::dispatch(
+            sprintf(
+                ':warning: *Bookly Alert* — Payment failed for booking `%s`.'
+                . ' Booking has been expired.'
+                . "\n*Amount*: %d %s  |  Check application logs for details.",
+                $booking->reference,
+                $payment->amount,
+                $payment->currency,
+            ),
+            [
                 'booking_reference' => $booking->reference,
+                'traveler_id' => $booking->traveler_id,
+                'tour_id' => $booking->tour_id,
+                'payment_id' => $payment->id,
                 'amount' => $payment->amount,
                 'currency' => $payment->currency,
-                'exception' => $e->getMessage(),
-            ]);
-        }
+            ],
+        )->afterCommit();
     }
 }

@@ -4,7 +4,7 @@ namespace App\Domains\Blog\Transformers;
 
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\CMS\Services\HtmlSanitizerService;
-use App\Domains\Search\Transformers\TourCardTransformer;
+use App\Domains\Search\Services\TourPublicProjectionService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -12,7 +12,7 @@ class BlogPostDetailTransformer
 {
     public function __construct(
         protected BlogPostTransformer $cardTransformer,
-        protected TourCardTransformer $tourCardTransformer
+        protected TourPublicProjectionService $projectionService
     ) {}
 
     public function transform(BlogPost $post, string $locale, ?Collection $relatedPosts = null): array
@@ -43,12 +43,9 @@ class BlogPostDetailTransformer
 
         $relatedToursData = [];
         if ($post->relationLoaded('relatedTours')) {
-            $relatedToursData = $post->relatedTours
-                ->filter(fn ($tour) => $tour->status === 'published')
-                ->take(6)
-                ->map(fn ($tour) => $this->tourCardTransformer->transform($tour, $locale))
-                ->values()
-                ->all();
+            $relatedToursData = $this->projectionService->hydrateAndTransformPublishedEligibleCards(
+                $post->relatedTours, $locale,
+            );
         }
 
         $relatedPostsData = [];

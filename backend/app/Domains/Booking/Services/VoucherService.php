@@ -136,11 +136,18 @@ class VoucherService
         $tourTitle = $this->resolveTourTitle($booking);
         $tour = $booking->tour;
         $locale = $booking->locale ?? 'en';
+        if ($booking->tour_departure_id) {
+            $booking->loadMissing('departure');
+        }
 
         return hash('sha256', json_encode([
             'reference' => $booking->reference,
             'tour_title' => $tourTitle,
             'tour_date' => $booking->tour_date->toDateString(),
+            'tour_departure_id' => $booking->tour_departure_id,
+            'departure_starts_at' => $booking->departure?->starts_at?->toIso8601String(),
+            'departure_timezone' => $booking->departure?->timezone,
+            'pricing_tier_name' => is_array($booking->pricing_snapshot) ? ($booking->pricing_snapshot['tier_name'] ?? null) : null,
             'participant_count' => (int) $booking->participant_count,
             'total_price' => (int) $booking->total_price,
             'currency' => $booking->currency ?? 'EUR',
@@ -163,7 +170,7 @@ class VoucherService
      */
     private function viewData(Booking $booking): array
     {
-        $booking->loadMissing(['tour', 'tour.translations', 'traveler']);
+        $booking->loadMissing(['tour', 'tour.translations', 'traveler', 'departure']);
         $locale = $booking->locale ?? 'en';
         $tourTitle = $this->resolveTourTitle($booking);
 
@@ -174,7 +181,11 @@ class VoucherService
             'booking' => $booking,
             'tourTitle' => $tourTitle,
             'tourDate' => $booking->tour_date->format('l, F j, Y'),
+            'departure' => $booking->departure,
             'formattedTotal' => Booking::formatPrice($booking->total_price, $booking->currency ?? 'EUR'),
+            'formattedUnitPrice' => Booking::formatPrice($booking->price_per_person, $booking->currency ?? 'EUR'),
+            'pricingSnapshot' => is_array($booking->pricing_snapshot) ? $booking->pricing_snapshot : null,
+            'optionSnapshot' => $booking->bookingOption(),
             'meetingPoint' => $booking->tour->meeting_point ?? '—',
             'qrUrl' => $qrUrl,
             'qrDataUri' => $qrDataUri,

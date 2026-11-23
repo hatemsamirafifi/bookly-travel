@@ -12,6 +12,7 @@ use App\Domains\Payment\Actions\WebhookHandlers\HandlePaymentFailed;
 use App\Domains\Payment\Actions\WebhookHandlers\HandlePaymentSucceeded;
 use App\Domains\Payment\Actions\WebhookHandlers\HandleRefunded;
 use App\Domains\Payment\Models\StripeWebhookEvent;
+use App\Domains\Payment\Services\PaymentConfigurationGuard;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Stripe\Event;
@@ -33,6 +34,11 @@ class ProcessStripeWebhookAction
 
     public function execute(string $payload, string $signature): void
     {
+        // Fail closed before touching Stripe signature verification: staging
+        // and production must have a real, mode-correct Stripe configuration
+        // (local/testing return early inside the guard).
+        app(PaymentConfigurationGuard::class)->assertValid();
+
         $event = Webhook::constructEvent(
             $payload,
             $signature,

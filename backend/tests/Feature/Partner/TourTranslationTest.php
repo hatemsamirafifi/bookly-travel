@@ -1,11 +1,13 @@
 <?php
 
+use App\Domains\Admin\Actions\ApproveTourRevisionAction;
 use App\Domains\Partner\Contracts\TourContentTranslator;
 use App\Domains\Partner\Jobs\GenerateTourTranslationJob;
 use App\Domains\Partner\Models\AvailabilityRule;
 use App\Domains\Partner\Models\Partner;
 use App\Domains\Partner\Services\GeminiTourTranslator;
 use App\Domains\Partner\Services\PermanentTranslationException;
+use App\Domains\Partner\Services\TourRevisionService;
 use App\Domains\Partner\Services\TourService;
 use App\Domains\Partner\Services\TourTranslationService;
 use App\Domains\Partner\Services\TransientTranslationException;
@@ -23,6 +25,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Tests\Support\Spec019CommittedFixtures;
 use Tests\Support\Spec019DispatchFailureQueue;
+use Tests\Support\TourRevisionFixtures;
 
 uses(RefreshDatabase::class);
 
@@ -50,6 +53,7 @@ beforeEach(function () {
         'user_id',
         $this->spec019Fixture['tables'][(new User)->getTable()][0]
     )->value('id');
+    Partner::whereKey($this->partnerId)->update(['onboarding_status' => 'approved']);
 
     $wineFood = Category::firstOrCreate(['slug' => 'wine-food'], ['name' => 'Wine & Food']);
     if ($wineFood->wasRecentlyCreated) {
@@ -60,6 +64,8 @@ beforeEach(function () {
 afterEach(function () {
     try {
         if ($this->spec019GuardPassed) {
+            $tourIds = Tour::where('partner_id', $this->partnerId)->pluck('id');
+            DB::table('governance_audit_logs')->where('target_type', 'tour')->whereIn('target_id', $tourIds)->delete();
             Spec019CommittedFixtures::deleteOwnerScope($this->spec019Fixture);
         }
     } finally {
@@ -85,6 +91,23 @@ function createEnglishSourceTour(): Tour
     $response->assertCreated();
 
     return Tour::findOrFail($response->json('data.id'));
+}
+
+/** Published source changes now use the actual ordinary revision review path. */
+function spec019ApprovePublishedSourceEdit(Tour $tour, array $source): void
+{
+    $revisions = app(TourRevisionService::class);
+    $base = $revisions->captureBaseline($tour);
+    $ownerId = (int) $tour->partnerRecord->user_id;
+    $candidate = $revisions->createCandidate($tour, $ownerId, $base->id, ['source' => $source]);
+    $revisions->submitCandidate($tour, $candidate->id, $ownerId);
+    $admin = TourRevisionFixtures::admin('manage_tours');
+    try {
+        app(ApproveTourRevisionAction::class)->execute($admin, $tour, $candidate->id);
+    } finally {
+        $admin->adminPermission()->delete();
+        $admin->delete();
+    }
 }
 
 it('queues Spanish and Italian from English without treating guide codes as content locales', function () {
@@ -160,6 +183,7 @@ it('translates traveler-facing itinerary and information while retaining structu
     ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
     $hash = $tour->translationStates()->where('locale', 'es')->firstOrFail()->source_hash;
 
+    $hashEpoch = $tour->fresh()->generationEpoch();
     $translator = new class implements TourContentTranslator
     {
         public function translate(array $strings, string $locale): array
@@ -167,7 +191,7 @@ it('translates traveler-facing itinerary and information while retaining structu
             return array_map(fn (string $text): string => "{$locale}: {$text}", $strings);
         }
     };
-    (new GenerateTourTranslationJob($tour->id, 'es', $hash))
+    (new GenerateTourTranslationJob($tour->id, 'es', $hash, $hashEpoch))
         ->handle(app(TourTranslationService::class), $translator);
 
     $translated = $tour->translations()->where('locale', 'es')->firstOrFail();
@@ -193,10 +217,12 @@ it('rejects partner-authored Spanish while keeping English source writable', fun
 it('accepts only the latest English revision when an older translation job finishes late', function () {
     $tour = createEnglishSourceTour();
     $oldHash = $tour->translationStates()->where('locale', 'es')->firstOrFail()->source_hash;
+    $oldHashEpoch = $tour->fresh()->generationEpoch();
     $this->putJson("/api/partner/tours/{$tour->id}", [
         'title' => 'Updated English title',
     ], ['Authorization' => 'Bearer ' . $this->token])->assertOk();
     $newHash = $tour->translationStates()->where('locale', 'es')->firstOrFail()->source_hash;
+    $newHashEpoch = $tour->fresh()->generationEpoch();
     expect($newHash)->not->toBe($oldHash);
 
     $translator = new class implements TourContentTranslator
@@ -207,10 +233,10 @@ it('accepts only the latest English revision when an older translation job finis
         }
     };
     $service = app(TourTranslationService::class);
-    (new GenerateTourTranslationJob($tour->id, 'es', $oldHash))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'es', $oldHash, $oldHashEpoch))->handle($service, $translator);
     expect($tour->translations()->where('locale', 'es')->exists())->toBeFalse();
 
-    (new GenerateTourTranslationJob($tour->id, 'es', $newHash))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'es', $newHash, $newHashEpoch))->handle($service, $translator);
     expect($tour->translations()->where('locale', 'es')->firstOrFail()->title)
         ->toBe('es: Updated English title');
     expect($tour->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('ready');
@@ -226,6 +252,7 @@ it('schedules a fresh search projection after a derived translation becomes read
         'capacity' => 10,
     ]);
     $hash = $tour->translationStates()->where('locale', 'es')->firstOrFail()->source_hash;
+    $hashEpoch = $tour->fresh()->generationEpoch();
     Queue::fake();
 
     $translator = new class implements TourContentTranslator
@@ -235,7 +262,7 @@ it('schedules a fresh search projection after a derived translation becomes read
             return array_map(fn (string $text): string => "{$locale}: {$text}", $strings);
         }
     };
-    Tour::withoutEvents(fn () => (new GenerateTourTranslationJob($tour->id, 'es', $hash))
+    Tour::withoutEvents(fn () => (new GenerateTourTranslationJob($tour->id, 'es', $hash, $hashEpoch))
         ->handle(app(TourTranslationService::class), $translator));
 
     expect($tour->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('ready');
@@ -246,7 +273,8 @@ it('schedules a fresh search projection after a derived translation becomes read
 
     $this->putJson("/api/partner/tours/{$tour->id}", ['title' => 'Revised English tour'], [
         'Authorization' => 'Bearer ' . $this->token,
-    ])->assertOk();
+    ])->assertUnprocessable()->assertJsonPath('error_code', 'content_requires_revision');
+    spec019ApprovePublishedSourceEdit($tour, ['title' => 'Revised English tour']);
 
     expect($tour->fresh()->toSearchableArray()['title_es'])->toBe('Revised English tour');
     expect(app(TourCardTransformer::class)->transform($tour->fresh(), 'es')['title'])
@@ -258,6 +286,7 @@ it('serves a visible English fallback until generated content is ready, then sta
     $tour->update(['status' => 'published']);
     $hash = $tour->translationStates()->where('locale', 'es')->firstOrFail()->source_hash;
 
+    $hashEpoch = $tour->fresh()->generationEpoch();
     $this->getJson("/api/public/tours/{$tour->slug}?locale=es")
         ->assertOk()
         ->assertJsonPath('data.content_locale', 'en')
@@ -272,7 +301,7 @@ it('serves a visible English fallback until generated content is ready, then sta
             return array_map(fn (string $text): string => "{$locale}: {$text}", $strings);
         }
     };
-    (new GenerateTourTranslationJob($tour->id, 'es', $hash))
+    (new GenerateTourTranslationJob($tour->id, 'es', $hash, $hashEpoch))
         ->handle(app(TourTranslationService::class), $translator);
 
     $this->getJson("/api/public/tours/{$tour->slug}?locale=es")
@@ -284,7 +313,8 @@ it('serves a visible English fallback until generated content is ready, then sta
 
     $this->putJson("/api/partner/tours/{$tour->id}", ['title' => 'Updated English title'], [
         'Authorization' => 'Bearer ' . $this->token,
-    ])->assertOk();
+    ])->assertUnprocessable()->assertJsonPath('error_code', 'content_requires_revision');
+    spec019ApprovePublishedSourceEdit($tour, ['title' => 'Updated English title']);
     $this->getJson("/api/public/tours/{$tour->slug}?locale=es")
         ->assertOk()
         ->assertJsonPath('data.title', 'Updated English title')
@@ -297,6 +327,7 @@ it('marks a rejected provider result failed while keeping the published English 
     $tour = createEnglishSourceTour();
     $tour->update(['status' => 'published']);
     $hash = $tour->translationStates()->where('locale', 'it')->firstOrFail()->source_hash;
+    $hashEpoch = $tour->fresh()->generationEpoch();
     $translator = new class implements TourContentTranslator
     {
         public function translate(array $strings, string $locale): array
@@ -305,7 +336,7 @@ it('marks a rejected provider result failed while keeping the published English 
         }
     };
 
-    (new GenerateTourTranslationJob($tour->id, 'it', $hash))
+    (new GenerateTourTranslationJob($tour->id, 'it', $hash, $hashEpoch))
         ->handle(app(TourTranslationService::class), $translator);
 
     expect($tour->translationStates()->where('locale', 'it')->firstOrFail()->status)->toBe('failed');
@@ -414,8 +445,9 @@ it('spec019 stales both locales while retaining old derivatives on an English ed
         }
     };
     $hash = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
-    (new GenerateTourTranslationJob($tour->id, 'es', $hash))->handle($service, $translator);
-    (new GenerateTourTranslationJob($tour->id, 'it', $hash))->handle($service, $translator);
+    $hashEpoch = $tour->fresh()->generationEpoch();
+    (new GenerateTourTranslationJob($tour->id, 'es', $hash, $hashEpoch))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'it', $hash, $hashEpoch))->handle($service, $translator);
     $oldEs = $tour->translations()->where('locale', 'es')->firstOrFail()->title;
     $oldIt = $tour->translations()->where('locale', 'it')->firstOrFail()->title;
     Queue::fake();
@@ -685,8 +717,9 @@ it('spec019 bounded reruns never rewrite current derivatives or source text', fu
         }
     };
     $hash = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
-    (new GenerateTourTranslationJob($tour->id, 'es', $hash))->handle($service, $translator);
-    (new GenerateTourTranslationJob($tour->id, 'it', $hash))->handle($service, $translator);
+    $hashEpoch = $tour->fresh()->generationEpoch();
+    (new GenerateTourTranslationJob($tour->id, 'es', $hash, $hashEpoch))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'it', $hash, $hashEpoch))->handle($service, $translator);
 
     $enBefore = $tour->translations()->where('locale', 'en')->firstOrFail()->getAttributes();
     $esBefore = $tour->translations()->where('locale', 'es')->firstOrFail()->getAttributes();
@@ -715,8 +748,9 @@ it('spec019 refresh-ready requeues only the search projection for current deriva
         }
     };
     $hash = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
-    (new GenerateTourTranslationJob($tour->id, 'es', $hash))->handle($service, $translator);
-    (new GenerateTourTranslationJob($tour->id, 'it', $hash))->handle($service, $translator);
+    $hashEpoch = $tour->fresh()->generationEpoch();
+    (new GenerateTourTranslationJob($tour->id, 'es', $hash, $hashEpoch))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'it', $hash, $hashEpoch))->handle($service, $translator);
     $esBefore = $tour->translations()->where('locale', 'es')->firstOrFail()->getAttributes();
     Queue::fake();
 

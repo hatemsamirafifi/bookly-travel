@@ -4,7 +4,7 @@ namespace App\Domains\Payment\Actions\WebhookHandlers;
 
 use App\Domains\Payment\Models\Payment;
 use App\Domains\Payment\Models\StripeWebhookEvent;
-use Illuminate\Support\Facades\Http;
+use App\Jobs\SendAdminSlackAlertJob;
 use Illuminate\Support\Facades\Log;
 use Stripe\Event;
 
@@ -15,7 +15,9 @@ class HandleDisputeCreated
         $dispute = data_get($event, 'data.object');
         $intentId = $dispute->payment_intent;
 
-        $payment = Payment::where('stripe_payment_intent_id', $intentId)->first();
+        $payment = Payment::where('stripe_payment_intent_id', $intentId)
+            ->where('type', 'charge')
+            ->first();
         if (! $payment) {
             Log::warning('Payment not found for dispute', ['intent_id' => $intentId]);
 
@@ -53,41 +55,30 @@ class HandleDisputeCreated
         return [];
     }
 
+    /**
+     * Slack is best-effort (FR-012): the queued job owns the webhook URL and
+     * is dispatched after commit, so the external HTTP call never runs inside
+     * the webhook-processing DB transaction (where it would hold row locks on
+     * Slack's latency) and a Slack outage can never roll the dispute state
+     * back.
+     */
     private function notifyAdminOfDispute(Payment $payment, object $dispute): void
     {
-        $webhookUrl = config('services.slack.admin_webhook_url');
-        if (! $webhookUrl) {
-            return;
-        }
-
-        try {
-            $response = Http::timeout(5)->post($webhookUrl, [
-                'text' => sprintf(
-                    ':warning: *Bookly Alert* — Dispute created for booking `%s`.'
-                    . ' Admin must review.'
-                    . "\n*Amount*: %d %s  |  *Reason*: %s",
-                    $payment->booking->reference,
-                    $payment->amount,
-                    $payment->currency,
-                    $dispute->reason,
-                ),
-            ]);
-
-            if (! $response->successful()) {
-                Log::error('Slack webhook returned non-success status', [
-                    'stripe_event_id' => $dispute->id,
-                    'booking_reference' => $payment->booking->reference,
-                    'response_status' => $response->status(),
-                    'response_body' => $response->body(),
-                ]);
-            }
-        } catch (\Throwable $e) {
-            Log::error('Slack webhook call failed', [
+        SendAdminSlackAlertJob::dispatch(
+            sprintf(
+                ':warning: *Bookly Alert* — Dispute created for booking `%s`.'
+                . ' Admin must review.'
+                . "\n*Amount*: %d %s  |  *Reason*: %s",
+                $payment->booking->reference,
+                $payment->amount,
+                $payment->currency,
+                $dispute->reason,
+            ),
+            [
                 'stripe_event_id' => $dispute->id,
                 'booking_reference' => $payment->booking->reference,
-                'exception' => $e->getMessage(),
-            ]);
-        }
+            ],
+        )->afterCommit();
     }
 
     private function markProcessed(string $eventId): void

@@ -8,6 +8,9 @@ $labels = [
         'docType' => 'Tour Voucher',
         'bookingReference' => 'Booking Reference',
         'date' => 'Date',
+        'departureTime' => 'Departure Time',
+        'option' => 'Option',
+        'rate' => 'Rate',
         'participants' => 'Participants',
         'totalPaid' => 'Total Paid',
         'meetingPoint' => 'Meeting Point',
@@ -21,6 +24,9 @@ $labels = [
         'docType' => 'Comprobante de tour',
         'bookingReference' => 'Referencia de reserva',
         'date' => 'Fecha',
+        'departureTime' => 'Hora de salida',
+        'option' => 'Opción',
+        'rate' => 'Tarifa',
         'participants' => 'Participantes',
         'totalPaid' => 'Total pagado',
         'meetingPoint' => 'Punto de encuentro',
@@ -34,6 +40,9 @@ $labels = [
         'docType' => 'Voucher del tour',
         'bookingReference' => 'Riferimento prenotazione',
         'date' => 'Data',
+        'departureTime' => 'Orario di partenza',
+        'option' => 'Opzione',
+        'rate' => 'Tariffa',
         'participants' => 'Partecipanti',
         'totalPaid' => 'Totale pagato',
         'meetingPoint' => 'Punto di incontro',
@@ -132,10 +141,33 @@ $host = parse_url($baseUrl, PHP_URL_HOST) ?: 'bookly.travel';
                     <td class="label">{{ $L('date') }}</td>
                     <td class="value">{{ $tourDate }}</td>
                 </tr>
+                @if ($departure)
+                <tr>
+                    <td class="label">{{ $L('departureTime') }}</td>
+                    <td class="value">{{ substr($departure->local_time, 0, 5) }} ({{ $departure->timezone }})</td>
+                </tr>
+                @endif
+                @if ($optionSnapshot && !empty($optionSnapshot['title']))
+                <tr>
+                    <td class="label">{{ $L('option') }}</td>
+                    <td class="value">{{ $optionSnapshot['title'] }}</td>
+                </tr>
+                @endif
                 <tr>
                     <td class="label">{{ $L('participants') }}</td>
                     <td class="value">{{ $booking->participant_count }}</td>
                 </tr>
+                @if (!empty($pricingSnapshot['tier_name']) || !empty($formattedUnitPrice))
+                <tr>
+                    <td class="label">{{ $L('rate') }}</td>
+                    <td class="value">
+                        {{ $formattedUnitPrice }}
+                        @if (!empty($pricingSnapshot['tier_name']))
+                            ({{ $pricingSnapshot['tier_name'] }})
+                        @endif
+                    </td>
+                </tr>
+                @endif
                 <tr>
                     <td class="label">{{ $L('totalPaid') }}</td>
                     <td class="value">{{ $formattedTotal }}</td>

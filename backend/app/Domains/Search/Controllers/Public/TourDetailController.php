@@ -5,7 +5,6 @@ namespace App\Domains\Search\Controllers\Public;
 use App\Domains\Search\Actions\GetTourDetailAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class TourDetailController
 {
@@ -19,11 +18,9 @@ class TourDetailController
             'locale' => 'required|in:en,es,it',
         ]);
 
-        $key = 'tour.' . $slug . '.' . $validated['locale'];
-
-        $result = Cache::remember($key, 900, function () use ($slug, $validated) {
-            return $this->getTourDetailAction->execute($slug, $validated['locale']);
-        });
+        // The projection service owns the versioned cache key and the single
+        // Tour-shared-lock read boundary; the controller stays thin.
+        $result = $this->getTourDetailAction->execute($slug, $validated['locale']);
 
         return response()->json($result);
     }

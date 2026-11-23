@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { TourOption } from '@/lib/api/types';
+import type { TieredPricingInfo, TieredPricingTier, TourOption } from '@/lib/api/types';
+import { formatCurrency } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import AvailabilityCalendar from './AvailabilityCalendar';
 import OptionSelector from './OptionSelector';
@@ -177,6 +178,70 @@ export function BookingContinuation({ view, auth, actionClassName, onContinueCli
   );
 }
 
+export function TieredPricingSummary({
+  tieredPricing,
+  activeTierId,
+  locale,
+}: {
+  tieredPricing: TieredPricingInfo | null | undefined;
+  activeTierId: number | null | undefined;
+  locale: string;
+}) {
+  const t = useTranslations('tour.tieredPricing');
+  if (!tieredPricing || tieredPricing.mode !== 'per_person' || tieredPricing.tiers.length === 0) {
+    return null;
+  }
+
+  const formatRange = (tier: TieredPricingTier): string => {
+    if (tier.max_participants === null) {
+      return t('minPlusParticipants', { min: tier.min_participants });
+    }
+    if (tier.min_participants === tier.max_participants && tier.min_participants === 1) {
+      return t('singleParticipant');
+    }
+    return t('rangeParticipants', {
+      min: tier.min_participants,
+      max: tier.max_participants,
+    });
+  };
+
+  return (
+    <div
+      className="mb-3 rounded-lg border border-border bg-surface-alt p-3 space-y-1.5"
+      data-testid="tiered-pricing-summary"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-semibold text-bookly-navy">{t('title')}</span>
+        <span className="text-[11px] text-text-muted">{t('perPersonNote')}</span>
+      </div>
+      <ul className="space-y-1 text-xs">
+        {tieredPricing.tiers.map((tier) => {
+          const isActive = activeTierId === tier.id;
+          return (
+            <li
+              key={tier.id}
+              data-testid={`tiered-rate-${tier.id}`}
+              className={`flex items-center justify-between rounded px-2 py-1 ${
+                isActive ? 'bg-accent/15 font-semibold text-bookly-navy' : 'text-text-muted'
+              }`}
+            >
+              <span>
+                {formatRange(tier)}
+                {isActive && (
+                  <span className="ml-1.5 inline-block rounded bg-bookly-gold px-1.5 py-0.5 text-[10px] font-bold text-bookly-navy">
+                    {t('activeBadge')}
+                  </span>
+                )}
+              </span>
+              <span className="font-mono">{formatCurrency(tier.price_amount, tier.currency, locale)}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 export interface BookingCardProps {
   locale: string;
   /** Retained for controller compatibility: the single current-tour wishlist
@@ -208,6 +273,8 @@ export interface BookingCardProps {
   /** Inert option/date/count controls while auth restores; continuation
    *  keeps its own pending rule in BookingContinuation. */
   controlsDisabled: boolean;
+  /** Optional participant-count per-person pricing tiers (EGM-005 D5). */
+  tieredPricing?: TieredPricingInfo | null;
 }
 
 const CARD_ACTION_CLASS =
@@ -233,6 +300,7 @@ export default function BookingCard({
   cancellationPolicy,
   cancellationPolicyLocale,
   controlsDisabled,
+  tieredPricing,
 }: BookingCardProps) {
   const t = useTranslations('tour');
   const bookable = !view.reasons.includes('tour-unavailable');
@@ -323,6 +391,12 @@ export default function BookingCard({
                   <span className="font-semibold text-primary">{view.estimateDisplay}</span>
                 </p>
               )}
+
+              <TieredPricingSummary
+                tieredPricing={tieredPricing ?? (view.selectedOption?.pricing.tiered_pricing ?? null)}
+                activeTierId={view.appliedTier?.id}
+                locale={locale}
+              />
             </>
           )}
 

@@ -18,6 +18,7 @@ use App\Domains\Search\Controllers\Public\DestinationController;
 use App\Domains\Search\Controllers\Public\HomepageController;
 use App\Domains\Search\Controllers\Public\SearchController;
 use App\Domains\Search\Controllers\Public\SitemapController;
+use App\Domains\Search\Controllers\Public\TourDepartureController;
 use App\Domains\Search\Controllers\Public\TourDetailController;
 use App\Domains\Traveler\Controllers\Public\ProfileController;
 use App\Domains\Traveler\Controllers\Public\WishlistController;
@@ -104,6 +105,7 @@ Route::prefix('search')->middleware('rate.limit:search')->group(function () {
 });
 
 Route::prefix('tours')->middleware('rate.limit:detail')->group(function () {
+    Route::get('{slug}/departures', [TourDepartureController::class, 'index']);
     Route::get('{slug}', [TourDetailController::class, 'show']);
 });
 
@@ -198,6 +200,8 @@ Route::middleware(['auth:sanctum', 'throttle:traveler'])->prefix('traveler')->gr
         Route::get('{reference}', [TravelerBookingController::class, 'show']);
         Route::get('{reference}/voucher', [VoucherController::class, 'download']);
         Route::post('{reference}/cancel', [TravelerBookingController::class, 'cancel'])
+            ->middleware('throttle:booking.create');
+        Route::post('{reference}/decline', [TravelerBookingController::class, 'decline'])
             ->middleware('throttle:booking.create');
     });
 

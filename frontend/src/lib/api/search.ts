@@ -26,6 +26,6 @@ export async function searchTours(params: SearchParams): Promise<SearchResponse>
 
   return apiClient<SearchResponse>(
     `/api/public/search/tours?${searchParams.toString()}`,
-    { locale: params.locale, revalidate: 300 }
+    { locale: params.locale, cache: 'no-store' }
   );
 }

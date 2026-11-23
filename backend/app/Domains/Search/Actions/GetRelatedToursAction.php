@@ -3,6 +3,7 @@
 namespace App\Domains\Search\Actions;
 
 use App\Domains\Reviews\Models\Review;
+use App\Domains\Search\Services\TourPublicProjectionService;
 use App\Domains\Search\Transformers\TourCardTransformer;
 use App\Models\Tour;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,52 +17,39 @@ class GetRelatedToursAction
 
     private const CANDIDATE_PAGE_SIZE = 32;
 
-    public function __construct(private readonly TourCardTransformer $transformer) {}
+    public function __construct(
+        private readonly TourCardTransformer $transformer,
+        private readonly TourPublicProjectionService $projection,
+    ) {}
 
     public function execute(Tour $tour, string $locale, int $limit = self::DEFAULT_LIMIT): array
     {
-        // Internal clamp only: four by default, never beyond eight. There is
-        // no public limit parameter; callers pass nothing or an internal
-        // value which is still bounded by the absolute ceiling.
         $limit = max(1, min($limit, self::ABSOLUTE_CEILING));
-
         if (! $tour->location_slug && ! $tour->category_id) {
             return [];
         }
-
-        $eligible = collect();
+        $cards = [];
+        $seen = [];
         $offset = 0;
-
-        // Scan bounded candidate pages in genuine-stats SQL order until the
-        // requested eligible cards are found or candidates are exhausted. A
-        // fixed 32-row cap would hide valid tours behind ineligible ones.
         do {
             $page = $this->candidatePage($tour, $offset, self::CANDIDATE_PAGE_SIZE);
-
-            foreach ($page as $candidate) {
-                if ($candidate->isPubliclyBookable()) {
-                    // Project the same genuine facts used for ordering without
-                    // changing stored caches or the shared card transformer.
-                    $reviewCount = (int) $candidate->getAttribute('genuine_review_count');
-                    $candidate->setAttribute('review_count', $reviewCount);
-                    $candidate->setAttribute('average_rating', $reviewCount > 0
-                        ? round((float) $candidate->getAttribute('genuine_average_rating'), 2)
-                        : 0.0);
-                    $eligible->push($candidate);
-
-                    if ($eligible->count() >= $limit) {
-                        break 2;
-                    }
+            $projected = $this->projection->hydrateAndTransformCards(
+                $page, $locale, fn (Tour $candidate, string $language): array => $this->transformer->transform($candidate, $language),
+            );
+            foreach ($projected as $card) {
+                if (isset($seen[$card['id']])) {
+                    continue;
+                }
+                $seen[$card['id']] = true;
+                $cards[] = $card;
+                if (count($cards) >= $limit) {
+                    return $cards;
                 }
             }
-
             $offset += self::CANDIDATE_PAGE_SIZE;
         } while ($page->count() === self::CANDIDATE_PAGE_SIZE);
 
-        return $eligible
-            ->map(fn (Tour $candidate) => $this->transformer->transform($candidate, $locale))
-            ->values()
-            ->all();
+        return $cards;
     }
 
     /**

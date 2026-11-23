@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domains\Search\Services\TourPublicCacheService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -27,6 +28,29 @@ class TourOptionTranslation extends Model
         return [
             'tour_option_id' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (TourOptionTranslation $translation) {
+            $translation->invalidateForTour();
+        });
+
+        static::deleted(function (TourOptionTranslation $translation) {
+            $translation->invalidateForTour();
+        });
+    }
+
+    /** Drop the owning tour's current detail payload after commit. */
+    private function invalidateForTour(): void
+    {
+        $tourId = (int) $this->option()->value('tour_id');
+
+        if ($tourId > 0) {
+            app(TourPublicCacheService::class)->forgetDetailAfterCommit(
+                Tour::query()->whereKey($tourId)->pluck('slug')->filter()->values()->all()
+            );
+        }
     }
 
     public function option(): BelongsTo

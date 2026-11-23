@@ -1,8 +1,8 @@
 # Partner Tour Content Contract: Spec 019
 
 **Governance**: [Constitution v2.1.0](../../../.specify/memory/constitution.md) at original design; synchronized 2026-11-10 with [Constitution v3.0.0](../../../.specify/memory/constitution.md). The tour-content source policy and criteria are defined in the [spec.md Amendment Record](../spec.md); where this file says English/EN as the authored source, the active rule is the tour's fixed canonical source locale.
-**Source requirements**: FR-001-013, FR-017-021, FR-030.
-**Status**: Target completion of existing owned routes; implementation acceptance pending.
+**Source requirements**: FR-001-013, FR-017-021, FR-030, FR-031-FR-040.
+**Status**: Target completion of existing owned routes; EGM-003 revision-governed implementation and Round 1 review remediations complete on 2026-11-17, pending final acceptance gate closure. The revision-governed section below was synchronized on 2026-11-14 to the [EGM-003 technical design v3](../../../docs/designs/supplier-portal-egm003-governance-v3.md) and its [execution file/test manifest](../../../docs/designs/supplier-portal-egm003-execution-plan.md); the earlier 2026-11-15 [interim review](../../../docs/reports/supplier-portal-egm003-checkpoint-review.md) failure record is preserved as historical context.
 
 ## Existing Routes and Authorization
 
@@ -74,7 +74,7 @@ Media retains existing ordered URL/is_cover input and at most 20 authored media 
 
 ## Supplier option content
 
-Create and update accept `options`. The source-language option title and pickup instructions follow the tour's fixed source. Create rejects supplied option IDs. Update accepts existing IDs scoped to the owned tour, preserves rows when `options` is omitted, and retires omitted options when a list is sent. An empty list retires all options. Changing source option text or order can trigger regeneration. Price, capacity, schedule, and guide codes are shared across locales. [Supplier plan](../../../docs/superpowers/plans/2026-11-10-bookly-supplier-portal.md#٣-البيانات-وقواعد-الحجز)
+Create and update accept `options`. The source-language option title and pickup instructions follow the tour's fixed source. Create rejects supplied option IDs. Update accepts existing IDs scoped to the owned tour, preserves rows when `options` is omitted, and retires omitted options when a list is sent. An empty list retires all options. Changing source option text or order can trigger regeneration. Price, capacity, schedule, and guide codes are shared across locales. These draft-tour behaviours are unchanged; on a **published** tour the governed option text and option structure follow the revision-governed section below. [Supplier plan](../../../docs/superpowers/plans/2026-11-10-bookly-supplier-portal.md#٣-البيانات-وقواعد-الحجز)
 
 ## Draft and Publishing Boundaries
 
@@ -95,3 +95,131 @@ Frontend read/write DTOs represent actual structured itinerary, difficulty_level
 Verify every deployed writer addresses the tour's canonical source locale before activating the derived-locale-authoring restriction against an older deployed backend. This branch already restricts those writes; do not weaken it to conceal a rollout mismatch. Existing legacy rows default to `en` as a compatibility default, not a restriction on new authoring. Retain stored old derivatives; readers fall back until a current generation exists.
 
 Extend existing create/draft/translation/moderation suites with all source-field round trips, omission/null/[] behavior, bounds, owned IDs versus user IDs, source-state forgery, concurrent save/completion, no-media-change retention, blank draft versus rejected publish, optional source-field editing, and generated locale status privacy. Cover the tour's canonical source locale at creation, its immutability afterward, source-locale validation at both gates, and publication while derivatives are pending or failed. Frontend/browser tests exercise canonical-locale entry, duration/difficulty/media, localized nested errors and pending/failed/ready statuses through the actual existing routes.
+
+## Revision-Governed Content (EGM-003 owner decision, 2026-11-14)
+
+Partners own and edit canonical tour content. A content edit to a **published** tour is submitted as a separate reviewable revision and the approved public version stays unchanged until that revision is approved. Gemini derivatives are never manually edited. Administrators request changes with a mandatory reason and specific fields; an exceptional administrator correction is proposed only through a dedicated, authorized, audited domain action and never through the general Filament form. There is no emergency publishing path, and the correction action cannot approve or publish. The [EGM-002 publication guard](../../../backend/app/Domains/Admin/Services/TourPublicationGuardService.php) remains the only route to `published`.
+
+**Design of record.** [EGM-003 technical design v3](../../../docs/designs/supplier-portal-egm003-governance-v3.md), with its [execution file/test manifest](../../../docs/designs/supplier-portal-egm003-execution-plan.md), supersedes the failed v1/v2 proposals; the v1/v2 files are retained as historical review evidence and are not active contracts. The owner policy is [ADR 0024](../../../docs/adr/0024-tour-content-governance.md) and Constitution v3.0.0 is unchanged.
+
+**Correction review.** Ordinary administrative review of an exceptional correction is the **selected implementation choice** under the owner-approved correction policy, not an additional owner quote. No emergency approval, automatic publication or four-eyes path is introduced. The correction permission has no automatic ordinary-admin grant; the existing super-admin wildcard and explicit grants apply.
+
+**Enforcement boundary.** Refusals are enforced in authenticated Laravel boundaries, domain Actions/Services and the known writer inventory. No PostgreSQL `GUC` or trigger bypass mechanism is introduced. After the coordinated cutover, an unpatched old application build and direct operator SQL are not supported mutation interfaces; a rolled-back client receives the refusal and cannot bypass it.
+
+### Owned read — additive field
+
+`GET /api/partner/tours/{id}` keeps its existing envelope and fields and adds one additive object for **every owned tour**:
+
+```jsonc
+"content_governance": {
+  "source_locale": "es",
+  "generation_epoch": 4,
+  "content_version": 4,
+  "approved_revision": { "id": 12, "revision_number": 3, "kind": "legacy_baseline", "state": "approved",
+                         "payload_hash": "…", "created_at": "…" },
+  "active_candidate": { "id": 15, "revision_number": 4, "kind": "partner_edit", "state": "proposed",
+                         "payload_hash": "…", "base_revision_id": 12, "submitted_at": "…", "change_summary": "…" },
+  "latest_revision":  { "id": 15, "revision_number": 4, "kind": "partner_edit", "state": "proposed",
+                         "payload_hash": "…", "base_revision_id": 12, "submitted_at": "…" },
+  "open_requests":    [ { "id": 9, "context": "published_review", "state": "open", "reason": "…",
+                           "field_refs": [ { "path": "source.meeting_point", "note": "…" } ],
+                           "created_at": "…" } ]
+}
+```
+
+Rules for this object:
+
+- It is **never `null`** for an owned tour that the platform now protects. A published legacy tour is returned with a lazily captured baseline; the baseline is captured under the Tour lock **before** the response is built.
+- `approved_revision` is `null` for a never-public tour, and `active_candidate` is `null` when no candidate exists. A never-public tour still reports its **real** `generation_epoch`, so an initial-review response needs no invented revision ID.
+- `kind` is one of `legacy_baseline`, `partner_edit`, `admin_correction`, `publication`. Request `context` is one of `initial_review`, `published_review`, `correction`; request `state` is one of `open`, `answered`, `approved`, `rejected`, `closed`, `superseded`.
+- No payload, hash or request body content beyond the bounded summary fields above is exposed by this summary; the full payload is read through the single-revision route below.
+
+### New routes
+
+| Method / path | Operation |
+|---|---|
+| `GET /api/partner/tours/{id}` | Owned tour read; adds the `content_governance` object described above |
+| `GET /api/partner/tours/{id}/revisions/{revisionId}` | Read one owned candidate revision **including its full immutable payload**, its payload hash (replacement token; source/content generation hashes remain internal), its kind/state, its base revision ID, its timestamps, its reason/fields and its normalized diff versus the base |
+| `GET /api/partner/tours/{id}/revisions` | Bounded paginated owner-scoped revision history (read-only) |
+| `GET /api/partner/tours/{id}/revision-requests` | Bounded paginated owner-scoped change-request history (read-only) |
+| `POST /api/partner/tours/{id}/revisions` | Create a candidate revision from a content patch over the approved revision; observed base ID plus bounded source/presentation/options/media PATCH; **201** with the new draft and complete payload metadata |
+| `PUT /api/partner/tours/{id}/revisions/{revisionId}` | Replace the candidate: observed base ID + observed payload hash + patch; **200** with the **NEW** replacement ID and full payload metadata; the old ID becomes `superseded`. The endpoint name does not mean mutable snapshot storage |
+| `POST /api/partner/tours/{id}/revisions/{revisionId}/submit` | Submit the owned current draft for the ordinary review; 200 state response or the documented 409/422/404 |
+| `POST /api/partner/tours/{id}/revisions/{revisionId}/withdraw` | Withdraw the partner's own current draft/proposed candidate; 200 state response or the documented 409/422/404 |
+| `POST /api/partner/tours/{id}/revision-requests/{requestId}/respond` | Partner response to an open request: submitted revision ID for a published context, or observed generation epoch for an initial context, plus a bounded note; 200 answered request |
+
+`auth:sanctum` + `partner` middleware and the existing throttle are preserved. Unauthenticated is 401; a missing partner capability or an unknown/cross-partner tour is 404 through the scoped lookup; a restricted partner keeps the existing 403 `ONBOARDING_STATUS_BLOCKED` response. No public or administrator REST approval endpoint is added.
+
+All candidate operations identify tour **and** revision and scope ownership before validation, so an unknown or foreign revision remains 404. Ownership, permissions and account eligibility are re-read from the locked rows, not trusted from a caller-supplied model.
+
+### Owned response projections
+
+`GET tours/{id}` exposes a flat `content_governance` object with `source_locale`, `generation_epoch`, `content_version`, nullable `approved_revision`, nullable `active_candidate`, nullable `latest_revision` (preserving the highest-numbered revision summary so terminal `rejected`/`withdrawn`/`superseded` outcomes stay visible after `active_candidate` clears), and bounded `open_requests`. Approved summaries include `state: "approved"`; candidate summaries identify the exact immutable ID, number, kind, state, base, optional `change_summary`, and payload hash. Request summaries contain the request ID, context/state, mandatory reason, field references and timestamps. Full histories use the paginated owner-only endpoints; raw Eloquent request models and internal requested-content hashes are never serialized.
+
+Full revision GET/create/replace/submit/withdraw responses put the revision fields directly under the existing `data` key: `id`, `tour_id`, `revision_number`, `kind`, `state`, `source_locale`, `change_summary`, `payload`, `payload_hash`, `base_revision_id`, relevant timestamps and `diff`. They do not introduce a `data.revision` wrapper. The response examples below abbreviate the full payload and diff. The only exposed replacement token is `payload_hash`; canonical source/content hashes and provider diagnostics remain internal. Partner frontend types and real HTTP contract tests must agree on this projection before acceptance.
+
+### Create request and payload
+
+```jsonc
+{
+  "change_summary": "Correct the meeting point",   // optional, max 500
+  "base_revision_id": 12,                          // mandatory: the observed approved revision, must equal the current pointer
+  "translations": { "es": { "meeting_point": "Plaza de Armas, puerta 3" } },
+  "options": [ { "id": 12, "title": "Grupo pequeño", "pickup_instructions": "…" } ],
+  "media": [ { "url": "https://…/a.jpg", "alt_text": "…", "is_cover": true } ],
+  "presentation": { "location": "Cairo", "category_id": 7, "slug": "cairo-old-town" }
+}
+```
+
+Only the tour's fixed source locale may appear under `translations`. The request-level `translations` key is the existing compatibility form for the canonical-source patch; the stored revision snapshot keeps the same nine canonical fields under its `source` tier, and field references use the stored tier names (`source.*`, `presentation.*`, `options[*].title`, `options[*].pickup_instructions`, `media[*].alt_text`) with stable option IDs and media positions from the captured context. `options` accepts authored text only for options owned by the tour; price, capacity, schedule, guide codes, membership, order and status are commercial/operational and are rejected. The candidate's option set must equal the tour's active option ids in the live order — an addition, removal or reorder is refused with `option_structure_change_not_supported`. `presentation` carries the governed tour-row presentation fields `category_id`, `slug`, `location`, `location_slug`, `duration_minutes`, `duration_label`, `group_size_min`, `group_size_max`, `difficulty_level`, `guide_languages` and `cover_image_url`; commercial and operational keys are rejected. `media` keeps the existing ordered-list, distinct-URL and cover-selection semantics. Present-key semantics apply: omitted preserves, explicit `null` clears nullable text, `[]` clears a list. Bounds are the existing source, itinerary, option and media bounds. The merge base is the **approved revision's payload**; the server stores the resolved full snapshot.
+
+Create preconditions: the tour is `published`; the supplied `base_revision_id` equals the current approved-revision pointer; and no active candidate exists. The server inserts a complete immutable `draft` snapshot with a new ID and revision number, and answers **409 `REVISION_ALREADY_OPEN`** identifying the conflicting revision when an active candidate already exists. A stale base is refused with **409 `REVISION_SUPERSEDED`** and nothing is written.
+
+### Replace an existing candidate
+
+`PUT /api/partner/tours/{id}/revisions/{revisionId}` takes `{ "base_revision_id": 12, "observed_payload_hash": "…", …patch keys… }`. The merge base is the **candidate's own stored payload**, never the latest approved revision. A payload hash that differs from the stored `payload_hash` is refused with 409 `REVISION_CONFLICT` and nothing is written, so the client must reload through the full-payload read endpoint and re-apply its edits.
+
+Replacement is **immutable**: the server merges the patch against that stored candidate, inserts a **NEW** immutable `draft` row with a new ID and revision number, marks the previous row `superseded`, and returns the NEW ID/number. A payload is never mutated under a reviewed ID. A `draft` or `proposed` candidate may be replaced, including an active administrator correction that is explicitly being replaced. Linked answered/correction requests become `superseded`; unlinked open requests remain open.
+
+| Condition | Status | Body |
+|---|---|---|
+| Created | 201 | `{ "data": { "id": 15, "revision_number": 4, "kind": "partner_edit", "state": "draft", "payload_hash": "…", "base_revision_id": 12, "created_at": "…" }, "message": "Revision saved." }` |
+| Replaced | 200 | `{ "data": { "id": 16, "revision_number": 5, "kind": "partner_edit", "state": "draft", "payload_hash": "…", "base_revision_id": 12, "created_at": "…" }, "message": "Revision replaced." }` — the previous ID is superseded |
+| Stale `base_revision_id`, or the tour is no longer `published` | 409 | `{ "message": "…", "error_code": "REVISION_SUPERSEDED" }` |
+| A candidate is already open and this is not a replacement of it | 409 | `{ "message": "…", "error_code": "REVISION_ALREADY_OPEN", "revision_id": 14 }` |
+| `observed_payload_hash` differs from the stored payload hash | 409 | `{ "message": "…", "error_code": "REVISION_CONFLICT", "revision_id": 15 }` |
+| The candidate is already in a terminal state | 409 | `{ "message": "…", "error_code": "REVISION_TERMINAL" }` |
+| Replaying a superseded candidate | 409 | `{ "message": "…", "error_code": "REVISION_SUPERSEDED" }` |
+| Commercial, operational, derivative-locale or platform-owned key in the payload | 422 | `{ "message": "…", "errors": { "<path>": ["…"] } }` |
+| Content bounds violated | 422 | `{ "message": "…", "errors": { "translations.es.itinerary.0.stops.2.duration_minutes": ["…"] } }` |
+| Option id not owned by the tour | 422 | `{ "message": "…", "errors": { "options.0.id": ["The selected option does not belong to this tour."] } }` |
+| Option set differs from the tour's active options or their order | 422 | `{ "message": "…", "error_code": "option_structure_change_not_supported" }` |
+| Field reference outside the allowlist, unresolvable, or a changed path not declared | 422 | `{ "message": "…", "error_code": "unknown_field_reference" }` / `{ "message": "…", "error_code": "undeclared_field_change" }` |
+| Unknown or cross-partner tour or revision | 404 | `{ "message": "Not found." }` |
+| Partner not approved or suspended | 403 | existing `ONBOARDING_STATUS_BLOCKED` body |
+
+`POST …/revisions/{revisionId}/submit` returns 200 with the submitted revision, 409 `REVISION_SUPERSEDED` / `REVISION_TERMINAL`, 422 `REVISION_CONTENT_INVALID` when the merged candidate lacks a trimmed non-empty canonical title and description in the source locale, and 404 for an unknown or non-owned revision.
+
+`POST …/revision-requests/{requestId}/respond` takes `{ "revision_id": 15, "response_note": "…" }` for a **published** request context, or `{ "observed_generation_epoch": 4, "response_note": "…" }` for an **initial-review** request context, and returns 200 with the answered request. It refuses a mismatching tour or ownership with 404, a stale context or request state with 409 `REQUEST_NOT_OPEN`, and an invalid reference or candidate link with 422. A published-context response may link **only** the current owned submitted candidate that carries the request's base; an initial-context response requires the observed epoch to equal the current owned source epoch. An answered request is never silently reused for another revision.
+
+### New machine-readable error codes
+
+`content_requires_revision`, `option_structure_change_not_supported`, `REVISION_CONFLICT`, `REVISION_ALREADY_OPEN`, `REVISION_SUPERSEDED`, `REVISION_TERMINAL`, `REVISION_CONTENT_INVALID`, `REQUEST_NOT_OPEN`, `unknown_field_reference`, `undeclared_field_change`. They travel on the existing `{"message": …}` and `{"message": …, "errors": {…}}` shapes; no new envelope is introduced. The exact offending input paths are reported; mixed dirty commercial/source fields are never silently dropped.
+
+### Write routing for a published tour
+
+`PUT /api/partner/tours/{id}` keeps its contract for operational and commercial fields on every tour. For a **published** tour the request is classified inside a fresh Tour lock **before any write**: governed fields that actually change, governed fields that are unchanged, and operational fields. The governed set is the canonical source text and its aliases, every governed presentation field (`category_id`, `slug`, `location`, `location_slug`, `duration_minutes`, `duration_label`, `group_size_min`, `group_size_max`, `difficulty_level`, `guide_languages`, `cover_image_url`), the media projection and the authored option text.
+
+If any governed value changes, the **whole request** is refused with one atomic 422 `content_requires_revision` and the exact paths, and **nothing** is written — neither the governed nor the operational field, so there is no partial save and no silent drop. When no governed value changes, the request proceeds exactly as today: unchanged round-tripped content may accompany a legitimate operational price/capacity/schedule save. A submitted option array whose authored text, identity and order are unchanged keeps its existing commercial-edit contract; a text change is refused with `content_requires_revision`, and a membership or order change is refused with `option_structure_change_not_supported`.
+
+**Published option structure fails closed in this slice.** Option additions, reactivation, retirement and reordering on a published tour are refused with a localized explanation. This restriction is explicit, tested and recorded as remaining option-review work; it is not a claim that the A3 option slice is complete. Existing active option text can be revised through a revision, and an unchanged-text, unchanged-identity, unchanged-order option list can round-trip in an operational save. Draft-tour option functionality is unchanged.
+
+**Mixed dirty fields are never partially applied.** If governed content **and** commercial fields are both dirty, the editor makes **no request**, retains every entered value, and shows localized instructions to save operational changes separately. Explicit content-draft and operational-only save controls each send only their own allowed fields; after either succeeds the saved baseline is refreshed while the other dirty fields are retained, and a failure keeps the dirty values and announces the error.
+
+**Enforcement and activation.** The refusal is enforced in authenticated Laravel boundaries, domain Actions/Services and the known writer inventory; no PostgreSQL `GUC` or trigger bypass mechanism exists. It is part of the single coordinated EGM-003 activation: production enters maintenance for partner/administrator writes, queue producers and schedulers stop, old workers finish their current jobs and exit, the complete new build and additive schema are deployed, baselines are captured in bounded idempotent Tour-locked batches, and only new workers are restarted. A rolled-back client cannot save published content; an older frontend shows a recoverable error. After the cutover, an unpatched old application build and direct operator SQL are not supported mutation interfaces, so the supported rollback target is a compatible build that retains all governance guards and readers, with proposal/correction/approval writes disabled if necessary. Accepted snapshots and columns are never destructively dropped.
+
+### Administrator surfaces
+
+No administrator REST endpoint is added; the administrator surfaces are Filament actions backed by domain actions (`RequestTourChangesAction`, `ProposeTourCorrectionAction`, `ApproveTourRevisionAction`, `RejectTourRevisionAction`). The general Filament form carries no translation field and no canonical authoring, and is read-only for governed fields on a published tour, so no administrator surface writes a canonical or derivative translation row. Raw submitted state is compared before relationship persistence, so a forged change is rejected; read-only controls alone are insufficient.
+
+Administrator change requests and corrections carry a reason that is non-blank after trimming and bounded at 2,000 characters, and 1–30 allowlisted field-reference objects (`path`, optional plain-text `note` max500); there is no arbitrary ten-character minimum. Published requests use the captured approved base; initial-review requests use current captured source context/hash/epoch without an invented revision. All governed source/presentation/option-text/media fields are requestable, but only the nine canonical `source.*` fields are administratively correctable in this slice. A correction must declare every field it changes, and changed fields must be a subset of declared references. The correction permission is granted only explicitly and is not granted to ordinary administrator roles by default. A correction cannot approve, publish, or change tour lifecycle state; it passes ordinary revision review — the selected implementation choice under the owner-approved policy, not a separate owner quote.

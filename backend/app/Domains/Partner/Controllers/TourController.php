@@ -2,6 +2,7 @@
 
 namespace App\Domains\Partner\Controllers;
 
+use App\Domains\Partner\Exceptions\TourRevisionException;
 use App\Domains\Partner\Requests\StoreTourRequest;
 use App\Domains\Partner\Requests\UpdateTourRequest;
 use App\Domains\Partner\Services\TourService;
@@ -40,7 +41,13 @@ class TourController
     {
         $partnerId = $request->attributes->get('partner_id');
 
-        return response()->json(['data' => $this->service->getOwnedTourDetail((int) $id, $partnerId)]);
+        try {
+            $data = $this->service->getOwnedTourDetail((int) $id, $partnerId);
+        } catch (TourRevisionException $exception) {
+            return response()->json(['message' => $exception->getMessage(), ...$exception->contractPayload()], $exception->status);
+        }
+
+        return response()->json(['data' => $data]);
     }
 
     public function store(StoreTourRequest $request): JsonResponse
@@ -55,7 +62,17 @@ class TourController
             $tour->load(['options' => fn ($query) => $query->active()]);
         }
 
-        return response()->json(['data' => $tour], 201);
+        $status = $tour->wasRecentlyCreated ? 201 : 200;
+
+        $creationId = $data['creation_id'] ?? $request->header('Client-Creation-Id');
+        $draft = is_string($creationId) && trim($creationId) !== ''
+            ? $this->service->getDraftByCreationId((int) $partnerId, $creationId)
+            : null;
+
+        return response()->json([
+            'data' => $tour,
+            'draft' => $draft ? $this->service->serializeDraftSyncMeta($draft) : null,
+        ], $status);
     }
 
     public function update(UpdateTourRequest $request, string $id): JsonResponse
@@ -71,7 +88,14 @@ class TourController
             $data = $this->service->resolveCategoryId($data, required: false);
         }
 
-        $tour = $this->service->updateTour($tour, $data);
+        try {
+            $tour = $this->service->updateTour($tour, $data);
+        } catch (TourRevisionException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+                ...$exception->contractPayload(),
+            ], $exception->status);
+        }
         if (array_key_exists('options', $data)) {
             $tour->load(['options' => fn ($query) => $query->active()]);
         }
@@ -91,6 +115,108 @@ class TourController
         $this->service->archiveTour($tour);
 
         return response()->json(['message' => 'Tour archived.']);
+    }
+
+    public function listDrafts(Request $request): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $drafts = $this->service->listDraftsForPartner($partnerId);
+
+        return response()->json(['data' => $drafts]);
+    }
+
+    public function latestGeneralDraft(Request $request): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $draft = $this->service->getLatestGeneralDraft($partnerId);
+
+        if (! $draft) {
+            return response()->json(['message' => 'No draft found.'], 404);
+        }
+
+        return response()->json(['data' => $draft]);
+    }
+
+    private function resolveDraftConcurrencyToken(Request $request, array $data): ?string
+    {
+        $ifMatch = $request->header('If-Match');
+        if (is_string($ifMatch)) {
+            $trimmed = trim($ifMatch, "\"' ");
+            if ($trimmed !== '') {
+                return $trimmed;
+            }
+        }
+
+        $bodyToken = $data['concurrency_token'] ?? null;
+
+        return is_string($bodyToken) && trim($bodyToken) !== '' ? trim($bodyToken) : null;
+    }
+
+    public function saveGeneralDraft(Request $request): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $data = $request->validate([
+            'id' => 'sometimes|nullable|integer',
+            'creation_id' => 'sometimes|nullable|uuid',
+            'tour_id' => 'sometimes|nullable|integer',
+            'source_locale' => 'sometimes|nullable|string|in:en,es,it',
+            'current_step' => 'sometimes|nullable|string|max:32',
+            'concurrency_token' => 'sometimes|nullable|string|max:64',
+            'payload' => 'required|array',
+        ]);
+
+        $token = $this->resolveDraftConcurrencyToken($request, $data);
+
+        $draft = $this->service->saveGeneralDraft($partnerId, $data, $token);
+
+        return response()->json(['data' => $draft], 200);
+    }
+
+    public function showDraft(Request $request, string $draftId): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $draft = $this->service->getDraftForPartner($partnerId, (int) $draftId);
+
+        if (! $draft) {
+            abort(404, 'Draft not found.');
+        }
+
+        return response()->json(['data' => $draft]);
+    }
+
+    public function updateDraft(Request $request, string $draftId): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $data = $request->validate([
+            'creation_id' => 'sometimes|nullable|uuid',
+            'tour_id' => 'sometimes|nullable|integer',
+            'source_locale' => 'sometimes|nullable|string|in:en,es,it',
+            'current_step' => 'sometimes|nullable|string|max:32',
+            'concurrency_token' => 'sometimes|nullable|string|max:64',
+            'payload' => 'required|array',
+        ]);
+        $data['id'] = (int) $draftId;
+        $token = $this->resolveDraftConcurrencyToken($request, $data);
+
+        $draft = $this->service->saveGeneralDraft($partnerId, $data, $token);
+
+        return response()->json(['data' => $draft], 200);
+    }
+
+    public function resumeDraft(Request $request, string $draftId): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $resumed = $this->service->resumeDraftForPartner($partnerId, (int) $draftId);
+
+        return response()->json(['data' => $resumed]);
+    }
+
+    public function discardDraft(Request $request, string $draftId): JsonResponse
+    {
+        $partnerId = (int) $request->attributes->get('partner_id');
+        $this->service->discardDraftForPartner($partnerId, (int) $draftId);
+
+        return response()->json(['message' => 'Draft discarded.']);
     }
 
     public function saveDraft(Request $request, string $id): JsonResponse

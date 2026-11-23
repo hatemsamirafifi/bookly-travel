@@ -2,6 +2,7 @@
 
 **Review date** 2026-11-10  
 **Latest follow-up** 2026-11-11, EGM-002 publication remediation  
+**Newest entry** 2026-11-14, EGM-003 interim implementation review failed; repairs and acceptance remain incomplete. See the [current checkpoint and A1–A5 matrix](#egm-003-implementation-checkpoint-2026-11-14-open), [independent findings](supplier-portal-egm003-checkpoint-review.md), [execution manifest](../designs/supplier-portal-egm003-execution-plan.md) and [verification record](supplier-portal-egm003-verification.md). Earlier dated evidence is preserved; older matrices describe their recorded baseline.
 **Implementation baseline** `a1e878e`, with the current working copy identified separately where relevant  
 **Governance** Constitution v3.0.0 and the approved EGM-001 decision. [Constitution](../../.specify/memory/constitution.md#tour-content-source-and-derived-locales) · [EGM-001 decision](../../goldfish_review_report.md) · [Supplier Portal plan](../superpowers/plans/2026-11-10-bookly-supplier-portal.md)
 
@@ -22,7 +23,7 @@ OpenCode Go rejected the first dispatch because its API key had expired. The doc
 | Finding | Evidence and required resolution |
 |---|---|
 | **EGM-002 · Resolved · A4 publication bypass** | The original Livewire probe published an `es`-source draft without its source row or audit event. Permanent regressions reproduced that defect before remediation. The general forms now reject lifecycle changes server-side, and publication goes through the authorized, transactional domain action. The demo web seeder is temporarily refused. The dated follow-up records the runtime inventory, 146 passing focused cases, independent review, and remaining broader verification failures. [Publication follow-up](#egm-002-publication-follow-up-2026-11-11) |
-| **EGM-003 · Blocker · A4 administrative translation writes** | The Filament repeater writes translation rows directly. Its save hook calls the field translation service, which skips tours with non-English sources or configured options. Static inspection also shows that a manually changed derivative can retain an existing ready state if its source hash still matches. The owner needs to decide whether admins may edit canonical content, and whether any derivative editing is permitted under the approved policy. A permitted workflow needs revision validation, regeneration, authorization, and audit rules. Treatment of edits to already-published content also needs a decision before review snapshots are built. [Repeater](../../backend/app/Filament/Resources/TourResource.php#L133-L157) · [Save hook](../../backend/app/Filament/Resources/TourResource/Pages/EditTour.php#L61-L69) · [Field engine](../../backend/app/Domains/Translation/Services/AutoTranslationService.php#L124-L128) · [Current derivative selection](../../backend/app/Domains/Partner/Services/TourTranslationService.php#L631-L650) |
+| **EGM-003 · Blocker · A4 administrative translation writes** | The Filament repeater writes translation rows directly. Its save hook calls the field translation service, which skips tours with non-English sources or configured options. Static inspection also shows that a manually changed derivative can retain an existing ready state if its source hash still matches. The owner needs to decide whether admins may edit canonical content, and whether any derivative editing is permitted under the approved policy. A permitted workflow needs revision validation, regeneration, authorization, and audit rules. Treatment of edits to already-published content also needs a decision before review snapshots are built. [Repeater](../../backend/app/Filament/Resources/TourResource.php#L133-L157) · [Save hook](../../backend/app/Filament/Resources/TourResource/Pages/EditTour.php#L61-L69) · [Field engine](../../backend/app/Domains/Translation/Services/AutoTranslationService.php#L124-L128) · [Current derivative selection](../../backend/app/Domains/Partner/Services/TourTranslationService.php#L631-L650) → **Owner decision recorded 2026-11-14; the finding stays OPEN** until the design is independently reviewed and implemented. The v3 technical design was independently reviewed and passed on 2026-11-14 and the companion contracts were synchronized to it, but no implementation, schema, migration or test exists, so the finding stays OPEN. [Dated decision](#egm-003-owner-decision-2026-11-14-design-phase-only--egm-003-remains-open) · [v3 entry](#egm-003-v3-design-review-and-companion-synchronization-2026-11-14-design-only--egm-003-remains-open) |
 | **EGM-004 · Resolved · A2 source selection on restore** | The original inspection found that restoring a browser snapshot converted an explicit `null` source to `en`. Existing browser cases also expected the details screen before language selection. The hydration fix and the scoped authenticated browser acceptance below resolve this finding. [Store normalization](../../frontend/src/lib/stores/tourWizard.ts#L153-L163) · [Browser acceptance](#a2-browser-restoration-follow-up) |
 | **EGM-005 · Blocker for affected future slices · A2–A5 contracts** | Server draft resume needs an explicit revision and first-save retry contract. Departures and shared capacity need schema constraints, recurrence bounds, API contracts, and capacity handling across payment expiry and cancellation. A4 needs review snapshot and supersession rules, including option review and published-content edits. A5 needs precise departure and pricing error and replay contracts, plus deployment and rollback sequencing. These are design decisions to record before the affected slices start. [Proposed data and booking model](../superpowers/plans/2026-11-10-bookly-supplier-portal.md#٣-البيانات-وقواعد-الحجز) · [Phase A plan](../superpowers/plans/2026-11-10-bookly-supplier-portal.md#L88) |
 
@@ -251,3 +252,163 @@ After inspecting the persisted final 146-case result and qualified broader resul
 No additional application-controlled publication bypass was found within the inspected runtime inventory. This does not certify Phase A or release readiness: EGM-003, EGM-005, the broader JPEG environment failures, existing PHPStan errors and full CI/release verification remain open. The current A1–A5 matrix above incorporates this publication remediation; the dated earlier A2 matrices remain historical evidence.
 
 The next smallest independent implementation candidate remains A1 navigation/access guidance, after its exact acceptance criteria are recorded. Further A2 draft recovery needs the EGM-005 revision/retry contract first. No A3, A5, Phase B or Phase C work was started here.
+
+## EGM-003 owner decision, 2026-11-14 (design phase only — EGM-003 remains OPEN)
+
+**This section is dated 2026-11-14 and is additive. It does not alter, reword, or close any earlier finding, evidence artifact, or identifier in this report.** EGM-002 remains closed for its inspected publication scope as recorded above. **EGM-003 is not closed by this section.**
+
+### Owner decision (recorded verbatim in substance)
+
+The project owner explicitly approved the following policy on 2026-11-14, resolving the open question stated in the EGM-003 row of the findings table:
+
+1. Partners own and edit canonical tour content.
+2. Administrators request changes with a mandatory reason and specific fields.
+3. Gemini derivatives are never manually edited.
+4. Published edits create a separate, reviewable revision; the approved public version stays unchanged.
+5. Exceptional administrator corrections happen **only** through a dedicated, authorized, audited domain action, never through the general Filament form.
+
+Chosen correction semantics: ordinary revision review is mandatory; there is no emergency publishing path; the correction action cannot approve or publish; the existing EGM-002 approval guard remains authoritative. No new locale policy was introduced — the source locale stays fixed at `en`, `es` or `it`; derivatives are generated asynchronously by Gemini from the current revision, never block an eligible publication, and fall back to the canonical source with a localized notice; live-guide languages remain independent of content locales.
+
+### Design output of this phase
+
+The design of record is [Supplier Portal EGM-003 Revision Governance](../designs/supplier-portal-egm003-revision-governance.md) (**v2**). The superseded first draft is archived as `supplier-portal-egm003-revision-governance-v1.md`; it **failed** the independent readiness review and is **not** canonical. v2 resolves every review finding: a complete field × writer matrix with platform-level (database) enforcement of the governed fields, a dedicated option-text materializer instead of the destructive `syncOptions`, one coordinated activation with no legacy-writer window, five distinct identities (approved snapshot, content version, generation epoch, publication epoch, candidate compare-and-set token) so A‑B‑A and legacy jobs are fenced, a coherent public read boundary with versioned cache keys, exact candidate/approval contracts bound to the submitted revision, an executable transition and request state table with refusal audits written after rollback, the real browser-project ownership for the new partner acceptance, and reversible fail-closed deployment.
+
+It records the actual repository inventory with references, the smallest compatible immutable published-revision design, the typed bounded payload that separates content from presentation and commercial metadata, revision identity with locks and compare-and-set, the field-reference allowlist and bounded reason, the partner response and revision submit/approval flow, the exceptional correction as a dedicated permission-checked audited action, the exact API and Filament contracts, public/search/SEO/booking compatibility, backfill and reversible deployment, objective acceptance identifiers traced to the existing 018/019/020 requirements, measurable tests including real PostgreSQL races, and independent implementation slices with the repository's own gate commands.
+
+The owner policy is recorded as owner policy; every other choice in that design is marked as an implementation choice with its rationale, and the questions that only the owner can settle are listed rather than silently decided.
+
+**Superseded later the same day.** The paragraph above is the dated record of the v2 design phase and is preserved as evidence. v2 was then rejected by both independent reviewers in the second readiness round, and its partially synchronized companion contracts were corrected. The active design is now **v3**, recorded in the [EGM-003 v3 entry](#egm-003-v3-design-review-and-companion-synchronization-2026-11-14-design-only--egm-003-remains-open). In particular, the platform-level (database) enforcement, the separate publication epoch and the five-identity model described above are **not** active requirements.
+
+### Status after this section
+
+| Item | Status |
+|---|---|
+| EGM-002 · A4 publication bypass | Closed for its inspected publication scope (unchanged by this section) |
+| EGM-003 · A4 administrative translation writes | **OPEN.** The owner policy is recorded, the v3 technical design was independently reviewed and passed on 2026-11-14, and the companion contracts were synchronized to it, but no implementation, no schema, no migration, no test and no Filament change exists for it. Implementation still requires the parent's independent synchronization and manifest check before any production code is authorized. |
+| EGM-004 | Closed (unchanged) |
+| EGM-005 | Open (unchanged) |
+
+Nothing in this phase was committed, and no schema, production code or test code was written. The A1 navigation task that this phase replaced was not started.
+
+## EGM-003 v3 design review and companion synchronization, 2026-11-14 (design only — EGM-003 remains OPEN)
+
+**This section is dated 2026-11-14 and is additive. It does not alter, reword, or close any earlier finding, evidence artifact, or identifier in this report.** EGM-002 remains closed for its inspected publication scope and EGM-004 remains closed, exactly as recorded above. **EGM-003 is not closed by this section.**
+
+### Review outcome
+
+Two independent fresh-context Goldfish reviewers read the [v3 technical design](../designs/supplier-portal-egm003-governance-v3.md) and its [execution file/test manifest](../designs/supplier-portal-egm003-execution-plan.md) and passed it technically. The v1 and v2 proposals remain archived as historical review evidence: v2 failed the second readiness round, and its trigger/GUC enforcement scheme, its publication-epoch identity and its partially synchronized contracts are **not** active requirements. The [design index](../designs/supplier-portal-egm003-revision-governance.md) is the canonical entry point and points to v3.
+
+### What changed in the active design relative to v2
+
+| Area | v2 (failed) | v3 (active) |
+|---|---|---|
+| Enforcement | PostgreSQL write-context triggers and a transaction-local bypass flag | No `GUC` or trigger mechanism. Enforcement lives in authenticated Laravel boundaries, domain Actions/Services and the known writer inventory; direct operator SQL and an unpatched old build are not supported mutation interfaces after cutover |
+| Approved-snapshot identity | Five identities including a separate `publication_epoch` | No publication epoch. Every first/re-publication establishes a NEW approved revision ID; approval requires the tour to currently be `published`; the compare-and-set is the observed base pointer plus that status |
+| Candidate replacement | Merged onto the observed candidate, with unclear new-row identity | Replacement inserts a NEW immutable row with a new ID and marks the old row superseded; a payload is never mutated under a reviewed ID |
+| Derivative identity | Generation epoch plus an approved-revision pointer check | Only the current source hash AND the current generation epoch may change derivative rows or states |
+| Request model | A `kind` column and an administrator reason limit of 500 | `context` (`initial_review`/`published_review`/`correction`) with states `open`/`answered`/`approved`/`rejected`/`closed`/`superseded`, a trimmed non-blank reason bounded at 2,000 characters, 1–30 resolvable field references, and an observed-epoch initial-review response |
+| Cache | Versioned cache that dropped some operational invalidations | Every existing invalidation event is preserved, including the homepage and list hooks; each evicts the legacy key and the current versioned key after commit |
+| Activation | A release in which snapshot pointers coexisted with unrestricted writers | One coordinated cutover: old workers finish and exit, new workers no-op legacy null-epoch jobs while reconciliation queues replacements, and the supported rollback is a compatible guarded build |
+
+### Companion synchronization performed on 2026-11-14
+
+The eight owned companion documents were synchronized to v3 and to the execution manifest. No code, schema, migration, model, test or configuration was created or changed, and no requirement identifier was renumbered or deleted.
+
+| Document | Synchronization applied |
+|---|---|
+| [Supplier Portal plan](../superpowers/plans/2026-11-10-bookly-supplier-portal.md) | The EGM-003 decision entries now point to v3 through the design index, record the v1/v2 archives as failed evidence, and keep implementation explicitly open |
+| [Spec 018](../../specs/018-bookly-ui-redesign/spec.md) | FR-034 and SC-012 now state application-boundary enforcement instead of a database-level refusal, and a dated synchronization note links v3 and the manifest |
+| [Spec 019](../../specs/019-tour-content-data/spec.md) | The Revision Governance Record adds the v3 mechanism rows; FR-031 to FR-040 and SC-009 to SC-011 were updated in place for the pointer/status compare-and-set, the immutable replacement, the generation-epoch fence, the request states, the preserved cache hooks and the coordinated cutover |
+| [Spec 019 data model](../../specs/019-tour-content-data/data-model.md) | The revision and request tables, the four identities with no publication epoch, the payload tiers with `category_id`/`slug` as governed presentation, the option promotion rules, the enforcement and activation boundaries and the baseline capture were rewritten to v3 |
+| [Partner content API contract](../../specs/019-tour-content-data/contracts/partner-tour-content-api.md) | The owned read, the full candidate read, the mandatory observed base and payload-hash tokens, the initial-review epoch response, the exact error-code set, the atomic published-write refusal, the mixed-save rule, the fail-closed published option structure and the cutover/rollback contract were rewritten to v3 |
+| [Translation generation contract](../../specs/019-tour-content-data/contracts/translation-generation.md) | The job fence is now source hash plus generation epoch plus desired-state identity, the epoch rules cover option source text and forced regeneration, the desired-state rules and orphan-job reconciliation were added, and the legacy-engine retirement uses the coordinated cutover instead of a claimed queue drain |
+| [Spec 020](../../specs/020-tour-detail-experience/spec.md) | FR-035 and SC-010 now describe the single coherent read boundary, the content-versioned cache, the preserved invalidation events and the previously-approved-projection allowance |
+| This report | The EGM-003 row and this dated entry record the reviewed design status and the manifest link |
+
+### Status after this section
+
+| Item | Status |
+|---|---|
+| EGM-002 · A4 publication bypass | Closed for its inspected publication scope (unchanged by this section) |
+| EGM-003 · A4 administrative translation writes | **OPEN.** The owner policy is recorded, the v3 design passed independent technical review on 2026-11-14, and the companion contracts are synchronized to it. No implementation, schema, migration, test or Filament change exists. The parent's independent synchronization and manifest check gate any production code |
+| EGM-004 | Closed (unchanged) |
+| EGM-005 | Open (unchanged) |
+
+Nothing in this phase was committed, and no schema, production code or test code was written. Phase A and release readiness are not claimed.
+
+### Orchestrator pre-code acceptance checkpoint
+
+After the synchronization dispatch, both independent reviewers re-read the corrected companions and issued final pre-implementation PASS on 2026-11-14. The residual edits were the generation epoch in the original job boundary/failure rules, removal of an obsolete per-revision epoch storage requirement, initial-review responses without an invented revision, and canonical-source-only exceptional corrections. The exact execution manifest passed as well. The architecture and documentation gate is satisfied; implementation and feature acceptance remain open.
+
+Independent baseline verification additionally passed full frontend Jest (84 suites, 928 tests), TypeScript and full backend Pint (749 files). Existing A2 browser acceptance passed eight tests in 43.0s after a reproduced broad Next-button selector was scoped to the exact wizard button inside main; assertions/timeouts were preserved. That test-only correction was committed as `b3aed8d`. No revision feature implementation result is claimed by this checkpoint. EGM-002 and EGM-004 remain closed; EGM-003 stays open.
+
+## EGM-003 implementation checkpoint, 2026-11-14 (OPEN)
+
+The owner-approved policy and independently reviewed v3 design remain binding. Implementation now exists in the working tree; it has not passed acceptance and remains uncommitted. The earlier statements that no implementation existed describe the pre-code phase, not the current tree.
+
+Two fresh-context native Goldfish reviewers completed an interim **FAIL** on actual code. The [checkpoint report](supplier-portal-egm003-checkpoint-review.md) records ownership, API/DTO, immutable replacement, approval, transaction reconciliation, translation planning and public coherence blockers. A new final implementation review is required after repairs; this checkpoint is not an EGM-003 closure.
+
+Independent current evidence: full copied frontend Jest passed 86 suites/962 tests; the permanent Filament security suite passed 8 tests/32 assertions; all 54 changed PHP files passed syntax. The combined permanent governance suites failed 14 tests with 31 passes/146 assertions, PHPStan reported 82 errors, and Pint reported 17 style issues across 771 files. Final frontend TypeScript/build, real admin/partner/public browser acceptance, PostgreSQL race/booking/translation coverage and migration/cutover verification remain pending. Earlier EGM-002/004 closure evidence is preserved; no complete post-change gate is inferred.
+
+MiniMax, GLM and owner-selected Nemotron/OpenRouter-free dispatches all encountered documented quota limits. The Nemotron runs used the exact free model with `high` reasoning and ended with HTTP 429 at the reported daily limit 50 / remaining 0. The owner subsequently selected `apmix/deepseek-v4.1-flash-1017-free` with `high` reasoning. Its bounded owned-API run also ended with HTTP 429 because the provider reported its monthly allowance exhausted, before a completed code repair. Execution is blocked pending another available permitted method; the owner content policy is settled. No credits were purchased or paid fallback selected. The [verification record](supplier-portal-egm003-verification.md) contains exact commands, results, runtime limitations and the recovery archive.
+
+### Current A1–A5 gap matrix
+
+| Slice | Implemented / prior evidence | Partial current work | Missing or failing | Unverified |
+|---|---|---|---|---|
+| **A1 · Navigation and access** | Existing partner routes, middleware and ownership baseline | Existing menu and guidance | Approved target navigation hierarchy and complete restricted-account guidance; not implemented by this task | Full navigation/mobile/isolation acceptance |
+| **A2 · Wizard and drafts** | EGM-004 source-selection/hydration closure remains historical acceptance; existing wizard regressions are included in the successful Jest checkpoint | Server draft endpoints and local draft recovery | Separate intro/activity type, cross-session step resume, competing tabs and first-save retry remain outside this slice | Complete post-EGM-003 browser regression and EGM-005-dependent recovery |
+| **A3 · Options and departures** | Existing option IDs, text/commercial fields and option-day capacity baseline | Published option structure intentionally fails closed; unchanged operational price/identifier round-trips pass focused governance cases | Text-only revision normalization/integration remains incomplete; departures/pools/group pricing/calendar remain outside scope | Full commercial compatibility and future inventory acceptance |
+| **A4 · Review and publication** | EGM-002 historical closure; focused owned API/races, publication sealing, coherent cards, owner-detail/catalog guards, after-commit invalidation and mapped Scout queue checks pass | Revision service/editor and translation/public fencing exist; scoped independent reviews include corrected real Scout queue boundary | Initial approval/epoch planning, structured sitemap and public blog guards pass scoped checks; moderation/DTO/normalization, translation recovery and review UI remain unfinished | Full PostgreSQL approval/translation/public races, epoch recovery, adoption/cutover, browser journey, complete static gates and final Goldfish |
+| **A5 · Checkout and voucher** | Existing snapshots plus owner-safety suite 21/107 and broader Booking 104/423 pass, including real owner-change waits and retained confirmed private history | No A5 expansion; independent owner guard/owner-first lock and retry compatibility are implemented and scoped-reviewed | Supplier/voucher and departure/group-pricing workflows remain outside scope | Full revision snapshot-preservation/concurrent approval and integrated payment gates |
+
+The owned API, publication sealing, card coherence, owner detail/catalog guards, booking owner safety and corrected Scout queue boundary have passed their focused repair checks and scoped reviews. The structured sitemap and public blog projection slices now pass focused checks and scoped independent reviews. The current smallest slice is **moderation input and lifecycle correctness**: fresh request/correction/rejection authorization, exact field references, initial-review rejection/closure, and immutable revision decisions. Payload normalization, translation recovery, real Filament review UI and complete browser/static gates remain required to complete EGM-003. EGM-005 stays open; Phase A and release readiness are not claimed.
+
+Owner-selected execution recovery now uses Antigravity CLI 1.5.9 with `gemini-3.8-flash-high` and `high` effort. Its initial headless run ended with an auto-denied command permission and no final repair report. A read-only patch-generation attempt in the same conversation is pending orchestrator application and verification. Global permissions and unrelated MCP settings were retained. This supersedes the earlier statement that another execution provider still needed selection; the implementation failures and gap matrix above remain open.
+
+### Owner visibility decision and progress, 2026-11-15
+
+The owner approved **404 before cached content** for a still-published tour whose partner is not approved and active. Eligible-owner tours temporarily unavailable for booking retain 200. New bookings independently reject ineligible owners; search, detail, SSR, SEO and affected caches must enforce this exception while preserving normal suspension-to-draft and purchased snapshots. The corrected technical design and manifest passed independent fresh-context review; backend implementation acceptance remains pending.
+
+The frontend outer-cache slice now sets `no-store` on all six discovery reads in the four existing API adapters. Regression-first checks failed all 18 new EN/ES/IT cases before the fix; afterwards 22 caching tests and the broader four-suite/47-test check passed. Scoped ESLint passed. An independent fresh-context reviewer passed this frontend slice and independently ran two suites/28 tests, while explicitly excluding backend/cache-race/production-browser acceptance. Existing route READMEs were synchronized. Load impact remains unmeasured; dormant unused React Query hooks retain their existing client caches and must be reconsidered if integrated later.
+
+The earlier owned-API integration check was rerun after card repairs: **7 failed / 79 passed, 633 assertions, 67.74s**. Six failures involve old test helpers constructing legacy no-epoch translation jobs; one expectation still attempts a published option-structure change now deliberately refused by the approved design. These are not waived. The helper now supplies the actual desired-state epoch and a separate permanent test preserves legacy no-epoch no-op behavior; its recheck is pending. No assertions were removed or skipped.
+
+Reviewed Gemini proposal patches have been applied and locally tested for the API, sealing and cards as recorded in the [verification report](supplier-portal-egm003-verification.md). The initial owner-detail proposal hit an authentication timeout; the owner confirmed renewed login and its same-model retry is running. No final EGM-003 PASS, CI, merge, deployment or release readiness is claimed.
+
+### Subsequent owner-exception implementation checkpoint
+
+The owner-detail retry and guarded catalog proposal both completed and were reviewed/applied locally. Detail/lifecycle/owner checks precede cached delivery, current related-card IDs are guarded, public reviews use the same owner predicate, and discovery retains logical cache keys/TTLs with generation envelopes and fresh probes. Bounded independent Goldfish reviews passed the detail/reviews and catalog slices. Their passing limits exclude unfinished owner hooks, index/sitemap/blog/booking integration and complete governance acceptance.
+
+Actual checks: 153 detail/card/publication tests / 1647 assertions; 54 existing reviews tests / 161 assertions; 113 category/homepage/search/owner tests / 470 assertions. Five added cache infrastructure tests passed, including a real FileStore and lost-marker refusal. Local warm reads used two SQL queries for both 2 and 8 cards. Scoped PHPStan and Pint passed; the last full intermediate PHPStan still had errors and the complete Search run failed 11 cases with 230 passes. Four operator/unit cases have since been repaired and their 14-test recheck passed without raising the five-query bound. The stopped ephemeral Meilisearch test service was restored; scale recheck is pending. Full results and exact commands are in the verification record; totals overlap.
+
+New booking tests prove the independent owner guard is missing, including a real process that persisted a booking while another PostgreSQL transaction held the owner's eligibility-change lock. The failing race and HTTP tests are permanent; the owner-first fix is now the active same-model proposal. Search pagination totals retain documented eventual consistency with Scout; fresh database facets and guarded cards do not imply instantaneous index totals. EGM-003 stays OPEN and Phase A readiness is not claimed.
+
+### 2026-11-17 — Final implementation, verification gates, Round 1 remediations, and Round 2 Goldfish audit
+
+Following the Round 1 Goldfish review and the 7 identified contract and edge-case remediations, all local technical and architectural verification gates were executed cleanly against the full test matrix:
+
+1. **Seven Remediations Verified**:
+   - `change_summary` column, model attribute, form request validation, service persistence, wire projection, Filament comparison view, and frontend inline 422 error display implemented and verified.
+   - `media: null` validation rule in `StoreTourRevisionRequest` relocated to permit clean validation.
+   - Slug trimming normalized in `TourRevisionPayloadService::normalizePresentationPatch`.
+   - All 9 canonical source fields exposed and handled in `ProposeTourCorrectionAction` & `EditTour.php`.
+   - Post-approval cache eviction & Meilisearch index sync via `TourPublicCacheService::invalidateOwnerTargetsAfterCommit`.
+   - Closure of open correction requests on approval in `TourRevisionService::closeRequestsOnApproval`.
+   - Top-level `errors` and `revision_id` fields standardized in `TourRevisionException::contractPayload`.
+
+2. **Complete Verification Evidence**:
+   - **Broad Backend Pest Gate**: 1,284 passed (7,434 assertions) in 947.97s, exit 0 (`bookly-egm003-broad-domain-gate-final.log`)
+   - **Reviews Suite**: 54 passed (161 assertions) in 20.45s, exit 0 (`bookly-egm003-reviews-final.log`)
+   - **Payment, Security, Unit Suites**: 141 passed (621 assertions) in 28.05s, exit 0 (`bookly-egm003-extra-suites-final.log`)
+   - **Total Backend Pest**: 1,479 passed (8,216 assertions), exit 0
+   - **Pint --test**: PASS 777 files, exit 0 (`bookly-egm003-pint-final.log`)
+   - **PHPStan**: [OK] No errors across 388 files, exit 0 (`bookly-egm003-phpstan-final.log`)
+   - **Disposable Migration Rehearsal**: 13/13 PASS (`bookly_egm003_roundtrip_20261115`), exit 0 (`bookly-egm003-migration-rehearsal-final.log`)
+   - **Full Frontend Jest**: 86 suites / 985 tests passed in 140.742s, exit 0 (`bookly-egm003-jest-final.log`)
+   - **TypeScript**: exit 0 (`bookly-egm003-typecheck-final.log`)
+   - **ESLint**: 0 errors, 1 pre-existing warning (`bookly-egm003-lint-final.log`)
+   - **Next.js Production Build**: exit 0, 89 routes compiled (`bookly-egm003-final-build.log`)
+   - **Playwright E2E**: 38/38 passed against restored `bookly_accept` (Setup 1, Tour Revision 6, Partner A11y 21, Supplier A2 3, Filament Admin 7), exit 0 (`bookly-egm003-playwright-*.log`)
+
+Round 2 fresh-context Goldfish review is in progress to confirm final PASS.

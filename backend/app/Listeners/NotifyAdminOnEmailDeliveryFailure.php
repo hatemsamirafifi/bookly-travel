@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\BookingEmailDeliveryFailed;
-use Illuminate\Support\Facades\Http;
+use App\Jobs\SendAdminSlackAlertJob;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Log;
  *   2. Slack webhook (only when ADMIN_SLACK_WEBHOOK_URL env var is set).
  *
  * Per FR-028: this listener MUST NOT alter the booking status or block normal flow.
+ * Per FR-012: Slack is best-effort — the HTTP call lives in the queued
+ * SendAdminSlackAlertJob (dispatched after commit, webhook URL read from
+ * config at run time), so a Slack outage can never fail this listener or run
+ * inside an open DB transaction.
  */
 class NotifyAdminOnEmailDeliveryFailure
 {
@@ -31,27 +35,14 @@ class NotifyAdminOnEmailDeliveryFailure
             'error' => $event->errorMessage,
         ]);
 
-        // 2. Slack webhook — only if configured
-        $webhookUrl = config('services.slack.admin_webhook_url');
-        if (! $webhookUrl) {
-            return;
-        }
-
-        try {
-            Http::post($webhookUrl, [
-                'text' => sprintf(
-                    ':warning: *Bookly Alert* — Booking confirmation email delivery failed (all retries exhausted).'
-                    . "\n*Booking*: `%s`  |  Check application logs for details.",
-                    $booking->reference,
-                ),
-            ])->throw();
-        } catch (\Throwable $e) {
-            // Slack is best-effort only (FR-012): a Slack failure MUST NOT
-            // fail the listener. The ERROR log entry above already persists.
-            Log::warning('Slack admin alert failed — delivery failure already logged', [
-                'booking_reference' => $booking->reference,
-                'slack_error' => $e->getMessage(),
-            ]);
-        }
+        // 2. Slack webhook — best-effort, after commit, never blocking
+        SendAdminSlackAlertJob::dispatch(
+            sprintf(
+                ':warning: *Bookly Alert* — Booking confirmation email delivery failed (all retries exhausted).'
+                . "\n*Booking*: `%s`  |  Check application logs for details.",
+                $booking->reference,
+            ),
+            ['booking_reference' => $booking->reference],
+        )->afterCommit();
     }
 }

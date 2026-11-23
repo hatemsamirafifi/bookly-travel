@@ -3,6 +3,8 @@
 use App\Domains\Booking\Models\Booking;
 use App\Models\Category;
 use App\Models\Tour;
+use App\Models\TourDeparture;
+use App\Models\TourOption;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -80,6 +82,62 @@ it('returns 403 when accessing another traveler booking', function () {
     ]);
 
     $response->assertStatus(403);
+});
+
+it('returns departure and pricing_snapshot in traveler booking detail', function () {
+    $option = TourOption::create([
+        'tour_id' => $this->tour->id,
+        'title' => 'Morning Option',
+        'guide_languages' => ['en'],
+        'price_amount' => 8900,
+        'status' => TourOption::STATUS_ACTIVE,
+    ]);
+    $departure = TourDeparture::create([
+        'tour_id' => $this->tour->id,
+        'tour_option_id' => $option->id,
+        'starts_at' => now()->addDays(12)->setTime(10, 0, 0),
+        'timezone' => 'Europe/Rome',
+        'local_date' => now()->addDays(12)->format('Y-m-d'),
+        'local_time' => '10:00:00',
+        'capacity' => 10,
+        'booking_cutoff_hours' => 2,
+        'status' => TourDeparture::STATUS_ACTIVE,
+    ]);
+
+    $booking = Booking::create([
+        'reference' => Booking::generateReference(),
+        'traveler_id' => $this->traveler->id,
+        'tour_id' => $this->tour->id,
+        'tour_option_id' => $option->id,
+        'tour_date' => $departure->local_date,
+        'participant_count' => 2,
+        'price_per_person' => 8900,
+        'total_price' => 17800,
+        'currency' => 'EUR',
+        'status' => 'confirmed',
+        'idempotency_key' => Str::uuid()->toString(),
+        'tour_departure_id' => $departure->id,
+        'pricing_snapshot' => [
+            'mode' => 'per_person',
+            'tier_id' => 1,
+            'tier_name' => 'Standard',
+            'unit_price_cents' => 8900,
+            'total_price_cents' => 17800,
+            'currency' => 'EUR',
+        ],
+        'locale' => 'en',
+    ]);
+
+    $response = getJson('/api/public/traveler/bookings/' . $booking->reference, [
+        'Authorization' => 'Bearer ' . $this->token,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.reference', $booking->reference)
+        ->assertJsonPath('data.departure.id', $departure->id)
+        ->assertJsonPath('data.departure.local_time', '10:00:00')
+        ->assertJsonPath('data.departure.timezone', 'Europe/Rome')
+        ->assertJsonPath('data.pricing_snapshot.unit_price_cents', 8900);
 });
 
 it('lists translated tour titles using the booking locale with English fallback', function (string $locale, string $expectedTitle, bool $hasTranslation) {

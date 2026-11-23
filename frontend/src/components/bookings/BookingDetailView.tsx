@@ -18,11 +18,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function formatMoneyValue(value?: number | { amount?: number; formatted?: string }) {
+function formatMoneyValue(value?: number | { amount?: number; currency?: string; formatted?: string }, currency = 'EUR') {
   if (typeof value === 'object' && value?.formatted) return value.formatted;
   const amount = typeof value === 'object' ? value.amount : value;
+  const curr = (typeof value === 'object' ? value?.currency : undefined) || currency || 'EUR';
   if (typeof amount !== 'number') return '';
-  return new Intl.NumberFormat('en', { style: 'currency', currency: 'EUR' }).format(amount / 100);
+  return new Intl.NumberFormat('en', { style: 'currency', currency: curr }).format(amount / 100);
 }
 
 export default function BookingDetailView({ booking, locale }: BookingDetailViewProps) {
@@ -51,7 +52,11 @@ export default function BookingDetailView({ booking, locale }: BookingDetailView
           <p className="text-sm text-gray-600">{booking.tour.location}</p>
         </Field>
         <Field label={detailT('dateTime')}>
-          <p>{booking.tour_date}{booking.tour_time ? ` at ${booking.tour_time}` : ''}</p>
+          <p>
+            {booking.departure
+              ? `${booking.departure.local_date} · ${booking.departure.local_time.slice(0, 5)} (${booking.departure.timezone})`
+              : `${booking.tour_date}${booking.tour_time ? ` at ${booking.tour_time}` : ''}`}
+          </p>
         </Field>
         {option?.title && (
           <Field label={detailT('option')}>
@@ -72,6 +77,9 @@ export default function BookingDetailView({ booking, locale }: BookingDetailView
           <p>{participants}</p>
         </Field>
         <Field label={detailT('price')}>
+          {booking.pricing_snapshot?.tier_name && (
+            <p className="text-xs text-gray-600">{booking.pricing_snapshot.tier_name}</p>
+          )}
           <p>{detailT('perPerson', { price: pricePerPerson })}</p>
           <p className="font-semibold">{detailT('total', { total })}</p>
         </Field>

@@ -48,7 +48,7 @@ final class Spec019TranslationProcess
         }
 
         $instance = new self($label, $stderrLog);
-        $handle = proc_open([PHP_BINARY, $worker, ...$args], [
+        $handle = proc_open([PHP_BINARY, '-d', 'opcache.enable_cli=1', $worker, ...$args], [
             0 => ['pipe', 'r'],
             1 => ['file', $stdoutLog, 'w'],
             2 => ['file', $stderrLog, 'w'],
@@ -223,15 +223,40 @@ final class Spec019TranslationProcess
 
     /**
      * Poll for a barrier file with a deadline. Ordering comes from file
-     * observation, never from sleeps.
+     * observation, never from sleeps. When an owned process handle is supplied,
+     * an early exit fails loudly right away instead of burning the full timeout.
      */
-    public static function waitForFile(string $path, float $timeoutSeconds, string $label, string $stderrLog = ''): void
-    {
+    public static function waitForFile(
+        string $path,
+        float $timeoutSeconds,
+        string $label,
+        string $stderrLog = '',
+        ?self $process = null,
+    ): void {
         $deadline = microtime(true) + $timeoutSeconds;
+        $spawnedPath = $path . '.spawned';
         while (true) {
             clearstatcache(true, $path);
             if (is_file($path)) {
                 return;
+            }
+            if ($process !== null && ! $process->isAlive()) {
+                // Re-check once after exit in case the child wrote the file right before exiting.
+                clearstatcache(true, $path);
+                if (is_file($path)) {
+                    return;
+                }
+                $exitCode = $process->close();
+                $spawned = is_file($spawnedPath) ? 'yes' : 'no';
+                $hint = '';
+                if ($stderrLog !== '' && is_file($stderrLog)) {
+                    $tail = file_get_contents($stderrLog);
+                    $hint = ' Child stderr tail: \'' . substr(is_string($tail) ? $tail : '', -2000) . '\'';
+                }
+
+                throw new \RuntimeException(
+                    "{$label}: child exited early (exit=" . ($exitCode ?? -1) . ", spawned={$spawned}) before writing {$path}.{$hint}"
+                );
             }
             if (microtime(true) >= $deadline) {
                 break;
@@ -239,13 +264,14 @@ final class Spec019TranslationProcess
             usleep(50000);
         }
 
+        $spawned = is_file($spawnedPath) ? 'yes' : 'no';
         $hint = '';
         if ($stderrLog !== '' && is_file($stderrLog)) {
             $tail = file_get_contents($stderrLog);
             $hint = ' Child stderr tail: \'' . substr(is_string($tail) ? $tail : '', -2000) . '\'';
         }
 
-        throw new \RuntimeException("{$label}: timed out after {$timeoutSeconds}s waiting for {$path}.{$hint}");
+        throw new \RuntimeException("{$label}: timed out after {$timeoutSeconds}s waiting for {$path} (spawned={$spawned}).{$hint}");
     }
 
     public static function signal(string $path, string $content = "1\n"): void

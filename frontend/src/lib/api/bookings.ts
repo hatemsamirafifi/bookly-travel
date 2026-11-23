@@ -13,6 +13,8 @@ export interface CreateBookingRequest {
   /** Selected bookable option of the tour (additive). The backend validates
    *  it against the tour and snapshot-fills the booking's option block. */
   tour_option_id?: number;
+  /** Selected concrete departure (EGM-005 D3/D4). */
+  tour_departure_id?: number;
 }
 
 export interface BookingResponse {
@@ -49,6 +51,25 @@ export interface BookingResponse {
   created_at: string;
   /** Booked option snapshot (additive); null/absent for option-less tours. */
   option?: BookingOptionSnapshot | null;
+  /** Booked departure snapshot (EGM-005 D3); null/absent for legacy bookings. */
+  departure?: {
+    id: number;
+    starts_at: string;
+    timezone: string;
+    local_date: string;
+    local_time: string;
+  } | null;
+  /** Integer-cents pricing breakdown snapshot (EGM-005 D5). */
+  pricing_snapshot?: {
+    mode?: string | null;
+    tier_id?: number | null;
+    tier_name?: string | null;
+    min_participants?: number | null;
+    max_participants?: number | null;
+    unit_price_cents?: number | null;
+    total_price_cents?: number | null;
+    currency?: string | null;
+  } | null;
 }
 
 export interface PaymentInfo {
@@ -113,6 +134,7 @@ export async function createBooking(
       locale: params.locale || 'en',
       ...(params.page_load_price !== undefined && { page_load_price: params.page_load_price }),
       ...(params.tour_option_id !== undefined && { tour_option_id: params.tour_option_id }),
+      ...(params.tour_departure_id !== undefined && { tour_departure_id: params.tour_departure_id }),
     }),
   });
 }

@@ -140,11 +140,9 @@ it('spec019 refreshes the latest English and current derivatives after a lost re
         }
     };
     $hashV1 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
-    $tour->translationStates()->updateOrCreate(
-        ['locale' => 'es'],
-        ['source_hash' => $hashV1, 'translated_hash' => null, 'status' => 'pending', 'last_error_code' => null]
-    );
-    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1))->handle($service, $translator);
+    $service->planSourceDispatches($tour, null);
+    $epochV1 = $tour->fresh()->generationEpoch();
+    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1, $epochV1))->handle($service, $translator);
     $tour = $tour->fresh();
     expect($tour->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('ready');
 
@@ -153,18 +151,17 @@ it('spec019 refreshes the latest English and current derivatives after a lost re
     $tour = $tour->fresh();
     $hashV2 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
     expect($hashV2)->not->toBe($hashV1);
-    $tour->translationStates()->where('locale', 'es')->update([
-        'source_hash' => $hashV2, 'translated_hash' => $hashV1, 'status' => 'stale',
-    ]);
+    $service->planSourceDispatches($tour, $hashV1);
+    $epochV2 = $tour->fresh()->generationEpoch();
 
     // A delayed v1 job loads fresh source/state and must no-op.
-    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1, $epochV1))->handle($service, $translator);
     $tour = $tour->fresh();
     expect($tour->translations()->where('locale', 'es')->firstOrFail()->title)->toBe('es: Spec019 Lost Projection Tour');
     expect($tour->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('stale');
 
     // The reconciled v2 job becomes ready, then a real index refresh runs.
-    (new GenerateTourTranslationJob($tour->id, 'es', $hashV2))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'es', $hashV2, $epochV2))->handle($service, $translator);
     $tour = $tour->fresh();
     expect($tour->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('ready');
     expect($tour->translations()->where('locale', 'es')->firstOrFail()->title)->toBe('es: Spec019 Revised Projection Tour');
@@ -196,10 +193,8 @@ it('spec019 delayed translation jobs load fresh source and state', function () {
         }
     };
     $hashV1 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
-    $tour->translationStates()->updateOrCreate(
-        ['locale' => 'it'],
-        ['source_hash' => $hashV1, 'translated_hash' => null, 'status' => 'pending', 'last_error_code' => null]
-    );
+    $service->planSourceDispatches($tour, null);
+    $epochV1 = $tour->fresh()->generationEpoch();
 
     // Source advances before the queued job runs.
     $tour->translations()->where('locale', 'en')->update(['title' => 'Spec019 Delayed Job Revised']);
@@ -207,13 +202,14 @@ it('spec019 delayed translation jobs load fresh source and state', function () {
     $hashV2 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
     expect($hashV2)->not->toBe($hashV1);
 
-    (new GenerateTourTranslationJob($tour->id, 'it', $hashV1))->handle($service, $translator);
+    (new GenerateTourTranslationJob($tour->id, 'it', $hashV1, $epochV1))->handle($service, $translator);
     $tour = $tour->fresh();
     expect($tour->translations()->where('locale', 'it')->exists())->toBeFalse();
     expect($tour->translationStates()->where('locale', 'it')->firstOrFail()->status)->toBe('pending');
 
-    $tour->translationStates()->where('locale', 'it')->update(['source_hash' => $hashV2]);
-    (new GenerateTourTranslationJob($tour->id, 'it', $hashV2))->handle($service, $translator);
+    $service->planSourceDispatches($tour, $hashV1);
+    $epochV2 = $tour->fresh()->generationEpoch();
+    (new GenerateTourTranslationJob($tour->id, 'it', $hashV2, $epochV2))->handle($service, $translator);
     $tour = $tour->fresh();
     expect($tour->translations()->where('locale', 'it')->firstOrFail()->title)->toBe('it: Spec019 Delayed Job Revised');
     expect($tour->translationStates()->where('locale', 'it')->firstOrFail()->status)->toBe('ready');
@@ -250,11 +246,9 @@ it('spec019 delayed index refresh never presents a stale derivative as current a
         }
     };
     $hashV1 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
-    $tour->translationStates()->updateOrCreate(
-        ['locale' => 'es'],
-        ['source_hash' => $hashV1, 'translated_hash' => null, 'status' => 'pending', 'last_error_code' => null]
-    );
-    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1))->handle($service, $translator);
+    $service->planSourceDispatches($tour, null);
+    $epochV1 = $tour->fresh()->generationEpoch();
+    (new GenerateTourTranslationJob($tour->id, 'es', $hashV1, $epochV1))->handle($service, $translator);
     expect($tour->fresh()->translationStates()->where('locale', 'es')->firstOrFail()->status)->toBe('ready');
 
     // English source advances; the stored derivative is genuinely stale.
@@ -262,9 +256,8 @@ it('spec019 delayed index refresh never presents a stale derivative as current a
     $tour = $tour->fresh();
     $hashV2 = $service->sourceHash($tour->translations()->where('locale', 'en')->firstOrFail());
     expect($hashV2)->not->toBe($hashV1);
-    $tour->translationStates()->where('locale', 'es')->update([
-        'source_hash' => $hashV2, 'translated_hash' => $hashV1, 'status' => 'stale',
-    ]);
+    $service->planSourceDispatches($tour, $hashV1);
+    $epochV2 = $tour->fresh()->generationEpoch();
 
     // Baseline detail before the delayed/queued index refresh runs: the
     // current English source is served with a disclosed fallback.

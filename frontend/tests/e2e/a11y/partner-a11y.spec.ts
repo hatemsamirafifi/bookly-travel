@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { apiGet, enterEnglishTourDetails, ownedMedia, seededOwnedTourId } from '../partner/tour-content-helpers';
+import { apiGet, enterEnglishTourDetails, ownedEnRow, ownedMedia, seededOwnedTourId } from '../partner/tour-content-helpers';
 
 test.describe('Partner Dashboard Accessibility', () => {
   test('partner dashboard home should not have accessibility violations', async ({ page }) => {
@@ -229,7 +229,7 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
     // Client-side validation only: no backend write, no route mock.
     await page.goto('/en/partner/tours/create');
     await expect(page.locator('main#main-content')).toBeVisible();
-    await page.getByRole('button', { name: /Next/i }).click();
+    await page.locator('main#main-content').getByRole('button', { name: 'Next', exact: true }).click();
     const summary = page.getByRole('alert').first();
     await expect(summary).toBeVisible();
     expect(await summary.getAttribute('aria-live')).toBe('assertive');
@@ -276,5 +276,89 @@ test.describe('Partner Tour Wizard Accessibility (Spec019 FR-030)', () => {
       }
     }
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  });
+});
+
+// EGM-003 revision governance additions (author-only): reads of the seeded
+// published tour's editor plus one client-side mixed-save probe that makes no
+// request. No route mocks, no backend writes, no Axe exclusions.
+test.describe('Partner Tour Revision Governance Accessibility (EGM-003)', () => {
+  test('governance panel is announced, labeled and Axe-clean across the required widths', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+    const tourId = await seededOwnedTourId(page);
+    const widths = [390, 768, 1024, 1440] as const;
+    for (const width of widths) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/en/partner/tours/${tourId}/edit`);
+      await expect(page.locator('main#main-content')).toBeVisible();
+      const heading = page.getByRole('heading', { name: 'Content governance' });
+      await expect(heading).toBeVisible();
+      // The publish-protection notice stays persistent on every width.
+      await expect(page.getByText(/Travelers keep seeing the approved content/)).toBeVisible();
+      // Only the LIVE public page is linked; proposed content has no route.
+      await expect(page.getByRole('link', { name: 'View live public page' })).toHaveAttribute('href', /\/tours\/.+$/);
+      // Structural option review fails closed with an explanation, no fake link.
+      await expect(page.getByRole('button', { name: 'Add Option' })).toHaveCount(0);
+      await expect(page.getByText(/adding, removing or reordering booking options/i)).toHaveCount(1);
+      // The two explicit saves are reachable, labeled controls.
+      await expect(page.getByRole('button', { name: 'Save content changes for review' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Save price/schedule changes only' })).toBeVisible();
+      expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    }
+  });
+
+  test('mixed-save guidance on the published editor is focused and announced without sending any request', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+    const tourId = await seededOwnedTourId(page);
+    const detail = await apiGet(page, `/api/partner/tours/${tourId}`);
+    const originalTitle = ownedEnRow(detail.json).title as string;
+    await page.goto(`/en/partner/tours/${tourId}/edit`);
+    await expect(page.locator('#edit-source-title')).toHaveValue(originalTitle);
+
+    // Client-side probe only: source text (governed) + price (commercial) are
+    // both dirty, so the editor sends NO request and keeps every value.
+    let revisionWrites = 0;
+    page.on('request', (request) => {
+      if (
+        request.method() !== 'GET' &&
+        (request.url().includes('/revisions') || request.url().includes('/revision-requests'))
+      ) {
+        revisionWrites += 1;
+      }
+    });
+    await page.locator('#edit-source-title').fill(`${originalTitle} a11y probe`);
+    await page.getByLabel('Price per person').first().fill('88');
+    await page.getByRole('button', { name: 'Save Tour Details' }).click();
+    const guidance = page.getByRole('status').filter({ hasText: /Save them separately with/ });
+    await expect(guidance).toBeVisible();
+    await expect(guidance).toBeFocused();
+    await expect(page.locator('#edit-source-title')).toHaveValue(`${originalTitle} a11y probe`);
+    expect(revisionWrites).toBe(0);
+    // Axe stays clean with the guidance region on screen.
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  });
+});
+
+test.describe('Partner Tour Availability & Departures Accessibility (EGM-005 Wave 3C)', () => {
+  test('availability and departures surface is WCAG-clean across locales', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+    const tourId = await seededOwnedTourId(page);
+
+    for (const locale of ['en', 'es', 'it'] as const) {
+      await page.goto(`/${locale}/partner/tours/${tourId}/availability`);
+      await expect(page.locator('main#main-content')).toBeVisible();
+      expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    }
+  });
+
+  test('pricing tier management surface is WCAG-clean across locales (EGM-005 Wave 3D)', async ({ page }) => {
+    await page.goto('/en/partner/tours');
+    const tourId = await seededOwnedTourId(page);
+
+    for (const locale of ['en', 'es', 'it'] as const) {
+      await page.goto(`/${locale}/partner/tours/${tourId}/pricing`);
+      await expect(page.locator('main#main-content')).toBeVisible();
+      expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    }
   });
 });

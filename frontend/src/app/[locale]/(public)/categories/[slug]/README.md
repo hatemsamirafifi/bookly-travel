@@ -17,7 +17,7 @@ Filtered and paginated tour listing for one category.
 
 ## Side Effects
 
-- Reads category tours with the 300-second revalidation requested by the API helper. [Fetch policy](../../../../../lib/api/categories.ts#L17)
+- Reads category tours with `cache: 'no-store'` so each server request reaches the backend eligibility checks and guarded caches. [Fetch policy](../../../../../lib/api/categories.ts#L17)
 
 ## Verification
 

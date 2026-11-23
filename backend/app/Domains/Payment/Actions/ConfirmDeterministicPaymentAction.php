@@ -42,6 +42,10 @@ class ConfirmDeterministicPaymentAction
                 throw new ConflictHttpException('This booking can no longer be paid.');
             }
 
+            if ($booking->pending_expires_at !== null && $booking->pending_expires_at->isPast()) {
+                throw new ConflictHttpException('This booking hold has expired.');
+            }
+
             if ($payment->status === 'pending') {
                 $payment->update([
                     'status' => 'succeeded',
