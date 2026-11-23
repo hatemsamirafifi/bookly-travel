@@ -151,7 +151,7 @@ class PartnerSeeder extends Seeder
             'price_amount' => 6500, // €65.00 in cents
             'status' => 'published',
             'cover_image_url' => 'http://cdn.bookly.test/tours/rome-cover.jpg',
-            'is_featured' => true,
+            'is_featured' => false,
             'published_at' => now()->subDays(20),
             'price_from' => 65.00,
             'currency' => 'EUR',

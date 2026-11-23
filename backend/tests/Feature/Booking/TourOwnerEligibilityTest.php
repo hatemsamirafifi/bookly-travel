@@ -217,7 +217,7 @@ it('serializes a new booking behind concurrent owner eligibility or identity cha
         $category?->delete();
         DB::setDefaultConnection($previous);
         DB::purge('egm003_booking_owner');
-        foreach ([$arrival, $output, $error] as $file) {
+        foreach ([$arrival, $arrival . '.spawned', $output, $error] as $file) {
             if (is_file($file)) {
                 unlink($file);
             }
